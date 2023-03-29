@@ -6,12 +6,10 @@ import useAuth from '@wasp/auth/useAuth';
 
 const active = 'inline-flex items-center border-b-2 border-indigo-300 px-1 pt-1 text-sm font-medium text-gray-900';
 const inactive = 'inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700'
-
 const current = window.location.pathname;
+
 export default function NavBar() {
   const { data: user } = useAuth();
-
-  console.log(current);
 
   return (
     <Disclosure as='nav' className='bg-white shadow sticky top-0 z-50 '>
@@ -21,7 +19,7 @@ export default function NavBar() {
             <div className='flex h-16 justify-between'>
               <div className='flex'>
                 <div className='flex flex-shrink-0 items-center'>
-                  <a href='https://wasp-lang.dev/docs' target='_blank'>
+                  <a href='/'>
                     <img className='h-8 w-8' src={logo} alt='My SaaS App' />
                   </a>
                 </div>

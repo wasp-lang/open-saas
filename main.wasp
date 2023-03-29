@@ -102,7 +102,6 @@ page LoginPage {
 
 route GptRoute { path: "/gpt", to: GptPage }
 page GptPage {
-  authRequired: true,
   component: import GptPage from "@client/GptPage"
 }
 

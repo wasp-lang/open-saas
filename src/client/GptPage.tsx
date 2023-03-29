@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { RelatedObject } from '@wasp/entities';
 import generateGptResponse from '@wasp/actions/generateGptResponse';
+import useAuth from '@wasp/auth/useAuth';
 
 type GptPayload = {
   instructions: string;
@@ -13,7 +14,14 @@ export default function GptPage() {
   const [temperature, setTemperature] = useState<number>(1);
   const [response, setResponse] = useState<string>('');
 
+  const { data: user } = useAuth();
+
   const onSubmit = async ({ instructions, command, temperature }: any) => {
+    console.log('user, ', !!user)
+    if (!user) {
+      alert('You must be logged in to use this feature.');
+      return;
+    }
     try {
       const response = (await generateGptResponse({ instructions, command, temperature })) as RelatedObject;
       if (response) {
@@ -56,6 +64,7 @@ export default function GptPage() {
                 })}
               />
             </div>
+            <span className='text-sm text-red-500'>{formErrors.instructions && formErrors.instructions.message}</span>
           </div>
           <div className='col-span-full'>
             <label htmlFor='command' className='block text-sm font-medium leading-6 text-gray-900'>
@@ -77,6 +86,7 @@ export default function GptPage() {
                 })}
               />
             </div>
+            <span className='text-sm text-red-500'>{formErrors.command && formErrors.command.message}</span>
           </div>
 
           <div className='h-10 '>

@@ -48,7 +48,7 @@ export default function Example({ user }: { user: User }) {
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
               <dt className='text-sm font-medium text-gray-500'>Most Recent User RelatedObject</dt>
               <dd className='mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0'>
-                {!!relatedObjects
+                {!!relatedObjects && relatedObjects.length > 0
                   ? relatedObjects[relatedObjects.length - 1].content
                   : "You don't have any at this time."}
               </dd>
