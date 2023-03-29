@@ -6,11 +6,14 @@ export default function MainPage() {
           <div className='mx-auto max-w-2xl'>
             <div className='max-w-lg'>
               <h1 className=' text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl'>SaaS Template</h1>
-              <a href='https://wasp-lang.dev'>
-                <h2 className='ml-4 max-w-2xl text-2xl f tracking-tight text-gray-800 slg:col-span-2 xl:col-auto'>
-                  by Wasp &nbsp; {'= }'}
-                </h2>
-              </a>
+
+              <h2 className='ml-4 max-w-2xl text-2xl f tracking-tight text-gray-800 slg:col-span-2 xl:col-auto'>
+                for the PERN stack
+              </h2>
+              <h2 className='ml-4 max-w-2xl text-md f tracking-tight text-gray-600 slg:col-span-2 xl:col-auto'>
+                Postgres/Prisma, Express, React, Node
+              </h2>
+
               <p className='mt-4 text-lg leading-8 text-gray-600'>
                 Hey 🧙‍♂️! This template will help you get a SaaS App up and running in no time. It's got:
               </p>
@@ -21,20 +24,24 @@ export default function MainPage() {
                 <li>Managed Server-Side Routes</li>
                 <li>Tailwind styling</li>
                 <li>Client-side Caching</li>
-                <li>One-command Deploy 🚀</li>
+                <li>
+                  One-command{' '}
+                  <a href='https://wasp-lang.dev/docs/deploying' className='underline' target='_blank'>
+                    Deploy 🚀
+                  </a>
+                </li>
               </ul>
               <p className='mt-4 text-lg leading-8 text-gray-600'>
-                Make sure to check out the <code>README.md</code> file before you begin
+                Make sure to check out the <code>README.md</code> file and add your <code>env</code> variables before
+                you begin
               </p>
               <div className='mt-10 flex items-center gap-x-6'>
+                <span className='text-sm font-semibold leading-6 text-gray-900'>Made with Wasp &nbsp; {' = }'}</span>
                 <a
-                  href='#'
+                  href='https://wasp-lang.dev/docs'
                   className='rounded-md bg-yellow-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-yellow-6  00 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500'
                 >
-                  Documentation
-                </a>
-                <a href='#' className='text-sm font-semibold leading-6 text-gray-900'>
-                  View on GitHub <span aria-hidden='true'>→</span>
+                  Read the Wasp Docs
                 </a>
               </div>
             </div>

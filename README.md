@@ -8,12 +8,24 @@ After cloning this repo, you can run it locally by following these steps:
 1. Install [Wasp](https://wasp-lang.dev) by running `curl -sSL https://get.wasp-lang.dev/installer.sh | sh` in your terminal.
 2. Create a `.env.server` file in the root of the project
 3. Copy the `env.example` file contents to `.env.server` and fill in your API keys
-4. Run `wasp db migrate-dev`
-5. Run `wasp start`
-6. Go to `localhost:3000` in your browser (your NodeJS server will be running on port `3001`)
-7. Install the Wasp extension for VSCode to get syntax highlighting on the `main.wasp` file and other features
-8. Check the files for comments containing specific instructions
-9. Enjoy and Have fun. When you create an App with this template, be kind and let me know by tagging me on twitter [@hot_town](https://twitter.com/hot_town)
+4. Make sure you have a Database connected and running. Here are two quick options:  
+  - Provision a Postgres database on [Railway](https://railway.app), go to settings and copy the `connection url`. Past it as `DATABASE_URL=<your-postgres-connection-url>` into your `env.server` file.  
+  - or you can spin up a Postgres docker container with this command:
+    ```shell
+    docker run \
+      --rm \
+      --publish 5432:5432 \
+      -v my-app-data:/var/lib/postgresql/data \
+      --env POSTGRES_PASSWORD=devpass1234 \
+      postgres
+    ```
+    and then paste `DATABASE_URL=postgresql://postgres:devpass1234@localhost:5432/postgres` into your `env.server` file
+5. Run `wasp db migrate-dev`
+6. Run `wasp start`
+7. Go to `localhost:3000` in your browser (your NodeJS server will be running on port `3001`)
+8. Install the Wasp extension for VSCode to get the best DX
+9. Check the files for comments containing specific instructions
+10. Enjoy and Have fun. When you create an App with this template, be kind and let me know by tagging me on twitter [@hot_town](https://twitter.com/hot_town)
 
 ## How it works
 
