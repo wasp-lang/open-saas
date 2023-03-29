@@ -1,0 +1,180 @@
+app SaaSTemplate {
+  wasp: {
+    version: "^0.9.0"
+  },
+  title: "My SaaS App",
+  head: [
+        "<meta property='og:type' content='website' />",
+        "<meta property='og:url' content='https://mySaaSapp.com' />",
+        "<meta property='og:description' content='I made a SaaS App. Buy my stuff.' />",
+        "<meta property='og:image' content='src/client/static/image.png' />",
+        // put your google analytics script here, too!
+  ],
+  // 🔐 Auth out of the box! https://wasp-lang.dev/docs/language/features#authentication--authorization
+  auth: {
+    userEntity: User,
+    externalAuthEntity: SocialLogin,
+    methods: {
+      google: { // Guide for setting up Auth via Google https://wasp-lang.dev/docs/integrations/google
+        getUserFieldsFn: import { getUserFields } from "@server/auth/google.js",
+        configFn: import { config } from "@server/auth/google.js",
+      },
+    },
+    onAuthFailedRedirectTo: "/",
+  },
+  db: { 
+    system: PostgreSQL
+  },
+  server: {
+    setupFn: import serverSetup from "@server/serverSetup.js"
+  },
+  client: {
+    rootComponent: import App from "@client/App",
+  },
+  dependencies: [
+    ("@headlessui/react", "1.7.13"),
+    ("@tailwindcss/forms", "^0.5.3"),
+    ("@tailwindcss/typography", "^0.5.7"),
+    ("react-hook-form", "7.43.1"),
+    ("react-icons", "4.8.0"),
+    ("@sendgrid/mail", "7.7.0"),
+    ("request-ip", "3.3.0"),
+    ("@types/request-ip", "0.0.37"),
+    ("node-fetch", "3.3.0"),
+    ("react-hook-form", "7.43.1"),
+    ("stripe", "11.15.0"),
+  ],
+}
+
+/* 💽 Wasp defines DB entities via Prisma Database Models: 
+ * https://wasp-lang.dev/docs/language/features#entity
+ */
+
+entity User {=psl
+  id                    Int             @id @default(autoincrement())
+  username              String          @unique
+  email                 String          @unique
+  password              String
+  stripeId              String? 
+  checkoutSessionId     String?
+  hasPaid               Boolean         @default(false)
+  sendEmail             Boolean         @default(false)
+  datePaid              DateTime?
+  credits               Int             @default(3)
+  relatedObject         RelatedObject[]
+  externalAuthAssociations  SocialLogin[]
+psl=}
+
+entity SocialLogin {=psl
+  id                    String          @id @default(uuid())
+  provider              String
+  providerId            String
+  user                  User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                Int
+  createdAt             DateTime        @default(now())
+  @@unique([provider, providerId, userId])
+psl=}
+
+// This can be anything. In most cases, this will be your product
+entity RelatedObject {=psl
+  id                    String          @id @default(uuid())
+  content               String
+  user                  User            @relation(fields: [userId], references: [id])
+  userId                Int
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+psl=}
+
+
+/* 📡 These are the Wasp Routes (You can protect them easily w/ 'authRequired: true');
+ * https://wasp-lang.dev/docs/language/features#route
+ */
+
+route RootRoute { path: "/", to: MainPage }
+page MainPage {
+  component: import Main from "@client/MainPage"
+}
+
+route LoginRoute { path: "/login", to: LoginPage }
+page LoginPage {
+  component: import Login from "@client/Login"
+}
+
+route GptRoute { path: "/gpt", to: GptPage }
+page GptPage {
+  authRequired: true,
+  component: import GptPage from "@client/GptPage"
+}
+
+route PricingRoute { path: "/pricing", to: PricingPage }
+page PricingPage {
+  component: import Pricing from "@client/PricingPage"
+}
+
+route AccountRoute { path: "/account", to: AccountPage }
+page AccountPage {
+  authRequired: true,
+  component: import Account from "@client/AccountPage"
+}
+
+route CheckoutRoute { path: "/checkout", to: CheckoutPage }
+page CheckoutPage {
+  authRequired: true,
+  component: import Checkout from "@client/CheckoutPage"
+}
+
+/* ⛑ These are the Wasp Operations, which allow the client and server to interact:
+ * https://wasp-lang.dev/docs/language/features#queries-and-actions-aka-operations
+ */
+
+// 📝 Actions aka Mutations
+
+action generateGptResponse {
+  fn: import { generateGptResponse } from "@server/actions.js",
+  entities: [User, RelatedObject]
+}
+
+action stripePayment {
+  fn: import { stripePayment } from "@server/actions.js",
+  entities: [User]
+}
+
+// action stripeCreditsPayment {
+//   fn: import { stripeCreditsPayment } from "@server/actions.js",
+//   entities: [User]
+// }
+
+// action updateUser {
+//   fn: import { updateUser } from "@server/actions.js",
+//   entities: [User]
+// }
+
+// 📚 Queries
+
+query getRelatedObjects {
+  fn: import { getRelatedObjects } from "@server/queries.js",
+  entities: [User, RelatedObject]
+}
+
+/* 🕵️‍♂️ These are the Wasp Cron Jobs. Use them to set up recurring tasks and/or queues:
+ * https://wasp-lang.dev/docs/language/features#jobs
+ */
+
+job emailChecker {
+  executor: PgBoss,
+  perform: {
+    fn: import { checkAndQueueEmails } from "@server/workers/checkAndQueueEmails.js"
+  },
+  schedule: {
+    cron: "0 7 * * 1" // at 7:00 am every Monday
+  },
+  entities: [User]
+}
+
+job emailSender {
+  executor: PgBoss,
+  perform: {
+    fn: import { sendGrid } from "@server/workers/sendGrid.js"
+  },
+  entities: [User]
+}
