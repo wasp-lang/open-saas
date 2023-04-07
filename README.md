@@ -4,7 +4,6 @@
 
 ## Running it locally
 Before you being, install [Wasp](https://wasp-lang.dev) by running `curl -sSL https://get.wasp-lang.dev/installer.sh | sh` in your terminal.
-ou have two options to run this template locally:
 
 1. Run `wasp new <project-name> -t saas`. This will clone and set up the repo in the background.
 2. Create a `.env.server` file in the root of the project
