@@ -1,4 +1,4 @@
-# Wasp SaaS Template w/ GPT API, Google Auth, Tailwind, & Stripe Payments
+# SaaS Template w/ GPT API, Google Auth, Tailwind, & Stripe Payments
 
 <img src='src/client/static/gptsaastemplate.png' width='700px'/>
 
