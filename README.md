@@ -5,7 +5,7 @@
 ## Running it locally
 Before you being, install [Wasp](https://wasp-lang.dev) by running `curl -sSL https://get.wasp-lang.dev/installer.sh | sh` in your terminal.
 
-1. Run `wasp new <project-name> -t saas`. This will clone and set up the repo in the background.
+1. First clone this repo.
 2. Create a `.env.server` file in the root of the project
 3. Copy the `env.example` file contents to `.env.server` and fill in your API keys
 4. Make sure you have a Database connected and running. Here are two quick options:  
