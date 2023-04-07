@@ -1,10 +1,7 @@
-import HttpError from '@wasp/core/HttpError.js';
 import fetch from 'node-fetch';
-import type { RelatedObject, User } from '@wasp/entities';
-import type {
-  GenerateGptResponse,
-  StripePayment,
-} from '@wasp/actions/types';
+import HttpError from '@wasp/core/HttpError.js';
+import type { RelatedObject } from '@wasp/entities';
+import type { GenerateGptResponse, StripePayment } from '@wasp/actions/types';
 import type { StripePaymentResult, OpenAIResponse } from './types';
 import Stripe from 'stripe';
 
@@ -101,7 +98,6 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, RelatedObject>
     temperature: Number(temperature),
   };
 
-
   try {
     if (!context.user.hasPaid && !context.user.credits) {
       throw new HttpError(402, 'User has not paid or is out of credits');
@@ -117,7 +113,7 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, RelatedObject>
       });
     }
 
-    console.log('fetching', payload)
+    console.log('fetching', payload);
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       headers: {
         'Content-Type': 'application/json',
@@ -127,15 +123,14 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, RelatedObject>
       body: JSON.stringify(payload),
     });
 
-    const json = (await response.json()) as OpenAIResponse
-    console.log('response json', json)
+    const json = (await response.json()) as OpenAIResponse;
+    console.log('response json', json);
     return context.entities.RelatedObject.create({
       data: {
         content: json?.choices[0].message.content,
         user: { connect: { id: context.user.id } },
       },
     });
-
   } catch (error) {
     if (!context.user.hasPaid) {
       await context.entities.User.update({

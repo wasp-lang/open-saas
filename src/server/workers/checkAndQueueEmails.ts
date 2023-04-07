@@ -1,5 +1,7 @@
-import { emailSender } from '@wasp/jobs/emailSender.js';
-import type { Email } from './sendGrid';
+import { emailSender } from '@wasp/email/index.js'
+
+import type { Email } from '@wasp/email/core/types';
+import type { User } from '@wasp/entities'
 import type { Context } from '../types';
 
 const emailToSend: Email = {
@@ -19,7 +21,10 @@ const emailToSend: Email = {
         </html>`,
 };
 
+//  you could use this function to send newsletters, expiration notices, etc.
 export async function checkAndQueueEmails(_args: unknown, context: Context) {
+
+  // e.g. you could send an offer email 2 weeks before their subscription expires
   const currentDate = new Date();
   const twoWeeksFromNow = new Date(currentDate.getTime() + 14 * 24 * 60 * 60 * 1000);
 
@@ -32,7 +37,7 @@ export async function checkAndQueueEmails(_args: unknown, context: Context) {
       },
       sendEmail: true,
     },
-  });
+  }) as User[];
 
   console.log('Sending expiration notices to users: ', users.length);
 
@@ -45,7 +50,7 @@ export async function checkAndQueueEmails(_args: unknown, context: Context) {
       if (user.email) {
         try {
           emailToSend.to = user.email;
-          await emailSender.submit(emailToSend);
+          await emailSender.send(emailToSend);
         } catch (error) {
           console.error('Error sending expiration notice to user: ', user.id, error);
         }
