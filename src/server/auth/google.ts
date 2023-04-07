@@ -2,9 +2,8 @@
 
 export async function getUserFields(_context: unknown, args: any) {
   console.log('args', args.profile)
-  const username = args.profile.emails[0].value
   const email = args.profile.emails[0].value
-  return { username, email };
+  return { email };
 }
 
 export function config() {

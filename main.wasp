@@ -1,6 +1,6 @@
 app SaaSTemplate {
   wasp: {
-    version: "^0.9.0"
+    version: "^0.10.0"
   },
   title: "My SaaS App",
   head: [
@@ -8,7 +8,7 @@ app SaaSTemplate {
         "<meta property='og:url' content='https://mySaaSapp.com' />",
         "<meta property='og:description' content='I made a SaaS App. Buy my stuff.' />",
         "<meta property='og:image' content='src/client/static/image.png' />",
-        // put your google analytics script here, too!
+        // you can put your google analytics script here, too!
   ],
   // 🔐 Auth out of the box! https://wasp-lang.dev/docs/language/features#authentication--authorization
   auth: {
@@ -25,11 +25,16 @@ app SaaSTemplate {
   db: { 
     system: PostgreSQL
   },
-  server: {
-    setupFn: import serverSetup from "@server/serverSetup.js"
-  },
   client: {
     rootComponent: import App from "@client/App",
+  },
+  emailSender: {
+    provider: SendGrid,
+    defaultFrom: {
+      name: "MySaaSApp",
+      // make sure this address is the same you registered your SendGrid account with!
+      email: "email@mysaasapp.com" 
+    },
   },
   dependencies: [
     ("@headlessui/react", "1.7.13"),
@@ -37,7 +42,6 @@ app SaaSTemplate {
     ("@tailwindcss/typography", "^0.5.7"),
     ("react-hook-form", "7.43.1"),
     ("react-icons", "4.8.0"),
-    ("@sendgrid/mail", "7.7.0"),
     ("request-ip", "3.3.0"),
     ("@types/request-ip", "0.0.37"),
     ("node-fetch", "3.3.0"),
@@ -52,9 +56,7 @@ app SaaSTemplate {
 
 entity User {=psl
   id                    Int             @id @default(autoincrement())
-  username              String          @unique
   email                 String          @unique
-  password              String
   stripeId              String? 
   checkoutSessionId     String?
   hasPaid               Boolean         @default(false)
@@ -155,6 +157,16 @@ query getRelatedObjects {
   entities: [User, RelatedObject]
 }
 
+/*
+ * 📡 These are custom Wasp API Endpoints. Use them for callbacks, webhooks, etc.
+ */ 
+
+api stripeWebhook {
+  fn: import { stripeWebhook } from "@server/webhooks.js",
+  entities: [User],
+  httpRoute: (POST, "/stripe-webhook")
+}
+
 /* 🕵️‍♂️ These are the Wasp Cron Jobs. Use them to set up recurring tasks and/or queues:
  * https://wasp-lang.dev/docs/language/features#jobs
  */
@@ -166,14 +178,6 @@ job emailChecker {
   },
   schedule: {
     cron: "0 7 * * 1" // at 7:00 am every Monday
-  },
-  entities: [User]
-}
-
-job emailSender {
-  executor: PgBoss,
-  perform: {
-    fn: import { sendGrid } from "@server/workers/sendGrid.js"
   },
   entities: [User]
 }
