@@ -24,7 +24,6 @@ const stripe = new Stripe(process.env.STRIPE_KEY!, {
 });
 
 export const stripeWebhook: StripeWebhook = async (request, response, context) => {
-  response.set('Access-Control-Allow-Origin', '*'); // Example of modifying headers to override Wasp default CORS middleware.
 
   if (process.env.NODE_ENV === 'production') {
     const detectedIp = requestIp.getClientIp(request) as string;
