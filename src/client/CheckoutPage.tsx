@@ -11,7 +11,7 @@ export default function CheckoutPage({ user }: { user: User }) {
 
     function delayedRedirect() {
       return setTimeout(() => {
-        history.push('/profile');
+        history.push('/account');
       }, 4000);
     }
 
@@ -24,7 +24,7 @@ export default function CheckoutPage({ user }: { user: User }) {
     } else if (success) {
       setHasPaid('paid');
     } else {
-      history.push('/profile');
+      history.push('/account');
     }
     delayedRedirect();
     return () => {
@@ -43,7 +43,7 @@ export default function CheckoutPage({ user }: { user: User }) {
       </h1>
       {hasPaid !== 'loading' && (
         <span className='text-center'>
-          You are being redirected to your profile page... <br />
+          You are being redirected to your account page... <br />
         </span>
       )}
     </>

@@ -42,12 +42,18 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
   try {
     event = request.body;
 
-    if (event.type === 'invoice.paid') {
-      const charge = event.data.object as Stripe.Invoice;
-      userStripeId = charge.customer as string;
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object as Stripe.Checkout.Session;
+      userStripeId = session.customer as string;
 
-      if (charge.amount_paid === 999) {
-        console.log('Subscription purchased: ', charge.amount_paid);
+      const { line_items } = await stripe.checkout.sessions.retrieve(session.id, {
+        expand: ['line_items'],
+      });
+
+      console.log('line_items: ', line_items);
+
+      if (line_items?.data[0]?.price?.id === process.env.SUBSCRIPTION_PRICE_ID) {
+        console.log('Subscription purchased ');
         await context.entities.User.updateMany({
           where: {
             stripeId: userStripeId,
@@ -58,19 +64,24 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
         });
       }
 
-      if (charge.amount_paid === 295) {
-        console.log('Credits purchased: ', charge.amount_paid);
-        await context.entities.User.updateMany({
-          where: {
-            stripeId: userStripeId,
-          },
-          data: {
-            credits: {
-              increment: 10,
-            },
-          },
-        });
-      }
+      /**
+       * and here is an example of handling a different type of product
+       * make sure to configure it in the Stripe dashboard first! 
+       */
+
+      // if (line_items?.data[0]?.price?.id === process.env.CREDITS_PRICE_ID) {
+      //   console.log('Credits purchased: ');
+      //   await context.entities.User.updateMany({
+      //     where: {
+      //       stripeId: userStripeId,
+      //     },
+      //     data: {
+      //       credits: {
+      //         increment: 10,
+      //       },
+      //     },
+      //   });
+      // }
     } else if (event.type === 'customer.subscription.updated') {
       const subscription = event.data.object as Stripe.Subscription;
       userStripeId = subscription.customer as string;
