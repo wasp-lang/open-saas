@@ -85,7 +85,15 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
       const subscription = event.data.object as Stripe.Subscription;
       userStripeId = subscription.customer as string;
 
+      /**
+       * Stripe will send a subscription.updated event when a subscription is canceled
+       * but the subscription is still active until the end of the period.
+       * So we check if cancel_at_period_end is true and send an email to the customer.
+       * https://stripe.com/docs/billing/subscriptions/cancel#events
+       */
       if (subscription.cancel_at_period_end) {
+        console.log('Subscription canceled at period end');
+
         const customerEmail = await context.entities.User.findFirst({
           where: {
             stripeId: userStripeId,
@@ -108,7 +116,11 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
       const subscription = event.data.object as Stripe.Subscription;
       userStripeId = subscription.customer as string;
 
-      console.log('Subscription canceled');
+      /**
+       * Stripe will send then finally send a subscription.deleted event when subscription period ends
+       * https://stripe.com/docs/billing/subscriptions/cancel#events
+       */
+      console.log('Subscription deleted/ended');
       await context.entities.User.updateMany({
         where: {
           stripeId: userStripeId,
