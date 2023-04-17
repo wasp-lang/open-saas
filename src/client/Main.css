@@ -2,4 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/* rest of content below */
+
+a {
+  color: rgb(79 70 229 / var(--tw-text-opacity));
+}
+
+a:hover {
+  color: rgb(99 102 241 / var(--tw-text-opacity));
+}

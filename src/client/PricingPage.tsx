@@ -29,7 +29,7 @@ export default function PricingPage() {
     setIsLoading(true);
     try {
       const response = await stripePayment();
-      if (response) {
+      if (response?.sessionUrl) {
         window.open(response.sessionUrl, '_self');
       }
     } catch (e) {

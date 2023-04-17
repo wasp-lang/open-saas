@@ -94,7 +94,7 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
       if (subscription.cancel_at_period_end) {
         console.log('Subscription canceled at period end');
 
-        const customerEmail = await context.entities.User.findFirst({
+        const customer = await context.entities.User.findFirst({
           where: {
             stripeId: userStripeId,
           },
@@ -103,9 +103,9 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
           },
         });
 
-        if (customerEmail) {
+        if (customer?.email) {
           await emailSender.send({
-            to: customerEmail.email,
+            to: customer.email,
             subject: 'We hate to see you go :(',
             text: 'We hate to see you go. Here is a sweet offer...',
             html: 'We hate to see you go. Here is a sweet offer...',

@@ -28,7 +28,7 @@ export async function checkAndQueueEmails(_args: unknown, context: Context) {
   const currentDate = new Date();
   const twoWeeksFromNow = new Date(currentDate.getTime() + 14 * 24 * 60 * 60 * 1000);
 
-  console.log('Starting CRON JOB: \n\nSending expiration notices...');
+  console.log('Starting CRON JOB: \n\nSending notices...');
 
   const users = await context.entities.User.findMany({
     where: {
@@ -39,10 +39,10 @@ export async function checkAndQueueEmails(_args: unknown, context: Context) {
     },
   }) as User[];
 
-  console.log('Sending expiration notices to users: ', users.length);
+  console.log('Sending notices to users: ', users.length);
 
   if (users.length === 0) {
-    console.log('No users to send expiration notices to.');
+    console.log('No users to send notices to.');
     return;
   }
   await Promise.allSettled(
@@ -52,7 +52,7 @@ export async function checkAndQueueEmails(_args: unknown, context: Context) {
           emailToSend.to = user.email;
           await emailSender.send(emailToSend);
         } catch (error) {
-          console.error('Error sending expiration notice to user: ', user.id, error);
+          console.error('Error sending notice to user: ', user.id, error);
         }
       }
     })

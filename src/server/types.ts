@@ -1,4 +1,5 @@
-import { User, Prisma } from '@prisma/client';
+import { User } from '@wasp/entities'
+import { Prisma } from '@prisma/client'
 
 export type Context = {
   user: User;

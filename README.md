@@ -3,11 +3,10 @@
 <img src='src/client/static/gptsaastemplate.png' width='700px'/>
 
 ## Running it locally
-Before you being, install [Wasp](https://wasp-lang.dev) by running `curl -sSL https://get.wasp-lang.dev/installer.sh | sh` in your terminal.
 
-1. First clone this repo.
-2. Create a `.env.server` file in the root of the project
-3. Copy the `env.server.example` file contents to `.env.server` and fill in your API keys
+1. Make sure you have the latest version of [Wasp](https://wasp-lang.dev) installed by running `curl -sSL https://get.wasp-lang.dev/installer.sh | sh` in your terminal.
+2. Run `wasp new <project-name> -t saas` to create a new app using this template. 
+3. Rename the `env.server.example` file to `.env.server` and fill in your API keys
 4. Make sure you have a Database connected and running. Here are two quick options:  
   - run `wasp start db` if you have Docker installed (if not, on MacOS run `brew install docker-machine docker`). This will start a Postgres database for you. No need to do anything else! 🤯 
   - or provision a Postgres database on [Railway](https://railway.app), go to settings and copy the `connection url`. Past it as `DATABASE_URL=<your-postgres-connection-url>` into your `env.server` file.  

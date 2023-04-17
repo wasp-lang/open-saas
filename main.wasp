@@ -15,10 +15,26 @@ app SaaSTemplate {
     userEntity: User,
     externalAuthEntity: SocialLogin,
     methods: {
+      email: {
+        fromField: {
+          name: "SaaS App",
+          // make sure this address is the same you registered your SendGrid or MailGun account with!
+          email: "vince@wasp-lang.dev" 
+        },
+        emailVerification: {
+          clientRoute: EmailVerificationRoute,
+          getEmailContentFn: import { getVerificationEmailContent } from "@server/auth/email.js",
+        },
+        passwordReset: {
+          clientRoute: PasswordResetRoute,
+          getEmailContentFn: import { getPasswordResetEmailContent } from "@server/auth/email.js",
+        },
+      },
       google: { // Guide for setting up Auth via Google https://wasp-lang.dev/docs/integrations/google
         getUserFieldsFn: import { getUserFields } from "@server/auth/google.js",
         configFn: import { config } from "@server/auth/google.js",
       },
+      // gitHub: {} // Guide for setting up Auth via Github https://wasp-lang.dev/docs/integrations/github
     },
     onAuthFailedRedirectTo: "/",
   },
@@ -31,10 +47,15 @@ app SaaSTemplate {
   emailSender: {
     provider: SendGrid,
     defaultFrom: {
-      name: "MySaaSApp",
-      // make sure this address is the same you registered your SendGrid account with!
-      email: "email@mysaasapp.com" 
+      name: "SaaS App",
+      // make sure this address is the same you registered your SendGrid or MailGun account with!
+      email: "vince@wasp-lang.dev" 
     },
+    // defaultFrom: {
+    //   name: "MySaaSApp",
+    //   // make sure this address is the same you registered your SendGrid or MailGun account with!
+    //   email: "email@mysaasapp.com" 
+    // },
   },
   dependencies: [
     ("@headlessui/react", "1.7.13"),
@@ -55,15 +76,19 @@ app SaaSTemplate {
  */
 
 entity User {=psl
-  id                    Int             @id @default(autoincrement())
-  email                 String          @unique
-  stripeId              String? 
-  checkoutSessionId     String?
-  hasPaid               Boolean         @default(false)
-  sendEmail             Boolean         @default(false)
-  datePaid              DateTime?
-  credits               Int             @default(3)
-  relatedObject         RelatedObject[]
+  id                        Int             @id @default(autoincrement())
+  email                     String?          @unique
+  password                  String?
+  isEmailVerified           Boolean         @default(false)
+  emailVerificationSentAt   DateTime?
+  passwordResetSentAt       DateTime?
+  stripeId                  String? 
+  checkoutSessionId         String?
+  hasPaid                   Boolean         @default(false)
+  sendEmail                 Boolean         @default(false)
+  datePaid                  DateTime?
+  credits                   Int             @default(3)
+  relatedObject             RelatedObject[]
   externalAuthAssociations  SocialLogin[]
 psl=}
 
@@ -99,7 +124,27 @@ page MainPage {
 
 route LoginRoute { path: "/login", to: LoginPage }
 page LoginPage {
-  component: import Login from "@client/Login"
+  component: import Login from "@client/auth/LoginPage"
+}
+
+route SignupRoute { path: "/signup", to: SignupPage }
+page SignupPage {
+  component: import { Signup } from "@client/auth/SignupPage"
+}
+
+route RequestPasswordResetRoute { path: "/request-password-reset", to: RequestPasswordResetPage }
+page RequestPasswordResetPage {
+  component: import { RequestPasswordReset } from "@client/auth/RequestPasswordReset",
+}
+
+route PasswordResetRoute { path: "/password-reset", to: PasswordResetPage }
+page PasswordResetPage {
+  component: import { PasswordReset } from "@client/auth/PasswordReset",
+}
+
+route EmailVerificationRoute { path: "/email-verification", to: EmailVerificationPage }
+page EmailVerificationPage {
+  component: import { EmailVerification } from "@client/auth/EmailVerification",
 }
 
 route GptRoute { path: "/gpt", to: GptPage }
@@ -159,6 +204,7 @@ query getRelatedObjects {
 
 /*
  * 📡 These are custom Wasp API Endpoints. Use them for callbacks, webhooks, etc.
+ * https://wasp-lang.dev/docs/language/features#apis
  */ 
 
 api stripeWebhook {
