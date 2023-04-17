@@ -72,7 +72,7 @@ function BuyMoreButton({ isLoading, setIsLoading }: { isLoading: boolean, setIsL
   const handleClick = async () => {
     setIsLoading(true);
     const stripeResults = await stripePayment();
-    if (stripeResults) {
+    if (stripeResults?.sessionUrl) {
       window.open(stripeResults.sessionUrl, '_self');
     }
     setIsLoading(false);

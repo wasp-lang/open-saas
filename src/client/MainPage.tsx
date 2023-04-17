@@ -39,7 +39,7 @@ export default function MainPage() {
                 <span className='text-sm font-semibold leading-6 text-gray-900'>Made with Wasp &nbsp; {' = }'}</span>
                 <a
                   href='https://wasp-lang.dev/docs'
-                  className='rounded-md bg-yellow-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-yellow-6  00 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500'
+                  className='rounded-md bg-yellow-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-yellow-400 hover:text-black/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500'
                 >
                   Read the Wasp Docs
                 </a>
