@@ -34,7 +34,6 @@ app SaaSTemplate {
         getUserFieldsFn: import { getUserFields } from "@server/auth/google.js",
         configFn: import { config } from "@server/auth/google.js",
       },
-      // gitHub: {} // Guide for setting up Auth via Github https://wasp-lang.dev/docs/integrations/github
     },
     onAuthFailedRedirectTo: "/",
   },
@@ -51,11 +50,6 @@ app SaaSTemplate {
       // make sure this address is the same you registered your SendGrid or MailGun account with!
       email: "vince@wasp-lang.dev" 
     },
-    // defaultFrom: {
-    //   name: "MySaaSApp",
-    //   // make sure this address is the same you registered your SendGrid or MailGun account with!
-    //   email: "email@mysaasapp.com" 
-    // },
   },
   dependencies: [
     ("@headlessui/react", "1.7.13"),
@@ -77,7 +71,7 @@ app SaaSTemplate {
 
 entity User {=psl
   id                        Int             @id @default(autoincrement())
-  email                     String?          @unique
+  email                     String?         @unique
   password                  String?
   isEmailVerified           Boolean         @default(false)
   emailVerificationSentAt   DateTime?
@@ -93,23 +87,23 @@ entity User {=psl
 psl=}
 
 entity SocialLogin {=psl
-  id                    String          @id @default(uuid())
-  provider              String
-  providerId            String
-  user                  User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                Int
-  createdAt             DateTime        @default(now())
+  id                        String          @id @default(uuid())
+  provider                  String
+  providerId                String
+  user                      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                    Int
+  createdAt                 DateTime        @default(now())
   @@unique([provider, providerId, userId])
 psl=}
 
 // This can be anything. In most cases, this will be your product
 entity RelatedObject {=psl
-  id                    String          @id @default(uuid())
-  content               String
-  user                  User            @relation(fields: [userId], references: [id])
-  userId                Int
-  createdAt             DateTime        @default(now())
-  updatedAt             DateTime        @updatedAt
+  id                        String          @id @default(uuid())
+  content                   String
+  user                      User            @relation(fields: [userId], references: [id])
+  userId                    Int
+  createdAt                 DateTime        @default(now())
+  updatedAt                 DateTime        @updatedAt
 psl=}
 
 
