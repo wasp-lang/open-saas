@@ -12,8 +12,8 @@
 2. Run `wasp new <project-name> -t saas` to create a new app using this template. 
 3. Rename the `env.server.example` file to `.env.server` and fill in your API keys
 4. Make sure you have a Database connected and running. Here are two quick options:  
-  - run `wasp start db` if you have Docker installed (if not, on MacOS run `brew install docker-machine docker`). This will start a Postgres database for you. No need to do anything else! 🤯 
-  - or provision a Postgres database on [Railway](https://railway.app), go to settings and copy the `connection url`. Past it as `DATABASE_URL=<your-postgres-connection-url>` into your `env.server` file.  
+  - run `wasp start db` if you have Docker installed and running (if not, on MacOS run `brew install docker-machine docker` then find and run the app from your launchpad). This will start a Postgres database for you. No need to do anything else! 🤯 
+  - or provision a Postgres database on [Railway](https://railway.app), go to settings and copy the `connection url`. Paste it as `DATABASE_URL=<your-postgres-connection-url>` into your `env.server` file.  
 5. Run `wasp db migrate-dev`
 6. Run `wasp start`. This will install all dependencies and start the client and server for you :)
 7. Go to `localhost:3000` in your browser (your NodeJS server will be running on port `3001`)
@@ -35,4 +35,4 @@
 
 [Wasp's integrated Jobs](https://wasp-lang.dev/docs/language/features#jobs) feature is used to run a cron job every week to send an newsletter email. I used [SendGrid](https://sendgrid.com/) for the email service.
 
-If you have any other questions, feel free to reach out to me on [twitter](https://twitter.com/hot_town)
+If you have any other questions, feel free to reach out to me on [twitter](https://twitter.com/hot_town) or in the [Wasp discord server](https://discord.gg/rzdnErX).
