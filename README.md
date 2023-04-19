@@ -2,6 +2,10 @@
 
 <img src='src/client/static/gptsaastemplate.png' width='700px'/>
 
+<br/>
+<a href="https://www.producthunt.com/posts/free-saas-template-gpt-stripe-auth?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-free&#0045;saas&#0045;template&#0045;gpt&#0045;stripe&#0045;auth" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=389763&theme=neutral" alt="Free&#0032;SaaS&#0032;Template&#0032;&#0040;GPT&#0044;&#0032;Stripe&#0044;&#0032;Auth&#0041; - A&#0032;free&#0032;React&#0047;NodeJS&#0032;SaaS&#0032;template&#0032;for&#0032;quick&#0032;idea&#0032;execution | Product Hunt" style="width: 200px;" width="200" /></a>
+<br/>  
+
 ## Running it locally
 
 1. Make sure you have the latest version of [Wasp](https://wasp-lang.dev) installed by running `curl -sSL https://get.wasp-lang.dev/installer.sh | sh` in your terminal.
