@@ -125,13 +125,12 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, RelatedObject>
 
     const json = (await response.json()) as OpenAIResponse;
     console.log('response json', json);
-    const res = await context.entities.RelatedObject.create({
+    return context.entities.RelatedObject.create({
       data: {
         content: json?.choices[0].message.content,
         user: { connect: { id: context.user.id } },
       },
     });
-    return res;
   } catch (error: any) {
     if (!context.user.hasPaid && error?.statusCode != 402) {
       await context.entities.User.update({
