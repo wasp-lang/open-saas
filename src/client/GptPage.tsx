@@ -23,7 +23,7 @@ export default function GptPage() {
       return;
     }
     try {
-      const response = (await generateGptResponse({ instructions, command, temperature })) as RelatedObject;
+      const response = await generateGptResponse({ instructions, command, temperature })
       if (response) {
         setResponse(response.content);
       }
