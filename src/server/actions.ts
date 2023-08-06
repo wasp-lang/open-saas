@@ -57,16 +57,14 @@ export const stripePayment: StripePayment<void, StripePaymentResult> = async (_a
     },
   });
 
-  return new Promise((resolve, reject) => {
-    if (!session) {
-      reject(new HttpError(402, 'Could not create a Stripe session'));
-    } else {
-      resolve({
-        sessionUrl: session.url,
-        sessionId: session.id,
-      });
-    }
-  });
+  if (!session) {
+    throw new HttpError(402, 'Could not create a Stripe session');
+  } else {
+    return {
+      sessionUrl: session.url,
+      sessionId: session.id,
+    };
+  }
 };
 
 type GptPayload = {
@@ -145,7 +143,5 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, RelatedObject>
     console.error(error);
   }
 
-  return new Promise((resolve, reject) => {
-    reject(new HttpError(500, 'Something went wrong'));
-  });
+  throw new HttpError(500, 'Something went wrong');
 };
