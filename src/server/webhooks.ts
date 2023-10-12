@@ -24,7 +24,6 @@ const stripe = new Stripe(process.env.STRIPE_KEY!, {
 });
 
 export const stripeWebhook: StripeWebhook = async (request, response, context) => {
-
   if (process.env.NODE_ENV === 'production') {
     const detectedIp = requestIp.getClientIp(request) as string;
     const isStripeIP = STRIPE_WEBHOOK_IPS.includes(detectedIp);
@@ -42,6 +41,7 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
     event = request.body;
 
     if (event.type === 'checkout.session.completed') {
+      console.log('Checkout session completed');
       const session = event.data.object as Stripe.Checkout.Session;
       userStripeId = session.customer as string;
 
@@ -59,13 +59,14 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
           },
           data: {
             hasPaid: true,
+            datePaid: new Date(),
           },
         });
       }
 
       /**
        * and here is an example of handling a different type of product
-       * make sure to configure it in the Stripe dashboard first! 
+       * make sure to configure it in the Stripe dashboard first!
        */
 
       // if (line_items?.data[0]?.price?.id === process.env.CREDITS_PRICE_ID) {
@@ -81,10 +82,47 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
       //     },
       //   });
       // }
+    } else if (event.type === 'invoice.paid') {
+      console.log('>>>> invoice.paid: ', userStripeId);
+      const invoice = event.data.object as Stripe.Invoice;
+      const periodStart = new Date(invoice.period_start * 1000);
+      await context.entities.User.updateMany({
+        where: {
+          stripeId: userStripeId,
+        },
+        data: {
+          hasPaid: true,
+          datePaid: periodStart,
+        },
+      });
     } else if (event.type === 'customer.subscription.updated') {
       const subscription = event.data.object as Stripe.Subscription;
       userStripeId = subscription.customer as string;
-
+      if (subscription.status === 'active') {
+        console.log('Subscription active ', userStripeId);
+        await context.entities.User.updateMany({
+          where: {
+            stripeId: userStripeId,
+          },
+          data: {
+            subscriptionStatus: 'active',
+          },
+        });
+      }
+      // you'll want to make a check on the front end to see if the subscription is past due
+      // and then prompt the user to update their payment method
+      // this is useful if the user's card expires or is canceled and automatic subscription renewal fails
+      if (subscription.status === 'past_due') {
+        console.log('Subscription past due: ', userStripeId);
+        await context.entities.User.updateMany({
+          where: {
+            stripeId: userStripeId,
+          },
+          data: {
+            subscriptionStatus: 'past_due',
+          },
+        });
+      }
       /**
        * Stripe will send a subscription.updated event when a subscription is canceled
        * but the subscription is still active until the end of the period.
