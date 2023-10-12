@@ -1,6 +1,6 @@
 app SaaSTemplate {
   wasp: {
-    version: "^0.11.1"
+    version: "^0.11.6"
   },
   title: "My SaaS App",
   head: [
@@ -10,7 +10,7 @@ app SaaSTemplate {
         "<meta property='og:image' content='src/client/static/image.png' />",
         // you can put your google analytics script here, too!
   ],
-  // 🔐 Auth out of the box! https://wasp-lang.dev/docs/language/features#authentication--authorization
+  // 🔐 Auth out of the box! https://wasp-lang.dev/docs/auth/overview
   auth: {
     userEntity: User,
     externalAuthEntity: SocialLogin,
@@ -30,7 +30,7 @@ app SaaSTemplate {
           getEmailContentFn: import { getPasswordResetEmailContent } from "@server/auth/email.js",
         },
       },
-      google: { // Guide for setting up Auth via Google https://wasp-lang.dev/docs/integrations/google
+      google: { // Guide for setting up Auth via Google https://wasp-lang.dev/docs/auth/social-auth/overview
         getUserFieldsFn: import { getUserFields } from "@server/auth/google.js",
         configFn: import { config } from "@server/auth/google.js",
       },
@@ -60,13 +60,13 @@ app SaaSTemplate {
     ("request-ip", "3.3.0"),
     ("@types/request-ip", "0.0.37"),
     ("node-fetch", "3.3.0"),
-    ("react-hook-form", "7.43.1"),
+    ("react-hook-form", "^7.45.4"),
     ("stripe", "11.15.0"),
   ],
 }
 
 /* 💽 Wasp defines DB entities via Prisma Database Models: 
- * https://wasp-lang.dev/docs/language/features#entity
+ * https://wasp-lang.dev/docs/data-model/entities
  */
 
 entity User {=psl
@@ -80,6 +80,7 @@ entity User {=psl
   checkoutSessionId         String?
   hasPaid                   Boolean         @default(false)
   sendEmail                 Boolean         @default(false)
+  subscriptionStatus        String?
   datePaid                  DateTime?
   credits                   Int             @default(3)
   relatedObject             RelatedObject[]
@@ -108,7 +109,7 @@ psl=}
 
 
 /* 📡 These are the Wasp Routes (You can protect them easily w/ 'authRequired: true');
- * https://wasp-lang.dev/docs/language/features#route
+ * https://wasp-lang.dev/docs/tutorial/pages
  */
 
 route RootRoute { path: "/", to: MainPage }
@@ -164,7 +165,7 @@ page CheckoutPage {
 }
 
 /* ⛑ These are the Wasp Operations, which allow the client and server to interact:
- * https://wasp-lang.dev/docs/language/features#queries-and-actions-aka-operations
+ * https://wasp-lang.dev/docs/data-model/operations/overview
  */
 
 // 📝 Actions aka Mutations
@@ -198,7 +199,7 @@ query getRelatedObjects {
 
 /*
  * 📡 These are custom Wasp API Endpoints. Use them for callbacks, webhooks, etc.
- * https://wasp-lang.dev/docs/language/features#apis
+ * https://wasp-lang.dev/docs/advanced/apis
  */ 
 
 api stripeWebhook {
@@ -208,7 +209,7 @@ api stripeWebhook {
 }
 
 /* 🕵️‍♂️ These are the Wasp Cron Jobs. Use them to set up recurring tasks and/or queues:
- * https://wasp-lang.dev/docs/language/features#jobs
+ * https://wasp-lang.dev/docs/advanced/jobs
  */
 
 job emailChecker {

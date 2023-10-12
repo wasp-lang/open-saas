@@ -16,6 +16,7 @@ export const stripePayment: StripePayment<void, StripePaymentResult> = async (_a
   if (!context.user) {
     throw new HttpError(401);
   }
+  
   let customer: Stripe.Customer;
   const stripeCustomers = await stripe.customers.list({
     email: context.user.email!,

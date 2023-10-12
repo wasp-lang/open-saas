@@ -70,12 +70,18 @@ export default function Example({ user }: { user: User }) {
 
 function BuyMoreButton({ isLoading, setIsLoading }: { isLoading: boolean, setIsLoading: Dispatch<SetStateAction<boolean>> }) {
   const handleClick = async () => {
-    setIsLoading(true);
-    const stripeResults = await stripePayment();
-    if (stripeResults?.sessionUrl) {
-      window.open(stripeResults.sessionUrl, '_self');
+    try {
+      setIsLoading(true);
+      const stripeResults = await stripePayment();
+      if (stripeResults?.sessionUrl) {
+        window.open(stripeResults.sessionUrl, '_self');
+      }
+      
+    } catch (error: any) {
+      alert(error?.message ?? 'Something went wrong.')
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   return (
