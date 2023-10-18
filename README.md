@@ -25,16 +25,17 @@ Test it out here: [https://saas-template-gpt-client.fly.dev/](https://saas-templ
 
 1. Make sure you have the latest version of [Wasp](https://wasp-lang.dev) installed by running `curl -sSL https://get.wasp-lang.dev/installer.sh | sh` in your terminal.
 2. Run `wasp new <project-name> -t saas` to create a new app using this template. 
-3. Rename the `env.server.example` file to `.env.server` and fill in your API keys
+3. Rename the `env.server.example` file to `.env.server` and fill in your API keys according to the instructions in the file.
 4. Make sure you have a Database connected and running. Here are two quick options:  
   - run `wasp start db` if you have Docker installed and running (if not, on MacOS run `brew install docker-machine docker` then find and run the app from your launchpad). This will start a Postgres database for you. No need to do anything else! 🤯 
   - or provision a Postgres database on [Railway](https://railway.app), go to settings and copy the `connection url`. Paste it as `DATABASE_URL=<your-postgres-connection-url>` into your `env.server` file.  
 5. Run `wasp db migrate-dev`
 6. Run `wasp start`. This will install all dependencies and start the client and server for you :)
 7. Go to `localhost:3000` in your browser (your NodeJS server will be running on port `3001`)
-8. Install the Wasp extension for VSCode to get the best DX
-9. Check the files for comments containing specific instructions
-10. Enjoy and Have fun. When you create an App with this template, be kind and let me know by tagging me on twitter [@hot_town](https://twitter.com/hot_town)
+8. Install the [Wasp extension for VSCode](https://marketplace.visualstudio.com/items?itemName=wasp-lang.wasp) to get the best DX
+9. Check the files for comments containing specific instructions.
+10. If you would like to test Stripe Webhooks locally, download the [Stripe CLI](https://stripe.com/docs/stripe-cli#install). This [YouTube video](https://youtu.be/Psq5N5C-FGo?si=CzRy3kizF20RFiSK&t=1041) does a great job explaining how to test webhooks locally with the Stripe CLI (watch until 27:00).
+11. Enjoy and Have fun. When you create an App with this template, be kind and let me know by tagging me on twitter [@hot_town](https://twitter.com/hot_town)
 
 ## Deploying it quickly to Fly.io
 
