@@ -2,7 +2,7 @@ import { emailSender } from '@wasp/email/index.js'
 
 import type { Email } from '@wasp/email/core/types';
 import type { User } from '@wasp/entities'
-import type { Context } from '../types';
+import type { EmailChecker } from '@wasp/jobs/emailChecker'
 
 const emailToSend: Email = {
   to: '',
@@ -22,7 +22,7 @@ const emailToSend: Email = {
 };
 
 //  you could use this function to send newsletters, expiration notices, etc.
-export async function checkAndQueueEmails(_args: unknown, context: Context) {
+export const checkAndQueueEmails: EmailChecker<never, void> = async (_args , context) => {
 
   // e.g. you could send an offer email 2 weeks before their subscription expires
   const currentDate = new Date();
