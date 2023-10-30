@@ -45,7 +45,7 @@ Test it out here: [https://saas-template-gpt-client.fly.dev/](https://saas-templ
 4. Run `wasp deploy fly cmd secrets set ENV_VAR_EXAMPLE=<your-env-var> --context=server`, making sure to fill in all of your env vars
 5. Run `wasp deploy fly create-db mia`
 6. Run `wasp deploy fly deploy`
-7. make sure you've updated your Stripe webhook URL in your [Stripe dashboard](https://dashboard.stripe.com/) to point to your Fly app's URL 
+7. Make sure you've updated your Stripe webhook URL in your [Stripe dashboard](https://dashboard.stripe.com/) to point to your Fly app's URL 
 8. Also make sure you've updated your [Google Auth callback URL](https://wasp-lang.dev/docs/integrations/google#google-auth) to point to your Fly app's URL 
 
 You can also see the guides for deploying manually to Fly, Railway, and Netlify [here](https://wasp-lang.dev/docs/deploying).
