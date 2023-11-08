@@ -1,5 +1,5 @@
 
-import logo from './static/logo.png'
+
 import { Disclosure } from '@headlessui/react';
 import { AiOutlineBars, AiOutlineClose, AiOutlineUser } from 'react-icons/ai';
 import useAuth from '@wasp/auth/useAuth';
