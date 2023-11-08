@@ -56,7 +56,7 @@ app SaaSTemplate {
     ("@tailwindcss/forms", "^0.5.3"),
     ("@tailwindcss/typography", "^0.5.7"),
     ("react-hook-form", "7.43.1"),
-    ("react-icons", "4.8.0"),
+    ("react-icons", "4.11.0"),
     ("request-ip", "3.3.0"),
     ("@types/request-ip", "0.0.37"),
     ("node-fetch", "3.3.0"),
@@ -115,6 +115,11 @@ psl=}
 route RootRoute { path: "/", to: MainPage }
 page MainPage {
   component: import Main from "@client/MainPage"
+}
+
+route LandingPageRoute { path: "/landing-page", to: LandingPage }
+page LandingPage {
+  component: import LandingPage from "@client/LandingPage"
 }
 
 route LoginRoute { path: "/login", to: LoginPage }
