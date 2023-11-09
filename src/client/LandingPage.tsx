@@ -6,7 +6,9 @@ import { MdPayments } from 'react-icons/md';
 import { HiDocumentText } from 'react-icons/hi';
 import { PiMagicWandFill } from 'react-icons/pi';
 import { HiBars3 } from 'react-icons/hi2';
+import { BiLogIn } from 'react-icons/bi';
 import logo from './static/logo.png';
+import daBoi from './static/magic-app-gen-logo.png';
 
 const navigation = [
   { name: 'Product', href: '#' },
@@ -18,30 +20,43 @@ const features = [
   {
     name: 'Auto-magic Auth',
     description:
-      'Not only is Auth built-in, you can integrate Google, GitHub, Email Verified Login, and more with just a few lines of code, thanks to the power of Wasp',
-    icon: FiKey,
+      'Not only is Auth pre-configured, but you can integrate more providers with just a few lines of code, thanks to the power of Wasp',
+    // icon: FiKey,
+    icon: '🔐',
+  },
+  {
+    name: 'Full-stack Type Safety',
+    description:
+      'Because Wasp understands your app, it provides end-to-end type safety out of the box. Nothing to configure!',
+    // icon: FiKey,
+    icon: '🥞',
   },
   {
     name: 'Stripe Integration',
     description:
       "No SaaS is complete without payments. That's why subscriptions and there necessary webhooks are built-in!",
-    icon: MdPayments,
+    // icon: MdPayments,
+    icon: '💸',
   },
-  {
-    name: 'Complete Documentation & Support',
-    description:
-      "We don't leave you hanging. We have a complete documentation site, and a Discord community to help you get along the way.",
-    icon: HiDocumentText,
-  },
-  {
-    name: 'OpenAI ChatGPT API Integration',
-    description: 'Technology is moving fast, and so are new ideas. Profit from yours quickly.',
-    icon: PiMagicWandFill,
-  },
+  // {
+  //   name: 'OpenAI ChatGPT API Integration',
+  //   description: 'Technology is moving fast, and so are new ideas. Profit from yours quickly.',
+  //   icon: '🧙‍♂️',
+  // },
   {
     name: 'No 3rd Party Services',
     description: 'You own your data, and you own your code. No expensive 3rd party services to worry about.',
-    icon: PiMagicWandFill,
+    icon: '🚫',
+  },
+  {
+    name: 'Deploy Anywhere',
+    description: 'You own all your code, so deploy it wherever you want!',
+    icon: '🚀 ',
+  },
+  {
+    name: 'Complete Documentation & Support',
+    description: "We don't leave you hanging. We have tons of docs, and a Discord community to help!",
+    icon: '🫂',
   },
 ];
 const tiers = [
@@ -150,14 +165,21 @@ export default function LandingPage() {
           </div>
           <div className='hidden lg:flex lg:gap-x-12'>
             {navigation.map((item) => (
-              <a key={item.name} href={item.href} className='text-sm font-semibold leading-6 text-gray-900'>
+              <a
+                key={item.name}
+                href={item.href}
+                className='text-sm font-semibold leading-6 text-gray-900 hover:text-yellow-500'
+              >
                 {item.name}
               </a>
             ))}
           </div>
-          <div className='hidden lg:flex lg:flex-1 lg:justify-end'>
-            <a href='#' className='text-sm font-semibold leading-6 text-gray-900'>
-              Log in <span aria-hidden='true'>&rarr;</span>
+          <div className='hidden lg:flex lg:flex-1 lg:justify-end lg:align-end'>
+            <a
+              href='#'
+              className='flex justify-end items-center text-sm  font-semibold leading-6 text-gray-900 hover:text-yellow-500'
+            >
+              Log in <BiLogIn size='1.1rem' className='ml-1 mt-[0.1rem]' />
             </a>
           </div>
         </nav>
@@ -211,38 +233,51 @@ export default function LandingPage() {
 
       <main className='isolate'>
         {/* Hero section */}
-        <div className='relative pt-14'>
-          <div className='absolute inset-x-0 top-80 -z-10 transform-gpu overflow-hidden blur-3xl' aria-hidden='true'>
+        <div className='relative pt-14 w-full '>
+          <div
+            className='absolute top-0 right-0 -z-10 transform-gpu overflow-hidden w-full blur-3xl sm:top-0 '
+            aria-hidden='true'
+          >
             <div
-              className='relative left-1/2 aspect-[1155/678] w-[36.125rem] -translate-x-3/4 bg-gradient-to-tr from-amber-300 to-yellow-200 opacity-30 sm:left-1/2 sm:w-[72.1875rem]'
+              className='aspect-[1020/880] w-[55rem] flex-none bg-gradient-to-tr from-amber-400 to-purple-300 opacity-40 sm:right-1/4 sm:translate-x-1/2'
               style={{
-                clipPath: 'ellipse(50% 25% at 25% 50%)',
+                clipPath: 'polygon(80% 20%, 90% 55%, 50% 100%, 70% 30%, 20% 50%, 50% 0)',
+
+                pointerEvents: 'none' /* This ensures the element does not block interaction with elements below it */,
+              }}
+            />
+          </div>
+          <div
+            className='absolute inset-x-0 top-[calc(100%-40rem)] sm:top-[calc(100%-65rem)] -z-10 transform-gpu overflow-hidden blur-3xl'
+            aria-hidden='true'
+          >
+            <div
+              className='relative aspect-[1020/880] sm:-left-3/4 sm:translate-x-1/4 bg-gradient-to-br from-amber-400 to-purple-300  opacity-50 w-[72.1875rem]'
+              style={{
+                clipPath: 'ellipse(80% 30% at 80% 50%)',
               }}
             />
           </div>
           <div className='py-24 sm:py-32'>
-            <div className='mx-auto max-w-7xl px-6 lg:px-8'>
+            <div className='mx-auto max-w-8xl px-6 lg:px-8'>
               <div className='mx-auto max-w-2xl text-center'>
                 <h1 className='text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl'>
                   The <span className='italic'>free</span> SaaS template with superpowers
                 </h1>
                 <p className='mt-6 text-lg leading-8 text-gray-600'>
-                  Get all the features of a modern SaaS app, in a ready-made teplate. Built on top of Wasp, the only
+                  Get all the features of a modern SaaS app, in a ready-made template. Built on top of Wasp, the only
                   full-stack React + NodeJS framework that builds features for you.
                 </p>
                 <div className='mt-10 flex items-center justify-center gap-x-6'>
                   <a
                     href='#'
-                    className='rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white hover:text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+                    className='rounded-md bg-yellow-500 px-3.5 py-2.5 text-sm font-semibold text-white hover:text-white shadow-sm hover:bg-yellow-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
                   >
-                    Get started
-                  </a>
-                  <a href='#' className='text-sm font-semibold leading-6 text-gray-900'>
                     Learn more <span aria-hidden='true'>→</span>
                   </a>
                 </div>
               </div>
-              <div className='mt-16 flow-root sm:mt-24 '>
+              <div className='mt-14 flow-root sm:mt-14 '>
                 <div className='-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4'>
                   <img
                     src='https://coverlettergpt.xyz/homepage.png'
@@ -255,17 +290,17 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-          <div
-            className='absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]'
+          {/* <div
+            className='absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-45rem)]'
             aria-hidden='true'
           >
             <div
-              className='relative left-1/2 aspect-[1155/678] w-[36.125rem] -translate-x-1/4 bg-gradient-to-tr from-amber-300 to-yellow-200 opacity-30 sm:left-1/2 sm:w-[72.1875rem]'
+              className='relative aspect-[1020/880] left-3/4 -translate-x-1/4 bg-gradient-to-tr from-yellow-400 to-amber-300 opacity-50 w-[72.1875rem]'
               style={{
-                clipPath: 'ellipse(50% 25% at 75% 40%)',
+                clipPath: 'ellipse(80% 25% at 30% 40%)',
               }}
             />
-          </div>
+          </div> */}
           {/* <div
             className='absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]'
             aria-hidden='true'
@@ -279,69 +314,66 @@ export default function LandingPage() {
             />
           </div> */}
         </div>
+        {/* 
+        <div className=' flex justify-center'>
+          <p className='relative px-5 py-3 text-sm text-gray-600 rounded-xl ring-[1.5px] ring-gray-200'>
+            <span className='hidden md:inline'>
+              Transistor saves up to $40,000 per year, per employee by working with us.
+            </span>
+            <a href='#' className='font-semibold text-indigo-600'>
+              <span className='absolute inset-0' aria-hidden='true' /> Read our case study{' '}
+              <span aria-hidden='true'>&rarr;</span>
+            </a>
+          </p>
+        </div> */}
 
-        {/* Logo cloud */}
-        <div className='mx-auto max-w-7xl px-6 lg:px-8'>
+        <div className='mt-12 mx-auto max-w-7xl px-6 lg:px-8 flex flex-col items-between gap-y-6'>
+          <h2 className='text-center font-semibold tracking-wide  leading-7 text-gray-500'>Built and Ships with</h2>
+
           <div className='mx-auto grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-12 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10 sm:gap-y-14 lg:mx-0 lg:max-w-none lg:grid-cols-5'>
             <img
-              className='col-span-2 max-h-12 w-full object-contain lg:col-span-1'
-              src='https://tailwindui.com/img/logos/158x48/transistor-logo-gray-900.svg'
-              alt='Transistor'
-              width={158}
+              className='col-span-2 max-h-12 w-full object-contain grayscale opacity-100 lg:col-span-1'
+              src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/512px-React-icon.svg.png'
+              alt='React'
               height={48}
             />
             <img
-              className='col-span-2 max-h-12 w-full object-contain lg:col-span-1'
-              src='https://tailwindui.com/img/logos/158x48/reform-logo-gray-900.svg'
-              alt='Reform'
-              width={158}
+              className='col-span-2 max-h-12 w-full object-contain grayscale opacity-70 lg:col-span-1'
+              src='https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Node.js_logo.svg/590px-Node.js_logo.svg.png'
+              alt='NodeJS'
               height={48}
             />
             <img
-              className='col-span-2 max-h-12 w-full object-contain lg:col-span-1'
-              src='https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg'
-              alt='Tuple'
-              width={158}
+              className='col-span-2 col-start-2 max-h-12 w-full object-contain grayscale opacity-80 sm:col-start-auto lg:col-span-1'
+              src={logo}
+              alt='Wasp'
               height={48}
             />
             <img
-              className='col-span-2 max-h-12 w-full object-contain sm:col-start-2 lg:col-span-1'
-              src='https://tailwindui.com/img/logos/158x48/savvycal-logo-gray-900.svg'
-              alt='SavvyCal'
-              width={158}
+              className='col-span-2 max-h-12 w-full object-contain grayscale lg:col-span-1'
+              src='https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Tailwind_CSS_Logo.svg/512px-Tailwind_CSS_Logo.svg.png'
+              alt='Tailwind CSS'
               height={48}
             />
             <img
-              className='col-span-2 col-start-2 max-h-12 w-full object-contain sm:col-start-auto lg:col-span-1'
-              src='https://tailwindui.com/img/logos/158x48/statamic-logo-gray-900.svg'
-              alt='Statamic'
-              width={158}
+              className='col-span-2 max-h-12 w-full object-contain grayscale opacity-80 sm:col-start-2 lg:col-span-1'
+              src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Stripe_Logo%2C_revised_2016.svg/512px-Stripe_Logo%2C_revised_2016.svg.png'
+              alt='Stripe'
               height={48}
             />
-          </div>
-          <div className='mt-16 flex justify-center'>
-            <p className='relative rounded-full px-4 py-1.5 text-sm leading-6 text-gray-600 ring-1 ring-inset ring-gray-900/10 hover:ring-gray-900/20'>
-              <span className='hidden md:inline'>
-                Transistor saves up to $40,000 per year, per employee by working with us.
-              </span>
-              <a href='#' className='font-semibold text-indigo-600'>
-                <span className='absolute inset-0' aria-hidden='true' /> Read our case study{' '}
-                <span aria-hidden='true'>&rarr;</span>
-              </a>
-            </p>
           </div>
         </div>
 
         {/* Feature section */}
-        <div className='mx-auto mt-32 max-w-7xl px-6 sm:mt-56 lg:px-8'>
+        <div className='mx-auto mt-48 max-w-7xl px-6 lg:px-8'>
           <div className='mx-auto max-w-2xl lg:text-center'>
-            <h2 className='text-base font-semibold leading-7 text-indigo-600'>Deploy faster</h2>
-            <p className='mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl'>
-              Everything you need to deploy your app
+            <p className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl'>
+              All the important <span className='text-yellow-500'>stuff</span>
             </p>
             <p className='mt-6 text-lg leading-8 text-gray-600'>
-              Quis tellus eget adipiscing convallis sit sit eget aliquet quis. Suspendisse eget egestas a elementum
-              pulvinar et feugiat blandit at. In mi viverra elit nunc.
+              We've pre-built the important stuff.
+              <br /> Wasp does all the boring stuff.
+              <br /> You get all the credit.
             </p>
           </div>
           <div className='mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl'>
@@ -349,8 +381,9 @@ export default function LandingPage() {
               {features.map((feature) => (
                 <div key={feature.name} className='relative pl-16'>
                   <dt className='text-base font-semibold leading-7 text-gray-900'>
-                    <div className='absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600'>
-                      <feature.icon className='h-6 w-6 text-white' aria-hidden='true' />
+                    <div className='absolute left-0 top-0 flex h-10 w-10 items-center justify-center border border-yellow-400 bg-yellow-100/50 rounded-lg'>
+                      {/* <feature.icon className='h-6 w-6 text-white' aria-hidden='true' /> */}
+                      <div className='text-2xl'>{feature.icon}</div>
                     </div>
                     {feature.name}
                   </dt>
@@ -363,49 +396,41 @@ export default function LandingPage() {
 
         {/* Testimonial section */}
         <div className='mx-auto mt-32 max-w-7xl sm:mt-56 sm:px-6 lg:px-8'>
-          <div className='relative overflow-hidden bg-gray-900 px-6 py-20 shadow-xl sm:rounded-3xl sm:px-10 sm:py-24 md:px-12 lg:px-20'>
-            <img
-              className='absolute inset-0 h-full w-full object-cover brightness-150 saturate-0'
-              src='https://images.unsplash.com/photo-1601381718415-a05fb0a261f3?ixid=MXwxMjA3fDB8MHxwcm9maWxlLXBhZ2V8ODl8fHxlbnwwfHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1216&q=80'
-              alt=''
-            />
-            <div className='absolute inset-0 bg-gray-900/90 mix-blend-multiply' />
-            <div className='absolute -left-80 -top-56 transform-gpu blur-3xl' aria-hidden='true'>
-              <div
-                className='aspect-[1097/845] w-[68.5625rem] bg-gradient-to-r from-[#ff4694] to-[#776fff] opacity-[0.45]'
-                style={{
-                  clipPath:
-                    'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
-                }}
-              />
-            </div>
-            <div
-              className='hidden md:absolute md:bottom-16 md:left-[50rem] md:block md:transform-gpu md:blur-3xl'
-              aria-hidden='true'
-            >
-              <div
-                className='aspect-[1097/845] w-[68.5625rem] bg-gradient-to-r from-[#ff4694] to-[#776fff] opacity-25'
-                style={{
-                  clipPath:
-                    'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
-                }}
-              />
-            </div>
-            <div className='relative mx-auto max-w-2xl lg:mx-0'>
-              <img className='h-12 w-auto' src='https://tailwindui.com/img/logos/workcation-logo-white.svg' alt='' />
-              <figure>
-                <blockquote className='mt-6 text-lg font-semibold text-white sm:text-xl sm:leading-8'>
-                  <p>
-                    “Amet amet eget scelerisque tellus sit neque faucibus non eleifend. Integer eu praesent at a. Ornare
-                    arcu gravida natoque erat et cursus tortor consequat at. Vulputate gravida sociis enim nullam
-                    ultricies habitant malesuada lorem ac.”
-                  </p>
-                </blockquote>
-                <figcaption className='mt-6 text-base text-white'>
-                  <div className='font-semibold'>Judith Black</div>
-                  <div className='mt-1'>CEO of Tuple</div>
-                </figcaption>
-              </figure>
+          <div className='-m-2 rounded-xl bg-yellow-400/20 p-1 lg:ring-1 lg:ring-inset lg:ring-yellow-500/50 lg:-m-4 lg:rounded-2xl lg:p-4'>
+            <div className='relative overflow-hidden bg-gray-900 px-6 py-20 shadow-xl sm:rounded-xl sm:px-10 sm:py-16 md:px-12 lg:px-20'>
+              <h2 className='text-left font-semibold tracking-wide  leading-7 text-gray-500'>Testimonials</h2>
+              <div className='relative flex gap-12 w-full mt-6 z-10 justify-between lg:mx-0'>
+                <figure className='flex-1 p-8 rounded-xl bg-gray-500/5 '>
+                  <blockquote className='text-lg font-semibold text-white sm:text-xl sm:leading-8'>
+                    <p>“My cats love it!”</p>
+                  </blockquote>
+                  <figcaption className=' mt-6 text-base text-white'>
+                    <div className='font-semibold'>Fecony</div>
+                    <div className='mt-1'>Wasp Expert</div>
+                  </figcaption>
+                </figure>
+                <figure className='flex-1 p-8 rounded-xl bg-gray-500/5 '>
+                  <blockquote className='text-lg font-semibold text-white sm:text-xl sm:leading-8'>
+                    <p>“I've never SaaSed so much in my life. WOO!”</p>
+                  </blockquote>
+                  <figcaption className=' mt-6 text-base text-white'>
+                    <div className='font-semibold'>Vince</div>
+                    <div className='mt-1'>Padawan Hacker</div>
+                  </figcaption>
+                </figure>
+                <figure className='flex-1 p-8 rounded-xl bg-gray-500/5 '>
+                  <blockquote className='text-lg font-semibold text-white sm:text-xl sm:leading-8'>
+                    <p>“I don't even know how to code. I'm just a plushie.”</p>
+                  </blockquote>
+                  <figcaption className=' mt-6 text-base text-white'>
+                    <div className='font-semibold'>Da Boi</div>
+                    <div className='mt-1'>Wasp's Unofficial Mascot</div>
+                  </figcaption>
+                </figure>
+              </div>
+              <div className='absolute top-10 right-0 sm:right-10 w-[10%] grayscale-[35%]'>
+                <img src={daBoi} />
+              </div>
             </div>
           </div>
         </div>
@@ -414,42 +439,39 @@ export default function LandingPage() {
         <div className='py-24 sm:pt-48'>
           <div className='mx-auto max-w-7xl px-6 lg:px-8'>
             <div className='mx-auto max-w-4xl text-center'>
-              <h2 className='text-base font-semibold leading-7 text-indigo-600'>Pricing</h2>
-              <p className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl'>
-                Pricing plans for teams of&nbsp;all&nbsp;sizes
-              </p>
+              <h2 className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl'>
+                Pick your <span className='text-yellow-500'>pricing</span>
+              </h2>
             </div>
             <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600'>
-              Distinctio et nulla eum soluta et neque labore quibusdam. Saepe et quasi iusto modi velit ut non voluptas
-              in. Explicabo id ut laborum.
+              Secure Stripe webhooks, and a complete subscription management system are built-in.
             </p>
-            <div className='isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3'>
-              {tiers.map((tier, tierIdx) => (
+            <div className='isolate flex gap-4 mx-auto mt-10 max-w-md sm:mt-212 lg:mx-0 lg:max-w-none'>
+              {tiers.map((tier) => (
                 <div
                   key={tier.id}
-                  className={classNames(
-                    tier.mostPopular ? 'lg:z-10 lg:rounded-b-none' : 'lg:mt-8',
-                    tierIdx === 0 ? 'lg:rounded-r-none' : '',
-                    tierIdx === tiers.length - 1 ? 'lg:rounded-l-none' : '',
-                    'flex flex-col justify-between rounded-3xl bg-white p-8 ring-1 ring-gray-200 xl:p-10'
-                  )}
+                  className={`relative flex flex-col ${
+                    tier.mostPopular ? 'flex-2 ring-2' : 'flex-1 ring-1'
+                  } lg:mt-8 justify-between rounded-3xl ring-gray-200 overflow-hidden  p-8 xl:p-10`}
                 >
+                  {tier.mostPopular && (
+                    <div
+                      className='absolute top-0 right-0 -z-10 w-full h-full transform-gpu blur-3xl'
+                      aria-hidden='true'
+                    >
+                      <div
+                        className='absolute w-full h-full bg-gradient-to-br from-amber-400 to-purple-300 opacity-30'
+                        style={{
+                          clipPath: 'circle(670% at 50% 50%)',
+                        }}
+                      />
+                    </div>
+                  )}
                   <div>
                     <div className='flex items-center justify-between gap-x-4'>
-                      <h3
-                        id={tier.id}
-                        className={classNames(
-                          tier.mostPopular ? 'text-indigo-600' : 'text-gray-900',
-                          'text-lg font-semibold leading-8'
-                        )}
-                      >
+                      <h3 id={tier.id} className='text-gray-900 text-lg font-semibold leading-8'>
                         {tier.name}
                       </h3>
-                      {tier.mostPopular ? (
-                        <p className='rounded-full bg-indigo-600/10 px-2.5 py-1 text-xs font-semibold leading-5 text-indigo-600'>
-                          Most popular
-                        </p>
-                      ) : null}
                     </div>
                     <p className='mt-4 text-sm leading-6 text-gray-600'>{tier.description}</p>
                     <p className='mt-6 flex items-baseline gap-x-1'>
@@ -459,7 +481,7 @@ export default function LandingPage() {
                     <ul role='list' className='mt-8 space-y-3 text-sm leading-6 text-gray-600'>
                       {tier.features.map((feature) => (
                         <li key={feature} className='flex gap-x-3'>
-                          <AiFillCheckCircle className='h-6 w-5 flex-none text-indigo-600' aria-hidden='true' />
+                          <AiFillCheckCircle className='h-6 w-5 flex-none text-purple-300' aria-hidden='true' />
                           {feature}
                         </li>
                       ))}
@@ -470,7 +492,7 @@ export default function LandingPage() {
                     aria-describedby={tier.id}
                     className={classNames(
                       tier.mostPopular
-                        ? 'bg-indigo-600 text-white shadow-sm hover:bg-indigo-500'
+                        ? 'bg-yellow-500 text-white shadow-sm hover:bg-indigo-500'
                         : 'text-indigo-600 ring-1 ring-inset ring-indigo-200 hover:ring-indigo-300',
                       'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
                     )}
