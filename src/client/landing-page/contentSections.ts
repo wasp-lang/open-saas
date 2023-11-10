@@ -1,8 +1,8 @@
 export const navigation = [
   { name: 'Features', href: '#features' },
   { name: 'Pricing', href: '#pricing' },
-  { name: 'Documentation', href: '#documentation' },
-  { name: 'Blog', href: '#blog' },
+  { name: 'Documentation', href: 'https://saas-template.gitbook.io/test' },
+  { name: 'Blog', href: 'https://saas-template.gitbook.io/posts/' },
 ];
 export const features = [
   {
