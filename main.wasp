@@ -119,7 +119,7 @@ page MainPage {
 
 route LandingPageRoute { path: "/landing-page", to: LandingPage }
 page LandingPage {
-  component: import LandingPage from "@client/LandingPage"
+  component: import LandingPage from "@client/landing-page/LandingPage"
 }
 
 route LoginRoute { path: "/login", to: LoginPage }
