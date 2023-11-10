@@ -3,6 +3,7 @@ import { Dialog } from '@headlessui/react';
 import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai';
 import { HiBars3 } from 'react-icons/hi2';
 import { BiLogIn } from 'react-icons/bi';
+import { CgProfile } from 'react-icons/cg';
 import logo from '../static/logo.png';
 import daBoi from '../static/magic-app-gen-logo.png';
 import { features, navigation, tiers, faqs, footerNavigation } from './contentSections';
@@ -46,10 +47,19 @@ export default function LandingPage() {
           </div>
           <div className='hidden lg:flex lg:flex-1 lg:justify-end lg:align-end'>
             <a
-              href='#'
+              href={!user ? '/login' : '/account'}
               className='flex justify-end items-center text-sm  font-semibold leading-6 text-gray-900 hover:text-yellow-500'
             >
-              Log in <BiLogIn size='1.1rem' className='ml-1 mt-[0.1rem]' />
+              {!user ? (
+                <>
+                  Log in <BiLogIn size='1.1rem' className='ml-1 mt-[0.1rem]' />
+                </>
+              ) : (
+                <>
+                  {user.email?.split('@')[0]}
+                  <CgProfile size='1.1rem' className='ml-1 mt-[0.1rem]' />
+                </>
+              )}
             </a>
           </div>
         </nav>
@@ -182,49 +192,39 @@ export default function LandingPage() {
             />
           </div> */}
         </div>
-        {/* 
-        <div className=' flex justify-center'>
-          <p className='relative px-5 py-3 text-sm text-gray-600 rounded-xl ring-[1.5px] ring-gray-200'>
-            <span className='hidden md:inline'>
-              Transistor saves up to $40,000 per year, per employee by working with us.
-            </span>
-            <a href='#' className='font-semibold text-indigo-600'>
-              <span className='absolute inset-0' aria-hidden='true' /> Read our case study{' '}
-              <span aria-hidden='true'>&rarr;</span>
-            </a>
-          </p>
-        </div> */}
+  
+        {/* Logo cloud section */}
 
         <div className='mt-12 mx-auto max-w-7xl px-6 lg:px-8 flex flex-col items-between gap-y-6'>
-          <h2 className='text-center font-semibold tracking-wide  leading-7 text-gray-500'>Built and Ships with</h2>
+          <h2 className='mb-6 text-center font-semibold tracking-wide text-gray-500'>Built and Ships with</h2>
 
-          <div className='mx-auto grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-12 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10 sm:gap-y-14 lg:mx-0 lg:max-w-none lg:grid-cols-5'>
+          <div className='mx-auto grid max-w-lg grid-cols-2 items-center gap-x-8 gap-y-12 sm:max-w-xl md:grid-cols-5 sm:gap-x-10 sm:gap-y-14 lg:mx-0 lg:max-w-none lg:grid-cols-5'>
             <img
-              className='col-span-2 max-h-12 w-full object-contain grayscale opacity-100 lg:col-span-1'
+              className=' col-span-1 max-h-12 w-full object-contain grayscale opacity-100'
               src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/512px-React-icon.svg.png'
               alt='React'
               height={48}
             />
             <img
-              className='col-span-2 max-h-12 w-full object-contain grayscale opacity-70 lg:col-span-1'
+              className=' col-span-1 max-h-12 w-full object-contain grayscale opacity-70 '
               src='https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Node.js_logo.svg/590px-Node.js_logo.svg.png'
               alt='NodeJS'
               height={48}
             />
             <img
-              className='col-span-2 col-start-2 max-h-12 w-full object-contain grayscale opacity-80 sm:col-start-auto lg:col-span-1'
+              className='col-span-2 md:col-span-1 max-h-12 w-full object-contain grayscale opacity-80 '
               src={logo}
               alt='Wasp'
               height={48}
             />
             <img
-              className='col-span-2 max-h-12 w-full object-contain grayscale lg:col-span-1'
+              className=' col-span-1 max-h-12 w-full object-contain grayscale '
               src='https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Tailwind_CSS_Logo.svg/512px-Tailwind_CSS_Logo.svg.png'
               alt='Tailwind CSS'
               height={48}
             />
             <img
-              className='col-span-2 max-h-12 w-full object-contain grayscale opacity-80 sm:col-start-2 lg:col-span-1'
+              className=' col-span-1 max-h-12 w-full object-contain grayscale opacity-80 '
               src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Stripe_Logo%2C_revised_2016.svg/512px-Stripe_Logo%2C_revised_2016.svg.png'
               alt='Stripe'
               height={48}
@@ -234,7 +234,7 @@ export default function LandingPage() {
 
         {/* Feature section */}
         <div id='features' className='mx-auto mt-48 max-w-7xl px-6 lg:px-8'>
-          <div className='mx-auto max-w-2xl lg:text-center'>
+          <div className='mx-auto max-w-2xl text-center'>
             <p className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl'>
               All the important <span className='text-yellow-500'>stuff</span>
             </p>
@@ -264,10 +264,10 @@ export default function LandingPage() {
 
         {/* Testimonial section */}
         <div className='mx-auto mt-32 max-w-7xl sm:mt-56 sm:px-6 lg:px-8'>
-          <div className='-m-2 rounded-xl bg-yellow-400/20 p-1 lg:ring-1 lg:ring-inset lg:ring-yellow-500/50 lg:-m-4 lg:rounded-2xl lg:p-4'>
-            <div className='relative overflow-hidden bg-gray-900 px-6 py-20 shadow-xl sm:rounded-xl sm:px-10 sm:py-16 md:px-12 lg:px-20'>
+          <div className='relative sm:left-5 -m-2 rounded-xl bg-yellow-400/20 lg:ring-1 lg:ring-yellow-500/50 lg:-m-4 '>
+            <div className='relative sm:top-5 sm:right-5 bg-gray-900 px-8 py-20 shadow-xl sm:rounded-xl sm:px-10 sm:py-16 md:px-12 lg:px-20'>
               <h2 className='text-left font-semibold tracking-wide  leading-7 text-gray-500'>Testimonials</h2>
-              <div className='relative flex gap-12 w-full mt-6 z-10 justify-between lg:mx-0'>
+              <div className='relative flex flex-col lg:flex-row gap-12 w-full mt-6 z-10 justify-between lg:mx-0'>
                 <figure className='flex-1 p-8 rounded-xl bg-gray-500/5 '>
                   <blockquote className='text-lg font-semibold text-white sm:text-xl sm:leading-8'>
                     <p>“My cats love it!”</p>
@@ -279,11 +279,16 @@ export default function LandingPage() {
                 </figure>
                 <figure className='flex-1 p-8 rounded-xl bg-gray-500/5 '>
                   <blockquote className='text-lg font-semibold text-white sm:text-xl sm:leading-8'>
-                    <p>“I've never SaaSed so much in my life. WOO!”</p>
+                    <p>
+                      “I used Wasp to build and sell my AI-augmented SaaS app for marketplace vendors within two
+                      months...!”
+                    </p>
                   </blockquote>
                   <figcaption className=' mt-6 text-base text-white'>
-                    <div className='font-semibold'>Vince</div>
-                    <div className='mt-1'>Padawan Hacker</div>
+                    <a href='https://twitter.com/maksim36ua'>
+                      <div className='font-semibold hover:underline'>Maks</div>
+                      <div className='mt-1'>Senior Eng @ Red Hat</div>
+                    </a>
                   </figcaption>
                 </figure>
                 <figure className='flex-1 p-8 rounded-xl bg-gray-500/5 '>
@@ -296,7 +301,7 @@ export default function LandingPage() {
                   </figcaption>
                 </figure>
               </div>
-              <div className='absolute top-10 right-0 sm:right-10 w-[10%] grayscale-[35%]'>
+              <div className='absolute top-10 right-5 w-[20%] sm:right-10 sm:w-[10%] grayscale-[35%]'>
                 <img src={daBoi} />
               </div>
             </div>
