@@ -1,147 +1,17 @@
 import { useState } from 'react';
 import { Dialog } from '@headlessui/react';
 import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai';
-import { FiKey } from 'react-icons/fi';
-import { MdPayments } from 'react-icons/md';
-import { HiDocumentText } from 'react-icons/hi';
-import { PiMagicWandFill } from 'react-icons/pi';
 import { HiBars3 } from 'react-icons/hi2';
 import { BiLogIn } from 'react-icons/bi';
-import logo from './static/logo.png';
-import daBoi from './static/magic-app-gen-logo.png';
-
-const navigation = [
-  { name: 'Product', href: '#' },
-  { name: 'Features', href: '#' },
-  { name: 'Marketplace', href: '#' },
-  { name: 'Company', href: '#' },
-];
-const features = [
-  {
-    name: 'Auto-magic Auth',
-    description:
-      'Not only is Auth pre-configured, but you can integrate more providers with just a few lines of code, thanks to the power of Wasp',
-    // icon: FiKey,
-    icon: '🔐',
-  },
-  {
-    name: 'Full-stack Type Safety',
-    description:
-      'Because Wasp understands your app, it provides end-to-end type safety out of the box. Nothing to configure!',
-    // icon: FiKey,
-    icon: '🥞',
-  },
-  {
-    name: 'Stripe Integration',
-    description:
-      "No SaaS is complete without payments. That's why subscriptions and there necessary webhooks are built-in!",
-    // icon: MdPayments,
-    icon: '💸',
-  },
-  // {
-  //   name: 'OpenAI ChatGPT API Integration',
-  //   description: 'Technology is moving fast, and so are new ideas. Profit from yours quickly.',
-  //   icon: '🧙‍♂️',
-  // },
-  {
-    name: 'No 3rd Party Services',
-    description: 'You own your data, and you own your code. No expensive 3rd party services to worry about.',
-    icon: '🚫',
-  },
-  {
-    name: 'Deploy Anywhere',
-    description: 'You own all your code, so deploy it wherever you want!',
-    icon: '🚀 ',
-  },
-  {
-    name: 'Complete Documentation & Support',
-    description: "We don't leave you hanging. We have tons of docs, and a Discord community to help!",
-    icon: '🫂',
-  },
-];
-const tiers = [
-  {
-    name: 'Freelancer',
-    id: 'tier-freelancer',
-    href: '#',
-    priceMonthly: '$24',
-    description: 'The essentials to provide your best work for clients.',
-    features: ['5 products', 'Up to 1,000 subscribers', 'Basic analytics', '48-hour support response time'],
-    mostPopular: false,
-  },
-  {
-    name: 'Startup',
-    id: 'tier-startup',
-    href: '#',
-    priceMonthly: '$32',
-    description: 'A plan that scales with your rapidly growing business.',
-    features: [
-      '25 products',
-      'Up to 10,000 subscribers',
-      'Advanced analytics',
-      '24-hour support response time',
-      'Marketing automations',
-    ],
-    mostPopular: true,
-  },
-  {
-    name: 'Enterprise',
-    id: 'tier-enterprise',
-    href: '#',
-    priceMonthly: '$48',
-    description: 'Dedicated support and infrastructure for your company.',
-    features: [
-      'Unlimited products',
-      'Unlimited subscribers',
-      'Advanced analytics',
-      '1-hour, dedicated support response time',
-      'Marketing automations',
-    ],
-    mostPopular: false,
-  },
-];
-const faqs = [
-  {
-    id: 1,
-    question: "What's the best thing about Switzerland?",
-    answer:
-      "I don't know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
-  },
-  // More questions...
-];
-const footerNavigation = {
-  solutions: [
-    { name: 'Hosting', href: '#' },
-    { name: 'Data Services', href: '#' },
-    { name: 'Uptime Monitoring', href: '#' },
-    { name: 'Enterprise Services', href: '#' },
-  ],
-  support: [
-    { name: 'Pricing', href: '#' },
-    { name: 'Documentation', href: '#' },
-    { name: 'Guides', href: '#' },
-    { name: 'API Reference', href: '#' },
-  ],
-  company: [
-    { name: 'About', href: '#' },
-    { name: 'Blog', href: '#' },
-    { name: 'Jobs', href: '#' },
-    { name: 'Press', href: '#' },
-    { name: 'Partners', href: '#' },
-  ],
-  legal: [
-    { name: 'Claim', href: '#' },
-    { name: 'Privacy', href: '#' },
-    { name: 'Terms', href: '#' },
-  ],
-};
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ');
-}
+import logo from '../static/logo.png';
+import daBoi from '../static/magic-app-gen-logo.png';
+import { features, navigation, tiers, faqs, footerNavigation } from './contentSections';
+import useAuth from '@wasp/auth/useAuth';
 
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const { data: user } = useAuth();
 
   return (
     <div className='bg-white'>
@@ -242,8 +112,6 @@ export default function LandingPage() {
               className='aspect-[1020/880] w-[55rem] flex-none bg-gradient-to-tr from-amber-400 to-purple-300 opacity-40 sm:right-1/4 sm:translate-x-1/2'
               style={{
                 clipPath: 'polygon(80% 20%, 90% 55%, 50% 100%, 70% 30%, 20% 50%, 50% 0)',
-
-                pointerEvents: 'none' /* This ensures the element does not block interaction with elements below it */,
               }}
             />
           </div>
@@ -270,10 +138,10 @@ export default function LandingPage() {
                 </p>
                 <div className='mt-10 flex items-center justify-center gap-x-6'>
                   <a
-                    href='#'
+                    href='https://github.com/wasp-lang/saas-template-gpt'
                     className='rounded-md bg-yellow-500 px-3.5 py-2.5 text-sm font-semibold text-white hover:text-white shadow-sm hover:bg-yellow-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
                   >
-                    Learn more <span aria-hidden='true'>→</span>
+                    Get Started <span aria-hidden='true'>→</span>
                   </a>
                 </div>
               </div>
@@ -365,7 +233,7 @@ export default function LandingPage() {
         </div>
 
         {/* Feature section */}
-        <div className='mx-auto mt-48 max-w-7xl px-6 lg:px-8'>
+        <div id='features' className='mx-auto mt-48 max-w-7xl px-6 lg:px-8'>
           <div className='mx-auto max-w-2xl lg:text-center'>
             <p className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl'>
               All the important <span className='text-yellow-500'>stuff</span>
@@ -438,23 +306,24 @@ export default function LandingPage() {
         {/* Pricing section */}
         <div className='py-24 sm:pt-48'>
           <div className='mx-auto max-w-7xl px-6 lg:px-8'>
-            <div className='mx-auto max-w-4xl text-center'>
+            <div id='pricing' className='mx-auto max-w-4xl text-center'>
               <h2 className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl'>
                 Pick your <span className='text-yellow-500'>pricing</span>
               </h2>
             </div>
             <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600'>
-              Secure Stripe webhooks, and a complete subscription management system are built-in.
+              Secure Stripe webhooks, and a complete subscription management system are built-in. Just add your Stripe
+              Product IDs and you're good to go!
             </p>
-            <div className='isolate flex gap-4 mx-auto mt-10 max-w-md sm:mt-212 lg:mx-0 lg:max-w-none'>
+            <div className='isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 lg:gap-x-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3'>
               {tiers.map((tier) => (
                 <div
                   key={tier.id}
-                  className={`relative flex flex-col ${
-                    tier.mostPopular ? 'flex-2 ring-2' : 'flex-1 ring-1'
-                  } lg:mt-8 justify-between rounded-3xl ring-gray-200 overflow-hidden  p-8 xl:p-10`}
+                  className={`relative flex flex-col  ${
+                    tier.bestDeal ? 'ring-2' : 'ring-1 lg:mt-8'
+                  } grow justify-between rounded-3xl ring-gray-200 overflow-hidden p-8 xl:p-10`}
                 >
-                  {tier.mostPopular && (
+                  {tier.bestDeal && (
                     <div
                       className='absolute top-0 right-0 -z-10 w-full h-full transform-gpu blur-3xl'
                       aria-hidden='true'
@@ -467,7 +336,7 @@ export default function LandingPage() {
                       />
                     </div>
                   )}
-                  <div>
+                  <div className='mb-8'>
                     <div className='flex items-center justify-between gap-x-4'>
                       <h3 id={tier.id} className='text-gray-900 text-lg font-semibold leading-8'>
                         {tier.name}
@@ -481,23 +350,25 @@ export default function LandingPage() {
                     <ul role='list' className='mt-8 space-y-3 text-sm leading-6 text-gray-600'>
                       {tier.features.map((feature) => (
                         <li key={feature} className='flex gap-x-3'>
-                          <AiFillCheckCircle className='h-6 w-5 flex-none text-purple-300' aria-hidden='true' />
+                          <AiFillCheckCircle className='h-6 w-5 flex-none text-yellow-500' aria-hidden='true' />
                           {feature}
                         </li>
                       ))}
                     </ul>
                   </div>
                   <a
-                    href={tier.href}
                     aria-describedby={tier.id}
-                    className={classNames(
-                      tier.mostPopular
-                        ? 'bg-yellow-500 text-white shadow-sm hover:bg-indigo-500'
-                        : 'text-indigo-600 ring-1 ring-inset ring-indigo-200 hover:ring-indigo-300',
-                      'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
-                    )}
+                    href={!!user ? '/account' : '/login'}
+                    className={`
+                      ${
+                        tier.bestDeal
+                          ? 'bg-yellow-500 text-white hover:text-white shadow-sm hover:bg-yellow-400'
+                          : 'text-gray-600  ring-1 ring-inset ring-purple-200 hover:ring-purple-400'
+                      }
+                      'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400'
+                    `}
                   >
-                    Buy plan
+                    {!!user ? 'Buy plan' : 'Log in to buy plan'}
                   </a>
                 </div>
               ))}
@@ -546,13 +417,10 @@ export default function LandingPage() {
             </p>
             <div className='mt-10 flex items-center justify-center gap-x-6'>
               <a
-                href='#'
+                href='https://github.com/wasp-lang/saas-template-gpt'
                 className='rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
               >
                 Get started
-              </a>
-              <a href='#' className='text-sm font-semibold leading-6 text-gray-900'>
-                Learn more <span aria-hidden='true'>→</span>
               </a>
             </div>
           </div>
