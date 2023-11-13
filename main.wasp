@@ -62,6 +62,11 @@ app SaaSTemplate {
     ("node-fetch", "3.3.0"),
     ("react-hook-form", "^7.45.4"),
     ("stripe", "11.15.0"),
+    ("react-hot-toast", "^2.4.1"),
+    ("react-apexcharts", "^1.4.1"),
+    ("apexcharts", "^3.41.0"),
+    ("headlessui", "^0.0.0"),
+
   ],
 }
 
@@ -73,9 +78,11 @@ entity User {=psl
   id                        Int             @id @default(autoincrement())
   email                     String?         @unique
   password                  String?
+  lastActiveTimestamp       DateTime        @default(now())
   isEmailVerified           Boolean         @default(false)
   emailVerificationSentAt   DateTime?
   passwordResetSentAt       DateTime?
+  referrer                  String          @default("unknown")
   stripeId                  String? 
   checkoutSessionId         String?
   hasPaid                   Boolean         @default(false)
@@ -85,6 +92,7 @@ entity User {=psl
   credits                   Int             @default(3)
   relatedObject             RelatedObject[]
   externalAuthAssociations  SocialLogin[]
+  contactFormMessages       ContactFormMessage[]
 psl=}
 
 entity SocialLogin {=psl
@@ -107,6 +115,15 @@ entity RelatedObject {=psl
   updatedAt                 DateTime        @updatedAt
 psl=}
 
+entity ContactFormMessage {=psl
+  id                        String          @id @default(uuid())
+  content                   String
+  user                      User            @relation(fields: [userId], references: [id])
+  userId                    Int
+  createdAt                 DateTime        @default(now())
+  isRead                    Boolean         @default(false)
+  repliedAt                 DateTime?       
+psl=}
 
 /* 📡 These are the Wasp Routes (You can protect them easily w/ 'authRequired: true');
  * https://wasp-lang.dev/docs/tutorial/pages
@@ -169,6 +186,60 @@ page CheckoutPage {
   component: import Checkout from "@client/CheckoutPage"
 }
 
+route AdminRoute { path: "/admin", to: DashboardPage }
+page DashboardPage {
+  authRequired: true,
+  component: import Dashboard from "@client/admin/pages/Dashboard/Ecommerce"
+}
+
+route AdminUsersRoute { path: "/admin/users", to: AdminUsersPage }
+page AdminUsersPage {
+  authRequired: true,
+  component: import AdminUsers from "@client/admin/pages/Users"
+}
+
+route AdminSettingsRoute { path: "/admin/settings", to: AdminSettingsPage }
+page AdminSettingsPage {
+  authRequired: true,
+  component: import AdminSettings from "@client/admin/pages/Settings"
+}
+
+route AdminChartsRoute { path: "/admin/chart", to: AdminChartsPage }
+page AdminChartsPage {
+  authRequired: true,
+  component: import AdminCharts from "@client/admin/pages/Chart"
+}
+
+route AdminFormElementsRoute { path: "/admin/forms/form-elements", to: AdminFormElementsPage }
+page AdminFormElementsPage {
+  authRequired: true,
+  component: import AdminForms from "@client/admin/pages/Form/FormElements"
+}
+
+route AdminFormLayoutsRoute { path: "/admin/forms/form-layouts", to: AdminFormLayoutsPage }
+page AdminFormLayoutsPage {
+  authRequired: true,
+  component: import AdminForms from "@client/admin/pages/Form/FormLayout"
+}
+
+route AdminCalendarRoute { path: "/admin/calendar", to: AdminCalendarPage }
+page AdminCalendarPage {
+  authRequired: true,
+  component: import AdminCalendar from "@client/admin/pages/Calendar"
+}
+
+route AdminUIAlertsRoute { path: "/admin/ui/alerts", to: AdminUIAlertsPage }
+page AdminUIAlertsPage {
+  authRequired: true,
+  component: import AdminUI from "@client/admin/pages/UiElements/Alerts"
+}
+
+route AdminUIButtonsRoute { path: "/admin/ui/buttons", to: AdminUIButtonsPage }
+page AdminUIButtonsPage {
+  authRequired: true,
+  component: import AdminUI from "@client/admin/pages/UiElements/Buttons"
+}
+
 /* ⛑ These are the Wasp Operations, which allow the client and server to interact:
  * https://wasp-lang.dev/docs/data-model/operations/overview
  */
@@ -190,10 +261,10 @@ action stripePayment {
 //   entities: [User]
 // }
 
-// action updateUser {
-//   fn: import { updateUser } from "@server/actions.js",
-//   entities: [User]
-// }
+action updateUser {
+  fn: import { updateUser } from "@server/actions.js",
+  entities: [User]
+}
 
 // 📚 Queries
 
