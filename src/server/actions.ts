@@ -1,8 +1,10 @@
 import fetch from 'node-fetch';
 import HttpError from '@wasp/core/HttpError.js';
-import type { RelatedObject } from '@wasp/entities';
+import type { RelatedObject, User } from '@wasp/entities';
 import type { GenerateGptResponse, StripePayment } from '@wasp/actions/types';
 import type { StripePaymentResult, OpenAIResponse } from './types';
+import { UpdateUser } from '@wasp/actions/types';
+
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_KEY!, {
@@ -146,3 +148,16 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, RelatedObject>
 
   throw new HttpError(500, 'Something went wrong');
 };
+
+export const updateUser: UpdateUser<Partial<User>, User> = async (user, context) => {
+  if (!context.user) {
+    throw new HttpError(401);
+  }
+
+  return context.entities.User.update({
+    where: {
+      id: context.user.id,
+    },
+    data: user
+  });
+}
