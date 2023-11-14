@@ -78,7 +78,9 @@ entity User {=psl
   id                        Int             @id @default(autoincrement())
   email                     String?         @unique
   password                  String?
+  createdAt                 DateTime        @default(now())
   lastActiveTimestamp       DateTime        @default(now())
+  isAdmin                   Boolean         @default(false)
   isEmailVerified           Boolean         @default(false)
   emailVerificationSentAt   DateTime?
   passwordResetSentAt       DateTime?
@@ -123,6 +125,17 @@ entity ContactFormMessage {=psl
   createdAt                 DateTime        @default(now())
   isRead                    Boolean         @default(false)
   repliedAt                 DateTime?       
+psl=}
+
+entity DailyStats {=psl 
+  id                       Int             @id @default(autoincrement())
+  date                     DateTime        @default(now()) @unique
+  userCount                Int             @default(0)
+  paidUserCount            Int             @default(0)
+  userDelta                Int             @default(0)
+  paidUserDelta            Int             @default(0)
+  totalRevenue             Int             @default(0)
+  totalProfit              Int             @default(0)
 psl=}
 
 /* 📡 These are the Wasp Routes (You can protect them easily w/ 'authRequired: true');
@@ -273,6 +286,11 @@ query getRelatedObjects {
   entities: [User, RelatedObject]
 }
 
+query getDailyStats {
+  fn: import { getDailyStats } from "@server/queries.js",
+  entities: [User, DailyStats]
+}
+
 /*
  * 📡 These are custom Wasp API Endpoints. Use them for callbacks, webhooks, etc.
  * https://wasp-lang.dev/docs/advanced/apis
@@ -297,4 +315,15 @@ job emailChecker {
     cron: "0 7 * * 1" // at 7:00 am every Monday
   },
   entities: [User]
+}
+
+job dailyStats {
+  executor: PgBoss,
+  perform: {
+    fn: import { calculateDailyStats } from "@server/workers/calculateDailyStats.js"
+  },
+  schedule: {
+    cron: "0 * * * *" // every hour
+  },
+  entities: [User, DailyStats]
 }

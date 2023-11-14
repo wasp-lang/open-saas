@@ -161,3 +161,4 @@ export const updateUser: UpdateUser<Partial<User>, User> = async (user, context)
     data: user
   });
 }
+
