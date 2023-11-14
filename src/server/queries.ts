@@ -1,6 +1,11 @@
 import HttpError from '@wasp/core/HttpError.js';
-import type { RelatedObject } from '@wasp/entities';
-import type { GetRelatedObjects } from '@wasp/queries/types';
+import type { DailyStats, RelatedObject } from '@wasp/entities';
+import type { GetRelatedObjects, GetDailyStats } from '@wasp/queries/types';
+
+type DailyStatsValues = {
+  dailyStats: DailyStats;
+  weeklyStats: DailyStats[];
+};
 
 export const getRelatedObjects: GetRelatedObjects<void, RelatedObject[]> = async (args, context) => {
   if (!context.user) {
@@ -9,8 +14,28 @@ export const getRelatedObjects: GetRelatedObjects<void, RelatedObject[]> = async
   return context.entities.RelatedObject.findMany({
     where: {
       user: {
-        id: context.user.id
-      }
+        id: context.user.id,
+      },
     },
-  })
+  });
+};
+
+export const getDailyStats: GetDailyStats<void, DailyStatsValues> = async (_args, context) => {
+  if (!context.user?.isAdmin) {
+    throw new HttpError(401);
+  }
+  const dailyStats = await context.entities.DailyStats.findFirstOrThrow({
+    orderBy: {
+      date: 'desc',
+    },
+  });
+
+  const weeklyStats = await context.entities.DailyStats.findMany({
+    orderBy: {
+      date: 'desc',
+    },
+    take: 7,
+  });
+
+  return {dailyStats, weeklyStats};
 }

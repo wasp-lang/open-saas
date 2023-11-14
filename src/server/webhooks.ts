@@ -19,8 +19,9 @@ export const STRIPE_WEBHOOK_IPS = [
   '54.187.216.72',
 ];
 
+// make sure the api version matches the version in the Stripe dashboard
 const stripe = new Stripe(process.env.STRIPE_KEY!, {
-  apiVersion: '2022-11-15',
+  apiVersion: '2022-11-15', // TODO find out where this is in the Stripe dashboard and document
 });
 
 export const stripeWebhook: StripeWebhook = async (request, response, context) => {
@@ -132,25 +133,37 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
       if (subscription.cancel_at_period_end) {
         console.log('Subscription canceled at period end');
 
-        const customer = await context.entities.User.findFirst({
+        let customer = await context.entities.User.findFirst({
           where: {
             stripeId: userStripeId,
           },
           select: {
+            id: true,
             email: true,
           },
         });
 
-        if (customer?.email) {
-          await emailSender.send({
-            to: customer.email,
-            subject: 'We hate to see you go :(',
-            text: 'We hate to see you go. Here is a sweet offer...',
-            html: 'We hate to see you go. Here is a sweet offer...',
+        if (customer) {
+          await context.entities.User.update({
+            where: {
+              id: customer.id,
+            },
+            data: {
+              subscriptionStatus: 'canceled',
+            },
           });
+
+          if (customer.email) {
+            await emailSender.send({
+              to: customer.email,
+              subject: 'We hate to see you go :(',
+              text: 'We hate to see you go. Here is a sweet offer...',
+              html: 'We hate to see you go. Here is a sweet offer...',
+            });
+          }
         }
       }
-    } else if (event.type === 'customer.subscription.deleted' || event.type === 'customer.subscription.canceled') {
+    } else if (event.type === 'customer.subscription.deleted') {
       const subscription = event.data.object as Stripe.Subscription;
       userStripeId = subscription.customer as string;
 
@@ -165,6 +178,7 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
         },
         data: {
           hasPaid: false,
+          subscriptionStatus: 'deleted',
         },
       });
     } else {
