@@ -16,7 +16,7 @@ export default function App({ children }: { children: ReactNode }) {
   const [referrer, setReferrer] = useReferrer();
 
   const shouldDisplayAppNavBar = useMemo(() => {
-    return !location.pathname.startsWith('/landing-page');
+    return location.pathname !== '/';
   }, [location]);
 
   const isAdminDashboard = useMemo(() => {

@@ -109,7 +109,7 @@ interface ChartOneState {
   }[];
 }
 
-const DailyActiveUsersChart = ({ weeklyStats, isLoading }: DailyStatsProps) => {
+const RevenueAndProfitChart = ({ weeklyStats, isLoading }: DailyStatsProps) => {
   const dailyRevenueArray = useMemo(() => {
     if (!!weeklyStats && weeklyStats?.length > 0) {
       const sortedWeeks = weeklyStats?.sort((a, b) => {
@@ -235,4 +235,4 @@ const DailyActiveUsersChart = ({ weeklyStats, isLoading }: DailyStatsProps) => {
   );
 };
 
-export default DailyActiveUsersChart;
+export default RevenueAndProfitChart;

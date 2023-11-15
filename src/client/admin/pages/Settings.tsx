@@ -6,6 +6,7 @@ import DefaultLayout from '../layout/DefaultLayout';
 
 const Settings = () => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    // TODO add toast provider / wrapper
     event.preventDefault();
     const confirmed = confirm("Are you sure you want to save the changes?");
     if (confirmed) {

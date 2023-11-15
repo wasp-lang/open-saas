@@ -1,6 +1,7 @@
 import { useState, ReactNode, FC } from 'react';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
+import useAuth from '@wasp/auth/useAuth';
 
 interface Props {
   children?: ReactNode;
@@ -8,6 +9,7 @@ interface Props {
 
 const DefaultLayout: FC<Props> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { data: user } = useAuth();
 
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark">
@@ -20,7 +22,7 @@ const DefaultLayout: FC<Props> = ({ children }) => {
         {/* <!-- ===== Content Area Start ===== --> */}
         <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
           {/* <!-- ===== Header Start ===== --> */}
-          <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+          <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} user={user} />
           {/* <!-- ===== Header End ===== --> */}
 
           {/* <!-- ===== Main Content Start ===== --> */}
