@@ -3,16 +3,16 @@ import { Dialog } from '@headlessui/react';
 import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai';
 import { HiBars3 } from 'react-icons/hi2';
 import { BiLogIn } from 'react-icons/bi';
-import { CgProfile } from 'react-icons/cg';
 import logo from '../static/logo.png';
 import daBoi from '../static/magic-app-gen-logo.png';
 import { features, navigation, tiers, faqs, footerNavigation } from './contentSections';
 import useAuth from '@wasp/auth/useAuth';
+import DropdownUser from '../common/DropdownUser';
 
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const { data: user } = useAuth();
+  const { data: user, isLoading: isUserLoading } = useAuth();
 
   return (
     <div className='bg-white'>
@@ -39,7 +39,7 @@ export default function LandingPage() {
               <a
                 key={item.name}
                 href={item.href}
-                className='text-sm font-semibold leading-6 text-gray-900 hover:text-yellow-500'
+                className='text-sm font-semibold leading-6 text-gray-900 duration-300 ease-in-out hover:text-yellow-500'
               >
                 {item.name}
               </a>
@@ -48,17 +48,14 @@ export default function LandingPage() {
           <div className='hidden lg:flex lg:flex-1 lg:justify-end lg:align-end'>
             <a
               href={!user ? '/login' : '/account'}
-              className='flex justify-end items-center text-sm  font-semibold leading-6 text-gray-900 hover:text-yellow-500'
+              className='flex justify-end items-center text-sm  font-semibold leading-6 '
             >
-              {!user ? (
-                <>
+              {isUserLoading ? null : !user ? (
+                <div className='duration-300 ease-in-out text-gray-900 hover:text-yellow-500'>
                   Log in <BiLogIn size='1.1rem' className='ml-1 mt-[0.1rem]' />
-                </>
+                </div>
               ) : (
-                <>
-                  {user.email?.split('@')[0]}
-                  <CgProfile size='1.1rem' className='ml-1 mt-[0.1rem]' />
-                </>
+                <DropdownUser username={user.email?.split('@')[0]} />
               )}
             </a>
           </div>
@@ -100,7 +97,7 @@ export default function LandingPage() {
                 <div className='py-6'>
                   <a
                     href='#'
-                    className='-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50'
+                    className='-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 duration-300 ease-in-out hover:bg-gray-50'
                   >
                     Log in
                   </a>
@@ -168,31 +165,8 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-          {/* <div
-            className='absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-45rem)]'
-            aria-hidden='true'
-          >
-            <div
-              className='relative aspect-[1020/880] left-3/4 -translate-x-1/4 bg-gradient-to-tr from-yellow-400 to-amber-300 opacity-50 w-[72.1875rem]'
-              style={{
-                clipPath: 'ellipse(80% 25% at 30% 40%)',
-              }}
-            />
-          </div> */}
-          {/* <div
-            className='absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]'
-            aria-hidden='true'
-          >
-            <div
-              className='relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]'
-              style={{
-                clipPath:
-                  'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
-              }}
-            />
-          </div> */}
         </div>
-  
+
         {/* Logo cloud section */}
 
         <div className='mt-12 mx-auto max-w-7xl px-6 lg:px-8 flex flex-col items-between gap-y-6'>

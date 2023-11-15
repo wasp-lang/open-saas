@@ -142,12 +142,7 @@ psl=}
  * https://wasp-lang.dev/docs/tutorial/pages
  */
 
-route RootRoute { path: "/", to: MainPage }
-page MainPage {
-  component: import Main from "@client/MainPage"
-}
-
-route LandingPageRoute { path: "/landing-page", to: LandingPage }
+route LandingPageRoute { path: "/", to: LandingPage }
 page LandingPage {
   component: import LandingPage from "@client/landing-page/LandingPage"
 }

@@ -1,95 +1,65 @@
-
-
-import { Disclosure } from '@headlessui/react';
+import { useState } from 'react';
 import { AiOutlineBars, AiOutlineClose, AiOutlineUser } from 'react-icons/ai';
+import { BiLogIn } from 'react-icons/bi';
+import { HiBars3 } from 'react-icons/hi2';
 import useAuth from '@wasp/auth/useAuth';
-import logo from './static/logo.png'
+import logo from './static/logo.png';
+import DropdownUser from './common/DropdownUser';
 
-const active = 'inline-flex items-center border-b-2 border-indigo-300 px-1 pt-1 text-sm font-medium text-gray-900';
-const inactive = 'inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700'
-const current = window.location.pathname;
+const navigation = [
+  { name: 'GPT Wrapper', href: '/gpt' },
+  { name: 'Documentation', href: 'https://saas-template.gitbook.io/test' },
+  { name: 'Blog', href: 'https://saas-template.gitbook.io/posts/' },
+];
 
 export default function NavBar() {
-  const { data: user } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const { data: user, isLoading: isUserLoading } = useAuth();
   return (
-    <Disclosure as='nav' className='bg-white shadow sticky top-0 z-50 '>
-      {({ open }) => (
-        <>
-          <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-16'>
-            <div className='flex h-16 justify-between'>
-              <div className='flex'>
-                <div className='flex flex-shrink-0 items-center'>
-                  <a href='/'>
-                    <img className='h-8 w-8' src={logo} alt='My SaaS App' />
-                  </a>
-                </div>
-                <div className='hidden sm:ml-6 sm:flex sm:space-x-8'>
-                  <a href='/' className={current === '/' ? active : inactive}>
-                    Landing Page
-                  </a>
-                  <a href='/pricing' className={current.includes('pricing') ? active : inactive}>
-                    Pricing
-                  </a>
-                  <a href='/gpt' className={current.includes('gpt') ? active : inactive}>
-                    GPT
-                  </a>
-                </div>
+    <header className='absolute inset-x-0 top-0 z-50 shadow sticky bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter'>
+      <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
+        <div className='flex lg:flex-1'>
+          <a href='/' className='-m-1.5 p-1.5'>
+            <img className='h-8 w-8' src={logo} alt='My SaaS App' />
+          </a>
+        </div>
+        <div className='flex lg:hidden'>
+          <button
+            type='button'
+            className='-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700'
+            onClick={() => setMobileMenuOpen(true)}
+          >
+            <span className='sr-only'>Open main menu</span>
+            <HiBars3 className='h-6 w-6' aria-hidden='true' />
+          </button>
+        </div>
+        <div className='hidden lg:flex lg:gap-x-12'>
+          {navigation.map((item) => (
+            <a
+              key={item.name}
+              href={item.href}
+              className='text-sm font-semibold leading-6 text-gray-900 duration-300 ease-in-out hover:text-yellow-500'
+            >
+              {item.name}
+            </a>
+          ))}
+        </div>
+        <div className='hidden lg:flex lg:flex-1 lg:justify-end lg:align-end'>
+          <a
+            href={!user ? '/login' : '/account'}
+            className='flex justify-end items-center text-sm  font-semibold leading-6 '
+          >
+            {isUserLoading ? null : !user ? (
+              <div className='duration-300 ease-in-out text-gray-900 hover:text-yellow-500'>
+                Log in <BiLogIn size='1.1rem' className='ml-1 mt-[0.1rem]' />
               </div>
-              <div className='hidden sm:ml-6 sm:flex sm:space-x-8'>
-                <a href={!!user ? '/account' : '/login'} className={current === '/account' ? active : inactive}>
-                  <AiOutlineUser className='h-6 w-6 mr-2' />
-                  Account
-                </a>
-              </div>
-              <div className='-mr-2 flex items-center sm:hidden'>
-                {/* Mobile menu */}
-                <Disclosure.Button className='inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-300'>
-                  <span className='sr-only'>Open menu</span>
-                  {open ? (
-                    <AiOutlineClose className='block h-6 w-6' aria-hidden='true' />
-                  ) : (
-                    <AiOutlineBars className='block h-6 w-6' aria-hidden='true' />
-                  )}
-                </Disclosure.Button>
-              </div>
-            </div>
-          </div>
-
-          <Disclosure.Panel className='sm:hidden'>
-            <div className='space-y-1 pt-2 pb-3'>
-              <Disclosure.Button
-                as='a'
-                href='/'
-                className='block border-l-4 border-indigo-300 bg-indigo-50 py-2 pl-3 pr-4 text-base font-medium text-indigo-500'
-              >
-                Landing Page
-              </Disclosure.Button>
-              <Disclosure.Button
-                as='a'
-                href='/pricing'
-                className='block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700'
-              >
-                Pricing
-              </Disclosure.Button>
-              <Disclosure.Button
-                as='a'
-                href='/gpt'
-                className='block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700'
-              >
-                GPT
-              </Disclosure.Button>
-              <Disclosure.Button
-                as='a'
-                href='/account'
-                className='block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800'
-              >
-                Account
-              </Disclosure.Button>
-            </div>
-          </Disclosure.Panel>
-        </>
-      )}
-    </Disclosure>
+            ) : (
+              <DropdownUser username={user.email?.split('@')[0]} />
+            )}
+          </a>
+        </div>
+      </nav>
+    </header>
   );
 }
