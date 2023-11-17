@@ -1,14 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { RelatedObject } from '@wasp/entities';
 import generateGptResponse from '@wasp/actions/generateGptResponse';
 import useAuth from '@wasp/auth/useAuth';
-
-type GptPayload = {
-  instructions: string;
-  command: string;
-  temperature: number;
-};
 
 export default function GptPage() {
   const [temperature, setTemperature] = useState<number>(1);
@@ -23,7 +16,7 @@ export default function GptPage() {
       return;
     }
     try {
-      const response = await generateGptResponse({ instructions, command, temperature })
+      const response = await generateGptResponse({ instructions, command, temperature });
       if (response) {
         setResponse(response.content);
       }
@@ -67,7 +60,7 @@ export default function GptPage() {
                   />
                 </div>
                 <span className='text-sm text-red-500'>
-                  {formErrors.instructions && formErrors.instructions.message}
+                  {typeof formErrors?.instructions?.message === 'string' ? formErrors.instructions.message : null}
                 </span>
               </div>
               <div className='col-span-full'>
@@ -90,7 +83,9 @@ export default function GptPage() {
                     })}
                   />
                 </div>
-                <span className='text-sm text-red-500'>{formErrors.command && formErrors.command.message}</span>
+                <span className='text-sm text-red-500'>
+                  {typeof formErrors?.command?.message === 'string' ? formErrors.command.message : null}
+                </span>
               </div>
 
               <div className='h-10 '>

@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { AiOutlineBars, AiOutlineClose, AiOutlineUser } from 'react-icons/ai';
 import { BiLogIn } from 'react-icons/bi';
 import { HiBars3 } from 'react-icons/hi2';
 import useAuth from '@wasp/auth/useAuth';
-import logo from './static/logo.png';
-import DropdownUser from './common/DropdownUser';
+import logo from '../static/logo.png';
+import DropdownUser from './DropdownUser';
 
 const navigation = [
   { name: 'GPT Wrapper', href: '/gpt' },
@@ -12,7 +11,7 @@ const navigation = [
   { name: 'Blog', href: 'https://saas-template.gitbook.io/posts/' },
 ];
 
-export default function NavBar() {
+export default function AppNavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const { data: user, isLoading: isUserLoading } = useAuth();
@@ -46,18 +45,18 @@ export default function NavBar() {
           ))}
         </div>
         <div className='hidden lg:flex lg:flex-1 lg:justify-end lg:align-end'>
-          <a
-            href={!user ? '/login' : '/account'}
-            className='flex justify-end items-center text-sm  font-semibold leading-6 '
-          >
-            {isUserLoading ? null : !user ? (
+          {isUserLoading ? null : !user ? (
+            <a
+              href={!user ? '/login' : '/account'}
+              className='flex justify-end items-center text-sm  font-semibold leading-6 '
+            >
               <div className='duration-300 ease-in-out text-gray-900 hover:text-yellow-500'>
                 Log in <BiLogIn size='1.1rem' className='ml-1 mt-[0.1rem]' />
               </div>
-            ) : (
-              <DropdownUser username={user.email?.split('@')[0]} />
-            )}
-          </a>
+            </a>
+          ) : (
+            <DropdownUser username={user.email?.split('@')[0]} isUserAdmin={user.isAdmin} />
+          )}
         </div>
       </nav>
     </header>

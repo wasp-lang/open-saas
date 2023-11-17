@@ -3,11 +3,12 @@ import { Dialog } from '@headlessui/react';
 import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai';
 import { HiBars3 } from 'react-icons/hi2';
 import { BiLogIn } from 'react-icons/bi';
+import { Link } from '@wasp/router';
 import logo from '../static/logo.png';
 import daBoi from '../static/magic-app-gen-logo.png';
 import { features, navigation, tiers, faqs, footerNavigation } from './contentSections';
 import useAuth from '@wasp/auth/useAuth';
-import DropdownUser from '../common/DropdownUser';
+import DropdownUser from '../components/DropdownUser';
 
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -46,18 +47,17 @@ export default function LandingPage() {
             ))}
           </div>
           <div className='hidden lg:flex lg:flex-1 lg:justify-end lg:align-end'>
-            <a
-              href={!user ? '/login' : '/account'}
-              className='flex justify-end items-center text-sm  font-semibold leading-6 '
-            >
+            <div className='text-sm  font-semibold leading-6 '>
               {isUserLoading ? null : !user ? (
-                <div className='duration-300 ease-in-out text-gray-900 hover:text-yellow-500'>
-                  Log in <BiLogIn size='1.1rem' className='ml-1 mt-[0.1rem]' />
-                </div>
+                <Link to='/login'>
+                  <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500'>
+                    Log in <BiLogIn size='1.1rem' className='ml-1 mt-[0.1rem]' />
+                  </div>
+                </Link>
               ) : (
-                <DropdownUser username={user.email?.split('@')[0]} />
+                <DropdownUser username={user.email?.split('@')[0]} isUserAdmin={user.isAdmin} />
               )}
-            </a>
+            </div>
           </div>
         </nav>
         <Dialog as='div' className='lg:hidden' open={mobileMenuOpen} onClose={setMobileMenuOpen}>

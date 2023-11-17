@@ -1,6 +1,6 @@
 import HttpError from '@wasp/core/HttpError.js';
-import type { DailyStats, RelatedObject } from '@wasp/entities';
-import type { GetRelatedObjects, GetDailyStats } from '@wasp/queries/types';
+import type { DailyStats, RelatedObject, Referrer, User } from '@wasp/entities';
+import type { GetRelatedObjects, GetDailyStats, GetReferrerStats, GetPaginatedUsers } from '@wasp/queries/types';
 
 type DailyStatsValues = {
   dailyStats: DailyStats;
@@ -37,5 +37,96 @@ export const getDailyStats: GetDailyStats<void, DailyStatsValues> = async (_args
     take: 7,
   });
 
-  return {dailyStats, weeklyStats};
-}
+  return { dailyStats, weeklyStats };
+};
+
+type ReferrerWithSanitizedUsers = Referrer & {
+  users: Pick<User, 'id' | 'email' | 'hasPaid' | 'subscriptionStatus'>[];
+};
+
+export const getReferrerStats: GetReferrerStats<void, ReferrerWithSanitizedUsers[]> = async (args, context) => {
+  const referrers = await context.entities.Referrer.findMany({
+    include: {
+      users: true,
+    },
+  });
+
+  return referrers.map((referrer) => ({
+    ...referrer,
+    users: referrer.users.map((user) => ({
+      id: user.id,
+      email: user.email,
+      hasPaid: user.hasPaid,
+      subscriptionStatus: user.subscriptionStatus,
+    })),
+  }));
+};
+
+type GetPaginatedUsersInput = {
+  skip: number;
+  cursor?: number | undefined;
+  emailContains?: string;
+  subscriptionStatus?: string[]
+};
+type GetPaginatedUsersOutput = {
+  users: Pick<User, 'id' | 'email' | 'lastActiveTimestamp' | 'hasPaid' | 'subscriptionStatus' | 'stripeId'>[];
+  totalPages: number;
+};
+
+export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPaginatedUsersOutput> = async (
+  args,
+  context
+) => {
+
+  let hasPaid = undefined
+  if (!!args.subscriptionStatus && args.subscriptionStatus.includes('hasPaid')) {
+    hasPaid = true
+  }
+  
+  let subscriptionStatus = args.subscriptionStatus?.filter((status) => status !== 'hasPaid')
+  subscriptionStatus = subscriptionStatus?.length ? subscriptionStatus : undefined
+  
+  const queryResults = await context.entities.User.findMany({
+    skip: args.skip,
+    take: 10,
+    where: {
+      email: {
+        contains: args.emailContains || undefined,
+        mode: 'insensitive',
+      },
+      hasPaid,
+      subscriptionStatus: {
+        in: subscriptionStatus || undefined,
+      },
+    },
+    select: {
+      id: true,
+      email: true,
+      lastActiveTimestamp: true,
+      hasPaid: true,
+      subscriptionStatus: true,
+      stripeId: true,
+    },
+    orderBy: {
+      id: 'desc',
+    },
+  });
+
+  const totalUserCount = await context.entities.User.count({
+    where: {
+      email: {
+        contains: args.emailContains || undefined,
+      },
+      hasPaid,
+      subscriptionStatus: {
+        in: subscriptionStatus || undefined,
+      },
+    },
+  });
+  const totalPages = Math.ceil(totalUserCount / 10);
+
+  return {
+    users: queryResults,
+    totalPages
+  };
+};

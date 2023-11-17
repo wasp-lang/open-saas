@@ -1,5 +1,5 @@
 import { useMemo, useEffect } from 'react';
-import { UpArrow, DownArrow } from '../common/icons';
+import { UpArrow, DownArrow } from '../images/icon/icons-arrows';
 import type { DailyStatsProps } from '../common/types';
 
 const TotalRevenueCard = ({dailyStats, weeklyStats, isLoading}: DailyStatsProps) => {
@@ -8,15 +8,17 @@ const TotalRevenueCard = ({dailyStats, weeklyStats, isLoading}: DailyStatsProps)
     return (weeklyStats[0].totalRevenue - weeklyStats[1]?.totalRevenue) > 0;
   }, [weeklyStats]);
 
-  const delta = useMemo(() => {
-    if (!weeklyStats) return;
-    return weeklyStats[0].totalRevenue - weeklyStats[1]?.totalRevenue;
-  }, [weeklyStats]);
-
   const deltaPercentage = useMemo(() => {
-    if (!weeklyStats || !weeklyStats[1]?.totalRevenue) return;
+    if ( !weeklyStats || isLoading) return;
+    weeklyStats.sort((a, b) => b.id - a.id);
+    console.log('weeklyStats[1]?.totalRevenue; ', !!weeklyStats && weeklyStats)
     return ((weeklyStats[0].totalRevenue - weeklyStats[1]?.totalRevenue) / weeklyStats[1]?.totalRevenue) * 100;
   }, [weeklyStats]);
+
+  useEffect(() => {
+    console.log('deltaPercentage; ', deltaPercentage)
+    console.log('weeklyStats; ', weeklyStats)
+  }, [deltaPercentage])
 
   return (
     <div className='rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark'>

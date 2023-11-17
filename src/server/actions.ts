@@ -3,7 +3,7 @@ import HttpError from '@wasp/core/HttpError.js';
 import type { RelatedObject, User } from '@wasp/entities';
 import type { GenerateGptResponse, StripePayment } from '@wasp/actions/types';
 import type { StripePaymentResult, OpenAIResponse } from './types';
-import { UpdateUser } from '@wasp/actions/types';
+import { UpdateCurrentUser, SaveReferrer, UpdateUserReferrer, UpdateUserById } from '@wasp/actions/types';
 
 import Stripe from 'stripe';
 
@@ -149,16 +149,77 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, RelatedObject>
   throw new HttpError(500, 'Something went wrong');
 };
 
-export const updateUser: UpdateUser<Partial<User>, User> = async (user, context) => {
+export const updateUserById: UpdateUserById<{ id: number; data: Partial<User> }, User> = async (
+  { id, data },
+  context
+) => {
   if (!context.user) {
     throw new HttpError(401);
   }
+
+  if (!context.user.isAdmin) {
+    throw new HttpError(403);
+  }
+
+  const updatedUser = await context.entities.User.update({
+    where: {
+      id,
+    },
+    data,
+  });
+
+  console.log('updated user', updatedUser.id)
+
+  return updatedUser;
+}
+
+export const updateCurrentUser: UpdateCurrentUser<Partial<User>, User> = async (user, context) => {
+  if (!context.user) {
+    throw new HttpError(401);
+  }
+
+  console.log('updating user', user);
 
   return context.entities.User.update({
     where: {
       id: context.user.id,
     },
-    data: user
+    data: user,
+  });
+};
+
+
+export const saveReferrer: SaveReferrer<{ name: string }, void> = async ({ name }, context) => {
+  await context.entities.Referrer.upsert({
+    where: {
+      name,
+    },
+    create: {
+      name,
+      count: 1,
+    },
+    update: {
+      count: {
+        increment: 1,
+      },
+    },
   });
 }
 
+export const updateUserReferrer: UpdateUserReferrer<{ name: string }, void> = async ({ name }, context) => {
+  if (!context.user) {
+    throw new HttpError(401);
+  }
+  await context.entities.User.update({
+    where: {
+      id: context.user.id,
+    },
+    data: {
+      referrer: {
+        connect: {
+          name,
+        },
+      },
+    },
+  });
+}

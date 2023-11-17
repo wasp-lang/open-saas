@@ -12,10 +12,10 @@ const ECommerce = () => {
   const { data: stats, isLoading, error } = useQuery(getDailyStats);
 
   return (
-    <DefaultLayout >
+    <DefaultLayout>
       <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5'>
         <TotalPageViewsCard />
-        <TotalRevenueCard dailyStats={stats?.dailyStats} weeklyStats={stats?.weeklyStats} isLoading={isLoading}/>
+        <TotalRevenueCard dailyStats={stats?.dailyStats} weeklyStats={stats?.weeklyStats} isLoading={isLoading} />
         <TotalPayingUsersCard dailyStats={stats?.dailyStats} isLoading={isLoading} />
         <TotalSignupsCard dailyStats={stats?.dailyStats} isLoading={isLoading} />
       </div>
