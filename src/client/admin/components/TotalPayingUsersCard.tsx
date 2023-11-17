@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { UpArrow, DownArrow } from '../common/icons';
+import { UpArrow, DownArrow } from '../images/icon/icons-arrows';
 import type { DailyStatsProps } from '../common/types';
 
 const TotalPayingUsersCard = ({ dailyStats, isLoading }: DailyStatsProps) => {

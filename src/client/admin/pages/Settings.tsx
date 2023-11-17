@@ -1,6 +1,5 @@
 import { FormEvent } from 'react';
 import Breadcrumb from '../components/Breadcrumb';
-import userThree from '../images/user/user-03.png';
 import toast from 'react-hot-toast';
 import DefaultLayout from '../layout/DefaultLayout';
 
@@ -235,7 +234,7 @@ const Settings = () => {
                 <form action="#">
                   <div className="mb-4 flex items-center gap-3">
                     <div className="h-14 w-14 rounded-full">
-                      <img src={userThree} alt="User" />
+                      {/* <img src={userThree} alt="User" /> */}
                     </div>
                     <div>
                       <span className="mb-1.5 text-black dark:text-white">

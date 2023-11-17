@@ -5,9 +5,13 @@ app SaaSTemplate {
   title: "My SaaS App",
   head: [
         "<meta property='og:type' content='website' />",
-        "<meta property='og:url' content='https://mySaaSapp.com' />",
+        "<meta property='og:url' content='https://mySaaSapp.com' />", // TODO change url
         "<meta property='og:description' content='I made a SaaS App. Buy my stuff.' />",
         "<meta property='og:image' content='src/client/static/image.png' />",
+        "<meta name='twitter:image' content='https://mySaaSapp.com/gptsaastemplate.png' />", // TODO change url and image
+        "<meta name='twitter:image:width' content='800' />",
+        "<meta name='twitter:image:height' content='400' />",
+        "<meta name='twitter:card' content='summary_large_image' />",
         // you can put your google analytics script here, too!
   ],
   // 🔐 Auth out of the box! https://wasp-lang.dev/docs/auth/overview
@@ -38,7 +42,11 @@ app SaaSTemplate {
     onAuthFailedRedirectTo: "/",
   },
   db: { 
-    system: PostgreSQL
+    system: PostgreSQL,
+    seeds: [
+      import { devSeedUsers } from "@server/scripts/usersSeed.js",
+
+    ]
   },
   client: {
     rootComponent: import App from "@client/App",
@@ -48,7 +56,7 @@ app SaaSTemplate {
     defaultFrom: {
       name: "SaaS App",
       // make sure this address is the same you registered your SendGrid or MailGun account with!
-      email: "vince@wasp-lang.dev" 
+      email: "vince@wasp-lang.dev" // TODO change to generic email before pushing to github
     },
   },
   dependencies: [
@@ -66,7 +74,7 @@ app SaaSTemplate {
     ("react-apexcharts", "^1.4.1"),
     ("apexcharts", "^3.41.0"),
     ("headlessui", "^0.0.0"),
-
+    ("@faker-js/faker", "8.3.1")
   ],
 }
 
@@ -84,7 +92,6 @@ entity User {=psl
   isEmailVerified           Boolean         @default(false)
   emailVerificationSentAt   DateTime?
   passwordResetSentAt       DateTime?
-  referrer                  String          @default("unknown")
   stripeId                  String? 
   checkoutSessionId         String?
   hasPaid                   Boolean         @default(false)
@@ -95,6 +102,8 @@ entity User {=psl
   relatedObject             RelatedObject[]
   externalAuthAssociations  SocialLogin[]
   contactFormMessages       ContactFormMessage[]
+  referrer                  Referrer?       @relation(fields: [referrerId], references: [id])
+  referrerId                Int?        
 psl=}
 
 entity SocialLogin {=psl
@@ -138,6 +147,20 @@ entity DailyStats {=psl
   totalProfit              Int             @default(0)
 psl=}
 
+entity Referrer {=psl
+  id                       Int             @id @default(autoincrement())
+  name                 String          @default("unknown") @unique
+  count                    Int             @default(0)
+  users                    User[]
+psl=}
+
+entity Logs {=psl
+  id                       Int             @id @default(autoincrement())
+  createdAt                DateTime        @default(now())
+  message                  String
+  level                    String
+psl=}
+
 /* 📡 These are the Wasp Routes (You can protect them easily w/ 'authRequired: true');
  * https://wasp-lang.dev/docs/tutorial/pages
  */
@@ -174,24 +197,24 @@ page EmailVerificationPage {
 
 route GptRoute { path: "/gpt", to: GptPage }
 page GptPage {
-  component: import GptPage from "@client/GptPage"
+  component: import GptPage from "@client/app/GptPage"
 }
 
 route PricingRoute { path: "/pricing", to: PricingPage }
 page PricingPage {
-  component: import Pricing from "@client/PricingPage"
+  component: import Pricing from "@client/app/PricingPage"
 }
 
 route AccountRoute { path: "/account", to: AccountPage }
 page AccountPage {
   authRequired: true,
-  component: import Account from "@client/AccountPage"
+  component: import Account from "@client/app/AccountPage"
 }
 
 route CheckoutRoute { path: "/checkout", to: CheckoutPage }
 page CheckoutPage {
   authRequired: true,
-  component: import Checkout from "@client/CheckoutPage"
+  component: import Checkout from "@client/app/CheckoutPage"
 }
 
 route AdminRoute { path: "/admin", to: DashboardPage }
@@ -269,9 +292,24 @@ action stripePayment {
 //   entities: [User]
 // }
 
-action updateUser {
-  fn: import { updateUser } from "@server/actions.js",
+action updateCurrentUser {
+  fn: import { updateCurrentUser } from "@server/actions.js",
   entities: [User]
+}
+
+action updateUserById {
+  fn: import { updateUserById } from "@server/actions.js",
+  entities: [User]
+}
+
+action saveReferrer {
+  fn: import { saveReferrer } from "@server/actions.js",
+  entities: [Referrer]
+}
+
+action UpdateUserReferrer {
+  fn: import { updateUserReferrer } from "@server/actions.js",
+  entities: [User, Referrer]
 }
 
 // 📚 Queries
@@ -284,6 +322,16 @@ query getRelatedObjects {
 query getDailyStats {
   fn: import { getDailyStats } from "@server/queries.js",
   entities: [User, DailyStats]
+}
+
+query getReferrerStats {
+  fn: import { getReferrerStats } from "@server/queries.js",
+  entities: [User, Referrer]
+}
+
+query getPaginatedUsers {
+  fn: import { getPaginatedUsers } from "@server/queries.js",
+  entities: [User]
 }
 
 /*
@@ -318,7 +366,7 @@ job dailyStats {
     fn: import { calculateDailyStats } from "@server/workers/calculateDailyStats.js"
   },
   schedule: {
-    cron: "0 * * * *" // every hour
+    cron: "* * * * *" //
   },
-  entities: [User, DailyStats]
+  entities: [User, DailyStats, Logs]
 }

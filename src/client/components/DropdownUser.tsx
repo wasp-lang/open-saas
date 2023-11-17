@@ -1,25 +1,25 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'; // TODO change all Links to wasp router links
 import { CgProfile } from 'react-icons/cg';
 import { MdOutlineSpaceDashboard } from 'react-icons/md';
-import { TfiDashboard } from 'react-icons/tfi'
+import { TfiDashboard } from 'react-icons/tfi';
+import logout from '@wasp/auth/logout';
 
-const DropdownUser = ({username} : {username: string | undefined}) => {
+const DropdownUser = ({ username, isUserAdmin }: { username: string | undefined, isUserAdmin: boolean }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
 
+  const toggleDropdown = () => setDropdownOpen((prev) => !prev);
+
   // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
-      if (!dropdown.current) return;
-      if (
-        !dropdownOpen ||
-        dropdown.current.contains(target) ||
-        trigger.current.contains(target)
-      )
+      if (!dropdown.current) return
+      if (!dropdownOpen || dropdown.current.contains(target) || trigger.current.contains(target)) {
         return;
+      }
       setDropdownOpen(false);
     };
     document.addEventListener('click', clickHandler);
@@ -38,11 +38,10 @@ const DropdownUser = ({username} : {username: string | undefined}) => {
 
   return (
     <div className='relative'>
-      <Link
+      <button
         ref={trigger}
-        onClick={() => setDropdownOpen(!dropdownOpen)}
+        onClick={toggleDropdown}
         className='flex items-center gap-4 duration-300 ease-in-out text-gray-900 hover:text-yellow-500'
-        to='#'
       >
         <span className='hidden text-right lg:block'>
           <span className='block text-sm font-medium dark:text-white'>{username}</span>
@@ -63,34 +62,23 @@ const DropdownUser = ({username} : {username: string | undefined}) => {
             fill=''
           />
         </svg>
-      </Link>
+      </button>
 
       {/* <!-- Dropdown Start --> */}
       <div
         ref={dropdown}
-        onFocus={() => setDropdownOpen(true)}
-        onBlur={() => setDropdownOpen(false)}
         className={`absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${
           dropdownOpen === true ? 'block' : 'hidden'
         }`}
       >
-        <ul className='flex flex-col gap-5 border-b border-stroke px-6 py-5 dark:border-strokedark'>
+        <ul className='flex flex-col gap-5 border-b border-stroke px-6 py-4 dark:border-strokedark'>
           <li>
             <Link
               to='/gpt'
-              className='flex items-center gap-3.5 font-medium duration-300 ease-in-out hover:text-yellow-500'
+              className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-yellow-500'
             >
               <MdOutlineSpaceDashboard size='1.1rem' />
               App
-            </Link>
-          </li>
-          <li>
-            <Link
-              to='/admin'
-              className='flex items-center gap-3.5 font-medium duration-300 ease-in-out hover:text-yellow-500'
-            >
-              <TfiDashboard size='1.1rem' />
-              Admin Dashboard
             </Link>
           </li>
           <li>
@@ -119,7 +107,21 @@ const DropdownUser = ({username} : {username: string | undefined}) => {
             </Link>
           </li>
         </ul>
-        <button className='flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-yellow-500'>
+        {isUserAdmin && <ul className='flex flex-col gap-5 border-b border-stroke px-6 py-4 dark:border-strokedark'>
+          <li className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-yellow-500'>
+            <Link
+              to='/admin'
+              className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-yellow-500'
+            >
+              <TfiDashboard size='1.1rem' />
+              Admin Dashboard
+            </Link>
+          </li>
+        </ul>}
+        <button
+          onClick={() => logout()}
+          className='flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-yellow-500'
+        >
           <svg
             className='fill-current'
             width='18'

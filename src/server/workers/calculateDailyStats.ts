@@ -6,14 +6,20 @@ const stripe = new Stripe(process.env.STRIPE_KEY!, {
 });
 
 export const calculateDailyStats: DailyStats<never, void> = async (_args, context) => {
-  const currentDate = new Date();
-  const yesterdaysDate = new Date(new Date().setDate(currentDate.getDate() - 1));
+  const nowUTC = new Date(Date.now());
+  nowUTC.setUTCHours(0, 0, 0, 0);
+
+  const yesterdayUTC = new Date(nowUTC);
+  yesterdayUTC.setUTCDate(yesterdayUTC.getUTCDate() - 1);
+
+  console.log('yesterdayUTC: ', yesterdayUTC);
+  console.log('nowUTC: ', nowUTC);
 
   try {
     const yesterdaysStats = await context.entities.DailyStats.findFirst({
       where: {
         date: {
-          equals: yesterdaysDate,
+          equals: yesterdayUTC,
         },
       },
     });
@@ -33,16 +39,16 @@ export const calculateDailyStats: DailyStats<never, void> = async (_args, contex
     if (yesterdaysStats) {
       userDelta -= yesterdaysStats.userCount;
       paidUserDelta -= yesterdaysStats.paidUserCount;
-    } 
+    }
 
     const newRunningTotal = await calculateTotalRevenue(context);
 
     await context.entities.DailyStats.upsert({
       where: {
-        date: currentDate,
+        date: nowUTC,
       },
       create: {
-        date: currentDate,
+        date: nowUTC,
         userCount,
         paidUserCount,
         userDelta,
@@ -57,24 +63,39 @@ export const calculateDailyStats: DailyStats<never, void> = async (_args, contex
         totalRevenue: newRunningTotal,
       },
     });
-  } catch (error) {
+
+    await context.entities.Logs.create({
+      data: {
+        message: `Daily stats calculated for ${nowUTC.toDateString()}`,
+        level: 'job-info',
+      },
+    });
+  } catch (error: any) {
     console.error('Error calculating daily stats: ', error);
+    await context.entities.Logs.create({
+      data: {
+        message: `Error calculating daily stats: ${error?.message}`,
+        level: 'job-error',
+      },
+    });
   }
 };
 
 async function fetchDailyStripeRevenue() {
-  const startOfDay = new Date();
-  startOfDay.setHours(0, 0, 0, 0); // Sets to beginning of day
-  const startOfDayTimestamp = Math.floor(startOfDay.getTime() / 1000); // Convert to Unix timestamp in seconds
+  const startOfDayUTC = new Date(Date.now());
+  startOfDayUTC.setHours(0, 0, 0, 0); // Sets to beginning of day
+  const startOfDayTimestamp = Math.floor(startOfDayUTC.getTime() / 1000); // Convert to Unix timestamp in seconds
 
-  const endOfDay = new Date();
-  endOfDay.setHours(23, 59, 59, 999); // Sets to end of day
-  const endOfDayTimestamp = Math.floor(endOfDay.getTime() / 1000); // Convert to Unix timestamp in seconds
+  const endOfDayUTC = new Date();
+  endOfDayUTC.setHours(23, 59, 59, 999); // Sets to end of day
+  const endOfDayTimestamp = Math.floor(endOfDayUTC.getTime() / 1000); // Convert to Unix timestamp in seconds
 
   let nextPageCursor = undefined;
   const allPayments = [] as Stripe.Invoice[];
 
   while (true) {
+    // Stripe allows searching for invoices by date range via their Query Language
+    // If there are more than 100 invoices in a day, we need to paginate through them
     const params = {
       query: `created>=${startOfDayTimestamp} AND created<=${endOfDayTimestamp} AND status:"paid"`,
       limit: 100,
@@ -106,13 +127,22 @@ async function calculateTotalRevenue(context: any) {
   const revenueInCents = await fetchDailyStripeRevenue();
 
   const revenueInDollars = revenueInCents / 100;
+  
+  // we use UTC time to avoid issues with local timezones
+  const nowUTC = new Date(Date.now());
 
-  const lastTotalEntry = await context.entities.DailyStats.find({
+  // Set the time component to midnight in UTC
+  // This way we can pass the Date object directly to Prisma
+  // without having to convert it to a string
+  nowUTC.setUTCHours(0, 0, 0, 0);
+
+  // Get yesterday's date by subtracting one day
+  const yesterdayUTC = new Date(nowUTC);
+  yesterdayUTC.setUTCDate(yesterdayUTC.getUTCDate() - 1);
+
+  const lastTotalEntry = await context.entities.DailyStats.findUnique({
     where: {
-      // date is yesterday
-      date: {
-        equals: new Date(new Date().setDate(new Date().getDate() - 1)),
-      },
+      date: yesterdayUTC, // Pass the Date object directly, not as a string
     },
   });
 

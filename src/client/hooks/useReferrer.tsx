@@ -10,12 +10,18 @@ export function useReferrer() {
   const urlParams = new URLSearchParams(window.location.search);
   const refValue = urlParams.get(REFERRER_KEY);
 
-  const [referrer, setReferrer] = useLocalStorage(REFERRER_KEY, refValue);
+  const values = {
+    [REFERRER_KEY]: refValue || UNKOWN_REFERRER,
+    isSavedInDB: false,
+    isSavedToUser: false,
+  }
+
+  const [referrer, setReferrer] = useLocalStorage(REFERRER_KEY, values);
 
   useEffect(() => {
     console.log('referrer', referrer);
     if (!!refValue && refValue !== UNKOWN_REFERRER) {
-      setReferrer(refValue);
+      setReferrer(values);
     }
     history.replace({
       search: '',
