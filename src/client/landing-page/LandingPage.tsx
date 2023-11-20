@@ -9,11 +9,32 @@ import daBoi from '../static/magic-app-gen-logo.png';
 import { features, navigation, tiers, faqs, footerNavigation } from './contentSections';
 import useAuth from '@wasp/auth/useAuth';
 import DropdownUser from '../components/DropdownUser';
+import { useHistory } from 'react-router-dom';
+import stripePayment from '@wasp/actions/stripePayment';
+import { CUSTOMER_PORTAL_LINK } from '../const';
 
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const { data: user, isLoading: isUserLoading } = useAuth();
+
+  const history = useHistory();
+
+  async function handleBuyNowClick(tierId: string) {
+    if (!user) {
+      history.push('/login');
+      return;
+    }
+    try {
+      let stripeResults = await stripePayment(tierId);
+
+      if (stripeResults?.sessionUrl) {
+        window.open(stripeResults.sessionUrl, '_self');
+      }
+    } catch (error: any) {
+      console.error(error?.message ?? 'Something went wrong.');
+    }
+  }
 
   return (
     <div className='bg-white'>
@@ -335,10 +356,12 @@ export default function LandingPage() {
                       ))}
                     </ul>
                   </div>
-                  <a
-                    aria-describedby={tier.id}
-                    href={!!user ? '/account' : '/login'}
-                    className={`
+                  {!!user && user.hasPaid ? (
+                    <a
+                      href={CUSTOMER_PORTAL_LINK}
+                      aria-describedby='manage-subscription'
+                      className={`
+                      ${tier.id === 'enterprise-tier' ? 'opacity-50 cursor-not-allowed' : 'opacity-100 cursor-pointer'}
                       ${
                         tier.bestDeal
                           ? 'bg-yellow-500 text-white hover:text-white shadow-sm hover:bg-yellow-400'
@@ -346,9 +369,26 @@ export default function LandingPage() {
                       }
                       'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400'
                     `}
-                  >
-                    {!!user ? 'Buy plan' : 'Log in to buy plan'}
-                  </a>
+                    >
+                      {tier.id === 'enterprise-tier' ? 'Contact us' : 'Manage Subscription'}
+                    </a>
+                  ) : (
+                    <button
+                      onClick={() => handleBuyNowClick(tier.id)}
+                      aria-describedby={tier.id}
+                      className={`
+                      ${tier.id === 'enterprise-tier' ? 'opacity-50 cursor-not-allowed' : 'opacity-100 cursor-pointer'}
+                      ${
+                        tier.bestDeal
+                          ? 'bg-yellow-500 text-white hover:text-white shadow-sm hover:bg-yellow-400'
+                          : 'text-gray-600  ring-1 ring-inset ring-purple-200 hover:ring-purple-400'
+                      }
+                      'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400'
+                    `}
+                    >
+                      {tier.id === 'enterprise-tier' ? 'Contact us' : !!user ? 'Buy plan' : 'Log in to buy plan'}
+                    </button>
+                  )}
                 </div>
               ))}
             </div>

@@ -12,7 +12,8 @@ const TotalRevenueCard = ({dailyStats, weeklyStats, isLoading}: DailyStatsProps)
     if ( !weeklyStats || isLoading) return;
     weeklyStats.sort((a, b) => b.id - a.id);
     console.log('weeklyStats[1]?.totalRevenue; ', !!weeklyStats && weeklyStats)
-    return ((weeklyStats[0].totalRevenue - weeklyStats[1]?.totalRevenue) / weeklyStats[1]?.totalRevenue) * 100;
+    const percentage = ((weeklyStats[0].totalRevenue - weeklyStats[1]?.totalRevenue) / weeklyStats[1]?.totalRevenue) * 100;
+    return Math.floor(percentage);
   }, [weeklyStats]);
 
   useEffect(() => {

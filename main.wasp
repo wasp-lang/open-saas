@@ -65,8 +65,6 @@ app SaaSTemplate {
     ("@tailwindcss/typography", "^0.5.7"),
     ("react-hook-form", "7.43.1"),
     ("react-icons", "4.11.0"),
-    ("request-ip", "3.3.0"),
-    ("@types/request-ip", "0.0.37"),
     ("node-fetch", "3.3.0"),
     ("react-hook-form", "^7.45.4"),
     ("stripe", "11.15.0"),
@@ -95,8 +93,9 @@ entity User {=psl
   stripeId                  String? 
   checkoutSessionId         String?
   hasPaid                   Boolean         @default(false)
-  sendEmail                 Boolean         @default(false)
+  subscriptionType          String?
   subscriptionStatus        String?
+  sendEmail                 Boolean         @default(false)
   datePaid                  DateTime?
   credits                   Int             @default(3)
   relatedObject             RelatedObject[]
@@ -143,8 +142,8 @@ entity DailyStats {=psl
   paidUserCount            Int             @default(0)
   userDelta                Int             @default(0)
   paidUserDelta            Int             @default(0)
-  totalRevenue             Int             @default(0)
-  totalProfit              Int             @default(0)
+  totalRevenue             Float             @default(0)
+  totalProfit              Float             @default(0)
 psl=}
 
 entity Referrer {=psl
@@ -287,11 +286,6 @@ action stripePayment {
   entities: [User]
 }
 
-// action stripeCreditsPayment {
-//   fn: import { stripeCreditsPayment } from "@server/actions.js",
-//   entities: [User]
-// }
-
 action updateCurrentUser {
   fn: import { updateCurrentUser } from "@server/actions.js",
   entities: [User]
@@ -340,8 +334,9 @@ query getPaginatedUsers {
  */ 
 
 api stripeWebhook {
-  fn: import { stripeWebhook } from "@server/webhooks.js",
+  fn: import { stripeWebhook } from "@server/webhooks/stripe.js",
   entities: [User],
+  middlewareConfigFn: import { stripeMiddlewareFn } from "@server/webhooks/stripe.js",
   httpRoute: (POST, "/stripe-webhook")
 }
 
@@ -366,7 +361,8 @@ job dailyStats {
     fn: import { calculateDailyStats } from "@server/workers/calculateDailyStats.js"
   },
   schedule: {
-    cron: "* * * * *" //
+    // every hour
+    cron: "0 * * * *"
   },
   entities: [User, DailyStats, Logs]
 }

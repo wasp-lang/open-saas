@@ -2,16 +2,15 @@ import { User } from '@wasp/entities';
 import { useQuery } from '@wasp/queries'
 import getRelatedObjects from '@wasp/queries/getRelatedObjects'
 import logout from '@wasp/auth/logout';
-import stripePayment from '@wasp/actions/stripePayment';
 import { useState, Dispatch, SetStateAction } from 'react';
+import { Link } from '@wasp/router'
+import { CUSTOMER_PORTAL_LINK } from '../const';
 
-// get your own link from your stripe dashboard: https://dashboard.stripe.com/settings/billing/portal
-const CUSTOMER_PORTAL_LINK = 'https://billing.stripe.com/p/login/test_8wM8x17JN7DT4zC000';
 
 export default function Example({ user }: { user: User }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { data: relatedObjects, isLoading: isLoadingRelatedObjects } = useQuery(getRelatedObjects)
+  const { data: relatedObjects, isLoading: isLoadingRelatedObjects } = useQuery(getRelatedObjects);
 
   return (
     <div className='mt-10 px-6'>
@@ -69,26 +68,13 @@ export default function Example({ user }: { user: User }) {
 }
 
 function BuyMoreButton({ isLoading, setIsLoading }: { isLoading: boolean, setIsLoading: Dispatch<SetStateAction<boolean>> }) {
-  const handleClick = async () => {
-    try {
-      setIsLoading(true);
-      const stripeResults = await stripePayment();
-      if (stripeResults?.sessionUrl) {
-        window.open(stripeResults.sessionUrl, '_self');
-      }
-      
-    } catch (error: any) {
-      alert(error?.message ?? 'Something went wrong.')
-    } finally {
-      setIsLoading(false);
-    }
-  };
+
 
   return (
     <div className='ml-4 flex-shrink-0 sm:col-span-1 sm:mt-0'>
-      <button onClick={handleClick} className={`font-medium text-sm text-indigo-600 hover:text-indigo-500 ${isLoading && 'animate-pulse'}`}>
+      <Link to='/' hash='pricing' className={`font-medium text-sm text-indigo-600 hover:text-indigo-500 ${isLoading && 'animate-pulse'}`}>
         {!isLoading ? 'Buy More/Upgrade' : 'Loading...'}
-      </button>
+      </Link>
     </div>
   );
 }
