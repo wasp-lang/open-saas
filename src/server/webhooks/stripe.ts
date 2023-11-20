@@ -1,23 +1,9 @@
+import express from 'express';
 import { StripeWebhook } from '@wasp/apis/types';
+import type { MiddlewareConfigFn } from '@wasp/middleware';
 import { emailSender } from '@wasp/email/index.js';
 
 import Stripe from 'stripe';
-import requestIp from 'request-ip';
-
-export const STRIPE_WEBHOOK_IPS = [
-  '3.18.12.63',
-  '3.130.192.231',
-  '13.235.14.237',
-  '13.235.122.149',
-  '18.211.135.69',
-  '35.154.171.200',
-  '52.15.183.38',
-  '54.88.130.119',
-  '54.88.130.237',
-  '54.187.174.169',
-  '54.187.205.235',
-  '54.187.216.72',
-];
 
 // make sure the api version matches the version in the Stripe dashboard
 const stripe = new Stripe(process.env.STRIPE_KEY!, {
@@ -25,22 +11,23 @@ const stripe = new Stripe(process.env.STRIPE_KEY!, {
 });
 
 export const stripeWebhook: StripeWebhook = async (request, response, context) => {
-  if (process.env.NODE_ENV === 'production') {
-    const detectedIp = requestIp.getClientIp(request) as string;
-    const isStripeIP = STRIPE_WEBHOOK_IPS.includes(detectedIp);
+  const sig = request.headers['stripe-signature'] as string;
+  let event: Stripe.Event;
 
-    if (!isStripeIP) {
-      console.log('IP address not from Stripe: ', detectedIp);
-      return response.status(403).json({ received: false });
-    }
+  console.log('\n\nsig: ', sig)
+
+  try {
+    event = stripe.webhooks.constructEvent(request.body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
+    // console.table({sig: 'stripe webhook signature verified', type: event.type})
+  } catch (err: any) {
+    console.log(err.message);
+    return response.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  let event: Stripe.Event;
+  // let event: Stripe.Event;
   let userStripeId: string | null = null;
 
   try {
-    event = request.body;
-
     if (event.type === 'checkout.session.completed') {
       console.log('Checkout session completed');
       const session = event.data.object as Stripe.Checkout.Session;
@@ -52,8 +39,8 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
 
       console.log('line_items: ', line_items);
 
-      if (line_items?.data[0]?.price?.id === process.env.SUBSCRIPTION_PRICE_ID) {
-        console.log('Subscription purchased ');
+      if (line_items?.data[0]?.price?.id === process.env.HOBBY_SUBSCRIPTION_PRICE_ID) {
+        console.log('Hobby subscription purchased ');
         await context.entities.User.updateMany({
           where: {
             stripeId: userStripeId,
@@ -61,6 +48,19 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
           data: {
             hasPaid: true,
             datePaid: new Date(),
+            subscriptionType: 'hobby',
+          },
+        });
+      } else if (line_items?.data[0]?.price?.id === process.env.PRO_SUBSCRIPTION_PRICE_ID) {
+        console.log('Pro subscription purchased ');
+        await context.entities.User.updateMany({
+          where: {
+            stripeId: userStripeId,
+          },
+          data: {
+            hasPaid: true,
+            datePaid: new Date(),
+            subscriptionType: 'pro',
           },
         });
       }
@@ -189,4 +189,28 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
   } catch (err: any) {
     response.status(400).send(`Webhook Error: ${err?.message}`);
   }
+};
+
+// MIDDELWARE EXAMPLE
+// const defaultGlobalMiddleware: MiddlewareConfig = new Map([
+//   ['helmet', helmet()],
+//   ['cors', cors({ origin: config.allowedCORSOrigins })],
+//   ['logger', logger('dev')],
+//   ['express.json', express.json()],
+//   ['express.urlencoded', express.urlencoded({ extended: false })],
+//   ['cookieParser', cookieParser()],
+// ]);
+
+export const stripeMiddlewareFn: MiddlewareConfigFn = (middlewareConfig) => {
+  middlewareConfig.delete('express.json');
+  middlewareConfig.set('express.raw', express.raw({ type: 'application/json' }));
+  return middlewareConfig;
+
+  // let updatedMiddlewareConfig = new Map([
+  //   // New entry as an array: [key, value]
+  //   ['express.raw', express.raw({ type: 'application/json' })],
+  //   ...Array.from(middlewareConfig.entries()),
+  // ]);
+
+  // return updatedMiddlewareConfig;
 };

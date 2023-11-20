@@ -1,11 +1,11 @@
-import { User } from '@wasp/entities';
 import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
-export default function CheckoutPage({ user }: { user: User }) {
-  const [hasPaid, setHasPaid] = useState('loading');
+export default function CheckoutPage() {
+  const [paymentStatus, setPaymentStatus] = useState('loading');
 
   const history = useHistory();
+  const location = useLocation();
 
   useEffect(() => {
     function delayedRedirect() {
@@ -14,14 +14,14 @@ export default function CheckoutPage({ user }: { user: User }) {
       }, 4000);
     }
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const cancel = urlParams.get('canceled');
-    const success = urlParams.get('success');
-    const credits = urlParams.get('credits');
-    if (cancel) {
-      setHasPaid('canceled');
-    } else if (success) {
-      setHasPaid('paid');
+    const queryParams = new URLSearchParams(location.search);
+    const isSuccess = queryParams.get('success')
+    const isCanceled = queryParams.get('canceled')
+
+    if (isCanceled) {
+      setPaymentStatus('canceled');
+    } else if (isSuccess) {
+      setPaymentStatus('paid');
     } else {
       history.push('/account');
     }
@@ -29,20 +29,22 @@ export default function CheckoutPage({ user }: { user: User }) {
     return () => {
       clearTimeout(delayedRedirect());
     };
-  }, []);
+  }, [location]);
+
+
 
   return (
     <div className='flex min-h-full flex-col justify-center mt-10 sm:px-6 lg:px-8'>
       <div className='sm:mx-auto sm:w-full sm:max-w-md'>
         <div className='bg-white py-8 px-4 shadow-xl ring-1 ring-gray-900/10 sm:rounded-lg sm:px-10'>
           <h1>
-            {hasPaid === 'paid'
+            {paymentStatus === 'paid'
               ? '🥳 Payment Successful!'
-              : hasPaid === 'canceled'
+              : paymentStatus === 'canceled'
               ? '😢 Payment Canceled'
-              : hasPaid === 'error' && '🙄 Payment Error'}
+              : paymentStatus === 'error' && '🙄 Payment Error'}
           </h1>
-          {hasPaid !== 'loading' && (
+          {paymentStatus !== 'loading' && (
             <span className='text-center'>
               You are being redirected to your account page... <br />
             </span>

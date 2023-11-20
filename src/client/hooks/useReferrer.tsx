@@ -22,10 +22,10 @@ export function useReferrer() {
     console.log('referrer', referrer);
     if (!!refValue && refValue !== UNKOWN_REFERRER) {
       setReferrer(values);
+      history.replace({
+        search: '',
+      });
     }
-    history.replace({
-      search: '',
-    });
   }, [referrer]);
 
   return [referrer, setReferrer] as const;

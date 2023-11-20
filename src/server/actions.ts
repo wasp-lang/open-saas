@@ -4,70 +4,42 @@ import type { RelatedObject, User } from '@wasp/entities';
 import type { GenerateGptResponse, StripePayment } from '@wasp/actions/types';
 import type { StripePaymentResult, OpenAIResponse } from './types';
 import { UpdateCurrentUser, SaveReferrer, UpdateUserReferrer, UpdateUserById } from '@wasp/actions/types';
-
 import Stripe from 'stripe';
+import { fetchStripeCustomer, createStripeCheckoutSession } from './stripeUtils.js';
 
-const stripe = new Stripe(process.env.STRIPE_KEY!, {
-  apiVersion: '2022-11-15',
-});
-
-// WASP_WEB_CLIENT_URL will be set up by Wasp when deploying to production: https://wasp-lang.dev/docs/deploying
-const DOMAIN = process.env.WASP_WEB_CLIENT_URL || 'http://localhost:3000';
-
-export const stripePayment: StripePayment<void, StripePaymentResult> = async (_args, context) => {
-  if (!context.user) {
+export const stripePayment: StripePayment<string, StripePaymentResult> = async (tier, context) => {
+  if (!context.user || !context.user.email) {
     throw new HttpError(401);
   }
-  
-  let customer: Stripe.Customer;
-  const stripeCustomers = await stripe.customers.list({
-    email: context.user.email!,
-  });
-  if (!stripeCustomers.data.length) {
-    console.log('creating customer');
-    customer = await stripe.customers.create({
-      email: context.user.email!,
-    });
-  } else {
-    console.log('using existing customer');
-    customer = stripeCustomers.data[0];
-  }
 
-  const session: Stripe.Checkout.Session = await stripe.checkout.sessions.create({
-    line_items: [
-      {
-        price: process.env.SUBSCRIPTION_PRICE_ID!,
-        quantity: 1,
-      },
-    ],
-    mode: 'subscription',
-    success_url: `${DOMAIN}/checkout?success=true`,
-    cancel_url: `${DOMAIN}/checkout?canceled=true`,
-    automatic_tax: { enabled: true },
-    customer_update: {
-      address: 'auto',
-    },
-    customer: customer.id,
-  });
+  const priceId = tier === 'hobby-tier' ? 'HOBBY_SUBSCRIPTION_PRICE_ID' : 'PRO_SUBSCRIPTION_PRICE_ID';
+
+  let customer: Stripe.Customer;
+  let session: Stripe.Checkout.Session;
+  try {
+    customer = await fetchStripeCustomer(context.user.email);
+    session = await createStripeCheckoutSession({
+      priceId,
+      customerId: customer.id,
+    });
+  } catch (error: any) {
+    throw new HttpError(500, error.message);
+  }
 
   await context.entities.User.update({
     where: {
       id: context.user.id,
     },
     data: {
-      checkoutSessionId: session?.id ?? null,
-      stripeId: customer.id ?? null,
+      checkoutSessionId: session.id,
+      stripeId: customer.id,
     },
   });
 
-  if (!session) {
-    throw new HttpError(402, 'Could not create a Stripe session');
-  } else {
-    return {
-      sessionUrl: session.url,
-      sessionId: session.id,
-    };
-  }
+  return {
+    sessionUrl: session.url,
+    sessionId: session.id,
+  };
 };
 
 type GptPayload = {
@@ -168,10 +140,10 @@ export const updateUserById: UpdateUserById<{ id: number; data: Partial<User> },
     data,
   });
 
-  console.log('updated user', updatedUser.id)
+  console.log('updated user', updatedUser.id);
 
   return updatedUser;
-}
+};
 
 export const updateCurrentUser: UpdateCurrentUser<Partial<User>, User> = async (user, context) => {
   if (!context.user) {
@@ -188,7 +160,6 @@ export const updateCurrentUser: UpdateCurrentUser<Partial<User>, User> = async (
   });
 };
 
-
 export const saveReferrer: SaveReferrer<{ name: string }, void> = async ({ name }, context) => {
   await context.entities.Referrer.upsert({
     where: {
@@ -204,7 +175,7 @@ export const saveReferrer: SaveReferrer<{ name: string }, void> = async ({ name 
       },
     },
   });
-}
+};
 
 export const updateUserReferrer: UpdateUserReferrer<{ name: string }, void> = async ({ name }, context) => {
   if (!context.user) {
@@ -222,4 +193,4 @@ export const updateUserReferrer: UpdateUserReferrer<{ name: string }, void> = as
       },
     },
   });
-}
+};

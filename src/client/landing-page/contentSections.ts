@@ -44,14 +44,14 @@ export const tiers = [
   {
     name: 'Hobby',
     id: 'hobby-tier',
-    priceMonthly: 'free',
-    description: 'try it out for free',
-    features: ['5 credits', 'no expiration date', 'no credit card required'],
+    priceMonthly: '$9.99',
+    description: 'All you need to get started',
+    features: ['Limited monthly usage', 'Basic support'],
   },
   {
     name: 'Pro',
     id: 'pro-tier',
-    priceMonthly: '$10',
+    priceMonthly: '$19.99',
     description: 'Our most popular plan',
     features: ['Unlimited monthly usage', 'Priority customer support'],
     bestDeal: true,
@@ -59,7 +59,7 @@ export const tiers = [
   {
     name: 'Enterprise',
     id: 'enterprise-tier',
-    priceMonthly: '$50',
+    priceMonthly: '$500',
     description: 'Big business means big money',
     features: ['Unlimited monthly usage', '24/7 customer support', 'Advanced analytics'],
   },

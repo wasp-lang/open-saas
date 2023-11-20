@@ -64,12 +64,6 @@ export const calculateDailyStats: DailyStats<never, void> = async (_args, contex
       },
     });
 
-    await context.entities.Logs.create({
-      data: {
-        message: `Daily stats calculated for ${nowUTC.toDateString()}`,
-        level: 'job-info',
-      },
-    });
   } catch (error: any) {
     console.error('Error calculating daily stats: ', error);
     await context.entities.Logs.create({

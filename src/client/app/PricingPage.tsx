@@ -28,7 +28,7 @@ export default function PricingPage() {
   const clickHandler = async () => {
     setIsLoading(true);
     try {
-      const response = await stripePayment();
+      const response = await stripePayment('hobby');
       if (response?.sessionUrl) {
         window.open(response.sessionUrl, '_self');
       }
