@@ -43,7 +43,7 @@ export const calculateDailyStats: DailyStats<never, void> = async (_args, contex
 
     const newRunningTotal = await calculateTotalRevenue(context);
 
-    await context.entities.DailyStats.upsert({
+    const newDailyStat = await context.entities.DailyStats.upsert({
       where: {
         date: nowUTC,
       },
@@ -63,6 +63,8 @@ export const calculateDailyStats: DailyStats<never, void> = async (_args, contex
         totalRevenue: newRunningTotal,
       },
     });
+
+    console.table({ newDailyStat })
 
   } catch (error: any) {
     console.error('Error calculating daily stats: ', error);
