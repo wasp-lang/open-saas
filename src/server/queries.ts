@@ -65,6 +65,7 @@ export const getReferrerStats: GetReferrerStats<void, ReferrerWithSanitizedUsers
 type GetPaginatedUsersInput = {
   skip: number;
   cursor?: number | undefined;
+  hasPaidFilter: boolean | undefined;
   emailContains?: string;
   subscriptionStatus?: string[]
 };
@@ -77,11 +78,6 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
   args,
   context
 ) => {
-
-  let hasPaid = undefined
-  if (!!args.subscriptionStatus && args.subscriptionStatus.includes('hasPaid')) {
-    hasPaid = true
-  }
   
   let subscriptionStatus = args.subscriptionStatus?.filter((status) => status !== 'hasPaid')
   subscriptionStatus = subscriptionStatus?.length ? subscriptionStatus : undefined
@@ -94,7 +90,7 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
         contains: args.emailContains || undefined,
         mode: 'insensitive',
       },
-      hasPaid,
+      hasPaid: args.hasPaidFilter,
       subscriptionStatus: {
         in: subscriptionStatus || undefined,
       },
@@ -117,7 +113,7 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
       email: {
         contains: args.emailContains || undefined,
       },
-      hasPaid,
+      hasPaid: args.hasPaidFilter,
       subscriptionStatus: {
         in: subscriptionStatus || undefined,
       },

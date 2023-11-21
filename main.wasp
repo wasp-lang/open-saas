@@ -363,6 +363,7 @@ job dailyStats {
   schedule: {
     // every hour
     cron: "0 * * * *"
+    // cron: "* * * * *"
   },
   entities: [User, DailyStats, Logs]
 }

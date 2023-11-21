@@ -1,12 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { User } from '@wasp/entities';
 
 const SwitcherOne = ({ user, updateUserById}: { user?: Partial<User>, updateUserById?: any}) => {
   const [enabled, setEnabled] = useState<boolean>(user?.hasPaid || false);
-
-  // useEffect(() => {
-  //   console.table({ hasPaid: user?.hasPaid})
-  // }, [user])
 
   return (
     <div className='relative'>

@@ -6,7 +6,6 @@ const Users = () => {
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Users" />
-
       <div className="flex flex-col gap-10">
         <UsersTable />
       </div>

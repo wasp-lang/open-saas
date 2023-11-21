@@ -1,6 +1,5 @@
 import Breadcrumb from '../../components/Breadcrumb';
 import CheckboxOne from '../../components/CheckboxOne';
-import CheckboxTwo from '../../components/CheckboxTwo';
 import SwitcherOne from '../../components/SwitcherOne';
 import SwitcherTwo from '../../components/SwitcherTwo';
 import DefaultLayout from '../../layout/DefaultLayout';
@@ -188,7 +187,6 @@ const FormElements = () => {
             </div>
             <div className="flex flex-col gap-5.5 p-6.5">
               <CheckboxOne />
-              <CheckboxTwo />
             </div>
           </div>
 
