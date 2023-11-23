@@ -6,7 +6,7 @@ import type { GenerateGptResponse, StripePayment } from '@wasp/actions/types';
 import type { StripePaymentResult, OpenAIResponse } from './types';
 import { UpdateCurrentUser, SaveReferrer, UpdateUserReferrer, UpdateUserById } from '@wasp/actions/types';
 import { fetchStripeCustomer, createStripeCheckoutSession } from './stripeUtils.js';
-import { TierIds } from '../shared/const.js';
+import { TierIds } from '@wasp/shared/const.js';
 
 export const stripePayment: StripePayment<string, StripePaymentResult> = async (tier, context) => {
   if (!context.user || !context.user.email) {

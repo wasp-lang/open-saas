@@ -5,7 +5,7 @@ import logout from '@wasp/auth/logout';
 import { useState, Dispatch, SetStateAction } from 'react';
 import { Link } from '@wasp/router'
 import { CUSTOMER_PORTAL_LINK } from '../../shared/const';
-
+import { TierIds } from '@wasp/shared/const';
 
 export default function AccountPage({ user }: { user: User }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -28,7 +28,7 @@ export default function AccountPage({ user }: { user: User }) {
               <dt className='text-sm font-medium text-gray-500'>Your Plan</dt>
               {user.hasPaid ? (
                 <>
-                  <dd className='mt-1 text-sm text-gray-900 sm:col-span-1 sm:mt-0'>Premium Monthly Subscription</dd>
+                  {user.subscriptionStatus !== 'past_due' ? <dd className='mt-1 text-sm text-gray-900 sm:col-span-1 sm:mt-0'>{user.subscriptionTier === TierIds.HOBBY ? 'Hobby' : 'Pro' } Plan</dd> : <dd className='mt-1 text-sm text-gray-900 sm:col-span-1 sm:mt-0'>Your Account is Past Due! Please Update your Payment Information</dd>}
                   <CustomerPortalButton isLoading={isLoading} setIsLoading={setIsLoading} />
                 </>
               ) : (
