@@ -2,6 +2,9 @@ import { AiOutlineCheck } from 'react-icons/ai';
 import stripePayment from '@wasp/actions/stripePayment';
 import { useState } from 'react';
 
+// TODO: fix this page
+
+
 const prices = [
   {
     name: 'Credits',

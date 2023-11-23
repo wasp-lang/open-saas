@@ -28,7 +28,7 @@ export async function createStripeCheckoutSession({ priceId, customerId }: { pri
   return await stripe.checkout.sessions.create({
     line_items: [
       {
-        price: process.env[priceId]!,
+        price: priceId,
         quantity: 1,
       },
     ],

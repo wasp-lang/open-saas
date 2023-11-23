@@ -4,10 +4,10 @@ import getRelatedObjects from '@wasp/queries/getRelatedObjects'
 import logout from '@wasp/auth/logout';
 import { useState, Dispatch, SetStateAction } from 'react';
 import { Link } from '@wasp/router'
-import { CUSTOMER_PORTAL_LINK } from '../const';
+import { CUSTOMER_PORTAL_LINK } from '../../shared/const';
 
 
-export default function Example({ user }: { user: User }) {
+export default function AccountPage({ user }: { user: User }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { data: relatedObjects, isLoading: isLoadingRelatedObjects } = useQuery(getRelatedObjects);

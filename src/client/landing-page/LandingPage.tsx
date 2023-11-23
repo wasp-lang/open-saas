@@ -11,7 +11,7 @@ import useAuth from '@wasp/auth/useAuth';
 import DropdownUser from '../components/DropdownUser';
 import { useHistory } from 'react-router-dom';
 import stripePayment from '@wasp/actions/stripePayment';
-import { CUSTOMER_PORTAL_LINK } from '../const';
+import { CUSTOMER_PORTAL_LINK } from '../../shared/const';
 
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
