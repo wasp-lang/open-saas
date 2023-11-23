@@ -93,7 +93,7 @@ entity User {=psl
   stripeId                  String? 
   checkoutSessionId         String?
   hasPaid                   Boolean         @default(false)
-  subscriptionType          String?
+  subscriptionTier          String?
   subscriptionStatus        String?
   sendEmail                 Boolean         @default(false)
   datePaid                  DateTime?

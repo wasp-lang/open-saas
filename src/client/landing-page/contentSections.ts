@@ -1,3 +1,5 @@
+import { TierIds} from "../../shared/const";
+
 export const navigation = [
   { name: 'Features', href: '#features' },
   { name: 'Pricing', href: '#pricing' },
@@ -43,14 +45,14 @@ export const features = [
 export const tiers = [
   {
     name: 'Hobby',
-    id: 'hobby-tier',
+    id: TierIds.HOBBY,
     priceMonthly: '$9.99',
     description: 'All you need to get started',
     features: ['Limited monthly usage', 'Basic support'],
   },
   {
     name: 'Pro',
-    id: 'pro-tier',
+    id: TierIds.PRO,
     priceMonthly: '$19.99',
     description: 'Our most popular plan',
     features: ['Unlimited monthly usage', 'Priority customer support'],
@@ -58,7 +60,7 @@ export const tiers = [
   },
   {
     name: 'Enterprise',
-    id: 'enterprise-tier',
+    id: TierIds.ENTERPRISE,
     priceMonthly: '$500',
     description: 'Big business means big money',
     features: ['Unlimited monthly usage', '24/7 customer support', 'Advanced analytics'],

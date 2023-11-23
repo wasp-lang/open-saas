@@ -1,18 +1,26 @@
+import Stripe from 'stripe';
 import fetch from 'node-fetch';
 import HttpError from '@wasp/core/HttpError.js';
 import type { RelatedObject, User } from '@wasp/entities';
 import type { GenerateGptResponse, StripePayment } from '@wasp/actions/types';
 import type { StripePaymentResult, OpenAIResponse } from './types';
 import { UpdateCurrentUser, SaveReferrer, UpdateUserReferrer, UpdateUserById } from '@wasp/actions/types';
-import Stripe from 'stripe';
 import { fetchStripeCustomer, createStripeCheckoutSession } from './stripeUtils.js';
+import { TierIds } from '../shared/const.js';
 
 export const stripePayment: StripePayment<string, StripePaymentResult> = async (tier, context) => {
   if (!context.user || !context.user.email) {
     throw new HttpError(401);
   }
 
-  const priceId = tier === 'hobby-tier' ? 'HOBBY_SUBSCRIPTION_PRICE_ID' : 'PRO_SUBSCRIPTION_PRICE_ID';
+  let priceId;
+  if (tier === TierIds.HOBBY) {
+    priceId = process.env.HOBBY_SUBSCRIPTION_PRICE_ID!;
+  } else if (tier === TierIds.PRO) {
+    priceId = process.env.PRO_SUBSCRIPTION_PRICE_ID!;
+  } else {
+    throw new HttpError(400, 'Invalid tier');
+  }
 
   let customer: Stripe.Customer;
   let session: Stripe.Checkout.Session;

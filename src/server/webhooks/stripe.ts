@@ -2,6 +2,7 @@ import express from 'express';
 import { StripeWebhook } from '@wasp/apis/types';
 import type { MiddlewareConfigFn } from '@wasp/middleware';
 import { emailSender } from '@wasp/email/index.js';
+import { TierIds } from '../../shared/const.js';
 
 import Stripe from 'stripe';
 
@@ -48,7 +49,7 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
           data: {
             hasPaid: true,
             datePaid: new Date(),
-            subscriptionType: 'hobby',
+            subscriptionTier: TierIds.HOBBY,
           },
         });
       } else if (line_items?.data[0]?.price?.id === process.env.PRO_SUBSCRIPTION_PRICE_ID) {
@@ -60,7 +61,7 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
           data: {
             hasPaid: true,
             datePaid: new Date(),
-            subscriptionType: 'pro',
+            subscriptionTier: TierIds.PRO,
           },
         });
       }
