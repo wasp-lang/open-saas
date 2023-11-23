@@ -7,8 +7,15 @@ import ReferrerTable from '../../components/ReferrerTable';
 import DefaultLayout from '../../layout/DefaultLayout';
 import { useQuery } from '@wasp/queries';
 import getDailyStats from '@wasp/queries/getDailyStats';
+import { useHistory } from 'react-router-dom';
+import type { User } from '@wasp/entities';
 
-const ECommerce = () => {
+const ECommerce = ({ user} : { user: User }) => {
+  const history = useHistory();
+  if (!user.isAdmin) {
+    history.push('/');
+  }
+  
   const { data: stats, isLoading, error } = useQuery(getDailyStats);
 
   return (
