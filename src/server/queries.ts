@@ -1,6 +1,13 @@
 import HttpError from '@wasp/core/HttpError.js';
+import { getTotalPageViews, calculateDailyChangePercentage } from './analyticsUtils.js';
 import type { DailyStats, RelatedObject, Referrer, User } from '@wasp/entities';
-import type { GetRelatedObjects, GetDailyStats, GetReferrerStats, GetPaginatedUsers } from '@wasp/queries/types';
+import type {
+  GetRelatedObjects,
+  GetDailyStats,
+  GetReferrerStats,
+  GetPaginatedUsers,
+  GetPlausibleStats,
+} from '@wasp/queries/types';
 
 type DailyStatsValues = {
   dailyStats: DailyStats;
@@ -67,7 +74,7 @@ type GetPaginatedUsersInput = {
   cursor?: number | undefined;
   hasPaidFilter: boolean | undefined;
   emailContains?: string;
-  subscriptionStatus?: string[]
+  subscriptionStatus?: string[];
 };
 type GetPaginatedUsersOutput = {
   users: Pick<User, 'id' | 'email' | 'lastActiveTimestamp' | 'hasPaid' | 'subscriptionStatus' | 'stripeId'>[];
@@ -78,10 +85,9 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
   args,
   context
 ) => {
-  
-  let subscriptionStatus = args.subscriptionStatus?.filter((status) => status !== 'hasPaid')
-  subscriptionStatus = subscriptionStatus?.length ? subscriptionStatus : undefined
-  
+  let subscriptionStatus = args.subscriptionStatus?.filter((status) => status !== 'hasPaid');
+  subscriptionStatus = subscriptionStatus?.length ? subscriptionStatus : undefined;
+
   const queryResults = await context.entities.User.findMany({
     skip: args.skip,
     take: 10,
@@ -123,6 +129,24 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
 
   return {
     users: queryResults,
-    totalPages
+    totalPages,
+  };
+};
+
+// TODO: move this and analyticsUtils to Cron Job
+export const getPlausibleStats: GetPlausibleStats<
+  void,
+  { totalPageViews: string | undefined; dailyChangePercentage: string | undefined }
+> = async (_args, context) => {
+  if (!context.user?.isAdmin) {
+    throw new HttpError(401);
+  }
+
+  const totalPageViews = (await getTotalPageViews()).toString();
+  const dailyChangePercentage = await calculateDailyChangePercentage();
+
+  return {
+    totalPageViews,
+    dailyChangePercentage,
   };
 };

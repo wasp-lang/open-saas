@@ -60,3 +60,25 @@ Go to `localhost:3000` in your browser to view it (your NodeJS server will be ru
 Check the files for comments containing specific instructions.
 
 For more info on Wasp as a full-stack React, NodeJS, Prisma framework, check out the [Wasp docs](https://wasp-lang.dev/docs/).
+
+#### Install Docs and Blog (optional)
+
+As an example, this SaaS app comes with a docs and blog section built with the [Starlight template on top of the Astro](https://starlight.astro.build) framework. You can use this as a starting point for your own docs and blog.
+
+If you want to install the Starlight docs and blog, first navigate to the `docs` folder:
+
+```sh
+cd docs
+```
+
+Then run:
+```sh
+npm install
+```
+
+Then start the development server:
+```sh
+npm run dev
+```
+
+

@@ -7,6 +7,7 @@ import ReferrerTable from '../../components/ReferrerTable';
 import DefaultLayout from '../../layout/DefaultLayout';
 import { useQuery } from '@wasp/queries';
 import getDailyStats from '@wasp/queries/getDailyStats';
+import getPlausibleStats from '@wasp/queries/getPlausibleStats';
 import { useHistory } from 'react-router-dom';
 import type { User } from '@wasp/entities';
 
@@ -17,11 +18,12 @@ const ECommerce = ({ user} : { user: User }) => {
   }
   
   const { data: stats, isLoading, error } = useQuery(getDailyStats);
+  const { data: plausibleStats, isLoading: isPlausibleLoading, error: plausibleError } = useQuery(getPlausibleStats);
 
   return (
     <DefaultLayout>
       <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5'>
-        <TotalPageViewsCard />
+        <TotalPageViewsCard totalPageViews={plausibleStats?.totalPageViews} dailyChangePercentage={plausibleStats?.dailyChangePercentage}  />
         <TotalRevenueCard dailyStats={stats?.dailyStats} weeklyStats={stats?.weeklyStats} isLoading={isLoading} />
         <TotalPayingUsersCard dailyStats={stats?.dailyStats} isLoading={isLoading} />
         <TotalSignupsCard dailyStats={stats?.dailyStats} isLoading={isLoading} />
