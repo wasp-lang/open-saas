@@ -12,6 +12,8 @@ app SaaSTemplate {
         "<meta name='twitter:image:width' content='800' />",
         "<meta name='twitter:image:height' content='400' />",
         "<meta name='twitter:card' content='summary_large_image' />",
+        "<script defer data-domain='localhost' src='https://plausible.apps.twoducks.dev/js/script.local.js'></script>"
+
         // you can put your google analytics script here, too!
   ],
   // 🔐 Auth out of the box! https://wasp-lang.dev/docs/auth/overview
@@ -326,6 +328,11 @@ query getReferrerStats {
 query getPaginatedUsers {
   fn: import { getPaginatedUsers } from "@server/queries.js",
   entities: [User]
+}
+
+query getPlausibleStats {
+  fn: import { getPlausibleStats } from "@server/queries.js",
+  entities: [User, Logs]
 }
 
 /*
