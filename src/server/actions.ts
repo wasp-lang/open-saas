@@ -4,7 +4,7 @@ import HttpError from '@wasp/core/HttpError.js';
 import type { RelatedObject, User } from '@wasp/entities';
 import type { GenerateGptResponse, StripePayment } from '@wasp/actions/types';
 import type { StripePaymentResult, OpenAIResponse } from './types';
-import { UpdateCurrentUser, SaveReferrer, UpdateUserReferrer, UpdateUserById } from '@wasp/actions/types';
+import { UpdateCurrentUser, UpdateUserById } from '@wasp/actions/types';
 import { fetchStripeCustomer, createStripeCheckoutSession } from './stripeUtils.js';
 import { TierIds } from '@wasp/shared/const.js';
 
@@ -165,40 +165,5 @@ export const updateCurrentUser: UpdateCurrentUser<Partial<User>, User> = async (
       id: context.user.id,
     },
     data: user,
-  });
-};
-
-export const saveReferrer: SaveReferrer<{ name: string }, void> = async ({ name }, context) => {
-  await context.entities.Referrer.upsert({
-    where: {
-      name,
-    },
-    create: {
-      name,
-      count: 1,
-    },
-    update: {
-      count: {
-        increment: 1,
-      },
-    },
-  });
-};
-
-export const updateUserReferrer: UpdateUserReferrer<{ name: string }, void> = async ({ name }, context) => {
-  if (!context.user) {
-    throw new HttpError(401);
-  }
-  await context.entities.User.update({
-    where: {
-      id: context.user.id,
-    },
-    data: {
-      referrer: {
-        connect: {
-          name,
-        },
-      },
-    },
   });
 };

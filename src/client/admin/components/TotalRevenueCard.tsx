@@ -9,17 +9,14 @@ const TotalRevenueCard = ({dailyStats, weeklyStats, isLoading}: DailyStatsProps)
   }, [weeklyStats]);
 
   const deltaPercentage = useMemo(() => {
-    if ( !weeklyStats || isLoading) return;
+    if ( !weeklyStats || weeklyStats.length < 2 || isLoading) return;
+    if ( weeklyStats[1]?.totalRevenue === 0 || weeklyStats[0]?.totalRevenue === 0 ) return 0;
+
     weeklyStats.sort((a, b) => b.id - a.id);
     console.log('weeklyStats[1]?.totalRevenue; ', !!weeklyStats && weeklyStats)
     const percentage = ((weeklyStats[0].totalRevenue - weeklyStats[1]?.totalRevenue) / weeklyStats[1]?.totalRevenue) * 100;
     return Math.floor(percentage);
   }, [weeklyStats]);
-
-  useEffect(() => {
-    console.log('deltaPercentage; ', deltaPercentage)
-    console.log('weeklyStats; ', weeklyStats)
-  }, [deltaPercentage])
 
   return (
     <div className='rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark'>

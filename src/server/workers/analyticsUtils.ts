@@ -15,6 +15,13 @@ type PageViewsResult = {
   };
 };
 
+type PageViewSourcesResult = {
+  results: [{
+      source: string;
+      visitors: number;
+    }];
+};
+
 export async function getTotalPageViews() {
   const response = await fetch(
     `${PLAUSIBLE_BASE_URL}/v1/stats/aggregate?site_id=${PLAUSIBLE_SITE_ID}&metrics=pageviews`,
@@ -26,12 +33,12 @@ export async function getTotalPageViews() {
   if (!response.ok) {
     throw new Error(`HTTP error! Status: ${response.status}`);
   }
-  const json = await response.json() as PageViewsResult;
+  const json = (await response.json()) as PageViewsResult;
 
   return json.results.pageviews.value;
 }
 
-export async function calculateDailyChangePercentage() {
+export async function getPrevDayViewsChangePercent() {
   // Calculate today, yesterday, and the day before yesterday's dates
   const today = new Date();
   const yesterday = new Date(today.setDate(today.getDate() - 1)).toISOString().split('T')[0];
@@ -42,7 +49,12 @@ export async function calculateDailyChangePercentage() {
     const pageViewsYesterday = await getPageviewsForDate(yesterday);
     const pageViewsDayBeforeYesterday = await getPageviewsForDate(dayBeforeYesterday);
 
-    console.table({ pageViewsYesterday, pageViewsDayBeforeYesterday, typeY: typeof pageViewsYesterday, typeDBY: typeof pageViewsDayBeforeYesterday })
+    console.table({
+      pageViewsYesterday,
+      pageViewsDayBeforeYesterday,
+      typeY: typeof pageViewsYesterday,
+      typeDBY: typeof pageViewsDayBeforeYesterday,
+    });
 
     let change = 0;
     if (pageViewsYesterday === 0 || pageViewsDayBeforeYesterday === 0) {
@@ -52,7 +64,7 @@ export async function calculateDailyChangePercentage() {
     }
 
     console.log(`Daily change in page views percentage: ${change.toFixed(2)}%`);
-    return change.toFixed(2); // Limit the number to two decimal places
+    return change.toFixed(2);
   } catch (error) {
     console.error('Error calculating daily change percentage:', error);
   }
@@ -67,6 +79,19 @@ async function getPageviewsForDate(date: string) {
   if (!response.ok) {
     throw new Error(`HTTP error! Status: ${response.status}`);
   }
-  const data = await response.json() as PageViewsResult;
+  const data = (await response.json()) as PageViewsResult;
   return data.results.pageviews.value;
+}
+
+export async function getSources() {
+  const url = `${PLAUSIBLE_BASE_URL}/v1/stats/breakdown?site_id=${PLAUSIBLE_SITE_ID}&property=visit:source&metrics=visitors`;
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: headers,
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+  const data = await response.json() as PageViewSourcesResult;
+  return data.results;
 }

@@ -7,6 +7,10 @@ export default defineConfig({
   integrations: [
     starlightBlog({
       title: 'The Best Blog Ever',
+      sidebar: [
+        {
+        }
+      ],
       authors: {
         vince: {
           name: 'Vince',

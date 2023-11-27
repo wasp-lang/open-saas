@@ -3,11 +3,10 @@ import TotalPageViewsCard from '../../components/TotalPaidViewsCard';
 import TotalPayingUsersCard from '../../components/TotalPayingUsersCard';
 import TotalRevenueCard from '../../components/TotalRevenueCard';
 import RevenueAndProfitChart from '../../components/RevenueAndProfitChart';
-import ReferrerTable from '../../components/ReferrerTable';
+import SourcesTable from '../../components/SourcesTable';
 import DefaultLayout from '../../layout/DefaultLayout';
 import { useQuery } from '@wasp/queries';
 import getDailyStats from '@wasp/queries/getDailyStats';
-import getPlausibleStats from '@wasp/queries/getPlausibleStats';
 import { useHistory } from 'react-router-dom';
 import type { User } from '@wasp/entities';
 
@@ -18,12 +17,14 @@ const ECommerce = ({ user} : { user: User }) => {
   }
   
   const { data: stats, isLoading, error } = useQuery(getDailyStats);
-  const { data: plausibleStats, isLoading: isPlausibleLoading, error: plausibleError } = useQuery(getPlausibleStats);
 
   return (
     <DefaultLayout>
       <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5'>
-        <TotalPageViewsCard totalPageViews={plausibleStats?.totalPageViews} dailyChangePercentage={plausibleStats?.dailyChangePercentage}  />
+        <TotalPageViewsCard
+          totalPageViews={stats?.dailyStats.totalViews}
+          prevDayViewsChangePercent={stats?.dailyStats.prevDayViewsChangePercent}
+        />
         <TotalRevenueCard dailyStats={stats?.dailyStats} weeklyStats={stats?.weeklyStats} isLoading={isLoading} />
         <TotalPayingUsersCard dailyStats={stats?.dailyStats} isLoading={isLoading} />
         <TotalSignupsCard dailyStats={stats?.dailyStats} isLoading={isLoading} />
@@ -33,7 +34,7 @@ const ECommerce = ({ user} : { user: User }) => {
         <RevenueAndProfitChart weeklyStats={stats?.weeklyStats} isLoading={isLoading} />
 
         <div className='col-span-12 xl:col-span-8'>
-          <ReferrerTable />
+          <SourcesTable sources={stats?.dailyStats?.sources} />
         </div>
       </div>
     </DefaultLayout>

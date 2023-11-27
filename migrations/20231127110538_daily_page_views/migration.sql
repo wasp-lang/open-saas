@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "DailyStats" ADD COLUMN     "dailyPageViewsDelta" DOUBLE PRECISION NOT NULL DEFAULT 0,
+ADD COLUMN     "totalPageViews" INTEGER NOT NULL DEFAULT 0;

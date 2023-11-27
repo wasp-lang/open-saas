@@ -30,9 +30,7 @@ entity User {=psl
   credits                   Int             @default(3)
   relatedObject             RelatedObject[]
   externalAuthAssociations  SocialLogin[]
-  contactFormMessages       ContactFormMessage[]
-  referrer                  Referrer?       @relation(fields: [referrerId], references: [id])
-  referrerId                Int?        
+  contactFormMessages       ContactFormMessage[]      
 psl=}
 ```
 
