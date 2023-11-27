@@ -1,13 +1,13 @@
 import { UpArrow, DownArrow } from "../images/icon/icons-arrows";
 
 type PageViewsStats = {
-    totalPageViews: string | undefined;
-    dailyChangePercentage: string | undefined;
+    totalPageViews: number | undefined;
+    prevDayViewsChangePercent: string | undefined;
 }
 
-const TotalPageViewsCard = ({ totalPageViews, dailyChangePercentage } : PageViewsStats ) => {
+const TotalPageViewsCard = ({ totalPageViews, prevDayViewsChangePercent } : PageViewsStats ) => {
 
-  const isDeltaPositive = parseInt(dailyChangePercentage || '') > 0;
+  const isDeltaPositive = parseInt(prevDayViewsChangePercent || '') > 0;
 
   return (
     <div className='rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark'>
@@ -37,11 +37,11 @@ const TotalPageViewsCard = ({ totalPageViews, dailyChangePercentage } : PageView
           <span className='text-sm font-medium'>Total page views</span>
         </div>
 
-        {dailyChangePercentage && parseInt(dailyChangePercentage) !== 0 && (
+        {prevDayViewsChangePercent && parseInt(prevDayViewsChangePercent) !== 0 && (
           <span
             className={`flex items-center gap-1 text-sm font-medium ${isDeltaPositive ? 'text-meta-3' : 'text-meta-5'}`}
           >
-            {dailyChangePercentage}%{parseInt(dailyChangePercentage) > 0 ? <UpArrow /> : <DownArrow />}
+            {prevDayViewsChangePercent}%{parseInt(prevDayViewsChangePercent) > 0 ? <UpArrow /> : <DownArrow />}
           </span>
         )}
       </div>

@@ -2,11 +2,8 @@ import './Main.css';
 import AppNavBar from './components/AppNavBar';
 import { useMemo, useEffect, ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useReferrer, UNKOWN_REFERRER } from './hooks/useReferrer';
 import useAuth from '@wasp/auth/useAuth';
 import updateCurrentUser from '@wasp/actions/updateCurrentUser'; // TODO fix
-import updateUserReferrer from '@wasp/actions/UpdateUserReferrer';
-import saveReferrer from '@wasp/actions/saveReferrer';
 
 /**
  * use this component to wrap all child components
@@ -15,7 +12,6 @@ import saveReferrer from '@wasp/actions/saveReferrer';
 export default function App({ children }: { children: ReactNode }) {
   const location = useLocation();
   const { data: user } = useAuth();
-  const [referrer, setReferrer] = useReferrer();
 
   const shouldDisplayAppNavBar = useMemo(() => {
     return location.pathname !== '/' && location.pathname !== '/login' && location.pathname !== '/signup';
@@ -33,26 +29,6 @@ export default function App({ children }: { children: ReactNode }) {
       updateCurrentUser({ lastActiveTimestamp: today });
     }
   }, [user]);
-
-  useEffect(() => {
-    if (referrer && referrer.ref !== UNKOWN_REFERRER && !referrer.isSavedInDB) {
-      saveReferrer({ name: referrer.ref });
-      setReferrer({
-        ...referrer,
-        isSavedInDB: true,
-      });
-    }
-  }, [referrer]);
-
-  useEffect(() => {
-    if (user && referrer && !referrer.isSavedToUser && referrer.ref !== UNKOWN_REFERRER) {
-      updateUserReferrer({ name: referrer.ref });
-      setReferrer({
-        ...referrer,
-        isSavedToUser: true,
-      });
-    }
-  }, [user, referrer]);
 
   useEffect(() => {
     if (location.hash) {

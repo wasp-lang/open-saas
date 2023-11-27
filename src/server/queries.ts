@@ -1,17 +1,18 @@
 import HttpError from '@wasp/core/HttpError.js';
-import { getTotalPageViews, calculateDailyChangePercentage } from './analyticsUtils.js';
-import type { DailyStats, RelatedObject, Referrer, User } from '@wasp/entities';
+import type { DailyStats, RelatedObject, User, PageViewSource } from '@wasp/entities';
 import type {
   GetRelatedObjects,
   GetDailyStats,
-  GetReferrerStats,
   GetPaginatedUsers,
-  GetPlausibleStats,
 } from '@wasp/queries/types';
 
+type DailyStatsWithSources = DailyStats & {
+  sources: PageViewSource[];
+};
+
 type DailyStatsValues = {
-  dailyStats: DailyStats;
-  weeklyStats: DailyStats[];
+  dailyStats: DailyStatsWithSources;
+  weeklyStats: DailyStatsWithSources[];
 };
 
 export const getRelatedObjects: GetRelatedObjects<void, RelatedObject[]> = async (args, context) => {
@@ -35,38 +36,24 @@ export const getDailyStats: GetDailyStats<void, DailyStatsValues> = async (_args
     orderBy: {
       date: 'desc',
     },
+    include: {
+      sources: true,
+    },
   });
+
+  console.log('dailyStats: ', dailyStats)
 
   const weeklyStats = await context.entities.DailyStats.findMany({
     orderBy: {
       date: 'desc',
     },
     take: 7,
-  });
-
-  return { dailyStats, weeklyStats };
-};
-
-type ReferrerWithSanitizedUsers = Referrer & {
-  users: Pick<User, 'id' | 'email' | 'hasPaid' | 'subscriptionStatus'>[];
-};
-
-export const getReferrerStats: GetReferrerStats<void, ReferrerWithSanitizedUsers[]> = async (args, context) => {
-  const referrers = await context.entities.Referrer.findMany({
     include: {
-      users: true,
+      sources: true,
     },
   });
 
-  return referrers.map((referrer) => ({
-    ...referrer,
-    users: referrer.users.map((user) => ({
-      id: user.id,
-      email: user.email,
-      hasPaid: user.hasPaid,
-      subscriptionStatus: user.subscriptionStatus,
-    })),
-  }));
+  return { dailyStats, weeklyStats };
 };
 
 type GetPaginatedUsersInput = {
@@ -130,23 +117,5 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
   return {
     users: queryResults,
     totalPages,
-  };
-};
-
-// TODO: move this and analyticsUtils to Cron Job
-export const getPlausibleStats: GetPlausibleStats<
-  void,
-  { totalPageViews: string | undefined; dailyChangePercentage: string | undefined }
-> = async (_args, context) => {
-  if (!context.user?.isAdmin) {
-    throw new HttpError(401);
-  }
-
-  const totalPageViews = (await getTotalPageViews()).toString();
-  const dailyChangePercentage = await calculateDailyChangePercentage();
-
-  return {
-    totalPageViews,
-    dailyChangePercentage,
   };
 };

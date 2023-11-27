@@ -102,9 +102,7 @@ entity User {=psl
   credits                   Int             @default(3)
   relatedObject             RelatedObject[]
   externalAuthAssociations  SocialLogin[]
-  contactFormMessages       ContactFormMessage[]
-  referrer                  Referrer?       @relation(fields: [referrerId], references: [id])
-  referrerId                Int?        
+  contactFormMessages       ContactFormMessage[]     
 psl=}
 
 entity SocialLogin {=psl
@@ -138,21 +136,26 @@ entity ContactFormMessage {=psl
 psl=}
 
 entity DailyStats {=psl 
-  id                       Int             @id @default(autoincrement())
-  date                     DateTime        @default(now()) @unique
-  userCount                Int             @default(0)
-  paidUserCount            Int             @default(0)
-  userDelta                Int             @default(0)
-  paidUserDelta            Int             @default(0)
-  totalRevenue             Float             @default(0)
-  totalProfit              Float             @default(0)
+  id                               Int             @id @default(autoincrement())
+  date                             DateTime        @default(now()) @unique
+  totalViews                       Int             @default(0)
+  prevDayViewsChangePercent        String          @default("0")
+  userCount                        Int             @default(0)
+  paidUserCount                    Int             @default(0)
+  userDelta                        Int             @default(0)
+  paidUserDelta                    Int             @default(0)
+  totalRevenue                     Float             @default(0)
+  totalProfit                      Float             @default(0)
+  sources                          PageViewSource[]
 psl=}
 
-entity Referrer {=psl
-  id                       Int             @id @default(autoincrement())
-  name                 String          @default("unknown") @unique
-  count                    Int             @default(0)
-  users                    User[]
+entity PageViewSource {=psl
+  date                     DateTime        @default(now())       
+  name                     String          @unique
+  visitors                 Int             
+  dailyStats               DailyStats?     @relation(fields: [dailyStatsId], references: [id])
+  dailyStatsId             Int?
+  @@id([date, name])
 psl=}
 
 entity Logs {=psl
@@ -298,16 +301,6 @@ action updateUserById {
   entities: [User]
 }
 
-action saveReferrer {
-  fn: import { saveReferrer } from "@server/actions.js",
-  entities: [Referrer]
-}
-
-action UpdateUserReferrer {
-  fn: import { updateUserReferrer } from "@server/actions.js",
-  entities: [User, Referrer]
-}
-
 // 📚 Queries
 
 query getRelatedObjects {
@@ -320,19 +313,9 @@ query getDailyStats {
   entities: [User, DailyStats]
 }
 
-query getReferrerStats {
-  fn: import { getReferrerStats } from "@server/queries.js",
-  entities: [User, Referrer]
-}
-
 query getPaginatedUsers {
   fn: import { getPaginatedUsers } from "@server/queries.js",
   entities: [User]
-}
-
-query getPlausibleStats {
-  fn: import { getPlausibleStats } from "@server/queries.js",
-  entities: [User, Logs]
 }
 
 /*
@@ -369,8 +352,8 @@ job dailyStats {
   },
   schedule: {
     // every hour
-    cron: "0 * * * *"
-    // cron: "* * * * *"
+    // cron: "0 * * * *"
+    cron: "* * * * *"
   },
-  entities: [User, DailyStats, Logs]
+  entities: [User, DailyStats, Logs, PageViewSource]
 }

@@ -11,7 +11,7 @@ const options: ApexOptions = {
   },
   colors: ['#3C50E0', '#80CAEE'],
   chart: {
-    fontFamily: 'Satoshi, sans-serif',  
+    fontFamily: 'Satoshi, sans-serif',
     height: 335,
     type: 'area',
     dropShadow: {
@@ -175,18 +175,22 @@ const RevenueAndProfitChart = ({ weeklyStats, isLoading }: DailyStatsProps) => {
   }, [dailyRevenueArray]);
 
   useEffect(() => {
-    console.log('ooptions categories: ', options?.xaxis?.categories);
-    console.log('days of week arr: ', daysOfWeekArr);
-    if (!!daysOfWeekArr && daysOfWeekArr?.length > 0) {
+    if (!!daysOfWeekArr && daysOfWeekArr?.length > 0 && !!dailyRevenueArray && dailyRevenueArray?.length > 0) {
       setChartOptions({
         ...options,
         xaxis: {
           ...options.xaxis,
           categories: daysOfWeekArr,
         },
+        yaxis: {
+          ...options.yaxis,
+          // get the min & max values to the neareast hundred 
+          max: Math.ceil(Math.max(...dailyRevenueArray) / 100) * 100,
+          min: Math.floor(Math.min(...dailyRevenueArray) / 100) * 100,
+        },
       });
     }
-  }, [daysOfWeekArr]);
+  }, [daysOfWeekArr, dailyRevenueArray]);
 
   return (
     <div className='col-span-12 rounded-sm border border-stroke bg-white px-5 pt-7.5 pb-5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8'>

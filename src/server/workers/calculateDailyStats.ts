@@ -1,5 +1,6 @@
 import type { DailyStats } from '@wasp/jobs/dailyStats';
 import Stripe from 'stripe';
+import { getTotalPageViews, getPrevDayViewsChangePercent, getSources } from './analyticsUtils.js';
 
 const stripe = new Stripe(process.env.STRIPE_KEY!, {
   apiVersion: '2022-11-15', // TODO find out where this is in the Stripe dashboard and document
@@ -40,8 +41,9 @@ export const calculateDailyStats: DailyStats<never, void> = async (_args, contex
       userDelta -= yesterdaysStats.userCount;
       paidUserDelta -= yesterdaysStats.paidUserCount;
     }
-
-    const newRunningTotal = await calculateTotalRevenue(context);
+    
+    const totalRevenue = await fetchTotalStripeRevenue();
+    const { totalViews, prevDayViewsChangePercent } = await getDailyPageviews();
 
     const newDailyStat = await context.entities.DailyStats.upsert({
       where: {
@@ -49,20 +51,46 @@ export const calculateDailyStats: DailyStats<never, void> = async (_args, contex
       },
       create: {
         date: nowUTC,
+        totalViews,
+        prevDayViewsChangePercent: prevDayViewsChangePercent || '0',
         userCount,
         paidUserCount,
         userDelta,
         paidUserDelta,
-        totalRevenue: newRunningTotal,
+        totalRevenue,
       },
       update: {
+        totalViews,
+        prevDayViewsChangePercent: prevDayViewsChangePercent || '0' ,
         userCount,
         paidUserCount,
         userDelta,
         paidUserDelta,
-        totalRevenue: newRunningTotal,
+        totalRevenue,
       },
     });
+
+    const sources = await getSources();
+
+    for (const source of sources) {
+      await context.entities.PageViewSource.upsert({
+        where: {
+          date_name: {
+            date: nowUTC,
+            name: source.source,
+          },
+        },
+        create: {
+          date: nowUTC,
+          name: source.source,
+          visitors: source.visitors,
+          dailyStatsId: newDailyStat.id,
+        },
+        update: {
+          visitors: source.visitors,
+        },
+      });
+    }
 
     console.table({ newDailyStat })
 
@@ -77,75 +105,46 @@ export const calculateDailyStats: DailyStats<never, void> = async (_args, contex
   }
 };
 
-async function fetchDailyStripeRevenue() {
-  const startOfDayUTC = new Date(Date.now());
-  startOfDayUTC.setHours(0, 0, 0, 0); // Sets to beginning of day
-  const startOfDayTimestamp = Math.floor(startOfDayUTC.getTime() / 1000); // Convert to Unix timestamp in seconds
+async function fetchTotalStripeRevenue() {
+  let totalRevenue = 0;
+  let params: Stripe.BalanceTransactionListParams = {
+    limit: 100,
+    // created: {
+    //   gte: startTimestamp,
+    //   lt: endTimestamp
+    // },
+    type: 'charge',
+  };
 
-  const endOfDayUTC = new Date();
-  endOfDayUTC.setHours(23, 59, 59, 999); // Sets to end of day
-  const endOfDayTimestamp = Math.floor(endOfDayUTC.getTime() / 1000); // Convert to Unix timestamp in seconds
+  let hasMore = true;
+  while (hasMore) {
+    const balanceTransactions = await stripe.balanceTransactions.list(params);
 
-  let nextPageCursor = undefined;
-  const allPayments = [] as Stripe.Invoice[];
-
-  while (true) {
-    // Stripe allows searching for invoices by date range via their Query Language
-    // If there are more than 100 invoices in a day, we need to paginate through them
-    const params = {
-      query: `created>=${startOfDayTimestamp} AND created<=${endOfDayTimestamp} AND status:"paid"`,
-      limit: 100,
-      page: nextPageCursor,
-    };
-    const payments = await stripe.invoices.search(params);
-
-    if (payments.next_page) {
-      nextPageCursor = payments.next_page;
+    for (const transaction of balanceTransactions.data) {
+      if (transaction.type === 'charge') {
+        totalRevenue += transaction.amount;
+      }
     }
 
-    console.log('\n\nstripe invoice payments: ', payments, '\n\n');
-
-    payments.data.forEach((invoice) => allPayments.push(invoice));
-
-    if (!payments.has_more) {
-      break;
+    if (balanceTransactions.has_more) {
+      // Set the starting point for the next iteration to the last object fetched
+      params.starting_after = balanceTransactions.data[balanceTransactions.data.length - 1].id;
+    } else {
+      hasMore = false;
     }
   }
 
-  const dailyTotalInCents = allPayments.reduce((total, invoice) => {
-    return total + invoice.amount_paid;
-  }, 0);
-
-  return dailyTotalInCents;
+  // Revenue is in cents so we convert to dollars (or your main currency unit)
+  const formattedRevenue = (totalRevenue / 100)
+  return formattedRevenue;
 }
 
-async function calculateTotalRevenue(context: any) {
-  const revenueInCents = await fetchDailyStripeRevenue();
+async function getDailyPageviews() {
+    const totalViews = await getTotalPageViews()
+    const prevDayViewsChangePercent = await getPrevDayViewsChangePercent();
 
-  const revenueInDollars = revenueInCents / 100;
-  
-  // we use UTC time to avoid issues with local timezones
-  const nowUTC = new Date(Date.now());
-
-  // Set the time component to midnight in UTC
-  // This way we can pass the Date object directly to Prisma
-  // without having to convert it to a string
-  nowUTC.setUTCHours(0, 0, 0, 0);
-
-  // Get yesterday's date by subtracting one day
-  const yesterdayUTC = new Date(nowUTC);
-  yesterdayUTC.setUTCDate(yesterdayUTC.getUTCDate() - 1);
-
-  const lastTotalEntry = await context.entities.DailyStats.findUnique({
-    where: {
-      date: yesterdayUTC, // Pass the Date object directly, not as a string
-    },
-  });
-
-  let newRunningTotal = revenueInDollars;
-  if (lastTotalEntry) {
-    newRunningTotal += lastTotalEntry.totalRevenue;
-  }
-
-  return newRunningTotal;
+    return {
+      totalViews,
+      prevDayViewsChangePercent,
+    };
 }
