@@ -59,7 +59,9 @@ export default defineConfig({
         },
         {
           label: 'General',
-          items: [{ label: 'User Permissions', link: 'general/user-permissions/' }],
+          items: [
+            { label: 'User Permissions', link: 'general/user-permissions/' },
+          ],
         },
       ],
     }),

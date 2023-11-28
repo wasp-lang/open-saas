@@ -1,12 +1,14 @@
-import type { DailyStats } from '@wasp/jobs/dailyStats';
+import type { DailyStatsJob } from '@wasp/jobs/dailyStatsJob';
+import type { DailyStats } from '@wasp/entities';
 import Stripe from 'stripe';
-import { getTotalPageViews, getPrevDayViewsChangePercent, getSources } from './analyticsUtils.js';
+// import { getDailyPageViews, getSources } from './plausibleAnalyticsUtils.js';
+import { getDailyPageViews, getSources } from './googleAnalyticsUtils.js';
 
 const stripe = new Stripe(process.env.STRIPE_KEY!, {
   apiVersion: '2022-11-15', // TODO find out where this is in the Stripe dashboard and document
 });
 
-export const calculateDailyStats: DailyStats<never, void> = async (_args, context) => {
+export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, context) => {
   const nowUTC = new Date(Date.now());
   nowUTC.setUTCHours(0, 0, 0, 0);
 
@@ -41,38 +43,55 @@ export const calculateDailyStats: DailyStats<never, void> = async (_args, contex
       userDelta -= yesterdaysStats.userCount;
       paidUserDelta -= yesterdaysStats.paidUserCount;
     }
-    
-    const totalRevenue = await fetchTotalStripeRevenue();
-    const { totalViews, prevDayViewsChangePercent } = await getDailyPageviews();
 
-    const newDailyStat = await context.entities.DailyStats.upsert({
+    const totalRevenue = await fetchTotalStripeRevenue();
+    const { totalViews, prevDayViewsChangePercent } = await getDailyPageViews();
+
+    let dailyStats = await context.entities.DailyStats.findUnique({
       where: {
         date: nowUTC,
       },
-      create: {
-        date: nowUTC,
-        totalViews,
-        prevDayViewsChangePercent: prevDayViewsChangePercent || '0',
-        userCount,
-        paidUserCount,
-        userDelta,
-        paidUserDelta,
-        totalRevenue,
-      },
-      update: {
-        totalViews,
-        prevDayViewsChangePercent: prevDayViewsChangePercent || '0' ,
-        userCount,
-        paidUserCount,
-        userDelta,
-        paidUserDelta,
-        totalRevenue,
-      },
     });
 
+    if (!dailyStats) {
+      console.log('No daily stat found for today, creating one...');
+      dailyStats = await context.entities.DailyStats.create({
+        data: {
+          date: nowUTC,
+          totalViews,
+          prevDayViewsChangePercent,
+          userCount,
+          paidUserCount,
+          userDelta,
+          paidUserDelta,
+          totalRevenue,
+        },
+      });
+    } else {
+      console.log('Daily stat found for today, updating it...');
+      dailyStats = await context.entities.DailyStats.update({
+        where: {
+          id: dailyStats.id,
+        },
+        data: {
+          totalViews,
+          prevDayViewsChangePercent,
+          userCount,
+          paidUserCount,
+          userDelta,
+          paidUserDelta,
+          totalRevenue,
+        },
+      });
+    }
     const sources = await getSources();
 
     for (const source of sources) {
+      console.log('source: ', source);
+      let visitors = source.visitors;
+      if (typeof source.visitors !== 'number') {
+        visitors = parseInt(source.visitors);
+      }
       await context.entities.PageViewSource.upsert({
         where: {
           date_name: {
@@ -83,17 +102,16 @@ export const calculateDailyStats: DailyStats<never, void> = async (_args, contex
         create: {
           date: nowUTC,
           name: source.source,
-          visitors: source.visitors,
-          dailyStatsId: newDailyStat.id,
+          visitors,
+          dailyStatsId: dailyStats.id,
         },
         update: {
-          visitors: source.visitors,
+          visitors,
         },
       });
     }
 
-    console.table({ newDailyStat })
-
+    console.table({ dailyStats })
   } catch (error: any) {
     console.error('Error calculating daily stats: ', error);
     await context.entities.Logs.create({
@@ -135,16 +153,6 @@ async function fetchTotalStripeRevenue() {
   }
 
   // Revenue is in cents so we convert to dollars (or your main currency unit)
-  const formattedRevenue = (totalRevenue / 100)
+  const formattedRevenue = totalRevenue / 100;
   return formattedRevenue;
-}
-
-async function getDailyPageviews() {
-    const totalViews = await getTotalPageViews()
-    const prevDayViewsChangePercent = await getPrevDayViewsChangePercent();
-
-    return {
-      totalViews,
-      prevDayViewsChangePercent,
-    };
 }

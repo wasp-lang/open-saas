@@ -1,8 +1,9 @@
 ---
 title: Stripe Testing
 ---
+This guide will show you how to test and try out your checkout, payments, and webhooks locally.
 
-First, make sure you've set up your Stripe account for testing and local development. You can find the guide [here](/docs/guides/stripe-integration).
+First, make sure you've set up your Stripe account for local development. You can find the guide [here](/guides/stripe-integration).
 
 ## Testing Webhooks via the Stripe CLI
 
@@ -40,12 +41,12 @@ The results of the event firing will be visible in the initial terminal window. 
 
 For more info on testing webhooks, check out https://stripe.com/docs/webhooks#test-webhook
 
-## Testing Payments Webhooks via the Client
+## Testing Checkout and Payments via the Client
 
 Make sure the **Stripe CLI is running** by following the steps above.
 You can then test the payment flow via the client by doing the following:
 
-- Click on the "BUY NOW" button on the homepage. You should be redirected to the checkout page.
+- Click on a Buy button on the for any of the products on the homepage. You should be redirected to the checkout page.
 - Fill in the form with the following test credit card number `4242 4242 4242 4242` and any future date for the expiration date and any 3 digits for the CVC.
 
 - Click on the "Pay" button. You should be redirected to the success page.
@@ -61,3 +62,7 @@ wasp db studio
 ![db studio](/stripe/db-studio.png)
 
 - Navigate to `localhost:5555` and click on the `users` table. You should see `hasPaid`is true and `subscriptionStatus` is `active` for the user that just made the purchase.
+
+:::note
+If you want to learn more about how a user's payment status, subscription status, and subscription tier affect a user's priveledges within the app, check out the [User Permissions](/general/user-permissions) reference.
+:::

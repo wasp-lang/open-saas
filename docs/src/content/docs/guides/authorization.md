@@ -27,17 +27,21 @@ This will automatically redirect users to the login page if they are not logged 
 If you want more fine-grained control over what users can access, there are two Wasp-specific options:
 1. When you define the `authRequired: true` property on the `page` definition, Wasp automatically passes the User object to the page component. Here you can check for certain user properties before authorizing access:
 
-```tsx title="ExamplePage.tsx" {1}
-export default function Example({ user }: { user: User }) 
+```tsx title="ExamplePage.tsx" "{ user }: { user: User }"
+import type { User } from '@wasp/entities';
 
-if (user.subscriptionStatus === 'past_due') {
-  return (<span>Your subscription is past due. Please update your payment information.</span>)
-}
-if (user.subscriptionStatus === 'canceled') {
-  return (<span>Your will susbscription end on 01.01.2024</span>)
-}
-if (user.subscriptionStatus === 'active') {
-  return (<span>Thanks so much for your support!</span>)
+export default function Example({ user }: { user: User }) {
+
+  if (user.subscriptionStatus === 'past_due') {
+    return (<span>Your subscription is past due. Please update your payment information.</span>)
+  }
+  if (user.subscriptionStatus === 'canceled') {
+    return (<span>Your will susbscription end on 01.01.2024</span>)
+  }
+  if (user.subscriptionStatus === 'active') {
+    return (<span>Thanks so much for your support!</span>)
+  }
+
 }
 ```
 

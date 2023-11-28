@@ -56,18 +56,21 @@ At the root of our project, you will see the following folders and files:
 
 ### Wasp Config file
 
-The `main.wasp` file is where you define your app structure. You should define everything if your app here first, and then Wasp will generate all the boilerplate code for you.
+The `main.wasp` file is where you define your app structure. 
 
-Here, we've already defined a number of things:
+In this template, we've already defined a number of things for you, including:
 - Auth
 - Routes and Pages
 - Prisma Database Models
-- Server Operations (read and write functions)
+- Operations (data read and write functions)
 - Background Jobs
+- Email Sending
 
-By defining these things in the config file, Wasp continuously handles the boilerplate necessary with putting all these features together. You just need to focus on the business logic of your app.
+By defining these things in the config file, Wasp continuously handles the boilerplate necessary with putting all these features together. You just need to focus on the business logic of your app!
 
-If you want to learn more about Wasp, check out the [Wasp docs](https://wasp-lang.dev/docs/).
+Wasp abstracts away some things that you would normally be used to doing during development. For exmaple, you may notice there's no `package.json` file at the root of the project. 
+
+That's why we highly suggest you get acquainted with Wasp. A great starting point is the intro tutorial in the [Wasp docs](https://wasp-lang.dev/docs/) which takes ~20 minutes.
 
 ### Client
 
@@ -106,5 +109,4 @@ The `src/server` folder contains all the code that runs on the server. Wasp comp
     ├── static             # Assets that you need access to in your code, e.g. import logo from 'static/logo.png'
     ├── types.ts           # Main app component to wrap all child components. Useful for global state, navbars, etc.   
     └── Main.css
-```sh
-
+```

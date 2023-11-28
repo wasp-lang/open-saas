@@ -26,17 +26,17 @@ cd // TODO ADD REPO NAME
 ```
 
 ### Start your DB
-Make sure you have a Database connected and running. With Wasp, it's super easy:
+Before you start your app, you need to have a Postgres Database connected and running. With Wasp, that's super easy!
 
 First, make sure you have Docker installed and running. If not, download and install it [here](https://www.docker.com/products/docker-desktop/)
 
-From within the root of the projectn a new terminal window, run:
+With Docker running, open a new terminal window/tab and from within the root of the project, run:
 ```sh
 wasp start db 
 ```
 This will start and connect your app to a Postgres database for you. No need to do anything else! 🤯 
 
-In a new terminal window, run:
+Then, in a new terminal window/tab, run:
 ```sh
 wasp db migrate-dev
 ```
@@ -48,7 +48,7 @@ wasp db studio
 ```
 
 ### Start your app
-In a new terminal window, run:
+In a new terminal window/tab, run:
 ```sh
 wasp start 
 ```
