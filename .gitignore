@@ -6,3 +6,6 @@ fly config/fly-client.toml
 fly config/fly-server.toml
 fly-client.toml
 fly-server.toml
+# TODO: change this before deploy
+# replace with your own Google Analytics service account json file 
+saastemplate-381911-6dc3caae2204.json
