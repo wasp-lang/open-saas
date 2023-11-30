@@ -4,8 +4,8 @@ import getGptResponses from '@wasp/queries/getGptResponses'
 import logout from '@wasp/auth/logout';
 import { useState, Dispatch, SetStateAction } from 'react';
 import { Link } from '@wasp/router'
-import { CUSTOMER_PORTAL_LINK } from '../../shared/const';
-import { TierIds } from '@wasp/shared/const';
+import { STRIPE_CUSTOMER_PORTAL_LINK } from '@wasp/shared/constants';
+import { TierIds } from '@wasp/shared/constants';
 
 export default function AccountPage({ user }: { user: User }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -82,7 +82,11 @@ function BuyMoreButton({ isLoading, setIsLoading }: { isLoading: boolean, setIsL
 function CustomerPortalButton({ isLoading, setIsLoading }: { isLoading: boolean, setIsLoading: Dispatch<SetStateAction<boolean>> }) {
   const handleClick = () => {
     setIsLoading(true);
-    window.open(CUSTOMER_PORTAL_LINK, '_blank');
+    if (!STRIPE_CUSTOMER_PORTAL_LINK) {
+      throw new Error('STRIPE_CUSTOMER_PORTAL_LINK is undefined');
+      return
+    }
+    window.open(STRIPE_CUSTOMER_PORTAL_LINK, '_blank');
     setIsLoading(false);
   };
 

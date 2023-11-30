@@ -2,7 +2,7 @@ import express from 'express';
 import { StripeWebhook } from '@wasp/apis/types';
 import type { MiddlewareConfigFn } from '@wasp/middleware';
 import { emailSender } from '@wasp/email/index.js';
-import { TierIds } from '../../shared/const.js';
+import { TierIds } from '@wasp/shared/constants.js';
 
 import Stripe from 'stripe';
 
