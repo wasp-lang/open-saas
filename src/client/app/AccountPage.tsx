@@ -82,10 +82,6 @@ function BuyMoreButton({ isLoading, setIsLoading }: { isLoading: boolean, setIsL
 function CustomerPortalButton({ isLoading, setIsLoading }: { isLoading: boolean, setIsLoading: Dispatch<SetStateAction<boolean>> }) {
   const handleClick = () => {
     setIsLoading(true);
-    if (!STRIPE_CUSTOMER_PORTAL_LINK) {
-      throw new Error('STRIPE_CUSTOMER_PORTAL_LINK is undefined');
-      return
-    }
     window.open(STRIPE_CUSTOMER_PORTAL_LINK, '_blank');
     setIsLoading(false);
   };
