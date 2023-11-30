@@ -3,7 +3,9 @@
 export async function getUserFields(_context: unknown, args: any) {
   console.log('args', args.profile)
   const email = args.profile.emails[0].value
-  return { email };
+  const adminEmails = process.env.ADMIN_EMAILS?.split(',') || []
+  const isAdmin = adminEmails.includes(email)
+  return { email, isAdmin };
 }
 
 export function config() {

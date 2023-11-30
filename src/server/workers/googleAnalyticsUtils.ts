@@ -98,6 +98,15 @@ async function getPrevDayViewsChangePercent() {
         startDate: '2daysAgo',
         endDate: 'yesterday',
       },
+      
+    ],
+    orderBys: [
+      {
+        dimension: {
+          dimensionName: 'date',
+        },
+        desc: true,
+      },
     ],
     dimensions: [
       {
@@ -111,6 +120,7 @@ async function getPrevDayViewsChangePercent() {
     ],
   });
 
+  console.log('response: ', JSON.stringify(response?.rows, null, 2));
   let viewsFromYesterday;
   let viewsFromDayBeforeYesterday;
 
@@ -127,6 +137,7 @@ async function getPrevDayViewsChangePercent() {
         console.log('Page views are zero, so no percentage change');
         return '0';
       }
+      console.table({ viewsFromYesterday, viewsFromDayBeforeYesterday });
 
       const change = ((viewsFromYesterday - viewsFromDayBeforeYesterday) / viewsFromDayBeforeYesterday) * 100;
       return change.toFixed(2);

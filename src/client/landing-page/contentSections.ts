@@ -26,10 +26,22 @@ export const features = [
     icon: '💸',
   },
   {
+    name: 'Admin Dashboard',
+    description:
+      "Graphs! Tables! Analytics all in one place! Ooooooooooh! Ahhhhhhhhh!",
+    icon: '📈',
+  },
+  {
     name: 'Email Sending',
     description:
       "Email sending is built-in and pre-configured. Combine it with Wasp's cron jobs feature to easily send emails to your customers.",
     icon: '📧',
+  },
+  {
+    name: 'OpenAI Integration',
+    description:
+      "Technology is changing rapidly. Ship your new AI-powered app before it's already obsolete!",
+    icon: '🤖',
   },
   {
     name: 'Deploy Anywhere',
@@ -69,35 +81,26 @@ export const tiers = [
 export const faqs = [
   {
     id: 1,
-    question: "What's the best thing about Switzerland?",
+    question: "Why is this amazing SaaS Template free and open-source?",
     answer:
-      "I don't know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+      "Because open-source is cool, and we love you ❤️",
   },
-  // More questions...
+  {
+    id: 2,
+    question: "What's Wasp?",
+    answer:
+      "It's the fastest way to develop full-stack React + NodeJS + Prisma apps. It's what gives this template superpowers.",
+  },
 ];
 export const footerNavigation = {
-  solutions: [
-    { name: 'Hosting', href: '#' },
-    { name: 'Data Services', href: '#' },
-    { name: 'Uptime Monitoring', href: '#' },
-    { name: 'Enterprise Services', href: '#' },
-  ],
-  support: [
-    { name: 'Pricing', href: '#' },
-    { name: 'Documentation', href: '#' },
-    { name: 'Guides', href: '#' },
-    { name: 'API Reference', href: '#' },
+  app: [
+    { name: 'Pricing', href: '#pricing' },
+    { name: 'Documentation', href: '#' }, // TODO: fill in
+    { name: 'Blog', href: '#' },
   ],
   company: [
     { name: 'About', href: '#' },
-    { name: 'Blog', href: '#' },
-    { name: 'Jobs', href: '#' },
-    { name: 'Press', href: '#' },
-    { name: 'Partners', href: '#' },
-  ],
-  legal: [
-    { name: 'Claim', href: '#' },
     { name: 'Privacy', href: '#' },
-    { name: 'Terms', href: '#' },
+    { name: 'Terms of Service', href: '#' },
   ],
 };

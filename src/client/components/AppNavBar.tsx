@@ -7,9 +7,9 @@ import DropdownUser from './DropdownUser';
 
 const navigation = [
   { name: 'GPT Wrapper', href: '/gpt' },
-  { name: 'Documentation', href: 'https://saas-template.gitbook.io/test' },
-  { name: 'Blog', href: 'https://saas-template.gitbook.io/posts/' },
-];
+  { name: 'Documentation', href: '#' }, // TODO: add link to docs
+  { name: 'Blog', href: '#' }, // TODO: add link to blog
+]; 
 
 export default function AppNavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
