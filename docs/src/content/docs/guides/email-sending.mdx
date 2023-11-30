@@ -1,0 +1,81 @@
+---
+title: Email Sending
+---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+This guide explains how to use the integrated email sender and how you can integrate your own account in this template.
+
+## Sending Emails
+
+In the `main.wasp` config file, you'll see we've got the email sender set up for you:
+
+```tsx title="main.wasp"
+app SaaSTemplate {
+  // ...
+  emailSender: {
+    provider: SendGrid,
+    defaultFrom: {
+      name: "Open SaaS App",
+      // make sure this address is the same you registered your SendGrid or MailGun account with!
+      email: "my@email.com" 
+    },
+  },
+```
+
+This means that you can send emails from your app using the `send` function from the `email` module:
+
+```tsx title="src/server/webhooks.ts"
+import { emailSender } from "@wasp/email/index.js";
+
+//...
+
+  if (subscription.cancel_at_period_end) {
+    await emailSender.send({
+      to: customer.email,
+      subject: 'We hate to see you go :(',
+      text: 'We hate to see you go. Here is a sweet offer...',
+      html: 'We hate to see you go. Here is a sweet offer...',
+    });
+  }
+```
+
+In the example above, you can see that we're sending an email to the customer when we receive a cancel subscription event within the Stripe webhook. 
+
+This is a powerful feature and super simple to use.
+
+:::tip[Sending Emails in Development]
+In the `.env.server` file, we've set the `SEND_EMAILS_IN_DEVELOPMENT` env variable to true. This means that emails will be sent in development mode. 
+
+This is useful for testing, but you can turn it off by setting it to false, and the emails will be logged to the console instead.
+:::
+
+## Integrate your email sender
+
+To set up your email sender, you first need an account with one of the supported email providers.
+
+<Tabs>
+  <TabItem label="SendGrid">
+    - Register at SendGrid.com and then get your [API KEYS](https://app.sendgrid.com/settings/api_keys).
+    - Copy yours to the `.env.server` file under the `SENDGRID_API_KEY` variable.  
+  </TabItem>
+  <TabItem label="MailGun">
+    - Go to [Mailgun](https://mailgun.com) and create an account.
+    - Go to [API Keys](https://app.mailgun.com/app/account/security/api_keys) and create a new API key.
+    - Copy the API key and add it to your .env.server file under the `MAILGUN_API_KEY=` variable.
+    - Go to [Domains](https://app.mailgun.com/app/domains) and create a new domain.
+    - Copy the domain and add it to your .env.server file as `MAILGUN_DOMAIN=`.
+  </TabItem>
+</Tabs>
+
+Make sure to change the `defaultFrom` email address in the `main.wasp` file to the same email address you used to register your account with.
+
+```tsx title="main.wasp" {5}
+emailSender: {
+  provider: SendGrid,
+  defaultFrom: {
+    name: "Open SaaS App",
+    email: "my@email.com" 
+  },
+```
+
+If you want more detailed info, or would like to use SMTP, check out the [Wasp docs](https://wasp-lang.dev/docs/advanced/email).

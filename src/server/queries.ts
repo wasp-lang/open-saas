@@ -1,7 +1,7 @@
 import HttpError from '@wasp/core/HttpError.js';
-import type { DailyStats, RelatedObject, User, PageViewSource } from '@wasp/entities';
+import type { DailyStats, GptResponse, User, PageViewSource } from '@wasp/entities';
 import type {
-  GetRelatedObjects,
+  GetGptResponses,
   GetDailyStats,
   GetPaginatedUsers,
 } from '@wasp/queries/types';
@@ -15,11 +15,11 @@ type DailyStatsValues = {
   weeklyStats: DailyStatsWithSources[];
 };
 
-export const getRelatedObjects: GetRelatedObjects<void, RelatedObject[]> = async (args, context) => {
+export const getGptResponses: GetGptResponses<void, GptResponse[]> = async (args, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
-  return context.entities.RelatedObject.findMany({
+  return context.entities.GptResponse.findMany({
     where: {
       user: {
         id: context.user.id,

@@ -9,7 +9,15 @@ Plausible is an open-source, privacy-friendly alternative to Google Analytics. I
 
 ## Plausible
 <!-- TODO add plausible -->
-*coming soon... until then, check out the [official documentation](https://plausible.io/docs)*
+
+*coming soon...*
+*until then, check out the [official documentation](https://plausible.io/docs)*
+
+:::tip[Contribute!] 
+If you'd like to help us write this guide, click the "Edit page" button at the bottom of this page 
+
+As a completely free, open-source project, we appreciate any help 🙏
+:::
 
 ## Google Analytics
 

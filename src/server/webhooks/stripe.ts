@@ -192,26 +192,9 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
   }
 };
 
-// MIDDELWARE EXAMPLE
-// const defaultGlobalMiddleware: MiddlewareConfig = new Map([
-//   ['helmet', helmet()],
-//   ['cors', cors({ origin: config.allowedCORSOrigins })],
-//   ['logger', logger('dev')],
-//   ['express.json', express.json()],
-//   ['express.urlencoded', express.urlencoded({ extended: false })],
-//   ['cookieParser', cookieParser()],
-// ]);
-
+// This allows us to override Wasp's defaults and parse the raw body of the request from Stripe to verify the signature
 export const stripeMiddlewareFn: MiddlewareConfigFn = (middlewareConfig) => {
   middlewareConfig.delete('express.json');
   middlewareConfig.set('express.raw', express.raw({ type: 'application/json' }));
   return middlewareConfig;
-
-  // let updatedMiddlewareConfig = new Map([
-  //   // New entry as an array: [key, value]
-  //   ['express.raw', express.raw({ type: 'application/json' })],
-  //   ...Array.from(middlewareConfig.entries()),
-  // ]);
-
-  // return updatedMiddlewareConfig;
 };

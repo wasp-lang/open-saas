@@ -1,6 +1,6 @@
 import { User } from '@wasp/entities';
 import { useQuery } from '@wasp/queries'
-import getRelatedObjects from '@wasp/queries/getRelatedObjects'
+import getGptResponses from '@wasp/queries/getGptResponses'
 import logout from '@wasp/auth/logout';
 import { useState, Dispatch, SetStateAction } from 'react';
 import { Link } from '@wasp/router'
@@ -10,7 +10,7 @@ import { TierIds } from '@wasp/shared/const';
 export default function AccountPage({ user }: { user: User }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { data: relatedObjects, isLoading: isLoadingRelatedObjects } = useQuery(getRelatedObjects);
+  const { data: gptResponses, isLoading: isLoadingGptResponses } = useQuery(getGptResponses);
 
   return (
     <div className='mt-10 px-6'>
@@ -45,10 +45,10 @@ export default function AccountPage({ user }: { user: User }) {
               <dd className='mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0'>I'm a cool customer.</dd>
             </div>
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
-              <dt className='text-sm font-medium text-gray-500'>Most Recent User RelatedObject</dt>
+              <dt className='text-sm font-medium text-gray-500'>Most Recent GPT Response</dt>
               <dd className='mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0'>
-                {!!relatedObjects && relatedObjects.length > 0
-                  ? relatedObjects[relatedObjects.length - 1].content
+                {!!gptResponses && gptResponses.length > 0
+                  ? gptResponses[gptResponses.length - 1].content
                   : "You don't have any at this time."}
               </dd>
             </div>

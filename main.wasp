@@ -2,7 +2,7 @@ app SaaSTemplate {
   wasp: {
     version: "^0.11.6"
   },
-  title: "My SaaS App",
+  title: "My Open SaaS App",
   head: [
         "<meta property='og:type' content='website' />",
         "<meta property='og:url' content='https://mySaaSapp.com' />", // TODO change url
@@ -26,7 +26,7 @@ app SaaSTemplate {
     methods: {
       email: {
         fromField: {
-          name: "SaaS App",
+          name: "Open SaaS App",
           // make sure this address is the same you registered your SendGrid or MailGun account with!
           email: "vince@wasp-lang.dev" 
         },
@@ -44,13 +44,15 @@ app SaaSTemplate {
         configFn: import { config } from "@server/auth/google.js",
       },
     },
+    signup: {
+      additionalFields: import setAdminUsers from "@server/auth/setAdminUsers.js",
+    },
     onAuthFailedRedirectTo: "/",
   },
   db: { 
     system: PostgreSQL,
     seeds: [
       import { devSeedUsers } from "@server/scripts/usersSeed.js",
-
     ]
   },
   client: {
@@ -64,6 +66,7 @@ app SaaSTemplate {
       email: "vince@wasp-lang.dev" // TODO change to generic email before pushing to github
     },
   },
+  // add your dependencies here. the quickest way to find the latest version is `npm view <package-name> version`
   dependencies: [
     ("@headlessui/react", "1.7.13"),
     ("@tailwindcss/forms", "^0.5.3"),
@@ -104,7 +107,7 @@ entity User {=psl
   sendEmail                 Boolean         @default(false)
   datePaid                  DateTime?
   credits                   Int             @default(3)
-  relatedObject             RelatedObject[]
+  gptResponses              GptResponse[]
   externalAuthAssociations  SocialLogin[]
   contactFormMessages       ContactFormMessage[]     
 psl=}
@@ -120,7 +123,7 @@ entity SocialLogin {=psl
 psl=}
 
 // This can be anything. In most cases, this will be your product
-entity RelatedObject {=psl
+entity GptResponse {=psl
   id                        String          @id @default(uuid())
   content                   String
   user                      User            @relation(fields: [userId], references: [id])
@@ -205,6 +208,7 @@ page EmailVerificationPage {
 
 route GptRoute { path: "/gpt", to: GptPage }
 page GptPage {
+  authRequired: true,
   component: import GptPage from "@client/app/GptPage"
 }
 
@@ -287,7 +291,7 @@ page AdminUIButtonsPage {
 
 action generateGptResponse {
   fn: import { generateGptResponse } from "@server/actions.js",
-  entities: [User, RelatedObject]
+  entities: [User, GptResponse]
 }
 
 action stripePayment {
@@ -307,9 +311,9 @@ action updateUserById {
 
 // 📚 Queries
 
-query getRelatedObjects {
-  fn: import { getRelatedObjects } from "@server/queries.js",
-  entities: [User, RelatedObject]
+query getGptResponses {
+  fn: import { getGptResponses } from "@server/queries.js",
+  entities: [User, GptResponse]
 }
 
 query getDailyStats {

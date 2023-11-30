@@ -1,7 +1,7 @@
 import Stripe from 'stripe';
 import fetch from 'node-fetch';
 import HttpError from '@wasp/core/HttpError.js';
-import type { RelatedObject, User } from '@wasp/entities';
+import type { GptResponse, User } from '@wasp/entities';
 import type { GenerateGptResponse, StripePayment } from '@wasp/actions/types';
 import type { StripePaymentResult, OpenAIResponse } from './types';
 import { UpdateCurrentUser, UpdateUserById } from '@wasp/actions/types';
@@ -56,7 +56,7 @@ type GptPayload = {
   temperature: number;
 };
 
-export const generateGptResponse: GenerateGptResponse<GptPayload, RelatedObject> = async (
+export const generateGptResponse: GenerateGptResponse<GptPayload, GptResponse> = async (
   { instructions, command, temperature },
   context
 ) => {
@@ -106,7 +106,7 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, RelatedObject>
 
     const json = (await response.json()) as OpenAIResponse;
     console.log('response json', json);
-    return context.entities.RelatedObject.create({
+    return context.entities.GptResponse.create({
       data: {
         content: json?.choices[0].message.content,
         user: { connect: { id: context.user.id } },

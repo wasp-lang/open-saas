@@ -4,10 +4,8 @@ import type { User } from '@wasp/entities';
 
 // in a terminal window run `wasp db seed` to seed your dev database with this data
 
-let prevUserId = 0;
 export function createRandomUser(): Partial<User> {
   const user: Partial<User> = {
-    id: ++prevUserId,
     email: faker.internet.email(),
     password: faker.internet.password({
       length: 12,
