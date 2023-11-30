@@ -1,15 +1,12 @@
 import { User } from '@wasp/entities';
-import { useQuery } from '@wasp/queries'
-import getGptResponses from '@wasp/queries/getGptResponses'
+import { useQuery } from '@wasp/queries';
+import getGptResponses from '@wasp/queries/getGptResponses';
 import logout from '@wasp/auth/logout';
-import { useState, Dispatch, SetStateAction } from 'react';
-import { Link } from '@wasp/router'
+import { Link } from '@wasp/router';
 import { STRIPE_CUSTOMER_PORTAL_LINK } from '@wasp/shared/constants';
 import { TierIds } from '@wasp/shared/constants';
 
 export default function AccountPage({ user }: { user: User }) {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const { data: gptResponses, isLoading: isLoadingGptResponses } = useQuery(getGptResponses);
 
   return (
@@ -28,15 +25,23 @@ export default function AccountPage({ user }: { user: User }) {
               <dt className='text-sm font-medium text-gray-500'>Your Plan</dt>
               {user.hasPaid ? (
                 <>
-                  {user.subscriptionStatus !== 'past_due' ? <dd className='mt-1 text-sm text-gray-900 sm:col-span-1 sm:mt-0'>{user.subscriptionTier === TierIds.HOBBY ? 'Hobby' : 'Pro' } Plan</dd> : <dd className='mt-1 text-sm text-gray-900 sm:col-span-1 sm:mt-0'>Your Account is Past Due! Please Update your Payment Information</dd>}
-                  <CustomerPortalButton isLoading={isLoading} setIsLoading={setIsLoading} />
+                  {user.subscriptionStatus !== 'past_due' ? (
+                    <dd className='mt-1 text-sm text-gray-900 sm:col-span-1 sm:mt-0'>
+                      {user.subscriptionTier === TierIds.HOBBY ? 'Hobby' : 'Pro'} Plan
+                    </dd>
+                  ) : (
+                    <dd className='mt-1 text-sm text-gray-900 sm:col-span-1 sm:mt-0'>
+                      Your Account is Past Due! Please Update your Payment Information
+                    </dd>
+                  )}
+                  <CustomerPortalButton />
                 </>
               ) : (
                 <>
                   <dd className='mt-1 text-sm text-gray-900 sm:col-span-1 sm:mt-0'>
                     Credits remaining: {user.credits}
                   </dd>
-                  <BuyMoreButton isLoading={isLoading} setIsLoading={setIsLoading} />
+                  <BuyMoreButton />
                 </>
               )}
             </div>
@@ -47,7 +52,9 @@ export default function AccountPage({ user }: { user: User }) {
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
               <dt className='text-sm font-medium text-gray-500'>Most Recent GPT Response</dt>
               <dd className='mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0'>
-                {!!gptResponses && gptResponses.length > 0
+                {isLoadingGptResponses
+                  ? 'Loading...'
+                  : !!gptResponses && gptResponses.length > 0
                   ? gptResponses[gptResponses.length - 1].content
                   : "You don't have any at this time."}
               </dd>
@@ -67,29 +74,25 @@ export default function AccountPage({ user }: { user: User }) {
   );
 }
 
-function BuyMoreButton({ isLoading, setIsLoading }: { isLoading: boolean, setIsLoading: Dispatch<SetStateAction<boolean>> }) {
-
-
+function BuyMoreButton() {
   return (
     <div className='ml-4 flex-shrink-0 sm:col-span-1 sm:mt-0'>
-      <Link to='/' hash='pricing' className={`font-medium text-sm text-indigo-600 hover:text-indigo-500 ${isLoading && 'animate-pulse'}`}>
-        {!isLoading ? 'Buy More/Upgrade' : 'Loading...'}
+      <Link to='/' hash='pricing' className={`font-medium text-sm text-indigo-600 hover:text-indigo-500`}>
+        Buy More/Upgrade
       </Link>
     </div>
   );
 }
 
-function CustomerPortalButton({ isLoading, setIsLoading }: { isLoading: boolean, setIsLoading: Dispatch<SetStateAction<boolean>> }) {
+function CustomerPortalButton() {
   const handleClick = () => {
-    setIsLoading(true);
     window.open(STRIPE_CUSTOMER_PORTAL_LINK, '_blank');
-    setIsLoading(false);
   };
 
   return (
     <div className='ml-4 flex-shrink-0 sm:col-span-1 sm:mt-0'>
-      <button onClick={handleClick} className={`font-medium text-sm text-indigo-600 hover:text-indigo-500 ${isLoading && 'animate-pulse'}`}>
-        {!isLoading ? 'Manage Subscription' : 'Loading...'}
+      <button onClick={handleClick} className={`font-medium text-sm text-indigo-600 hover:text-indigo-500`}>
+        Manage Subscription
       </button>
     </div>
   );
