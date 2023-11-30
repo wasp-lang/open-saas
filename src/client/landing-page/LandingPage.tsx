@@ -11,7 +11,7 @@ import useAuth from '@wasp/auth/useAuth';
 import DropdownUser from '../components/DropdownUser';
 import { useHistory } from 'react-router-dom';
 import stripePayment from '@wasp/actions/stripePayment';
-import { CUSTOMER_PORTAL_LINK } from '../../shared/const';
+import { STRIPE_CUSTOMER_PORTAL_LINK } from '@wasp/shared/constants';
 import { UserMenuItems } from '../components/UserMenuItems';
 
 export default function LandingPage() {
@@ -360,7 +360,7 @@ export default function LandingPage() {
                   </div>
                   {!!user && user.hasPaid ? (
                     <a
-                      href={CUSTOMER_PORTAL_LINK}
+                      href={STRIPE_CUSTOMER_PORTAL_LINK}
                       aria-describedby='manage-subscription'
                       className={`
                       ${tier.id === 'enterprise-tier' ? 'opacity-50 cursor-not-allowed' : 'opacity-100 cursor-pointer'}

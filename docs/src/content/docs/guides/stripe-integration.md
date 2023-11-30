@@ -41,6 +41,21 @@ To create a test customer, go to the test customers url [https://dashboard.strip
  When filling in the test customer email address, use an address you have access to and will use when logging into your SaaS app. This is important because the email address is used to identify the customer when creating a subscription and allows you to manage your test user's payments/subscriptions via the test customer portal
 :::
 
+## Get your Customer Portal Link
+
+Go to https://dashboard.stripe.com/test/settings/billing/portal in the Stripe Dashboard and activate and copy the `Customer portal link`. Paste it in your `src/shared/constants.ts` file. 
+
+```ts title="src/shared/constants.ts"
+const customerPortalTestUrl = 'https//billing.stripe.com/p/login/test_...'
+const customerPortalProdUrl = undefined
+
+export const STRIPE_CUSTOMER_PORTAL_LINK = isDev ? customerPortalTestUrl : customerPortalProdUrl;
+
+checkStripePortalLinkExists(STRIPE_CUSTOMER_PORTAL_LINK); // throws an error if the link is not set in production
+```
+
+Note that there are variables set aside for your test portal link, as well as a production portal link. You will be warned in the console if you there is no link in the development environment, but the app will throw an error if there is no link in the production environment!
+
 ## Install the Stripe CLI
 
 To install the Stripe CLI with homebrew, run the following command in your terminal:
