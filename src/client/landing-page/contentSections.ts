@@ -3,8 +3,8 @@ import { TierIds } from '@wasp/shared/const';
 export const navigation = [
   { name: 'Features', href: '#features' },
   { name: 'Pricing', href: '#pricing' },
-  { name: 'Documentation', href: 'https://saas-template.gitbook.io/test' },
-  { name: 'Blog', href: 'https://saas-template.gitbook.io/posts/' },
+  { name: 'Documentation', href: '#' },
+  { name: 'Blog', href: '#' },
 ];
 export const features = [
   {

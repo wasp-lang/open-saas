@@ -55,7 +55,7 @@ export default function AppNavBar() {
               </div>
             </a>
           ) : (
-            <DropdownUser username={user.email?.split('@')[0]} isUserAdmin={user.isAdmin} />
+            <DropdownUser user={user} />
           )}
         </div>
       </nav>

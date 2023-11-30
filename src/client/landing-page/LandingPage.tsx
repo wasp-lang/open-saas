@@ -12,6 +12,7 @@ import DropdownUser from '../components/DropdownUser';
 import { useHistory } from 'react-router-dom';
 import stripePayment from '@wasp/actions/stripePayment';
 import { CUSTOMER_PORTAL_LINK } from '../../shared/const';
+import { UserMenuItems } from '../components/UserMenuItems';
 
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -36,6 +37,8 @@ export default function LandingPage() {
     }
   }
 
+  const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Open SaaS App' />;
+
   return (
     <div className='bg-white'>
       {/* Header */}
@@ -43,7 +46,7 @@ export default function LandingPage() {
         <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
           <div className='flex lg:flex-1'>
             <a href='/' className='-m-1.5 p-1.5'>
-              <img className='h-8 w-8' src={logo} alt='My SaaS App' />
+              <NavLogo />
             </a>
           </div>
           <div className='flex lg:hidden'>
@@ -76,7 +79,7 @@ export default function LandingPage() {
                   </div>
                 </Link>
               ) : (
-                <DropdownUser username={user.email?.split('@')[0]} isUserAdmin={user.isAdmin} />
+                <DropdownUser user={user} />
               )}
             </div>
           </div>
@@ -85,13 +88,9 @@ export default function LandingPage() {
           <div className='fixed inset-0 z-50' />
           <Dialog.Panel className='fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10'>
             <div className='flex items-center justify-between'>
-              <a href='#' className='-m-1.5 p-1.5'>
-                <span className='sr-only'>Your Company</span>
-                <img
-                  className='h-8 w-auto'
-                  src='https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600'
-                  alt=''
-                />
+              <a href='/' className='-m-1.5 p-1.5'>
+                <span className='sr-only'>Open SaaS</span>
+                <NavLogo />
               </a>
               <button
                 type='button'
@@ -116,12 +115,15 @@ export default function LandingPage() {
                   ))}
                 </div>
                 <div className='py-6'>
-                  <a
-                    href='#'
-                    className='-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 duration-300 ease-in-out hover:bg-gray-50'
-                  >
-                    Log in
-                  </a>
+                  {isUserLoading ? null : !user ? (
+                    <Link to='/login'>
+                      <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500'>
+                        Log in <BiLogIn size='1.1rem' className='ml-1 mt-[0.1rem]' />
+                      </div>
+                    </Link>
+                  ) : (
+                    <UserMenuItems user={user}/>
+                  )}
                 </div>
               </div>
             </div>
