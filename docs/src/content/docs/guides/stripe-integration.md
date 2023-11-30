@@ -56,6 +56,13 @@ checkStripePortalLinkExists(STRIPE_CUSTOMER_PORTAL_LINK); // throws an error if 
 
 Note that there are variables set aside for your test portal link, as well as a production portal link. You will be warned in the console if you there is no link in the development environment, but the app will throw an error if there is no link in the production environment!
 
+```sh
+[Server]  🔍 Validating environment variables...
+[Server!] 🚫 STRIPE_CUSTOMER_PORTAL_LINK is not defined.
+[Server]  🚀 "Email and password" auth initialized
+[Server]  🚀 "Google" auth initialized
+```
+
 ## Install the Stripe CLI
 
 To install the Stripe CLI with homebrew, run the following command in your terminal:
