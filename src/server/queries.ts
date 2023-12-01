@@ -41,8 +41,6 @@ export const getDailyStats: GetDailyStats<void, DailyStatsValues> = async (_args
     },
   });
 
-  console.log('dailyStats: ', dailyStats)
-
   const weeklyStats = await context.entities.DailyStats.findMany({
     orderBy: {
       date: 'desc',

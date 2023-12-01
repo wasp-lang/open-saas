@@ -13,10 +13,10 @@ app SaaSTemplate {
         "<meta name='twitter:image:height' content='400' />",
         "<meta name='twitter:card' content='summary_large_image' />",
         // you can put your analytics scripts here
-        "<script defer data-domain='localhost' src='https://plausible.apps.twoducks.dev/js/script.js'></script>",
-        // plausible has script extension `script.local.js` for local development
-        "<script defer data-domain='localhost' src='https://plausible.apps.twoducks.dev/js/script.local.js'></script>",
-        // google analytics automatically detects if you are in dev mode and 
+        "<script defer data-domain='opensaas.sh' src='https://plausible.apps.twoducks.dev/js/script.js'></script>",
+        // plausible has script extension `script.local.js` for local development TODO: remove before deploying
+        "<script defer data-domain='opensaas.sh' src='https://plausible.apps.twoducks.dev/js/script.local.js'></script>",
+        // google analytics only needs one script and will automatically detect if you are in dev mode 
         "<!-- Google tag (gtag.js) --><script async src='https://www.googletagmanager.com/gtag/js?id=G-H3LSJCK95H'></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-H3LSJCK95H');</script>"
   ],
   // 🔐 Auth out of the box! https://wasp-lang.dev/docs/auth/overview
@@ -355,9 +355,8 @@ job dailyStatsJob {
     fn: import { calculateDailyStats } from "@server/workers/calculateDailyStats.js"
   },
   schedule: {
-    // every hour
-    // cron: "0 * * * *"
-    cron: "* * * * *"
+    // cron: "0 * * * *" // every hour. use in production
+    cron: "* * * * *" // every minute. useful for debugging
   },
   entities: [User, DailyStats, Logs, PageViewSource]
 }
