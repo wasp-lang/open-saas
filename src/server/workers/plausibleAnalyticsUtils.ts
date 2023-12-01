@@ -1,6 +1,6 @@
-const PLAUSIBLE_API_KEY = process.env.PLAUSIBLE_API_KEY!; // Replace with your Plausible API key
-const PLAUSIBLE_SITE_ID = 'localhost'; // Replace with your registered site ID with Plausible
-const PLAUSIBLE_BASE_URL = 'https://plausible.apps.twoducks.dev/api'; //  This is a self-hosted Plausible instance. Replace with your own, or the cloud-based Plausible base URL (e.g. https://plausible.io/api)
+const PLAUSIBLE_API_KEY = process.env.PLAUSIBLE_API_KEY!;
+const PLAUSIBLE_SITE_ID = process.env.PLAUSIBLE_SITE_ID!;
+const PLAUSIBLE_BASE_URL = process.env.PLAUSIBLE_BASE_URL;
 
 const headers = {
   'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ async function getPrevDayViewsChangePercent() {
   } else {
     change = ((pageViewsYesterday - pageViewsDayBeforeYesterday) / pageViewsDayBeforeYesterday) * 100;
   }
-  return change.toFixed(2);
+  return change.toFixed(0);
 }
 
 async function getPageviewsForDate(date: string) {

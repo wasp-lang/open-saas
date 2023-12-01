@@ -7,7 +7,7 @@ export enum TierIds {
 //get this link at https://dashboard.stripe.com/test/settings/billing/portal
 const isDev = process.env.NODE_ENV === 'development';
 const customerPortalTestUrl = 'https://billing.stripe.com/p/login/test_8wM8x17JN7DT4zC000';
-const customerPortalProdUrl = undefined;
+const customerPortalProdUrl = undefined; // TODO: add before deploying to production
 
 export const STRIPE_CUSTOMER_PORTAL_LINK = isDev ? customerPortalTestUrl : customerPortalProdUrl;
 
