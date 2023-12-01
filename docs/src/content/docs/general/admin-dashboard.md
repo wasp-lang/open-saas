@@ -50,9 +50,8 @@ The Admin dashboard is a single place for you to view your most important metric
 
 For a guide on how to integrate these services, check out the [Stripe](/guides/stripe-integration) and [Analytics guide](/guides/analytics) of the docs.
 
-<!-- TODO: add repo links -->
 :::tip[Help us improve]
-We're always looking to improve the Admin dashboard. If you feel something is missing or could be improved, consider [opening an issue]() or [submitting a pull request]()
+We're always looking to improve the Admin dashboard. If you feel something is missing or could be improved, consider [opening an issue](https://github.com/wasp-lang/open-saas/issues) or [submitting a pull request](https://github.com/wasp-lang/open-saas/pulls)
 :::
 
 ### Users

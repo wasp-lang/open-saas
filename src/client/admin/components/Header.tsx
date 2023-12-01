@@ -1,5 +1,5 @@
 import DarkModeSwitcher from './DarkModeSwitcher';
-import DropdownMessage from './DropdownMessage';
+import MessageButton from './MessageButton';
 import DropdownUser from '../../components/DropdownUser';
 import type { User } from '@wasp/entities'
 
@@ -67,7 +67,7 @@ const Header = (props: {
             {/* <!-- Dark Mode Toggler --> */}
 
             {/* <!-- Chat Notification Area --> */}
-            <DropdownMessage />
+            <MessageButton />
             {/* <!-- Chat Notification Area --> */}
           </ul>
 

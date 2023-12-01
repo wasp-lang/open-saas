@@ -18,11 +18,12 @@ Also install the [Wasp extension for VSCode](https://marketplace.visualstudio.co
 
 Clone this repo by running this command in your terminal:
 ```sh
-git clone // TODO ADD REPO LINK
+git clone https://github.com/wasp-lang/open-saas.git
 ```
 
+Then position yourself in the root of the project:
 ```sh
-cd // TODO ADD REPO NAME
+cd open-saas
 ```
 
 ### Start your DB

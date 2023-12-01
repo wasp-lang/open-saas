@@ -2,7 +2,6 @@ import { BetaAnalyticsDataClient } from '@google-analytics/data';
 
 const CLIENT_EMAIL = process.env.GOOGLE_ANALYTICS_CLIENT_EMAIL;
 const PRIVATE_KEY = Buffer.from(process.env.GOOGLE_ANALYTICS_PRIVATE_KEY!, 'base64').toString('utf-8');
-
 const PROPERTY_ID = process.env.GOOGLE_ANALYTICS_PROPERTY_ID;
 
 const analyticsDataClient = new BetaAnalyticsDataClient({
@@ -22,7 +21,6 @@ export async function getSources() {
       },
     ],
     // for a list of dimensions and metrics see https://developers.google.com/analytics/devguides/reporting/data/v1/api-schema
-    // get total page views
     dimensions: [
       {
         name: 'source',
@@ -37,7 +35,6 @@ export async function getSources() {
 
   let activeUsersPerReferrer: any[] = [];
   if (response?.rows) {
-    console.log('response.rows (sources): ', response.rows)
     activeUsersPerReferrer = response.rows.map((row) => {
       if (row.dimensionValues && row.metricValues) {
         return {

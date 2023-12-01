@@ -7,10 +7,7 @@ export default defineConfig({
   integrations: [
     starlightBlog({
       title: 'The Best Blog Ever',
-      sidebar: [
-        {
-        }
-      ],
+      sidebar: [{}],
       authors: {
         vince: {
           name: 'Vince',
@@ -22,10 +19,8 @@ export default defineConfig({
     }),
     starlight({
       title: 'Open SaaS Docs',
-      // root: '/start/introdcution/',
-      // site: 'https://www.my-site.dev', // TODO: Change this to your site
       editLink: {
-        baseUrl: 'https://github.com/withastro/starlight/edit/main/', // TODO: change
+        baseUrl: 'https://github.com/wasp-lang/open-saas/edit/main', 
       },
       components: {
         MarkdownContent: 'starlight-blog/overrides/MarkdownContent.astro',
@@ -33,7 +28,7 @@ export default defineConfig({
         ThemeSelect: 'starlight-blog/overrides/ThemeSelect.astro',
       },
       social: {
-        github: 'https://github.com/wasp-lang',
+        github: 'https://github.com/wasp-lang/open-saas',
         twitter: 'https://twitter.com/wasp_lang',
         discord: 'https://discord.gg/aCamt5wCpS',
       },

@@ -14,9 +14,8 @@ This template is:
 2. completely free to use and distribute
 3. comes with a ton of features out of the box!
 
-<!-- // TODO: add links -->
-Try it out here:
-Check Out the Code: 
+Try it out here: [OpenSaaS.sh](https://opensaas.sh)
+Check Out the Code: Open SaaS [GitHub Repo](https://github.com/wasp-lang/open-saas)
 
 ## What's inside?
 
@@ -44,8 +43,7 @@ You also get access to Wasp's diverse, helpful community if you get stuck or nee
 :::tip["Work In Progress"]
 We've tried to get as many of the core features of a SaaS app into this template as possible, but there still might be some missing features or functionality.
 
-We could always use some help tying up loose ends, so consider [contributing]()!
-<!-- {/* TODO: add link */} -->
+We could always use some help tying up loose ends, so consider [contributing](https://github.com/wasp-lang/open-saas/blob/main/CONTRIBUTING.md)!
 :::
 
 ## Getting acquainted with the codebase
