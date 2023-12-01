@@ -1,67 +1,41 @@
-# SaaS Template w/ GPT API, Google Auth, Tailwind, & Stripe Payments
+## Welcome to your new SaaS App!
 
-<img src='src/client/static/gptsaastemplate.png' width='700px'/>
+You've decided to build a SaaS app with the Open SaaS template. Great choice! 🎉
 
-<br/>
-<a href="https://www.producthunt.com/posts/free-saas-template-gpt-stripe-auth?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-free&#0045;saas&#0045;template&#0045;gpt&#0045;stripe&#0045;auth" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=389763&theme=neutral" alt="Free&#0032;SaaS&#0032;Template&#0032;&#0040;GPT&#0044;&#0032;Stripe&#0044;&#0032;Auth&#0041; - A&#0032;free&#0032;React&#0047;NodeJS&#0032;SaaS&#0032;template&#0032;for&#0032;quick&#0032;idea&#0032;execution | Product Hunt" style="width: 200px;" width="200" /></a>
-<br/>  
+This template is:
 
-## What is it?
-Entirely free SaaS template built with Prisma/Postgres, Express, React, Node (PERN stack). Use it as a springboard to build great products! 
+1. fully open-source
+2. completely free to use and distribute
+3. comes with a ton of features out of the box!
+4. focused on free, open-source services, where possible
 
-It has pre-configured: 
-- 🔐 Authentication (email + social) 
-- 📩 Emailing 
-- 🤑 Payments (Stripe) 
-- 🤖 GPT API, 
+Try it out here: [OpenSaaS.sh](https://opensaas.sh)
+Check Out the Docs here: [Open SaaS Docs](https://docs.opensaas.sh)
 
-and leverages: 
-- ⌨️ TypeScript 
-- 🎨 Tailwind CSS
+## What's inside?
 
-Test it out here: [https://saas-template-gpt-client.fly.dev/](https://saas-template-gpt-client.fly.dev/)
+The template itself is built on top of some very powerful tools and frameworks, including:
 
-## Running it locally
+- 🐝 [Wasp](https://wasp-lang.dev) - a full-stack React, NodeJS, Prisma framework with superpowers
+- 🚀 [Astro](https://starlight.astro.build/) - Astro's lightweight "Starlight" template for documentation and blog
+- 💸 [Stripe](https://stripe.com) - for products and payments
+- 📈 [Plausible](https://plausible.io) or [Google](https://analytics.google.com/) Analytics
+- 🤖 [OpenAI](https://openai.com) - OpenAI API integrated into the app
+- 📧 [SendGrid](https://sendgrid.com), [MailGun](https://mailgun.com), or SMTP - for email sending
+- 💅 [TailwindCSS](https://tailwindcss.com) - for styling
+- 🧑‍💼 [TailAdmin](https://tailadmin.com/) - admin dashboard & components for TailwindCSS
 
-1. Make sure you have the latest version of [Wasp](https://wasp-lang.dev) installed by running `curl -sSL https://get.wasp-lang.dev/installer.sh | sh` in your terminal.
-2. Run `wasp new <project-name> -t saas` to create a new app using this template. 
-3. Rename the `env.server.example` file to `.env.server` and fill in your API keys according to the instructions in the file.
-4. Make sure you have a Database connected and running. Here are two quick options:  
-  - run `wasp start db` if you have Docker installed and running (if not, on MacOS run `brew install docker-machine docker` then find and run the app from your launchpad). This will start a Postgres database for you. No need to do anything else! 🤯 
-  - or provision a Postgres database on [Railway](https://railway.app), go to settings and copy the `connection url`. Paste it as `DATABASE_URL=<your-postgres-connection-url>` into your `env.server` file.  
-5. Run `wasp db migrate-dev`
-6. Run `wasp start`. This will install all dependencies and start the client and server for you :)
-7. Go to `localhost:3000` in your browser (your NodeJS server will be running on port `3001`)
-8. Install the [Wasp extension for VSCode](https://marketplace.visualstudio.com/items?itemName=wasp-lang.wasp) to get the best DX
-9. Check the files for comments containing specific instructions.
-10. If you would like to test Stripe Webhooks locally, download the [Stripe CLI](https://stripe.com/docs/stripe-cli#install). This [YouTube video](https://youtu.be/Psq5N5C-FGo?si=CzRy3kizF20RFiSK&t=1041) does a great job explaining how to test webhooks locally with the Stripe CLI (watch until 27:00).
-11. Enjoy and Have fun. When you create an App with this template, be kind and let me know by tagging me on twitter [@hot_town](https://twitter.com/hot_town)
+Because we're using Wasp as the full-stack framework, we can leverage a lot of its features to build our SaaS in record time, including:
 
-## Deploying it quickly to Fly.io
+- 🔐 [Full-stack Authentication](https://wasp-lang.dev/docs/auth/overview) - Email verified + social Auth in a few lines of code.
+- ⛑ [End-to-end Type Safety](https://wasp-lang.dev/docs/data-model/operations/overview) - Type your backend functions and get inferred types on the front-end automatically, without the need to install or configure any third-party libraries. Oh, and type-safe Links, too!
+- 🤖 [Jobs](https://wasp-lang.dev/docs/language/features#jobs) - Run cron jobs in the background or set up queues simply by defining a function in the config file.
+- 🚀 [One-command Deploy](https://wasp-lang.dev/docs/advanced/deployment/overview) - Easily deploy via the CLI to [Fly.io](https://fly.io), or to other provides like [Railway](https://railway.app) and [Netlify](https://netlify.com).
 
-1. Create an account on Fly.io
-2. Install the Fly CLI by running `curl -L https://fly.io/install.sh | sh` on Linux/MacOS
-3. Run `wasp deploy fly setup my-wasp-app mia`
-4. Run `wasp deploy fly cmd secrets set ENV_VAR_EXAMPLE=<your-env-var> --context=server`, making sure to fill in all of your env vars
-5. Run `wasp deploy fly create-db mia`
-6. Run `wasp deploy fly deploy`
-7. Make sure you've updated your Stripe webhook URL in your [Stripe dashboard](https://dashboard.stripe.com/) to point to your Fly app's URL 
-8. Also make sure you've updated your [Google Auth callback URL](https://wasp-lang.dev/docs/integrations/google#google-auth) to point to your Fly app's URL 
+You also get access to Wasp's diverse, helpful community if you get stuck or need help.
+- 🤝 [Wasp Discord](https://discord.gg/aCamt5wCpS)
 
-You can also see the guides for deploying manually to Fly, Railway, and Netlify [here](https://wasp-lang.dev/docs/deploying).
 
-## How it works
+Note that we've tried to get as many of the core features of a SaaS app into this template as possible, but there still might be some missing features or functionality.
 
-- 🐝 [Wasp](https://wasp-lang.dev) - allows you to build full-stack apps with 10x less boilerplate
-- 🎨 [Tailwind CSS](https://tailwindcss.com/) - CSS that's easy to work with
-- 🤖 [OpenAI](https://openai.com/) - GPT-3.5 turbo API
-- 💸 [Stripe](https://stripe.com/) - for payments
-- 📧 [SendGrid](https://sendgrid.com/) - for email
-
-[Wasp](https://wasp-lang.dev) as the full-stack framework allows you to describe your app’s core features in the `main.wasp` config file in the root directory. Then it builds and glues these features into a React-Express-Prisma app for you so that you can focus on writing the client and server-side logic instead of configuring. For example, I did not have to use any third-party libraries for Google Authentication. I just wrote a couple lines of code in the config file stating that I want to use Google Auth, and Wasp configures it for me. Check out the comments `main.wasp` file for more.
-
-[Stripe](https://stripe.com/) makes the payment functionality super easy. I just used their `Subscription` feature. After the user pays, their `hasPaid` and `datePaid` fields are updated in the database via the webhook found in the `src/server/webhooks.ts` file. 
-
-[Wasp's integrated Jobs](https://wasp-lang.dev/docs/language/features#jobs) feature is used to run a cron job every week to send an newsletter email. I used [SendGrid](https://sendgrid.com/) for the email service.
-
-If you have any other questions, feel free to reach out to me on [twitter](https://twitter.com/hot_town) or in the [Wasp discord server](https://discord.gg/rzdnErX).
+We could always use some help tying up loose ends, so consider [contributing](https://github.com/wasp-lang/open-saas/blob/main/CONTRIBUTING.md)!
