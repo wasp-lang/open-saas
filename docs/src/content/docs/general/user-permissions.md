@@ -127,7 +127,7 @@ entity User {=psl
 //...
 psl=}
 ```
-// TODO: add screenshot of user table
+<!--  TODO: add screenshot of user table -->
 
 As an Admin, a user has access to the Admin dashboard, along with the user table where they can view and search for users, and edit and update information manually if necessary.
 

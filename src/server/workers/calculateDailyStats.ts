@@ -86,7 +86,6 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, con
     const sources = await getSources();
 
     for (const source of sources) {
-      console.log('source: ', source);
       let visitors = source.visitors;
       if (typeof source.visitors !== 'number') {
         visitors = parseInt(source.visitors);

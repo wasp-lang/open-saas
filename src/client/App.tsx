@@ -3,7 +3,7 @@ import AppNavBar from './components/AppNavBar';
 import { useMemo, useEffect, ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
 import useAuth from '@wasp/auth/useAuth';
-import updateCurrentUser from '@wasp/actions/updateCurrentUser'; // TODO fix
+import updateCurrentUser from '@wasp/actions/updateCurrentUser';
 
 /**
  * use this component to wrap all child components
@@ -25,8 +25,9 @@ export default function App({ children }: { children: ReactNode }) {
     if (user) {
       const lastSeenAt = new Date(user.lastActiveTimestamp);
       const today = new Date();
-      if (lastSeenAt.getDate() === today.getDate()) return;
-      updateCurrentUser({ lastActiveTimestamp: today });
+      if (today.getTime() - lastSeenAt.getTime() > 5 * 60 * 1000) {
+        updateCurrentUser({ lastActiveTimestamp: today });
+      }
     }
   }, [user]);
 

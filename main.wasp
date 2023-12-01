@@ -5,10 +5,10 @@ app SaaSTemplate {
   title: "My Open SaaS App",
   head: [
         "<meta property='og:type' content='website' />",
-        "<meta property='og:url' content='https://mySaaSapp.com' />", // TODO change url
+        "<meta property='og:url' content='https://opensaas.sh' />", 
         "<meta property='og:description' content='I made a SaaS App. Buy my stuff.' />",
-        "<meta property='og:image' content='src/client/static/image.png' />",
-        "<meta name='twitter:image' content='https://mySaaSapp.com/gptsaastemplate.png' />", // TODO change url and image
+        "<meta property='og:image' content='https://opensaas.sh/public-logo.png' />",
+        "<meta name='twitter:image' content='https://opensaas.sh/public-logo.png' />", 
         "<meta name='twitter:image:width' content='800' />",
         "<meta name='twitter:image:height' content='400' />",
         "<meta name='twitter:card' content='summary_large_image' />",
@@ -247,6 +247,12 @@ route AdminChartsRoute { path: "/admin/chart", to: AdminChartsPage }
 page AdminChartsPage {
   authRequired: true,
   component: import AdminCharts from "@client/admin/pages/Chart"
+}
+
+route AdminMessagesRoute { path: "/admin/messages", to: AdminMessagesPage }
+page AdminMessagesPage {
+  authRequired: true,
+  component: import AdminMessages from "@client/admin/pages/Messages"
 }
 
 route AdminFormElementsRoute { path: "/admin/forms/form-elements", to: AdminFormElementsPage }
