@@ -12,7 +12,7 @@ app SaaSTemplate {
         "<meta name='twitter:image:width' content='800' />",
         "<meta name='twitter:image:height' content='400' />",
         "<meta name='twitter:card' content='summary_large_image' />",
-        // you can put your analytics scripts here, too!
+        // you can put your analytics scripts here
         "<script defer data-domain='localhost' src='https://plausible.apps.twoducks.dev/js/script.js'></script>",
         // plausible has script extension `script.local.js` for local development
         "<script defer data-domain='localhost' src='https://plausible.apps.twoducks.dev/js/script.local.js'></script>",
@@ -122,7 +122,6 @@ entity SocialLogin {=psl
   @@unique([provider, providerId, userId])
 psl=}
 
-// This can be anything. In most cases, this will be your product
 entity GptResponse {=psl
   id                        String          @id @default(uuid())
   content                   String
@@ -132,6 +131,8 @@ entity GptResponse {=psl
   updatedAt                 DateTime        @updatedAt
 psl=}
 
+// TODO: add functionality to allow users to send messages to admin
+// and make them accessible via the admin dashboard
 entity ContactFormMessage {=psl
   id                        String          @id @default(uuid())
   content                   String
@@ -210,11 +211,6 @@ route GptRoute { path: "/gpt", to: GptPage }
 page GptPage {
   authRequired: true,
   component: import GptPage from "@client/app/GptPage"
-}
-
-route PricingRoute { path: "/pricing", to: PricingPage }
-page PricingPage {
-  component: import Pricing from "@client/app/PricingPage"
 }
 
 route AccountRoute { path: "/account", to: AccountPage }
