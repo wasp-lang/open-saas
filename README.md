@@ -9,8 +9,8 @@ This template is:
 3. comes with a ton of features out of the box!
 4. focused on free, open-source services, where possible
 
-Try it out here: [OpenSaaS.sh](https://opensaas.sh)
-Check Out the Docs here: [Open SaaS Docs](https://docs.opensaas.sh)
+Try it out here: [OpenSaaS.sh](https://opensaas.sh)  
+Check out the Docs here: [Open SaaS Docs](https://docs.opensaas.sh)
 
 ## What's inside?
 

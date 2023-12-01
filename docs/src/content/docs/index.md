@@ -14,8 +14,8 @@ This template is:
 2. completely free to use and distribute
 3. comes with a ton of features out of the box!
 
-Try it out here: [OpenSaaS.sh](https://opensaas.sh)
-Check Out the Code: Open SaaS [GitHub Repo](https://github.com/wasp-lang/open-saas)
+Try it out here: [OpenSaaS.sh](https://opensaas.sh)  
+Check out the Code: [Open SaaS GitHub Repo](https://github.com/wasp-lang/open-saas)
 
 ## What's inside?
 
