@@ -1,5 +1,6 @@
-Thanks so much for considering contributing to Open SaaS
+Thanks so much for considering contributing to Open SaaS 🙏
 
+## How to contribute
 Contributing is simple:
 1. Make sure you've installed and run the app.
 2. Find something you'd like to work on. Check out the [issues](https://github.com/wasp-lang/open-saas/issues) or contact us on the [Wasp Discord](https://discord.gg/aCamt5wCpS) to discuss.
