@@ -228,7 +228,7 @@ page CheckoutPage {
 route AdminRoute { path: "/admin", to: DashboardPage }
 page DashboardPage {
   authRequired: true,
-  component: import Dashboard from "@client/admin/pages/Dashboard/Ecommerce"
+  component: import Dashboard from "@client/admin/pages/DashboardPage"
 }
 
 route AdminUsersRoute { path: "/admin/users", to: AdminUsersPage }

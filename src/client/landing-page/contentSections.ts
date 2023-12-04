@@ -1,10 +1,10 @@
-import { TierIds } from '@wasp/shared/constants';
+import { TierIds, DOCS_URL, BLOG_URL } from '@wasp/shared/constants';
 
 export const navigation = [
   { name: 'Features', href: '#features' },
   { name: 'Pricing', href: '#pricing' },
-  { name: 'Documentation', href: '#' },
-  { name: 'Blog', href: '#' },
+  { name: 'Documentation', href: DOCS_URL },
+  { name: 'Blog', href: BLOG_URL },
 ];
 export const features = [
   {

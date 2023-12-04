@@ -4,6 +4,9 @@ export enum TierIds {
   ENTERPRISE = 'enterprise-tier',
 }
 
+export const DOCS_URL = 'https://open-saas-docs.netlify.app';
+export const BLOG_URL = 'https://open-saas-blog.netlify.app/blog';
+
 //get this link at https://dashboard.stripe.com/test/settings/billing/portal
 const isDev = process.env.NODE_ENV === 'development';
 const customerPortalTestUrl = 'https://billing.stripe.com/p/login/test_8wM8x17JN7DT4zC000';
