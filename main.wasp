@@ -1,6 +1,6 @@
 app SaaSTemplate {
   wasp: {
-    version: "^0.11.6"
+    version: "^0.11.8"
   },
   title: "My Open SaaS App",
   head: [
