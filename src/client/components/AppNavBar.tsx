@@ -4,11 +4,12 @@ import { HiBars3 } from 'react-icons/hi2';
 import useAuth from '@wasp/auth/useAuth';
 import logo from '../static/logo.png';
 import DropdownUser from './DropdownUser';
+import { DOCS_URL, BLOG_URL } from '@wasp/shared/constants';
 
 const navigation = [
   { name: 'GPT Wrapper', href: '/gpt' },
-  { name: 'Documentation', href: '#' }, // TODO: add link to docs
-  { name: 'Blog', href: '#' }, // TODO: add link to blog
+  { name: 'Documentation', href: DOCS_URL }, 
+  { name: 'Blog', href: BLOG_URL }, 
 ]; 
 
 export default function AppNavBar() {

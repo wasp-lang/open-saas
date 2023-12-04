@@ -1,21 +1,21 @@
-import TotalSignupsCard from '../../components/TotalSignupsCard';
-import TotalPageViewsCard from '../../components/TotalPaidViewsCard';
-import TotalPayingUsersCard from '../../components/TotalPayingUsersCard';
-import TotalRevenueCard from '../../components/TotalRevenueCard';
-import RevenueAndProfitChart from '../../components/RevenueAndProfitChart';
-import SourcesTable from '../../components/SourcesTable';
-import DefaultLayout from '../../layout/DefaultLayout';
+import TotalSignupsCard from '../components/TotalSignupsCard';
+import TotalPageViewsCard from '../components/TotalPaidViewsCard';
+import TotalPayingUsersCard from '../components/TotalPayingUsersCard';
+import TotalRevenueCard from '../components/TotalRevenueCard';
+import RevenueAndProfitChart from '../components/RevenueAndProfitChart';
+import SourcesTable from '../components/SourcesTable';
+import DefaultLayout from '../layout/DefaultLayout';
 import { useQuery } from '@wasp/queries';
 import getDailyStats from '@wasp/queries/getDailyStats';
 import { useHistory } from 'react-router-dom';
 import type { User } from '@wasp/entities';
 
-const Ecommerce = ({ user} : { user: User }) => {
+const Dashboard = ({ user }: { user: User }) => {
   const history = useHistory();
   if (!user.isAdmin) {
     history.push('/');
   }
-  
+
   const { data: stats, isLoading, error } = useQuery(getDailyStats);
 
   return (
@@ -41,4 +41,4 @@ const Ecommerce = ({ user} : { user: User }) => {
   );
 };
 
-export default Ecommerce;
+export default Dashboard;
