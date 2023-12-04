@@ -22,13 +22,13 @@ export const features = [
   {
     name: 'Stripe Integration',
     description:
-      "No SaaS is complete without payments. That's why subscriptions and there necessary webhooks are built-in!",
+      "No SaaS is complete without payments. That's why subscriptions and the necessary webhooks are built-in.",
     icon: '💸',
   },
   {
     name: 'Admin Dashboard',
     description:
-      "Graphs! Tables! Analytics all in one place! Ooooooooooh! Ahhhhhhhhh!",
+      "Graphs! Tables! Analytics! All in one place. Ooooooooooh.",
     icon: '📈',
   },
   {
@@ -45,7 +45,7 @@ export const features = [
   },
   {
     name: 'Deploy Anywhere',
-    description: 'You own all your code, so deploy it wherever you want!',
+    description: 'You own all your code, so deploy it wherever you want.',
     icon: '🚀 ',
   },
   {
