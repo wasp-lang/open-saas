@@ -100,7 +100,7 @@ const UsersTable = () => {
                       } else if (!!prevValue) {
                         return [...prevValue, e.target.value as StatusOptions];
                       } else {
-                        return [prevValue as StatusOptions];
+                        return prevValue;
                       }
                     });
                   }}

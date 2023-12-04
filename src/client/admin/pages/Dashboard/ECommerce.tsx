@@ -10,7 +10,7 @@ import getDailyStats from '@wasp/queries/getDailyStats';
 import { useHistory } from 'react-router-dom';
 import type { User } from '@wasp/entities';
 
-const ECommerce = ({ user} : { user: User }) => {
+const Ecommerce = ({ user} : { user: User }) => {
   const history = useHistory();
   if (!user.isAdmin) {
     history.push('/');
@@ -41,4 +41,4 @@ const ECommerce = ({ user} : { user: User }) => {
   );
 };
 
-export default ECommerce;
+export default Ecommerce;

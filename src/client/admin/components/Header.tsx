@@ -6,7 +6,7 @@ import type { User } from '@wasp/entities'
 const Header = (props: {
   sidebarOpen: string | boolean | undefined;
   setSidebarOpen: (arg0: boolean) => void;
-  user?: Omit<User, 'password'> | null | undefined;
+  user?: Partial<User>;
 }) => {
   return (
     <header className='sticky top-0 z-999 flex w-full bg-white dark:bg-boxdark dark:drop-shadow-none'>
@@ -72,7 +72,7 @@ const Header = (props: {
           </ul>
 
           {/* <!-- User Area --> */}
-          <DropdownUser username={props.user?.email?.split('@')[0]} isUserAdmin={props.user?.isAdmin || false} />
+          {!!props.user && <DropdownUser user={props.user} />}
           {/* <!-- User Area --> */}
         </div>
       </div>
