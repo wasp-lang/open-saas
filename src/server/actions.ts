@@ -124,9 +124,8 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, GptResponse> =
       });
     }
     console.error(error);
+    throw new HttpError(500, error.message);
   }
-
-  throw new HttpError(500, 'Something went wrong');
 };
 
 export const updateUserById: UpdateUserById<{ id: number; data: Partial<User> }, User> = async (
