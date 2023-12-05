@@ -4,10 +4,10 @@ import starlightBlog from 'starlight-blog';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://opensaas.sh',
   integrations: [
     starlightBlog({
       title: 'The Best Blog Ever',
-      sidebar: [{}],
       authors: {
         vince: {
           name: 'Vince',
@@ -18,9 +18,14 @@ export default defineConfig({
       },
     }),
     starlight({
-      title: 'Open SaaS Docs',
+      title: 'Open SaaS',
+      description: 'Open SaaS is a free, open-source, full-stack SaaS starter kit for React + NodeJS.',
+      logo: {
+        src: '/src/assets/logo.png',
+        alt: 'Open SaaS',
+      },
       editLink: {
-        baseUrl: 'https://github.com/wasp-lang/open-saas/edit/main', 
+        baseUrl: 'https://github.com/wasp-lang/open-saas/edit/main',
       },
       components: {
         MarkdownContent: 'starlight-blog/overrides/MarkdownContent.astro',
