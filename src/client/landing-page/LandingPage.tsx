@@ -1,21 +1,23 @@
 import { useState } from 'react';
 import { Dialog } from '@headlessui/react';
-import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai';
+import { AiFillCheckCircle, AiFillCloseCircle, AiOutlineLoading } from 'react-icons/ai';
 import { HiBars3 } from 'react-icons/hi2';
 import { BiLogIn } from 'react-icons/bi';
 import { Link } from '@wasp/router';
 import logo from '../static/logo.png';
-import daBoi from '../static/magic-app-gen-logo.png';
+import daBoi from '../static/da-boi.png';
+import openSaasBanner from '../static/open-saas-banner-gr.png';
 import { features, navigation, tiers, faqs, footerNavigation } from './contentSections';
 import useAuth from '@wasp/auth/useAuth';
 import DropdownUser from '../components/DropdownUser';
 import { useHistory } from 'react-router-dom';
 import stripePayment from '@wasp/actions/stripePayment';
-import { STRIPE_CUSTOMER_PORTAL_LINK } from '@wasp/shared/constants';
+import { DOCS_URL, STRIPE_CUSTOMER_PORTAL_LINK } from '@wasp/shared/constants';
 import { UserMenuItems } from '../components/UserMenuItems';
 
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isStripePaymentLoading, setIsStripePaymentLoading] = useState<boolean | string>(false);
 
   const { data: user, isLoading: isUserLoading } = useAuth();
 
@@ -27,6 +29,7 @@ export default function LandingPage() {
       return;
     }
     try {
+      setIsStripePaymentLoading(tierId);
       let stripeResults = await stripePayment(tierId);
 
       if (stripeResults?.sessionUrl) {
@@ -34,6 +37,8 @@ export default function LandingPage() {
       }
     } catch (error: any) {
       console.error(error?.message ?? 'Something went wrong.');
+    } finally {
+      setIsStripePaymentLoading(false);
     }
   }
 
@@ -122,7 +127,7 @@ export default function LandingPage() {
                       </div>
                     </Link>
                   ) : (
-                    <UserMenuItems user={user}/>
+                    <UserMenuItems user={user} />
                   )}
                 </div>
               </div>
@@ -158,30 +163,36 @@ export default function LandingPage() {
           </div>
           <div className='py-24 sm:py-32'>
             <div className='mx-auto max-w-8xl px-6 lg:px-8'>
-              <div className='mx-auto max-w-2xl text-center'>
+              <div className='lg:mb-18 mx-auto max-w-2xl text-center'>
                 <h1 className='text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl'>
                   The <span className='italic'>free</span> SaaS template with superpowers
                 </h1>
                 <p className='mt-6 text-lg leading-8 text-gray-600'>
-                  Get all the features of a modern SaaS app, in a ready-made template. Built on top of Wasp, the only
-                  full-stack React + NodeJS framework that builds features for you.
+                  An open-source, feature-rich template, engineered with Wasp—the only full-stack React + NodeJS
+                  framework that manages features for you.
                 </p>
                 <div className='mt-10 flex items-center justify-center gap-x-6'>
                   <a
-                    href='https://github.com/wasp-lang/saas-template-gpt'
+                    href='https://github.com/wasp-lang/open-saas'
                     className='rounded-md bg-yellow-500 px-3.5 py-2.5 text-sm font-semibold text-white hover:text-white shadow-sm hover:bg-yellow-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
                   >
                     Get Started <span aria-hidden='true'>→</span>
+                  </a>
+                  <a
+                    href={DOCS_URL}
+                    className='rounded-md px-3.5 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-purple-200 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+                  >
+                    Read the Docs
                   </a>
                 </div>
               </div>
               <div className='mt-14 flow-root sm:mt-14 '>
                 <div className='-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4'>
                   <img
-                    src='https://coverlettergpt.xyz/homepage.png'
+                    src={openSaasBanner}
                     alt='App screenshot'
-                    // width={2432}
-                    // height={1442}
+                    width={2432}
+                    height={1442}
                     className='rounded-md shadow-2xl ring-1 ring-gray-900/10'
                   />
                 </div>
@@ -265,41 +276,57 @@ export default function LandingPage() {
             <div className='relative sm:top-5 sm:right-5 bg-gray-900 px-8 py-20 shadow-xl sm:rounded-xl sm:px-10 sm:py-16 md:px-12 lg:px-20'>
               <h2 className='text-left font-semibold tracking-wide  leading-7 text-gray-500'>Testimonials</h2>
               <div className='relative flex flex-col lg:flex-row gap-12 w-full mt-6 z-10 justify-between lg:mx-0'>
-                <figure className='flex-1 p-8 rounded-xl bg-gray-500/5 '>
-                  <blockquote className='text-lg font-semibold text-white sm:text-xl sm:leading-8'>
-                    <p>“My cats love it!”</p>
-                  </blockquote>
-                  <figcaption className=' mt-6 text-base text-white'>
-                    <div className='font-semibold'>Fecony</div>
-                    <div className='mt-1'>Wasp Expert</div>
-                  </figcaption>
-                </figure>
-                <figure className='flex-1 p-8 rounded-xl bg-gray-500/5 '>
+                <figure className='flex-1 flex-1 flex flex-col justify-between p-8 rounded-xl bg-gray-500/5 '>
                   <blockquote className='text-lg font-semibold text-white sm:text-xl sm:leading-8'>
                     <p>
                       “I used Wasp to build and sell my AI-augmented SaaS app for marketplace vendors within two
-                      months...!”
+                      months!”
                     </p>
                   </blockquote>
-                  <figcaption className=' mt-6 text-base text-white'>
-                    <a href='https://twitter.com/maksim36ua'>
-                      <div className='font-semibold hover:underline'>Maks</div>
-                      <div className='mt-1'>Senior Eng @ Red Hat</div>
+                  <figcaption className='mt-6 text-base text-white'>
+                    <a href='https://twitter.com/maksim36ua' className='flex items-center gap-x-2'>
+                      <img
+                        src='https://pbs.twimg.com/profile_images/1719397191205179392/V_QrGPSO_400x400.jpg'
+                        className='h-12 w-12 rounded-full'
+                      />
+                      <div>
+                        <div className='font-semibold hover:underline'>Maks</div>
+                        <div className='mt-1'>Senior Eng @ Red Hat</div>
+                      </div>
                     </a>
                   </figcaption>
                 </figure>
-                <figure className='flex-1 p-8 rounded-xl bg-gray-500/5 '>
+                <figure className='flex-1 flex flex-col justify-between p-8 rounded-xl bg-gray-500/5 '>
+                  <blockquote className='text-lg font-semibold text-white sm:text-xl sm:leading-8'>
+                    <p>“My cats love it!”</p>
+                  </blockquote>
+                  <figcaption className='mt-6 text-base text-white'>
+                    <a href='https://twitter.com/webrickony' className='flex items-center gap-x-2'>
+                      <img
+                        src='https://pbs.twimg.com/profile_images/1560677466749943810/QIFuQMqU_400x400.jpg'
+                        className='h-12 w-12 rounded-full'
+                      />
+                      <div>
+                        <div className='font-semibold hover:underline'>Fecony</div>
+                        <div className='mt-1'>Wasp Expert</div>
+                      </div>
+                    </a>
+                  </figcaption>
+                </figure>
+                <figure className='flex-1 flex-1 flex flex-col justify-between  p-8 rounded-xl bg-gray-500/5 '>
                   <blockquote className='text-lg font-semibold text-white sm:text-xl sm:leading-8'>
                     <p>“I don't even know how to code. I'm just a plushie.”</p>
                   </blockquote>
                   <figcaption className=' mt-6 text-base text-white'>
-                    <div className='font-semibold'>Da Boi</div>
-                    <div className='mt-1'>Wasp's Unofficial Mascot</div>
+                    <a href='https://twitter.com/wasp-lang' className='flex items-center gap-x-2'>
+                      <img src={daBoi} className='h-14 w-14 rounded-full' />
+                      <div>
+                        <div className='font-semibold hover:underline'>Da Boi</div>
+                        <div className='mt-1'>Wasp Unofficial Mascot</div>
+                      </div>
+                    </a>
                   </figcaption>
                 </figure>
-              </div>
-              <div className='absolute top-10 right-5 w-[20%] sm:right-10 sm:w-[10%] grayscale-[35%]'>
-                <img src={daBoi} />
               </div>
             </div>
           </div>
@@ -385,6 +412,7 @@ export default function LandingPage() {
                           ? 'bg-yellow-500 text-white hover:text-white shadow-sm hover:bg-yellow-400'
                           : 'text-gray-600  ring-1 ring-inset ring-purple-200 hover:ring-purple-400'
                       }
+                      ${isStripePaymentLoading === tier.id ? 'cursor-wait' : null}
                       'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400'
                     `}
                     >

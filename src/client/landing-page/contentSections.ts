@@ -44,8 +44,8 @@ export const features = [
     icon: '🤖',
   },
   {
-    name: 'Deploy Anywhere',
-    description: 'You own all your code, so deploy it wherever you want.',
+    name: 'Deploy Anywhere. Easily.',
+    description: 'You own all your code, so deploy it wherever you want. Or take advantage of Wasp\'s one-command, full-stack deploy.',
     icon: '🚀 ',
   },
   {
@@ -95,8 +95,8 @@ export const faqs = [
 export const footerNavigation = {
   app: [
     { name: 'Pricing', href: '#pricing' },
-    { name: 'Documentation', href: '#' }, // TODO: fill in
-    { name: 'Blog', href: '#' },
+    { name: 'Documentation', href: DOCS_URL }, 
+    { name: 'Blog', href: BLOG_URL },
   ],
   company: [
     { name: 'About', href: '#' },
