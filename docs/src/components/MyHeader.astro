@@ -3,10 +3,10 @@ import { logos } from 'virtual:starlight/user-images';
 import config from 'virtual:starlight/user-config';
 import blogConfig from 'virtual:starlight-blog-config'
 import type { Props } from '@astrojs/starlight/props';
-import { BASE_URL } from '../../constants';
 
+const href = Astro.site
 ---
-<a href={BASE_URL} class="site-title sl-flex">
+<a {href} class="site-title sl-flex">
 	{
 		config.logo && logos.dark && (
 			<>

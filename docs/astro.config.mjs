@@ -1,11 +1,10 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import starlightBlog from 'starlight-blog';
-import { BASE_URL } from './constants';
 
 // https://astro.build/config
 export default defineConfig({
-  site: BASE_URL,
+  site: 'https://opensaas.sh',
   integrations: [
     starlightBlog({
       title: 'Blog',
