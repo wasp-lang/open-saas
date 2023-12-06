@@ -34,6 +34,7 @@ export function createRandomUser() {
     passwordResetSentAt: null,
     checkoutSessionId: null,
     subscriptionTier: faker.helpers.arrayElement([TierIds.HOBBY, TierIds.PRO]),
+    isMockUser: true,
   };
   return user;
 }

@@ -45,9 +45,9 @@ app SaaSTemplate {
       //   },
       // },
     },
-    signup: {
-      additionalFields: import setAdminUsers from "@server/auth/setAdminUsers.js",
-    },
+    // signup: {
+    //   additionalFields: import setAdminUsers from "@server/auth/setAdminUsers.js",
+    // },
     onAuthFailedRedirectTo: "/",
     onAuthSucceededRedirectTo: "/gpt",
   },
@@ -98,8 +98,13 @@ entity User {=psl
   password                  String
   createdAt                 DateTime        @default(now())
   lastActiveTimestamp       DateTime        @default(now())
-  isAdmin                   Boolean         @default(false)
   isEmailVerified           Boolean         @default(false)
+  // this is an extra property for the deployed version of the app
+  // so that all users can access the admin dashboard but won't be able to see
+  // the other users' data, only mock user data
+  isMockUser                Boolean         @default(false)
+  isAdmin                   Boolean         @default(true) // make all users admins by default
+
   emailVerificationSentAt   DateTime?
   passwordResetSentAt       DateTime?
   stripeId                  String? 
