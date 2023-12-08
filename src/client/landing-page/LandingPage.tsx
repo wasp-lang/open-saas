@@ -286,7 +286,7 @@ export default function LandingPage() {
             </p>
             <p className='mt-6 text-lg leading-8 text-gray-600'>
               We've pre-built the important stuff.
-              <br /> Wasp does all the boring stuff.
+              <br /> Wasp does the boilerplate stuff.
               <br /> You get to do the fun stuff.
             </p>
           </div>
@@ -380,7 +380,7 @@ export default function LandingPage() {
             </div>
             <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600'>
               Stripe subscriptions and secure webhooks are built-in. Just add your Stripe
-              Product IDs! Go it a try with credit card number{' '}<span className='px-2 py-1 bg-gray-100 rounded-md text-gray-500'>4242 4242 4242 4242 4242</span>
+              Product IDs! Try it out below with test credit card number{' '}<span className='px-2 py-1 bg-gray-100 rounded-md text-gray-500'>4242 4242 4242 4242 4242</span>
             </p>
             <div className='isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 lg:gap-x-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3'>
               {tiers.map((tier) => (
