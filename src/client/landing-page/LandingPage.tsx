@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog } from '@headlessui/react';
 import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai';
 import { HiBars3 } from 'react-icons/hi2';
@@ -6,7 +6,8 @@ import { BiLogIn } from 'react-icons/bi';
 import { Link } from '@wasp/router';
 import logo from '../static/logo.png';
 import daBoi from '../static/da-boi.png';
-import openSaasBanner from '../static/open-saas-banner-gr.png';
+import openSaasBanner from '../static/open-saas-banner.png';
+// import openSaasBanner from '../static/open-saas-alt-banner.p ng';
 import { features, navigation, tiers, faqs, footerNavigation } from './contentSections';
 import useAuth from '@wasp/auth/useAuth';
 import DropdownUser from '../components/DropdownUser';
@@ -18,10 +19,23 @@ import { UserMenuItems } from '../components/UserMenuItems';
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isStripePaymentLoading, setIsStripePaymentLoading] = useState<boolean | string>(false);
+  const [isDemoInfoVisible, setIsDemoInfoVisible] = useState(false);
 
   const { data: user, isLoading: isUserLoading } = useAuth();
 
   const history = useHistory();
+
+  useEffect(() => {
+    try {
+      if (localStorage.getItem('isDemoInfoVisible') === 'false') {
+        // do nothing
+      } else {
+        setIsDemoInfoVisible(true);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
 
   async function handleBuyNowClick(tierId: string) {
     if (!user) {
@@ -42,16 +56,40 @@ export default function LandingPage() {
     }
   }
 
+  const handleDemoInfoClose = () => {
+    try {
+      localStorage.setItem('isDemoInfoVisible', 'false');
+      setIsDemoInfoVisible(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Open SaaS App' />;
 
   return (
     <div className='bg-white'>
+      {/* Floating Demo Announcement */}
+      {isDemoInfoVisible && <div className='fixed z-999 bottom-0 mb-2 left-1/2 -translate-x-1/2 lg:mb-4 bg-gray-700 rounded-full px-3.5 py-2 text-sm text-white duration-300 ease-in-out hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-600'>
+        <div className='px-4 flex flex-row gap-2 items-center my-1'>
+          <span className='text-gray-100'>
+            This demo app <span className='italic'>is</span> the SaaS template. Feel free to play around!
+          </span>
+          <button className=' pl-2.5 text-gray-400 text-xl font-bold' onClick={() => handleDemoInfoClose()}>
+            X
+          </button>
+        </div>
+      </div>}
       {/* Header */}
       <header className='absolute inset-x-0 top-0 z-50'>
         <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
-          <div className='flex lg:flex-1'>
-            <a href='/' className='-m-1.5 p-1.5'>
+          <div className='flex items-center lg:flex-1'>
+            <a
+              href='/'
+              className='flex items-center -m-1.5 p-1.5 text-gray-900 duration-300 ease-in-out hover:text-yellow-500'
+            >
               <NavLogo />
+              <span className='ml-2 text-sm font-semibold leading-6 '>Open Saas</span>
             </a>
           </div>
           <div className='flex lg:hidden'>
@@ -163,31 +201,28 @@ export default function LandingPage() {
           </div>
           <div className='py-24 sm:py-32'>
             <div className='mx-auto max-w-8xl px-6 lg:px-8'>
-              <div className='lg:mb-18 mx-auto max-w-2xl text-center'>
+              <div className='lg:mb-18 mx-auto max-w-3xl text-center'>
                 <h1 className='text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl'>
                   The <span className='italic'>free</span> SaaS template with superpowers
                 </h1>
-                <p className='mt-6 text-lg leading-8 text-gray-600'>
-                  An open-source, feature-rich template, engineered with Wasp—the only full-stack React + NodeJS
-                  framework that manages features for you.
+                <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-gray-600'>
+                  An open-source, feature-rich, full-stack React + NodeJS template that manages features for you.
                 </p>
                 <div className='mt-10 flex items-center justify-center gap-x-6'>
-                  <a
+                  {/* <a
                     href='https://github.com/wasp-lang/open-saas'
                     className='rounded-md bg-yellow-500 px-3.5 py-2.5 text-sm font-semibold text-white hover:text-white shadow-sm hover:bg-yellow-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
-                  >
-                    Get Started <span aria-hidden='true'>→</span>
-                  </a>
+                  ></a> */}
                   <a
                     href={DOCS_URL}
                     className='rounded-md px-3.5 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-purple-200 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
                   >
-                    Read the Docs
+                    Get Started <span aria-hidden='true'>→</span>
                   </a>
                 </div>
               </div>
               <div className='mt-14 flow-root sm:mt-14 '>
-                <div className='-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4'>
+                <div className='-m-2 rounded-xl  lg:-m-4 lg:rounded-2xl lg:p-4'>
                   <img
                     src={openSaasBanner}
                     alt='App screenshot'
@@ -206,7 +241,7 @@ export default function LandingPage() {
         <div className='mt-12 mx-auto max-w-7xl px-6 lg:px-8 flex flex-col items-between gap-y-6'>
           <h2 className='mb-6 text-center font-semibold tracking-wide text-gray-500'>Built and Ships with</h2>
 
-          <div className='mx-auto grid max-w-lg grid-cols-2 items-center gap-x-8 gap-y-12 sm:max-w-xl md:grid-cols-5 sm:gap-x-10 sm:gap-y-14 lg:mx-0 lg:max-w-none lg:grid-cols-5'>
+          <div className='mx-auto grid max-w-lg grid-cols-2 items-center gap-x-8 gap-y-12 sm:max-w-xl md:grid-cols-6 sm:gap-x-10 sm:gap-y-14 lg:mx-0 lg:max-w-none'>
             <img
               className=' col-span-1 max-h-12 w-full object-contain grayscale opacity-100'
               src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/512px-React-icon.svg.png'
@@ -220,11 +255,14 @@ export default function LandingPage() {
               height={48}
             />
             <img
-              className='col-span-2 md:col-span-1 max-h-12 w-full object-contain grayscale opacity-80 '
+              className='col-span-1 max-h-12 w-full object-contain grayscale opacity-80 '
               src={logo}
               alt='Wasp'
               height={48}
             />
+            <div className='flex justify-center col-span-1 max-h-12 w-full object-contain grayscale opacity-80'>
+            <svg width={48} height={48} viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><title>file_type_prisma</title><path fill="#545454" d="M25.21,24.21,12.739,27.928a.525.525,0,0,1-.667-.606L16.528,5.811a.43.43,0,0,1,.809-.094l8.249,17.661A.6.6,0,0,1,25.21,24.21Zm2.139-.878L17.8,2.883h0A1.531,1.531,0,0,0,16.491,2a1.513,1.513,0,0,0-1.4.729L4.736,19.648a1.592,1.592,0,0,0,.018,1.7l5.064,7.909a1.628,1.628,0,0,0,1.83.678l14.7-4.383a1.6,1.6,0,0,0,1-2.218Z"  /></svg>
+            </div>
             <img
               className=' col-span-1 max-h-12 w-full object-contain grayscale '
               src='https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Tailwind_CSS_Logo.svg/512px-Tailwind_CSS_Logo.svg.png'
@@ -249,7 +287,7 @@ export default function LandingPage() {
             <p className='mt-6 text-lg leading-8 text-gray-600'>
               We've pre-built the important stuff.
               <br /> Wasp does all the boring stuff.
-              <br /> You get all the credit.
+              <br /> You get to do the fun stuff.
             </p>
           </div>
           <div className='mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl'>
@@ -341,8 +379,8 @@ export default function LandingPage() {
               </h2>
             </div>
             <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600'>
-              Secure Stripe webhooks, and a complete subscription management system are built-in. Just add your Stripe
-              Product IDs and you're good to go!
+              Stripe subscriptions and secure webhooks are built-in. Just add your Stripe
+              Product IDs! Go it a try with credit card number{' '}<span className='px-2 py-1 bg-gray-100 rounded-md text-gray-500'>4242 4242 4242 4242 4242</span>
             </p>
             <div className='isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 lg:gap-x-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3'>
               {tiers.map((tier) => (
