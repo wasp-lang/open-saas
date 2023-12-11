@@ -1,16 +1,21 @@
+---
+title: Introduction
+---
+
 ## Welcome to your new SaaS App!
 
-You've decided to build a SaaS app with the Open SaaS template. Great choice! 🎉
+<!-- {/* TODO: add a screenshot of the app */} -->
+
+You've decided to build a SaaS app with this template. Great choice! 🎉
 
 This template is:
 
 1. fully open-source
 2. completely free to use and distribute
 3. comes with a ton of features out of the box!
-4. focused on free, open-source services, where possible
 
 Check it out in action here: [OpenSaaS.sh](https://opensaas.sh)  
-Check out the Docs here: [Open SaaS Docs](https://docs.opensaas.sh)
+Check out the Code: [Open SaaS GitHub Repo](https://github.com/wasp-lang/open-saas)
 
 ## What's inside?
 
@@ -35,7 +40,9 @@ Because we're using Wasp as the full-stack framework, we can leverage a lot of i
 You also get access to Wasp's diverse, helpful community if you get stuck or need help.
 - 🤝 [Wasp Discord](https://discord.gg/aCamt5wCpS)
 
-
-Note that we've tried to get as many of the core features of a SaaS app into this template as possible, but there still might be some missing features or functionality.
+:::tip["Work In Progress"]
+We've tried to get as many of the core features of a SaaS app into this template as possible, but there still might be some missing features or functionality.
 
 We could always use some help tying up loose ends, so consider [contributing](https://github.com/wasp-lang/open-saas/blob/main/CONTRIBUTING.md)!
+:::
+

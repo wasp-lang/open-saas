@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "DailyStats" ADD COLUMN     "totalProfit" INTEGER NOT NULL DEFAULT 0,
-ADD COLUMN     "totalRevenue" INTEGER NOT NULL DEFAULT 0;
