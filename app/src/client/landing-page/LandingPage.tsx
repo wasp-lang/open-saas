@@ -1,29 +1,22 @@
 import { useState, useEffect } from 'react';
 import { Dialog } from '@headlessui/react';
-import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai';
+import { AiFillCloseCircle } from 'react-icons/ai';
 import { HiBars3 } from 'react-icons/hi2';
 import { BiLogIn } from 'react-icons/bi';
 import { Link } from '@wasp/router';
 import logo from '../static/logo.png';
-import daBoi from '../static/da-boi.png';
 import openSaasBanner from '../static/open-saas-banner.png';
-// import openSaasBanner from '../static/open-saas-alt-banner.p ng';
-import { features, navigation, tiers, faqs, footerNavigation } from './contentSections';
-import useAuth from '@wasp/auth/useAuth';
+import { features, navigation, faqs, footerNavigation, testimonials } from './contentSections';
 import DropdownUser from '../components/DropdownUser';
-import { useHistory } from 'react-router-dom';
-import stripePayment from '@wasp/actions/stripePayment';
-import { DOCS_URL, STRIPE_CUSTOMER_PORTAL_LINK } from '@wasp/shared/constants';
+import { DOCS_URL } from '@wasp/shared/constants';
 import { UserMenuItems } from '../components/UserMenuItems';
+import useAuth from '@wasp/auth/useAuth';
 
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isStripePaymentLoading, setIsStripePaymentLoading] = useState<boolean | string>(false);
   const [isDemoInfoVisible, setIsDemoInfoVisible] = useState(false);
 
   const { data: user, isLoading: isUserLoading } = useAuth();
-
-  const history = useHistory();
 
   useEffect(() => {
     try {
@@ -36,25 +29,6 @@ export default function LandingPage() {
       console.error(error);
     }
   }, []);
-
-  async function handleBuyNowClick(tierId: string) {
-    if (!user) {
-      history.push('/login');
-      return;
-    }
-    try {
-      setIsStripePaymentLoading(tierId);
-      let stripeResults = await stripePayment(tierId);
-
-      if (stripeResults?.sessionUrl) {
-        window.open(stripeResults.sessionUrl, '_self');
-      }
-    } catch (error: any) {
-      console.error(error?.message ?? 'Something went wrong.');
-    } finally {
-      setIsStripePaymentLoading(false);
-    }
-  }
 
   const handleDemoInfoClose = () => {
     try {
@@ -70,16 +44,18 @@ export default function LandingPage() {
   return (
     <div className='bg-white'>
       {/* Floating Demo Announcement */}
-      {isDemoInfoVisible && <div className='fixed z-999 bottom-0 mb-2 left-1/2 -translate-x-1/2 lg:mb-4 bg-gray-700 rounded-full px-3.5 py-2 text-sm text-white duration-300 ease-in-out hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-600'>
-        <div className='px-4 flex flex-row gap-2 items-center my-1'>
-          <span className='text-gray-100'>
-            This demo app <span className='italic'>is</span> the SaaS template. Feel free to play around!
-          </span>
-          <button className=' pl-2.5 text-gray-400 text-xl font-bold' onClick={() => handleDemoInfoClose()}>
-            X
-          </button>
+      {isDemoInfoVisible && (
+        <div className='fixed z-999 bottom-0 mb-2 left-1/2 -translate-x-1/2 lg:mb-4 bg-gray-700 rounded-full px-3.5 py-2 text-sm text-white duration-300 ease-in-out hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-600'>
+          <div className='px-4 flex flex-row gap-2 items-center my-1'>
+            <span className='text-gray-100'>
+              This demo app <span className='italic'>is</span> the SaaS template. Feel free to play around!
+            </span>
+            <button className=' pl-2.5 text-gray-400 text-xl font-bold' onClick={() => handleDemoInfoClose()}>
+              X
+            </button>
+          </div>
         </div>
-      </div>}
+      )}
       {/* Header */}
       <header className='absolute inset-x-0 top-0 z-50'>
         <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
@@ -261,7 +237,13 @@ export default function LandingPage() {
               height={48}
             />
             <div className='flex justify-center col-span-1 max-h-12 w-full object-contain grayscale opacity-80'>
-            <svg width={48} height={48} viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><title>file_type_prisma</title><path fill="#545454" d="M25.21,24.21,12.739,27.928a.525.525,0,0,1-.667-.606L16.528,5.811a.43.43,0,0,1,.809-.094l8.249,17.661A.6.6,0,0,1,25.21,24.21Zm2.139-.878L17.8,2.883h0A1.531,1.531,0,0,0,16.491,2a1.513,1.513,0,0,0-1.4.729L4.736,19.648a1.592,1.592,0,0,0,.018,1.7l5.064,7.909a1.628,1.628,0,0,0,1.83.678l14.7-4.383a1.6,1.6,0,0,0,1-2.218Z"  /></svg>
+              <svg width={48} height={48} viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'>
+                <title>file_type_prisma</title>
+                <path
+                  fill='#545454'
+                  d='M25.21,24.21,12.739,27.928a.525.525,0,0,1-.667-.606L16.528,5.811a.43.43,0,0,1,.809-.094l8.249,17.661A.6.6,0,0,1,25.21,24.21Zm2.139-.878L17.8,2.883h0A1.531,1.531,0,0,0,16.491,2a1.513,1.513,0,0,0-1.4.729L4.736,19.648a1.592,1.592,0,0,0,.018,1.7l5.064,7.909a1.628,1.628,0,0,0,1.83.678l14.7-4.383a1.6,1.6,0,0,0,1-2.218Z'
+                />
+              </svg>
             </div>
             <img
               className=' col-span-1 max-h-12 w-full object-contain grayscale '
@@ -292,11 +274,10 @@ export default function LandingPage() {
           </div>
           <div className='mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl'>
             <dl className='grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16'>
-              {features.map((feature) => (
-                <div key={feature.name} className='relative pl-16'>
+              {features.map((feature, idx) => (
+                <div key={feature.name} className={`relative pl-16 ${idx === features.length - 1 ? `mx-auto lg:col-span-2 lg:w-1/2` : ''}`}>
                   <dt className='text-base font-semibold leading-7 text-gray-900'>
                     <div className='absolute left-0 top-0 flex h-10 w-10 items-center justify-center border border-yellow-400 bg-yellow-100/50 rounded-lg'>
-                      {/* <feature.icon className='h-6 w-6 text-white' aria-hidden='true' /> */}
                       <div className='text-2xl'>{feature.icon}</div>
                     </div>
                     {feature.name}
@@ -313,158 +294,35 @@ export default function LandingPage() {
           <div className='relative sm:left-5 -m-2 rounded-xl bg-yellow-400/20 lg:ring-1 lg:ring-yellow-500/50 lg:-m-4 '>
             <div className='relative sm:top-5 sm:right-5 bg-gray-900 px-8 py-20 shadow-xl sm:rounded-xl sm:px-10 sm:py-16 md:px-12 lg:px-20'>
               <h2 className='text-left font-semibold tracking-wide  leading-7 text-gray-500'>Testimonials</h2>
-              <div className='relative flex flex-col lg:flex-row gap-12 w-full mt-6 z-10 justify-between lg:mx-0'>
-                <figure className='flex-1 flex-1 flex flex-col justify-between p-8 rounded-xl bg-gray-500/5 '>
-                  <blockquote className='text-lg font-semibold text-white sm:text-xl sm:leading-8'>
+              <div className='relative flex flex-wrap gap-6 w-full mt-6 z-10 justify-between lg:mx-0'>
+                {testimonials.map((testimonial) => (
+                  <figure className='w-full lg:w-1/4 box-content flex flex-col justify-between p-8 rounded-xl bg-gray-500/5 '>
+                  <blockquote className='text-lg text-white sm:text-md sm:leading-8'>
                     <p>
-                      “I used Wasp to build and sell my AI-augmented SaaS app for marketplace vendors within two
-                      months!”
+                      {testimonial.quote}
                     </p>
                   </blockquote>
                   <figcaption className='mt-6 text-base text-white'>
-                    <a href='https://twitter.com/maksim36ua' className='flex items-center gap-x-2'>
+                    <a href={testimonial.socialUrl} className='flex items-center gap-x-2'>
                       <img
-                        src='https://pbs.twimg.com/profile_images/1719397191205179392/V_QrGPSO_400x400.jpg'
+                        src={testimonial.avatarSrc}
                         className='h-12 w-12 rounded-full'
                       />
                       <div>
-                        <div className='font-semibold hover:underline'>Maks</div>
-                        <div className='mt-1'>Senior Eng @ Red Hat</div>
+                        <div className='font-semibold hover:underline'>{testimonial.name}</div>
+                        <div className='mt-1'>{testimonial.role}</div>
                       </div>
                     </a>
                   </figcaption>
                 </figure>
-                <figure className='flex-1 flex flex-col justify-between p-8 rounded-xl bg-gray-500/5 '>
-                  <blockquote className='text-lg font-semibold text-white sm:text-xl sm:leading-8'>
-                    <p>“My cats love it!”</p>
-                  </blockquote>
-                  <figcaption className='mt-6 text-base text-white'>
-                    <a href='https://twitter.com/webrickony' className='flex items-center gap-x-2'>
-                      <img
-                        src='https://pbs.twimg.com/profile_images/1560677466749943810/QIFuQMqU_400x400.jpg'
-                        className='h-12 w-12 rounded-full'
-                      />
-                      <div>
-                        <div className='font-semibold hover:underline'>Fecony</div>
-                        <div className='mt-1'>Wasp Expert</div>
-                      </div>
-                    </a>
-                  </figcaption>
-                </figure>
-                <figure className='flex-1 flex-1 flex flex-col justify-between  p-8 rounded-xl bg-gray-500/5 '>
-                  <blockquote className='text-lg font-semibold text-white sm:text-xl sm:leading-8'>
-                    <p>“I don't even know how to code. I'm just a plushie.”</p>
-                  </blockquote>
-                  <figcaption className=' mt-6 text-base text-white'>
-                    <a href='https://twitter.com/wasp-lang' className='flex items-center gap-x-2'>
-                      <img src={daBoi} className='h-14 w-14 rounded-full' />
-                      <div>
-                        <div className='font-semibold hover:underline'>Da Boi</div>
-                        <div className='mt-1'>Wasp Unofficial Mascot</div>
-                      </div>
-                    </a>
-                  </figcaption>
-                </figure>
+                ))}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Pricing section */}
-        <div className='py-24 sm:pt-48'>
-          <div className='mx-auto max-w-7xl px-6 lg:px-8'>
-            <div id='pricing' className='mx-auto max-w-4xl text-center'>
-              <h2 className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl'>
-                Pick your <span className='text-yellow-500'>pricing</span>
-              </h2>
-            </div>
-            <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600'>
-              Stripe subscriptions and secure webhooks are built-in. Just add your Stripe
-              Product IDs! Try it out below with test credit card number{' '}<span className='px-2 py-1 bg-gray-100 rounded-md text-gray-500'>4242 4242 4242 4242 4242</span>
-            </p>
-            <div className='isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 lg:gap-x-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3'>
-              {tiers.map((tier) => (
-                <div
-                  key={tier.id}
-                  className={`relative flex flex-col  ${
-                    tier.bestDeal ? 'ring-2' : 'ring-1 lg:mt-8'
-                  } grow justify-between rounded-3xl ring-gray-200 overflow-hidden p-8 xl:p-10`}
-                >
-                  {tier.bestDeal && (
-                    <div
-                      className='absolute top-0 right-0 -z-10 w-full h-full transform-gpu blur-3xl'
-                      aria-hidden='true'
-                    >
-                      <div
-                        className='absolute w-full h-full bg-gradient-to-br from-amber-400 to-purple-300 opacity-30'
-                        style={{
-                          clipPath: 'circle(670% at 50% 50%)',
-                        }}
-                      />
-                    </div>
-                  )}
-                  <div className='mb-8'>
-                    <div className='flex items-center justify-between gap-x-4'>
-                      <h3 id={tier.id} className='text-gray-900 text-lg font-semibold leading-8'>
-                        {tier.name}
-                      </h3>
-                    </div>
-                    <p className='mt-4 text-sm leading-6 text-gray-600'>{tier.description}</p>
-                    <p className='mt-6 flex items-baseline gap-x-1'>
-                      <span className='text-4xl font-bold tracking-tight text-gray-900'>{tier.priceMonthly}</span>
-                      <span className='text-sm font-semibold leading-6 text-gray-600'>/month</span>
-                    </p>
-                    <ul role='list' className='mt-8 space-y-3 text-sm leading-6 text-gray-600'>
-                      {tier.features.map((feature) => (
-                        <li key={feature} className='flex gap-x-3'>
-                          <AiFillCheckCircle className='h-6 w-5 flex-none text-yellow-500' aria-hidden='true' />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  {!!user && user.hasPaid ? (
-                    <a
-                      href={STRIPE_CUSTOMER_PORTAL_LINK}
-                      aria-describedby='manage-subscription'
-                      className={`
-                      ${tier.id === 'enterprise-tier' ? 'opacity-50 cursor-not-allowed' : 'opacity-100 cursor-pointer'}
-                      ${
-                        tier.bestDeal
-                          ? 'bg-yellow-500 text-white hover:text-white shadow-sm hover:bg-yellow-400'
-                          : 'text-gray-600  ring-1 ring-inset ring-purple-200 hover:ring-purple-400'
-                      }
-                      'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400'
-                    `}
-                    >
-                      {tier.id === 'enterprise-tier' ? 'Contact us' : 'Manage Subscription'}
-                    </a>
-                  ) : (
-                    <button
-                      onClick={() => handleBuyNowClick(tier.id)}
-                      aria-describedby={tier.id}
-                      className={`
-                      ${tier.id === 'enterprise-tier' ? 'opacity-50 cursor-not-allowed' : 'opacity-100 cursor-pointer'}
-                      ${
-                        tier.bestDeal
-                          ? 'bg-yellow-500 text-white hover:text-white shadow-sm hover:bg-yellow-400'
-                          : 'text-gray-600  ring-1 ring-inset ring-purple-200 hover:ring-purple-400'
-                      }
-                      ${isStripePaymentLoading === tier.id ? 'cursor-wait' : null}
-                      'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400'
-                    `}
-                    >
-                      {tier.id === 'enterprise-tier' ? 'Contact us' : !!user ? 'Buy plan' : 'Log in to buy plan'}
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
         {/* FAQ */}
-        <div className='mx-auto max-w-2xl divide-y divide-gray-900/10 px-6 pb-8 sm:pb-24 sm:pt-12 lg:max-w-7xl lg:px-8 lg:pb-32'>
+        <div className='mt-32 mx-auto max-w-2xl divide-y divide-gray-900/10 px-6 pb-8 sm:pb-24 sm:pt-12 lg:max-w-7xl lg:px-8 lg:py-32'>
           <h2 className='text-2xl font-bold leading-10 tracking-tight text-gray-900'>Frequently asked questions</h2>
           <dl className='mt-10 space-y-8 divide-y divide-gray-900/10'>
             {faqs.map((faq) => (

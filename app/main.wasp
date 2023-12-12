@@ -49,6 +49,7 @@ app SaaSTemplate {
       additionalFields: import setAdminUsers from "@server/auth/setAdminUsers.js",
     },
     onAuthFailedRedirectTo: "/",
+    onAuthSucceededRedirectTo: "/gpt",
   },
   db: { 
     system: PostgreSQL,
@@ -213,6 +214,11 @@ route GptRoute { path: "/gpt", to: GptPage }
 page GptPage {
   authRequired: true,
   component: import GptPage from "@client/app/GptPage"
+}
+
+route PricingPageRoute { path: "/pricing", to: PricingPage }
+page PricingPage {
+  component: import PricingPage from "@client/app/PricingPage"
 }
 
 route AccountRoute { path: "/account", to: AccountPage }

@@ -124,7 +124,9 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, GptResponse> =
       });
     }
     console.error(error);
-    throw new HttpError(500, error.message);
+    const statusCode = error.statusCode || 500;
+    const errorMessage = error.message || 'Internal server error';
+    throw new HttpError(statusCode, errorMessage);
   }
 };
 
