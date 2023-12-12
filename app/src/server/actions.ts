@@ -56,7 +56,7 @@ type GptPayload = {
   temperature: number;
 };
 
-export const generateGptResponse: GenerateGptResponse<GptPayload, GptResponse> = async (
+export const generateGptResponse: GenerateGptResponse<GptPayload, string> = async (
   { instructions, command, temperature },
   context
 ) => {
@@ -105,13 +105,17 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, GptResponse> =
     });
 
     const json = (await response.json()) as OpenAIResponse;
-    console.log('response json', json);
-    return context.entities.GptResponse.create({
+    console.log('response json', json?.choices[0].message.content);
+    if (!json?.choices[0].message.content) { 
+      throw new HttpError(500, 'No response from OpenAI');
+    } 
+    await context.entities.GptResponse.create({
       data: {
         content: json?.choices[0].message.content,
         user: { connect: { id: context.user.id } },
       },
     });
+    return json?.choices[0].message.content;
   } catch (error: any) {
     if (!context.user.hasPaid && error?.statusCode != 402) {
       await context.entities.User.update({

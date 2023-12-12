@@ -37,6 +37,11 @@ export const features = [
     icon: '📈',
   },
   {
+    name: 'Blog w/ Astro',
+    description: 'Built-in blog with the Astro framework. Write your posts in Markdown, and watch your SEO performance take off.',
+    icon: '📝',
+  },
+  {
     name: 'Email Sending',
     description:
       "Email sending built-in and pre-configured. Combine it with Wasp's cron jobs feature to easily send emails to your customers.",

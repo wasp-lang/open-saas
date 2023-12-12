@@ -5,7 +5,7 @@ import useAuth from '@wasp/auth/useAuth';
 
 export default function GptPage() {
   const [temperature, setTemperature] = useState<number>(1);
-  const [response, setResponse] = useState<string>('');
+  const [response, setResponse] = useState<string[]>([]);
 
   const { data: user } = useAuth();
 
@@ -18,11 +18,12 @@ export default function GptPage() {
     try {
       const response = await generateGptResponse({ instructions, command, temperature });
       if (response) {
-        setResponse(response.content);
+        setResponse(response.split('\n'));
+        console.log(response)
       }
-    } catch (e) {
-      alert('Something went wrong. Please try again.');
-      console.error(e);
+    } catch (error: any) {
+      alert(error.message);
+      console.error(error);
     }
   };
 
@@ -124,7 +125,7 @@ export default function GptPage() {
             <button
               type='submit'
               className={`${
-                isSubmitting && 'animate-puls'
+                isSubmitting && 'opacity-70 cursor-wait'
               } rounded-md bg-yellow-500 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-yellow-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
             >
               {!isSubmitting ? 'Submit' : 'Loading...'}
@@ -134,10 +135,10 @@ export default function GptPage() {
         <div
           className={`${
             isSubmitting && 'animate-pulse'
-          } mt-2 mx-6 flex justify-center rounded-lg border border-dashed border-gray-900/25 mt-10 sm:w-[90%] md:w-[50%] mx-auto mt-12 px-6 py-10`}
+          } mt-4 mx-6 flex justify-center rounded-lg border border-dashed border-gray-900/25 sm:w-[90%] md:w-[50%] mx-auto mt-12 px-6 py-10`}
         >
-          <div className='space-y-2 text-center'>
-            <p className='text-sm text-gray-500'>{response ? response : 'GPT Response will load here'}</p>
+          <div className='space-y-2 flex flex-col gap-2 text-center text-sm text-gray-500 w-full'>
+              {response.length > 0 ? response.map((str) => <p key={str}>{str}</p>) : <p>GPT Response will load here</p>}
           </div>
         </div>
       </div>
