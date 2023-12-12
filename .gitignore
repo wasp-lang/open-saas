@@ -2,7 +2,4 @@
 */.env.server
 */.env.client
 */.DS_Store
-
-# TODO: create a clean version for the user to fill in
-# replace with your own Google Analytics service account json file 
-saastemplate-381911-6dc3caae2204.json
+.DS_Store
