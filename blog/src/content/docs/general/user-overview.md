@@ -1,8 +1,8 @@
 ---
-title: User Permissions
+title: User Overview
 ---
 
-This reference will help you understand how the user permissions work in this template.
+This reference will help you understand how the User entity works in this template.
 This includes the user roles, subscription tiers and statuses, and how to authorize access to certain pages and components.
 
 ## User Entity

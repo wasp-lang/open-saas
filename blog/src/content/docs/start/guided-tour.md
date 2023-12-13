@@ -17,7 +17,7 @@ At the root of our project, you will see two folders:
 
 `app` contains the Wasp project files, which is your full-stack React + NodeJS + Prisma app along with a Wasp config file, which will be explained in more detail below.
 
-`blog` contains the Astro Starlight template for the blog and documentation section. 
+`blog` contains the [Astro Starlight template](https://starlight.astro.build/) for the blog and documentation section. 
 
 Let's check out what's in the `app` folder in more detail:
 ```sh
@@ -35,9 +35,11 @@ Let's check out what's in the `app` folder in more detail:
 
 ### The Wasp Config file
 
-The `main.wasp` file is where you define your app structure.
+This template at its core is a Wasp template, where [Wasp](https://wasp-lang.dev) is a full-stack web app framework that let’s you write your app in React, NodeJS, and Prisma and will manage the "boilerplatey" work for you, allowing you to just take care of the fun stuff!
 
-In this template, we've already defined a number of things in the config file for you, including:
+[Wasp's secret sauce](https://wasp-lang.dev/docs) is its use of a config file (`main.wasp`) and compiler which takes your code and outputs the client app, server app and deployment code for you. 
+
+In this template, we've already defined a number of things in the `main.wasp` config file, including:
 
 - Auth
 - Routes and Pages
@@ -46,7 +48,7 @@ In this template, we've already defined a number of things in the config file fo
 - Background Jobs
 - Email Sending
 
-By defining these things in the config file, Wasp continuously handles the boilerplate necessary with putting all these features together. You just need to focus on the business logic of your app!
+By defining these things in the config file, Wasp continuously handles the boilerplate necessary with putting all these features together. You just need to focus on the business logic of your app.
 
 Wasp abstracts away some things that you would normally be used to doing during development, so don't be surprised if you don't see some of the things you're used to seeing.
 

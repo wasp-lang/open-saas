@@ -19,7 +19,7 @@ export default function GptPage() {
       const response = await generateGptResponse({ instructions, command, temperature });
       if (response) {
         setResponse(response.split('\n'));
-        console.log(response)
+        console.log(response);
       }
     } catch (error: any) {
       alert(error.message);
@@ -138,7 +138,7 @@ export default function GptPage() {
           } mt-4 mx-6 flex justify-center rounded-lg border border-dashed border-gray-900/25 sm:w-[90%] md:w-[50%] mx-auto mt-12 px-6 py-10`}
         >
           <div className='space-y-2 flex flex-col gap-2 text-center text-sm text-gray-500 w-full'>
-              {response.length > 0 ? response.map((str) => <p key={str}>{str}</p>) : <p>GPT Response will load here</p>}
+            {response.length > 0 ? response.map((str) => <p key={str}>{str}</p>) : <p>GPT Response will load here</p>}
           </div>
         </div>
       </div>

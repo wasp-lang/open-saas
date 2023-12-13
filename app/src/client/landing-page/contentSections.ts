@@ -1,4 +1,4 @@
-import { DOCS_URL, BLOG_URL } from '@wasp/shared/constants';
+import { DOCS_URL, BLOG_URL, GITHUB_URL } from '@wasp/shared/constants';
 import daBoiAavatar from '../static/da-boi.png';
 
 export const navigation = [
@@ -10,58 +10,68 @@ export const features = [
   {
     name: 'Open-Source Philosophy',
     description:
-      "Forever free and open-source. Create an issue, make a PR, and together let's make the best SaaS template ever!",
+      'The repo and framework are 100% open-source, and so are the services wherever possible. Still missing something? Contribute!',
     icon: '🤝',
+    href: DOCS_URL,
   },
   {
-    name: 'Auto-magic Auth',
-    description:
-      'Not only is full-stack Auth pre-configured, but you can integrate more providers with just a few lines of code.',
+    name: 'DIY Auth, Done For You',
+    description: 'Pre-configured full-stack Auth that you own. No 3rd-party services or hidden fees.',
     icon: '🔐',
+    href: DOCS_URL + '/guides/authentication/',
   },
   {
     name: 'Full-stack Type Safety',
     description:
-      'Because Wasp understands your app, it provides end-to-end type safety out of the box. Nothing to configure!',
+      'Full support for TypeScript with auto-generated types that span the whole stack. Nothing to configure!',
     icon: '🥞',
+    href: DOCS_URL,
   },
   {
     name: 'Stripe Integration',
     description:
       "No SaaS is complete without payments. That's why subscriptions and the necessary webhooks are built-in.",
     icon: '💸',
+    href: DOCS_URL + '/guides/stripe-integration/',
   },
   {
     name: 'Admin Dashboard',
     description: 'Graphs! Tables! Analytics w/ Plausible or Google! All in one place. Ooooooooooh.',
     icon: '📈',
+    href: DOCS_URL + '/general/admin-dashboard/',
   },
   {
     name: 'Blog w/ Astro',
-    description: 'Built-in blog with the Astro framework. Write your posts in Markdown, and watch your SEO performance take off.',
+    description:
+      'Built-in blog with the Astro framework. Write your posts in Markdown, and watch your SEO performance take off.',
     icon: '📝',
+    href: DOCS_URL + '/start/guided-tour/',
   },
   {
     name: 'Email Sending',
     description:
-      "Email sending built-in and pre-configured. Combine it with Wasp's cron jobs feature to easily send emails to your customers.",
+      'Email sending built-in. Combine it with the cron jobs feature to easily send emails to your customers.',
     icon: '📧',
+    href: DOCS_URL + '/guides/email-sending/',
   },
   {
     name: 'OpenAI API Implemented',
-    description: "Technology is changing rapidly. Ship your new AI-powered app before it's already obsolete!",
+    description: 'Have a sweet AI-powered app concept? Get your idea shipped to potential customers in days!',
     icon: '🤖',
+    href: DOCS_URL,
   },
   {
     name: 'Deploy Anywhere. Easily.',
     description:
-      'You own all your code, and can deploy wherever & however you want. Or just let Wasp deploy it for you with a single command.',
+      'No vendor lock-in because you own all your code. Deploy yourself, or let Wasp deploy it for you with a single command.',
     icon: '🚀 ',
+    href: DOCS_URL + '/guides/deploying/',
   },
   {
     name: 'Complete Documentation & Support',
-    description: "We don't leave you hanging. We have tons of docs, and a Discord community to help!",
+    description: "We don't leave you hanging. We have detailed docs and a Discord community to help!",
     icon: '🫂',
+    href: DOCS_URL,
   },
 ];
 export const testimonials = [
@@ -114,23 +124,25 @@ export const testimonials = [
 export const faqs = [
   {
     id: 1,
-    question: 'Why is this amazing SaaS Template free and open-source?',
-    answer: 'Because open-source is cool, and we love you ❤️',
+    question: 'Why is this SaaS Template free and open-source?',
+    answer:
+      'We believe the best product is made when the community puts their heads together. We also believe a quality starting point for a web app should be free and available to everyone. Our hope is that together we can create the best SaaS template out there and bring our ideas to customers quickly.',
   },
   {
     id: 2,
     question: "What's Wasp?",
-    answer:
-      "It's the fastest way to develop full-stack React + NodeJS + Prisma apps. It's what gives this template superpowers.",
+    href: 'https://wasp-lang.dev',
+    answer: "It's the fastest way to develop full-stack React + NodeJS + Prisma apps and it's what gives this template superpowers. Wasp relies on React, NodeJS, and Prisma to define web components and server queries and actions. Wasp's secret sauce is its compiler which takes the client, server code, and config file and outputs the client app, server app and deployment code, supercharging the development experience. Combined with this template, you can build a SaaS app in record time.",
   },
 ];
 export const footerNavigation = {
   app: [
+    { name: 'Github', href: GITHUB_URL },
     { name: 'Documentation', href: DOCS_URL },
     { name: 'Blog', href: BLOG_URL },
   ],
   company: [
-    { name: 'About', href: '#' },
+    { name: 'About', href: 'https://wasp-lang.dev' },
     { name: 'Privacy', href: '#' },
     { name: 'Terms of Service', href: '#' },
   ],

@@ -11,7 +11,6 @@ const DropdownUser = ({ user } : { user: Partial<User> }) => {
 
   const toggleDropdown = () => setDropdownOpen((prev) => !prev);
 
-  // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
       if (!dropdown.current) return
@@ -62,7 +61,7 @@ const DropdownUser = ({ user } : { user: Partial<User> }) => {
         </svg>
       </button>
 
-      {/* <!-- Dropdown Start --> */}
+      {/* <!-- Dropdown --> */}
       <div
         ref={dropdown}
         className={`absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${
@@ -71,7 +70,6 @@ const DropdownUser = ({ user } : { user: Partial<User> }) => {
       >
         <UserMenuItems user={user} />
       </div>
-      {/* <!-- Dropdown End --> */}
     </div>
   );
 };

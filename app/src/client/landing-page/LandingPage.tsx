@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Dialog } from '@headlessui/react';
-import { AiFillCloseCircle } from 'react-icons/ai';
+import { AiFillCloseCircle, AiFillGithub } from 'react-icons/ai';
 import { HiBars3 } from 'react-icons/hi2';
 import { BiLogIn } from 'react-icons/bi';
 import { Link } from '@wasp/router';
@@ -8,54 +8,19 @@ import logo from '../static/logo.png';
 import openSaasBanner from '../static/open-saas-banner.png';
 import { features, navigation, faqs, footerNavigation, testimonials } from './contentSections';
 import DropdownUser from '../components/DropdownUser';
-import { DOCS_URL } from '@wasp/shared/constants';
+import { DOCS_URL, GITHUB_URL } from '@wasp/shared/constants';
 import { UserMenuItems } from '../components/UserMenuItems';
 import useAuth from '@wasp/auth/useAuth';
 
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isDemoInfoVisible, setIsDemoInfoVisible] = useState(false);
 
   const { data: user, isLoading: isUserLoading } = useAuth();
-
-  useEffect(() => {
-    try {
-      if (localStorage.getItem('isDemoInfoVisible') === 'false') {
-        // do nothing
-      } else {
-        setIsDemoInfoVisible(true);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
-
-  const handleDemoInfoClose = () => {
-    try {
-      localStorage.setItem('isDemoInfoVisible', 'false');
-      setIsDemoInfoVisible(false);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Open SaaS App' />;
 
   return (
     <div className='bg-white'>
-      {/* Floating Demo Announcement */}
-      {isDemoInfoVisible && (
-        <div className='fixed z-999 bottom-0 mb-2 left-1/2 -translate-x-1/2 lg:mb-4 bg-gray-700 rounded-full px-3.5 py-2 text-sm text-white duration-300 ease-in-out hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-600'>
-          <div className='px-4 flex flex-row gap-2 items-center my-1'>
-            <span className='text-gray-100'>
-              This demo app <span className='italic'>is</span> the SaaS template. Feel free to play around!
-            </span>
-            <button className=' pl-2.5 text-gray-400 text-xl font-bold' onClick={() => handleDemoInfoClose()}>
-              X
-            </button>
-          </div>
-        </div>
-      )}
       {/* Header */}
       <header className='absolute inset-x-0 top-0 z-50'>
         <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
@@ -94,7 +59,7 @@ export default function LandingPage() {
               {isUserLoading ? null : !user ? (
                 <Link to='/login'>
                   <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500'>
-                    Log in <BiLogIn size='1.1rem' className='ml-1 mt-[0.1rem]' />
+                    Try the Demo App <BiLogIn size='1.1rem' className='ml-1' />
                   </div>
                 </Link>
               ) : (
@@ -137,7 +102,7 @@ export default function LandingPage() {
                   {isUserLoading ? null : !user ? (
                     <Link to='/login'>
                       <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500'>
-                        Log in <BiLogIn size='1.1rem' className='ml-1 mt-[0.1rem]' />
+                        Try the Demo App <BiLogIn size='1.1rem' className='ml-1' />
                       </div>
                     </Link>
                   ) : (
@@ -185,15 +150,17 @@ export default function LandingPage() {
                   An open-source, feature-rich, full-stack React + NodeJS template that manages features for you.
                 </p>
                 <div className='mt-10 flex items-center justify-center gap-x-6'>
-                  {/* <a
-                    href='https://github.com/wasp-lang/open-saas'
-                    className='rounded-md bg-yellow-500 px-3.5 py-2.5 text-sm font-semibold text-white hover:text-white shadow-sm hover:bg-yellow-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
-                  ></a> */}
                   <a
                     href={DOCS_URL}
-                    className='rounded-md px-3.5 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-purple-200 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+                    className='rounded-md px-3.5 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-yellow-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
                   >
                     Get Started <span aria-hidden='true'>→</span>
+                  </a>
+                  <a
+                    href={GITHUB_URL}
+                    className='flex items-center justify-center rounded-md bg-gray-100 px-3.5 py-2.5 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-yellow-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+                  >
+                    View the Repo <AiFillGithub size='1rem' className='ml-1' />
                   </a>
                 </div>
               </div>
@@ -269,11 +236,7 @@ export default function LandingPage() {
               </svg>
             </div>
             <div className='flex justify-center col-span-1 w-full max-h-12 object-contain grayscale opacity-75'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                preserveAspectRatio='xMidYMid'
-                viewBox='0 0 256 260'
-              >
+              <svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMidYMid' viewBox='0 0 256 260'>
                 <path
                   fill='#545454'
                   d='M239.184 106.203a64.716 64.716 0 0 0-5.576-53.103C219.452 28.459 191 15.784 163.213 21.74A65.586 65.586 0 0 0 52.096 45.22a64.716 64.716 0 0 0-43.23 31.36c-14.31 24.602-11.061 55.634 8.033 76.74a64.665 64.665 0 0 0 5.525 53.102c14.174 24.65 42.644 37.324 70.446 31.36a64.72 64.72 0 0 0 48.754 21.744c28.481.025 53.714-18.361 62.414-45.481a64.767 64.767 0 0 0 43.229-31.36c14.137-24.558 10.875-55.423-8.083-76.483Zm-97.56 136.338a48.397 48.397 0 0 1-31.105-11.255l1.535-.87 51.67-29.825a8.595 8.595 0 0 0 4.247-7.367v-72.85l21.845 12.636c.218.111.37.32.409.563v60.367c-.056 26.818-21.783 48.545-48.601 48.601Zm-104.466-44.61a48.345 48.345 0 0 1-5.781-32.589l1.534.921 51.722 29.826a8.339 8.339 0 0 0 8.441 0l63.181-36.425v25.221a.87.87 0 0 1-.358.665l-52.335 30.184c-23.257 13.398-52.97 5.431-66.404-17.803ZM23.549 85.38a48.499 48.499 0 0 1 25.58-21.333v61.39a8.288 8.288 0 0 0 4.195 7.316l62.874 36.272-21.845 12.636a.819.819 0 0 1-.767 0L41.353 151.53c-23.211-13.454-31.171-43.144-17.804-66.405v.256Zm179.466 41.695-63.08-36.63L161.73 77.86a.819.819 0 0 1 .768 0l52.233 30.184a48.6 48.6 0 0 1-7.316 87.635v-61.391a8.544 8.544 0 0 0-4.4-7.213Zm21.742-32.69-1.535-.922-51.619-30.081a8.39 8.39 0 0 0-8.492 0L99.98 99.808V74.587a.716.716 0 0 1 .307-.665l52.233-30.133a48.652 48.652 0 0 1 72.236 50.391v.205ZM88.061 139.097l-21.845-12.585a.87.87 0 0 1-.41-.614V65.685a48.652 48.652 0 0 1 79.757-37.346l-1.535.87-51.67 29.825a8.595 8.595 0 0 0-4.246 7.367l-.051 72.697Zm11.868-25.58 28.138-16.217 28.188 16.218v32.434l-28.086 16.218-28.188-16.218-.052-32.434Z'
@@ -287,12 +250,11 @@ export default function LandingPage() {
         <div id='features' className='mx-auto mt-48 max-w-7xl px-6 lg:px-8'>
           <div className='mx-auto max-w-2xl text-center'>
             <p className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl'>
-              All the important <span className='text-yellow-500'>stuff</span>
+              <span className='text-yellow-500'>100%</span> Open-Source
             </p>
             <p className='mt-6 text-lg leading-8 text-gray-600'>
-              We've pre-built the important stuff.
-              <br /> Wasp does the boilerplate stuff.
-              <br /> You get to do the fun stuff.
+              No vendor lock-in.
+              <br /> Deploy anywhere.
             </p>
           </div>
           <div className='mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl'>
@@ -316,7 +278,9 @@ export default function LandingPage() {
         <div className='mx-auto mt-32 max-w-7xl sm:mt-56 sm:px-6 lg:px-8'>
           <div className='relative sm:left-5 -m-2 rounded-xl bg-yellow-400/20 lg:ring-1 lg:ring-yellow-500/50 lg:-m-4 '>
             <div className='relative sm:top-5 sm:right-5 bg-gray-900 px-8 py-20 shadow-xl sm:rounded-xl sm:px-10 sm:py-16 md:px-12 lg:px-20'>
-              <h2 className='text-left font-semibold tracking-wide  leading-7 text-gray-500'>Testimonials</h2>
+              <h2 className='text-left text-xl font-semibold tracking-wide leading-7 text-gray-500'>
+                What Our Users Say
+              </h2>
               <div className='relative flex flex-wrap gap-6 w-full mt-6 z-10 justify-between lg:mx-0'>
                 {testimonials.map((testimonial) => (
                   <figure className='w-full lg:w-1/4 box-content flex flex-col justify-between p-8 rounded-xl bg-gray-500/5 '>
@@ -348,6 +312,11 @@ export default function LandingPage() {
                 <dt className='text-base font-semibold leading-7 text-gray-900 lg:col-span-5'>{faq.question}</dt>
                 <dd className='mt-4 lg:col-span-7 lg:mt-0'>
                   <p className='text-base leading-7 text-gray-600'>{faq.answer}</p>
+                  {faq.href && (
+                    <a href={faq.href} className='mt-4 text-base leading-7 text-yellow-500 hover:text-yellow-600'>
+                      Learn more →
+                    </a>
+                  )}
                 </dd>
               </div>
             ))}
@@ -361,7 +330,7 @@ export default function LandingPage() {
           <h2 id='footer-heading' className='sr-only'>
             Footer
           </h2>
-          <div className='flex items-center justify-end mt-10 gap-20'>
+          <div className='flex items-start justify-end mt-10 gap-20'>
             <div>
               <h3 className='text-sm font-semibold leading-6 text-gray-900'>App</h3>
               <ul role='list' className='mt-6 space-y-4'>

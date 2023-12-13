@@ -63,7 +63,7 @@ export default defineConfig({
           label: 'General',
           items: [
             { label: 'Admin Dashboard', link: '/general/admin-dashboard/' },
-            { label: 'User Permissions', link: '/general/user-permissions/' },
+            { label: 'User Overview', link: '/general/user-overview/' },
           ],
         },
       ],

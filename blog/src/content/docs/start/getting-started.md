@@ -12,9 +12,14 @@ Install Wasp by running this command in your terminal:
 ```sh
 curl -sSL https://get.wasp-lang.dev/installer.sh | sh
 ```
-Also install the [Wasp extension for VSCode](https://marketplace.visualstudio.com/items?itemName=wasp-lang.wasp) to get the best DX (syntax highlighting, code scaffolding, autocomplete, etc.)
 
-### Clone the repo
+:::tip
+Make sure to install the Wasp VSCode extension to get the best DX, e.g. syntax highlighting, code scaffolding, autocomplete, etc:
+
+🐝 [Wasp VSCode Extension](https://marketplace.visualstudio.com/items?itemName=wasp-lang.wasp) 🧑‍💻
+:::
+
+### Clone the OpenSaaS repo
 
 Clone this repo by running this command in your terminal:
 ```sh
@@ -37,11 +42,10 @@ wasp start db
 ```
 This will start and connect your app to a Postgres database for you. No need to do anything else! 🤯 
 
-Then, in a new terminal window/tab, run:
+Whenever you make any changes to your schema, you can migrate them with:
 ```sh
 wasp db migrate-dev
 ```
-This will run the migrations for you and create the tables in your DB.
 
 If you want to see or manage your DB via Prisma's DB Studio GUI, run:
 ```sh
@@ -57,10 +61,10 @@ This will install all dependencies and start the client and server for you :)
 
 Go to `localhost:3000` in your browser to view it (your NodeJS server will be running on port `3001`)
 
-### Further info
-Check the files for comments containing specific instructions.
-
+### More Help/Further Info
 For more info on Wasp as a full-stack React, NodeJS, Prisma framework, check out the [Wasp docs](https://wasp-lang.dev/docs/).
+
+If you get stuck or need help, join the [Wasp Discord](https://discord.gg/aCamt5wCpS).
 
 #### Run Blog and Docs
 

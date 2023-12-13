@@ -6,6 +6,7 @@ export enum TierIds {
 
 export const DOCS_URL = 'https://docs.opensaas.sh';
 export const BLOG_URL = 'https://docs.opensaas.sh/blog';
+export const GITHUB_URL = 'https://github.com/wasp-lang/open-saas';
 
 //get this link at https://dashboard.stripe.com/test/settings/billing/portal
 const isDev = process.env.NODE_ENV !== 'production';
