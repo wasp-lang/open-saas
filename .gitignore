@@ -3,3 +3,6 @@
 */.env.client
 */.DS_Store
 .DS_Store
+
+# Local Netlify folder
+.netlify

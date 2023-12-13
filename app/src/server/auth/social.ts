@@ -6,7 +6,8 @@ export const getGitHubUserFields: GetUserFieldsFn = async (_context, args) => {
   // NOTE: if we don't want to access users' emails, we can use scope ["user:read"]
   // instead of ["user"] and access args.profile.username instead
   const email = args.profile.emails[0].value;
-  return { email };
+  const username = args.profile.username;
+  return { email, username };
 };
 
 export function getGitHubAuthConfig() {
@@ -18,9 +19,9 @@ export function getGitHubAuthConfig() {
 }
 
 export const getGoogleUserFields: GetUserFieldsFn = async (_context, args) => {
-  console.log('args', args.profile);
   const email = args.profile.emails[0].value;
-  return { email };
+  const username = args.profile.displayName;
+  return { email, username };
 }
 
 export function getGoogleAuthConfig() {

@@ -49,9 +49,9 @@ app SaaSTemplate {
         },
       },
     },
-    // signup: {
-    //   additionalFields: import setAdminUsers from "@server/auth/setAdminUsers.js",
-    // },
+    signup: {
+      additionalFields: import setUsername from "@server/auth/setUsername.js",
+    },
     onAuthFailedRedirectTo: "/",
     onAuthSucceededRedirectTo: "/gpt",
   },
@@ -98,7 +98,7 @@ app SaaSTemplate {
 entity User {=psl
   id                        Int             @id @default(autoincrement())
   email                     String?         @unique
-  // username                  String          @unique
+  username                  String?          @unique
   password                  String?
   createdAt                 DateTime        @default(now())
   lastActiveTimestamp       DateTime        @default(now())

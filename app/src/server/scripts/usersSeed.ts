@@ -12,10 +12,10 @@ export function createRandomUser() {
       firstName,
       lastName,
     }),
-    // username: faker.internet.userName({
-    //   firstName,
-    //   lastName,
-    // }),
+    username: faker.internet.userName({
+      firstName,
+      lastName,
+    }),
     password: faker.internet.password({
       length: 12,
       prefix: 'Aa1!',

@@ -11,7 +11,7 @@ export const GITHUB_URL = 'https://github.com/wasp-lang/open-saas';
 //get this link at https://dashboard.stripe.com/test/settings/billing/portal
 const isDev = process.env.NODE_ENV !== 'production';
 const customerPortalTestUrl = 'https://billing.stripe.com/p/login/test_8wM8x17JN7DT4zC000';
-const customerPortalProdUrl = undefined; // TODO: add before deploying to production
+const customerPortalProdUrl = 'https://billing.stripe.com/p/login/test_8wM8x17JN7DT4zC000';
 
 export const STRIPE_CUSTOMER_PORTAL_LINK = isDev ? customerPortalTestUrl : customerPortalProdUrl;
 
