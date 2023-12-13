@@ -62,7 +62,7 @@ type GetPaginatedUsersInput = {
   subscriptionStatus?: string[];
 };
 type GetPaginatedUsersOutput = {
-  users: Pick<User, 'id' | 'email' | 'username' | 'lastActiveTimestamp' | 'hasPaid' | 'subscriptionStatus' | 'stripeId'>[];
+  users: Pick<User, 'id' | 'email' | 'lastActiveTimestamp' | 'hasPaid' | 'subscriptionStatus' | 'stripeId'>[];
   totalPages: number;
 };
 
@@ -90,7 +90,6 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
     select: {
       id: true,
       email: true,
-      username: true,
       lastActiveTimestamp: true,
       hasPaid: true,
       subscriptionStatus: true,

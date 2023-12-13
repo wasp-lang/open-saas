@@ -203,7 +203,6 @@ const UsersTable = () => {
               <div className='col-span-3 flex items-center'>
                 <div className='flex flex-col gap-1 '>
                   <p className='text-sm text-black dark:text-white'>{user.email}</p>
-                  <p className='text-sm text-black dark:text-white'>{user.username}</p>
                 </div>
               </div>
 

@@ -41,7 +41,7 @@ const DropdownUser = ({ user } : { user: Partial<User> }) => {
         className='flex items-center gap-4 duration-300 ease-in-out text-gray-900 hover:text-yellow-500'
       >
         <span className='hidden text-right lg:block'>
-          <span className='block text-sm font-medium dark:text-white'>{user.username}</span>
+          <span className='block text-sm font-medium dark:text-white'>{user.email?.split('@')[0] || 'test user'}</span>
         </span>
         <CgProfile size='1.1rem' className='ml-1 mt-[0.1rem]' />
         <svg
