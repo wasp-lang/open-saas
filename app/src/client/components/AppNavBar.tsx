@@ -9,6 +9,7 @@ import { DOCS_URL, BLOG_URL } from '@wasp/shared/constants';
 const navigation = [
   { name: 'GPT Wrapper', href: '/gpt' },
   { name: 'Pricing', href: '/pricing'},
+  { name: 'Admin Dashboard', href: '/admin'},
   { name: 'Documentation', href: DOCS_URL }, 
   { name: 'Blog', href: BLOG_URL }, 
 ]; 

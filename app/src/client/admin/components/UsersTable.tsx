@@ -14,6 +14,7 @@ const UsersTable = () => {
   const [email, setEmail] = useState<string | undefined>(undefined);
   const [statusOptions, setStatusOptions] = useState<StatusOptions[]>([]);
   const [hasPaidFilter, setHasPaidFilter] = useState<boolean | undefined>(undefined);
+  const [isDemoInfoVisible, setIsDemoInfoVisible] = useState(false);
   const { data, isLoading, error } = useQuery(getPaginatedUsers, {
     skip,
     hasPaidFilter: hasPaidFilter,
@@ -29,8 +30,43 @@ const UsersTable = () => {
     setskip((page - 1) * 10);
   }, [page]);
 
+
+  useEffect(() => {
+    try {
+      if (localStorage.getItem('isDemoInfoVisible') === 'false') {
+        // do nothing
+      } else {
+        setIsDemoInfoVisible(true);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+    const handleDemoInfoClose = () => {
+      try {
+        localStorage.setItem('isDemoInfoVisible', 'false');
+        setIsDemoInfoVisible(false);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
   return (
     <div className='flex flex-col gap-4'>
+      {/* Floating Demo Announcement */}
+      {isDemoInfoVisible && (
+        <div className='fixed z-999 bottom-0 mb-2 left-1/2 -translate-x-1/2 lg:mb-4 bg-gray-700 rounded-full px-3.5 py-2 text-sm text-white duration-300 ease-in-out hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-600'>
+          <div className='px-4 flex flex-row gap-2 items-center my-1'>
+            <span className='text-gray-100'>
+              You are viewing mock user data only ;)
+            </span>
+            <button className=' pl-2.5 text-gray-400 text-xl font-bold' onClick={() => handleDemoInfoClose()}>
+              X
+            </button>
+          </div>
+        </div>
+      )}
       <div className='rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark'>
         <div className='flex-col flex items-start justify-between p-6 gap-3 w-full bg-gray-100/40 dark:bg-gray-700/50'>
           <span className='text-sm font-medium'>Filters:</span>
@@ -207,7 +243,9 @@ const UsersTable = () => {
               </div>
 
               <div className='col-span-3 hidden items-center sm:flex'>
-                <p className='text-sm text-black dark:text-white'>{user.lastActiveTimestamp.toLocaleDateString() + ' ' + user.lastActiveTimestamp.toLocaleTimeString()}</p>
+                <p className='text-sm text-black dark:text-white'>
+                  {user.lastActiveTimestamp.toLocaleDateString() + ' ' + user.lastActiveTimestamp.toLocaleTimeString()}
+                </p>
               </div>
               <div className='col-span-2 flex items-center'>
                 <p className='text-sm text-black dark:text-white'>{user.subscriptionStatus}</p>
