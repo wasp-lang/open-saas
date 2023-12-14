@@ -13,7 +13,7 @@ const TotalRevenueCard = ({dailyStats, weeklyStats, isLoading}: DailyStatsProps)
     if ( weeklyStats[1]?.totalRevenue === 0 || weeklyStats[0]?.totalRevenue === 0 ) return 0;
 
     weeklyStats.sort((a, b) => b.id - a.id);
-    console.log('weeklyStats[1]?.totalRevenue; ', !!weeklyStats && weeklyStats)
+
     const percentage = ((weeklyStats[0].totalRevenue - weeklyStats[1]?.totalRevenue) / weeklyStats[1]?.totalRevenue) * 100;
     return Math.floor(percentage);
   }, [weeklyStats]);

@@ -94,7 +94,6 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, string> = asyn
       });
     }
 
-    console.log('fetching', payload);
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       headers: {
         'Content-Type': 'application/json',
@@ -105,7 +104,7 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, string> = asyn
     });
 
     const json = (await response.json()) as OpenAIResponse;
-    console.log('response json', json?.choices[0].message.content);
+
     if (!json?.choices[0].message.content) { 
       throw new HttpError(500, 'No response from OpenAI');
     } 
@@ -153,8 +152,6 @@ export const updateUserById: UpdateUserById<{ id: number; data: Partial<User> },
     data,
   });
 
-  console.log('updated user', updatedUser.id);
-
   return updatedUser;
 };
 
@@ -162,8 +159,6 @@ export const updateCurrentUser: UpdateCurrentUser<Partial<User>, User> = async (
   if (!context.user) {
     throw new HttpError(401);
   }
-
-  console.log('updating user', user);
 
   return context.entities.User.update({
     where: {

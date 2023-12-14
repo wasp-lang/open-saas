@@ -69,7 +69,6 @@ async function getPrevDayViewsChangePercent() {
 
   let change = 0;
   if (pageViewsYesterday === 0 || pageViewsDayBeforeYesterday === 0) {
-    console.log('Page views are zero, so no percentage change');
     return '0';
   } else {
     change = ((pageViewsYesterday - pageViewsDayBeforeYesterday) / pageViewsDayBeforeYesterday) * 100;

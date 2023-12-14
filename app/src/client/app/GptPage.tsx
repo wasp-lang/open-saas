@@ -10,7 +10,7 @@ export default function GptPage() {
   const { data: user } = useAuth();
 
   const onSubmit = async ({ instructions, command, temperature }: any) => {
-    console.log('user, ', !!user);
+
     if (!user) {
       alert('You must be logged in to use this feature.');
       return;
@@ -19,7 +19,6 @@ export default function GptPage() {
       const response = await generateGptResponse({ instructions, command, temperature });
       if (response) {
         setResponse(response.split('\n'));
-        console.log(response);
       }
     } catch (error: any) {
       alert(error.message);
@@ -111,7 +110,6 @@ export default function GptPage() {
                     step='0.1'
                     {...register('temperature', {
                       onChange: (e) => {
-                        console.log(e.target.value);
                         setTemperature(Number(e.target.value));
                       },
                       required: 'This is required',

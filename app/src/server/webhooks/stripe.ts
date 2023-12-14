@@ -15,8 +15,6 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
   const sig = request.headers['stripe-signature'] as string;
   let event: Stripe.Event;
 
-  console.log('\n\nsig: ', sig)
-
   try {
     event = stripe.webhooks.constructEvent(request.body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
     // console.table({sig: 'stripe webhook signature verified', type: event.type})
@@ -37,8 +35,6 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
       const { line_items } = await stripe.checkout.sessions.retrieve(session.id, {
         expand: ['line_items'],
       });
-
-      console.log('line_items: ', line_items);
 
       if (line_items?.data[0]?.price?.id === process.env.HOBBY_SUBSCRIPTION_PRICE_ID) {
         console.log('Hobby subscription purchased ');
@@ -85,7 +81,6 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
       //   });
       // }
     } else if (event.type === 'invoice.paid') {
-      console.log('>>>> invoice.paid: ', userStripeId);
       const invoice = event.data.object as Stripe.Invoice;
       const periodStart = new Date(invoice.period_start * 1000);
       await context.entities.User.updateMany({

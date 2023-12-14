@@ -14,9 +14,6 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, con
   const yesterdayUTC = new Date(nowUTC);
   yesterdayUTC.setUTCDate(yesterdayUTC.getUTCDate() - 1);
 
-  console.log('yesterdayUTC: ', yesterdayUTC);
-  console.log('nowUTC: ', nowUTC);
-
   try {
     const yesterdaysStats = await context.entities.DailyStats.findFirst({
       where: {

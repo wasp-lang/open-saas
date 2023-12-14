@@ -1,7 +1,6 @@
 // More info on auth config: https://wasp-lang.dev/docs/language/features#social-login-providers-oauth-20
 
 export async function getUserFields(_context: unknown, args: any) {
-  console.log('args', args.profile)
   const email = args.profile.emails[0].value
   const username = args.profile.displayName
   const adminEmails = process.env.ADMIN_EMAILS?.split(',') || []

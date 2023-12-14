@@ -28,8 +28,6 @@ export const checkAndQueueEmails: EmailChecker<never, void> = async (_args , con
   const currentDate = new Date();
   const twoWeeksFromNow = new Date(currentDate.getTime() + 14 * 24 * 60 * 60 * 1000);
 
-  console.log('Starting CRON JOB: \n\nSending notices...');
-
   const users = await context.entities.User.findMany({
     where: {
       datePaid: {
@@ -39,10 +37,7 @@ export const checkAndQueueEmails: EmailChecker<never, void> = async (_args , con
     },
   }) as User[];
 
-  console.log('Sending notices to users: ', users.length);
-
   if (users.length === 0) {
-    console.log('No users to send notices to.');
     return;
   }
   await Promise.allSettled(

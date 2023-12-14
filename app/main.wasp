@@ -13,11 +13,11 @@ app SaaSTemplate {
         "<meta name='twitter:image:height' content='400' />",
         "<meta name='twitter:card' content='summary_large_image' />",
         // you can put your analytics scripts here
-        "<script defer data-domain='opensaas.sh' src='https://plausible.apps.twoducks.dev/js/script.js'></script>",
-        // plausible has script extension `script.local.js` for local development TODO: remove before deploying
-        "<script defer data-domain='opensaas.sh' src='https://plausible.apps.twoducks.dev/js/script.local.js'></script>",
+        "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.js'></script>",
+        // plausible has script extension `script.local.js` for local development
+        "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.local.js'></script>",
         // google analytics only needs one script and will automatically detect if you are in dev mode 
-        "<!-- Google tag (gtag.js) --><script async src='https://www.googletagmanager.com/gtag/js?id=G-H3LSJCK95H'></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-H3LSJCK95H');</script>"
+        "<!-- Google tag (gtag.js) --><script>...</script>"
   ],
   // 🔐 Auth out of the box! https://wasp-lang.dev/docs/auth/overview
   auth: {
@@ -33,7 +33,7 @@ app SaaSTemplate {
       //   fromField: {
       //     name: "Open SaaS App",
       //     // make sure this address is the same you registered your SendGrid or MailGun account with!
-      //     email: "vince@wasp-lang.dev" 
+      //     email: "me@example.com" 
       //   },
       //   emailVerification: {
       //     clientRoute: EmailVerificationRoute,
@@ -46,9 +46,9 @@ app SaaSTemplate {
       // },
     },
     signup: {
-      additionalFields: import setAdminUsers from "@server/auth/setAdminUsers.js",
+      additionalFields: import setIsAdminViaEmailSignup from "@server/auth/setIsAdminViaEmailSignup.js",
     },
-    onAuthFailedRedirectTo: "/",
+    onAuthFailedRedirectTo: "/login",
     onAuthSucceededRedirectTo: "/gpt",
   },
   db: { 
@@ -63,9 +63,9 @@ app SaaSTemplate {
   emailSender: {
     provider: SendGrid,
     defaultFrom: {
-      name: "SaaS App",
+      name: "Open SaaS App",
       // make sure this address is the same you registered your SendGrid or MailGun account with!
-      email: "vince@wasp-lang.dev" // TODO change to generic email before pushing to github
+      email: "me@example.com" 
     },
   },
   // add your dependencies here. the quickest way to find the latest version is `npm view <package-name> version`

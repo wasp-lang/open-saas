@@ -116,7 +116,6 @@ async function getPrevDayViewsChangePercent() {
     ],
   });
 
-  // console.log('response: ', JSON.stringify(response?.rows, null, 2));
   let viewsFromYesterday;
   let viewsFromDayBeforeYesterday;
 
@@ -130,7 +129,6 @@ async function getPrevDayViewsChangePercent() {
       viewsFromYesterday = parseInt(viewsFromYesterday);
       viewsFromDayBeforeYesterday = parseInt(viewsFromDayBeforeYesterday);
       if (viewsFromYesterday === 0 || viewsFromDayBeforeYesterday === 0) {
-        console.log('Page views are zero, so no percentage change');
         return '0';
       }
       console.table({ viewsFromYesterday, viewsFromDayBeforeYesterday });

@@ -48,11 +48,8 @@ export default function AppNavBar() {
         </div>
         <div className='hidden lg:flex lg:flex-1 lg:justify-end lg:align-end'>
           {isUserLoading ? null : !user ? (
-            <a
-              href={!user ? '/login' : '/account'}
-              className='flex justify-end items-center text-sm  font-semibold leading-6 '
-            >
-              <div className='duration-300 ease-in-out text-gray-900 hover:text-yellow-500'>
+            <a href={!user ? '/login' : '/account'} className='text-sm  font-semibold leading-6 '>
+              <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500'>
                 Log in <BiLogIn size='1.1rem' className='ml-1 mt-[0.1rem]' />
               </div>
             </a>

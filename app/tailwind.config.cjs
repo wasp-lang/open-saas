@@ -7,7 +7,6 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'sans': ['ui-monospace', 'Liberation Mono', 'Menlo', 'monospace'],
         satoshi: ['Satoshi', 'sans-serif'],
       },
       colors: {
