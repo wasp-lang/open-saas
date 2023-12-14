@@ -53,6 +53,8 @@ wasp db studio
 ```
 
 ### Start your app
+In the `app/` directory, rename the `.env.server.example` file to `.env.server`. You don't have to fill in your API keys right away, but leave the placeholder strings for the time being as this will allow you to run the app.
+
 In a new terminal window/tab, run:
 ```sh
 wasp start 
