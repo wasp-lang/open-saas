@@ -99,6 +99,6 @@ npm run dev
 
 ## What's next?
 
-Awesome! We have our new app ready and we know how to run both it and the blog/docs! Now, in the next section, we'll give you a quick "guided tour" of the different parts o the app we created and understand how it works.
+Awesome! We have our new app ready and we know how to run both it and the blog/docs! Now, in the next section, we'll give you a quick "guided tour" of the different parts of the app we created and understand how it works.
 
 
