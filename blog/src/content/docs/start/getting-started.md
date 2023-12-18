@@ -36,16 +36,22 @@ Before you start your app, you need to have a Postgres Database connected and ru
 
 First, make sure you have Docker installed and running. If not, download and install it [here](https://www.docker.com/products/docker-desktop/)
 
-With Docker running, open a new terminal window/tab and from within the root of the project, run:
+With Docker running, open a new terminal window/tab and position yourself in the `app` directory:
+```sh
+cd app
+```
+
+Then run:
 ```sh
 wasp start db 
 ```
 This will start and connect your app to a Postgres database for you. No need to do anything else! 🤯 
 
-Whenever you make any changes to your schema, you can migrate them with:
+Now let's initalize the database with the following command:
 ```sh
 wasp db migrate-dev
 ```
+You will also need to run `wasp db migrate-dev` whenever you make changes to your Prisma schema (entities).
 
 If you want to see or manage your DB via Prisma's DB Studio GUI, run:
 ```sh
@@ -55,18 +61,19 @@ wasp db studio
 ### Start your app
 In the `app/` directory, rename the `.env.server.example` file to `.env.server`. You don't have to fill in your API keys right away, but leave the placeholder strings for the time being as this will allow you to run the app.
 
-In a new terminal window/tab, run:
+In a new terminal window/tab, first make sure you're in the `app/` directory:
+```sh
+cd app
+```
+
+Then run:
 ```sh
 wasp start 
 ```
+
 This will install all dependencies and start the client and server for you :)
 
 Go to `localhost:3000` in your browser to view it (your NodeJS server will be running on port `3001`)
-
-### More Help/Further Info
-For more info on Wasp as a full-stack React, NodeJS, Prisma framework, check out the [Wasp docs](https://wasp-lang.dev/docs/).
-
-If you get stuck or need help, join the [Wasp Discord](https://discord.gg/aCamt5wCpS).
 
 #### Run Blog and Docs
 
@@ -89,4 +96,9 @@ Then start the development server:
 ```sh
 npm run dev
 ```
+
+## What's next?
+
+Awesome! We have our new app ready and we know how to run both it and the blog/docs! Now, in the next section, we'll give you a quick "guided tour" of the different parts o the app we created and understand how it works.
+
 

@@ -6,7 +6,21 @@ Let's get to know our new SaaS app.
 
 First, we'll take a look at the project's file structure, then dive into its main features and how you can get started customizing them.
 
+:::caution[HOLD UP! ✋]
+
+If you haven't already, now would be the right time to [explore the app](https://opensaas.sh) in your browser:
+- [ ] explore the landing page
+- [ ] log in to the demo app
+- [ ] check out the admin dashboard
+- [ ] make a test purchase
+- [ ] check out your account settings
+- [ ] check out the blog
+:::
+
+
+
 ## Getting acquainted with the codebase
+Now that you've gotten a feel for the app and how it works, let's dive into the codebase.
 
 At the root of our project, you will see two folders:
 ```sh
@@ -35,7 +49,7 @@ Let's check out what's in the `app` folder in more detail:
 
 ### The Wasp Config file
 
-This template at its core is a Wasp template, where [Wasp](https://wasp-lang.dev) is a full-stack web app framework that let’s you write your app in React, NodeJS, and Prisma and will manage the "boilerplatey" work for you, allowing you to just take care of the fun stuff!
+This template at its core is a Wasp project, where [Wasp](https://wasp-lang.dev) is a full-stack web app framework that let’s you write your app in React, NodeJS, and Prisma and will manage the "boilerplatey" work for you, allowing you to just take care of the fun stuff!
 
 [Wasp's secret sauce](https://wasp-lang.dev/docs) is its use of a config file (`main.wasp`) and compiler which takes your code and outputs the client app, server app and deployment code for you. 
 
@@ -200,3 +214,6 @@ job dailyStatsJob {
 
 For more info on integrating Plausible or Google Analytics, check out the [Analytics guide](/guides/analytics).
 
+## What's next?
+
+And that concludes our guided tour! For next steps, we recommend ...
