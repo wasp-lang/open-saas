@@ -43,9 +43,9 @@ const DropdownUser = ({ user } : { user: Partial<User> }) => {
         <span className='hidden text-right lg:block'>
           <span className='block text-sm font-medium dark:text-white'>{user.username}</span>
         </span>
-        <CgProfile size='1.1rem' className='ml-1 mt-[0.1rem]' />
+        <CgProfile size='1.1rem' className='ml-1 mt-[0.1rem] dark:text-white' />
         <svg
-          className={`hidden fill-current sm:block ${dropdownOpen ? 'rotate-180' : ''}`}
+          className={`hidden fill-current dark:fill-white sm:block ${dropdownOpen ? 'rotate-180' : ''}`}
           width='12'
           height='8'
           viewBox='0 0 12 8'
@@ -64,7 +64,7 @@ const DropdownUser = ({ user } : { user: Partial<User> }) => {
       {/* <!-- Dropdown --> */}
       <div
         ref={dropdown}
-        className={`absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${
+        className={`absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark dark:text-white ${
           dropdownOpen === true ? 'block' : 'hidden'
         }`}
       >
