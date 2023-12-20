@@ -57,14 +57,14 @@ const PricingPage = () => {
     }
 
   return (
-    <div className='my-10 lg:mt-20'>
+    <div className='py-10 lg:mt-10'>
       <div className='mx-auto max-w-7xl px-6 lg:px-8'>
         <div id='pricing' className='mx-auto max-w-4xl text-center'>
-          <h2 className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl'>
+          <h2 className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white'>
             Pick your <span className='text-yellow-500'>pricing</span>
           </h2>
         </div>
-        <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600'>
+        <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600 dark:text-white'>
           Stripe subscriptions and secure webhooks are built-in. Just add your Stripe Product IDs! Try it out below with
           test credit card number{' '}
           <span className='px-2 py-1 bg-gray-100 rounded-md text-gray-500'>4242 4242 4242 4242 4242</span>
@@ -80,7 +80,7 @@ const PricingPage = () => {
               {tier.bestDeal && (
                 <div className='absolute top-0 right-0 -z-10 w-full h-full transform-gpu blur-3xl' aria-hidden='true'>
                   <div
-                    className='absolute w-full h-full bg-gradient-to-br from-amber-400 to-purple-300 opacity-30'
+                    className='absolute w-full h-full bg-gradient-to-br from-amber-400 to-purple-300 opacity-30 dark:opacity-50'
                     style={{
                       clipPath: 'circle(670% at 50% 50%)',
                     }}
@@ -89,16 +89,16 @@ const PricingPage = () => {
               )}
               <div className='mb-8'>
                 <div className='flex items-center justify-between gap-x-4'>
-                  <h3 id={tier.id} className='text-gray-900 text-lg font-semibold leading-8'>
+                  <h3 id={tier.id} className='text-gray-900 text-lg font-semibold leading-8 dark:text-white'>
                     {tier.name}
                   </h3>
                 </div>
-                <p className='mt-4 text-sm leading-6 text-gray-600'>{tier.description}</p>
-                <p className='mt-6 flex items-baseline gap-x-1'>
-                  <span className='text-4xl font-bold tracking-tight text-gray-900'>{tier.priceMonthly}</span>
-                  <span className='text-sm font-semibold leading-6 text-gray-600'>/month</span>
+                <p className='mt-4 text-sm leading-6 text-gray-600 dark:text-white'>{tier.description}</p>
+                <p className='mt-6 flex items-baseline gap-x-1 dark:text-white'>
+                  <span className='text-4xl font-bold tracking-tight text-gray-900 dark:text-white'>{tier.priceMonthly}</span>
+                  <span className='text-sm font-semibold leading-6 text-gray-600 dark:text-white'>/month</span>
                 </p>
-                <ul role='list' className='mt-8 space-y-3 text-sm leading-6 text-gray-600'>
+                <ul role='list' className='mt-8 space-y-3 text-sm leading-6 text-gray-600 dark:text-white'>
                   {tier.features.map((feature) => (
                     <li key={feature} className='flex gap-x-3'>
                       <AiFillCheckCircle className='h-6 w-5 flex-none text-yellow-500' aria-hidden='true' />
@@ -127,7 +127,7 @@ const PricingPage = () => {
                 <button
                   onClick={() => handleBuyNowClick(tier.id)}
                   aria-describedby={tier.id}
-                  className={`
+                  className={`dark:text-white
                       ${tier.id === 'enterprise-tier' ? 'opacity-50 cursor-not-allowed' : 'opacity-100 cursor-pointer'}
                       ${
                         tier.bestDeal
