@@ -34,8 +34,8 @@ export default function GptPage() {
   } = useForm();
 
   return (
-    <div className='my-10 lg:mt-20 dark:bg-boxdark'>
-      <div className='mx-auto max-w-7xl px-6 lg:px-8'>
+    <div className='my-10 lg:mt-20 dark:bg-boxdark-2'>
+      <div className='mx-auto max-w-7xl px-6 lg:px-8  dark:bg-boxdark'>
         <div id='pricing' className='mx-auto max-w-4xl text-center'>
           <h2 className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white'>
             Create your AI-powered <span className='text-yellow-500'>SaaS</span>

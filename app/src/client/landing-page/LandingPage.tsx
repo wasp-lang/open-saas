@@ -21,9 +21,9 @@ export default function LandingPage() {
   const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Your SaaS App' />;
 
   return (
-    <div className='bg-white dark:text-white dark:bg-boxdark'>
+    <div className='bg-white dark:text-white dark:bg-boxdark-2'>
       {/* Header */}
-      <header className='absolute inset-x-0 top-0 z-50 dark:bg-boxdark'>
+      <header className='absolute inset-x-0 top-0 z-50 dark:bg-boxdark-2'>
         <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
           <div className='flex items-center lg:flex-1'>
             <a
@@ -120,7 +120,7 @@ export default function LandingPage() {
         </Dialog>
       </header>
 
-      <main className='isolate dark:bg-boxdark'>
+      <main className='isolate dark:bg-boxdark-2'>
         {/* Hero section */}
         <div className='relative pt-14 w-full '>
           <div
@@ -128,7 +128,7 @@ export default function LandingPage() {
             aria-hidden='true'
           >
             <div
-              className='aspect-[1020/880] w-[55rem] flex-none bg-gradient-to-tr from-amber-400 to-purple-300 opacity-40 sm:right-1/4 sm:translate-x-1/2'
+              className='aspect-[1020/880] w-[55rem] flex-none sm:right-1/4 sm:translate-x-1/2 dark:hidden bg-gradient-to-tr from-amber-400 to-purple-300 opacity-40'
               style={{
                 clipPath: 'polygon(80% 20%, 90% 55%, 50% 100%, 70% 30%, 20% 50%, 50% 0)',
               }}
@@ -139,7 +139,7 @@ export default function LandingPage() {
             aria-hidden='true'
           >
             <div
-              className='relative aspect-[1020/880] sm:-left-3/4 sm:translate-x-1/4 bg-gradient-to-br from-amber-400 to-purple-300  opacity-50 w-[72.1875rem]'
+              className='relative aspect-[1020/880] sm:-left-3/4 sm:translate-x-1/4 dark:hidden bg-gradient-to-br from-amber-400 to-purple-300  opacity-50 w-[72.1875rem]'
               style={{
                 clipPath: 'ellipse(80% 30% at 80% 50%)',
               }}
@@ -324,7 +324,7 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-      <div className='mx-auto mt-6 max-w-7xl px-6 lg:px-8 dark:bg-boxdark'>
+      <div className='mx-auto mt-6 max-w-7xl px-6 lg:px-8 dark:bg-boxdark-2'>
         <footer aria-labelledby='footer-heading' className='relative border-t border-gray-900/10 py-24 sm:mt-32'>
           <h2 id='footer-heading' className='sr-only'>
             Footer

@@ -57,7 +57,7 @@ const PricingPage = () => {
     }
 
   return (
-    <div className='my-10 lg:mt-20'>
+    <div className='py-10 lg:mt-10'>
       <div className='mx-auto max-w-7xl px-6 lg:px-8'>
         <div id='pricing' className='mx-auto max-w-4xl text-center'>
           <h2 className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white'>
@@ -80,7 +80,7 @@ const PricingPage = () => {
               {tier.bestDeal && (
                 <div className='absolute top-0 right-0 -z-10 w-full h-full transform-gpu blur-3xl' aria-hidden='true'>
                   <div
-                    className='absolute w-full h-full bg-gradient-to-br from-amber-400 to-purple-300 opacity-30'
+                    className='absolute w-full h-full bg-gradient-to-br from-amber-400 to-purple-300 opacity-30 dark:opacity-50'
                     style={{
                       clipPath: 'circle(670% at 50% 50%)',
                     }}
