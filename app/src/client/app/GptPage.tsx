@@ -35,8 +35,8 @@ export default function GptPage() {
   } = useForm();
 
   return (
-    <div className='my-10 lg:mt-20 dark:bg-boxdark-2'>
-      <div className='mx-auto max-w-7xl px-6 lg:px-8  dark:bg-boxdark'>
+    <div className='py-10 lg:pt-20 dark:bg-boxdark-2'>
+      <div className='mx-auto max-w-7xl px-6 lg:px-8 '>
         <div id='pricing' className='mx-auto max-w-4xl text-center'>
           <h2 className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white'>
             Create your AI-powered <span className='text-yellow-500'>SaaS</span>
@@ -45,10 +45,16 @@ export default function GptPage() {
         <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600 dark:text-white'>
           Below is an example of integrating the OpenAI API into your SaaS.
         </p>
-        <form onSubmit={handleSubmit(onSubmit)} className='py-8 mt-10 sm:mt-20 ring-1 ring-gray-200 rounded-lg'>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className='py-8 mt-10 sm:mt-20 ring-1 ring-gray-200 rounded-lg'
+        >
           <div className='space-y-6 sm:w-[90%] md:w-[60%] mx-auto border-b border-gray-900/10 px-6 pb-12'>
             <div className='col-span-full'>
-              <label htmlFor='instructions' className='block text-sm font-medium leading-6 text-gray-900 dark:text-white'>
+              <label
+                htmlFor='instructions'
+                className='block text-sm font-medium leading-6 text-gray-900 dark:text-white'
+              >
                 Instructions -- How should GPT behave?
               </label>
               <div className='mt-2'>

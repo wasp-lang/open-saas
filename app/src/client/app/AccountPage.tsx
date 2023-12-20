@@ -18,26 +18,26 @@ export default function AccountPage({ user }: { user: User }) {
   }, [gptResponses]);
   return (
     <div className='mt-10 px-6'>
-      <div className='overflow-hidden bg-white ring-1 ring-gray-900/10 shadow-lg sm:rounded-lg lg:m-8 '>
+      <div className='overflow-hidden bg-white ring-1 ring-gray-900/10 shadow-lg sm:rounded-lg lg:m-8 dark:bg-boxdark-2 dark:ring-gray-100/10'>
         <div className='px-4 py-5 sm:px-6 lg:px-8'>
-          <h3 className='text-base font-semibold leading-6 text-gray-900'>Account Information</h3>
+          <h3 className='text-base font-semibold leading-6 text-gray-900 dark:text-gray-400'>Account Information</h3>
         </div>
-        <div className='border-t border-gray-200 px-4 py-5 sm:p-0'>
-          <dl className='sm:divide-y sm:divide-gray-200'>
+        <div className='border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:p-0'>
+          <dl className='sm:divide-y sm:divide-gray-200 dark:divide-gray-700'>
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
-              <dt className='text-sm font-medium text-gray-500'>Email address</dt>
-              <dd className='mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0'>{user.email}</dd>
+              <dt className='text-sm font-medium text-gray-500 dark:text-white'>Email address</dt>
+              <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-2 sm:mt-0'>{user.email}</dd>
             </div>
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
-              <dt className='text-sm font-medium text-gray-500'>Your Plan</dt>
+              <dt className='text-sm font-medium text-gray-500 dark:text-white'>Your Plan</dt>
               {user.hasPaid ? (
                 <>
                   {user.subscriptionStatus !== 'past_due' ? (
-                    <dd className='mt-1 text-sm text-gray-900 sm:col-span-1 sm:mt-0'>
+                    <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
                       {user.subscriptionTier === TierIds.HOBBY ? 'Hobby' : 'Pro'} Plan
                     </dd>
                   ) : (
-                    <dd className='mt-1 text-sm text-gray-900 sm:col-span-1 sm:mt-0'>
+                    <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
                       Your Account is Past Due! Please Update your Payment Information
                     </dd>
                   )}
@@ -45,7 +45,7 @@ export default function AccountPage({ user }: { user: User }) {
                 </>
               ) : (
                 <>
-                  <dd className='mt-1 text-sm text-gray-900 sm:col-span-1 sm:mt-0'>
+                  <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
                     Credits remaining: {user.credits}
                   </dd>
                   <BuyMoreButton />
@@ -53,15 +53,16 @@ export default function AccountPage({ user }: { user: User }) {
               )}
             </div>
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
-              <dt className='text-sm font-medium text-gray-500'>About</dt>
-              <dd className='mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0'>I'm a cool customer.</dd>
+              <dt className='text-sm font-medium text-gray-500 dark:text-white'>About</dt>
+              <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-2 sm:mt-0'>I'm a cool customer.</dd>
             </div>
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
-              <dt className='text-sm font-medium text-gray-500'>Most Recent GPT Response</dt>
-              <dd className='flex flex-col gap-2 mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0'>
+              <dt className='text-sm font-medium text-gray-500 dark:text-white'>Most Recent GPT Response</dt>
+              <dd className='flex flex-col gap-2 mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-2 sm:mt-0'>
                 {isLoadingGptResponses
                   ? 'Loading...'
-                  : lastGptResponse.length >  0 ? lastGptResponse.map((str) => <p key={str}>{str}</p>) 
+                  : lastGptResponse.length > 0
+                  ? lastGptResponse.map((str) => <p key={str}>{str}</p>)
                   : "You don't have any at this time."}
               </dd>
             </div>
@@ -83,7 +84,7 @@ export default function AccountPage({ user }: { user: User }) {
 function BuyMoreButton() {
   return (
     <div className='ml-4 flex-shrink-0 sm:col-span-1 sm:mt-0'>
-      <Link to='/' hash='pricing' className={`font-medium text-sm text-indigo-600 hover:text-indigo-500`}>
+      <Link to='/' hash='pricing' className={`font-medium text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-500`}>
         Buy More/Upgrade
       </Link>
     </div>

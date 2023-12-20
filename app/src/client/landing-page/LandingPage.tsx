@@ -28,7 +28,7 @@ export default function LandingPage() {
           <div className='flex items-center lg:flex-1'>
             <a
               href='/'
-              className='flex items-center -m-1.5 p-1.5 text-gray-900 duration-300 ease-in-out hover:text-yellow-500'
+              className='flex items-center -m-1.5 p-1.5 text-gray-900 duration-300 ease-in-out hover:text-yellow-500 dark:text-white '
             >
               <NavLogo />
               <span className='ml-2 text-sm font-semibold leading-6 '>Open Saas</span>
@@ -57,13 +57,13 @@ export default function LandingPage() {
           </div>
           <div className='hidden lg:flex lg:flex-1 lg:justify-end lg:align-end'>
             {/* <!-- Dark Mode Toggler --> */}
-            <div className='flex items-center gap-3 2xsm:gap-7'>
+            <div className='flex items-center gap-3 text-sm font-semibold leading-6 2xsm:gap-7'>
               <ul className='flex justify-center items-center gap-2 2xsm:gap-4'>
                 <DarkModeSwitcher />
               </ul>
               {isUserLoading ? null : !user ? (
                 <Link to='/login'>
-                  <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500'>
+                  <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 text-sm hover:text-yellow-500 dark:text-white'>
                     Try the Demo App <BiLogIn size='1.1rem' className='ml-1' />
                   </div>
                 </Link>
@@ -148,10 +148,10 @@ export default function LandingPage() {
           <div className='py-24 sm:py-32'>
             <div className='mx-auto max-w-8xl px-6 lg:px-8'>
               <div className='lg:mb-18 mx-auto max-w-3xl text-center'>
-                <h1 className='text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl'>
+                <h1 className='text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl'>
                   The <span className='italic'>free</span> SaaS template with superpowers
                 </h1>
-                <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-gray-600'>
+                <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-gray-600 dark:text-gray-400'>
                   An open-source, feature-rich, full-stack React + NodeJS template that manages features for you.
                 </p>
                 <div className='mt-10 flex items-center justify-center gap-x-6'>
@@ -163,7 +163,7 @@ export default function LandingPage() {
                   </a>
                   <a
                     href={GITHUB_URL}
-                    className='flex items-center justify-center rounded-md bg-gray-100 px-3.5 py-2.5 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-yellow-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+                    className='flex items-center justify-center rounded-md bg-gray-100 px-3.5 py-2.5 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-200 dark:bg-gray-700 hover:ring-2 hover:ring-yellow-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
                   >
                     View the Repo <AiFillGithub size='1rem' className='ml-1' />
                   </a>
@@ -197,13 +197,13 @@ export default function LandingPage() {
               height={48}
             />
             <img
-              className=' col-span-1 max-h-12 w-full object-contain grayscale opacity-60 '
+              className='col-span-1 max-h-12 w-full object-contain grayscale opacity-60 dark:filter dark:brightness-0 dark:invert'
               src='https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Node.js_logo.svg/590px-Node.js_logo.svg.png'
               alt='NodeJS'
               height={48}
             />
             <img
-              className='col-span-1 max-h-12 w-full object-contain grayscale opacity-80 '
+              className='col-span-1 max-h-12 w-full object-contain grayscale opacity-80'
               src={logo}
               alt='Wasp'
               height={48}
@@ -218,13 +218,13 @@ export default function LandingPage() {
               </svg>
             </div>
             <img
-              className=' col-span-1 max-h-12 w-full object-contain grayscale '
+              className='col-span-1 max-h-12 w-full object-contain grayscale '
               src='https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Tailwind_CSS_Logo.svg/512px-Tailwind_CSS_Logo.svg.png'
               alt='Tailwind CSS'
               height={48}
             />
             <img
-              className=' col-span-1 max-h-12 w-full object-contain grayscale opacity-80 '
+              className='col-span-1 max-h-12 w-full object-contain grayscale opacity-80 dark:opacity-60 dark:filter dark:brightness-0 dark:invert'
               src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Stripe_Logo%2C_revised_2016.svg/512px-Stripe_Logo%2C_revised_2016.svg.png'
               alt='Stripe'
               height={48}
@@ -258,10 +258,10 @@ export default function LandingPage() {
         {/* Feature section */}
         <div id='features' className='mx-auto mt-48 max-w-7xl px-6 lg:px-8'>
           <div className='mx-auto max-w-2xl text-center'>
-            <p className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl'>
+            <p className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white'>
               <span className='text-yellow-500'>100%</span> Open-Source
             </p>
-            <p className='mt-6 text-lg leading-8 text-gray-600'>
+            <p className='mt-6 text-lg leading-8 text-gray-600 dark:text-gray-400'>
               No vendor lock-in.
               <br /> Deploy anywhere.
             </p>
@@ -269,15 +269,15 @@ export default function LandingPage() {
           <div className='mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl'>
             <dl className='grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16'>
               {features.map((feature) => (
-                <a href={feature.href} className='group '>
+                <a href={feature.href} className='group'>
                   <div key={feature.name} className='relative pl-16'>
-                    <dt className='text-base font-semibold leading-7 text-gray-900 group-hover:underline'>
-                      <div className='absolute left-0 top-0 flex h-10 w-10 items-center justify-center border border-yellow-400 bg-yellow-100/50 rounded-lg group-hover:border-yellow-500'>
-                        <div className='text-2xl group-hover:opacity-80'>{feature.icon}</div>
+                    <dt className='text-base font-semibold leading-7 text-gray-900 dark:text-white group-hover:underline'>
+                      <div className='absolute left-0 top-0 flex h-10 w-10 items-center justify-center border border-yellow-400 bg-yellow-100/50 dark:bg-boxdark rounded-lg group-hover:border-yellow-500'>
+                        <div className='text-2xl group-hover:opacity-80 '>{feature.icon}</div>
                       </div>
                       {feature.name}
                     </dt>
-                    <dd className='mt-2 text-base leading-7 text-gray-600'>{feature.description}</dd>
+                    <dd className='mt-2 text-base leading-7 text-gray-600 dark:text-gray-400'>{feature.description}</dd>
                   </div>
                 </a>
               ))}
@@ -288,7 +288,7 @@ export default function LandingPage() {
         {/* Testimonial section */}
         <div className='mx-auto mt-32 max-w-7xl sm:mt-56 sm:px-6 lg:px-8'>
           <div className='relative sm:left-5 -m-2 rounded-xl bg-yellow-400/20 lg:ring-1 lg:ring-yellow-500/50 lg:-m-4 '>
-            <div className='relative sm:top-5 sm:right-5 bg-gray-900 px-8 py-20 shadow-xl sm:rounded-xl sm:px-10 sm:py-16 md:px-12 lg:px-20'>
+            <div className='relative sm:top-5 sm:right-5 bg-gray-900 dark:bg-boxdark px-8 py-20 shadow-xl sm:rounded-xl sm:px-10 sm:py-16 md:px-12 lg:px-20'>
               <h2 className='text-left text-xl font-semibold tracking-wide leading-7 text-gray-500 dark:text-white'>
                 What Our Users Say
               </h2>
@@ -316,13 +316,15 @@ export default function LandingPage() {
 
         {/* FAQ */}
         <div className='mt-32 mx-auto max-w-2xl divide-y divide-gray-900/10 px-6 pb-8 sm:pb-24 sm:pt-12 lg:max-w-7xl lg:px-8 lg:py-32'>
-          <h2 className='text-2xl font-bold leading-10 tracking-tight text-gray-900 dark:text-white'>Frequently asked questions</h2>
-          <dl className='mt-10 space-y-8 divide-y divide-gray-900/10'>
+          <h2 className='text-2xl font-bold leading-10 tracking-tight text-gray-900 dark:text-white'>
+            Frequently asked questions
+          </h2>
+          <dl className='mt-10 space-y-8 divide-y divide-gray-900/10 dark:divide-gray-100/10'>
             {faqs.map((faq) => (
               <div key={faq.id} className='pt-8 lg:grid lg:grid-cols-12 lg:gap-8'>
-                <dt className='text-base font-semibold leading-7 text-gray-900 lg:col-span-5'>{faq.question}</dt>
+                <dt className='text-base font-semibold leading-7 text-gray-900 dark:text-white lg:col-span-5'>{faq.question}</dt>
                 <dd className='mt-4 lg:col-span-7 lg:mt-0'>
-                  <p className='text-base leading-7 text-gray-600'>{faq.answer}</p>
+                  <p className='text-base leading-7 text-gray-600 dark:text-gray-400'>{faq.answer}</p>
                   {faq.href && (
                     <a href={faq.href} className='mt-4 text-base leading-7 text-yellow-500 hover:text-yellow-600'>
                       Learn more →
@@ -337,7 +339,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <div className='mx-auto mt-6 max-w-7xl px-6 lg:px-8 dark:bg-boxdark-2'>
-        <footer aria-labelledby='footer-heading' className='relative border-t border-gray-900/10 py-24 sm:mt-32'>
+        <footer aria-labelledby='footer-heading' className='relative border-t border-gray-900/10 dark:border-gray-100/10 py-24 sm:mt-32'>
           <h2 id='footer-heading' className='sr-only'>
             Footer
           </h2>
