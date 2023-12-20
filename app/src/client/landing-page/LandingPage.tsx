@@ -261,7 +261,7 @@ export default function LandingPage() {
               {features.map((feature) => (
                 <div key={feature.name} className={`relative pl-16`}>
                   <dt className='text-base font-semibold leading-7 text-gray-900 dark:text-white'>
-                    <div className='absolute left-0 top-0 flex h-10 w-10 items-center justify-center border border-yellow-400 bg-yellow-100/50 rounded-lg'>
+                    <div className='absolute left-0 top-0 flex h-10 w-10 items-center justify-center border border-yellow-400 bg-yellow-100/50 dark:bg-boxdark rounded-lg'>
                       <div className='text-2xl'>{feature.icon}</div>
                     </div>
                     {feature.name}
@@ -276,7 +276,7 @@ export default function LandingPage() {
         {/* Testimonial section */}
         <div className='mx-auto mt-32 max-w-7xl sm:mt-56 sm:px-6 lg:px-8'>
           <div className='relative sm:left-5 -m-2 rounded-xl bg-yellow-400/20 lg:ring-1 lg:ring-yellow-500/50 lg:-m-4 '>
-            <div className='relative sm:top-5 sm:right-5 bg-gray-900 px-8 py-20 shadow-xl sm:rounded-xl sm:px-10 sm:py-16 md:px-12 lg:px-20'>
+            <div className='relative sm:top-5 sm:right-5 bg-gray-900 dark:bg-boxdark px-8 py-20 shadow-xl sm:rounded-xl sm:px-10 sm:py-16 md:px-12 lg:px-20'>
               <h2 className='text-left text-xl font-semibold tracking-wide leading-7 text-gray-500 dark:text-white'>
                 What Our Users Say
               </h2>
@@ -303,7 +303,7 @@ export default function LandingPage() {
         </div>
 
         {/* FAQ */}
-        <div className='mt-32 mx-auto max-w-2xl divide-y divide-gray-900/10 px-6 pb-8 sm:pb-24 sm:pt-12 lg:max-w-7xl lg:px-8 lg:py-32'>
+        <div className='mt-32 mx-auto max-w-2xl divide-y divide-gray-900/10 dark:divide-gray-200/10 px-6 pb-8 sm:pb-24 sm:pt-12 lg:max-w-7xl lg:px-8 lg:py-32'>
           <h2 className='text-2xl font-bold leading-10 tracking-tight text-gray-900 dark:text-white'>Frequently asked questions</h2>
           <dl className='mt-10 space-y-8 divide-y divide-gray-900/10'>
             {faqs.map((faq) => (
@@ -325,7 +325,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <div className='mx-auto mt-6 max-w-7xl px-6 lg:px-8 dark:bg-boxdark-2'>
-        <footer aria-labelledby='footer-heading' className='relative border-t border-gray-900/10 py-24 sm:mt-32'>
+        <footer aria-labelledby='footer-heading' className='relative border-t border-gray-900/10 dark:border-gray-200/10 py-24 sm:mt-32'>
           <h2 id='footer-heading' className='sr-only'>
             Footer
           </h2>
