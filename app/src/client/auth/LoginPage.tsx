@@ -20,7 +20,7 @@ export default function Login() {
     <AuthWrapper>
       <LoginForm />
       <br />
-      <span className='text-sm font-medium text-gray-900'>
+      <span className='text-sm font-medium text-gray-900 dark:text-gray-900'>
         Don't have an account yet?{' '}
         <Link to='/signup' className='underline'>
           go to signup

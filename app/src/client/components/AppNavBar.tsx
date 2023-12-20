@@ -5,6 +5,7 @@ import useAuth from '@wasp/auth/useAuth';
 import logo from '../static/logo.png';
 import DropdownUser from './DropdownUser';
 import { DOCS_URL, BLOG_URL } from '@wasp/shared/constants';
+import DarkModeSwitcher from '../admin/components/DarkModeSwitcher';
 
 const navigation = [
   { name: 'GPT Wrapper', href: '/gpt' },
@@ -18,7 +19,7 @@ export default function AppNavBar() {
 
   const { data: user, isLoading: isUserLoading } = useAuth();
   return (
-    <header className='absolute inset-x-0 top-0 z-50 shadow sticky bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter'>
+    <header className='absolute inset-x-0 top-0 z-50 shadow sticky bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter dark:border-strokedark dark:bg-boxdark-2'>
       <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
         <div className='flex lg:flex-1'>
           <a href='/' className='-m-1.5 p-1.5'>
@@ -40,23 +41,31 @@ export default function AppNavBar() {
             <a
               key={item.name}
               href={item.href}
-              className='text-sm font-semibold leading-6 text-gray-900 duration-300 ease-in-out hover:text-yellow-500'
+              className='text-sm font-semibold leading-6 text-gray-900 duration-300 ease-in-out hover:text-yellow-500 dark:text-white'
             >
               {item.name}
             </a>
           ))}
         </div>
-        <div className='hidden lg:flex lg:flex-1 lg:justify-end lg:align-end'>
+        <div className='hidden lg:flex lg:flex-1 lg:justify-end items-center'>
+          <div className='flex items-center gap-3 2xsm:gap-7'>
+            <ul className='flex justify-center items-center gap-2 2xsm:gap-4'>
+              <DarkModeSwitcher />
+            </ul>
+          </div>
           {isUserLoading ? null : !user ? (
-            <a href={!user ? '/login' : '/account'} className='text-sm  font-semibold leading-6 '>
-              <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500'>
+            <a href={!user ? '/login' : '/account'} className='text-sm font-semibold leading-6 ml-4'>
+              <div className='flex items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500 dark:text-white'>
                 Log in <BiLogIn size='1.1rem' className='ml-1 mt-[0.1rem]' />
               </div>
             </a>
           ) : (
-            <DropdownUser user={user} />
+            <div className='ml-4'>
+              <DropdownUser user={user} />
+            </div>
           )}
         </div>
+
       </nav>
     </header>
   );

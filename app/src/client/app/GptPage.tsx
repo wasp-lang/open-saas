@@ -34,20 +34,20 @@ export default function GptPage() {
   } = useForm();
 
   return (
-    <div className='my-10 lg:mt-20'>
-      <div className='mx-auto max-w-7xl px-6 lg:px-8'>
+    <div className='my-10 lg:mt-20 dark:bg-boxdark-2'>
+      <div className='mx-auto max-w-7xl px-6 lg:px-8  dark:bg-boxdark'>
         <div id='pricing' className='mx-auto max-w-4xl text-center'>
-          <h2 className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl'>
+          <h2 className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white'>
             Create your AI-powered <span className='text-yellow-500'>SaaS</span>
           </h2>
         </div>
-        <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600'>
+        <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600 dark:text-white'>
           Below is an example of integrating the OpenAI API into your SaaS.
         </p>
         <form onSubmit={handleSubmit(onSubmit)} className='py-8 mt-10 sm:mt-20 ring-1 ring-gray-200 rounded-lg'>
           <div className='space-y-6 sm:w-[90%] md:w-[60%] mx-auto border-b border-gray-900/10 px-6 pb-12'>
             <div className='col-span-full'>
-              <label htmlFor='instructions' className='block text-sm font-medium leading-6 text-gray-900'>
+              <label htmlFor='instructions' className='block text-sm font-medium leading-6 text-gray-900 dark:text-white'>
                 Instructions -- How should GPT behave?
               </label>
               <div className='mt-2'>
@@ -71,7 +71,7 @@ export default function GptPage() {
               </span>
             </div>
             <div className='col-span-full'>
-              <label htmlFor='command' className='block text-sm font-medium leading-6 text-gray-900'>
+              <label htmlFor='command' className='block text-sm font-medium leading-6 text-gray-900 dark:text-white'>
                 Command -- What should GPT do?
               </label>
               <div className='mt-2'>
@@ -95,8 +95,8 @@ export default function GptPage() {
               </span>
             </div>
 
-            <div className='h-10 '>
-              <label htmlFor='temperature' className='w-full text-gray-700 text-sm font-semibold'>
+            <div className='h-10'>
+              <label htmlFor='temperature' className='w-full text-gray-700 text-sm font-semibold dark:text-white'>
                 Temperature Input -- Controls How Random GPT's Output is
               </label>
               <div className='w-32 mt-2'>
@@ -133,9 +133,9 @@ export default function GptPage() {
         <div
           className={`${
             isSubmitting && 'animate-pulse'
-          } mt-4 mx-6 flex justify-center rounded-lg border border-dashed border-gray-900/25 sm:w-[90%] md:w-[50%] mx-auto mt-12 px-6 py-10`}
+          } mt-4 mx-6 flex justify-center rounded-lg border border-dashed border-gray-900/25 dark:border-white sm:w-[90%] md:w-[50%] mx-auto mt-12 px-6 py-10`}
         >
-          <div className='space-y-2 flex flex-col gap-2 text-center text-sm text-gray-500 w-full'>
+          <div className='space-y-2 flex flex-col gap-2 text-center text-sm text-gray-500 w-full dark:text-white'>
             {response.length > 0 ? response.map((str) => <p key={str}>{str}</p>) : <p>GPT Response will load here</p>}
           </div>
         </div>
