@@ -184,7 +184,7 @@ export default function LandingPage() {
           <h2 className='mb-6 text-center font-semibold tracking-wide text-gray-500 dark:text-white'>Built with / Used by:</h2>
 
           <div className='mx-auto grid max-w-lg grid-cols-2 items-center gap-x-8 gap-y-12 sm:max-w-xl md:grid-cols-4 sm:gap-x-10 sm:gap-y-14 lg:mx-0 lg:max-w-none'>
-            <div className='flex justify-center col-span-1 max-h-12 w-full object-contain grayscale'>
+            <div className='flex justify-center col-span-1 max-h-12 w-full object-contain dark:opacity-80'>
               <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 273 191'>
                 <defs>
                   <path id='a' d='M.06.5h272v190H.06z' />
@@ -193,7 +193,7 @@ export default function LandingPage() {
 
                   <path
                     className='dark:fill-white'
-                    fill='#00A1E0'
+                    fill='#545454'
                     d='M113 21.3c8.78-9.14 21-14.8 34.5-14.8 18 0 33.6 10 42 24.9a58 58 0 0 1 23.7-5.05c32.4 0 58.7 26.5 58.7 59.2s-26.3 59.2-58.7 59.2c-3.96 0-7.82-.398-11.6-1.15-7.35 13.1-21.4 22-37.4 22a42.7 42.7 0 0 1-18.8-4.32c-7.45 17.5-24.8 29.8-45 29.8-21.1 0-39-13.3-45.9-32a45.1 45.1 0 0 1-9.34.972c-25.1 0-45.4-20.6-45.4-45.9 0-17 9.14-31.8 22.7-39.8a52.6 52.6 0 0 1-4.35-21c0-29.2 23.7-52.8 52.9-52.8 17.1 0 32.4 8.15 42 20.8'
                     mask='url(#b)'
                   />
@@ -210,7 +210,7 @@ export default function LandingPage() {
                 </g>
               </svg>
             </div>
-            <div className='flex justify-center col-span-1 max-h-12 w-full object-contain grayscale opacity-80'>
+            <div className='flex justify-center col-span-1 max-h-12 w-full object-contain dark:opacity-80'>
               <svg width={48} height={48} viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'>
                 <path
                   className='dark:fill-white'
@@ -219,7 +219,7 @@ export default function LandingPage() {
                 />
               </svg>
             </div>
-            <div className='flex justify-center col-span-1 w-full max-h-12 object-contain grayscale opacity-75'>
+            <div className='flex justify-center col-span-1 w-full max-h-12 object-contain dark:opacity-80'>
               <svg viewBox='0 0 256 370' xmlns='http://www.w3.org/2000/svg'>
                 <path
                   className='dark:fill-white'
@@ -233,7 +233,7 @@ export default function LandingPage() {
                 />
               </svg>
             </div>
-            <div className='flex justify-center col-span-1 w-full max-h-12 object-contain grayscale opacity-75'>
+            <div className='flex justify-center col-span-1 w-full max-h-12 object-contain dark:opacity-80'>
               <svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMidYMid' viewBox='0 0 256 260'>
                 <path
                   className='dark:fill-white'
