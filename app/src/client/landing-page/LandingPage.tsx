@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog } from '@headlessui/react';
-import { AiFillCloseCircle, AiFillGithub } from 'react-icons/ai';
+import { AiFillCloseCircle, AiFillGithub, AiOutlineStar } from 'react-icons/ai';
 import { HiBars3 } from 'react-icons/hi2';
 import { BiLogIn } from 'react-icons/bi';
 import { Link } from '@wasp/router';
@@ -11,12 +11,27 @@ import DropdownUser from '../components/DropdownUser';
 import { DOCS_URL, GITHUB_URL } from '@wasp/shared/constants';
 import { UserMenuItems } from '../components/UserMenuItems';
 import useAuth from '@wasp/auth/useAuth';
-import DarkModeSwitcher from '../admin/components/DarkModeSwitcher'; 
+import DarkModeSwitcher from '../admin/components/DarkModeSwitcher';
 
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [repoInfo, setRepoInfo] = useState<null | any>(null);
 
   const { data: user, isLoading: isUserLoading } = useAuth();
+
+  useEffect(() => {
+    const fetchRepoInfo = async () => {
+      try {
+        const response = await fetch('https://api.github.com/repos/wasp-lang/open-saas');
+        const data = await response.json();
+        console.log('repo info > ', data);
+        setRepoInfo(data);
+      } catch (error) {
+        console.error('Error fetching repo info', error);
+      }
+    };
+    fetchRepoInfo();
+  }, []);
 
   const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Open SaaS App' />;
 
@@ -157,15 +172,24 @@ export default function LandingPage() {
                 <div className='mt-10 flex items-center justify-center gap-x-6'>
                   <a
                     href={DOCS_URL}
-                    className='rounded-md px-3.5 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-yellow-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-white'
+                    className='rounded-md px-6 py-4 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-yellow-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-white'
                   >
                     Get Started <span aria-hidden='true'>→</span>
                   </a>
                   <a
                     href={GITHUB_URL}
-                    className='flex items-center justify-center rounded-md bg-gray-100 px-3.5 py-2.5 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-200 dark:bg-gray-700 hover:ring-2 hover:ring-yellow-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+                    className='group relative flex items-center justify-center rounded-md bg-gray-100 px-6 py-4 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-200 dark:bg-gray-700 hover:ring-2 hover:ring-yellow-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
                   >
-                    View the Repo <AiFillGithub size='1rem' className='ml-1' />
+                    {/* <AiFillGithub size='1.25rem' className='mr-2' /> */}
+                    View the Repo
+                    {repoInfo!! && (
+                      <>
+                        <span className='absolute -top-3 -right-7 inline-flex items-center gap-x-1 rounded-full ring-1 group-hover:ring-2 ring-inset ring-yellow-300 bg-yellow-100 px-2 py-1 text-sm font-medium text-yellow-800'>
+                          <AiFillGithub size='1rem' />
+                          {repoInfo.stargazers_count}
+                        </span>
+                      </>
+                    )}
                   </a>
                 </div>
               </div>
@@ -322,7 +346,9 @@ export default function LandingPage() {
           <dl className='mt-10 space-y-8 divide-y divide-gray-900/10 dark:divide-gray-100/10'>
             {faqs.map((faq) => (
               <div key={faq.id} className='pt-8 lg:grid lg:grid-cols-12 lg:gap-8'>
-                <dt className='text-base font-semibold leading-7 text-gray-900 dark:text-white lg:col-span-5'>{faq.question}</dt>
+                <dt className='text-base font-semibold leading-7 text-gray-900 dark:text-white lg:col-span-5'>
+                  {faq.question}
+                </dt>
                 <dd className='mt-4 lg:col-span-7 lg:mt-0'>
                   <p className='text-base leading-7 text-gray-600 dark:text-gray-400'>{faq.answer}</p>
                   {faq.href && (
@@ -339,7 +365,10 @@ export default function LandingPage() {
 
       {/* Footer */}
       <div className='mx-auto mt-6 max-w-7xl px-6 lg:px-8 dark:bg-boxdark-2'>
-        <footer aria-labelledby='footer-heading' className='relative border-t border-gray-900/10 dark:border-gray-100/10 py-24 sm:mt-32'>
+        <footer
+          aria-labelledby='footer-heading'
+          className='relative border-t border-gray-900/10 dark:border-gray-100/10 py-24 sm:mt-32'
+        >
           <h2 id='footer-heading' className='sr-only'>
             Footer
           </h2>
