@@ -24,7 +24,6 @@ export default function LandingPage() {
       try {
         const response = await fetch('https://api.github.com/repos/wasp-lang/open-saas');
         const data = await response.json();
-        console.log('repo info > ', data);
         setRepoInfo(data);
       } catch (error) {
         console.error('Error fetching repo info', error);

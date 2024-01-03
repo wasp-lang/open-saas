@@ -2,6 +2,6 @@ import { defineAdditionalSignupFields } from '@wasp/auth/index.js';
 
 export default defineAdditionalSignupFields({
   username: (data) => {
-    return 'testuser';
+    return data.email as string;
   },
 });
