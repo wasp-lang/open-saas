@@ -1,21 +1,10 @@
-import { useState, useEffect } from 'react';
 import { User } from '@wasp/entities';
-import { useQuery } from '@wasp/queries';
-import getGptResponses from '@wasp/queries/getGptResponses';
 import logout from '@wasp/auth/logout';
 import { Link } from '@wasp/router';
 import { STRIPE_CUSTOMER_PORTAL_LINK } from '@wasp/shared/constants';
 import { TierIds } from '@wasp/shared/constants';
 
 export default function AccountPage({ user }: { user: User }) {
-  const [ lastGptResponse, setLastGptResponse ] = useState<string[]>([]);
-  const { data: gptResponses, isLoading: isLoadingGptResponses } = useQuery(getGptResponses);
-
-  useEffect(() => {
-    if (gptResponses && gptResponses.length > 0) {
-      setLastGptResponse(gptResponses[gptResponses.length - 1].content.split('\n'));
-    }
-  }, [gptResponses]);
   return (
     <div className='mt-10 px-6'>
       <div className='overflow-hidden bg-white ring-1 ring-gray-900/10 shadow-lg sm:rounded-lg lg:m-8 '>
@@ -24,10 +13,18 @@ export default function AccountPage({ user }: { user: User }) {
         </div>
         <div className='border-t border-gray-200 px-4 py-5 sm:p-0'>
           <dl className='sm:divide-y sm:divide-gray-200'>
-            <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
-              <dt className='text-sm font-medium text-gray-500'>Email address</dt>
-              <dd className='mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0'>{user.email}</dd>
-            </div>
+            {!!user.email && (
+              <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
+                <dt className='text-sm font-medium text-gray-500'>Email address</dt>
+                <dd className='mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0'>{user.email}</dd>
+              </div>
+            )}
+            {!!user.username && (
+              <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
+                <dt className='text-sm font-medium text-gray-500'>Username</dt>
+                <dd className='mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0'>{user.username}</dd>
+              </div>
+            )}
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
               <dt className='text-sm font-medium text-gray-500'>Your Plan</dt>
               {user.hasPaid ? (
@@ -55,15 +52,6 @@ export default function AccountPage({ user }: { user: User }) {
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
               <dt className='text-sm font-medium text-gray-500'>About</dt>
               <dd className='mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0'>I'm a cool customer.</dd>
-            </div>
-            <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
-              <dt className='text-sm font-medium text-gray-500'>Most Recent GPT Response</dt>
-              <dd className='flex flex-col gap-2 mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0'>
-                {isLoadingGptResponses
-                  ? 'Loading...'
-                  : lastGptResponse.length >  0 ? lastGptResponse.map((str) => <p key={str}>{str}</p>) 
-                  : "You don't have any at this time."}
-              </dd>
             </div>
           </dl>
         </div>

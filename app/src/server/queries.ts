@@ -1,9 +1,10 @@
 import HttpError from '@wasp/core/HttpError.js';
-import type { DailyStats, GptResponse, User, PageViewSource } from '@wasp/entities';
+import type { DailyStats, GptResponse, User, PageViewSource, Task } from '@wasp/entities';
 import type {
   GetGptResponses,
   GetDailyStats,
   GetPaginatedUsers,
+  GetAllTasksByUser
 } from '@wasp/queries/types';
 
 type DailyStatsWithSources = DailyStats & {
@@ -27,6 +28,22 @@ export const getGptResponses: GetGptResponses<void, GptResponse[]> = async (args
     },
   });
 };
+
+export const getAllTasksByUser: GetAllTasksByUser<void, Task[]> = async (_args, context) => {
+  if (!context.user) {
+    throw new HttpError(401);
+  }
+  return context.entities.Task.findMany({
+    where: {
+      user: {
+        id: context.user.id,
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+}
 
 export const getDailyStats: GetDailyStats<void, DailyStatsValues> = async (_args, context) => {
   if (!context.user?.isAdmin) {

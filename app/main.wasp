@@ -49,7 +49,7 @@ app SaaSTemplate {
       additionalFields: import setIsAdminViaEmailSignup from "@server/auth/setIsAdminViaEmailSignup.js",
     },
     onAuthFailedRedirectTo: "/login",
-    onAuthSucceededRedirectTo: "/gpt",
+    onAuthSucceededRedirectTo: "/demo-app",
   },
   db: { 
     system: PostgreSQL,
@@ -73,17 +73,16 @@ app SaaSTemplate {
     ("@headlessui/react", "1.7.13"),
     ("@tailwindcss/forms", "^0.5.3"),
     ("@tailwindcss/typography", "^0.5.7"),
-    ("react-hook-form", "7.43.1"),
     ("react-icons", "4.11.0"),
     ("node-fetch", "3.3.0"),
-    ("react-hook-form", "^7.45.4"),
     ("stripe", "11.15.0"),
     ("react-hot-toast", "^2.4.1"),
     ("react-apexcharts", "^1.4.1"),
     ("apexcharts", "^3.41.0"),
     ("headlessui", "^0.0.0"),
     ("@faker-js/faker", "8.3.1"),
-    ("@google-analytics/data", "4.1.0")
+    ("@google-analytics/data", "4.1.0"),
+    ("openai", "^4.24.1"),
   ],
 }
 
@@ -113,6 +112,7 @@ entity User {=psl
   gptResponses              GptResponse[]
   externalAuthAssociations  SocialLogin[]
   contactFormMessages       ContactFormMessage[]     
+  tasks                     Task[]
 psl=}
 
 entity SocialLogin {=psl
@@ -132,6 +132,16 @@ entity GptResponse {=psl
   userId                    Int
   createdAt                 DateTime        @default(now())
   updatedAt                 DateTime        @updatedAt
+psl=}
+
+entity Task {=psl
+  id                        String          @id @default(uuid())
+  description               String
+  time                      String          @default("1")
+  isDone                    Boolean         @default(false)
+  user                      User            @relation(fields: [userId], references: [id])
+  userId                    Int
+  createdAt                 DateTime        @default(now())
 psl=}
 
 // TODO: add functionality to allow users to send messages to admin
@@ -210,10 +220,10 @@ page SignupPage {
 //   component: import { EmailVerification } from "@client/auth/EmailVerification",
 // }
 
-route GptRoute { path: "/gpt", to: GptPage }
-page GptPage {
+route DemoAppRoute { path: "/demo-app", to: DemoAppPage }
+page DemoAppPage {
   authRequired: true,
-  component: import GptPage from "@client/app/GptPage"
+  component: import DemoAppPage from "@client/app/DemoAppPage"
 }
 
 route PricingPageRoute { path: "/pricing", to: PricingPage }
@@ -301,7 +311,22 @@ page AdminUIButtonsPage {
 
 action generateGptResponse {
   fn: import { generateGptResponse } from "@server/actions.js",
-  entities: [User, GptResponse]
+  entities: [User, Task, GptResponse]
+}
+
+action createTask {
+  fn: import { createTask } from "@server/actions.js",
+  entities: [Task]
+}
+
+action deleteTask {
+  fn: import { deleteTask } from "@server/actions.js",
+  entities: [Task]
+}
+
+action updateTask {
+  fn: import { updateTask } from "@server/actions.js",
+  entities: [Task]
 }
 
 action stripePayment {
@@ -324,6 +349,11 @@ action updateUserById {
 query getGptResponses {
   fn: import { getGptResponses } from "@server/queries.js",
   entities: [User, GptResponse]
+}
+
+query getAllTasksByUser {
+  fn: import { getAllTasksByUser } from "@server/queries.js",
+  entities: [Task]
 }
 
 query getDailyStats {
