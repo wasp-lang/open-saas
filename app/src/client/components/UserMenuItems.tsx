@@ -11,11 +11,11 @@ export const UserMenuItems = ({ user }: { user?: Partial<User> }) => {
       <ul className='flex flex-col gap-5 border-b border-stroke px-6 py-4 dark:border-strokedark'>
         <li>
           <Link
-            to='/gpt'
+            to='/demo-app'
             className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-yellow-500'
           >
             <MdOutlineSpaceDashboard size='1.1rem' />
-            App
+            AI Scheduler (Demo App)
           </Link>
         </li>
         <li>
