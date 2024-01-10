@@ -85,7 +85,8 @@ app SaaSTemplate {
     ("openai", "^4.24.1"),
     ("lucide-react", "0.306.0"),
     ("prettier", "3.1.1"),
-    ("prettier-plugin-tailwindcss", "0.5.11")
+    ("prettier-plugin-tailwindcss", "0.5.11"),
+    ("zod", "3.22.4")
   ],
 }
 
