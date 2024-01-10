@@ -7,7 +7,7 @@ import { useQuery } from '@wasp/queries';
 import getAllTasksByUser from '@wasp/queries/getAllTasksByUser';
 import { Task } from '@wasp/entities';
 import { CgSpinner } from 'react-icons/cg';
-import { XSquare } from 'lucide-react';
+import { TiDelete } from 'react-icons/ti';
 
 export default function DemoAppPage() {
   return (
@@ -97,7 +97,7 @@ function Todo({ id, isDone, description, time }: TodoProps) {
       </div>
       <div className='flex items-center justify-end w-15'>
         <button className='p-1' onClick={handleDeleteClick} title='Remove task'>
-          <XSquare size='20' className='text-red-600 hover:text-red-700' />
+          <TiDelete size='20' className='text-red-600 hover:text-red-700' />
         </button>
       </div>
     </div>
