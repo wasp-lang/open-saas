@@ -15,11 +15,11 @@ export default function DemoAppPage() {
       <div className='mx-auto max-w-7xl px-6 lg:px-8'>
         <div className='mx-auto max-w-4xl text-center'>
           <h2 className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white'>
-            Create your AI-powered <span className='text-yellow-500'>SaaS</span>
+            <span className='text-yellow-500'>AI</span> Day  Scheduler
           </h2>
         </div>
         <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600 dark:text-white'>
-          Below is an example of integrating the OpenAI API into your SaaS.
+          Enter your day's tasks and let AI do the rest!
         </p>
         {/* begin AI-powered Todo List */}
         <div className='my-8 border rounded-3xl border-gray-900/10'>
