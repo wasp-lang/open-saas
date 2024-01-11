@@ -6,38 +6,51 @@ import { BiLogIn } from 'react-icons/bi';
 import { Link } from '@wasp/router';
 import logo from '../static/logo.png';
 import openSaasBanner from '../static/open-saas-banner.png';
-import { features, navigation, faqs, footerNavigation, testimonials } from './contentSections';
+import {
+  features,
+  navigation,
+  faqs,
+  footerNavigation,
+  testimonials,
+} from './contentSections';
 import DropdownUser from '../components/DropdownUser';
 import { DOCS_URL } from '@wasp/shared/constants';
 import { UserMenuItems } from '../components/UserMenuItems';
 import useAuth from '@wasp/auth/useAuth';
-import DarkModeSwitcher from '../admin/components/DarkModeSwitcher'; 
+import DarkModeSwitcher from '../admin/components/DarkModeSwitcher';
 
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const { data: user, isLoading: isUserLoading } = useAuth();
 
-  const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Your SaaS App' />;
+  const NavLogo = () => (
+    <img className='h-8 w-8' src={logo} alt='Your SaaS App' />
+  );
 
   return (
     <div className='bg-white dark:text-white dark:bg-boxdark-2'>
       {/* Header */}
       <header className='absolute inset-x-0 top-0 z-50 dark:bg-boxdark-2'>
-        <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
+        <nav
+          className='flex items-center justify-between p-6 lg:px-8'
+          aria-label='Global'
+        >
           <div className='flex items-center lg:flex-1'>
             <a
               href='/'
               className='flex items-center -m-1.5 p-1.5 text-gray-900 duration-300 ease-in-out hover:text-yellow-500'
             >
               <NavLogo />
-              <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Your Saas</span>
+              <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>
+                Your Saas
+              </span>
             </a>
           </div>
           <div className='flex lg:hidden'>
             <button
               type='button'
-              className='-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700'
+              className='-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 dark:text-white'
               onClick={() => setMobileMenuOpen(true)}
             >
               <span className='sr-only'>Open main menu</span>
@@ -73,9 +86,14 @@ export default function LandingPage() {
             </div>
           </div>
         </nav>
-        <Dialog as='div' className='lg:hidden' open={mobileMenuOpen} onClose={setMobileMenuOpen}>
+        <Dialog
+          as='div'
+          className='lg:hidden'
+          open={mobileMenuOpen}
+          onClose={setMobileMenuOpen}
+        >
           <div className='fixed inset-0 z-50' />
-          <Dialog.Panel className='fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10'>
+          <Dialog.Panel className='fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 dark:bg-boxdark dark:text-white'>
             <div className='flex items-center justify-between'>
               <a href='/' className='-m-1.5 p-1.5'>
                 <span className='sr-only'>Your SaaS</span>
@@ -83,7 +101,7 @@ export default function LandingPage() {
               </a>
               <button
                 type='button'
-                className='-m-2.5 rounded-md p-2.5 text-gray-700'
+                className='-m-2.5 rounded-md p-2.5 text-gray-700 dark:text-gray-50'
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <span className='sr-only'>Close menu</span>
@@ -97,7 +115,7 @@ export default function LandingPage() {
                     <a
                       key={item.name}
                       href={item.href}
-                      className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50'
+                      className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-boxdark-2'
                     >
                       {item.name}
                     </a>
@@ -106,7 +124,7 @@ export default function LandingPage() {
                 <div className='py-6'>
                   {isUserLoading ? null : !user ? (
                     <Link to='/login'>
-                      <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500'>
+                      <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500 dark:text-white'>
                         Log in <BiLogIn size='1.1rem' className='ml-1' />
                       </div>
                     </Link>
@@ -130,7 +148,8 @@ export default function LandingPage() {
             <div
               className='aspect-[1020/880] w-[55rem] flex-none sm:right-1/4 sm:translate-x-1/2 dark:hidden bg-gradient-to-tr from-amber-400 to-purple-300 opacity-40'
               style={{
-                clipPath: 'polygon(80% 20%, 90% 55%, 50% 100%, 70% 30%, 20% 50%, 50% 0)',
+                clipPath:
+                  'polygon(80% 20%, 90% 55%, 50% 100%, 70% 30%, 20% 50%, 50% 0)',
               }}
             />
           </div>
@@ -149,8 +168,8 @@ export default function LandingPage() {
             <div className='mx-auto max-w-8xl px-6 lg:px-8'>
               <div className='lg:mb-18 mx-auto max-w-3xl text-center'>
                 <h1 className='text-4xl font-bold text-gray-900 sm:text-6xl dark:text-white'>
-
-                  Some <span className='italic'>cool</span> words about your product
+                  Some <span className='italic'>cool</span> words about your
+                  product
                 </h1>
                 <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-gray-600 dark:text-white'>
                   With some more exciting words about your product!
@@ -181,7 +200,9 @@ export default function LandingPage() {
 
         {/* Clients section */}
         <div className='mt-12 mx-auto max-w-7xl px-6 lg:px-8 flex flex-col items-between gap-y-6'>
-          <h2 className='mb-6 text-center font-semibold tracking-wide text-gray-500 dark:text-white'>Built with / Used by:</h2>
+          <h2 className='mb-6 text-center font-semibold tracking-wide text-gray-500 dark:text-white'>
+            Built with / Used by:
+          </h2>
 
           <div className='mx-auto grid max-w-lg grid-cols-2 items-center gap-x-8 gap-y-12 sm:max-w-xl md:grid-cols-4 sm:gap-x-10 sm:gap-y-14 lg:mx-0 lg:max-w-none'>
             <div className='flex justify-center col-span-1 max-h-12 w-full object-contain dark:opacity-80'>
@@ -190,7 +211,6 @@ export default function LandingPage() {
                   <path id='a' d='M.06.5h272v190H.06z' />
                 </defs>
                 <g fill-rule='evenodd'>
-
                   <path
                     className='dark:fill-white'
                     fill='#545454'
@@ -211,7 +231,12 @@ export default function LandingPage() {
               </svg>
             </div>
             <div className='flex justify-center col-span-1 max-h-12 w-full object-contain dark:opacity-80'>
-              <svg width={48} height={48} viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'>
+              <svg
+                width={48}
+                height={48}
+                viewBox='0 0 32 32'
+                xmlns='http://www.w3.org/2000/svg'
+              >
                 <path
                   className='dark:fill-white'
                   fill='#545454'
@@ -234,7 +259,11 @@ export default function LandingPage() {
               </svg>
             </div>
             <div className='flex justify-center col-span-1 w-full max-h-12 object-contain dark:opacity-80'>
-              <svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMidYMid' viewBox='0 0 256 260'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                preserveAspectRatio='xMidYMid'
+                viewBox='0 0 256 260'
+              >
                 <path
                   className='dark:fill-white'
                   fill='#545454'
@@ -266,7 +295,9 @@ export default function LandingPage() {
                     </div>
                     {feature.name}
                   </dt>
-                  <dd className='mt-2 text-base leading-7 text-gray-600 dark:text-white'>{feature.description}</dd>
+                  <dd className='mt-2 text-base leading-7 text-gray-600 dark:text-white'>
+                    {feature.description}
+                  </dd>
                 </div>
               ))}
             </dl>
@@ -287,10 +318,18 @@ export default function LandingPage() {
                       <p>{testimonial.quote}</p>
                     </blockquote>
                     <figcaption className='mt-6 text-base text-white'>
-                      <a href={testimonial.socialUrl} className='flex items-center gap-x-2'>
-                        <img src={testimonial.avatarSrc} className='h-12 w-12 rounded-full' />
+                      <a
+                        href={testimonial.socialUrl}
+                        className='flex items-center gap-x-2'
+                      >
+                        <img
+                          src={testimonial.avatarSrc}
+                          className='h-12 w-12 rounded-full'
+                        />
                         <div>
-                          <div className='font-semibold hover:underline'>{testimonial.name}</div>
+                          <div className='font-semibold hover:underline'>
+                            {testimonial.name}
+                          </div>
                           <div className='mt-1'>{testimonial.role}</div>
                         </div>
                       </a>
@@ -304,15 +343,27 @@ export default function LandingPage() {
 
         {/* FAQ */}
         <div className='mt-32 mx-auto max-w-2xl divide-y divide-gray-900/10 dark:divide-gray-200/10 px-6 pb-8 sm:pb-24 sm:pt-12 lg:max-w-7xl lg:px-8 lg:py-32'>
-          <h2 className='text-2xl font-bold leading-10 tracking-tight text-gray-900 dark:text-white'>Frequently asked questions</h2>
+          <h2 className='text-2xl font-bold leading-10 tracking-tight text-gray-900 dark:text-white'>
+            Frequently asked questions
+          </h2>
           <dl className='mt-10 space-y-8 divide-y divide-gray-900/10'>
             {faqs.map((faq) => (
-              <div key={faq.id} className='pt-8 lg:grid lg:grid-cols-12 lg:gap-8'>
-                <dt className='text-base font-semibold leading-7 text-gray-900 lg:col-span-5 dark:text-white'>{faq.question}</dt>
+              <div
+                key={faq.id}
+                className='pt-8 lg:grid lg:grid-cols-12 lg:gap-8'
+              >
+                <dt className='text-base font-semibold leading-7 text-gray-900 lg:col-span-5 dark:text-white'>
+                  {faq.question}
+                </dt>
                 <dd className='flex items-center justify-start gap-2 mt-4 lg:col-span-7 lg:mt-0'>
-                  <p className='text-base leading-7 text-gray-600 dark:text-white'>{faq.answer}</p>
+                  <p className='text-base leading-7 text-gray-600 dark:text-white'>
+                    {faq.answer}
+                  </p>
                   {faq.href && (
-                    <a href={faq.href} className='text-base leading-7 text-yellow-500 hover:text-yellow-600'>
+                    <a
+                      href={faq.href}
+                      className='text-base leading-7 text-yellow-500 hover:text-yellow-600'
+                    >
                       Learn more →
                     </a>
                   )}
@@ -325,17 +376,25 @@ export default function LandingPage() {
 
       {/* Footer */}
       <div className='mx-auto mt-6 max-w-7xl px-6 lg:px-8 dark:bg-boxdark-2'>
-        <footer aria-labelledby='footer-heading' className='relative border-t border-gray-900/10 dark:border-gray-200/10 py-24 sm:mt-32'>
+        <footer
+          aria-labelledby='footer-heading'
+          className='relative border-t border-gray-900/10 dark:border-gray-200/10 py-24 sm:mt-32'
+        >
           <h2 id='footer-heading' className='sr-only'>
             Footer
           </h2>
           <div className='flex items-start justify-end mt-10 gap-20'>
             <div>
-              <h3 className='text-sm font-semibold leading-6 text-gray-900 dark:text-white'>App</h3>
+              <h3 className='text-sm font-semibold leading-6 text-gray-900 dark:text-white'>
+                App
+              </h3>
               <ul role='list' className='mt-6 space-y-4'>
                 {footerNavigation.app.map((item) => (
                   <li key={item.name}>
-                    <a href={item.href} className='text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-white'>
+                    <a
+                      href={item.href}
+                      className='text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-white'
+                    >
                       {item.name}
                     </a>
                   </li>
@@ -343,11 +402,16 @@ export default function LandingPage() {
               </ul>
             </div>
             <div>
-              <h3 className='text-sm font-semibold leading-6 text-gray-900 dark:text-white'>Company</h3>
+              <h3 className='text-sm font-semibold leading-6 text-gray-900 dark:text-white'>
+                Company
+              </h3>
               <ul role='list' className='mt-6 space-y-4'>
                 {footerNavigation.company.map((item) => (
                   <li key={item.name}>
-                    <a href={item.href} className='text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-white'>
+                    <a
+                      href={item.href}
+                      className='text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-white'
+                    >
                       {item.name}
                     </a>
                   </li>
