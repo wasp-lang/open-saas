@@ -6,7 +6,13 @@ import { BiLogIn } from 'react-icons/bi';
 import { Link } from '@wasp/router';
 import logo from '../static/logo.png';
 import openSaasBanner from '../static/open-saas-banner.png';
-import { features, navigation, faqs, footerNavigation, testimonials } from './contentSections';
+import {
+  features,
+  navigation,
+  faqs,
+  footerNavigation,
+  testimonials,
+} from './contentSections';
 import DropdownUser from '../components/DropdownUser';
 import { DOCS_URL, GITHUB_URL } from '@wasp/shared/constants';
 import { UserMenuItems } from '../components/UserMenuItems';
@@ -38,20 +44,25 @@ export default function LandingPage() {
     <div className='bg-white dark:text-white dark:bg-boxdark-2'>
       {/* Header */}
       <header className='absolute inset-x-0 top-0 z-50 dark:bg-boxdark-2'>
-        <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
+        <nav
+          className='flex items-center justify-between p-6 lg:px-8'
+          aria-label='Global'
+        >
           <div className='flex items-center lg:flex-1'>
             <a
               href='/'
               className='flex items-center -m-1.5 p-1.5 text-gray-900 duration-300 ease-in-out hover:text-yellow-500 dark:text-white '
             >
               <NavLogo />
-              <span className='ml-2 text-sm font-semibold leading-6 '>Open Saas</span>
+              <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>
+                Open Saas
+              </span>
             </a>
           </div>
           <div className='flex lg:hidden'>
             <button
               type='button'
-              className='-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700'
+              className='-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 dark:text-white'
               onClick={() => setMobileMenuOpen(true)}
             >
               <span className='sr-only'>Open main menu</span>
@@ -87,9 +98,14 @@ export default function LandingPage() {
             </div>
           </div>
         </nav>
-        <Dialog as='div' className='lg:hidden' open={mobileMenuOpen} onClose={setMobileMenuOpen}>
+        <Dialog
+          as='div'
+          className='lg:hidden'
+          open={mobileMenuOpen}
+          onClose={setMobileMenuOpen}
+        >
           <div className='fixed inset-0 z-50' />
-          <Dialog.Panel className='fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10'>
+          <Dialog.Panel className='fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 dark:bg-boxdark dark:text-white'>
             <div className='flex items-center justify-between'>
               <a href='/' className='-m-1.5 p-1.5'>
                 <span className='sr-only'>Open SaaS</span>
@@ -97,7 +113,7 @@ export default function LandingPage() {
               </a>
               <button
                 type='button'
-                className='-m-2.5 rounded-md p-2.5 text-gray-700'
+                className='-m-2.5 rounded-md p-2.5 text-gray-700 dark:text-gray-50'
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <span className='sr-only'>Close menu</span>
@@ -111,7 +127,7 @@ export default function LandingPage() {
                     <a
                       key={item.name}
                       href={item.href}
-                      className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50'
+                      className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-boxdark-2'
                     >
                       {item.name}
                     </a>
@@ -120,7 +136,7 @@ export default function LandingPage() {
                 <div className='py-6'>
                   {isUserLoading ? null : !user ? (
                     <Link to='/login'>
-                      <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500'>
+                      <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500 dark:text-white'>
                         Try the Demo App <BiLogIn size='1.1rem' className='ml-1' />
                       </div>
                     </Link>
@@ -144,7 +160,8 @@ export default function LandingPage() {
             <div
               className='aspect-[1020/880] w-[55rem] flex-none sm:right-1/4 sm:translate-x-1/2 dark:hidden bg-gradient-to-tr from-amber-400 to-purple-300 opacity-40'
               style={{
-                clipPath: 'polygon(80% 20%, 90% 55%, 50% 100%, 70% 30%, 20% 50%, 50% 0)',
+                clipPath:
+                  'polygon(80% 20%, 90% 55%, 50% 100%, 70% 30%, 20% 50%, 50% 0)',
               }}
             />
           </div>
@@ -267,7 +284,11 @@ export default function LandingPage() {
               </svg>
             </div>
             <div className='flex justify-center col-span-1 w-full max-h-12 object-contain dark:opacity-80'>
-              <svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMidYMid' viewBox='0 0 256 260'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                preserveAspectRatio='xMidYMid'
+                viewBox='0 0 256 260'
+              >
                 <path
                   className='dark:fill-white'
                   fill='#545454'
@@ -322,10 +343,18 @@ export default function LandingPage() {
                       <p>{testimonial.quote}</p>
                     </blockquote>
                     <figcaption className='mt-6 text-base text-white'>
-                      <a href={testimonial.socialUrl} className='flex items-center gap-x-2'>
-                        <img src={testimonial.avatarSrc} className='h-12 w-12 rounded-full' />
+                      <a
+                        href={testimonial.socialUrl}
+                        className='flex items-center gap-x-2'
+                      >
+                        <img
+                          src={testimonial.avatarSrc}
+                          className='h-12 w-12 rounded-full'
+                        />
                         <div>
-                          <div className='font-semibold hover:underline'>{testimonial.name}</div>
+                          <div className='font-semibold hover:underline'>
+                            {testimonial.name}
+                          </div>
                           <div className='mt-1'>{testimonial.role}</div>
                         </div>
                       </a>
@@ -373,11 +402,16 @@ export default function LandingPage() {
           </h2>
           <div className='flex items-start justify-end mt-10 gap-20'>
             <div>
-              <h3 className='text-sm font-semibold leading-6 text-gray-900 dark:text-white'>App</h3>
+              <h3 className='text-sm font-semibold leading-6 text-gray-900 dark:text-white'>
+                App
+              </h3>
               <ul role='list' className='mt-6 space-y-4'>
                 {footerNavigation.app.map((item) => (
                   <li key={item.name}>
-                    <a href={item.href} className='text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-white'>
+                    <a
+                      href={item.href}
+                      className='text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-white'
+                    >
                       {item.name}
                     </a>
                   </li>
@@ -385,11 +419,16 @@ export default function LandingPage() {
               </ul>
             </div>
             <div>
-              <h3 className='text-sm font-semibold leading-6 text-gray-900 dark:text-white'>Company</h3>
+              <h3 className='text-sm font-semibold leading-6 text-gray-900 dark:text-white'>
+                Company
+              </h3>
               <ul role='list' className='mt-6 space-y-4'>
                 {footerNavigation.company.map((item) => (
                   <li key={item.name}>
-                    <a href={item.href} className='text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-white'>
+                    <a
+                      href={item.href}
+                      className='text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-white'
+                    >
                       {item.name}
                     </a>
                   </li>
