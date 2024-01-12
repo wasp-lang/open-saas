@@ -18,14 +18,14 @@ export default defineConfig({
       },
     }),
     starlight({
-      title: 'OpenSaaS.sh', 
-      description: 'Open SaaS is a free, open-source, full-stack SaaS starter kit for React + NodeJS.',
+      title: 'Your SaaS', 
+      description: 'Documentation for your SaaS.',
       logo: {
         src: '/src/assets/logo.png',
-        alt: 'Open SaaS',
+        alt: 'Your SaaS',
       },
       editLink: {
-        baseUrl: 'https://github.com/wasp-lang/open-saas/edit/main',
+        baseUrl: 'https://github.com/<your-repo>',
       },
       components: {
         SiteTitle: './src/components/MyHeader.astro',
@@ -43,27 +43,13 @@ export default defineConfig({
           label: 'Start Here',
           items: [
             { label: 'Introduction', link: '/' },
-            { label: 'Getting Started', link: '/start/getting-started/' },
-            { label: 'Guided Tour', link: '/start/guided-tour/' },
           ],
         },
         {
           label: 'Guides',
           items: [
-            { label: 'Authentication', link: '/guides/authentication/' },
-            { label: 'Authorization', link: '/guides/authorization/' },
-            { label: 'Stripe Integration', link: '/guides/stripe-integration/' },
-            { label: 'Stripe Testing', link: '/guides/stripe-testing/' },
-            { label: 'Analytics', link: '/guides/analytics/' },
-            { label: 'Email Sending', link: '/guides/email-sending/' },
-            { label: 'Deploying', link: '/guides/deploying/' },
-          ],
-        },
-        {
-          label: 'General',
-          items: [
-            { label: 'Admin Dashboard', link: '/general/admin-dashboard/' },
-            { label: 'User Overview', link: '/general/user-overview/' },
+            { label: 'Example Guide', link: '/guides/example/' },
+
           ],
         },
       ],
