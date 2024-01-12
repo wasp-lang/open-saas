@@ -28,6 +28,12 @@ if you want to give administrator priveledges to other users, you can do so by a
 ADMIN_EMAILS=me@example.com,you@example.com,them@example.com
 ```
 
+:::tip[Star our Repo on GitHub! 🌟]
+We've packed in a ton of features and love into this SaaS starter.
+
+If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
+:::
+
 ## Admin Dashboard Pages
 
 ### Dashboard

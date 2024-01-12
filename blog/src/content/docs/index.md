@@ -17,6 +17,12 @@ This template is:
 Check it out in action here: [OpenSaaS.sh](https://opensaas.sh)  
 Check out the Code: [Open SaaS GitHub Repo](https://github.com/wasp-lang/open-saas)
 
+:::tip[FREE & OPEN-SOURCE!? 🌟]
+That's right. Use this template however you like. No strings attached.
+
+If you find this template useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp). It helps us to keep bringing you open-source software just like this!
+:::
+
 ## What's inside?
 
 The template itself is built on top of some very powerful tools and frameworks, including:
@@ -40,7 +46,7 @@ Because we're using Wasp as the full-stack framework, we can leverage a lot of i
 You also get access to Wasp's diverse, helpful community if you get stuck or need help.
 - 🤝 [Wasp Discord](https://discord.gg/aCamt5wCpS)
 
-:::tip["Work In Progress"]
+:::caution["Work In Progress"]
 We've tried to get as many of the core features of a SaaS app into this template as possible, but there still might be some missing features or functionality.
 
 We could always use some help tying up loose ends, so consider [contributing](https://github.com/wasp-lang/open-saas/blob/main/CONTRIBUTING.md)!

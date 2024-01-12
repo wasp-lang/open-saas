@@ -119,7 +119,9 @@ This template comes with a fully functional auth flow out of the box. It takes a
     userEntity: User,
     externalAuthEntity: SocialLogin,
     methods: {
-      email: {},
+      email: { 
+        //...
+      },
       google: {},
       github: {},
     },
@@ -137,7 +139,7 @@ By defining the auth structure in your `main.wasp` file, Wasp generates all the 
 
 We've set the template up with Wasp's simplest auth flow, `usernameAndPassword`, but we suggest you only use it to get your app developlment going and opt for `email`, `google`, `gitHub`, or a combination of them in production.
 
-You'll notice that `google` and `email` methods are also pre-configured. If you'd like to use these configurations in your app, make sure to check out the [Authentication Guide](/guides/authentication) which gives you details on obtaining necessary API keys and integrations.
+You'll notice that `google` and `email` methods are also pre-configured but commented out. If you'd like to use these configurations in your app, make sure to check out the [Authentication Guide](/guides/authentication) which gives you details on obtaining necessary API keys and integrations.
 
 ### Subscription Payments with Stripe
 
@@ -190,6 +192,13 @@ api stripeWebhook {
 Within the webhook handler, we look for specific events that Stripe sends us to let us know which payment was completed and for which user. Then we update the user's subscription status in the database.
 
 To learn more about configuring the app to handle your products and payments, check out the [Stripe Integration guide](/guides/stripe-integration).
+
+:::tip[Star our Repo on GitHub! 🌟]
+We've packed in a ton of features and love into this SaaS starter.
+
+If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
+:::
+
 
 ### Analytics and Admin Dashboard
 

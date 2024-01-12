@@ -8,6 +8,12 @@ Once you deploy your app, you can follow the same steps, just make sure you're u
 
 To get started, you'll need to create a Stripe account. You can do that [here](https://dashboard.stripe.com/register).
 
+:::tip[Star our Repo on GitHub! 🌟]
+We've packed in a ton of features and love into this SaaS starter.
+
+If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
+:::
+
 ## Get your test Stripe API Keys
 
 Once you've created your account, you'll need to get your test API keys. You can do that by navigating to [https://dashboard.stripe.com/test/apikeys](https://dashboard.stripe.com/test/apikeys) or by going to the [Stripe Dashboard](https://dashboard.stripe.com/test/dashboard) and clicking on the `Developers`.

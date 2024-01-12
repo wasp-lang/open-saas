@@ -4,15 +4,13 @@ title: Authentication
 
 Setting up your app's authentication is easy with Wasp. In fact, it's aready set up for your in the `main.wasp` file: 
 
-```tsx title="main.wasp" ins="usernameAndPassword: {}" ins="email: {}" ins="google: {}" ins="gitHub: {}" 
+```tsx title="main.wasp" " 
   auth: {
     userEntity: User,
     externalAuthEntity: SocialLogin,
     methods: {
-      usernameAndPassword: {},
-      email: {},
-      google: {},
-      gitHub: {},
+      usernameAndPassword: {}, // works out-of-the-box!
+      // more auth methods can be added here
     },
     onAuthFailedRedirectTo: "/",
   },
@@ -22,13 +20,18 @@ The great part is, by defining your auth config in the `main.wasp` file, not onl
 
 ## Migrating to a different Auth method
 
-If you want to use a different method or combinations of Auth methods, you can easily do so by changing the `auth.methods` object in the `main.wasp` file.
+We've set up the template to get you started with Wasp's simplest auth method, `usernameAndPassword`, but we suggest you only use it to get your app developlment going. 
 
-We've set up the template to get you started with Wasp's simplest auth method, `usernameAndPassword`, but we suggest you only use it to get your app developlment going and opt for `email`, `google`, `gitHub`, or a combination of these in production.
+In production, you should opt for one or more of Wasp's more secure Auth methods:
+- `email` (email verified Auth, with forgotten password and reset options),
+- `google`,
+- `gitHub`, 
+
+If you want to use one or a combination of these Auth methods, you can easily do so by changing the `auth.methods` object in the `main.wasp` file.
 
 ### Email Verified Auth
 
-The `email` method, with it's use of an Email Sending provider to verify a user's email, is preferrable to `usernameAndPassword` because it's more secure and allows for password reset options. Note, you cannot use both `email` and `usernameAndPassword` methods at the same time.
+The `email` method, with it's use of an Email Sending provider to verify a user's email, is preferrable to `usernameAndPassword` because it's more secure and allows for password reset options. Note that the `email` and `usernameAndPassword` methods can not be used together.
 
 We've pre-configured the `email` auth method for you in a number of different files but commented out the code in case you'd like to quickly implement it in your app. To do so, you'll first need to fill in your Email Sending provider's API keys. We chose [SendGrid](https://sendgrid.com) as the provider, but Wasp can also handle [MailGun](https://mailgun.com), or SMTP. 
 

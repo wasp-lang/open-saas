@@ -41,6 +41,12 @@ The results of the event firing will be visible in the initial terminal window. 
 
 For more info on testing webhooks, check out https://stripe.com/docs/webhooks#test-webhook
 
+:::tip[Star our Repo on GitHub! 🌟]
+We've packed in a ton of features and love into this SaaS starter.
+
+If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
+:::
+
 ## Testing Checkout and Payments via the Client
 
 Make sure the **Stripe CLI is running** by following the steps above.
@@ -64,5 +70,5 @@ wasp db studio
 - Navigate to `localhost:5555` and click on the `users` table. You should see `hasPaid`is true and `subscriptionStatus` is `active` for the user that just made the purchase.
 
 :::note
-If you want to learn more about how a user's payment status, subscription status, and subscription tier affect a user's priveledges within the app, check out the [User Permissions](/general/user-permissions) reference.
+If you want to learn more about how a user's payment status, subscription status, and subscription tier affect a user's priveledges within the app, check out the [User Overview](/general/user-overview) reference.
 :::
