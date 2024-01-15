@@ -58,12 +58,11 @@ export default function AppNavBar() {
             </a>
           ))}
         </div>
-        <div className='hidden lg:flex lg:flex-1 lg:justify-end items-center'>
-          <div className='flex items-center gap-3 2xsm:gap-7'>
-            <ul className='flex justify-center items-center gap-2 2xsm:gap-4'>
-              <DarkModeSwitcher />
-            </ul>
-          </div>
+        <div className='hidden lg:flex lg:flex-1 gap-3 justify-end items-center'>
+          <ul className='flex justify-center items-center gap-2 sm:gap-4'>
+            <DarkModeSwitcher />
+          </ul>
+
           {isUserLoading ? null : !user ? (
             <a
               href={!user ? '/login' : '/account'}
@@ -109,6 +108,7 @@ export default function AppNavBar() {
                   <a
                     key={item.name}
                     href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
                     className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 dark:text-white hover:dark:bg-boxdark-2'
                   >
                     {item.name}
@@ -123,7 +123,7 @@ export default function AppNavBar() {
                     </div>
                   </Link>
                 ) : (
-                  <UserMenuItems user={user} />
+                  <UserMenuItems user={user} setMobileMenuOpen={setMobileMenuOpen}/>
                 )}
               </div>
             </div>

@@ -4,23 +4,41 @@ import { TfiDashboard } from 'react-icons/tfi';
 import logout from '@wasp/auth/logout';
 import type { User } from '@wasp/entities';
 
-// TODO: make mobile-friendly
-export const UserMenuItems = ({ user }: { user?: Partial<User> }) => {
+export const UserMenuItems = ({
+  user,
+  setMobileMenuOpen,
+}: {
+  user?: Partial<User>;
+  setMobileMenuOpen?: any;
+}) => {
+  const path = window.location.pathname;
+
+  const handleMobileMenuClick = () => {
+    if (setMobileMenuOpen) setMobileMenuOpen(false);
+  }
+
   return (
     <>
-      <ul className='flex flex-col gap-5 border-b border-stroke px-6 py-4 dark:border-strokedark'>
-        <li>
-          <Link
-            to='/demo-app'
-            className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-yellow-500'
-          >
-            <MdOutlineSpaceDashboard size='1.1rem' />
-            AI Scheduler (Demo App)
-          </Link>
-        </li>
+      <ul
+        className={`flex flex-col gap-5 border-b border-stroke py-4 dark:border-strokedark ${
+          path === '/admin' ? 'px-6' : 'sm:px-6'
+        }`}
+      >
+        {path === '/' || path === '/admin' ? (
+          <li>
+            <Link
+              to='/demo-app'
+              className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-yellow-500'
+            >
+              <MdOutlineSpaceDashboard size='1.1rem' />
+              AI Scheduler (Demo App)
+            </Link>
+          </li>
+        ) : null}
         <li>
           <Link
             to='/account'
+            onClick={handleMobileMenuClick}
             className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-yellow-500'
           >
             <svg
@@ -45,10 +63,15 @@ export const UserMenuItems = ({ user }: { user?: Partial<User> }) => {
         </li>
       </ul>
       {!!user && user.isAdmin && (
-        <ul className='flex flex-col gap-5 border-b border-stroke px-6 py-4 dark:border-strokedark'>
+        <ul
+          className={`flex flex-col gap-5 border-b border-stroke py-4 dark:border-strokedark ${
+            path === '/admin' ? 'px-6' : 'sm:px-6'
+          }`}
+        >
           <li className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-yellow-500'>
             <Link
               to='/admin'
+              onClick={handleMobileMenuClick}
               className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-yellow-500'
             >
               <TfiDashboard size='1.1rem' />
@@ -59,7 +82,9 @@ export const UserMenuItems = ({ user }: { user?: Partial<User> }) => {
       )}
       <button
         onClick={() => logout()}
-        className='flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-yellow-500'
+        className={`flex items-center gap-3.5 py-4 text-sm font-medium duration-300 ease-in-out hover:text-yellow-500 ${
+          path === '/admin' ? 'px-6' : 'sm:px-6'
+        }`}
       >
         <svg
           className='fill-current'
