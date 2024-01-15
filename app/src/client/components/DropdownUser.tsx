@@ -68,7 +68,7 @@ const DropdownUser = ({ user } : { user: Partial<User> }) => {
           dropdownOpen === true ? 'block' : 'hidden'
         }`}
       >
-        <UserMenuItems user={user} />
+        <UserMenuItems user={user} setMobileMenuOpen={toggleDropdown} />
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Dialog } from '@headlessui/react';
-import { AiFillCloseCircle, AiFillGithub, AiOutlineStar } from 'react-icons/ai';
+import { AiFillCloseCircle, AiFillGithub } from 'react-icons/ai';
 import { HiBars3 } from 'react-icons/hi2';
 import { BiLogIn } from 'react-icons/bi';
 import { Link } from '@wasp/router';
@@ -28,7 +28,9 @@ export default function LandingPage() {
   useEffect(() => {
     const fetchRepoInfo = async () => {
       try {
-        const response = await fetch('https://api.github.com/repos/wasp-lang/open-saas');
+        const response = await fetch(
+          'https://api.github.com/repos/wasp-lang/open-saas'
+        );
         const data = await response.json();
         setRepoInfo(data);
       } catch (error) {
@@ -38,7 +40,9 @@ export default function LandingPage() {
     fetchRepoInfo();
   }, []);
 
-  const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Open SaaS App' />;
+  const NavLogo = () => (
+    <img className='h-8 w-8' src={logo} alt='Open SaaS App' />
+  );
 
   return (
     <div className='bg-white dark:text-white dark:bg-boxdark-2'>
@@ -127,6 +131,7 @@ export default function LandingPage() {
                     <a
                       key={item.name}
                       href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
                       className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-boxdark-2'
                     >
                       {item.name}
@@ -137,7 +142,8 @@ export default function LandingPage() {
                   {isUserLoading ? null : !user ? (
                     <Link to='/login'>
                       <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500 dark:text-white'>
-                        Try the Demo App <BiLogIn size='1.1rem' className='ml-1' />
+                        Try the Demo App{' '}
+                        <BiLogIn size='1.1rem' className='ml-1' />
                       </div>
                     </Link>
                   ) : (
@@ -180,10 +186,12 @@ export default function LandingPage() {
             <div className='mx-auto max-w-8xl px-6 lg:px-8'>
               <div className='lg:mb-18 mx-auto max-w-3xl text-center'>
                 <h1 className='text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl'>
-                  The <span className='italic'>free</span> SaaS template with superpowers
+                  The <span className='italic'>free</span> SaaS template with
+                  superpowers
                 </h1>
                 <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-gray-600 dark:text-gray-400'>
-                  An open-source, feature-rich, full-stack React + NodeJS template that manages features for you.
+                  An open-source, feature-rich, full-stack React + NodeJS
+                  template that manages features for you.
                 </p>
                 <div className='mt-10 flex items-center justify-center gap-x-6'>
                   <a
@@ -227,7 +235,9 @@ export default function LandingPage() {
         {/* Logo cloud section */}
 
         <div className='mt-12 mx-auto max-w-7xl px-6 lg:px-8 flex flex-col items-between gap-y-6'>
-          <h2 className='mb-6 text-center font-semibold tracking-wide text-gray-500'>Built and Ships with</h2>
+          <h2 className='mb-6 text-center font-semibold tracking-wide text-gray-500'>
+            Built and Ships with
+          </h2>
 
           <div className='mx-auto grid max-w-lg grid-cols-2 items-center gap-x-8 gap-y-12 sm:max-w-xl md:grid-cols-4 sm:gap-x-10 sm:gap-y-14 lg:mx-0 lg:max-w-none'>
             <img
@@ -249,7 +259,12 @@ export default function LandingPage() {
               height={48}
             />
             <div className='flex justify-center col-span-1 max-h-12 w-full object-contain grayscale opacity-80'>
-              <svg width={48} height={48} viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'>
+              <svg
+                width={48}
+                height={48}
+                viewBox='0 0 32 32'
+                xmlns='http://www.w3.org/2000/svg'
+              >
                 <path
                   className='dark:fill-white'
                   fill='#545454'
@@ -317,11 +332,15 @@ export default function LandingPage() {
                   <div key={feature.name} className='relative pl-16'>
                     <dt className='text-base font-semibold leading-7 text-gray-900 dark:text-white group-hover:underline'>
                       <div className='absolute left-0 top-0 flex h-10 w-10 items-center justify-center border border-yellow-400 bg-yellow-100/50 dark:bg-boxdark rounded-lg group-hover:border-yellow-500'>
-                        <div className='text-2xl group-hover:opacity-80 '>{feature.icon}</div>
+                        <div className='text-2xl group-hover:opacity-80 '>
+                          {feature.icon}
+                        </div>
                       </div>
                       {feature.name}
                     </dt>
-                    <dd className='mt-2 text-base leading-7 text-gray-600 dark:text-gray-400'>{feature.description}</dd>
+                    <dd className='mt-2 text-base leading-7 text-gray-600 dark:text-gray-400'>
+                      {feature.description}
+                    </dd>
                   </div>
                 </a>
               ))}
@@ -373,14 +392,22 @@ export default function LandingPage() {
           </h2>
           <dl className='mt-10 space-y-8 divide-y divide-gray-900/10 dark:divide-gray-100/10'>
             {faqs.map((faq) => (
-              <div key={faq.id} className='pt-8 lg:grid lg:grid-cols-12 lg:gap-8'>
+              <div
+                key={faq.id}
+                className='pt-8 lg:grid lg:grid-cols-12 lg:gap-8'
+              >
                 <dt className='text-base font-semibold leading-7 text-gray-900 dark:text-white lg:col-span-5'>
                   {faq.question}
                 </dt>
                 <dd className='mt-4 lg:col-span-7 lg:mt-0'>
-                  <p className='text-base leading-7 text-gray-600 dark:text-gray-400'>{faq.answer}</p>
+                  <p className='text-base leading-7 text-gray-600 dark:text-gray-400'>
+                    {faq.answer}
+                  </p>
                   {faq.href && (
-                    <a href={faq.href} className='mt-4 text-base leading-7 text-yellow-500 hover:text-yellow-600'>
+                    <a
+                      href={faq.href}
+                      className='mt-4 text-base leading-7 text-yellow-500 hover:text-yellow-600'
+                    >
                       Learn more →
                     </a>
                   )}

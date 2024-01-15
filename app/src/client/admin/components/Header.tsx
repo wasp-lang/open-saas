@@ -10,9 +10,10 @@ const Header = (props: {
 }) => {
   return (
     <header className='sticky top-0 z-999 flex w-full bg-white dark:bg-boxdark dark:drop-shadow-none'>
-      <div className='flex flex-grow items-center justify-end px-8 py-5 shadow '>
+      <div className='flex flex-grow items-center justify-between sm:justify-end sm:gap-5 px-8 py-5 shadow '>
         <div className='flex items-center gap-2 sm:gap-4 lg:hidden'>
-          {/* <!-- Hamburger Toggle BTN --> */} // TODO check mobile views
+          {/* <!-- Hamburger Toggle BTN --> */} 
+
           <button
             aria-controls='sidebar'
             onClick={(e) => {
@@ -53,14 +54,11 @@ const Header = (props: {
               </span>
             </span>
           </button>
+
           {/* <!-- Hamburger Toggle BTN --> */}
 
         </div>
 
-        {/* <div className='hidden sm:block'>
-        </div> */}
-
-        <div className='flex items-center gap-3 2xsm:gap-7'>
           <ul className='flex items-center gap-2 2xsm:gap-4'>
             {/* <!-- Dark Mode Toggler --> */}
             <DarkModeSwitcher />
@@ -70,6 +68,8 @@ const Header = (props: {
             <MessageButton />
             {/* <!-- Chat Notification Area --> */}
           </ul>
+
+        <div className='flex items-center gap-3 2xsm:gap-7'>
 
           {/* <!-- User Area --> */}
           {!!props.user && <DropdownUser user={props.user} />}
