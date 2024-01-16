@@ -48,6 +48,18 @@ export default function LandingPage() {
     <div className='bg-white dark:text-white dark:bg-boxdark-2'>
       {/* Header */}
       <header className='absolute inset-x-0 top-0 z-50 dark:bg-boxdark-2'>
+        {/* PRODUCT HUNT ANNOUNCEMENT */}
+        <div className='flex items-center justify-center gap-3 border-b border-gray-300 border-dashed text-center py-6 text-sm'>
+          Open SaaS is live on{' '}
+          <a
+            href='https://www.producthunt.com/posts/open-saas?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-open-saas'
+            target='_blank'
+            rel='noopener noreferrer'
+            className='bg-purple-200 hover:bg-purple-300 text-gray-900 border-b border-1 border-purple-300 hover:border-purple-400 py-1 px-3 -my-1 rounded-full shadow-lg hover:shadow-md duration-200 ease-in-out tracking-wider'
+          >
+            Product Hunt 🚀
+          </a>{' '}
+        </div>
         <nav
           className='flex items-center justify-between p-6 lg:px-8'
           aria-label='Global'
