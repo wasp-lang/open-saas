@@ -1,6 +1,9 @@
-## Welcome to your new SaaS App!
-
-You've decided to build a SaaS app with the Open SaaS template. Great choice! 🎉
+## Welcome to your new SaaS App! 🎉
+<a href="https://opensaas.sh">
+  <img src="app/src/client/static/open-saas-banner.png" width="500px" />
+</a>
+<br/><br/>
+You've decided to build a SaaS app with the Open SaaS template. Great choice! 
 
 This template is:
 
@@ -9,8 +12,8 @@ This template is:
 3. comes with a ton of features out of the box!
 4. focused on free, open-source services, where possible
 
-Check it out in action here: [OpenSaaS.sh](https://opensaas.sh)  
-Check out the Docs here: [Open SaaS Docs](https://docs.opensaas.sh)
+🧑‍💻 Check it out in action here: [OpenSaaS.sh](https://opensaas.sh)  
+📚 Check out the Docs here: [Open SaaS Docs](https://docs.opensaas.sh)
 
 ## What's inside?
 
