@@ -18,7 +18,7 @@ export const STRIPE_CUSTOMER_PORTAL_LINK = isDev ? customerPortalTestUrl : custo
 checkStripePortalLinkExists(STRIPE_CUSTOMER_PORTAL_LINK);
 
 function checkStripePortalLinkExists(link: string | undefined) {
-  console.log(process.env.NODE_ENV)
+
   if (!link) {
     if (isDev) console.warn('\x1b[31m%s\x1b[0m', '⚠️ STRIPE_CUSTOMER_PORTAL_LINK is not defined.');
     if (!isDev) throw new Error('🚫 STRIPE_CUSTOMER_PORTAL_LINK is not defined');

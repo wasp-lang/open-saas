@@ -19,11 +19,42 @@ import { UserMenuItems } from '../components/UserMenuItems';
 import useAuth from '@wasp/auth/useAuth';
 import DarkModeSwitcher from '../admin/components/DarkModeSwitcher';
 
+type TimeLeft = { hours: string; minutes: string; seconds: string };
+
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [repoInfo, setRepoInfo] = useState<null | any>(null);
+  const [timeLeft, setTimeLeft] = useState<TimeLeft | undefined>(calculateTimeLeft());
 
   const { data: user, isLoading: isUserLoading } = useAuth();
+
+  function calculateTimeLeft() {
+    const targetDate = '2024-01-23T00:00:00Z';
+    let diff = new Date(targetDate).getTime() - new Date().getTime();
+    let timeLeft: TimeLeft | undefined;
+
+    if (diff > 0) {
+      timeLeft = {
+        hours: (Math.floor((diff / (1000 * 60 * 60)) % 24)).toString(),
+        minutes: (Math.floor((diff / 1000 / 60) % 60)).toString(),
+        // make sure seconds are always displayed as two digits, e.g. '02'
+        seconds: (Math.floor((diff / 1000) % 60)).toString(),
+      };
+    }
+     if (!!timeLeft && timeLeft?.seconds.length === 1) {
+      timeLeft.seconds = '0'+timeLeft.seconds
+     } 
+
+    return timeLeft;
+  };
+
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+    return () => clearTimeout(timer);
+  });
 
   useEffect(() => {
     const fetchRepoInfo = async () => {
@@ -40,6 +71,8 @@ export default function LandingPage() {
     fetchRepoInfo();
   }, []);
 
+
+
   const NavLogo = () => (
     <img className='h-8 w-8' src={logo} alt='Open SaaS App' />
   );
@@ -52,13 +85,15 @@ export default function LandingPage() {
         <div className='flex items-center justify-center gap-3 border-b border-gray-300 border-dashed text-center py-6 text-sm'>
           Open SaaS is live on{' '}
           <a
-            href='https://www.producthunt.com/posts/open-saas?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-open-saas'
+            // href='https://www.producthunt.com/posts/open-saas?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-open-saas'
+            href='https://devhunt.org/tool/open-saas'
             target='_blank'
             rel='noopener noreferrer'
             className='bg-purple-200 hover:bg-purple-300 text-gray-900 border-b border-1 border-purple-300 hover:border-purple-400 py-1 px-3 -my-1 rounded-full shadow-lg hover:shadow-md duration-200 ease-in-out tracking-wider'
           >
-            Product Hunt 🚀
+            Dev Hunt 🚀
           </a>{' '}
+          {timeLeft && `in ${timeLeft.hours}:${timeLeft.minutes}:${timeLeft.seconds}`}
         </div>
         <nav
           className='flex items-center justify-between p-6 lg:px-8'
