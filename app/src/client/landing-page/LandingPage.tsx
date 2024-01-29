@@ -88,7 +88,11 @@ export default function LandingPage() {
         <div className='flex items-center justify-center gap-3 border-b border-gray-300 border-dashed text-center py-6 text-sm'>
           Open SaaS is live on{' '}
           <a
-            href='https://www.producthunt.com/posts/open-saas'
+            href={
+              timeLeft
+                ? 'https://www.producthunt.com/products/open-saas'
+                : 'https://www.producthunt.com/posts/open-saas'
+            }
             target='_blank'
             rel='noopener noreferrer'
             className='bg-purple-200 hover:bg-purple-300 text-gray-900 border-b border-1 border-purple-300 hover:border-purple-400 py-1 px-3 -my-1 rounded-full shadow-lg hover:shadow-md duration-200 ease-in-out tracking-wider'
