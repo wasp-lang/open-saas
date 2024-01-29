@@ -1,7 +1,7 @@
 ## Welcome to your new SaaS App! 🎉
 <a href="https://www.producthunt.com/posts/open-saas?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-open&#0045;saas" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=436467&theme=light" alt="Open&#0032;SaaS - Open&#0045;source&#0032;&#0038;&#0032;100&#0037;&#0032;free&#0032;React&#0032;&#0038;&#0032;Node&#0046;js&#0032;SaaS&#0032;starter&#0033; | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 
-<a href="https://www.youtube.com/watch?v=rfO5SbLfyFE"><img src="./open-saas-youtube.png" width="550px"/></a>
+<video src="open-saas-demo.mp4" controls title="Open SaaS Demo" width="650px"></video>
 
 You've decided to build a SaaS app with the Open SaaS template. Great choice! 
 
