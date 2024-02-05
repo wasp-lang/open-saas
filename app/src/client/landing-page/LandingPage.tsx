@@ -5,7 +5,6 @@ import { HiBars3 } from 'react-icons/hi2';
 import { BiLogIn } from 'react-icons/bi';
 import { Link } from '@wasp/router';
 import logo from '../static/logo.png';
-import openSaasBanner from '../static/open-saas-banner.png';
 import {
   features,
   navigation,
@@ -19,47 +18,11 @@ import { UserMenuItems } from '../components/UserMenuItems';
 import useAuth from '@wasp/auth/useAuth';
 import DarkModeSwitcher from '../admin/components/DarkModeSwitcher';
 
-type TimeLeft = { hours: string; minutes: string; seconds: string };
-
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [repoInfo, setRepoInfo] = useState<null | any>(null);
-  const [timeLeft, setTimeLeft] = useState<TimeLeft | undefined>(
-    calculateTimeLeft()
-  );
-
+ 
   const { data: user, isLoading: isUserLoading } = useAuth();
-
-  function calculateTimeLeft() {
-    const targetDate = '2024-01-30T08:01:00Z';
-    let diff = new Date(targetDate).getTime() - new Date().getTime();
-    let timeLeft: TimeLeft | undefined;
-
-    if (diff > 0) {
-      timeLeft = {
-        hours: Math.floor((diff / (1000 * 60 * 60)) % 24).toString(),
-        minutes: Math.floor((diff / 1000 / 60) % 60).toString(),
-        // make sure seconds are always displayed as two digits, e.g. '02'
-        seconds: Math.floor((diff / 1000) % 60).toString(),
-      };
-    }
-    if (!!timeLeft) {
-      if (timeLeft.seconds.length === 1) {
-        timeLeft.seconds = '0' + timeLeft.seconds;
-      }
-      if (timeLeft.minutes.length === 1) {
-        timeLeft.minutes = '0' + timeLeft.minutes;
-      }
-    }
-    return timeLeft;
-  }
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
-    return () => clearTimeout(timer);
-  });
 
   useEffect(() => {
     const fetchRepoInfo = async () => {
@@ -84,24 +47,6 @@ export default function LandingPage() {
     <div className='bg-white dark:text-white dark:bg-boxdark-2'>
       {/* Header */}
       <header className='absolute inset-x-0 top-0 z-50 dark:bg-boxdark-2'>
-        {/* PRODUCT HUNT ANNOUNCEMENT */}
-        <div className='flex items-center justify-center gap-3 border-b border-gray-300 border-dashed text-center py-6 text-sm'>
-          Open SaaS is live on{' '}
-          <a
-            href={
-              timeLeft
-                ? 'https://www.producthunt.com/products/open-saas'
-                : 'https://www.producthunt.com/posts/open-saas'
-            }
-            target='_blank'
-            rel='noopener noreferrer'
-            className='bg-purple-200 hover:bg-purple-300 text-gray-900 border-b border-1 border-purple-300 hover:border-purple-400 py-1 px-3 -my-1 rounded-full shadow-lg hover:shadow-md duration-200 ease-in-out tracking-wider'
-          >
-            Product Hunt 🚀
-          </a>{' '}
-          {timeLeft &&
-            `in ${timeLeft.hours}:${timeLeft.minutes}:${timeLeft.seconds}`}
-        </div>
         <nav
           className='flex items-center justify-between p-6 lg:px-8'
           aria-label='Global'
@@ -272,14 +217,21 @@ export default function LandingPage() {
                 </div>
               </div>
               <div className='mt-14 flow-root sm:mt-14 '>
-                <div className='-m-2 rounded-xl  lg:-m-4 lg:rounded-2xl lg:p-4'>
-                  <img
+                <div className='-m-2 mx-auto rounded-xl lg:-m-4 lg:rounded-2xl lg:p-4'>
+                  {/* <img
                     src={openSaasBanner}
                     alt='App screenshot'
                     width={2432}
                     height={1442}
                     className='rounded-md shadow-2xl ring-1 ring-gray-900/10'
-                  />
+                  /> */}
+                  <iframe
+                    className=' mx-auto w-full md:w-[85%] aspect-[4/3] shadow-2xl'
+                    src='https://cards.producthunt.com/cards/posts/436467?v=1'
+                    // width={850}
+                    // height={689}
+                    allowFullScreen
+                  ></iframe>
                 </div>
               </div>
             </div>
