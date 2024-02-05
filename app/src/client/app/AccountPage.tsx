@@ -15,14 +15,14 @@ export default function AccountPage({ user }: { user: User }) {
           <dl className='sm:divide-y sm:divide-gray-200'>
             {!!user.email && (
               <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
-                <dt className='text-sm font-medium text-gray-500'>Email address</dt>
-                <dd className='mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0'>{user.email}</dd>
+                <dt className='text-sm font-medium text-gray-500 dark:text-white'>Email address</dt>
+                <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-2 sm:mt-0'>{user.email}</dd>
               </div>
             )}
             {!!user.username && (
               <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
-                <dt className='text-sm font-medium text-gray-500'>Username</dt>
-                <dd className='mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0'>{user.username}</dd>
+                <dt className='text-sm font-medium text-gray-500 dark:text-white'>Username</dt>
+                <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-2 sm:mt-0'>{user.username}</dd>
               </div>
             )}
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
