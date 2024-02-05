@@ -13,6 +13,7 @@ import { Link } from '@wasp/router';
 
 const navigation = [
   { name: 'AI Scheduler (Demo App)', href: '/demo-app' },
+  { name: 'File Upload (AWS S3)', href: '/file-upload'},
   { name: 'Pricing', href: '/pricing' },
   { name: 'Documentation', href: DOCS_URL },
   { name: 'Blog', href: BLOG_URL },

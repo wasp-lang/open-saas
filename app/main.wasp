@@ -85,7 +85,8 @@ app SaaSTemplate {
     ("openai", "^4.24.1"),
     ("prettier", "3.1.1"),
     ("prettier-plugin-tailwindcss", "0.5.11"),
-    ("zod", "3.22.4")
+    ("zod", "3.22.4"),
+    ("aws-sdk", "^2.1551.0")
   ],
 }
 
@@ -116,6 +117,7 @@ entity User {=psl
   externalAuthAssociations  SocialLogin[]
   contactFormMessages       ContactFormMessage[]     
   tasks                     Task[]
+  files                     File[]
 psl=}
 
 entity SocialLogin {=psl
@@ -142,6 +144,17 @@ entity Task {=psl
   description               String
   time                      String          @default("1")
   isDone                    Boolean         @default(false)
+  user                      User            @relation(fields: [userId], references: [id])
+  userId                    Int
+  createdAt                 DateTime        @default(now())
+psl=}
+
+entity File {=psl
+  id                        String          @id @default(uuid())
+  name                      String
+  type                      String
+  key                       String
+  uploadUrl                 String
   user                      User            @relation(fields: [userId], references: [id])
   userId                    Int
   createdAt                 DateTime        @default(now())
@@ -246,6 +259,12 @@ page CheckoutPage {
   component: import Checkout from "@client/app/CheckoutPage"
 }
 
+route FileUploadRoute { path: "/file-upload", to: FileUploadPage }
+page FileUploadPage {
+  authRequired: true,
+  component: import FileUpload from "@client/app/FileUploadPage"
+}
+
 route AdminRoute { path: "/admin", to: DashboardPage }
 page DashboardPage {
   authRequired: true,
@@ -347,6 +366,12 @@ action updateUserById {
   entities: [User]
 }
 
+action createFile {
+  fn: import { createFile } from "@server/actions.js",
+  entities: [User, File]
+}
+
+
 // 📚 Queries
 
 query getGptResponses {
@@ -357,6 +382,16 @@ query getGptResponses {
 query getAllTasksByUser {
   fn: import { getAllTasksByUser } from "@server/queries.js",
   entities: [Task]
+}
+
+query getAllFilesByUser {
+  fn: import { getAllFilesByUser } from "@server/queries.js",
+  entities: [User, File]
+}
+
+query getDownloadFileSignedURL {
+  fn: import { getDownloadFileSignedURL } from "@server/queries.js",
+  entities: [User, File]
 }
 
 query getDailyStats {

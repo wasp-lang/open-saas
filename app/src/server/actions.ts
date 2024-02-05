@@ -1,12 +1,21 @@
 import Stripe from 'stripe';
 import fetch from 'node-fetch';
 import HttpError from '@wasp/core/HttpError.js';
-import type { User, Task } from '@wasp/entities';
-import type { GenerateGptResponse, StripePayment } from '@wasp/actions/types';
+import type { User, Task, File } from '@wasp/entities';
 import type { StripePaymentResult } from './types';
-import { UpdateCurrentUser, UpdateUserById, CreateTask, DeleteTask, UpdateTask } from '@wasp/actions/types';
-import { fetchStripeCustomer, createStripeCheckoutSession } from './stripeUtils.js';
+import {
+  GenerateGptResponse,
+  StripePayment,
+  UpdateCurrentUser,
+  UpdateUserById,
+  CreateTask,
+  DeleteTask,
+  UpdateTask,
+  CreateFile,
+} from '@wasp/actions/types';
+import { fetchStripeCustomer, createStripeCheckoutSession } from './payments/stripeUtils.js';
 import { TierIds } from '@wasp/shared/constants.js';
+import { getUploadFileSignedURLFromS3 } from './file-upload/s3Utils.js';
 
 export const stripePayment: StripePayment<string, StripePaymentResult> = async (tier, context) => {
   if (!context.user || !context.user.email) {
@@ -68,7 +77,10 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, string> = asyn
   });
 
   // use map to extract the description and time from each task
-  const parsedTasks = tasks.map(({ description, time }) => ({ description, time }));
+  const parsedTasks = tasks.map(({ description, time }) => ({
+    description,
+    time,
+  }));
 
   const payload = {
     model: 'gpt-3.5-turbo', // e.g. 'gpt-3.5-turbo', 'gpt-4', 'gpt-4-0613', gpt-4-1106-preview
@@ -95,7 +107,10 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, string> = asyn
               items: {
                 type: 'object',
                 properties: {
-                  name: { type: 'string', description: 'Name of main task provided by user' },
+                  name: {
+                    type: 'string',
+                    description: 'Name of main task provided by user',
+                  },
                   subtasks: {
                     type: 'array',
                     items: {
@@ -123,7 +138,10 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, string> = asyn
                           description:
                             'detailed breakdown and description of break. e.g., "take a 15 minute standing break and reflect on what you have learned".',
                         },
-                        time: { type: 'number', description: 'time allocated for a given break in hours, e.g. 0.2' },
+                        time: {
+                          type: 'number',
+                          description: 'time allocated for a given break in hours, e.g. 0.2',
+                        },
                       },
                     },
                   },
@@ -190,7 +208,6 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, string> = asyn
     });
 
     return gptArgs;
-
   } catch (error: any) {
     if (!context.user.hasPaid && error?.statusCode != 402) {
       await context.entities.User.update({
@@ -276,6 +293,31 @@ export const updateUserById: UpdateUserById<{ id: number; data: Partial<User> },
   });
 
   return updatedUser;
+};
+
+type fileArgs = {
+  fileType: string;
+  name: string;
+};
+
+export const createFile: CreateFile<fileArgs, File> = async ({ fileType, name }, context) => {
+  if (!context.user) {
+    throw new HttpError(401);
+  }
+
+  const userInfo = context.user.id.toString();
+
+  const { uploadUrl, key } = getUploadFileSignedURLFromS3({ fileType, userInfo });
+
+  return await context.entities.File.create({
+    data: {
+      name,
+      key,
+      uploadUrl,
+      type: fileType,
+      user: { connect: { id: context.user.id } },
+    },
+  });
 };
 
 export const updateCurrentUser: UpdateCurrentUser<Partial<User>, User> = async (user, context) => {
