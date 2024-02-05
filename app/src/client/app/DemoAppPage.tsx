@@ -11,7 +11,7 @@ import { TiDelete } from 'react-icons/ti';
 
 export default function DemoAppPage() {
   return (
-    <div className='my-10 lg:mt-20'>
+    <div className='py-10 lg:mt-10'>
       <div className='mx-auto max-w-7xl px-6 lg:px-8'>
         <div className='mx-auto max-w-4xl text-center'>
           <h2 className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white'>
@@ -19,7 +19,7 @@ export default function DemoAppPage() {
           </h2>
         </div>
         <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600 dark:text-white'>
-          Enter your day's tasks and let AI do the rest!
+          This example app uses OpenAI's chat completions with function calling to return a structured JSON object. Try it out, enter your day's tasks, and let AI do the rest!
         </p>
         {/* begin AI-powered Todo List */}
         <div className='my-8 border rounded-3xl border-gray-900/10'>
