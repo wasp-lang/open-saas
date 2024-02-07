@@ -60,9 +60,13 @@ export default function FileUploadPage() {
       if (res.status !== 200) {
         throw new Error('File upload to S3 failed');
       }
-    } catch (error) {
-      alert('Error uploading file. Please try again');
-      console.error('Error uploading file', error);
+    } catch (error: any) {
+      if (error?.statusCode === 403) {
+        alert(error?.message)
+      } else {
+        alert('Error uploading file. Please try again');
+      }
+      console.error(error);
     }
   };
 

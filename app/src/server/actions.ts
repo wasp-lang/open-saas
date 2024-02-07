@@ -308,6 +308,18 @@ export const createFile: CreateFile<fileArgs, File> = async ({ fileType, name },
     throw new HttpError(401);
   }
 
+  const numberOfFilesByUser = await context.entities.File.count({
+    where: {
+      user: {
+        id: context.user.id,
+      },
+    },
+  });
+
+  if (numberOfFilesByUser >= 2) {
+    throw new HttpError(403, 'Thanks for trying Open SaaS. This demo only allows 2 file uploads per user.');
+  }
+
   const userInfo = context.user.id.toString();
 
   const { uploadUrl, key } = getUploadFileSignedURLFromS3({ fileType, userInfo });

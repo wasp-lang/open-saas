@@ -104,7 +104,7 @@ type GetPaginatedUsersInput = {
 type GetPaginatedUsersOutput = {
   users: Pick<
     User,
-    'id' | 'email' | 'username' | 'lastActiveTimestamp' | 'hasPaid' | 'subscriptionStatus' | 'stripeId'
+    'id' | 'email' | 'lastActiveTimestamp' | 'hasPaid' | 'subscriptionStatus' | 'stripeId'
   >[];
   totalPages: number;
 };
