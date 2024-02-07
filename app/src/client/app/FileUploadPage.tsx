@@ -36,18 +36,17 @@ export default function FileUploadPage() {
   }, [fileToDownload]);
 
   const handleUpload = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
-    const file = formData.get('file-upload') as File;
-    if (!file) {
-      console.error('No file selected');
-      return;
-    }
-
-    const fileType = file.type;
-    const name = file.name;
-
     try {
+      e.preventDefault();
+      const formData = new FormData(e.target as HTMLFormElement);
+      const file = formData.get('file-upload') as File;
+      if (!file || !file.name || !file.type) {
+        throw new Error('No file selected');
+      }
+
+      const fileType = file.type;
+      const name = file.name;
+
       const { uploadUrl } = await createFile({ fileType, name });
       if (!uploadUrl) {
         throw new Error('Failed to get upload URL');
