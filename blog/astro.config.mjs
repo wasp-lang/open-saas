@@ -56,6 +56,7 @@ export default defineConfig({
             { label: 'Stripe Testing', link: '/guides/stripe-testing/' },
             { label: 'Analytics', link: '/guides/analytics/' },
             { label: 'Email Sending', link: '/guides/email-sending/' },
+            { label: 'File Uploading', link: '/guides/file-uploading/' },
             { label: 'Deploying', link: '/guides/deploying/' },
           ],
         },
