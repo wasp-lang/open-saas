@@ -12,6 +12,12 @@ There are two options we recommend:
 
 If you're just looking to upload small files and don't expect your app to grow to a large scale, you can use Multer to upload files to your app's server.
 
+:::tip[Star our Repo on GitHub! 🌟]
+We've packed in a ton of features and love into this SaaS starter.
+
+If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
+:::
+
 ## Using AWS S3
 
 ### How presigned URLs work
@@ -79,12 +85,6 @@ Now we need to change some permissions on the bucket to allow for file uploads f
 ]
 ```
 
-:::tip[Star our Repo on GitHub! 🌟]
-We've packed in a ton of features and love into this SaaS starter.
-
-If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
-:::
-
 ### Get your AWS S3 credentials
 
 Now that you have your S3 bucket set up, you'll need to get your S3 credentials to use in your app.
@@ -102,6 +102,12 @@ Now that you have your S3 bucket set up, you'll need to get your S3 credentials 
   AWS_S3_FILES_BUCKET=your-bucket-name
   AWS_S3_REGION=your-region // (e.g. us-west-2)
 ```
+
+:::tip[Star our Repo on GitHub! 🌟]
+We've packed in a ton of features and love into this SaaS starter.
+
+If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
+:::
 
 ### Using and Customizing File Uploads with S3 in your App
 

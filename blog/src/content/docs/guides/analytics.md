@@ -7,6 +7,8 @@ Google Analytics is free, but tends to be more cumbersome to use.
 
 Plausible is an open-source, privacy-friendly alternative to Google Analytics. It's also easier to use than Google if you use their hosted service, which is a paid feature. But, it is completely free if you want to self-host it, although this comes with some additional setup steps.
 
+If you're looking to add analytics to your blog, you can follow the [Adding Analytics to your Blog](#adding-analytics-to-your-blog) section at the end of this guide.
+
 ## Plausible
 
 ### Hosted Plausible
@@ -88,3 +90,30 @@ Then, set up the Google Analytics API access by following these steps:
     
 7. **Add your Google Analytics Property ID:** You will find the Property ID in your Google Analytics dashboard in the `Admin > Property > Property Settings > Property Details` section of your Google Analytics property (**not** your Google Cloud console). Add this 9-digit number to your `.env.server` file under the `GOOGLE_ANALYTICS_PROPERTY_ID` variable.
 
+## Adding Analytics to your Blog
+
+To add your analytics script to your Astro Starlight blog, all you need to do is modify the `head` property in your `blog/astro.config.mjs` file. 
+
+Below is an example of how to add Google Analytics to your blog:
+
+```js
+export default defineConfig({
+  site: 'https://opensaas.sh',
+  integrations: [
+    starlightBlog({ 
+      // ...
+    }),
+    starlight({
+      //...
+      head: [
+        {
+          tag: 'script',
+          content: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', '<your google analytics property id>');
+          `,
+        },
+      ],
+```

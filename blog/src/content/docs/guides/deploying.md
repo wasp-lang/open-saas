@@ -8,6 +8,8 @@ The simplest and quickest option is to take advantage of Wasp's one-command depl
 
 Or if you prefer to deploy to a different provider, or your frontend and backend separately, you can follow any of the other deployment guides below.
 
+If you're looking to deploy your Blog, you can follow the [Deploying your Blog](#deploying-your-blog) section at the end of this guide.
+
 ## Prerequisites
 
 Make sure you've got all your API keys and environment variables set up before you deploy. For example, in the [Stripe integration guide](/guides/stripe-integration), you set up your Stripe API keys using test keys and product ids. You'll need to get the production-ready keys and create actual Product IDs. 
@@ -25,3 +27,31 @@ There are a few prequisites to follow before you can initiate the deploy command
 ## Deploying Manually / to Other Providers
 
 If you prefer to deploy manually, your frontend and backend separately, or just prefer using your favorite provider you can follow the [Manual Deployment Guide](https://wasp-lang.dev/docs/advanced/deployment/manually).
+
+## Deploying your Blog
+
+Deploying your Astro Starlight blog is a bit different than deploying your SaaS app. As an example, we will show you how to deploy your blog for free to Netlify. You will need a Netlify account and [Netlify CLI](https://docs.netlify.com/cli/get-started/) installed to follow these instructions.
+
+Make sure you are logged in with Netlify CLI. 
+- You can check if you are logged in with `netlify status`, 
+- you can log in with `netlify login`.
+
+Position yourself in the `blog` directory and run the following command:
+
+```sh
+npm run build
+```
+
+This will build your blog into the `blog/dist` directory. Now you can deploy your blog to Netlify with the following command:
+
+```sh
+netlify deploy 
+``` 
+
+Select the `dist` directory as the deploy path.
+
+Finally, if the deployment looks good, you can deploy your blog to production with the following command: 
+  
+```sh
+netlify deploy --prod
+```

@@ -18,12 +18,23 @@ export default defineConfig({
       },
     }),
     starlight({
-      title: 'OpenSaaS.sh', 
+      title: 'OpenSaaS.sh',
       description: 'Open SaaS is a free, open-source, full-stack SaaS starter kit for React + NodeJS.',
       logo: {
         src: '/src/assets/logo.png',
         alt: 'Open SaaS',
       },
+      head: [
+        {
+          tag: 'script',
+          content: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', 'G-8QGM76GR3Q');
+          `,
+        },
+      ],
       editLink: {
         baseUrl: 'https://github.com/wasp-lang/open-saas/edit/main',
       },
