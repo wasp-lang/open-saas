@@ -23,7 +23,8 @@ The template itself is built on top of some very powerful tools and frameworks, 
 - 🚀 [Astro](https://starlight.astro.build/) - Astro's lightweight "Starlight" template for documentation and blog
 - 💸 [Stripe](https://stripe.com) - for products and payments
 - 📈 [Plausible](https://plausible.io) or [Google](https://analytics.google.com/) Analytics
-- 🤖 [OpenAI](https://openai.com) - OpenAI API integrated into the app
+- 🤖 [OpenAI](https://openai.com) - OpenAI API integrated into the app or [Replicate](https://replicate.com/) (coming soon 👀)
+- 📦 [AWS S3](https://aws.amazon.com/s3/) - for file uploads
 - 📧 [SendGrid](https://sendgrid.com), [MailGun](https://mailgun.com), or SMTP - for email sending
 - 💅 [TailwindCSS](https://tailwindcss.com) - for styling
 - 🧑‍💼 [TailAdmin](https://tailadmin.com/) - admin dashboard & components for TailwindCSS
