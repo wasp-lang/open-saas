@@ -41,13 +41,6 @@ export const features = [
     href: DOCS_URL + '/general/admin-dashboard/',
   },
   {
-    name: 'Blog w/ Astro',
-    description:
-      'Built-in blog with the Astro framework. Write your posts in Markdown, and watch your SEO performance take off.',
-    icon: '📝',
-    href: DOCS_URL + '/start/guided-tour/',
-  },
-  {
     name: 'Email Sending',
     description:
       'Email sending built-in. Combine it with the cron jobs feature to easily send emails to your customers.',
@@ -61,11 +54,24 @@ export const features = [
     href: DOCS_URL,
   },
   {
+    name: 'File Uploads with AWS',
+    description: 'File upload examples with AWS S3 presigned URLs are included and fully documented!',
+    icon: '📁',
+    href: DOCS_URL + '/guides/file-uploading/',
+  },
+  {
     name: 'Deploy Anywhere. Easily.',
     description:
       'No vendor lock-in because you own all your code. Deploy yourself, or let Wasp deploy it for you with a single command.',
     icon: '🚀 ',
     href: DOCS_URL + '/guides/deploying/',
+  },
+  {
+    name: 'Blog w/ Astro',
+    description:
+      'Built-in blog with the Astro framework. Write your posts in Markdown, and watch your SEO performance take off.',
+    icon: '📝',
+    href: DOCS_URL + '/start/guided-tour/',
   },
   {
     name: 'Complete Documentation & Support',
