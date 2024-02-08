@@ -105,18 +105,21 @@ export default defineConfig({
     }),
     starlight({
       //...
-      head: [
+       head: [
         {
           tag: 'script',
           attrs: {
-            async: true,
-            src: 'https://www.googletagmanager.com/gtag/js?id=<your google analytics property id>',
+            src: 'https://www.googletagmanager.com/gtag/js?id=<YOUR-GOOGLE-ANALYTICS-ID>',
           },
+        },
+        {
+          tag: 'script',
           content: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag() { dataLayer.push(arguments); }
-            gtag('js', new Date());
-            gtag('config', '<your google analytics property id>');
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+        
+          gtag('config', '<YOUR-GOOGLE-ANALYTICS-ID>');
           `,
         },
       ],
