@@ -1,8 +1,6 @@
+import { updateUserById, useQuery, getPaginatedUsers } from 'wasp/client/operations';
 import { useState, useEffect } from 'react';
 import SwitcherOne from './SwitcherOne';
-import { useQuery } from '@wasp/queries';
-import getPaginatedUsers from '@wasp/queries/getPaginatedUsers';
-import updateUserById from '@wasp/actions/updateUserById';
 import Loader from '../common/Loader';
 import DropdownEditDelete from './DropdownEditDelete';
 
@@ -208,7 +206,9 @@ const UsersTable = () => {
               </div>
 
               <div className='col-span-3 hidden items-center sm:flex'>
-                <p className='text-sm text-black dark:text-white'>{user.lastActiveTimestamp.toLocaleDateString() + ' ' + user.lastActiveTimestamp.toLocaleTimeString()}</p>
+                <p className='text-sm text-black dark:text-white'>
+                  {user.lastActiveTimestamp.toLocaleDateString() + ' ' + user.lastActiveTimestamp.toLocaleTimeString()}
+                </p>
               </div>
               <div className='col-span-2 flex items-center'>
                 <p className='text-sm text-black dark:text-white'>{user.subscriptionStatus}</p>

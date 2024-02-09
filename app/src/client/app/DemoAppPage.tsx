@@ -1,11 +1,15 @@
+import { type Task } from 'wasp/entities';
+
+import {
+  generateGptResponse,
+  deleteTask,
+  updateTask,
+  createTask,
+  useQuery,
+  getAllTasksByUser,
+} from 'wasp/client/operations';
+
 import { useState, useEffect, useMemo } from 'react';
-import generateGptResponse from '@wasp/actions/generateGptResponse';
-import deleteTask from '@wasp/actions/deleteTask';
-import updateTask from '@wasp/actions/updateTask';
-import createTask from '@wasp/actions/createTask';
-import { useQuery } from '@wasp/queries';
-import getAllTasksByUser from '@wasp/queries/getAllTasksByUser';
-import { Task } from '@wasp/entities';
 import { CgSpinner } from 'react-icons/cg';
 import { TiDelete } from 'react-icons/ti';
 
@@ -15,11 +19,12 @@ export default function DemoAppPage() {
       <div className='mx-auto max-w-7xl px-6 lg:px-8'>
         <div className='mx-auto max-w-4xl text-center'>
           <h2 className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white'>
-            <span className='text-yellow-500'>AI</span> Day  Scheduler
+            <span className='text-yellow-500'>AI</span> Day Scheduler
           </h2>
         </div>
         <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600 dark:text-white'>
-          This example app uses OpenAI's chat completions with function calling to return a structured JSON object. Try it out, enter your day's tasks, and let AI do the rest!
+          This example app uses OpenAI's chat completions with function calling to return a structured JSON object. Try
+          it out, enter your day's tasks, and let AI do the rest!
         </p>
         {/* begin AI-powered Todo List */}
         <div className='my-8 border rounded-3xl border-gray-900/10'>
@@ -36,9 +41,7 @@ export default function DemoAppPage() {
 type TodoProps = Pick<Task, 'id' | 'isDone' | 'description' | 'time'>;
 
 function Todo({ id, isDone, description, time }: TodoProps) {
-  const handleCheckboxChange = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleCheckboxChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     await updateTask({
       id,
       isDone: e.currentTarget.checked,
@@ -66,13 +69,7 @@ function Todo({ id, isDone, description, time }: TodoProps) {
             checked={isDone}
             onChange={handleCheckboxChange}
           />
-          <span
-            className={`text-slate-600 ${
-              isDone ? 'line-through text-slate-500' : ''
-            }`}
-          >
-            {description}
-          </span>
+          <span className={`text-slate-600 ${isDone ? 'line-through text-slate-500' : ''}`}>{description}</span>
         </div>
         <div className='flex items-center gap-2'>
           <input
@@ -86,13 +83,7 @@ function Todo({ id, isDone, description, time }: TodoProps) {
             value={time}
             onChange={handleTimeChange}
           />
-          <span
-            className={`italic text-slate-600 text-xs ${
-              isDone ? 'text-slate-500' : ''
-            }`}
-          >
-            hrs
-          </span>
+          <span className={`italic text-slate-600 text-xs ${isDone ? 'text-slate-500' : ''}`}>hrs</span>
         </div>
       </div>
       <div className='flex items-center justify-end w-15'>
@@ -104,18 +95,13 @@ function Todo({ id, isDone, description, time }: TodoProps) {
   );
 }
 
-function NewTaskForm({
-  handleCreateTask,
-}: {
-  handleCreateTask: typeof createTask;
-}) {
+function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask }) {
   const [description, setDescription] = useState<string>('');
   const [todaysHours, setTodaysHours] = useState<string>('8');
   const [response, setResponse] = useState<any>(null);
   const [isPlanGenerating, setIsPlanGenerating] = useState<boolean>(false);
 
-  const { data: tasks, isLoading: isTasksLoading } =
-    useQuery(getAllTasksByUser);
+  const { data: tasks, isLoading: isTasksLoading } = useQuery(getAllTasksByUser);
 
   useEffect(() => {
     console.log('response', response);
@@ -179,20 +165,11 @@ function NewTaskForm({
         {tasks!! && tasks.length > 0 ? (
           <div className='space-y-4'>
             {tasks.map((task: Task) => (
-              <Todo
-                key={task.id}
-                id={task.id}
-                isDone={task.isDone}
-                description={task.description}
-                time={task.time}
-              />
+              <Todo key={task.id} id={task.id} isDone={task.isDone} description={task.description} time={task.time} />
             ))}
             <div className='flex flex-col gap-3'>
               <div className='flex items-center justify-between gap-3'>
-                <label
-                  htmlFor='time'
-                  className='text-sm text-gray-600 dark:text-gray-300 text-nowrap font-semibold'
-                >
+                <label htmlFor='time' className='text-sm text-gray-600 dark:text-gray-300 text-nowrap font-semibold'>
                   How many hours will you work today?
                 </label>
                 <input
@@ -231,9 +208,7 @@ function NewTaskForm({
 
       {!!response && (
         <div className='flex flex-col'>
-          <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
-            Today's Schedule
-          </h3>
+          <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>Today's Schedule</h3>
 
           <TaskTable schedule={response.schedule} />
         </div>
@@ -254,18 +229,11 @@ function TaskTable({ schedule }: { schedule: any[] }) {
             <tr>
               <th
                 className={`flex items-center justify-between gap-5 py-4 px-3 text-slate-800 border rounded-md border-slate-200 ${
-                  task.priority === 'high'
-                    ? 'bg-red-50'
-                    : task.priority === 'low'
-                    ? 'bg-green-50'
-                    : 'bg-yellow-50'
+                  task.priority === 'high' ? 'bg-red-50' : task.priority === 'low' ? 'bg-green-50' : 'bg-yellow-50'
                 }`}
               >
                 <span>{task.name}</span>
-                <span className='opacity-70 text-xs font-medium italic'>
-                  {' '}
-                  {task.priority} priority
-                </span>
+                <span className='opacity-70 text-xs font-medium italic'> {task.priority} priority</span>
               </th>
             </tr>
           </thead>
@@ -275,10 +243,7 @@ function TaskTable({ schedule }: { schedule: any[] }) {
                 <td
                   className={`flex items-center justify-between py-2 px-3 text-slate-600 border rounded-md border-purple-100 bg-purple-50`}
                 >
-                  <Subtask
-                    description={subtask.description}
-                    time={subtask.time}
-                  />
+                  <Subtask description={subtask.description} time={subtask.time} />
                 </td>
               </tr>
             ))}
@@ -288,10 +253,7 @@ function TaskTable({ schedule }: { schedule: any[] }) {
                 <td
                   className={`flex items-center justify-between py-2 px-3 text-slate-600 border rounded-md border-purple-100 bg-purple-50`}
                 >
-                  <Subtask
-                    description={breakItem.description}
-                    time={breakItem.time}
-                  />
+                  <Subtask description={breakItem.description} time={breakItem.time} />
                 </td>
               </tr>
             ))}
@@ -309,9 +271,7 @@ function Subtask({ description, time }: { description: string; time: number }) {
     if (time === 0) return 0;
     const hours = Math.floor(time);
     const minutes = Math.round((time - hours) * 60);
-    return `${hours > 0 ? hours + 'hr' : ''} ${
-      minutes > 0 ? minutes + 'min' : ''
-    }`;
+    return `${hours > 0 ? hours + 'hr' : ''} ${minutes > 0 ? minutes + 'min' : ''}`;
   };
 
   const minutes = useMemo(() => convertHrsToMinutes(time), [time]);
@@ -324,20 +284,8 @@ function Subtask({ description, time }: { description: string; time: number }) {
         checked={isDone}
         onChange={(e) => setIsDone(e.currentTarget.checked)}
       />
-      <span
-        className={`text-slate-600 ${
-          isDone ? 'line-through text-slate-500 opacity-50' : ''
-        }`}
-      >
-        {description}
-      </span>
-      <span
-        className={`text-slate-600 ${
-          isDone ? 'line-through text-slate-500 opacity-50' : ''
-        }`}
-      >
-        {minutes}
-      </span>
+      <span className={`text-slate-600 ${isDone ? 'line-through text-slate-500 opacity-50' : ''}`}>{description}</span>
+      <span className={`text-slate-600 ${isDone ? 'line-through text-slate-500 opacity-50' : ''}`}>{minutes}</span>
     </>
   );
 }

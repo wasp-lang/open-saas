@@ -18,12 +18,30 @@ export default defineConfig({
       },
     }),
     starlight({
-      title: 'Your SaaS', 
+      title: 'Your SaaS',
       description: 'Documentation for your SaaS.',
       logo: {
         src: '/src/assets/logo.png',
         alt: 'Your SaaS',
       },
+      head: [ // Add your script tags here. Below is an example for Google analytics, etc.
+        {
+          tag: 'script',
+          attrs: {
+            src: 'https://www.googletagmanager.com/gtag/js?id=<YOUR-GOOGLE-ANALYTICS-ID>',
+          },
+        },
+        {
+          tag: 'script',
+          content: `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+        
+          gtag('config', '<YOUR-GOOGLE-ANALYTICS-ID>');
+          `,
+        },
+      ],
       editLink: {
         baseUrl: 'https://github.com/<your-repo>',
       },
@@ -41,16 +59,11 @@ export default defineConfig({
       sidebar: [
         {
           label: 'Start Here',
-          items: [
-            { label: 'Introduction', link: '/' },
-          ],
+          items: [{ label: 'Introduction', link: '/' }],
         },
         {
           label: 'Guides',
-          items: [
-            { label: 'Example Guide', link: '/guides/example/' },
-
-          ],
+          items: [{ label: 'Example Guide', link: '/guides/example/' }],
         },
       ],
     }),

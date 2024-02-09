@@ -94,7 +94,6 @@ async function getPrevDayViewsChangePercent() {
         startDate: '2daysAgo',
         endDate: 'yesterday',
       },
-      
     ],
     orderBys: [
       {

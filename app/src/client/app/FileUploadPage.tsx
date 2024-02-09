@@ -1,9 +1,6 @@
+import { createFile, useQuery, getAllFilesByUser, getDownloadFileSignedURL } from 'wasp/client/operations';
 import axios from 'axios';
-import { useQuery } from '@wasp/queries';
 import { useState, useEffect, FormEvent } from 'react';
-import getAllFilesByUser from '@wasp/queries/getAllFilesByUser';
-import createFile from '@wasp/actions/createFile';
-import getDownloadFileSignedURL from '@wasp/queries/getDownloadFileSignedURL';
 
 export default function FileUploadPage() {
   const [fileToDownload, setFileToDownload] = useState<string>('');
@@ -74,8 +71,8 @@ export default function FileUploadPage() {
           </h2>
         </div>
         <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600 dark:text-white'>
-          This is an example file upload page using AWS S3. Maybe your app needs this. Maybe it
-          doesn't. But a lot of people asked for this feature, so here you go 🤝
+          This is an example file upload page using AWS S3. Maybe your app needs this. Maybe it doesn't. But a lot of
+          people asked for this feature, so here you go 🤝
         </p>
         <div className='my-8 border rounded-3xl border-gray-900/10'>
           <div className='space-y-10 my-10 py-8 px-4 mx-auto sm:max-w-lg'>

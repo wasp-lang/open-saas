@@ -1,13 +1,13 @@
-import HttpError from '@wasp/core/HttpError.js';
-import type { DailyStats, GptResponse, User, PageViewSource, Task, File } from '@wasp/entities';
-import type {
-  GetGptResponses,
-  GetDailyStats,
-  GetPaginatedUsers,
-  GetAllTasksByUser,
-  GetAllFilesByUser,
-  GetDownloadFileSignedURL,
-} from '@wasp/queries/types';
+import { type DailyStats, type GptResponse, type User, type PageViewSource, type Task, type File } from 'wasp/entities';
+import { HttpError } from 'wasp/server';
+import {
+  type GetGptResponses,
+  type GetDailyStats,
+  type GetPaginatedUsers,
+  type GetAllTasksByUser,
+  type GetAllFilesByUser,
+  type GetDownloadFileSignedURL,
+} from 'wasp/server/operations';
 import { getDownloadFileSignedURLFromS3 } from './file-upload/s3Utils.js';
 
 type DailyStatsWithSources = DailyStats & {
@@ -64,7 +64,10 @@ export const getAllFilesByUser: GetAllFilesByUser<void, File[]> = async (_args, 
   });
 };
 
-export const getDownloadFileSignedURL: GetDownloadFileSignedURL<{ key: string }, string> = async ({ key }, _context) => {
+export const getDownloadFileSignedURL: GetDownloadFileSignedURL<{ key: string }, string> = async (
+  { key },
+  _context
+) => {
   return getDownloadFileSignedURLFromS3({ key });
 };
 

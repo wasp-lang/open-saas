@@ -1,8 +1,8 @@
-import { TierIds, STRIPE_CUSTOMER_PORTAL_LINK } from '@wasp/shared/constants';
+import { useAuth } from 'wasp/client/auth';
+import { stripePayment } from 'wasp/client/operations';
+import { TierIds, STRIPE_CUSTOMER_PORTAL_LINK } from '../../shared/constants';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { useState } from 'react';
-import stripePayment from '@wasp/actions/stripePayment';
-import useAuth from '@wasp/auth/useAuth';
 import { useHistory } from 'react-router-dom';
 
 export const tiers = [
@@ -33,28 +33,28 @@ export const tiers = [
 const PricingPage = () => {
   const [isStripePaymentLoading, setIsStripePaymentLoading] = useState<boolean | string>(false);
 
-    const { data: user, isLoading: isUserLoading } = useAuth();
+  const { data: user, isLoading: isUserLoading } = useAuth();
 
-    const history = useHistory();
+  const history = useHistory();
 
-    async function handleBuyNowClick(tierId: string) {
-      if (!user) {
-        history.push('/login');
-        return;
-      }
-      try {
-        setIsStripePaymentLoading(tierId);
-        let stripeResults = await stripePayment(tierId);
-
-        if (stripeResults?.sessionUrl) {
-          window.open(stripeResults.sessionUrl, '_self');
-        }
-      } catch (error: any) {
-        console.error(error?.message ?? 'Something went wrong.');
-      } finally {
-        setIsStripePaymentLoading(false);
-      }
+  async function handleBuyNowClick(tierId: string) {
+    if (!user) {
+      history.push('/login');
+      return;
     }
+    try {
+      setIsStripePaymentLoading(tierId);
+      let stripeResults = await stripePayment(tierId);
+
+      if (stripeResults?.sessionUrl) {
+        window.open(stripeResults.sessionUrl, '_self');
+      }
+    } catch (error: any) {
+      console.error(error?.message ?? 'Something went wrong.');
+    } finally {
+      setIsStripePaymentLoading(false);
+    }
+  }
 
   return (
     <div className='py-10 lg:mt-10'>
@@ -95,7 +95,9 @@ const PricingPage = () => {
                 </div>
                 <p className='mt-4 text-sm leading-6 text-gray-600 dark:text-white'>{tier.description}</p>
                 <p className='mt-6 flex items-baseline gap-x-1 dark:text-white'>
-                  <span className='text-4xl font-bold tracking-tight text-gray-900 dark:text-white'>{tier.priceMonthly}</span>
+                  <span className='text-4xl font-bold tracking-tight text-gray-900 dark:text-white'>
+                    {tier.priceMonthly}
+                  </span>
                   <span className='text-sm font-semibold leading-6 text-gray-600 dark:text-white'>/month</span>
                 </p>
                 <ul role='list' className='mt-8 space-y-3 text-sm leading-6 text-gray-600 dark:text-white'>

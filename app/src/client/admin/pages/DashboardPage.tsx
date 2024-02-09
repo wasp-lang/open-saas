@@ -1,3 +1,5 @@
+import { type User } from 'wasp/entities';
+import { useQuery, getDailyStats } from 'wasp/client/operations';
 import TotalSignupsCard from '../components/TotalSignupsCard';
 import TotalPageViewsCard from '../components/TotalPaidViewsCard';
 import TotalPayingUsersCard from '../components/TotalPayingUsersCard';
@@ -5,10 +7,7 @@ import TotalRevenueCard from '../components/TotalRevenueCard';
 import RevenueAndProfitChart from '../components/RevenueAndProfitChart';
 import SourcesTable from '../components/SourcesTable';
 import DefaultLayout from '../layout/DefaultLayout';
-import { useQuery } from '@wasp/queries';
-import getDailyStats from '@wasp/queries/getDailyStats';
 import { useHistory } from 'react-router-dom';
-import type { User } from '@wasp/entities';
 
 const Dashboard = ({ user }: { user: User }) => {
   const history = useHistory();

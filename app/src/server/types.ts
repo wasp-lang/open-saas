@@ -1,5 +1,5 @@
-import { User } from '@wasp/entities'
-import { Prisma } from '@prisma/client'
+import { type User } from 'wasp/entities';
+import { Prisma } from '@prisma/client';
 
 export type Context = {
   user: User;
@@ -30,6 +30,6 @@ export type OpenAIResponse = {
         content: string;
       };
       finish_reason: string;
-    }
+    },
   ];
 };

@@ -1,22 +1,16 @@
+import { Link } from 'wasp/client/router';
+import { useAuth } from 'wasp/client/auth';
 import { useState } from 'react';
 import { Dialog } from '@headlessui/react';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { HiBars3 } from 'react-icons/hi2';
 import { BiLogIn } from 'react-icons/bi';
-import { Link } from '@wasp/router';
 import logo from '../static/logo.png';
 import openSaasBanner from '../static/open-saas-banner.png';
-import {
-  features,
-  navigation,
-  faqs,
-  footerNavigation,
-  testimonials,
-} from './contentSections';
+import { features, navigation, faqs, footerNavigation, testimonials } from './contentSections';
 import DropdownUser from '../components/DropdownUser';
-import { DOCS_URL } from '@wasp/shared/constants';
+import { DOCS_URL } from '../../shared/constants';
 import { UserMenuItems } from '../components/UserMenuItems';
-import useAuth from '@wasp/auth/useAuth';
 import DarkModeSwitcher from '../admin/components/DarkModeSwitcher';
 
 export default function LandingPage() {
@@ -24,27 +18,20 @@ export default function LandingPage() {
 
   const { data: user, isLoading: isUserLoading } = useAuth();
 
-  const NavLogo = () => (
-    <img className='h-8 w-8' src={logo} alt='Your SaaS App' />
-  );
+  const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Your SaaS App' />;
 
   return (
     <div className='bg-white dark:text-white dark:bg-boxdark-2'>
       {/* Header */}
       <header className='absolute inset-x-0 top-0 z-50 dark:bg-boxdark-2'>
-        <nav
-          className='flex items-center justify-between p-6 lg:px-8'
-          aria-label='Global'
-        >
+        <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
           <div className='flex items-center lg:flex-1'>
             <a
               href='/'
               className='flex items-center -m-1.5 p-1.5 text-gray-900 duration-300 ease-in-out hover:text-yellow-500'
             >
               <NavLogo />
-              <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>
-                Your Saas
-              </span>
+              <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Your Saas</span>
             </a>
           </div>
           <div className='flex lg:hidden'>
@@ -86,12 +73,7 @@ export default function LandingPage() {
             </div>
           </div>
         </nav>
-        <Dialog
-          as='div'
-          className='lg:hidden'
-          open={mobileMenuOpen}
-          onClose={setMobileMenuOpen}
-        >
+        <Dialog as='div' className='lg:hidden' open={mobileMenuOpen} onClose={setMobileMenuOpen}>
           <div className='fixed inset-0 z-50' />
           <Dialog.Panel className='fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 dark:bg-boxdark dark:text-white'>
             <div className='flex items-center justify-between'>
@@ -149,8 +131,7 @@ export default function LandingPage() {
             <div
               className='aspect-[1020/880] w-[55rem] flex-none sm:right-1/4 sm:translate-x-1/2 dark:hidden bg-gradient-to-tr from-amber-400 to-purple-300 opacity-40'
               style={{
-                clipPath:
-                  'polygon(80% 20%, 90% 55%, 50% 100%, 70% 30%, 20% 50%, 50% 0)',
+                clipPath: 'polygon(80% 20%, 90% 55%, 50% 100%, 70% 30%, 20% 50%, 50% 0)',
               }}
             />
           </div>
@@ -169,8 +150,7 @@ export default function LandingPage() {
             <div className='mx-auto max-w-8xl px-6 lg:px-8'>
               <div className='lg:mb-18 mx-auto max-w-3xl text-center'>
                 <h1 className='text-4xl font-bold text-gray-900 sm:text-6xl dark:text-white'>
-                  Some <span className='italic'>cool</span> words about your
-                  product
+                  Some <span className='italic'>cool</span> words about your product
                 </h1>
                 <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-gray-600 dark:text-white'>
                   With some more exciting words about your product!
@@ -232,12 +212,7 @@ export default function LandingPage() {
               </svg>
             </div>
             <div className='flex justify-center col-span-1 max-h-12 w-full object-contain dark:opacity-80'>
-              <svg
-                width={48}
-                height={48}
-                viewBox='0 0 32 32'
-                xmlns='http://www.w3.org/2000/svg'
-              >
+              <svg width={48} height={48} viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'>
                 <path
                   className='dark:fill-white'
                   fill='#545454'
@@ -260,11 +235,7 @@ export default function LandingPage() {
               </svg>
             </div>
             <div className='flex justify-center col-span-1 w-full max-h-12 object-contain dark:opacity-80'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                preserveAspectRatio='xMidYMid'
-                viewBox='0 0 256 260'
-              >
+              <svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMidYMid' viewBox='0 0 256 260'>
                 <path
                   className='dark:fill-white'
                   fill='#545454'
@@ -296,9 +267,7 @@ export default function LandingPage() {
                     </div>
                     {feature.name}
                   </dt>
-                  <dd className='mt-2 text-base leading-7 text-gray-600 dark:text-white'>
-                    {feature.description}
-                  </dd>
+                  <dd className='mt-2 text-base leading-7 text-gray-600 dark:text-white'>{feature.description}</dd>
                 </div>
               ))}
             </dl>
@@ -319,18 +288,10 @@ export default function LandingPage() {
                       <p>{testimonial.quote}</p>
                     </blockquote>
                     <figcaption className='mt-6 text-base text-white'>
-                      <a
-                        href={testimonial.socialUrl}
-                        className='flex items-center gap-x-2'
-                      >
-                        <img
-                          src={testimonial.avatarSrc}
-                          className='h-12 w-12 rounded-full'
-                        />
+                      <a href={testimonial.socialUrl} className='flex items-center gap-x-2'>
+                        <img src={testimonial.avatarSrc} className='h-12 w-12 rounded-full' />
                         <div>
-                          <div className='font-semibold hover:underline'>
-                            {testimonial.name}
-                          </div>
+                          <div className='font-semibold hover:underline'>{testimonial.name}</div>
                           <div className='mt-1'>{testimonial.role}</div>
                         </div>
                       </a>
@@ -349,22 +310,14 @@ export default function LandingPage() {
           </h2>
           <dl className='mt-10 space-y-8 divide-y divide-gray-900/10'>
             {faqs.map((faq) => (
-              <div
-                key={faq.id}
-                className='pt-8 lg:grid lg:grid-cols-12 lg:gap-8'
-              >
+              <div key={faq.id} className='pt-8 lg:grid lg:grid-cols-12 lg:gap-8'>
                 <dt className='text-base font-semibold leading-7 text-gray-900 lg:col-span-5 dark:text-white'>
                   {faq.question}
                 </dt>
                 <dd className='flex items-center justify-start gap-2 mt-4 lg:col-span-7 lg:mt-0'>
-                  <p className='text-base leading-7 text-gray-600 dark:text-white'>
-                    {faq.answer}
-                  </p>
+                  <p className='text-base leading-7 text-gray-600 dark:text-white'>{faq.answer}</p>
                   {faq.href && (
-                    <a
-                      href={faq.href}
-                      className='text-base leading-7 text-yellow-500 hover:text-yellow-600'
-                    >
+                    <a href={faq.href} className='text-base leading-7 text-yellow-500 hover:text-yellow-600'>
                       Learn more →
                     </a>
                   )}
@@ -386,16 +339,11 @@ export default function LandingPage() {
           </h2>
           <div className='flex items-start justify-end mt-10 gap-20'>
             <div>
-              <h3 className='text-sm font-semibold leading-6 text-gray-900 dark:text-white'>
-                App
-              </h3>
+              <h3 className='text-sm font-semibold leading-6 text-gray-900 dark:text-white'>App</h3>
               <ul role='list' className='mt-6 space-y-4'>
                 {footerNavigation.app.map((item) => (
                   <li key={item.name}>
-                    <a
-                      href={item.href}
-                      className='text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-white'
-                    >
+                    <a href={item.href} className='text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-white'>
                       {item.name}
                     </a>
                   </li>
@@ -403,16 +351,11 @@ export default function LandingPage() {
               </ul>
             </div>
             <div>
-              <h3 className='text-sm font-semibold leading-6 text-gray-900 dark:text-white'>
-                Company
-              </h3>
+              <h3 className='text-sm font-semibold leading-6 text-gray-900 dark:text-white'>Company</h3>
               <ul role='list' className='mt-6 space-y-4'>
                 {footerNavigation.company.map((item) => (
                   <li key={item.name}>
-                    <a
-                      href={item.href}
-                      className='text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-white'
-                    >
+                    <a href={item.href} className='text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-white'>
                       {item.name}
                     </a>
                   </li>

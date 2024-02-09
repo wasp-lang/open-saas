@@ -1,5 +1,5 @@
+import { type DailyStatsJob } from 'wasp/server/jobs';
 import Stripe from 'stripe';
-import type { DailyStatsJob } from '@wasp/jobs/dailyStatsJob.js';
 import { getDailyPageViews, getSources } from './plausibleAnalyticsUtils.js';
 // import { getDailyPageViews, getSources } from './googleAnalyticsUtils.js';
 
@@ -106,7 +106,7 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, con
       });
     }
 
-    console.table({ dailyStats })
+    console.table({ dailyStats });
   } catch (error: any) {
     console.error('Error calculating daily stats: ', error);
     await context.entities.Logs.create({

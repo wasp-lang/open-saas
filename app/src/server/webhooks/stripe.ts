@@ -1,8 +1,8 @@
+import { emailSender } from 'wasp/server/email';
+import { type MiddlewareConfigFn } from 'wasp/server';
+import { type StripeWebhook } from 'wasp/server/api';
 import express from 'express';
-import { StripeWebhook } from '@wasp/apis/types';
-import type { MiddlewareConfigFn } from '@wasp/middleware';
-import { emailSender } from '@wasp/email/index.js';
-import { TierIds } from '@wasp/shared/constants.js';
+import { TierIds } from '../../shared/constants.js';
 
 import Stripe from 'stripe';
 
@@ -63,7 +63,8 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
       }
 
       /**
-       * and here is an example of handling a different type of product
+       * and here is an example of handling a product that is not a subscription
+       * in this case, we are adding 10 credits to the user's account
        * make sure to configure it in the Stripe dashboard first!
        */
 
