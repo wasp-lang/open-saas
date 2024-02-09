@@ -1,9 +1,8 @@
+import { useAuth, LoginForm } from "wasp/client/auth";
 import { useHistory } from 'react-router-dom';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { LoginForm } from '@wasp/auth/forms/Login';
 import { AuthWrapper } from './authWrapper';
-import useAuth from '@wasp/auth/useAuth';
 
 export default function Login() {
   const history = useHistory();

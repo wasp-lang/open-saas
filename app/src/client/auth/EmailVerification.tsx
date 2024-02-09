@@ -1,5 +1,5 @@
+import { VerifyEmailForm } from "wasp/client/auth";
 import { Link } from 'react-router-dom';
-import { VerifyEmailForm } from '@wasp/auth/forms/VerifyEmail';
 import { AuthWrapper } from './authWrapper';
 
 export function EmailVerification() {

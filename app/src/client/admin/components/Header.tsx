@@ -1,7 +1,7 @@
+import { type User } from "wasp/entities";
 import DarkModeSwitcher from './DarkModeSwitcher';
 import MessageButton from './MessageButton';
 import DropdownUser from '../../components/DropdownUser';
-import type { User } from '@wasp/entities'
 
 const Header = (props: {
   sidebarOpen: string | boolean | undefined;

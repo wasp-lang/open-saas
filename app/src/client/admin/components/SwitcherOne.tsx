@@ -1,5 +1,5 @@
+import { type User } from "wasp/entities";
 import { useState } from 'react';
-import { User } from '@wasp/entities';
 
 const SwitcherOne = ({ user, updateUserById}: { user?: Partial<User>, updateUserById?: any}) => {
   const [enabled, setEnabled] = useState<boolean>(user?.hasPaid || false);

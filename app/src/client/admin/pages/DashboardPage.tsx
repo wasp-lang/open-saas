@@ -1,3 +1,6 @@
+import { Link } from "wasp/client/router";
+import { type User } from "wasp/entities";
+import { useQuery, getDailyStats } from "wasp/client/operations";
 import { useState, useEffect } from 'react';
 import TotalSignupsCard from '../components/TotalSignupsCard';
 import TotalPageViewsCard from '../components/TotalPaidViewsCard';
@@ -6,11 +9,7 @@ import TotalRevenueCard from '../components/TotalRevenueCard';
 import RevenueAndProfitChart from '../components/RevenueAndProfitChart';
 import SourcesTable from '../components/SourcesTable';
 import DefaultLayout from '../layout/DefaultLayout';
-import { useQuery } from '@wasp/queries';
-import getDailyStats from '@wasp/queries/getDailyStats';
-import { Link } from '@wasp/router';
 import { useHistory } from 'react-router-dom';
-import type { User } from '@wasp/entities';
 
 const Dashboard = ({ user }: { user: User }) => {
   const [isDemoInfoVisible, setIsDemoInfoVisible] = useState(false);

@@ -1,5 +1,5 @@
+import { type DailyStatsJob } from "wasp/server/jobs";
 import Stripe from 'stripe';
-import type { DailyStatsJob } from '@wasp/jobs/dailyStatsJob.js';
 import { getDailyPageViews, getSources } from './plausibleAnalyticsUtils.js';
 // import { getDailyPageViews, getSources } from './googleAnalyticsUtils.js';
 

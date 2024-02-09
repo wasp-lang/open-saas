@@ -1,25 +1,30 @@
+import { type User, type Task, type File } from "wasp/entities";
+import { HttpError } from "wasp/server";
+import {
+  type GenerateGptResponse,
+  type StripePayment,
+  type UpdateCurrentUser,
+  type UpdateUserById,
+  type CreateTask,
+  type DeleteTask,
+  type UpdateTask,
+  type CreateFile,
+} from "wasp/server/operations";
 import Stripe from 'stripe';
 import fetch from 'node-fetch';
-import HttpError from '@wasp/core/HttpError.js';
-import type { User, Task, File } from '@wasp/entities';
 import type { StripePaymentResult } from './types';
-import {
-  GenerateGptResponse,
-  StripePayment,
-  UpdateCurrentUser,
-  UpdateUserById,
-  CreateTask,
-  DeleteTask,
-  UpdateTask,
-  CreateFile,
-} from '@wasp/actions/types';
 import { fetchStripeCustomer, createStripeCheckoutSession } from './payments/stripeUtils.js';
-import { TierIds } from '@wasp/shared/constants.js';
+import { TierIds } from '../shared/constants.js';
 import { getUploadFileSignedURLFromS3 } from './file-upload/s3Utils.js';
 
 export const stripePayment: StripePayment<string, StripePaymentResult> = async (tier, context) => {
-  if (!context.user || !context.user.email) {
+  
+  if (!context.user) {
     throw new HttpError(401);
+  }
+  const userEmail = context.user.email;
+  if (!userEmail) {
+    throw new HttpError(403, 'User needs an email to make a payment. If using the usernameAndPassword Auth method, switch to an Auth method that provides an email.');
   }
 
   let priceId;
@@ -34,7 +39,7 @@ export const stripePayment: StripePayment<string, StripePaymentResult> = async (
   let customer: Stripe.Customer;
   let session: Stripe.Checkout.Session;
   try {
-    customer = await fetchStripeCustomer(context.user.email);
+    customer = await fetchStripeCustomer(userEmail);
     session = await createStripeCheckoutSession({
       priceId,
       customerId: customer.id,

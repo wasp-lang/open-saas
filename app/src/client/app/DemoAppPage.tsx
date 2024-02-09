@@ -1,11 +1,15 @@
+import { type Task } from "wasp/entities";
+
+import {
+  generateGptResponse,
+  deleteTask,
+  updateTask,
+  createTask,
+  useQuery,
+  getAllTasksByUser,
+} from "wasp/client/operations";
+
 import { useState, useEffect, useMemo } from 'react';
-import generateGptResponse from '@wasp/actions/generateGptResponse';
-import deleteTask from '@wasp/actions/deleteTask';
-import updateTask from '@wasp/actions/updateTask';
-import createTask from '@wasp/actions/createTask';
-import { useQuery } from '@wasp/queries';
-import getAllTasksByUser from '@wasp/queries/getAllTasksByUser';
-import { Task } from '@wasp/entities';
 import { CgSpinner } from 'react-icons/cg';
 import { TiDelete } from 'react-icons/ti';
 

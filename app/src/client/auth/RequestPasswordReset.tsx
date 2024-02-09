@@ -1,4 +1,4 @@
-import { ForgotPasswordForm } from '@wasp/auth/forms/ForgotPassword';
+import { ForgotPasswordForm } from "wasp/client/auth";
 import { AuthWrapper } from './authWrapper';
 
 export function RequestPasswordReset() {

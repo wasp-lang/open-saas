@@ -1,14 +1,12 @@
-import { GetUserFieldsFn } from '@wasp/types';
+import { defineUserSignupFields } from 'wasp/auth/providers/types'
 
-// More info on auth config: https://wasp-lang.dev/docs/language/features#social-login-providers-oauth-20
-
-export const getGitHubUserFields: GetUserFieldsFn = async (_context, args) => {
+export const getGitHubUserFields = defineUserSignupFields({
   // NOTE: if we don't want to access users' emails, we can use scope ["user:read"]
   // instead of ["user"] and access args.profile.username instead
-  const email = args.profile.emails[0].value;
-  const username = args.profile.username;
-  return { email, username };
-};
+  email: (data: any) => data.profile.emails[0].value,
+  username: (data: any) => data.profile.username,
+});
+
 
 export function getGitHubAuthConfig() {
   return {
@@ -18,11 +16,10 @@ export function getGitHubAuthConfig() {
   };
 }
 
-export const getGoogleUserFields: GetUserFieldsFn = async (_context, args) => {
-  const email = args.profile.emails[0].value;
-  const username = args.profile.displayName;
-  return { email, username };
-}
+export const getGoogleUserFields = defineUserSignupFields({
+  email: (data: any) => data.profile.emails[0].value,
+  username: (data: any) => data.profile.displayName,
+});
 
 export function getGoogleAuthConfig() {
   const clientID = process.env.GOOGLE_CLIENT_ID;

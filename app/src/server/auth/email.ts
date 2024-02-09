@@ -1,4 +1,5 @@
-import { GetVerificationEmailContentFn, GetPasswordResetEmailContentFn } from '@wasp/types';
+// TODO: Removed  from "@wasp/types" import because it is deprecated and has no clear alternative. Please check migration instructions in Wasp docs on how to manually migrate the code that was using it.
+import { type GetVerificationEmailContentFn, type GetPasswordResetEmailContentFn } from "wasp/server/auth";
 
 export const getVerificationEmailContent: GetVerificationEmailContentFn = ({ verificationLink }) => ({
   subject: 'Verify your email',

@@ -1,9 +1,10 @@
+import { Link } from "wasp/client/router";
+import { useAuth } from "wasp/client/auth";
 import { useState, useEffect } from 'react';
 import { Dialog } from '@headlessui/react';
 import { AiFillCloseCircle, AiFillGithub } from 'react-icons/ai';
 import { HiBars3 } from 'react-icons/hi2';
 import { BiLogIn } from 'react-icons/bi';
-import { Link } from '@wasp/router';
 import logo from '../static/logo.png';
 import {
   features,
@@ -13,9 +14,8 @@ import {
   testimonials,
 } from './contentSections';
 import DropdownUser from '../components/DropdownUser';
-import { DOCS_URL, GITHUB_URL } from '@wasp/shared/constants';
+import { DOCS_URL, GITHUB_URL } from '../../shared/constants';
 import { UserMenuItems } from '../components/UserMenuItems';
-import useAuth from '@wasp/auth/useAuth';
 import DarkModeSwitcher from '../admin/components/DarkModeSwitcher';
 
 export default function LandingPage() {

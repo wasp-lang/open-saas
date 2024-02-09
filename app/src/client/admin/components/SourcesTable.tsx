@@ -1,4 +1,4 @@
-import { PageViewSource } from "@wasp/entities";
+import { type PageViewSource } from "wasp/entities";
 
 const SourcesTable = ({ sources } : { sources: PageViewSource[] | undefined }) => {
 

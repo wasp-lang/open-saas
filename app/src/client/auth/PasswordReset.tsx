@@ -1,5 +1,5 @@
+import { ResetPasswordForm } from "wasp/client/auth";
 import { Link } from 'react-router-dom';
-import { ResetPasswordForm } from '@wasp/auth/forms/ResetPassword';
 import { AuthWrapper } from './authWrapper';
 
 export function PasswordReset() {

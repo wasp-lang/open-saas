@@ -1,4 +1,4 @@
-import { DOCS_URL, BLOG_URL, GITHUB_URL } from '@wasp/shared/constants';
+import { DOCS_URL, BLOG_URL, GITHUB_URL } from '../../shared/constants';
 import daBoiAavatar from '../static/da-boi.png';
 
 export const navigation = [

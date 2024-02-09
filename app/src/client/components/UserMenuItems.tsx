@@ -1,8 +1,8 @@
-import { Link } from '@wasp/router';
+import { Link } from "wasp/client/router";
+import { type User } from "wasp/entities";
+import { logout } from "wasp/client/auth";
 import { MdOutlineSpaceDashboard } from 'react-icons/md';
 import { TfiDashboard } from 'react-icons/tfi';
-import logout from '@wasp/auth/logout';
-import type { User } from '@wasp/entities';
 
 export const UserMenuItems = ({
   user,

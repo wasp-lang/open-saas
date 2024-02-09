@@ -1,7 +1,7 @@
+import { type User } from "wasp/entities";
 import { faker } from '@faker-js/faker';
 import type { PrismaClient } from '@prisma/client';
-import type { User } from '@wasp/entities';
-import { TierIds } from '@wasp/shared/constants.js';
+import { TierIds } from '../../shared/constants.js';
 
 // in a terminal window run `wasp db seed` to seed your dev database with this data
 export function createRandomUser() {
@@ -16,10 +16,10 @@ export function createRandomUser() {
       firstName,
       lastName,
     }),
-    password: faker.internet.password({
-      length: 12,
-      prefix: 'Aa1!',
-    }),
+    // password: faker.internet.password({
+    //   length: 12,
+    //   prefix: 'Aa1!',
+    // }),
     createdAt: faker.date.between({ from: new Date('2023-01-01'), to: new Date() }),
     lastActiveTimestamp: faker.date.recent(),
     isAdmin: false,
@@ -30,8 +30,8 @@ export function createRandomUser() {
     subscriptionStatus: faker.helpers.arrayElement(['active', 'canceled', 'past_due', 'deleted']),
     datePaid: faker.date.recent(),
     credits: faker.number.int({ min: 0, max: 3 }),
-    emailVerificationSentAt: null,
-    passwordResetSentAt: null,
+    // emailVerificationSentAt: null,
+    // passwordResetSentAt: null,
     checkoutSessionId: null,
     subscriptionTier: faker.helpers.arrayElement([TierIds.HOBBY, TierIds.PRO]),
     isMockUser: true,
