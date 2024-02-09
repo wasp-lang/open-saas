@@ -15,8 +15,8 @@ export default function CheckoutPage() {
     }
 
     const queryParams = new URLSearchParams(location.search);
-    const isSuccess = queryParams.get('success')
-    const isCanceled = queryParams.get('canceled')
+    const isSuccess = queryParams.get('success');
+    const isCanceled = queryParams.get('canceled');
 
     if (isCanceled) {
       setPaymentStatus('canceled');
@@ -31,12 +31,10 @@ export default function CheckoutPage() {
     };
   }, [location]);
 
-
-
   return (
     <div className='flex min-h-full flex-col justify-center mt-10 sm:px-6 lg:px-8'>
       <div className='sm:mx-auto sm:w-full sm:max-w-md'>
-        <div className='bg-white py-8 px-4 shadow-xl ring-1 ring-gray-900/10 sm:rounded-lg sm:px-10'>
+        <div className='bg-white text-black py-8 px-4 shadow-xl ring-1 ring-gray-900/10 sm:rounded-lg sm:px-10'>
           <h1>
             {paymentStatus === 'paid'
               ? '🥳 Payment Successful!'
