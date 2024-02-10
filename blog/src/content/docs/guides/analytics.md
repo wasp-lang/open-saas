@@ -57,9 +57,9 @@ After you sign up for [Google analytics](https://analytics.google.com/), go to y
 Once you've completed the steps to create a new Property, some Installation Instructions will pop up. Select `install manually` and copy and paste the Google script tag into the `main.wasp` file's head section. 
 
 ```js {7}
-app SaaSTemplate {
+app OpenSaaS {
   wasp: {
-    version: "^0.11.6"
+    version: "^0.12.0"
   },
   title: "My SaaS App",
   head: [

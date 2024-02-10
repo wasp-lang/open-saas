@@ -11,8 +11,8 @@ First, we'll take a look at the project's file structure, then dive into its mai
 If you haven't already, now would be the right time to [explore the app](https://opensaas.sh) in your browser:
 - [ ] explore the landing page
 - [ ] log in to the demo app
-- [ ] check out the admin dashboard
 - [ ] make a test purchase
+- [ ] check out the admin dashboard
 - [ ] check out your account settings
 - [ ] check out the blog
 :::
@@ -29,14 +29,21 @@ At the root of our project, you will see two folders:
 └── blog
 ```
 
-`app` contains the Wasp project files, which is your full-stack React + NodeJS + Prisma app along with a Wasp config file, which will be explained in more detail below.
+`app` contains the Wasp project files, which is your full-stack React + NodeJS + Prisma app along with a Wasp config file, `main.wasp`, which will be explained in more detail below.
 
 `blog` contains the [Astro Starlight template](https://starlight.astro.build/) for the blog and documentation section. 
 
 Let's check out what's in the `app` folder in more detail:
+
+:::caution[v0.11 and below]
+If you are using a version of the template with Wasp `v0.11.x` or below, you may see a slightly different file structure. But don't worry, the vast majority of the code and features are the same! 😅
+:::
+
 ```sh
 .
 ├── main.wasp              # Wasp Config file. You define your app structure here.
+├── .wasp                  # Output folder for Wasp. DON'T MODIFY THESE FILES!
+├── public                 # Public assets, e.g. www.yourdomain.com/banner.png
 ├── src
 │   ├── client             # Your client code (React) goes here.
 │   ├── server             # Your server code (NodeJS) goes here.
@@ -44,8 +51,16 @@ Let's check out what's in the `app` folder in more detail:
 │   └── .waspignore
 ├── .env.server            # Environment variables for your server code.
 ├── .env.client            # Environment variables for your client code.
+├── .prettierrc            # Prettier configuration.
+├── tailwind.config.js     # TailwindCSS configuration.   
+├── package.json
+├── package-lock.json
 └── .wasproot
 ```
+
+:::tip[File Structure]
+Note that since Wasp v0.12, the `src` folder does not need to be organized  between `client` and `server` code. You can organize your code however you like, e.g. by feature, but we've chosen to keep the traditional structure for this template. 
+:::
 
 ### The Wasp Config file
 
@@ -83,7 +98,6 @@ The `src/client` folder contains all the code that runs in the browser. It's a s
     ├── components         # Your shared React components.
     ├── hooks              # Your shared React hooks.
     ├── landing-page       # Landing page related code
-    ├── public             # Assets that are publicly accessible, e.g. www.yourdomain.com/banner.png
     ├── static             # Assets that you need access to in your code, e.g. import logo from 'static/logo.png'
     ├── App.tsx            # Main app component to wrap all child components. Useful for global state, navbars, etc.
     └── Main.css
@@ -99,12 +113,13 @@ All you have to do is define your server-side functions in the `main.wasp` file,
 ```sh
 └── server
     ├── auth               # Some small auth-related functions to customize the auth flow.
+    ├── file-upload        # File upload utility functions.
+    ├── payments           # Payments utility functions.
     ├── scripts            # Scripts to run via Wasp, e.g. database seeding.
     ├── webhooks           # The webhook handler for Stripe.
     ├── workers            # Functions that run in the background as Wasp Jobs, e.g. daily stats calculation.
     ├── actions.ts         # Your server-side write/mutation functions.
     ├── queries.ts         # Your server-side read functions.
-    ├── stripeUtils.ts    
     └── types.ts  
 ```
 
@@ -117,7 +132,6 @@ This template comes with a fully functional auth flow out of the box. It takes a
 ```js title="main.wasp"
   auth: {
     userEntity: User,
-    externalAuthEntity: SocialLogin,
     methods: {
       email: { 
         //...
@@ -129,15 +143,16 @@ This template comes with a fully functional auth flow out of the box. It takes a
   },
 ```
 
-By defining the auth structure in your `main.wasp` file, Wasp generates all the necessary code for you, including:
+By defining the auth structure in your `main.wasp` file, Wasp manages all the necessary code for you, including:
 - Email verified login with reset password
 - Social login with Google and/or GitHub
+- Auth-related databse entities for user credentials, sessions, and social logins 
 - Custom-generated AuthUI components for login, signup, and reset password
 - Auth hooks for fetching user data
 
 <!-- TODO: add pic of AuthUI components -->
 
-We've set the template up with Wasp's simplest auth flow, `usernameAndPassword`, but we suggest you only use it to get your app developlment going and opt for `email`, `google`, `gitHub`, or a combination of them in production.
+We've set the template up with Wasp's simplest auth flow, `usernameAndPassword`, **but we suggest you only use it to get your app developlment going and opt for `email`, `google`, `gitHub`, or a combination of them in production**.
 
 You'll notice that `google` and `email` methods are also pre-configured but commented out. If you'd like to use these configurations in your app, make sure to check out the [Authentication Guide](/guides/authentication) which gives you details on obtaining necessary API keys and integrations.
 
@@ -158,7 +173,7 @@ The logic for creating the Stripe Checkout session is defined in the `src/server
 a) define the action in the `main.wasp` file
 ```js title="main.wasp"
 action stripePayment {
-  fn: import { stripePayment } from "@server/actions.js",
+  fn: import { stripePayment } from "@src/server/actions.js",
   entities: [User]
 }
 ```
@@ -172,7 +187,7 @@ export const stripePayment = async (tier, context) => {
 
 c) call the action on the client-side
 ```js title="src/client/app/SubscriptionPage.tsx"
-import stripePayment from '@wasp/actions/stripePayment';
+import { stripePayment } from "wasp/client/operations";
 
 const handleBuyClick = async (tierId) => {
   const stripeResults = await stripePayment(tierId);
@@ -183,7 +198,7 @@ The webhook handler is defined in the `src/server/webhooks/stripe.ts` file. Unli
 
 ```js title="main.wasp"
 api stripeWebhook {
-  fn: import { stripeWebhook } from "@server/webhooks/stripe.js",
+  fn: import { stripeWebhook } from "@src/server/webhooks/stripe.js",
   httpRoute: (POST, "/stripe-webhook")
   entities: [User],
 }
@@ -212,7 +227,7 @@ To do that, we've leveraged Wasp's [Jobs feature](https://wasp-lang.dev/docs/adv
 job dailyStatsJob {
   executor: PgBoss,
   perform: {
-    fn: import { calculateDailyStats } from "@server/workers/calculateDailyStats.js"
+    fn: import { calculateDailyStats } from "@src/server/workers/calculateDailyStats.js"
   },
   schedule: {
     cron: "0 * * * *" // runs every hour

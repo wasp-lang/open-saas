@@ -106,10 +106,6 @@ This will install all dependencies and start the client and server for you :)
 
 Go to `localhost:3000` in your browser to view it (your NodeJS server will be running on port `3001`)
 
-:::danger[No NPM or Yarn needed]
-Wasp manages your dependencies for you from within the `main.wasp` file so there is no need to run `npm install` or `yarn install`.
-:::
-
 #### Run Blog and Docs
 
 This SaaS app comes with a docs and blog section built with the [Starlight template on top of the Astro](https://starlight.astro.build) framework. You can use this as a starting point for your own blog and documentation, if necessary.
