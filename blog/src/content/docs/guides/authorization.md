@@ -18,7 +18,7 @@ All authenticated users have access to the user-facing app, which is the app tha
 route AccountRoute { path: "/account", to: AccountPage }
 page AccountPage {
   authRequired: true,
-  component: import Account from "@client/app/AccountPage"
+  component: import Account from "@src/client/app/AccountPage"
 }
 ```
 
@@ -28,7 +28,7 @@ If you want more fine-grained control over what users can access, there are two 
 1. When you define the `authRequired: true` property on the `page` definition, Wasp automatically passes the User object to the page component. Here you can check for certain user properties before authorizing access:
 
 ```tsx title="ExamplePage.tsx" "{ user }: { user: User }"
-import type { User } from '@wasp/entities';
+import { type User } from "wasp/entities";
 
 export default function Example({ user }: { user: User }) {
 
@@ -48,7 +48,7 @@ export default function Example({ user }: { user: User }) {
 2. Or you can take advantage of the `useAuth` hook and check for certain user properties before authorizing access to certain pages or components:
 
 ```tsx title="ExamplePage.tsx" {1, 4}
-import useAuth from '@wasp/auth/useAuth';
+import { useAuth } from "wasp/client/auth";
 
 export default function ExampleHomePage() {
   const { data: user } = useAuth();

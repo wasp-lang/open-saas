@@ -11,7 +11,7 @@ The Admin dashboard is only accessible to users with the `isAdmin` field set to 
 entity User {=psl
   id                        Int             @id @default(autoincrement())
   email                     String?         @unique
-  password                  String?
+  username                  String?
   isAdmin                   Boolean         @default(false)
   //...
 ```
@@ -63,5 +63,5 @@ We're always looking to improve the Admin dashboard. If you feel something is mi
 ### Users
 The Users page is where you can view all your users and their most important details. You can also search and filter users by:
 - email address
-- subscription status
+- subscription/payment status
 

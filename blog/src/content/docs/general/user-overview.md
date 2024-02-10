@@ -13,13 +13,10 @@ The `User` entity within your app is defined in the `main.wasp` file:
 entity User {=psl
   id                        Int             @id @default(autoincrement())
   email                     String?         @unique
-  password                  String?
+  username                  String?         
   createdAt                 DateTime        @default(now())
   lastActiveTimestamp       DateTime        @default(now())
   isAdmin                   Boolean         @default(false)
-  isEmailVerified           Boolean         @default(false)
-  emailVerificationSentAt   DateTime?
-  passwordResetSentAt       DateTime?
   stripeId                  String? 
   checkoutSessionId         String?
   hasPaid                   Boolean         @default(false)
@@ -34,7 +31,7 @@ entity User {=psl
 psl=}
 ```
 
-We store all pertinent information to the user, including Auth, Subscription, and Stripe information.
+We store all pertinent information to the user, including identification, subscription, and Stripe information. Meanwhile, Wasp abstracts away all the Auth related entities dealing with `passwords`, `sessions`, and `socialLogins`, so you don't have to worry about these at all in your Prisma schema (if you want to learn more about this process, check out the [Wasp Auth Docs](https://wasp-lang.dev/docs/auth/overview)).
 
 ## Stripe and Subscriptions
 
@@ -76,7 +73,7 @@ The `subscriptionStatus` field is set by Stripe within your webhook handler and 
 
 - When `past_due`, the user's automatic subscription renewal payment was declined (e.g. their credit card expired). You can choose how to handle this status within your app. For example, you can send the user an email to update their payment information:
 ```tsx title="src/server/webhooks/stripe.ts" 
-import { emailSender } from '@wasp/email/index.js';
+import { emailSender } from "wasp/server/email";
 //...
 
 if (subscription.status === 'past_due') {
@@ -120,7 +117,7 @@ At the moment, we have two user roles: `admin` and `user`. This is defined withi
 entity User {=psl
   id                        Int             @id @default(autoincrement())
   email                     String?         @unique
-  password                  String?
+  username                  String?
   createdAt                 DateTime        @default(now())
   lastActiveTimestamp       DateTime        @default(now())
   isAdmin                   Boolean         @default(false)

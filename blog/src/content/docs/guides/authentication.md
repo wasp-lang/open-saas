@@ -7,7 +7,6 @@ Setting up your app's authentication is easy with Wasp. In fact, it's aready set
 ```tsx title="main.wasp" " 
   auth: {
     userEntity: User,
-    externalAuthEntity: SocialLogin,
     methods: {
       usernameAndPassword: {}, // works out-of-the-box!
       // more auth methods can be added here
@@ -16,13 +15,13 @@ Setting up your app's authentication is easy with Wasp. In fact, it's aready set
   },
 ```
 
-The great part is, by defining your auth config in the `main.wasp` file, not only does Wasp handle Auth for you, but you also get auto-generated client components for your app on the fly (aka AuthUI)! You can see them in the `src/client/auth` folder.
+The great part is, by defining your auth config in the `main.wasp` file, Wasp manages most of the Auth process for you, including the auth-related databse entities for user credentials and sessions, as well as auto-generated client components for your app on the fly (aka AuthUI -- you can see them in the `src/client/auth` folder).
 
 ## Migrating to a different Auth method
 
 We've set up the template to get you started with Wasp's simplest auth method, `usernameAndPassword`, but we suggest you only use it to get your app developlment going. 
 
-In production, you should opt for one or more of Wasp's more secure Auth methods:
+**In production, you should opt for one or more of Wasp's more secure Auth methods**:
 - `email` (email verified Auth, with forgotten password and reset options),
 - `google`,
 - `gitHub`, 
