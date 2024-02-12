@@ -30,15 +30,15 @@ const href = Astro.site
 			</>
 		)
 	}
-	<span class:list={{ 'sr-only': config.logo?.replacesTitle }}>
+	<span class:list={{ 'sr-only': config.logo?.replacesTitle }} class="dark:text-white hover:text-yellow-500">
 		{config.title}
 	</span>
 </a>
 <div>
-  <a href="/">Docs</a>
+  <a href="/" class="text-gray-900 hover:text-yellow-500 dark:text-white">Docs</a>
 </div>
 <div>
-  <a href="/blog">{blogConfig.title}</a>
+  <a href="/blog" class="text-gray-900 hover:text-yellow-500 dark:text-white">{blogConfig.title}</a>
 </div>
 
 <style>
@@ -47,10 +47,10 @@ const href = Astro.site
 		max-width: 100%;
 		overflow: hidden;
 		align-items: center;
+		color: var(--sl-color-gray-9);
 		gap: var(--sl-nav-gap);
 		font-size: var(--sl-text-h4);
 		font-weight: 600;
-		color: var(--sl-color-text-accent);
 		text-decoration: none;
 		white-space: nowrap;
     padding-inline-end: 1rem;
