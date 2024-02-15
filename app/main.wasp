@@ -46,7 +46,7 @@ app SaaSTemplate {
       // },
     },
     signup: {
-      additionalFields: import setIsAdminViaEmailSignup from "@server/auth/setIsAdminViaEmailSignup.js",
+      additionalFields: import setAdditionalUserFields from "@server/auth/setAdditionalUserFields.js",
     },
     onAuthFailedRedirectTo: "/login",
     onAuthSucceededRedirectTo: "/demo-app",
