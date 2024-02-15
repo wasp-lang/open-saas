@@ -18,14 +18,21 @@ curl -sSL https://get.wasp-lang.dev/installer.sh | sh
 
 #### Windows
 
-In order to use Wasp on Windows, you need to install WSL2 (Windows Subsystem for Linux) and a Linux distribution of your choice. We recommend using Ubuntu. Once in WSL2, run the following command in your **WSL2 environment**.
+In order to use Wasp on Windows, you need to install WSL2 (Windows Subsystem for Linux) and a Linux distribution of your choice. We recommend using Ubuntu. 
+
+**You can refer to this [article](https://wasp-lang.dev/blog/2023/11/21/guide-windows-development-wasp-wsl) if you prefer a step by step guide to using Wasp in the WSL environment.** If you need further help, reach out to us on [Discord](https://discord.gg/rzdnErX).
+
+Once in WSL2, run the following command in your **WSL2 environment**:
 
 ```sh
 curl -sSL https://get.wasp-lang.dev/installer.sh | sh
 ```
 
-You can refer to this [article](https://wasp-lang.dev/blog/2023/11/21/guide-windows-development-wasp-wsl) if you prefer a step by step guide to using Wasp in WSL environment. If you need further help, reach out to us on [Discord](https://discord.gg/rzdnErX).
-:::tip
+<br/>
+
+---
+
+:::tip[VSCode Extension ]
 Make sure to install the Wasp VSCode extension to get the best DX, e.g. syntax highlighting, code scaffolding, autocomplete, etc:
 
 🐝 [Wasp VSCode Extension](https://marketplace.visualstudio.com/items?itemName=wasp-lang.wasp) 🧑‍💻
