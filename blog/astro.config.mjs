@@ -2,12 +2,15 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import starlightBlog from 'starlight-blog';
 
+import tailwind from "@astrojs/tailwind";
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://opensaas.sh',
   integrations: [
     starlightBlog({
       title: 'Blog',
+      customCss: ['./src/styles/tailwind.css'],
       authors: {
         vince: {
           name: 'Vince',
@@ -20,6 +23,7 @@ export default defineConfig({
     starlight({
       title: 'OpenSaaS.sh',
       description: 'Open SaaS is a free, open-source, full-stack SaaS starter kit for React + NodeJS.',
+      customCss: ['./src/styles/tailwind.css'],
       logo: {
         src: '/src/assets/logo.png',
         alt: 'Open SaaS',
