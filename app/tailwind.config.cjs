@@ -1,5 +1,5 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
-const { resolveProjectPath } = require('wasp/client');
+const { resolveProjectPath } = require('wasp/dev');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
