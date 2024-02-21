@@ -22,7 +22,7 @@ export default function DemoAppPage() {
           This example app uses OpenAI's chat completions with function calling to return a structured JSON object. Try it out, enter your day's tasks, and let AI do the rest!
         </p>
         {/* begin AI-powered Todo List */}
-        <div className='my-8 border rounded-3xl border-gray-900/10'>
+        <div className='my-8 border rounded-3xl border-gray-900/10 dark:border-gray-100/10'>
           <div className='sm:w-[90%] md:w-[70%] lg:w-[50%] py-10 px-6 mx-auto my-8 space-y-10'>
             <NewTaskForm handleCreateTask={createTask} />
           </div>
