@@ -70,9 +70,9 @@ Then run:
 wasp start db
 ```
 
-This will start and connect your app to a Postgres database for you. No need to do anything else! 🤯
+This will start and connect your app to a Postgres database for you. No need to do anything else! 🤯 Just make sure to leave this terminal window open in the background while developing. Once you terminate the process, your DB will no longer be available to your app.
 
-Now let's initalize the database with the following command:
+Now let's initalize the database. Open a new terminal tab/window and run the following command:
 
 ```sh
 wasp db migrate-dev
@@ -80,7 +80,7 @@ wasp db migrate-dev
 
 You will also need to run `wasp db migrate-dev` whenever you make changes to your Prisma schema (entities).
 
-If you want to see or manage your DB via Prisma's DB Studio GUI, run:
+If you want to see or manage your DB via Prisma's DB Studio GUI, open yet another separate terminal tab/window and run:
 
 ```sh
 wasp db studio
