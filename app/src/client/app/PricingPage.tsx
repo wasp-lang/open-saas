@@ -75,7 +75,7 @@ const PricingPage = () => {
               key={tier.id}
               className={`relative flex flex-col  ${
                 tier.bestDeal ? 'ring-2' : 'ring-1 lg:mt-8'
-              } grow justify-between rounded-3xl ring-gray-200 overflow-hidden p-8 xl:p-10`}
+              } grow justify-between rounded-3xl ring-gray-900/10 dark:ring-gray-100/10 overflow-hidden p-8 xl:p-10`}
             >
               {tier.bestDeal && (
                 <div className='absolute top-0 right-0 -z-10 w-full h-full transform-gpu blur-3xl' aria-hidden='true'>
@@ -95,7 +95,9 @@ const PricingPage = () => {
                 </div>
                 <p className='mt-4 text-sm leading-6 text-gray-600 dark:text-white'>{tier.description}</p>
                 <p className='mt-6 flex items-baseline gap-x-1 dark:text-white'>
-                  <span className='text-4xl font-bold tracking-tight text-gray-900 dark:text-white'>{tier.priceMonthly}</span>
+                  <span className='text-4xl font-bold tracking-tight text-gray-900 dark:text-white'>
+                    {tier.priceMonthly}
+                  </span>
                   <span className='text-sm font-semibold leading-6 text-gray-600 dark:text-white'>/month</span>
                 </p>
                 <ul role='list' className='mt-8 space-y-3 text-sm leading-6 text-gray-600 dark:text-white'>
