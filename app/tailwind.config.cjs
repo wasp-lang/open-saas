@@ -1,13 +1,14 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
+const { resolveProjectPath } = require('wasp/dev');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./src/**/*.{js,jsx,ts,tsx}'],
+  content: [resolveProjectPath('./src/**/*.{js,jsx,ts,tsx}')],
   darkMode: 'class',
   theme: {
     extend: {
       fontFamily: {
-        'sans': ['ui-monospace', 'Liberation Mono', 'Menlo', 'monospace'],
+        sans: ['ui-monospace', 'Liberation Mono', 'Menlo', 'monospace'],
         satoshi: ['Satoshi', 'sans-serif'],
       },
       colors: {
@@ -218,8 +219,7 @@ module.exports = {
         default: '0px 8px 13px -3px rgba(0, 0, 0, 0.07)',
         card: '0px 1px 3px rgba(0, 0, 0, 0.12)',
         'card-2': '0px 1px 2px rgba(0, 0, 0, 0.05)',
-        switcher:
-          '0px 2px 4px rgba(0, 0, 0, 0.2), inset 0px 2px 2px #FFFFFF, inset 0px -1px 1px rgba(0, 0, 0, 0.1)',
+        switcher: '0px 2px 4px rgba(0, 0, 0, 0.2), inset 0px 2px 2px #FFFFFF, inset 0px -1px 1px rgba(0, 0, 0, 0.1)',
         'switch-1': '0px 0px 5px rgba(0, 0, 0, 0.15)',
         1: '0px 1px 3px rgba(0, 0, 0, 0.08)',
         2: '0px 1px 4px rgba(0, 0, 0, 0.12)',
@@ -252,9 +252,5 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
-    require('@tailwindcss/forms'),
-  ],
+  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography'), require('@tailwindcss/forms')],
 };

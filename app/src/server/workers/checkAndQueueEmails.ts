@@ -1,8 +1,6 @@
-import { emailSender } from '@wasp/email/index.js'
-
-import type { Email } from '@wasp/email/core/types';
-import type { User } from '@wasp/entities'
-import type { EmailChecker } from '@wasp/jobs/emailChecker'
+import { type EmailChecker } from "wasp/server/jobs";
+import { type User } from "wasp/entities";
+import { emailSender, type Email } from "wasp/server/email";
 
 const emailToSend: Email = {
   to: '',

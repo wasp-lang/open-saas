@@ -1,8 +1,8 @@
+import { emailSender } from "wasp/server/email";
+import { type MiddlewareConfigFn } from "wasp/server";
+import { type StripeWebhook } from "wasp/server/api";
 import express from 'express';
-import { StripeWebhook } from '@wasp/apis/types';
-import type { MiddlewareConfigFn } from '@wasp/middleware';
-import { emailSender } from '@wasp/email/index.js';
-import { TierIds } from '@wasp/shared/constants.js';
+import { TierIds } from '../../shared/constants';
 
 import Stripe from 'stripe';
 

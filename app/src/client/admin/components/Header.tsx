@@ -1,18 +1,18 @@
+import { type AuthUser } from 'wasp/auth';
 import DarkModeSwitcher from './DarkModeSwitcher';
 import MessageButton from './MessageButton';
 import DropdownUser from '../../components/DropdownUser';
-import type { User } from '@wasp/entities'
 
 const Header = (props: {
   sidebarOpen: string | boolean | undefined;
   setSidebarOpen: (arg0: boolean) => void;
-  user?: Partial<User>;
+  user?: AuthUser | null;
 }) => {
   return (
     <header className='sticky top-0 z-999 flex w-full bg-white dark:bg-boxdark dark:drop-shadow-none'>
       <div className='flex flex-grow items-center justify-between sm:justify-end sm:gap-5 px-8 py-5 shadow '>
         <div className='flex items-center gap-2 sm:gap-4 lg:hidden'>
-          {/* <!-- Hamburger Toggle BTN --> */} 
+          {/* <!-- Hamburger Toggle BTN --> */}
 
           <button
             aria-controls='sidebar'
@@ -56,21 +56,19 @@ const Header = (props: {
           </button>
 
           {/* <!-- Hamburger Toggle BTN --> */}
-
         </div>
 
-          <ul className='flex items-center gap-2 2xsm:gap-4'>
-            {/* <!-- Dark Mode Toggler --> */}
-            <DarkModeSwitcher />
-            {/* <!-- Dark Mode Toggler --> */}
+        <ul className='flex items-center gap-2 2xsm:gap-4'>
+          {/* <!-- Dark Mode Toggler --> */}
+          <DarkModeSwitcher />
+          {/* <!-- Dark Mode Toggler --> */}
 
-            {/* <!-- Chat Notification Area --> */}
-            <MessageButton />
-            {/* <!-- Chat Notification Area --> */}
-          </ul>
+          {/* <!-- Chat Notification Area --> */}
+          <MessageButton />
+          {/* <!-- Chat Notification Area --> */}
+        </ul>
 
         <div className='flex items-center gap-3 2xsm:gap-7'>
-
           {/* <!-- User Area --> */}
           {!!props.user && <DropdownUser user={props.user} />}
           {/* <!-- User Area --> */}

@@ -1,8 +1,6 @@
+import { updateUserById, useQuery, getPaginatedUsers } from "wasp/client/operations";
 import { useState, useEffect } from 'react';
 import SwitcherOne from './SwitcherOne';
-import { useQuery } from '@wasp/queries';
-import getPaginatedUsers from '@wasp/queries/getPaginatedUsers';
-import updateUserById from '@wasp/actions/updateUserById';
 import Loader from '../common/Loader';
 import DropdownEditDelete from './DropdownEditDelete';
 

@@ -1,4 +1,4 @@
-import { Link } from '@wasp/router';
+import { Link } from "wasp/client/router";
 
 const MessageButton = () => {
 

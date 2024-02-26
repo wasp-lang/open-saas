@@ -1,6 +1,6 @@
+import { type User } from "wasp/entities";
 import { useEffect, useRef, useState } from 'react';
 import { CgProfile } from 'react-icons/cg';
-import type { User } from '@wasp/entities'
 import { UserMenuItems } from './UserMenuItems';
 
 const DropdownUser = ({ user } : { user: Partial<User> }) => {

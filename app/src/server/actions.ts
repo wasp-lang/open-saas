@@ -1,19 +1,19 @@
-import Stripe from 'stripe';
-import HttpError from '@wasp/core/HttpError.js';
-import type { User, Task, File } from '@wasp/entities';
-import type { StripePaymentResult, GeneratedSchedule } from '../shared/types';
+import { type User, type Task, type File } from 'wasp/entities';
+import { HttpError } from 'wasp/server';
 import {
-  GenerateGptResponse,
-  StripePayment,
-  UpdateCurrentUser,
-  UpdateUserById,
-  CreateTask,
-  DeleteTask,
-  UpdateTask,
-  CreateFile,
-} from '@wasp/actions/types';
+  type GenerateGptResponse,
+  type StripePayment,
+  type UpdateCurrentUser,
+  type UpdateUserById,
+  type CreateTask,
+  type DeleteTask,
+  type UpdateTask,
+  type CreateFile,
+} from 'wasp/server/operations';
+import Stripe from 'stripe';
+import type { StripePaymentResult, GeneratedSchedule } from '../shared/types';
 import { fetchStripeCustomer, createStripeCheckoutSession } from './payments/stripeUtils.js';
-import { TierIds } from '@wasp/shared/constants.js';
+import { TierIds } from '../shared/constants';
 import { getUploadFileSignedURLFromS3 } from './file-upload/s3Utils.js';
 import OpenAI from 'openai';
 

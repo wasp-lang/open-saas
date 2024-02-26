@@ -1,14 +1,37 @@
-import { GetUserFieldsFn } from '@wasp/types';
+import { defineUserSignupFields } from 'wasp/server/auth';
+import { z } from 'zod';
 
-// More info on auth config: https://wasp-lang.dev/docs/language/features#social-login-providers-oauth-20
+const googleDataSchema = z.object({
+  profile: z.object({
+    emails: z.array(
+      z.object({
+        value: z.string(),
+      })
+    ),
+  }),
+});
 
-export const getGitHubUserFields: GetUserFieldsFn = async (_context, args) => {
-  // NOTE: if we don't want to access users' emails, we can use scope ["user:read"]
-  // instead of ["user"] and access args.profile.username instead
-  const email = args.profile.emails[0].value;
-  const username = args.profile.username;
-  return { email, username };
-};
+const githubDataSchema = z.object({
+  profile: z.object({
+    emails: z.array(
+      z.object({
+        value: z.string(),
+      })
+    ),
+    username: z.string(),
+  }),
+});
+
+export const getGitHubUserFields = defineUserSignupFields({
+  email: (data) => {
+    const githubData = githubDataSchema.parse(data);
+    return githubData.profile.emails[0].value;
+  },
+  username: (data) => {
+    const githubData = githubDataSchema.parse(data);
+    return githubData.profile.username;
+  },
+});
 
 export function getGitHubAuthConfig() {
   return {
@@ -18,11 +41,16 @@ export function getGitHubAuthConfig() {
   };
 }
 
-export const getGoogleUserFields: GetUserFieldsFn = async (_context, args) => {
-  const email = args.profile.emails[0].value;
-  const username = args.profile.displayName;
-  return { email, username };
-}
+export const getGoogleUserFields = defineUserSignupFields({
+  email: (data) => {
+    const googleData = googleDataSchema.parse(data);
+    return googleData.profile.emails[0].value;
+  },
+  username: (data) => {
+    const googleData = googleDataSchema.parse(data);
+    return googleData.profile.emails[0].value;
+  },
+});
 
 export function getGoogleAuthConfig() {
   const clientID = process.env.GOOGLE_CLIENT_ID;
@@ -33,4 +61,3 @@ export function getGoogleAuthConfig() {
     scope: ['profile', 'email'], // must include at least 'profile' for Google
   };
 }
-

@@ -1,4 +1,4 @@
-import { GetVerificationEmailContentFn, GetPasswordResetEmailContentFn } from '@wasp/types';
+import { type GetVerificationEmailContentFn, type GetPasswordResetEmailContentFn } from "wasp/server/auth";
 
 export const getVerificationEmailContent: GetVerificationEmailContentFn = ({ verificationLink }) => ({
   subject: 'Verify your email',
