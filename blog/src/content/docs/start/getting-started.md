@@ -38,18 +38,27 @@ Make sure to install the Wasp VSCode extension to get the best DX, e.g. syntax h
 🐝 [Wasp VSCode Extension](https://marketplace.visualstudio.com/items?itemName=wasp-lang.wasp) 🧑‍💻
 :::
 
-### Clone the OpenSaaS repo
+### Cloning the OpenSaaS template
 
-Clone this repo by running this command in your terminal:
+From the [Open SaaS repo on GitHub](https://github.com/wasp-lang/open-saas), click on "Use this template" > "Create a new repository".
+![use template](/getting-started/open-saas-template.png)
+
+Then, give your new repo a name and click "Create repository".
+![create repo](/getting-started/create-repo.png)
+
+Once you've created your new repo, you can clone it to your local machine by copying the repo URL found here: 
+![clone repo](/getting-started/clone-repo.png)
+
+And then running the following command in your terminal:
 
 ```sh
-git clone https://github.com/wasp-lang/open-saas.git
+git clone <your-repo-url>
 ```
 
-Then position yourself in the root of the project:
+Finally, you can navigate to the root of your new project:
 
 ```sh
-cd open-saas
+cd <your-repo-name>
 ```
 
 ### Start your DB
@@ -128,6 +137,25 @@ Then start the development server:
 
 ```sh
 npm run dev
+```
+
+### Getting Updates to the Open SaaS Template
+
+We will be updating the Open SaaS template with new features and improvements. To get these updates, you can pull the changes from the original template into your own repository.
+
+First, you need to add the original template as a remote `upstream` repository:
+```sh
+git remote add upstream https://github.com/wasp-lang/open-saas.git
+```
+
+Then, you can fetch the changes from the original template:
+```sh
+git fetch upstream
+```
+
+And finally, merge the changes into your local repository:
+```sh
+git merge upstream/main
 ```
 
 ## What's next?
