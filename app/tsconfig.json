@@ -5,17 +5,12 @@
 // compiler. Proper TS compiler configuration in Wasp is coming soon :)
 {
   "compilerOptions": {
-    "forceConsistentCasingInFileNames": false,
     // JSX support
     "jsx": "preserve",
     "strict": true,
     // Allow default imports.
     "esModuleInterop": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "types": [
       // This is needed to properly support Vitest testing with jest-dom matchers.
@@ -27,10 +22,7 @@
     // compilation, the following directory doesn't exist. We need to specify
     // it to prevent this error:
     // https://stackoverflow.com/questions/42609768/typescript-error-cannot-write-file-because-it-would-overwrite-input-file
-    "outDir": "phantom",
+    "outDir": "phantom"
   },
-  "exclude": [
-    "phantom"
-  ],
-  
+  "exclude": ["phantom"]
 }
