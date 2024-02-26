@@ -1,3 +1,3 @@
-import { type DailyStats } from "wasp/entities";
+import { type DailyStats } from 'wasp/entities';
 
-export type DailyStatsProps = { dailyStats?: DailyStats; weeklyStats?:DailyStats[], isLoading?: boolean }
+export type DailyStatsProps = { dailyStats?: DailyStats; weeklyStats?: DailyStats[]; isLoading?: boolean };

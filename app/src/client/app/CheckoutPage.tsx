@@ -39,8 +39,8 @@ export default function CheckoutPage() {
             {paymentStatus === 'paid'
               ? '🥳 Payment Successful!'
               : paymentStatus === 'canceled'
-              ? '😢 Payment Canceled'
-              : paymentStatus === 'error' && '🙄 Payment Error'}
+                ? '😢 Payment Canceled'
+                : paymentStatus === 'error' && '🙄 Payment Error'}
           </h1>
           {paymentStatus !== 'loading' && (
             <span className='text-center'>

@@ -1,4 +1,4 @@
-import { type User } from 'wasp/entities';
+import { type AuthUser } from 'wasp/auth/types';
 import DarkModeSwitcher from './DarkModeSwitcher';
 import MessageButton from './MessageButton';
 import DropdownUser from '../../components/DropdownUser';
@@ -6,7 +6,7 @@ import DropdownUser from '../../components/DropdownUser';
 const Header = (props: {
   sidebarOpen: string | boolean | undefined;
   setSidebarOpen: (arg0: boolean) => void;
-  user?: Partial<User>;
+  user?: AuthUser | null;
 }) => {
   return (
     <header className='sticky top-0 z-999 flex w-full bg-white dark:bg-boxdark dark:drop-shadow-none'>
