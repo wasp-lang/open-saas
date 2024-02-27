@@ -1,5 +1,9 @@
 ---
 title: Authentication
+banner:
+  content: |
+    ⚠️ Open SaaS is now running on <a href='https://wasp-lang.dev'>Wasp v0.12</a>! If you're running an older version of Open SaaS, please follow the 
+    <a href="https://wasp-lang.dev/docs/migrate-from-0-11-to-0-12">migration instructions here</a> ⚠️ 
 ---
 
 Setting up your app's authentication is easy with Wasp. In fact, it's aready set up for your in the `main.wasp` file: 
@@ -54,17 +58,17 @@ After you've signed up for a Sendgrid account, perform the following steps:
    ```ts title="main.wasp"
       route RequestPasswordResetRoute { path: "/request-password-reset", to: RequestPasswordResetPage }
       page RequestPasswordResetPage {
-        component: import { RequestPasswordReset } from "@client/auth/RequestPasswordReset",
+        component: import { RequestPasswordReset } from "@src/client/auth/RequestPasswordReset",
       }
 
       route PasswordResetRoute { path: "/password-reset", to: PasswordResetPage }
       page PasswordResetPage {
-        component: import { PasswordReset } from "@client/auth/PasswordReset",
+        component: import { PasswordReset } from "@src/client/auth/PasswordReset",
       }
 
       route EmailVerificationRoute { path: "/email-verification", to: EmailVerificationPage }
       page EmailVerificationPage {
-        component: import { EmailVerification } from "@client/auth/EmailVerification",
+        component: import { EmailVerification } from "@src/client/auth/EmailVerification",
       }
    ```
 3. Uncomment out the above routes's respective code in the `/src/client/auth` folder:
@@ -72,29 +76,6 @@ After you've signed up for a Sendgrid account, perform the following steps:
     - `PasswordReset.tsx` 
     - `RequestPasswordReset.tsx`
 4. Uncomment out the code in `app/src/server/auth/email.ts` as well.
-5. Modify the `User` entity in `main.wasp` so that `username`, `email`, and `password` are all optinal fields. 
-    ```tsx title="main.wasp" ins="?"
-      entity User {=psl
-        id                        Int             @id @default(autoincrement())
-        email                     String?         @unique
-        username                  String?         @unique
-        password                  String?
-    ```
-6. Finally, uncomment the `username` property in `app/src/server/auth/setAdditionalUserFields.ts`:
-    ```ts ins={2-4}
-      export default defineAdditionalSignupFields({
-        username: (data) => {
-          return data.email as string
-        },
-        isAdmin: (data) => {
-          if (!data.email) {
-            return false;
-          }
-          const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
-          return adminEmails.includes(data.email as string);
-        },
-      });
-    ```
 
 And that's it. Wasp will take care of the rest and update your AuthUI components accordingly.
 

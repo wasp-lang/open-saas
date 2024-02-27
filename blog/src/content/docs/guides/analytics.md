@@ -1,5 +1,9 @@
 ---
 title: Analytics
+banner:
+  content: |
+    ⚠️ Open SaaS is now running on <a href='https://wasp-lang.dev'>Wasp v0.12</a>! If you're running an older version of Open SaaS, please follow the 
+    <a href="https://wasp-lang.dev/docs/migrate-from-0-11-to-0-12">migration instructions here</a> ⚠️ 
 ---
 This guide will show you how to integrate analytics for your app. You can choose between [Google Analytics](#google-analytics) and [Plausible](#plausible).
 

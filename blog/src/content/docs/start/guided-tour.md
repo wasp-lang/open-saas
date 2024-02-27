@@ -1,5 +1,9 @@
 ---
 title: Guided Tour
+banner:
+  content: |
+    ⚠️ Open SaaS is now running on <a href='https://wasp-lang.dev'>Wasp v0.12</a>! If you're running an older version of Open SaaS, please follow the 
+    <a href="https://wasp-lang.dev/docs/migrate-from-0-11-to-0-12">migration instructions here</a> ⚠️ 
 ---
 
 Let's get to know our new SaaS app.
