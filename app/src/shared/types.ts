@@ -1,13 +1,3 @@
-import { User } from '@wasp/entities';
-import { Prisma } from '@prisma/client';
-
-export type Context = {
-  user: User;
-  entities: {
-    User: Prisma.UserDelegate<{}>;
-  };
-};
-
 export type StripePaymentResult = {
   sessionUrl: string | null;
   sessionId: string;

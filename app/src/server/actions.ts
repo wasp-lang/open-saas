@@ -11,14 +11,19 @@ import {
   type CreateFile,
 } from 'wasp/server/operations';
 import Stripe from 'stripe';
-import fetch from 'node-fetch';
-import type { StripePaymentResult } from './types';
+import type { GeneratedSchedule, StripePaymentResult } from '../shared/types';
 import { fetchStripeCustomer, createStripeCheckoutSession } from './payments/stripeUtils.js';
 import { TierIds } from '../shared/constants.js';
 import { getUploadFileSignedURLFromS3 } from './file-upload/s3Utils.js';
 import OpenAI from 'openai';
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
+const openai = setupOpenAI();
+function setupOpenAI() {
+  if (!process.env.OPENAI_API_KEY) {
+    return new HttpError(500, 'OpenAI API key is not set');
+  }
+  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+}
 
 export const stripePayment: StripePayment<string, StripePaymentResult> = async (tier, context) => {
   if (!context.user) {
@@ -104,6 +109,11 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, GeneratedSched
           },
         },
       });
+    }
+
+    // check if openai is initialized correctly with the API key
+    if (openai instanceof Error) {
+      throw openai;
     }
 
     const completion = await openai.chat.completions.create({

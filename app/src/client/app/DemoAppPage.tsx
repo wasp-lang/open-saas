@@ -9,11 +9,11 @@ import {
   getAllTasksByUser,
 } from 'wasp/client/operations';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { CgSpinner } from 'react-icons/cg';
 import { TiDelete } from 'react-icons/ti';
 import { type GeneratedSchedule } from '../../shared/types';
-import { MainTask, Subtask } from '@wasp/shared/types';
+import { MainTask, Subtask } from '../../shared/types';
 
 export default function DemoAppPage() {
   return (
@@ -282,7 +282,7 @@ function TaskTable({ schedule }: { schedule: GeneratedSchedule }) {
       <table className='table-auto w-full border-separate border border-spacing-2 rounded-md border-slate-200 shadow-sm'>
         {!!schedule.mainTasks ? (
           schedule.mainTasks
-            .map((mainTask) => <MainTask key={mainTask.name} mainTask={mainTask} subtasks={schedule.subtasks} />)
+            .map((mainTask) => <MainTaskTable key={mainTask.name} mainTask={mainTask} subtasks={schedule.subtasks} />)
             .sort((a, b) => {
               const priorityOrder = ['low', 'medium', 'high'];
               if (a.props.mainTask.priority && b.props.mainTask.priority) {
@@ -303,7 +303,7 @@ function TaskTable({ schedule }: { schedule: GeneratedSchedule }) {
   );
 }
 
-function MainTask({ mainTask, subtasks }: { mainTask: MainTask; subtasks: Subtask[] }) {
+function MainTaskTable({ mainTask, subtasks }: { mainTask: MainTask; subtasks: Subtask[] }) {
   return (
     <>
       <thead>
@@ -337,7 +337,7 @@ function MainTask({ mainTask, subtasks }: { mainTask: MainTask; subtasks: Subtas
                         : 'bg-yellow-50'
                     }`}
                   >
-                    <Subtask description={subtask.description} time={subtask.time} />
+                    <SubtaskTable description={subtask.description} time={subtask.time} />
                   </td>
                 </tr>
               </tbody>
@@ -351,7 +351,7 @@ function MainTask({ mainTask, subtasks }: { mainTask: MainTask; subtasks: Subtas
   );
 }
 
-function Subtask({ description, time }: { description: string; time: number }) {
+function SubtaskTable({ description, time }: { description: string; time: number }) {
   const [isDone, setIsDone] = useState<boolean>(false);
 
   const convertHrsToMinutes = (time: number) => {
