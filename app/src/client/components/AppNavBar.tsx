@@ -1,27 +1,25 @@
+import { Link } from 'wasp/client/router';
+import { useAuth } from 'wasp/client/auth';
 import { useState } from 'react';
 import { Dialog } from '@headlessui/react';
 import { BiLogIn } from 'react-icons/bi';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { HiBars3 } from 'react-icons/hi2';
-import useAuth from '@wasp/auth/useAuth';
 import logo from '../static/logo.png';
 import DropdownUser from './DropdownUser';
-import { DOCS_URL, BLOG_URL } from '@wasp/shared/constants';
+import { DOCS_URL, BLOG_URL } from '../../shared/constants';
 import DarkModeSwitcher from '../admin/components/DarkModeSwitcher';
 import { UserMenuItems } from '../components/UserMenuItems';
-import { Link } from '@wasp/router';
 
 const navigation = [
   { name: 'AI Scheduler (Demo App)', href: '/demo-app' },
-  { name: 'File Upload (AWS S3)', href: '/file-upload'},
+  { name: 'File Upload (AWS S3)', href: '/file-upload' },
   { name: 'Pricing', href: '/pricing' },
   { name: 'Documentation', href: DOCS_URL },
   { name: 'Blog', href: BLOG_URL },
 ];
 
-const NavLogo = () => (
-  <img className='h-8 w-8' src={logo} alt='Your SaaS App' />
-);
+const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Your SaaS App' />;
 
 export default function AppNavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

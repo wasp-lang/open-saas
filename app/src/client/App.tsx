@@ -1,9 +1,9 @@
+import { useAuth } from 'wasp/client/auth';
+import { updateCurrentUser } from 'wasp/client/operations';
 import './Main.css';
 import AppNavBar from './components/AppNavBar';
 import { useMemo, useEffect, ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
-import useAuth from '@wasp/auth/useAuth';
-import updateCurrentUser from '@wasp/actions/updateCurrentUser';
 
 /**
  * use this component to wrap all child components
@@ -43,16 +43,16 @@ export default function App({ children }: { children: ReactNode }) {
 
   return (
     <>
-    <div className='min-h-screen dark:text-white dark:bg-boxdark-2'>
-      {isAdminDashboard ? (
-        <>{children}</>
-      ) : (
-        <>
-          {shouldDisplayAppNavBar && <AppNavBar />}
-          <div className='mx-auto max-w-7xl sm:px-6 lg:px-8'>{children}</div>
-        </>
-      )}
-    </div>
+      <div className='min-h-screen dark:text-white dark:bg-boxdark-2'>
+        {isAdminDashboard ? (
+          <>{children}</>
+        ) : (
+          <>
+            {shouldDisplayAppNavBar && <AppNavBar />}
+            <div className='mx-auto max-w-7xl sm:px-6 lg:px-8'>{children}</div>
+          </>
+        )}
+      </div>
     </>
   );
 }

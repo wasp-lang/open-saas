@@ -1,10 +1,8 @@
-import { PageViewSource } from "@wasp/entities";
+import { type PageViewSource } from 'wasp/entities';
 
-const SourcesTable = ({ sources } : { sources: PageViewSource[] | undefined }) => {
-
+const SourcesTable = ({ sources }: { sources: PageViewSource[] | undefined }) => {
   return (
     <div className='rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1'>
-      
       <h4 className='mb-6 text-xl font-semibold text-black dark:text-white'>Top Sources</h4>
 
       <div className='flex flex-col'>
@@ -20,8 +18,7 @@ const SourcesTable = ({ sources } : { sources: PageViewSource[] | undefined }) =
           </div>
         </div>
 
-        {sources &&
-          sources.length > 0 ?
+        {sources && sources.length > 0 ? (
           sources.map((source) => (
             <div className='grid grid-cols-3 border-b border-stroke dark:border-strokedark'>
               <div className='flex items-center gap-3 p-2.5 xl:p-5'>
@@ -36,11 +33,12 @@ const SourcesTable = ({ sources } : { sources: PageViewSource[] | undefined }) =
                 <p className='text-black dark:text-white'>--</p>
               </div>
             </div>
-          )) : (
-            <div className='flex items-center justify-center p-2.5 xl:p-5'>
-              <p className='text-black dark:text-white'>No data to display</p>
-            </div>
-          )}
+          ))
+        ) : (
+          <div className='flex items-center justify-center p-2.5 xl:p-5'>
+            <p className='text-black dark:text-white'>No data to display</p>
+          </div>
+        )}
       </div>
     </div>
   );

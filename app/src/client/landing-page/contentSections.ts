@@ -1,4 +1,4 @@
-import { DOCS_URL, BLOG_URL } from '@wasp/shared/constants';
+import { DOCS_URL, BLOG_URL } from '../../shared/constants';
 import daBoiAvatar from '../static/da-boi.png';
 import avatarPlaceholder from '../static/avatar-placeholder.png';
 
@@ -35,7 +35,6 @@ export const features = [
   },
 ];
 export const testimonials = [
-
   {
     name: 'Da Boi',
     role: 'Wasp Mascot',

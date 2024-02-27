@@ -1,9 +1,9 @@
+import { type User } from 'wasp/entities';
 import { useEffect, useRef, useState } from 'react';
 import { CgProfile } from 'react-icons/cg';
-import type { User } from '@wasp/entities'
 import { UserMenuItems } from './UserMenuItems';
 
-const DropdownUser = ({ user } : { user: Partial<User> }) => {
+const DropdownUser = ({ user }: { user: Partial<User> }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const trigger = useRef<any>(null);
@@ -13,7 +13,7 @@ const DropdownUser = ({ user } : { user: Partial<User> }) => {
 
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
-      if (!dropdown.current) return
+      if (!dropdown.current) return;
       if (!dropdownOpen || dropdown.current.contains(target) || trigger.current.contains(target)) {
         return;
       }
