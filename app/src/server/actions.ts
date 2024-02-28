@@ -309,7 +309,7 @@ export const createFile: CreateFile<fileArgs, File> = async ({ fileType, name },
 
   const userInfo = context.user.id.toString();
 
-  const { uploadUrl, key } = getUploadFileSignedURLFromS3({ fileType, userInfo });
+  const { uploadUrl, key } = await getUploadFileSignedURLFromS3({ fileType, userInfo });
 
   return await context.entities.File.create({
     data: {

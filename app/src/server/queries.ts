@@ -68,7 +68,7 @@ export const getDownloadFileSignedURL: GetDownloadFileSignedURL<{ key: string },
   { key },
   _context
 ) => {
-  return getDownloadFileSignedURLFromS3({ key });
+  return await getDownloadFileSignedURLFromS3({ key });
 };
 
 export const getDailyStats: GetDailyStats<void, DailyStatsValues> = async (_args, context) => {
