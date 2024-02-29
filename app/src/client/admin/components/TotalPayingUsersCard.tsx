@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { UpArrow, DownArrow } from '../images/icon/icons-arrows';
 import type { DailyStatsProps } from '../common/types';
+import { clsx } from 'clsx';
 
 const TotalPayingUsersCard = ({ dailyStats, isLoading }: DailyStatsProps) => {
   const isDeltaPositive = useMemo(() => {
@@ -36,7 +37,10 @@ const TotalPayingUsersCard = ({ dailyStats, isLoading }: DailyStatsProps) => {
         </div>
 
         <span
-          className={`flex items-center gap-1 text-sm font-medium ${isDeltaPositive ? 'text-meta-3' : 'text-meta-5'}`}
+          className={clsx('flex items-center gap-1 text-sm font-medium', {
+            'text-meta-3': isDeltaPositive,
+            'text-meta-5': !isDeltaPositive,
+          })}
         >
           {isLoading ? '...' : dailyStats?.paidUserDelta !== 0 ? dailyStats?.paidUserDelta : '-'}
           {dailyStats?.paidUserDelta !== 0 ? isDeltaPositive ? <UpArrow /> : <DownArrow /> : null}

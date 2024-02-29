@@ -75,7 +75,7 @@ export default function AccountPage({ user }: { user: User }) {
 function BuyMoreButton() {
   return (
     <div className='ml-4 flex-shrink-0 sm:col-span-1 sm:mt-0'>
-      <Link to='/' hash='pricing' className={`font-medium text-sm text-indigo-600 hover:text-indigo-500`}>
+      <Link to='/' hash='pricing' className='font-medium text-sm text-indigo-600 hover:text-indigo-500'>
         Buy More/Upgrade
       </Link>
     </div>
@@ -89,7 +89,7 @@ function CustomerPortalButton() {
 
   return (
     <div className='ml-4 flex-shrink-0 sm:col-span-1 sm:mt-0'>
-      <button onClick={handleClick} className={`font-medium text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300`}>
+      <button onClick={handleClick} className='font-medium text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300'>
         Manage Subscription
       </button>
     </div>

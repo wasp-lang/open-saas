@@ -1,5 +1,6 @@
 import { type User } from 'wasp/entities';
 import { useState } from 'react';
+import { clsx } from 'clsx';
 
 const SwitcherOne = ({ user, updateUserById }: { user?: Partial<User>; updateUserById?: any }) => {
   const [enabled, setEnabled] = useState<boolean>(user?.hasPaid || false);
@@ -19,9 +20,9 @@ const SwitcherOne = ({ user, updateUserById }: { user?: Partial<User>; updateUse
           />
           <div className='reblock h-8 w-14 rounded-full bg-meta-9 dark:bg-[#5A616B]'></div>
           <div
-            className={`absolute left-1 top-1 h-6 w-6 rounded-full bg-white dark:bg-gray-400 transition ${
-              enabled && '!right-1 !translate-x-full !bg-primary dark:!bg-white'
-            }`}
+            className={clsx('absolute left-1 top-1 h-6 w-6 rounded-full bg-white dark:bg-gray-400 transition', {
+              '!right-1 !translate-x-full !bg-primary dark:!bg-white': enabled,
+            })}
           ></div>
         </div>
       </label>
