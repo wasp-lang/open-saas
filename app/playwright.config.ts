@@ -71,11 +71,13 @@ export default defineConfig({
     // },
   ],
 
-  webServer: {
-    command: 'npm run example-app:start',
-    // Wait for the backend to start
-    url: 'http://localhost:3001',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
-  },
+  webServer: process.env.CI
+    ? {
+        command: 'npm run example-app:start',
+        // Wait for the backend to start
+        url: 'http://localhost:3001',
+        reuseExistingServer: !process.env.CI,
+        timeout: 120 * 1000,
+      }
+    : undefined,
 });
