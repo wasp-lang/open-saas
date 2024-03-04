@@ -41,4 +41,4 @@ jobs:
       - name: Run Playwright tests
         run: |
           cd app
-          npx playwright test tests/whatever.spec.ts
+          DEBUG=pw:webserver npx playwright test tests/whatever.spec.ts

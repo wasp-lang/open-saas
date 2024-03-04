@@ -1,5 +1,13 @@
 {
   "name": "opensaas",
+  "scripts": {
+    "example-app:start": "node ci-start-app.js",
+    "example-app:start-db": "npm run example-app:cleanup-db && cd ./app && wasp start db",
+    "example-app:start-app": "npm run example-app:wait-for-db && npm run example-app:prepare-env && cd ./app && wasp db migrate-dev && wasp start",
+    "example-app:wait-for-db": "sleep 5 && ./node_modules/.bin/wait-port 5432",
+    "example-app:prepare-env": "cp ./app/.env.server.example ./app/.env.server",
+    "example-app:cleanup-db": "(docker container rm $(docker container ls -f name=^wasp-dev-db-OpenSaaS- -q) -f || true) && docker volume rm $(docker volume ls -f name=^wasp-dev-db-OpenSaaS- -q) -f || true"
+  },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.523.0",
     "@aws-sdk/s3-request-presigner": "^3.523.0",
@@ -31,6 +39,5 @@
     "prisma": "4.16.2",
     "typescript": "^5.1.0",
     "vite": "^4.3.9"
-  },
-  "scripts": {}
+  }
 }
