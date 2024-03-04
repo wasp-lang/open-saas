@@ -1,0 +1,79 @@
+name: e2e tests
+
+on:
+  push:
+    branches:
+      - main
+      - playwright-tests
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v3
+      
+      - name: Install Wasp
+        run: curl -sSL https://get.wasp-lang.dev/installer.sh | sh -s
+
+      - name: Docker setup
+        uses: docker/setup-buildx-action@v1
+
+      - name: Cache Node Modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: node-modules-${{ hashFiles('app/package-lock.json') }}
+
+      - name: Install Node.js dependencies
+        run: |
+          cd app
+          npm ci
+
+      - name: Install Stripe CLI
+        run: |
+          curl -o- https://raw.githubusercontent.com/stripe/stripe-cli/master/install.sh | bash
+
+      - name: Start Stripe webhook listener
+        env:
+          STRIPE_KEY: ${{ secrets.STRIPE_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+          HOBBY_SUBSCRIPTION_PRICE_ID: ${{ secrets.HOBBY_SUBSCRIPTION_PRICE_ID }}
+          PRO_SUBSCRIPTION_PRICE_ID: ${{ secrets.PRO_SUBSCRIPTION_PRICE_ID }}
+        run: |
+          stripe listen --forward-to localhost:3001/stripe-webook &
+
+      - name: Test Stripe webhook listener
+        run: |
+          RESPONSE=$(curl -so -w "%{http_code}" -X POST http://localhost:3000/webhook-path)
+          if [ $RESPONSE -ne 200 ]; then
+            echo "Webhook listener is not active"
+            exit 1
+          fi
+
+      - name: Setup other Env Vars
+        run: |
+          cd app
+          cp .env.server.example .env.server
+
+      - name: Commit and push if it's not up-to-date
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add -f .env.server
+          git commit -m "Add .env.server file" -a || echo "No changes to commit"
+          git push
+          
+      - name: Set up Playwright
+        run: |
+          cd app
+          npx playwright install --with-deps
+
+      - name: Run Playwright tests
+        env:
+        run: |
+          cd app
+          DEBUG=pw:webserver npx playwright test tests/whatever.spec.ts

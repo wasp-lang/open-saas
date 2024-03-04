@@ -81,5 +81,3 @@ test('demo-app', async ({ page }) => {
   // expect to find text "turtle" in a span element
   expect(page.getByText('turtle')).toBeTruthy();
 });
-
-//
