@@ -2,7 +2,7 @@
   "name": "opensaas",
   "scripts": {
     "example-app:start": "node ci-start-app.js",
-    "example-app:start-db": "npm run example-app:cleanup-db && cd ./app && wasp start db",
+    "example-app:start-db": "npm run example-app:cleanup-db && wasp start db",
     "example-app:start-app": "npm run example-app:wait-for-db && npm run example-app:prepare-env && cd ./app && wasp db migrate-dev && wasp start",
     "example-app:wait-for-db": "sleep 5 && ./node_modules/.bin/wait-port 5432",
     "example-app:prepare-env": "cp ./app/.env.server.example ./app/.env.server",
