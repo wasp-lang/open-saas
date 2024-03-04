@@ -3,8 +3,7 @@ name: Retag Commit
 on:
   push:
     branches:
-      # - main
-      - playwright-tests
+      - main
       
 
 jobs:
@@ -21,10 +20,10 @@ jobs:
           
       - name: Delete Old Tag
         run: |
-          git tag -d wasp-v0.12-test || true 
-          git push origin :refs/tags/wasp-v0.12-test || true
+          git tag -d wasp-v0.12-template || true 
+          git push origin :refs/tags/wasp-v0.12-template || true
 
       - name: Add New Tag
         run: |
-          git tag wasp-v0.12-test
-          git push origin wasp-v0.12-test
+          git tag wasp-v0.12-template
+          git push origin wasp-v0.12-template
