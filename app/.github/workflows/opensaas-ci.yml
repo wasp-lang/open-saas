@@ -1,0 +1,44 @@
+name: Open SaaS CI
+
+on:
+  push:
+    branches:
+      - main
+      - playwright-tests
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v3
+      
+      - name: Install Wasp
+        run: curl -sSL https://get.wasp-lang.dev/installer.sh | sh -s
+
+      - name: Docker setup
+        uses: docker/setup-buildx-action@v1
+
+      - name: Cache Node Modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: node-modules-${{ hashFiles('app/package-lock.json') }}
+
+      - name: Install Node.js dependencies
+        run: |
+          cd app
+          npm ci
+          
+      - name: Set up Playwright
+        run: |
+          cd app
+          npx playwright install --with-deps
+
+      - name: Run Playwright tests
+        run: |
+          cd app
+          npx playwright test tests/whatever.spec.ts
