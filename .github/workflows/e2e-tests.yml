@@ -33,28 +33,7 @@ jobs:
           cd app
           npm ci
 
-      - name: Install Stripe CLI
-        run: |
-          curl -o- https://raw.githubusercontent.com/stripe/stripe-cli/master/install.sh | bash
-
-      - name: Start Stripe webhook listener
-        env:
-          STRIPE_KEY: ${{ secrets.STRIPE_KEY }}
-          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
-          HOBBY_SUBSCRIPTION_PRICE_ID: ${{ secrets.HOBBY_SUBSCRIPTION_PRICE_ID }}
-          PRO_SUBSCRIPTION_PRICE_ID: ${{ secrets.PRO_SUBSCRIPTION_PRICE_ID }}
-        run: |
-          stripe listen --forward-to localhost:3001/stripe-webook &
-
-      - name: Test Stripe webhook listener
-        run: |
-          RESPONSE=$(curl -so -w "%{http_code}" -X POST http://localhost:3000/webhook-path)
-          if [ $RESPONSE -ne 200 ]; then
-            echo "Webhook listener is not active"
-            exit 1
-          fi
-
-      - name: Setup other Env Vars
+      - name: Setup Env Vars not in github secrets
         run: |
           cd app
           cp .env.server.example .env.server
