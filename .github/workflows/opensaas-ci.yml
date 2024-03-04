@@ -1,4 +1,4 @@
-name: Open SaaS CI
+name: e2e tests
 
 on:
   push:
