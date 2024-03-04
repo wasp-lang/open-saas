@@ -73,7 +73,6 @@ jobs:
           npx playwright install --with-deps
 
       - name: Run Playwright tests
-        env:
         run: |
           cd app
           DEBUG=pw:webserver npx playwright test tests/whatever.spec.ts
