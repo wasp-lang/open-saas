@@ -36,6 +36,8 @@ jobs:
       - name: Setup Env Vars not in github secrets
         run: |
           cd app
+          ls -la
+          test -f .env.server && echo ".env.server exists" || echo ".env.server does not exist"
           cp .env.server.example .env.server
 
       - name: Commit and push if it's not up-to-date
