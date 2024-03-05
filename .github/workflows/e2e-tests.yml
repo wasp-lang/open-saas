@@ -39,15 +39,6 @@ jobs:
           ls -la
           test -f .env.server && echo ".env.server exists" || echo ".env.server does not exist"
           cp .env.server.example .env.server
-
-      - name: Commit and push if it's not up-to-date
-        run: |
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git config user.name "github-actions[bot]"
-          cd app
-          git add -f .env.server
-          git commit -m "Add .env.server file" -a || echo "No changes to commit"
-          git push
           
       - name: Set up Playwright
         run: |
@@ -57,4 +48,4 @@ jobs:
       - name: Run Playwright tests
         run: |
           cd app
-          DEBUG=pw:webserver npx playwright test tests/whatever.spec.ts
+          DEBUG=pw:webserver npx playwright test
