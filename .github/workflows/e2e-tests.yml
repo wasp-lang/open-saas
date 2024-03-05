@@ -46,6 +46,8 @@ jobs:
           npx playwright install --with-deps
 
       - name: Run Playwright tests
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           cd app
           DEBUG=pw:webserver npx playwright test
