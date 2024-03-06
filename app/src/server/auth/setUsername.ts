@@ -9,6 +9,7 @@ const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
 export const getEmailUserFields = defineUserSignupFields({
   username: (data: any) => data.email,
   isAdmin : (data: any) => adminEmails.includes(data.email),
+  email: (data: any) => data.email,
 });
 
 export const getGitHubUserFields = defineUserSignupFields({
