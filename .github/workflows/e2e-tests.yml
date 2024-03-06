@@ -9,6 +9,9 @@ on:
     branches:
       - main
 
+env:
+  WASP_TELEMETRY_DISABLE: 1
+
 jobs:
   test:
     runs-on: ubuntu-latest
