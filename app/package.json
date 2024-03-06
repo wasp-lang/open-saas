@@ -1,11 +1,13 @@
 {
   "name": "opensaas",
   "scripts": {
-    "example-app:start": "node ci-start-app.js",
+    "example-app:start": "npm-run-all --parallel \"example-app:start-db\" \"example-app:start-app\"",
     "example-app:start-db": "npm run example-app:cleanup-db && wasp start db",
     "example-app:start-app": "npm run example-app:wait-for-db && wasp db migrate-dev && wasp start",
-    "example-app:wait-for-db": "sleep 5 && ./node_modules/.bin/wait-port 5432",
-    "example-app:cleanup-db": "(docker container rm $(docker container ls -f name=^wasp-dev-db-OpenSaaS- -q) -f || true) && docker volume rm $(docker volume ls -f name=^wasp-dev-db-OpenSaaS- -q) -f || true"
+    "example-app:wait-for-db": "npx wait-port 5432",
+    "example-app:cleanup-db": "(docker container rm $(docker container ls -f name=^wasp-dev-db-OpenSaaS- -q) -f || true) && docker volume rm $(docker volume ls -f name=^wasp-dev-db-OpenSaaS- -q) -f || true",
+    "example-app:playwright": "playwright test",
+    "example-app:playwright:ui": "playwright test --ui"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.523.0",
@@ -19,6 +21,7 @@
     "headlessui": "^0.0.0",
     "linebyline": "^1.3.0",
     "node-fetch": "3.3.0",
+    "npm-run-all": "^4.1.5",
     "openai": "^4.24.1",
     "prettier": "3.1.1",
     "prettier-plugin-tailwindcss": "0.5.11",
