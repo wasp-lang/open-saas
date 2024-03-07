@@ -1,5 +1,5 @@
+import { cn } from '../../../shared/utils';
 import { UpArrow, DownArrow } from '../images/icon/icons-arrows';
-import { clsx } from 'clsx';
 
 type PageViewsStats = {
   totalPageViews: number | undefined;
@@ -39,7 +39,7 @@ const TotalPageViewsCard = ({ totalPageViews, prevDayViewsChangePercent }: PageV
 
         {prevDayViewsChangePercent && parseInt(prevDayViewsChangePercent) !== 0 && (
           <span
-            className={clsx('flex items-center gap-1 text-sm font-medium', {
+            className={cn('flex items-center gap-1 text-sm font-medium', {
               'text-meta-3': isDeltaPositive,
               'text-meta-5': !isDeltaPositive,
             })}

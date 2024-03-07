@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { clsx } from 'clsx';
+import { cn } from '../../../shared/utils';
 
 const DropdownDefault = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -50,7 +50,7 @@ const DropdownDefault = () => {
         ref={dropdown}
         onFocus={() => setDropdownOpen(true)}
         onBlur={() => setDropdownOpen(false)}
-        className={clsx(
+        className={cn(
           'absolute right-0 top-full z-40 w-40 space-y-1 rounded-sm border border-stroke bg-white p-1.5 shadow-default dark:border-strokedark dark:bg-boxdark',
           {
             block: dropdownOpen,

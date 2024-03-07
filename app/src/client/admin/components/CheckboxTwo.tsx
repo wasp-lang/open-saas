@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { clsx } from 'clsx';
+import { cn } from '../../../shared/utils';
 
 const CheckboxTwo = () => {
   const [enabled, setEnabled] = useState<boolean>(false);
@@ -17,12 +17,12 @@ const CheckboxTwo = () => {
             }}
           />
           <div
-            className={clsx('ml-2 flex h-5 w-5 items-center justify-center rounded border', {
+            className={cn('ml-2 flex h-5 w-5 items-center justify-center rounded border', {
               'border-primary bg-gray dark:bg-transparent': enabled,
             })}
           >
             <span
-              className={clsx('opacity-0', {
+              className={cn('opacity-0', {
                 '!opacity-100': enabled,
               })}
             >

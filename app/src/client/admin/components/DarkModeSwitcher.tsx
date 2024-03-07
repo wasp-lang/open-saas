@@ -1,5 +1,5 @@
+import { cn } from '../../../shared/utils';
 import useColorMode from '../../hooks/useColorMode';
-import { clsx } from 'clsx';
 
 const DarkModeSwitcher = () => {
   const [colorMode, setColorMode] = useColorMode();
@@ -7,7 +7,7 @@ const DarkModeSwitcher = () => {
   return (
     <div>
       <label
-        className={clsx('relative m-0 block h-7.5 w-14 rounded-full', {
+        className={cn('relative m-0 block h-7.5 w-14 rounded-full', {
           'bg-primary': colorMode === 'dark',
           'bg-stroke': colorMode === 'light',
         })}
@@ -22,7 +22,7 @@ const DarkModeSwitcher = () => {
           className='dur absolute top-0 z-50 m-0 h-full w-full cursor-pointer opacity-0'
         />
         <span
-          className={clsx(
+          className={cn(
             'absolute top-1/2 left-[3px] flex h-6 w-6 -translate-y-1/2 translate-x-0 items-center justify-center rounded-full bg-white shadow-switcher duration-75 ease-linear',
             {
               '!right-[3px] !translate-x-full': colorMode === 'dark',

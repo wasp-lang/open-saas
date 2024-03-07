@@ -1,7 +1,7 @@
 import { createFile, useQuery, getAllFilesByUser, getDownloadFileSignedURL } from 'wasp/client/operations';
 import axios from 'axios';
 import { useState, useEffect, FormEvent } from 'react';
-import { clsx } from 'clsx';
+import { cn } from '../../shared/utils';
 
 export default function FileUploadPage() {
   const [fileToDownload, setFileToDownload] = useState<string>('');
@@ -100,7 +100,7 @@ export default function FileUploadPage() {
                 files.map((file: any) => (
                   <div
                     key={file.key}
-                    className={clsx('flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3', {
+                    className={cn('flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3', {
                       'opacity-70': file.key === fileToDownload && isDownloadUrlLoading,
                     })}
                   >

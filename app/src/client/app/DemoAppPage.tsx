@@ -14,7 +14,7 @@ import { CgSpinner } from 'react-icons/cg';
 import { TiDelete } from 'react-icons/ti';
 import { type GeneratedSchedule } from '../../shared/types';
 import { MainTask, Subtask } from '../../shared/types';
-import { clsx } from 'clsx';
+import { cn } from '../../shared/utils';
 
 export default function DemoAppPage() {
   return (
@@ -252,7 +252,7 @@ function Todo({ id, isDone, description, time }: TodoProps) {
             onChange={handleCheckboxChange}
           />
           <span
-            className={clsx('text-slate-600', {
+            className={cn('text-slate-600', {
               'line-through text-slate-500': isDone,
             })}
           >
@@ -265,7 +265,7 @@ function Todo({ id, isDone, description, time }: TodoProps) {
             type='number'
             min={0.5}
             step={0.5}
-            className={clsx(
+            className={cn(
               'w-18 h-8 text-center text-slate-600 text-xs rounded border border-gray-200 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-300 focus:ring-opacity-50',
               {
                 'pointer-events-none opacity-50': isDone,
@@ -275,7 +275,7 @@ function Todo({ id, isDone, description, time }: TodoProps) {
             onChange={handleTimeChange}
           />
           <span
-            className={clsx('italic text-slate-600 text-xs', {
+            className={cn('italic text-slate-600 text-xs', {
               'text-slate-500': isDone,
             })}
           >
@@ -325,7 +325,7 @@ function MainTaskTable({ mainTask, subtasks }: { mainTask: MainTask; subtasks: S
       <thead>
         <tr>
           <th
-            className={clsx(
+            className={cn(
               'flex items-center justify-between gap-5 py-4 px-3 text-slate-800 border rounded-md border-slate-200 bg-opacity-70',
               {
                 'bg-red-100': mainTask.priority === 'high',
@@ -346,7 +346,7 @@ function MainTaskTable({ mainTask, subtasks }: { mainTask: MainTask; subtasks: S
               <tbody key={subtask.description}>
                 <tr>
                   <td
-                    className={clsx(
+                    className={cn(
                       'flex items-center justify-between gap-4 py-2 px-3 text-slate-600 border rounded-md border-purple-100 bg-opacity-60',
                       {
                         'bg-red-50': mainTask.priority === 'high',
@@ -390,15 +390,17 @@ function SubtaskTable({ description, time }: { description: string; time: number
         onChange={(e) => setIsDone(e.currentTarget.checked)}
       />
       <span
-        className={clsx('leading-tight justify-self-start w-full text-slate-600', {
+        className={cn('leading-tight justify-self-start w-full text-slate-600', {
           'line-through text-slate-500 opacity-50': isDone,
         })}
       >
         {description}
       </span>
-      <span className={clsx('text-slate-600 text-right', {
-        'line-through text-slate-500 opacity-50': isDone
-      })}>
+      <span
+        className={cn('text-slate-600 text-right', {
+          'line-through text-slate-500 opacity-50': isDone,
+        })}
+      >
         {minutes}
       </span>
     </>

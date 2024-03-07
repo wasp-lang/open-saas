@@ -3,7 +3,7 @@ import { type User } from 'wasp/entities';
 import { logout } from 'wasp/client/auth';
 import { MdOutlineSpaceDashboard } from 'react-icons/md';
 import { TfiDashboard } from 'react-icons/tfi';
-import { clsx } from 'clsx';
+import { cn } from '../../shared/utils';
 
 export const UserMenuItems = ({ user, setMobileMenuOpen }: { user?: Partial<User>; setMobileMenuOpen?: any }) => {
   const path = window.location.pathname;
@@ -15,7 +15,7 @@ export const UserMenuItems = ({ user, setMobileMenuOpen }: { user?: Partial<User
   return (
     <>
       <ul
-        className={clsx('flex flex-col gap-5 border-b border-stroke py-4 dark:border-strokedark', {
+        className={cn('flex flex-col gap-5 border-b border-stroke py-4 dark:border-strokedark', {
           'sm:px-6': path !== '/admin',
           'px-6': path === '/admin',
         })}
@@ -60,7 +60,7 @@ export const UserMenuItems = ({ user, setMobileMenuOpen }: { user?: Partial<User
       </ul>
       {!!user && user.isAdmin && (
         <ul
-          className={clsx('flex flex-col gap-5 border-b border-stroke py-4 dark:border-strokedark', {
+          className={cn('flex flex-col gap-5 border-b border-stroke py-4 dark:border-strokedark', {
             'sm:px-6': path !== '/admin',
             'px-6': path === '/admin',
           })}
@@ -79,7 +79,7 @@ export const UserMenuItems = ({ user, setMobileMenuOpen }: { user?: Partial<User
       )}
       <button
         onClick={() => logout()}
-        className={clsx(
+        className={cn(
           'flex items-center gap-3.5 py-4 text-sm font-medium duration-300 ease-in-out hover:text-yellow-500',
           {
             'sm:px-6': path !== '/admin',

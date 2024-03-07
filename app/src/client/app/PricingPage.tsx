@@ -4,7 +4,7 @@ import { TierIds, STRIPE_CUSTOMER_PORTAL_LINK } from '../../shared/constants';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { clsx } from 'clsx';
+import { cn } from '../../shared/utils';
 
 export const tiers = [
   {
@@ -74,7 +74,7 @@ const PricingPage = () => {
           {tiers.map((tier) => (
             <div
               key={tier.id}
-              className={clsx(
+              className={cn(
                 'relative flex flex-col grow justify-between rounded-3xl ring-gray-900/10 dark:ring-gray-100/10 overflow-hidden p-8 xl:p-10',
                 {
                   'ring-2': tier.bestDeal,
@@ -118,7 +118,7 @@ const PricingPage = () => {
                 <a
                   href={STRIPE_CUSTOMER_PORTAL_LINK}
                   aria-describedby='manage-subscription'
-                  className={clsx(
+                  className={cn(
                     'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400',
                     {
                       'opacity-50 cursor-not-allowed': tier.id === 'enterprise-tier',
@@ -136,7 +136,7 @@ const PricingPage = () => {
                 <button
                   onClick={() => handleBuyNowClick(tier.id)}
                   aria-describedby={tier.id}
-                  className={clsx(
+                  className={cn(
                     {
                       'opacity-50 cursor-not-allowed': tier.id === 'enterprise-tier',
                       'opacity-100 cursor-pointer': tier.id !== 'enterprise-tier',

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import Logo from '../../static/logo.png';
 import SidebarLinkGroup from './SidebarLinkGroup';
-import { clsx } from 'clsx';
+import { cn } from '../../../shared/utils';
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -54,7 +54,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   return (
     <aside
       ref={sidebar}
-      className={clsx(
+      className={cn(
         'absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-gray-800 duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0',
         {
           'translate-x-0': sidebarOpen,
@@ -105,7 +105,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 to='/admin'
                 isActive={(_match, location) => location.pathname === '/admin'}
                 className={(isActive) =>
-                  clsx(
+                  cn(
                     'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-gray-700 dark:hover:bg-meta-4',
                     {
                       'bg-gray-700 dark:bg-meta-4': isActive,
@@ -148,7 +148,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 <NavLink
                   to='/admin/users'
                   className={(isActive) =>
-                    clsx(
+                    cn(
                       'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-gray-700 dark:hover:bg-meta-4',
                       {
                         'bg-gray-700 dark:bg-meta-4': isActive,
@@ -186,7 +186,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 <NavLink
                   to='/admin/settings'
                   className={(isActive) =>
-                    clsx(
+                    cn(
                       'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-gray-700 dark:hover:bg-meta-4',
                       {
                         'bg-gray-700 dark:bg-meta-4': isActive,
@@ -235,7 +235,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 <NavLink
                   to='/admin/chart'
                   className={(isActive) =>
-                    clsx(
+                    cn(
                       'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-gray-700 dark:hover:bg-meta-4',
                       {
                         'bg-gray-700 dark:bg-meta-4': isActive,
@@ -281,7 +281,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         to='#'
                         isActive={(_match, location) => location.pathname.includes('forms')}
                         className={(isActive) =>
-                          clsx(
+                          cn(
                             'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-gray-700 dark:hover:bg-meta-4',
                             {
                               'bg-gray-700 dark:bg-meta-4': isActive,
@@ -324,7 +324,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         </svg>
                         Forms
                         <svg
-                          className={clsx('absolute right-4 top-1/2 -translate-y-1/2 fill-current', {
+                          className={cn('absolute right-4 top-1/2 -translate-y-1/2 fill-current', {
                             'rotate-180': open,
                           })}
                           width='20'
@@ -342,13 +342,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         </svg>
                       </NavLink>
                       {/* <!-- Dropdown Menu Start --> */}
-                      <div className={clsx('translate transform overflow-hidden', { hidden: !open })}>
+                      <div className={cn('translate transform overflow-hidden', { hidden: !open })}>
                         <ul className='mt-4 mb-5.5 flex flex-col gap-2.5 pl-6'>
                           <li>
                             <NavLink
                               to='/admin/forms/form-elements'
                               className={(isActive) =>
-                                clsx(
+                                cn(
                                   'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white',
                                   { '!text-white': isActive }
                                 )
@@ -361,7 +361,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             <NavLink
                               to='/admin/forms/form-layouts'
                               className={(isActive) =>
-                                clsx(
+                                cn(
                                   'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white',
                                   { '!text-white': isActive }
                                 )
@@ -384,7 +384,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 <NavLink
                   to='/admin/calendar'
                   className={(isActive) =>
-                    clsx(
+                    cn(
                       'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-gray-700 dark:hover:bg-meta-4',
                       {
                         'bg-gray-700 dark:bg-meta-4': isActive,
@@ -419,7 +419,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         to='#'
                         isActive={(_match, location) => location.pathname.includes('ui')}
                         className={(isActive) =>
-                          clsx(
+                          cn(
                             'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-gray-700 dark:hover:bg-meta-4',
                             {
                               'bg-gray-700 dark:bg-meta-4': isActive,
@@ -461,7 +461,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         </svg>
                         UI Elements
                         <svg
-                          className={clsx('absolute right-4 top-1/2 -translate-y-1/2 fill-current', {
+                          className={cn('absolute right-4 top-1/2 -translate-y-1/2 fill-current', {
                             'rotate-180': open,
                           })}
                           width='20'
@@ -479,13 +479,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         </svg>
                       </NavLink>
                       {/* <!-- Dropdown Menu Start --> */}
-                      <div className={clsx('translate transform overflow-hidden', { hidden: !open })}>
+                      <div className={cn('translate transform overflow-hidden', { hidden: !open })}>
                         <ul className='mt-4 mb-5.5 flex flex-col gap-2.5 pl-6'>
                           <li>
                             <NavLink
                               to='/admin/ui/alerts'
                               className={(isActive) =>
-                                clsx(
+                                cn(
                                   'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white',
                                   { '!text-white': isActive }
                                 )
@@ -498,7 +498,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             <NavLink
                               to='/admin/ui/buttons'
                               className={(isActive) =>
-                                clsx(
+                                cn(
                                   'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white',
                                   { '!text-white': isActive }
                                 )

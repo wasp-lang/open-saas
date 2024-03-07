@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { clsx } from 'clsx';
+import { cn } from '../../../shared/utils';
 
 const SwitcherTwo = () => {
   const [enabled, setEnabled] = useState(false);
@@ -18,14 +18,14 @@ const SwitcherTwo = () => {
           />
           <div className='block h-8 w-14 rounded-full bg-meta-9 dark:bg-[#5A616B]'></div>
           <div
-            className={clsx(
+            className={cn(
               'dot absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white transition',
               {
                 '!right-1 !translate-x-full !bg-primary dark:!bg-white': enabled,
               }
             )}
           >
-            <span className={clsx('hidden', { '!block': enabled })}>
+            <span className={cn('hidden', { '!block': enabled })}>
               <svg
                 className='fill-white dark:fill-black'
                 width='11'
@@ -43,7 +43,7 @@ const SwitcherTwo = () => {
               </svg>
             </span>
             <span
-              className={clsx({
+              className={cn({
                 hidden: enabled,
               })}
             >

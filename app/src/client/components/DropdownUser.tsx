@@ -2,7 +2,7 @@ import { type User } from 'wasp/entities';
 import { useEffect, useRef, useState } from 'react';
 import { CgProfile } from 'react-icons/cg';
 import { UserMenuItems } from './UserMenuItems';
-import { clsx } from 'clsx';
+import { cn } from '../../shared/utils';
 
 const DropdownUser = ({ user }: { user: Partial<User> }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -46,7 +46,7 @@ const DropdownUser = ({ user }: { user: Partial<User> }) => {
         </span>
         <CgProfile size='1.1rem' className='ml-1 mt-[0.1rem] dark:text-white' />
         <svg
-          className={clsx('hidden fill-current dark:fill-white sm:block', {
+          className={cn('hidden fill-current dark:fill-white sm:block', {
             'rotate-180': dropdownOpen,
           })}
           width='12'
@@ -67,10 +67,10 @@ const DropdownUser = ({ user }: { user: Partial<User> }) => {
       {/* <!-- Dropdown --> */}
       <div
         ref={dropdown}
-        className={clsx(
+        className={cn(
           'absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark dark:text-white',
           {
-            'hidden': !dropdownOpen,
+            hidden: !dropdownOpen,
           }
         )}
       >
