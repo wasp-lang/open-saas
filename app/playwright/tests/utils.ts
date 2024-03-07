@@ -1,6 +1,7 @@
 import { test as base, type Page } from '@playwright/test';
 import { PrismaClient } from '@prisma/client';
-// Create a new Prisma client to interact with DB
+import { randomUUID } from 'crypto';
+
 export const prisma = new PrismaClient();
 
 export type User = {
@@ -17,7 +18,7 @@ export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
   // Click the get started link.
   await page.getByRole('link', { name: 'Log in' }).click();
 
-  console.log('logging in...', user)
+  console.log('logging in...', user);
   await page.waitForURL('http://localhost:3000/login');
   console.log('url', page.url());
 
@@ -32,7 +33,7 @@ export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
 };
 
 export const signUserUp = async ({ page, user }: { page: Page; user: User }) => {
-  await page.goto('localhost:3000');
+  await page.goto('/');
 
   // Click the get started link.
   await page.getByRole('link', { name: 'Log in' }).click();
@@ -51,28 +52,29 @@ export const signUserUp = async ({ page, user }: { page: Page; user: User }) => 
 };
 
 export const createRandomUser = () => {
-  const username = `user${Math.random().toString(36).substring(7)}`;
-  const password = `password${Math.random().toString(36).substring(7)}!`;
+  const username = `user${randomUUID()}`;
+  const password = `password${randomUUID()}!`;
 
   return { username, password };
 };
 
-export const createLoggedInUserFixture = ({ hasPaid, credits }: Pick<User, 'hasPaid' | 'credits'>) => base.extend<{ loggedInPage: Page; testUser: User }>({
-  testUser: async ({}, use) => {
-    const { username, password } = createRandomUser();
-    await use({ username, password, hasPaid, credits });
-  },
-  loggedInPage: async ({ page, testUser }, use) => {
-    await signUserUp({ page, user: testUser });
-    await page.waitForURL('http://localhost:3000/demo-app');
-    const user = await prisma.user.update({
-      where: { username: testUser.username },
-      data: { hasPaid: testUser.hasPaid, credits: testUser.credits },
-    });
-    await use(page);
-    // clean up all that nasty data 🤮
-    await prisma.gptResponse.deleteMany({ where: { userId: user.id } });
-    await prisma.task.deleteMany({ where: { userId: user.id } });
-    await prisma.user.delete({ where: { id: user.id } });
-  },
-});
+export const createLoggedInUserFixture = ({ hasPaid, credits }: Pick<User, 'hasPaid' | 'credits'>) =>
+  base.extend<{ loggedInPage: Page; testUser: User }>({
+    testUser: async ({}, use) => {
+      const { username, password } = createRandomUser();
+      await use({ username, password, hasPaid, credits });
+    },
+    loggedInPage: async ({ page, testUser }, use) => {
+      await signUserUp({ page, user: testUser });
+      await page.waitForURL('/demo-app');
+      const user = await prisma.user.update({
+        where: { username: testUser.username },
+        data: { hasPaid: testUser.hasPaid, credits: testUser.credits },
+      });
+      await use(page);
+      // clean up all that nasty data 🤮
+      await prisma.gptResponse.deleteMany({ where: { userId: user.id } });
+      await prisma.task.deleteMany({ where: { userId: user.id } });
+      await prisma.user.delete({ where: { id: user.id } });
+    },
+  });

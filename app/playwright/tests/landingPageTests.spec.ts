@@ -1,8 +1,9 @@
 import { test, expect } from '@playwright/test';
+import { DOCS_URL } from '../../src/shared/constants';
 
 test.describe('general landing page tests', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('localhost:3000');
+    await page.goto('/');
   });
 
   test('has title', async ({ page }) => {
@@ -12,10 +13,11 @@ test.describe('general landing page tests', () => {
 
   test('get started link', async ({ page }) => {
     await page.getByRole('link', { name: 'Get started' }).click();
+    await page.waitForURL(DOCS_URL);
   });
 
   test('headings', async ({ page }) => {
-    expect(page.getByRole('heading', { name: 'SaaS' })).toBeTruthy();
-    expect(page.getByRole('heading', { name: 'Features' })).toBeTruthy();
+    await expect(page.getByRole('heading', { name: 'Frequently asked questions' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Some cool words' })).toBeVisible();
   });
 });

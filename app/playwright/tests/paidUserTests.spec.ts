@@ -6,21 +6,24 @@ const test = createLoggedInUserFixture({ hasPaid: true, credits: 10 });
 
 // test /demo-app page by entering "todo" and clicking add task
 test('Demo App: add tasks & generate schedule', async ({ loggedInPage }) => {
-  expect(loggedInPage.url()).toBe('http://localhost:3000/demo-app');
+  const task1 = 'create presentation on SaaS';
+  const task2 = 'build SaaS app draft';
+
+  await loggedInPage.waitForURL('/demo-app');
 
   // Fill input id="description" with "create presentation"
-  await loggedInPage.fill('input[id="description"]', 'create presentation on SaaS');
+  await loggedInPage.fill('input[id="description"]', task1);
 
   // Click button:has-text("Add task")
   await loggedInPage.click('button:has-text("Add task")');
 
-  await loggedInPage.fill('input[id="description"]', 'build SaaS app draft');
+  await loggedInPage.fill('input[id="description"]', task2);
 
   await loggedInPage.click('button:has-text("Add task")');
 
   // expect to find text in a span element
-  expect(loggedInPage.getByText('create presentation on SaaS')).toBeTruthy();
-  expect(loggedInPage.getByText('build SaaS app draft')).toBeTruthy();
+  expect(loggedInPage.getByText(task1)).toBeTruthy();
+  expect(loggedInPage.getByText(task2)).toBeTruthy();
 
   // find a button with text "Generate Schedule" and check it's visible
   const generateScheduleButton = loggedInPage.getByRole('button', { name: 'Generate Schedule' });
@@ -31,7 +34,7 @@ test('Demo App: add tasks & generate schedule', async ({ loggedInPage }) => {
       (req) => req.url().includes('operations/generate-gpt-response') && req.method() === 'POST'
     ),
     loggedInPage.waitForResponse((response) => {
-      if (response.url() === 'http://localhost:3001/operations/generate-gpt-response' && response.status() === 200) {
+      if (response.url().includes('/operations/generate-gpt-response') && response.status() === 200) {
         return true;
       }
       return false;
@@ -39,4 +42,12 @@ test('Demo App: add tasks & generate schedule', async ({ loggedInPage }) => {
     // We already started waiting before we perform the click that triggers the API calls. So now we just perform the click
     generateScheduleButton.click(),
   ]);
+
+  const table = loggedInPage.getByRole('table');
+  await expect(table).toBeVisible();
+  const tableTextContent = (await table.innerText()).toLowerCase();
+  console.log(tableTextContent)
+
+  expect(tableTextContent.includes(task1.toLowerCase())).toBeTruthy();
+  expect(tableTextContent.includes(task2.toLowerCase())).toBeTruthy();
 });

@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v4
-      
+
       - name: Install Wasp
         run: curl -sSL https://get.wasp-lang.dev/installer.sh | sh -s
 
@@ -39,10 +39,8 @@ jobs:
       - name: Setup Env Vars not in github secrets
         run: |
           cd app
-          ls -la
-          test -f .env.server && echo ".env.server exists" || echo ".env.server does not exist"
           cp .env.server.example .env.server
-          
+
       - name: Set up Playwright
         run: |
           cd app

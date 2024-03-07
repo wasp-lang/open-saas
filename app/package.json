@@ -1,7 +1,7 @@
 {
   "name": "opensaas",
   "scripts": {
-    "example-app:start": "npm-run-all --parallel \"example-app:start-db\" \"example-app:start-app\"",
+    "example-app:start": "node ci-start-app.js",
     "example-app:start-db": "npm run example-app:cleanup-db && wasp start db",
     "example-app:start-app": "npm run example-app:wait-for-db && wasp db migrate-dev && wasp start",
     "example-app:wait-for-db": "npx wait-port 5432",

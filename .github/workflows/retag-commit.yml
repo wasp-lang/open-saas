@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      
 
 jobs:
   retag:
@@ -17,7 +16,7 @@ jobs:
         run: |
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
-          
+
       - name: Delete Old Tag
         run: |
           git tag -d wasp-v0.12-template || true 
