@@ -1,5 +1,5 @@
-import cp from 'child_process';
-import readline from 'linebyline';
+const cp = require('child_process');
+const readline = require('linebyline');
 
 function spawn(name, cmd, args, done) {
   const spawnOptions = {
