@@ -48,9 +48,9 @@ In the example above, you can see that we're sending an email to the customer wh
 This is a powerful feature and super simple to use.
 
 :::tip[Sending Emails in Development]
-In the `.env.server` file, we've set the `SEND_EMAILS_IN_DEVELOPMENT` env variable to true. This means that emails will be sent in development mode. 
+In the `.env.server` file, we've set the `SEND_EMAILS_IN_DEVELOPMENT` env variable to false. This means that emails won't actually be sent in development, rather only logged to the console. 
 
-This is useful for testing, but you can turn it off by setting it to false, and the emails will be logged to the console instead.
+If you'd like to actually send emails in development, you can turn it on by setting it to true.
 :::
 
 ## Integrate your email sender
