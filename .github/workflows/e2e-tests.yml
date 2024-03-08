@@ -41,6 +41,11 @@ jobs:
           cd app
           cp .env.server.example .env.server
 
+      - name: Install Playwright tests
+        run: |
+          cd app
+          npm install @playwright/test
+
       - name: Set up Playwright
         run: |
           cd app
