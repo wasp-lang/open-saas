@@ -109,7 +109,7 @@ const PricingPage = () => {
                   ))}
                 </ul>
               </div>
-              {!!user && user.hasPaid ? (
+              {!!user && !!user.subscriptionStatus ? (
                 <a
                   href={STRIPE_CUSTOMER_PORTAL_LINK}
                   aria-describedby='manage-subscription'

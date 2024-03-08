@@ -28,7 +28,6 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, con
     // we don't want to count those users as current paying users
     const paidUserCount = await context.entities.User.count({
       where: {
-        hasPaid: true,
         subscriptionStatus: 'active',
       },
     });

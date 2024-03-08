@@ -97,9 +97,9 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, GeneratedSched
   }));
 
   try {
-    if (!context.user.hasPaid && !context.user.credits) {
+    if (!context.user.subscriptionStatus && !context.user.credits) {
       throw new HttpError(402, 'User has not paid or is out of credits');
-    } else if (context.user.credits && !context.user.hasPaid) {
+    } else if (context.user.credits && !context.user.subscriptionStatus) {
       console.log('decrementing credits');
       await context.entities.User.update({
         where: { id: context.user.id },
@@ -211,7 +211,7 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, GeneratedSched
 
     return JSON.parse(gptArgs);
   } catch (error: any) {
-    if (!context.user.hasPaid && error?.statusCode != 402) {
+    if (!context.user.subscriptionStatus && error?.statusCode != 402) {
       await context.entities.User.update({
         where: { id: context.user.id },
         data: {

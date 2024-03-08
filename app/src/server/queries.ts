@@ -9,6 +9,7 @@ import {
   type GetDownloadFileSignedURL,
 } from 'wasp/server/operations';
 import { getDownloadFileSignedURLFromS3 } from './file-upload/s3Utils.js';
+import { type SubscriptionStatusOptions } from '../shared/types.js';
 
 type DailyStatsWithSources = DailyStats & {
   sources: PageViewSource[];
@@ -100,14 +101,14 @@ export const getDailyStats: GetDailyStats<void, DailyStatsValues> = async (_args
 type GetPaginatedUsersInput = {
   skip: number;
   cursor?: number | undefined;
-  hasPaidFilter: boolean | undefined;
   emailContains?: string;
-  subscriptionStatus?: string[];
+  isAdmin?: boolean;
+  subscriptionStatus?: SubscriptionStatusOptions[];
 };
 type GetPaginatedUsersOutput = {
   users: Pick<
     User,
-    'id' | 'email' | 'username' | 'lastActiveTimestamp' | 'hasPaid' | 'subscriptionStatus' | 'stripeId'
+    'id' | 'email' | 'username' | 'lastActiveTimestamp' | 'subscriptionStatus' | 'stripeId'
   >[];
   totalPages: number;
 };
@@ -116,28 +117,58 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
   args,
   context
 ) => {
-  let subscriptionStatus = args.subscriptionStatus?.filter((status) => status !== 'hasPaid');
-  subscriptionStatus = subscriptionStatus?.length ? subscriptionStatus : undefined;
+
+  console.log('waht <><><><><><><><><><')
+  console.log('args:', args);
+
+  const allSubscriptionStatusOptions = args.subscriptionStatus as Array<string | null> | undefined;
+  const hasNotSubscribed = allSubscriptionStatusOptions?.find((status) => status === null) 
+  let subscribtionStatusStrings = allSubscriptionStatusOptions?.filter((status) => status !== null) as string[] | undefined
+
+
+  console.log('subscriptionStatus:', subscribtionStatusStrings);
 
   const queryResults = await context.entities.User.findMany({
     skip: args.skip,
     take: 10,
     where: {
-      email: {
-        contains: args.emailContains || undefined,
-        mode: 'insensitive',
-      },
-      hasPaid: args.hasPaidFilter,
-      subscriptionStatus: {
-        in: subscriptionStatus || undefined,
-      },
+      AND: [
+        {
+          email: {
+            contains: args.emailContains || undefined,
+            mode: 'insensitive',
+          },
+          isAdmin: args.isAdmin,
+        },
+        {
+          OR: [
+            {
+              subscriptionStatus: {
+                in: subscribtionStatusStrings,
+              },
+            },
+            {
+              subscriptionStatus: {
+                equals: hasNotSubscribed,
+              },
+            },
+          ],
+        },
+      ],
+      // email: {
+      //   contains: args.emailContains || undefined,
+      //   mode: 'insensitive',
+      // },
+      // subscriptionStatus: {
+      //   in: subscriptionStatus || undefined,
+      // },
     },
     select: {
       id: true,
       email: true,
       username: true,
+      isAdmin: true,
       lastActiveTimestamp: true,
-      hasPaid: true,
       subscriptionStatus: true,
       stripeId: true,
     },
@@ -148,13 +179,35 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
 
   const totalUserCount = await context.entities.User.count({
     where: {
-      email: {
-        contains: args.emailContains || undefined,
-      },
-      hasPaid: args.hasPaidFilter,
-      subscriptionStatus: {
-        in: subscriptionStatus || undefined,
-      },
+      AND: [
+        {
+          email: {
+            contains: args.emailContains || undefined,
+            mode: 'insensitive',
+          },
+          isAdmin: args.isAdmin,
+        },
+        {
+          OR: [
+            {
+              subscriptionStatus: {
+                in: subscribtionStatusStrings,
+              },
+            },
+            {
+              subscriptionStatus: {
+                equals: hasNotSubscribed,
+              },
+            },
+          ],
+        },
+      ],
+      // email: {
+      //   contains: args.emailContains || undefined,
+      // },
+      // subscriptionStatus: {
+      //   in: subscriptionStatus || undefined,
+      // },
     },
   });
   const totalPages = Math.ceil(totalUserCount / 10);
