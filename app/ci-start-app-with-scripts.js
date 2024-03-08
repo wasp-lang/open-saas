@@ -29,7 +29,16 @@ spawn(
   'sh',
   [
     '-c',
-    '(docker container rm $(docker container ls -f name=^wasp-dev-db-OpenSaaS- -q) -f || true) && docker volume rm $(docker volume ls -f name=^wasp-dev-db-OpenSaaS- -q) -f || true',
+    `
+    containers=$(docker container ls -f name=^wasp-dev-db-OpenSaaS- -q)
+    if [ -n "$containers" ]; then
+      docker container rm $containers -f
+    fi
+    volumes=$(docker volume ls -f name=^wasp-dev-db-OpenSaaS- -q)
+    if [ -n "$volumes" ]; then
+      docker volume rm $volumes -f
+    fi
+    `,
   ],
   cb
 );
