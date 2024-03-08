@@ -31,12 +31,12 @@ jobs:
           path: ~/.npm
           key: node-modules-${{ hashFiles('app/package-lock.json') }}
 
-      - name: Install Node.js dependencies
-        run: |
-          cd app
-          npm ci
+      # - name: Install Node.js dependencies
+      #   run: |
+      #     cd app
+      #     npm ci
 
-      - name: Setup Env Vars not in github secrets
+      - name: Setup Dummy Env Vars 
         run: |
           cd app
           cp .env.server.example .env.server

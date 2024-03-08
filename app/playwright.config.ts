@@ -56,7 +56,7 @@ export default defineConfig({
   // only run the web server on CI
   webServer: process.env.CI
     ? {
-        command: 'npm run example-app:start',
+        command: 'node ci-start-app-with-scripts.js',
         // Wait for the backend to start
         url: 'http://localhost:3001',
         reuseExistingServer: !process.env.CI,
