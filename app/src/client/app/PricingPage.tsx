@@ -4,6 +4,7 @@ import { TierIds, STRIPE_CUSTOMER_PORTAL_LINK } from '../../shared/constants';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { cn } from '../../shared/utils';
 
 export const tiers = [
   {
@@ -73,9 +74,13 @@ const PricingPage = () => {
           {tiers.map((tier) => (
             <div
               key={tier.id}
-              className={`relative flex flex-col  ${
-                tier.bestDeal ? 'ring-2' : 'ring-1 lg:mt-8'
-              } grow justify-between rounded-3xl ring-gray-900/10 dark:ring-gray-100/10 overflow-hidden p-8 xl:p-10`}
+              className={cn(
+                'relative flex flex-col grow justify-between rounded-3xl ring-gray-900/10 dark:ring-gray-100/10 overflow-hidden p-8 xl:p-10',
+                {
+                  'ring-2': tier.bestDeal,
+                  'ring-1 lg:mt-8': !tier.bestDeal,
+                }
+              )}
             >
               {tier.bestDeal && (
                 <div className='absolute top-0 right-0 -z-10 w-full h-full transform-gpu blur-3xl' aria-hidden='true'>
@@ -113,15 +118,17 @@ const PricingPage = () => {
                 <a
                   href={STRIPE_CUSTOMER_PORTAL_LINK}
                   aria-describedby='manage-subscription'
-                  className={`
-                      ${tier.id === 'enterprise-tier' ? 'opacity-50 cursor-not-allowed' : 'opacity-100 cursor-pointer'}
-                      ${
-                        tier.bestDeal
-                          ? 'bg-yellow-500 text-white hover:text-white shadow-sm hover:bg-yellow-400'
-                          : 'text-gray-600  ring-1 ring-inset ring-purple-200 hover:ring-purple-400'
-                      }
-                      'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400'
-                    `}
+                  className={cn(
+                    'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400',
+                    {
+                      'opacity-50 cursor-not-allowed': tier.id === 'enterprise-tier',
+                      'opacity-100 cursor-pointer': tier.id !== 'enterprise-tier',
+                    },
+                    {
+                      'bg-yellow-500 text-white hover:text-white shadow-sm hover:bg-yellow-400': tier.bestDeal,
+                      'text-gray-600 ring-1 ring-inset ring-purple-200 hover:ring-purple-400': !tier.bestDeal,
+                    }
+                  )}
                 >
                   {tier.id === 'enterprise-tier' ? 'Contact us' : 'Manage Subscription'}
                 </a>
@@ -129,16 +136,20 @@ const PricingPage = () => {
                 <button
                   onClick={() => handleBuyNowClick(tier.id)}
                   aria-describedby={tier.id}
-                  className={`dark:text-white
-                      ${tier.id === 'enterprise-tier' ? 'opacity-50 cursor-not-allowed' : 'opacity-100 cursor-pointer'}
-                      ${
-                        tier.bestDeal
-                          ? 'bg-yellow-500 text-white hover:text-white shadow-sm hover:bg-yellow-400'
-                          : 'text-gray-600  ring-1 ring-inset ring-purple-200 hover:ring-purple-400'
-                      }
-                      ${isStripePaymentLoading === tier.id ? 'cursor-wait' : null}
-                      'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400'
-                    `}
+                  className={cn(
+                    {
+                      'opacity-50 cursor-not-allowed': tier.id === 'enterprise-tier',
+                      'opacity-100 cursor-pointer': tier.id !== 'enterprise-tier',
+                    },
+                    {
+                      'bg-yellow-500 text-white hover:text-white shadow-sm hover:bg-yellow-400': tier.bestDeal,
+                      'text-gray-600  ring-1 ring-inset ring-purple-200 hover:ring-purple-400': !tier.bestDeal,
+                    },
+                    {
+                      'cursor-wait': isStripePaymentLoading === tier.id,
+                    },
+                    'mt-8 block rounded-md py-2 px-3 text-center text-sm dark:text-white font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400'
+                  )}
                 >
                   {tier.id === 'enterprise-tier' ? 'Contact us' : !!user ? 'Buy plan' : 'Log in to buy plan'}
                 </button>

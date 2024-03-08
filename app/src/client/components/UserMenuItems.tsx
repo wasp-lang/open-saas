@@ -3,6 +3,7 @@ import { type User } from 'wasp/entities';
 import { logout } from 'wasp/client/auth';
 import { MdOutlineSpaceDashboard } from 'react-icons/md';
 import { TfiDashboard } from 'react-icons/tfi';
+import { cn } from '../../shared/utils';
 
 export const UserMenuItems = ({ user, setMobileMenuOpen }: { user?: Partial<User>; setMobileMenuOpen?: any }) => {
   const path = window.location.pathname;
@@ -14,9 +15,10 @@ export const UserMenuItems = ({ user, setMobileMenuOpen }: { user?: Partial<User
   return (
     <>
       <ul
-        className={`flex flex-col gap-5 border-b border-stroke py-4 dark:border-strokedark ${
-          path === '/admin' ? 'px-6' : 'sm:px-6'
-        }`}
+        className={cn('flex flex-col gap-5 border-b border-stroke py-4 dark:border-strokedark', {
+          'sm:px-6': path !== '/admin',
+          'px-6': path === '/admin',
+        })}
       >
         {path === '/' || path === '/admin' ? (
           <li>
@@ -58,9 +60,10 @@ export const UserMenuItems = ({ user, setMobileMenuOpen }: { user?: Partial<User
       </ul>
       {!!user && user.isAdmin && (
         <ul
-          className={`flex flex-col gap-5 border-b border-stroke py-4 dark:border-strokedark ${
-            path === '/admin' ? 'px-6' : 'sm:px-6'
-          }`}
+          className={cn('flex flex-col gap-5 border-b border-stroke py-4 dark:border-strokedark', {
+            'sm:px-6': path !== '/admin',
+            'px-6': path === '/admin',
+          })}
         >
           <li className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-yellow-500'>
             <Link
@@ -76,9 +79,13 @@ export const UserMenuItems = ({ user, setMobileMenuOpen }: { user?: Partial<User
       )}
       <button
         onClick={() => logout()}
-        className={`flex items-center gap-3.5 py-4 text-sm font-medium duration-300 ease-in-out hover:text-yellow-500 ${
-          path === '/admin' ? 'px-6' : 'sm:px-6'
-        }`}
+        className={cn(
+          'flex items-center gap-3.5 py-4 text-sm font-medium duration-300 ease-in-out hover:text-yellow-500',
+          {
+            'sm:px-6': path !== '/admin',
+            'px-6': path === '/admin',
+          }
+        )}
       >
         <svg
           className='fill-current'

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { UpArrow } from '../images/icon/icons-arrows';
 import type { DailyStatsProps } from '../common/types';
+import { cn } from '../../../shared/utils';
 
 const TotalSignupsCard = ({ dailyStats, isLoading }: DailyStatsProps) => {
   const isDeltaPositive = useMemo(() => {
@@ -40,7 +41,10 @@ const TotalSignupsCard = ({ dailyStats, isLoading }: DailyStatsProps) => {
         </div>
 
         <span
-          className={`flex items-center gap-1 text-sm font-medium ${isDeltaPositive ? 'text-meta-3' : 'text-meta-5'}`}
+          className={cn('flex items-center gap-1 text-sm font-medium', {
+            'text-meta-3': isDeltaPositive,
+            'text-meta-5': !isDeltaPositive,
+          })}
         >
           {isLoading ? '...' : isDeltaPositive ? dailyStats?.userDelta : '-'}
           {!!dailyStats && isDeltaPositive && <UpArrow />}
