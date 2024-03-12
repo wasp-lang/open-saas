@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { DOCS_URL } from '../../src/shared/constants';
+import { DOCS_URL } from '../../app/src/shared/constants';
 
 test.describe('general landing page tests', () => {
   test.beforeEach(async ({ page }) => {
