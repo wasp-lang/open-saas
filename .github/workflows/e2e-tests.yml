@@ -50,5 +50,5 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          cd app
+          cd e2e-tests
           DEBUG=pw:webserver npx playwright test
