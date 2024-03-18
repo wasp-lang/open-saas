@@ -27,5 +27,5 @@ const cb = (code) => {
     process.exit(code);
   }
 };
-spawn('app', 'npm', ['run', 'example-app:start-app'], cb);
-spawn('db', 'npm', ['run', 'example-app:start-db'], cb);
+spawn('app', 'npm', ['run', 'e2e:start-app'], cb);
+spawn('db', 'npm', ['run', 'e2e:start-db'], cb);

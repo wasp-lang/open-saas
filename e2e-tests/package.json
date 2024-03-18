@@ -7,13 +7,13 @@
     "test": "tests"
   },
   "scripts": {
-    "example-app:start": "node ci-start-app.js",
-    "example-app:start-db": "npm run example-app:cleanup-db && cd ../app && wasp start db",
-    "example-app:start-app": "npm run example-app:wait-for-db && cd ../app && wasp db migrate-dev && wasp start",
-    "example-app:wait-for-db": "npx wait-port 5432",
-    "example-app:cleanup-db": "(docker container rm $(docker container ls -f name=^wasp-dev-db-OpenSaaS- -q) -f || true) && docker volume rm $(docker volume ls -f name=^wasp-dev-db-OpenSaaS- -q) -f || true",
-    "example-app:playwright": "playwright test",
-    "example-app:playwright:ui": "playwright test --ui"
+    "e2e:start": "node ci-start-app.js",
+    "e2e:start-db": "npm run e2e:cleanup-db && cd ../app && wasp start db",
+    "e2e:start-app": "npm run e2e:wait-for-db && cd ../app && wasp db migrate-dev && wasp start",
+    "e2e:wait-for-db": "npx wait-port 5432",
+    "e2e:cleanup-db": "(docker container rm $(docker container ls -f name=^wasp-dev-db-OpenSaaS- -q) -f || true) && docker volume rm $(docker volume ls -f name=^wasp-dev-db-OpenSaaS- -q) -f || true",
+    "e2e:playwright": "playwright test",
+    "e2e:playwright:ui": "playwright test --ui"
   },
   "author": "",
   "license": "ISC",
