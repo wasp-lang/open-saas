@@ -15,13 +15,15 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      node-version:
-        - 'latest'
 
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
       - name: Install Wasp
         run: curl -sSL https://get.wasp-lang.dev/installer.sh | sh -s
