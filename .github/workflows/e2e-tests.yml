@@ -30,6 +30,7 @@ jobs:
         with:
           path: ~/.npm
           key: node-modules-${{ hashFiles('app/package-lock.json') }}
+          key: node-modules-${{ hashFiles('e2e-tests/package-lock.json') }}
 
       - name: Install Node.js dependencies
         run: |
@@ -40,6 +41,11 @@ jobs:
         run: |
           cd app
           cp .env.server.example .env.server
+
+      - name: Install Node.js dependencies
+        run: |
+          cd e2e-tests
+          npm ci
 
       - name: Set up Playwright
         run: |
