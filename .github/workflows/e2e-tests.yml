@@ -30,7 +30,6 @@ jobs:
         with:
           path: ~/.npm
           key: node-modules-${{ hashFiles('app/package-lock.json') }}
-          key: node-modules-${{ hashFiles('e2e-tests/package-lock.json') }}
 
       - name: Install Node.js dependencies
         run: |
