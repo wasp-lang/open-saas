@@ -31,10 +31,10 @@ jobs:
           path: ~/.npm
           key: node-modules-${{ hashFiles('app/package-lock.json') }}
 
-      # - name: Install Node.js dependencies
-      #   run: |
-      #     cd app
-      #     npm ci
+      - name: Install Node.js dependencies
+        run: |
+          cd app
+          npm ci
 
       - name: Setup Dummy Env Vars 
         run: |
