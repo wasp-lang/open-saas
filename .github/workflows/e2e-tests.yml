@@ -21,12 +21,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Node.js
+        id: setup-node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
       - name: Install Wasp
-        run: curl -sSL https://get.wasp-lang.dev/installer.sh | sh -s
+        run: curl -sSL https://get.wasp-lang.dev/installer.sh | sh -s -- -v 0.12.4
 
       - name: Docker setup
         uses: docker/setup-buildx-action@v3
@@ -35,12 +36,12 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.npm
-          key: node-modules-${{ hashFiles('app/package-lock.json') }}
+          key: ${{ runner.os }}-node${{ steps.setup-node.outputs.node-version }}-node-modules-${{ hashFiles('app/package-lock.json') }}
 
-      - name: Install Node.js dependencies
-        run: |
-          cd app
-          npm ci
+      # - name: Install Node.js dependencies
+      #   run: |
+      #     cd app
+      #     npm ci
 
       - name: Setup Dummy Env Vars 
         run: |
