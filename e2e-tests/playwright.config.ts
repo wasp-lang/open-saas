@@ -10,11 +10,8 @@ import { defineConfig, devices } from '@playwright/test';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './playwright/tests',
-  outputDir: './playwright/test-results',
-  // put playwright-report in the playwright folder
-  reporter: [['html', { outputFolder: 'playwright/reports' }]],
-  // reporter: [['html', { outputFolder: 'playwright/reports' }]],
+  testDir: './tests',
+  outputDir: './test-results',
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */

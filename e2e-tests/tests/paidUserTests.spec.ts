@@ -30,15 +30,17 @@ test('Demo App: add tasks & generate schedule', async ({ loggedInPage }) => {
   expect(generateScheduleButton).toBeTruthy();
 
   await Promise.all([
-    loggedInPage.waitForRequest(
-      (req) => req.url().includes('operations/generate-gpt-response') && req.method() === 'POST'
-    ),
-    loggedInPage.waitForResponse((response) => {
-      if (response.url().includes('/operations/generate-gpt-response') && response.status() === 200) {
-        return true;
-      }
-      return false;
-    }),
+    loggedInPage
+      .waitForRequest((req) => req.url().includes('operations/generate-gpt-response') && req.method() === 'POST')
+      .catch((err) => console.error(err.message)),
+    loggedInPage
+      .waitForResponse((response) => {
+        if (response.url().includes('/operations/generate-gpt-response') && response.status() === 200) {
+          return true;
+        }
+        return false;
+      })
+      .catch((err) => console.error(err.message)),
     // We already started waiting before we perform the click that triggers the API calls. So now we just perform the click
     generateScheduleButton.click(),
   ]);

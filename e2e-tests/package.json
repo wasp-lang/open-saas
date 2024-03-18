@@ -1,0 +1,21 @@
+{
+  "name": "e2e-tests",
+  "version": "1.0.0",
+  "description": "e2e-tests for opensaas.sh",
+  "main": "ci-start-app.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "npx playwright test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@playwright/test": "^1.42.1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "prisma": "^5.11.0"
+  }
+}
