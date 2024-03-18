@@ -1,5 +1,17 @@
 name: Retag Commit
 
+# NOTE: this action is only necessary for development of the Open SaaS template. 
+# If you are not contributing to the Open SaaS template itself,
+# and just using it to build your own app, then you can delete this file.
+
+# This action keeps assigning the TAG_NAME to the last commit on main. 
+# We do this because there are two ways to get the latest version of the Open SaaS template:
+# 1. By cloning the template from the GitHub repository
+# 2. By using `wasp new` from the Wasp CLI and choosing `saas`
+# When using method 2, the template is cloned from a tag on a specific commit,
+# so we keep updating the tag to the latest commit on main so that the user gets the latest version.
+# If we update Wasp to a new major version, we should also update the TAG_NAME below.
+
 on:
   push:
     branches:
