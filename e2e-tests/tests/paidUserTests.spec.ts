@@ -29,16 +29,6 @@ test('Demo App: add tasks & generate schedule', async ({ loggedInPage }) => {
   const generateScheduleButton = loggedInPage.getByRole('button', { name: 'Generate Schedule' });
   expect(generateScheduleButton).toBeTruthy();
 
-  async function expectTableToContainTasks() {
-    const table = loggedInPage.getByRole('table');
-    await expect(table).toBeVisible();
-    const tableTextContent = (await table.innerText()).toLowerCase();
-
-    expect(tableTextContent.includes(task1.toLowerCase())).toBeTruthy();
-    expect(tableTextContent.includes(task2.toLowerCase())).toBeTruthy();
-    console.log('table text content >> :', tableTextContent);
-  }
-
   await Promise.all([
     loggedInPage
       .waitForRequest((req) => req.url().includes('operations/generate-gpt-response') && req.method() === 'POST')
@@ -53,6 +43,13 @@ test('Demo App: add tasks & generate schedule', async ({ loggedInPage }) => {
       .catch((err) => console.error(err.message)),
     // We already started waiting before we perform the click that triggers the API calls. So now we just perform the click
     generateScheduleButton.click(),
-    expectTableToContainTasks(),
   ]);
+
+  await loggedInPage.waitForSelector('table');
+  const table = loggedInPage.getByRole('table');
+  await expect(table).toBeVisible();
+  const tableTextContent = (await table.innerText()).toLowerCase();
+  console.log('table text content >> :', tableTextContent);
+  expect(tableTextContent.includes(task1.toLowerCase())).toBeTruthy();
+  expect(tableTextContent.includes(task2.toLowerCase())).toBeTruthy();
 });
