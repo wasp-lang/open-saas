@@ -43,7 +43,7 @@ jobs:
 
       - name: Set up Playwright
         run: |
-          cd ../e2e-tests
+          cd e2e-tests
           npx playwright install --with-deps
 
       - name: Run Playwright tests
