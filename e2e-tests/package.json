@@ -7,7 +7,13 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "npx playwright test"
+    "example-app:start": "node ci-start-app.js",
+    "example-app:start-db": "npm run example-app:cleanup-db && wasp start db",
+    "example-app:start-app": "npm run example-app:wait-for-db && wasp db migrate-dev && wasp start",
+    "example-app:wait-for-db": "npx wait-port 5432",
+    "example-app:cleanup-db": "(docker container rm $(docker container ls -f name=^wasp-dev-db-OpenSaaS- -q) -f || true) && docker volume rm $(docker volume ls -f name=^wasp-dev-db-OpenSaaS- -q) -f || true",
+    "example-app:playwright": "playwright test",
+    "example-app:playwright:ui": "playwright test --ui"
   },
   "author": "",
   "license": "ISC",
