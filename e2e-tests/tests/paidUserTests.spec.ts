@@ -48,7 +48,7 @@ test('Demo App: add tasks & generate schedule', async ({ loggedInPage }) => {
   const table = loggedInPage.getByRole('table');
   await expect(table).toBeVisible();
   const tableTextContent = (await table.innerText()).toLowerCase();
-  console.log(tableTextContent)
+  console.log('table text content >> :', tableTextContent)
 
   expect(tableTextContent.includes(task1.toLowerCase())).toBeTruthy();
   expect(tableTextContent.includes(task2.toLowerCase())).toBeTruthy();
