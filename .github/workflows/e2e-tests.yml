@@ -15,6 +15,9 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+    node-version:
+      - 'latest'
+      
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v4
