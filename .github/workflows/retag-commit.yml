@@ -21,7 +21,7 @@ jobs:
   retag:
     runs-on: ubuntu-latest
     env:
-      TAG_NAME: wasp-v0.12-template
+      TAG_NAME: wasp-v0.13-template
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
