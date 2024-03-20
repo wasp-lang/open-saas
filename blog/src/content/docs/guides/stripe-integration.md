@@ -13,7 +13,7 @@ Once you deploy your app, you can follow the same steps, just make sure you're u
 To get started, you'll need to create a Stripe account. You can do that [here](https://dashboard.stripe.com/register).
 
 :::tip[Star our Repo on GitHub! 🌟]
-We've packed in a ton of features and love into this SaaS starter.
+We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
 
 If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
 :::

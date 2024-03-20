@@ -46,7 +46,7 @@ The results of the event firing will be visible in the initial terminal window. 
 For more info on testing webhooks, check out https://stripe.com/docs/webhooks#test-webhook
 
 :::tip[Star our Repo on GitHub! 🌟]
-We've packed in a ton of features and love into this SaaS starter.
+We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
 
 If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
 :::

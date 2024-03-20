@@ -27,9 +27,9 @@ PLAUSIBLE_SITE_ID=<your domain without www>
 After adding your domain, you'll be taken to a page with your Plausible script tag. Copy and paste this script tag into the `main.wasp` file's head section. 
 
 ```js {7}
-app SaaSTemplate {
+app OpenSaaS {
   wasp: {
-    version: "^0.11.6"
+    version: "^0.13.0"
   },
   title: "My SaaS App",
   head: [

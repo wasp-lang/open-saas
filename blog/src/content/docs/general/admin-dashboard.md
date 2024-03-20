@@ -33,7 +33,7 @@ ADMIN_EMAILS=me@example.com,you@example.com,them@example.com
 ```
 
 :::tip[Star our Repo on GitHub! 🌟]
-We've packed in a ton of features and love into this SaaS starter.
+We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
 
 If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
 :::

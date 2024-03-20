@@ -17,7 +17,7 @@ There are two options we recommend:
 If you're just looking to upload small files and don't expect your app to grow to a large scale, you can use Multer to upload files to your app's server.
 
 :::tip[Star our Repo on GitHub! 🌟]
-We've packed in a ton of features and love into this SaaS starter.
+We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
 
 If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
 :::
@@ -108,7 +108,7 @@ Now that you have your S3 bucket set up, you'll need to get your S3 credentials 
 ```
 
 :::tip[Star our Repo on GitHub! 🌟]
-We've packed in a ton of features and love into this SaaS starter.
+We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
 
 If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
 :::
@@ -144,6 +144,8 @@ To begin customizing file uploads, is important to know where everything lives i
 
 If you're looking to upload files to the app server, you can use the Multer middleware to handle file uploads. This will allow you to store files on your server and is a good option if you need a quick and dirty, free solution for simple file uploads.
 
-Below is a [GitHub Gist](https://gist.github.com/infomiho/ec379df4e33f3ae3410a251ba3aa81af) that shows you how to set up file uploads using Multer in your app:
+Below are GitHub Gists that show you how to set up file uploads using Multer in your app:
+
+### Wasp version 0.12 & higher
 
 <script src="https://gist.github.com/infomiho/ec379df4e33f3ae3410a251ba3aa81af.js"></script>

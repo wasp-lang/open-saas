@@ -24,13 +24,17 @@ curl -sSL https://get.wasp-lang.dev/installer.sh | sh
 
 In order to use Wasp on Windows, you need to install WSL2 (Windows Subsystem for Linux) and a Linux distribution of your choice. We recommend using Ubuntu. 
 
-**You can refer to this [article](https://wasp-lang.dev/blog/2023/11/21/guide-windows-development-wasp-wsl) if you prefer a step by step guide to using Wasp in the WSL environment.** If you need further help, reach out to us on [Discord](https://discord.gg/rzdnErX).
+**You can refer to this [article](https://wasp-lang.dev/blog/2023/11/21/guide-windows-development-wasp-wsl) for a step by step guide to using Wasp in the WSL environment.** If you need further help, reach out to us on [Discord](https://discord.gg/rzdnErX).
 
 Once in WSL2, run the following command in your **WSL2 environment**:
 
 ```sh
 curl -sSL https://get.wasp-lang.dev/installer.sh | sh
 ```
+
+:::caution
+  If you are using WSL2, make sure that your Wasp project is not on the Windows file system, **but instead on the Linux file system**. Otherwise, Wasp won't be able to detect file changes, due to this [issue in WSL2](https://github.com/microsoft/WSL/issues/4739).
+:::
 
 <br/>
 
@@ -173,7 +177,7 @@ git merge upstream/main
 Awesome! We have our new app ready and we know how to run both it and the blog/docs! Now, in the next section, we'll give you a quick "guided tour" of the different parts of the app we created and understand how it works.
 
 :::tip[Star our Repo on GitHub! 🌟]
-We've packed in a ton of features and love into this SaaS starter.
+We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
 
 If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
 :::
