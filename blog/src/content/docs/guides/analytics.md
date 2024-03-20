@@ -2,8 +2,8 @@
 title: Analytics
 banner:
   content: |
-    ⚠️ Open SaaS is now running on <a href='https://wasp-lang.dev'>Wasp v0.12</a>! If you're running an older version of Open SaaS, please follow the 
-    <a href="https://wasp-lang.dev/docs/migrate-from-0-11-to-0-12">migration instructions here</a> ⚠️ 
+    ⚠️ Open SaaS is now running on <a href='https://wasp-lang.dev'>Wasp v0.13</a>! If you're running an older version of Open SaaS, please follow the 
+    <a href="https://wasp-lang.dev/docs/migrate-from-0-12-to-0-13">migration instructions here</a> ⚠️ 
 ---
 This guide will show you how to integrate analytics for your app. You can choose between [Google Analytics](#google-analytics) and [Plausible](#plausible).
 
@@ -63,7 +63,7 @@ Once you've completed the steps to create a new Property, some Installation Inst
 ```js {7}
 app OpenSaaS {
   wasp: {
-    version: "^0.12.0"
+    version: "^0.13.0"
   },
   title: "My SaaS App",
   head: [

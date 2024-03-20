@@ -2,8 +2,8 @@
 title: Authentication
 banner:
   content: |
-    ⚠️ Open SaaS is now running on <a href='https://wasp-lang.dev'>Wasp v0.12</a>! If you're running an older version of Open SaaS, please follow the 
-    <a href="https://wasp-lang.dev/docs/migrate-from-0-11-to-0-12">migration instructions here</a> ⚠️ 
+    ⚠️ Open SaaS is now running on <a href='https://wasp-lang.dev'>Wasp v0.13</a>! If you're running an older version of Open SaaS, please follow the 
+    <a href="https://wasp-lang.dev/docs/migrate-from-0-12-to-0-13">migration instructions here</a> ⚠️ 
 ---
 
 Setting up your app's authentication is easy with Wasp. In fact, it's aready set up for your in the `main.wasp` file: 
