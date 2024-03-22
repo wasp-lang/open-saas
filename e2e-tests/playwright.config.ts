@@ -1,12 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// require('dotenv').config();
-
-/**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
@@ -36,24 +30,13 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
   ],
 
-  // only run the web server on CI
+  // only run the web server on CI to avoid port conflicts for wasp DB, client, and server. 
+  // In local development, we start the app manually with `wasp start` and then run `npx playwright test` to run the tests.
   webServer: process.env.CI
     ? {
-        command: 'node ci-start-app.js',
+        command: 'npm run e2e:start',
         // Wait for the backend to start
         url: 'http://localhost:3001',
         reuseExistingServer: !process.env.CI,
