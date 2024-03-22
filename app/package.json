@@ -1,6 +1,5 @@
 {
   "name": "opensaas",
-  "scripts": {},
   "dependencies": {
     "@aws-sdk/client-s3": "^3.523.0",
     "@aws-sdk/s3-request-presigner": "^3.523.0",
@@ -11,9 +10,7 @@
     "@tailwindcss/typography": "^0.5.7",
     "apexcharts": "^3.41.0",
     "headlessui": "^0.0.0",
-    "linebyline": "^1.3.0",
     "node-fetch": "3.3.0",
-    "npm-run-all": "^4.1.5",
     "openai": "^4.24.1",
     "prettier": "3.1.1",
     "prettier-plugin-tailwindcss": "0.5.11",
@@ -22,13 +19,11 @@
     "react-hot-toast": "^2.4.1",
     "react-icons": "4.11.0",
     "stripe": "11.15.0",
-    "wait-port": "^1.1.0",
     "wasp": "file:.wasp/out/sdk/wasp",
     "zod": "3.22.4"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
-    "@types/node": "^18.0.0",
     "@types/react": "^18.0.37",
     "@types/react-router-dom": "^5.3.3",
     "prisma": "4.16.2",

@@ -39,7 +39,21 @@ Because we're using Wasp as the full-stack framework, we can leverage a lot of i
 You also get access to Wasp's diverse, helpful community if you get stuck or need help.
 - 🤝 [Wasp Discord](https://discord.gg/aCamt5wCpS)
 
+## Getting Started
+
+For everything you need to know on getting started and using this template, check out the [Open SaaS Docs](https://docs.opensaas.sh).
+
+We've documented everything in great detail, including installation instructions, guides for integrating services, SEO, deployment, and more. 
+
 ## Changes & Contributions
 Note that we've tried to get as many of the core features of a SaaS app into this template as possible, but there still might be some missing features or functionality.
 
 We could always use some help tying up loose ends, so consider [contributing](https://github.com/wasp-lang/open-saas/blob/main/CONTRIBUTING.md)!
+
+As there are a few things to know and consider when contributing, please make sure to read the [CONTRIBUTING.md](https://github.com/wasp-lang/open-saas/blob/main/CONTRIBUTING.md) in this Repo.
+
+## Getting Help & Providing Feedback
+
+There are two ways to get help or provide feedback (and we try to always respond quickly!):
+1. [Open an issue](https://github.com/wasp-lang/open-saas/issues)
+2. [Wasp Discord](https://discord.gg/aCamt5wCpS) -- please direct questions to the #🙋questions forum channel

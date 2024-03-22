@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - playwright-tests
+      - playwright-tests # TODO remove this before merging
   pull_request:
     branches:
       - main
@@ -38,17 +38,12 @@ jobs:
           path: ~/.npm
           key: ${{ runner.os }}-node${{ steps.setup-node.outputs.node-version }}-node-modules-${{ hashFiles('app/package-lock.json') }}
 
-      # - name: Install Node.js dependencies
-      #   run: |
-      #     cd app
-      #     npm ci
-
       - name: Setup Dummy Env Vars 
         run: |
           cd app
           cp .env.server.example .env.server
 
-      - name: Install Node.js dependencies
+      - name: Install Node.js dependencies for Playwright tests
         run: |
           cd e2e-tests
           npm ci
@@ -60,6 +55,7 @@ jobs:
 
       - name: Run Playwright tests
         env:
+          # the e2e tests are testing parts of the app that need OPENAI_API_KEY, so we need to set it here
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           cd e2e-tests

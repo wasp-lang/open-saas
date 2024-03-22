@@ -10,42 +10,34 @@ export type User = {
   credits?: number;
 };
 
+const DEFAULT_PASSWORD = 'password123'
+
 export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
   await page.goto('localhost:3000');
 
-  // Click the get started link.
   await page.getByRole('link', { name: 'Log in' }).click();
 
   console.log('logging in...', user);
   await page.waitForURL('http://localhost:3000/login');
-  console.log('url', page.url());
 
-  // Fill input[name="username"]
   await page.fill('input[name="username"]', user.username);
 
-  // Fill input[name="password"]
-  await page.fill('input[name="password"]', user.password || 'password123');
+  await page.fill('input[name="password"]', user.password || DEFAULT_PASSWORD);
 
-  // Click button:has-text("Log in")
   await page.click('button:has-text("Log in")');
 };
 
 export const signUserUp = async ({ page, user }: { page: Page; user: User }) => {
   await page.goto('/');
 
-  // Click the get started link.
   await page.getByRole('link', { name: 'Log in' }).click();
 
-  // click text "Sign up"
   await page.click('text="go to signup"');
 
-  // Fill input[name="username"]
   await page.fill('input[name="username"]', user.username);
 
-  // Fill input[name="password"]
-  await page.fill('input[name="password"]', user.password || 'password123');
+  await page.fill('input[name="password"]', user.password || DEFAULT_PASSWORD);
 
-  // Click button:has-text("Sign up")
   await page.click('button:has-text("Sign up")');
 };
 

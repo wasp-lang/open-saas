@@ -1,7 +1,6 @@
 import { expect } from '@playwright/test';
 import { createLoggedInUserFixture } from './utils';
 
-// Create a new test fixture with an unpaid user and a logged in page
 const test = createLoggedInUserFixture({ hasPaid: false, credits: 0 });
 
 test('Demo app: cannot generate schedule', async ({ loggedInPage }) => {
@@ -10,23 +9,19 @@ test('Demo app: cannot generate schedule', async ({ loggedInPage }) => {
 
   await loggedInPage.waitForURL('/demo-app');
 
-  // Fill input id="description" with "create presentation"
   await loggedInPage.fill('input[id="description"]', task1);
 
-  // Click button:has-text("Add task")
   await loggedInPage.click('button:has-text("Add task")');
 
   await loggedInPage.fill('input[id="description"]', task2);
 
   await loggedInPage.click('button:has-text("Add task")');
 
-  // expect to find text in a span element
   expect(loggedInPage.getByText(task1)).toBeTruthy();
   expect(loggedInPage.getByText(task2)).toBeTruthy();
 
-  // find a button with text "Generate Schedule" and check it's visible
   const generateScheduleButton = loggedInPage.getByRole('button', { name: 'Generate Schedule' });
-  expect(generateScheduleButton).toBeTruthy();
+  await expect(generateScheduleButton).toBeVisible()
 
   await Promise.all([
     loggedInPage.waitForRequest(
