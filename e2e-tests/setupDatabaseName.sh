@@ -27,7 +27,8 @@ else
     # Avoid duplicating the line if DATABASE_URL already exists in .env
     if grep -q 'DATABASE_URL=' .env; then
         # Use sed to replace the existing DATABASE_URL line, with macOS compatibility
-        sed -i '' "s|^DATABASE_URL=.*|DATABASE_URL=$DATABASE_URL|" .env
+        # sed -i '' "s|^DATABASE_URL=.*|DATABASE_URL=$DATABASE_URL|" .env 
+        sed -i "s|^DATABASE_URL=.*|DATABASE_URL=$DATABASE_URL|" .env
         echo "DATABASE_URL updated in .env file."
     else
         # Append DATABASE_URL to .env
