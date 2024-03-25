@@ -32,8 +32,11 @@ export default defineConfig({
     },
   ],
 
-  // only run the web server on CI to avoid port conflicts for wasp DB, client, and server. 
-  // In local development, we start the app manually with `wasp start` and then run `npx playwright test` to run the tests.
+  /**
+   * There seems to be a bug that keeps the webserver open after running tests locally https://github.com/microsoft/playwright/issues/11907
+   * causing errors when trying to run `wasp start` afterwards. To avoid this, we can run the webserver only on CI.
+   * For local development, we start the app manually with `wasp start` and then run `npx playwright test` to run the tests.
+   */
   webServer: process.env.CI
     ? {
         command: 'npm run e2e:start',

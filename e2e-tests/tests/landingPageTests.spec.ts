@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { DOCS_URL } from '../../app/src/shared/constants';
+
+const DOCS_URL = 'https://docs.opensaas.sh'
 
 test.describe('general landing page tests', () => {
   test.beforeEach(async ({ page }) => {
