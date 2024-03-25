@@ -1,7 +1,5 @@
 name: Retag Commit
 
-
-
 on:
   push:
     branches:
