@@ -1,0 +1,61 @@
+name: e2e tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  WASP_TELEMETRY_DISABLE: 1
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        id: setup-node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Wasp
+        run: curl -sSL https://get.wasp-lang.dev/installer.sh | sh -s -- -v 0.13.0
+
+      - name: Docker setup
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Node Modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node${{ steps.setup-node.outputs.node-version }}-node-modules-${{ hashFiles('app/package-lock.json') }}
+
+      - name: Setup Dummy Env Vars 
+        run: |
+          cd app
+          cp .env.server.example .env.server
+
+      - name: Install Node.js dependencies for Playwright tests
+        run: |
+          cd e2e-tests
+          npm ci
+
+      - name: Set up Playwright
+        run: |
+          cd e2e-tests
+          npx playwright install --with-deps
+
+      - name: Run Playwright tests
+        env:
+          # the e2e tests are testing parts of the app that need OPENAI_API_KEY, so we need to set it here
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          cd e2e-tests
+          npm run e2e:playwright:debug
