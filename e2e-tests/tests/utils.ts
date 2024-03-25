@@ -1,6 +1,8 @@
 import { test as base, type Page } from '@playwright/test';
-import { prisma } from '../../app/src/server/utils';
 import { randomUUID } from 'crypto';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export type User = {
   id?: number;
