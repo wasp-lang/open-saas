@@ -39,7 +39,38 @@ Because we're using Wasp as the full-stack framework, we can leverage a lot of i
 You also get access to Wasp's diverse, helpful community if you get stuck or need help.
 - 🤝 [Wasp Discord](https://discord.gg/aCamt5wCpS)
 
+## Getting Started
 
+### Simple Instructions
+
+First, to install the latest version of [Wasp](https://wasp.sh/) on macOS, Linux, or Windows with WSL, run the following command:
+```bash
+curl -sSL https://get.wasp-lang.dev/installer.sh | sh
+```
+
+Then, create a new SaaS app with the following command:
+
+```bash
+wasp new -t saas
+```
+
+This will clone a **clean copy of the Open SaaS template** into a new directory, and you can start building your SaaS app right away!
+
+### Detailed Instructions
+
+For everything you need to know about getting started and using this template, check out the [Open SaaS Docs](https://docs.opensaas.sh).
+
+We've documented everything in great detail, including installation instructions, pulling updates to the template, guides for integrating services, SEO, deployment, and more. 🚀
+
+## Changes & Contributions
 Note that we've tried to get as many of the core features of a SaaS app into this template as possible, but there still might be some missing features or functionality.
 
 We could always use some help tying up loose ends, so consider [contributing](https://github.com/wasp-lang/open-saas/blob/main/CONTRIBUTING.md)!
+
+As there are a few things to know and consider when contributing, please make sure to read the [CONTRIBUTING.md](https://github.com/wasp-lang/open-saas/blob/main/CONTRIBUTING.md) in this Repo.
+
+## Getting Help & Providing Feedback
+
+There are two ways to get help or provide feedback (and we try to always respond quickly!):
+1. [Open an issue](https://github.com/wasp-lang/open-saas/issues)
+2. [Wasp Discord](https://discord.gg/aCamt5wCpS) -- please direct questions to the #🙋questions forum channel

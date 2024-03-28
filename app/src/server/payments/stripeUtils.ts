@@ -24,7 +24,15 @@ export async function fetchStripeCustomer(customerEmail: string) {
   return customer;
 }
 
-export async function createStripeCheckoutSession({ priceId, customerId }: { priceId: string; customerId: string }) {
+export async function createStripeCheckoutSession({
+  priceId,
+  customerId,
+  mode,
+}: {
+  priceId: string;
+  customerId: string;
+  mode: 'subscription' | 'payment';
+}) {
   return await stripe.checkout.sessions.create({
     line_items: [
       {
@@ -32,7 +40,7 @@ export async function createStripeCheckoutSession({ priceId, customerId }: { pri
         quantity: 1,
       },
     ],
-    mode: 'subscription',
+    mode: mode,
     success_url: `${DOMAIN}/checkout?success=true`,
     cancel_url: `${DOMAIN}/checkout?canceled=true`,
     automatic_tax: { enabled: true },
