@@ -30,7 +30,7 @@ export const features = [
   {
     name: 'Stripe Integration',
     description:
-      "No SaaS is complete without payments. That's why subscriptions and the necessary webhooks are built-in.",
+      "No SaaS is complete without payments. That's why payments and the necessary webhooks are built-in.",
     icon: '💸',
     href: DOCS_URL + '/guides/stripe-integration/',
   },

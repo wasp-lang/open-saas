@@ -1,5 +1,5 @@
-import { useAuth } from "wasp/client/auth";
-import { stripePayment } from "wasp/client/operations";
+import { useAuth } from 'wasp/client/auth';
+import { stripePayment } from 'wasp/client/operations';
 import { TierIds, STRIPE_CUSTOMER_PORTAL_LINK } from '../../shared/constants';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { useState } from 'react';
@@ -9,52 +9,52 @@ export const tiers = [
   {
     name: 'Hobby',
     id: TierIds.HOBBY,
-    priceMonthly: '$9.99',
+    price: '$9.99',
     description: 'All you need to get started',
     features: ['Limited monthly usage', 'Basic support'],
   },
   {
     name: 'Pro',
     id: TierIds.PRO,
-    priceMonthly: '$19.99',
+    price: '$19.99',
     description: 'Our most popular plan',
     features: ['Unlimited monthly usage', 'Priority customer support'],
     bestDeal: true,
   },
   {
-    name: 'Enterprise',
-    id: TierIds.ENTERPRISE,
-    priceMonthly: '$500',
-    description: 'Big business means big money',
-    features: ['Unlimited monthly usage', '24/7 customer support', 'Advanced analytics'],
+    name: '10 Credits',
+    id: TierIds.CREDITS,
+    price: '$9.99',
+    description: 'One-time purchase of 10 credits for your account',
+    features: ['Use credits for e.g. OpenAI API calls', 'No expiration date'],
   },
 ];
 
 const PricingPage = () => {
   const [isStripePaymentLoading, setIsStripePaymentLoading] = useState<boolean | string>(false);
 
-    const { data: user, isLoading: isUserLoading } = useAuth();
+  const { data: user, isLoading: isUserLoading } = useAuth();
 
-    const history = useHistory();
+  const history = useHistory();
 
-    async function handleBuyNowClick(tierId: string) {
-      if (!user) {
-        history.push('/login');
-        return;
-      }
-      try {
-        setIsStripePaymentLoading(tierId);
-        let stripeResults = await stripePayment(tierId);
-
-        if (stripeResults?.sessionUrl) {
-          window.open(stripeResults.sessionUrl, '_self');
-        }
-      } catch (error: any) {
-        console.error(error?.message ?? 'Something went wrong.');
-      } finally {
-        setIsStripePaymentLoading(false);
-      }
+  async function handleBuyNowClick(tierId: string) {
+    if (!user) {
+      history.push('/login');
+      return;
     }
+    try {
+      setIsStripePaymentLoading(tierId);
+      let stripeResults = await stripePayment(tierId);
+
+      if (stripeResults?.sessionUrl) {
+        window.open(stripeResults.sessionUrl, '_self');
+      }
+    } catch (error: any) {
+      console.error(error?.message ?? 'Something went wrong.');
+    } finally {
+      setIsStripePaymentLoading(false);
+    }
+  }
 
   return (
     <div className='py-10 lg:mt-10'>
@@ -95,10 +95,10 @@ const PricingPage = () => {
                 </div>
                 <p className='mt-4 text-sm leading-6 text-gray-600 dark:text-white'>{tier.description}</p>
                 <p className='mt-6 flex items-baseline gap-x-1 dark:text-white'>
-                  <span className='text-4xl font-bold tracking-tight text-gray-900 dark:text-white'>
-                    {tier.priceMonthly}
+                  <span className='text-4xl font-bold tracking-tight text-gray-900 dark:text-white'>{tier.price}</span>
+                  <span className='text-sm font-semibold leading-6 text-gray-600 dark:text-white'>
+                    {tier.id !== TierIds.CREDITS && '/month'}
                   </span>
-                  <span className='text-sm font-semibold leading-6 text-gray-600 dark:text-white'>/month</span>
                 </p>
                 <ul role='list' className='mt-8 space-y-3 text-sm leading-6 text-gray-600 dark:text-white'>
                   {tier.features.map((feature) => (
@@ -114,7 +114,6 @@ const PricingPage = () => {
                   href={STRIPE_CUSTOMER_PORTAL_LINK}
                   aria-describedby='manage-subscription'
                   className={`
-                      ${tier.id === 'enterprise-tier' ? 'opacity-50 cursor-not-allowed' : 'opacity-100 cursor-pointer'}
                       ${
                         tier.bestDeal
                           ? 'bg-yellow-500 text-white hover:text-white shadow-sm hover:bg-yellow-400'
@@ -123,14 +122,13 @@ const PricingPage = () => {
                       'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400'
                     `}
                 >
-                  {tier.id === 'enterprise-tier' ? 'Contact us' : 'Manage Subscription'}
+                  Manage Subscription
                 </a>
               ) : (
                 <button
                   onClick={() => handleBuyNowClick(tier.id)}
                   aria-describedby={tier.id}
                   className={`dark:text-white
-                      ${tier.id === 'enterprise-tier' ? 'opacity-50 cursor-not-allowed' : 'opacity-100 cursor-pointer'}
                       ${
                         tier.bestDeal
                           ? 'bg-yellow-500 text-white hover:text-white shadow-sm hover:bg-yellow-400'
@@ -140,7 +138,7 @@ const PricingPage = () => {
                       'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400'
                     `}
                 >
-                  {tier.id === 'enterprise-tier' ? 'Contact us' : !!user ? 'Buy plan' : 'Log in to buy plan'}
+                  {!!user ? 'Buy plan' : 'Log in to buy plan'}
                 </button>
               )}
             </div>

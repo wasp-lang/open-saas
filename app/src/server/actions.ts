@@ -29,8 +29,10 @@ export const stripePayment: StripePayment<string, StripePaymentResult> = async (
     priceId = process.env.HOBBY_SUBSCRIPTION_PRICE_ID!;
   } else if (tier === TierIds.PRO) {
     priceId = process.env.PRO_SUBSCRIPTION_PRICE_ID!;
+  } else if (tier === TierIds.CREDITS) {
+    priceId = process.env.CREDITS_PRICE_ID!;
   } else {
-    throw new HttpError(400, 'Invalid tier');
+    throw new HttpError(404, 'Invalid tier');
   }
 
   let customer: Stripe.Customer;
@@ -40,9 +42,12 @@ export const stripePayment: StripePayment<string, StripePaymentResult> = async (
     session = await createStripeCheckoutSession({
       priceId,
       customerId: customer.id,
+      mode: tier === TierIds.CREDITS ? 'payment' : 'subscription',
     });
   } catch (error: any) {
-    throw new HttpError(500, error.message);
+    const statusCode = error.statusCode || 500;
+    const errorMessage = error.message || 'Internal server error';
+    throw new HttpError(statusCode, errorMessage);
   }
 
   await context.entities.User.update({

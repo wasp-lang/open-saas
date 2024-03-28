@@ -3,77 +3,133 @@ title: Getting Started
 banner:
   content: |
     ⚠️ Open SaaS is now running on <a href='https://wasp-lang.dev'>Wasp v0.13</a>! If you're running an older version of Open SaaS, please follow the 
-    <a href="https://wasp-lang.dev/docs/migrate-from-0-12-to-0-13">migration instructions here</a> ⚠️ 
+    <a href="https://wasp-lang.dev/docs/migrate-from-0-12-to-0-13">migration instructions here</a> ⚠️
 ---
 
 This guide will help you get your new SaaS app up and running.
 
-## Setting up
+## Install Wasp
 
-### Install Wasp
+### Pre-requisites
 
-#### MacOS and Linux
+You must have Node.js (and NPM) installed on your machine and available in `PATH` to use Wasp.
+Your version of Node.js must be >= 18.
 
-Install Wasp by running this command in your terminal:
+To switch easily between Node.js versions, we recommend using [nvm](https://github.com/nvm-sh/nvm).
 
-```sh
+:::note[Installing and using nvm]
+<details>
+  <summary>
+    Need help with nvm?
+  </summary>
+  <div>
+
+Install nvm via your OS package manager (`apt`, `pacman`, `homebrew`, ...) or via the [nvm](https://github.com/nvm-sh/nvm#install--update-script) install script.
+
+Then, install a version of Node.js that you need:
+
+```shell
+nvm install 20
+```
+
+Finally, whenever you need to ensure a specific version of Node.js is used, run:
+
+```shell
+nvm use 20
+```
+
+to set the Node.js version for the current shell session.
+
+You can run
+
+```shell
+node -v
+```
+
+to check the version of Node.js currently being used in this shell session.
+
+Check NVM repo for more details: https://github.com/nvm-sh/nvm.
+
+  </div>
+</details>
+:::
+
+
+### Linux and macOS
+
+Open your terminal and run:
+
+```shell
 curl -sSL https://get.wasp-lang.dev/installer.sh | sh
 ```
 
-#### Windows
+:::caution[Bad CPU type in executable]
+<details>
+  <summary>
+    Are you getting this error on a Mac (Apple Silicon)?
+  </summary>
+Given that the wasp binary is built for x86 and not for arm64 (Apple Silicon), you'll need to install <a href='https://support.apple.com/en-us/HT211861'>Rosetta on your Mac</a> if you are using a Mac with Mx (M1, M2, ...). Rosetta is a translation process that enables users to run applications designed for x86 on arm64 (Apple Silicon). To install Rosetta, run the following command in your terminal
+
+```bash
+softwareupdate --install-rosetta
+```
+Once Rosetta is installed, you should be able to run Wasp without any issues.
+:::
+
+</details>
+
+### Windows
 
 In order to use Wasp on Windows, you need to install WSL2 (Windows Subsystem for Linux) and a Linux distribution of your choice. We recommend using Ubuntu. 
 
 **You can refer to this [article](https://wasp-lang.dev/blog/2023/11/21/guide-windows-development-wasp-wsl) for a step by step guide to using Wasp in the WSL environment.** If you need further help, reach out to us on [Discord](https://discord.gg/rzdnErX).
 
 Once in WSL2, run the following command in your **WSL2 environment**:
-
 ```sh
 curl -sSL https://get.wasp-lang.dev/installer.sh | sh
 ```
 
-:::caution
-  If you are using WSL2, make sure that your Wasp project is not on the Windows file system, **but instead on the Linux file system**. Otherwise, Wasp won't be able to detect file changes, due to this [issue in WSL2](https://github.com/microsoft/WSL/issues/4739).
+:::caution[WSL2 and file system issues]
+<details>
+  <summary>
+    Are you getting file system issues using WSL2?
+  </summary>
+If you are using WSL2, make sure that your Wasp project is not on the Windows file system, <b>but instead on the Linux file system</b>. Otherwise, Wasp won't be able to detect file changes, due to this <a href='https://github.com/microsoft/WSL/issues/4739'>issue in WSL2</a>.
+</details>
+:::  
+
+### Finalize Installation
+
+Run the following command to verify that Wasp was installed correctly:
+
+```shell
+wasp version
+```
+
+Also be sure to install the Wasp VSCode extension to get the best DX, e.g. syntax highlighting, code scaffolding, autocomplete, etc.
+
+:::tip[Installing the Wasp VSCode Extension]
+You can install the Wasp VSCode extension by searching for "Wasp" in the Extensions tab in VSCode, or by visiting the 🐝 [Wasp VSCode Extension](https://marketplace.visualstudio.com/items?itemName=wasp-lang.wasp) 🧑‍💻 homepage
 :::
 
-<br/>
-
----
-
-:::tip[VSCode Extension ]
-Make sure to install the Wasp VSCode extension to get the best DX, e.g. syntax highlighting, code scaffolding, autocomplete, etc:
-
-🐝 [Wasp VSCode Extension](https://marketplace.visualstudio.com/items?itemName=wasp-lang.wasp) 🧑‍💻
-:::
+## Setting up your SaaS app
 
 ### Cloning the OpenSaaS template
 
-From the [Open SaaS repo on GitHub](https://github.com/wasp-lang/open-saas), click on "Use this template" > "Create a new repository".
-![use template](/getting-started/open-saas-template.png)
-
-Then, give your new repo a name and click "Create repository".
-![create repo](/getting-started/create-repo.png)
-
-Once you've created your new repo, you can clone it to your local machine by copying the repo URL found here: 
-![clone repo](/getting-started/clone-repo.png)
-
-And then running the following command in your terminal:
-
+From the directory where you'd like to create your new project run:
 ```sh
-git clone <your-repo-url>
+wasp new
 ```
 
-Finally, you can navigate to the root of your new project:
+Then select option `[3] saas` from the list of templates after entering the name of your project.
 
-```sh
-cd <your-repo-name>
-```
+This will clone a **clean copy of the Open SaaS template** into a new directory! 🎉
 
 ### Start your DB
 
 Before you start your app, you need to have a Postgres Database connected and running. With Wasp, that's super easy!
 
-First, make sure you have Docker installed and running. If not, download and install it [here](https://www.docker.com/products/docker-desktop/)
+First, make sure you have **Docker installed and running**. If not, download and install it [here](https://www.docker.com/products/docker-desktop/)
 
 With Docker running, open a new terminal window/tab and position yourself in the `app` directory:
 
@@ -111,7 +167,7 @@ In a new terminal window/tab, first make sure you're in the `app/` directory:
 cd app
 ```
 
-Copy the `.env.server.example` file to `.env.server`. 
+Copy the `.env.server.example` file to `.env.server`.
 
 ```sh
 cp .env.server.example .env.server
@@ -158,16 +214,19 @@ npm run dev
 We will be updating the Open SaaS template with new features and improvements. To get these updates, you can pull the changes from the original template into your own repository.
 
 First, you need to add the original template as a remote `upstream` repository:
+
 ```sh
 git remote add upstream https://github.com/wasp-lang/open-saas.git
 ```
 
 Then, you can fetch the changes from the original template:
+
 ```sh
 git fetch upstream
 ```
 
 And finally, merge the changes into your local repository:
+
 ```sh
 git merge upstream/main
 ```

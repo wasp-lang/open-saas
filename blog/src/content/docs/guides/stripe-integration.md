@@ -27,7 +27,7 @@ Once you've created your account, you'll need to get your test API keys. You can
 - Click on the `Reveal test key token` button and copy the `Secret key`.
 - Paste it in your `.env.server` file under `STRIPE_KEY=`
 
-## Create a Test Product
+## Create Test Products
 
 To create a test product, go to the test products url [https://dashboard.stripe.com/test/products](https://dashboard.stripe.com/test/products), or after navigating to your dashboard, click the `test mode` toggle.
 
@@ -35,12 +35,17 @@ To create a test product, go to the test products url [https://dashboard.stripe.
 
 - Click on the `Add a product` button and fill in the relevant information for your product. 
 - Make sure you select `Software as a service (SaaS)` as the product type.
+- For Subscription products, make sure you select `Recurring` as the billing type.
+- For One-time payment products, make sure you select `One-time` as the billing type.
 - If you want to add different price tiers for the same product, click the `Add another price` button at the buttom. 
 
 ![price ids](/stripe/price-ids.png)
 
 - After you save the product, you'll be directed to the product page. 
-- Copy the price IDs and paste them in the `.env.server` file under `HOBBY_SUBSCRIPTION_PRICE_ID=` and `PRO_SUBSCRIPTION_PRICE_ID=`. Note that if you change the names of the price IDs, you'll need to update your server code to match these names as well
+- Copy the price IDs and paste them in the `.env.server` file
+  - We've set you up with two example subscription product environment variables, `HOBBY_SUBSCRIPTION_PRICE_ID=` and `PRO_SUBSCRIPTION_PRICE_ID=`.
+  - As well as a one-time payment product/credits-based environment variable, `CREDITS_PRICE_ID=`.
+- Note that if you change the names of the price IDs, you'll need to update your server code to match these names as well
 
 ## Create a Test Customer
 
