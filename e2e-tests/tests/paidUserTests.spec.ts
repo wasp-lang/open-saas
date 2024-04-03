@@ -13,11 +13,12 @@ test('Demo App: add tasks & generate schedule', async ({ loggedInPage }) => {
 
   await loggedInPage.click('button:has-text("Add task")');
 
+  await expect(loggedInPage.getByText(task1)).toBeVisible();
+
   await loggedInPage.fill('input[id="description"]', task2);
 
   await loggedInPage.click('button:has-text("Add task")');
 
-  await expect(loggedInPage.getByText(task1)).toBeVisible();
   await expect(loggedInPage.getByText(task2)).toBeVisible();
 
   const generateScheduleButton = loggedInPage.getByRole('button', { name: 'Generate Schedule' });

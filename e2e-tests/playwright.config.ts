@@ -37,13 +37,11 @@ export default defineConfig({
    * causing errors when trying to run `wasp start` afterwards. To avoid this, we can run the webserver only on CI.
    * For local development, we start the app manually with `wasp start` and then run `npx playwright test` to run the tests.
    */
-  webServer: process.env.CI
-    ? {
+  webServer: {
         command: 'npm run e2e:start',
         // Wait for the backend to start
         url: 'http://localhost:3001',
         reuseExistingServer: !process.env.CI,
         timeout: 120 * 1000,
       }
-    : undefined,
 });
