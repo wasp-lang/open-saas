@@ -120,14 +120,10 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
   if (!context.user?.isAdmin) {
     throw new HttpError(401);
   }
-  console.log('args:', args);
 
   const allSubscriptionStatusOptions = args.subscriptionStatus as Array<string | null> | undefined;
   const hasNotSubscribed = allSubscriptionStatusOptions?.find((status) => status === null) 
   let subscriptionStatusStrings = allSubscriptionStatusOptions?.filter((status) => status !== null) as string[] | undefined
-
-
-  console.log('subscriptionStatus:', subscriptionStatusStrings);
 
   const queryResults = await context.entities.User.findMany({
     skip: args.skip,
@@ -145,7 +141,7 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
           OR: [
             {
               subscriptionStatus: {
-                in: subscribtionStatusStrings,
+                in: subscriptionStatusStrings,
               },
             },
             {
@@ -156,13 +152,6 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
           ],
         },
       ],
-      // email: {
-      //   contains: args.emailContains || undefined,
-      //   mode: 'insensitive',
-      // },
-      // subscriptionStatus: {
-      //   in: subscriptionStatus || undefined,
-      // },
     },
     select: {
       id: true,
@@ -192,7 +181,7 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
           OR: [
             {
               subscriptionStatus: {
-                in: subscribtionStatusStrings,
+                in: subscriptionStatusStrings,
               },
             },
             {
@@ -203,12 +192,6 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
           ],
         },
       ],
-      // email: {
-      //   contains: args.emailContains || undefined,
-      // },
-      // subscriptionStatus: {
-      //   in: subscriptionStatus || undefined,
-      // },
     },
   });
   const totalPages = Math.ceil(totalUserCount / 10);

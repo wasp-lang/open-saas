@@ -91,7 +91,6 @@ const UsersTable = () => {
                 </div>
                 <select
                   onChange={(e) => {
-                    console.log('e.target.value:', e.target.value);
                     const targetValue = e.target.value === '' ? null : e.target.value;
                     setStatusOptions((prevValue) => {
                       if (prevValue?.includes(targetValue as SubscriptionStatusOptions)) {

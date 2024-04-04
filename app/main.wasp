@@ -27,10 +27,10 @@ app OpenSaaS {
       usernameAndPassword: { // !IMPORTANT: this method is only suitable for dev/testing. Use social or email methods in production.
         userSignupFields: import { getUsernameAndPasswordUserFields } from "@src/server/auth/setUsername.js",
       },
-      google: { // Guide for setting up Auth via Google https://wasp-lang.dev/docs/auth/social-auth/overview
-        userSignupFields: import { getGoogleUserFields } from "@src/server/auth/setUsername.js",
-        configFn: import { getGoogleAuthConfig } from "@src/server/auth/setUsername.js",
-      },
+      // google: { // Guide for setting up Auth via Google https://wasp-lang.dev/docs/auth/social-auth/overview
+      //   userSignupFields: import { getGoogleUserFields } from "@src/server/auth/setUsername.js",
+      //   configFn: import { getGoogleAuthConfig } from "@src/server/auth/setUsername.js",
+      // },
       // gitHub: {
       //   userSignupFields: import { getGitHubUserFields } from "@src/server/auth/setUsername.js",
       //   configFn: import { getGitHubAuthConfig } from "@src/server/auth/setUsername.js",
