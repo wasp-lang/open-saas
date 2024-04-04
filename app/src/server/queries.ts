@@ -117,8 +117,9 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
   args,
   context
 ) => {
-
-  console.log('waht <><><><><><><><><><')
+  if (!context.user?.isAdmin) {
+    throw new HttpError(401);
+  }
   console.log('args:', args);
 
   const allSubscriptionStatusOptions = args.subscriptionStatus as Array<string | null> | undefined;

@@ -97,6 +97,11 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, GeneratedSched
   }));
 
   try {
+    // check if openai is initialized correctly with the API key
+    if (openai instanceof Error) {
+      throw openai;
+    }
+
     if (!context.user.subscriptionStatus && !context.user.credits) {
       throw new HttpError(402, 'User has not paid or is out of credits');
     } else if (context.user.credits && !context.user.subscriptionStatus) {
@@ -111,13 +116,8 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, GeneratedSched
       });
     }
 
-    // check if openai is initialized correctly with the API key
-    if (openai instanceof Error) {
-      throw openai;
-    }
-
     const completion = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-3.5-turbo', // you can use any model here, e.g. 'gpt-3.5-turbo', 'gpt-4', etc. 
       messages: [
         {
           role: 'system',
