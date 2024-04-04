@@ -128,8 +128,11 @@ entity User {=psl
 //...
 psl=}
 ```
-<!--  TODO: add screenshot of user table -->
 
 As an Admin, a user has access to the Admin dashboard, along with the user table where they can view and search for users, and edit and update information manually if necessary.
+
+:::tip[Admin Priveleges]
+If you'd like to give yourself and/or certain users admin priveleges, follow the instructions in the [Admin Dashboard](/general/admin-dashboard/#permissions) section.
+:::
 
 As a general User, a user has access to the user-facing app that sits behind the login, but not the Admin dashboard. You can further restrict access to certain features within the app by following the [authorization guide](/guides/authorization).

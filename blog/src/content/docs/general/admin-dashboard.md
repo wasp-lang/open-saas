@@ -24,13 +24,22 @@ To give yourself administrator priveledges, make sure you add your email adderes
 
 ```sh title=".env.server"
 ADMIN_EMAILS=me@example.com
-```
 
-if you want to give administrator priveledges to other users, you can do so by adding them to `ADMIN_EMAILS` as a comma-separated list.
+// or add many admins with a comma-separated list
 
-```sh title=".env.server"
 ADMIN_EMAILS=me@example.com,you@example.com,them@example.com
 ```
+
+if you've already logged in with an email address that you want to give admin priveledges to, you can run the following command in a separate terminal window to update the user's `isAdmin` field:
+
+```sh
+wasp db studio
+```
+
+
+![db studio](/stripe/db-studio.png)
+
+---
 
 :::tip[Star our Repo on GitHub! 🌟]
 We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
@@ -60,7 +69,7 @@ The Admin dashboard is a single place for you to view your most important metric
 
 For a guide on how to integrate these services, check out the [Stripe](/guides/stripe-integration) and [Analytics guide](/guides/analytics) of the docs.
 
-:::tip[Help us improve]
+:::note[Help us improve]
 We're always looking to improve the Admin dashboard. If you feel something is missing or could be improved, consider [opening an issue](https://github.com/wasp-lang/open-saas/issues) or [submitting a pull request](https://github.com/wasp-lang/open-saas/pulls)
 :::
 
