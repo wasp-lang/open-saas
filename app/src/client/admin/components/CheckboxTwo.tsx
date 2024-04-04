@@ -5,7 +5,7 @@ const CheckboxTwo = () => {
   return (
     <div>
       <label htmlFor='checkboxLabelTwo' className='flex cursor-pointer text-sm text-gray-700 select-none items-center'>
-        hasPaid:
+        enabled:
         <div className='relative'>
           <input
             type='checkbox'

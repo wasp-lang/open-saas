@@ -136,7 +136,7 @@ const PricingPage = () => {
                           ? 'bg-yellow-500 text-white hover:text-white shadow-sm hover:bg-yellow-400'
                           : 'text-gray-600  ring-1 ring-inset ring-purple-200 hover:ring-purple-400'
                       }
-                      ${isStripePaymentLoading === tier.id ? 'cursor-wait' : null}
+                      ${isStripePaymentLoading === tier.id ? 'opacity-50 cursor-wait cursor-not-allowed' : null}
                       'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400'
                     `}
                 >
