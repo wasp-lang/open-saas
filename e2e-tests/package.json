@@ -9,7 +9,7 @@
   "scripts": {
     "e2e:start": "npm run e2e:cleanup-db && node ci-start-app-and-db.js",
     "e2e:start-db": "cd ../app && wasp start db",
-    "e2e:start-app": "npm run e2e:wait-for-db && cd ../app && wasp db migrate-dev --name test-run && cd ../e2e-tests && npm run e2e:set-db-name && cd ../app && wasp start",
+    "e2e:start-app": "npm run e2e:wait-for-db && cd ../app && wasp db migrate-dev && cd ../e2e-tests && npm run e2e:set-db-name && cd ../app && wasp start",
     "e2e:wait-for-db": "npx wait-port 5432",
     "e2e:wait-for-app": "npx wait-port 3000",
     "e2e:set-db-name": "chmod +x ./setupDatabaseName.sh && ./setupDatabaseName.sh",
