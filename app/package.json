@@ -9,6 +9,7 @@
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.7",
     "apexcharts": "^3.41.0",
+    "clsx": "^2.1.0",
     "headlessui": "^0.0.0",
     "node-fetch": "3.3.0",
     "openai": "^4.24.1",
@@ -19,6 +20,7 @@
     "react-hot-toast": "^2.4.1",
     "react-icons": "4.11.0",
     "stripe": "11.15.0",
+    "tailwind-merge": "^2.2.1",
     "wasp": "file:.wasp/out/sdk/wasp",
     "zod": "3.22.4"
   },

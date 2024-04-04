@@ -43,7 +43,7 @@ You also get access to Wasp's diverse, helpful community if you get stuck or nee
 
 ### Simple Instructions
 
-First, install the latest version of [Wasp](https://wasp.sh/)
+First, to install the latest version of [Wasp](https://wasp.sh/) on macOS, Linux, or Windows with WSL, run the following command:
 ```bash
 curl -sSL https://get.wasp-lang.dev/installer.sh | sh
 ```
