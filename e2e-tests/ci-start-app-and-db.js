@@ -40,3 +40,4 @@ const cb = (code) => {
 };
 spawn('app', 'npm', ['run', 'e2e:start-app'], cb);
 spawn('db', 'npm', ['run', 'e2e:start-db'], cb);
+spawn('prisma', 'npm', ['run', 'e2e:prisma-db-setup'], cb);
