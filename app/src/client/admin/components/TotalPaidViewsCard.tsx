@@ -1,12 +1,12 @@
-import { UpArrow, DownArrow } from "../images/icon/icons-arrows";
+import { cn } from '../../../shared/utils';
+import { UpArrow, DownArrow } from '../images/icon/icons-arrows';
 
 type PageViewsStats = {
-    totalPageViews: number | undefined;
-    prevDayViewsChangePercent: string | undefined;
-}
+  totalPageViews: number | undefined;
+  prevDayViewsChangePercent: string | undefined;
+};
 
-const TotalPageViewsCard = ({ totalPageViews, prevDayViewsChangePercent } : PageViewsStats ) => {
-
+const TotalPageViewsCard = ({ totalPageViews, prevDayViewsChangePercent }: PageViewsStats) => {
   const isDeltaPositive = parseInt(prevDayViewsChangePercent || '') > 0;
 
   return (
@@ -39,7 +39,10 @@ const TotalPageViewsCard = ({ totalPageViews, prevDayViewsChangePercent } : Page
 
         {prevDayViewsChangePercent && parseInt(prevDayViewsChangePercent) !== 0 && (
           <span
-            className={`flex items-center gap-1 text-sm font-medium ${isDeltaPositive ? 'text-meta-3' : 'text-meta-5'}`}
+            className={cn('flex items-center gap-1 text-sm font-medium', {
+              'text-meta-3': isDeltaPositive,
+              'text-meta-5': !isDeltaPositive,
+            })}
           >
             {prevDayViewsChangePercent}%{parseInt(prevDayViewsChangePercent) > 0 ? <UpArrow /> : <DownArrow />}
           </span>

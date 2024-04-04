@@ -3,7 +3,7 @@ import { z } from 'zod';
 export enum TierIds {
   HOBBY = 'hobby-tier',
   PRO = 'pro-tier',
-  ENTERPRISE = 'enterprise-tier',
+  CREDITS = 'credits',
 }
 
 export const DOCS_URL = 'https://docs.opensaas.sh';
