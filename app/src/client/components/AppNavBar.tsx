@@ -114,6 +114,9 @@ export default function AppNavBar() {
                   <UserMenuItems user={user} setMobileMenuOpen={setMobileMenuOpen} />
                 )}
               </div>
+              <div className='py-6'>
+                <DarkModeSwitcher />
+              </div>
             </div>
           </div>
         </Dialog.Panel>

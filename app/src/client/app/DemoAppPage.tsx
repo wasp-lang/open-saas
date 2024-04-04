@@ -14,6 +14,7 @@ import { CgSpinner } from 'react-icons/cg';
 import { TiDelete } from 'react-icons/ti';
 import { type GeneratedSchedule } from '../../shared/types';
 import { MainTask, Subtask } from '../../shared/types';
+import { cn } from '../../shared/utils';
 
 export default function DemoAppPage() {
   return (
@@ -35,63 +36,6 @@ export default function DemoAppPage() {
           </div>
         </div>
         {/* end AI-powered Todo List */}
-      </div>
-    </div>
-  );
-}
-
-type TodoProps = Pick<Task, 'id' | 'isDone' | 'description' | 'time'>;
-
-function Todo({ id, isDone, description, time }: TodoProps) {
-  const handleCheckboxChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    await updateTask({
-      id,
-      isDone: e.currentTarget.checked,
-    });
-  };
-
-  const handleTimeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    await updateTask({
-      id,
-      time: e.currentTarget.value,
-    });
-  };
-
-  const handleDeleteClick = async () => {
-    await deleteTask({ id });
-  };
-
-  return (
-    <div className='flex items-center justify-between bg-purple-50 rounded-lg border border-gray-200 p-2 w-full'>
-      <div className='flex items-center justify-between gap-5 w-full'>
-        <div className='flex items-center gap-3'>
-          <input
-            type='checkbox'
-            className='ml-1 form-checkbox bg-purple-300 checked:bg-purple-300 rounded border-purple-400 duration-200 ease-in-out hover:bg-purple-400 hover:checked:bg-purple-600 focus:ring focus:ring-purple-300 focus:checked:bg-purple-400 focus:ring-opacity-50 text-black'
-            checked={isDone}
-            onChange={handleCheckboxChange}
-          />
-          <span className={`text-slate-600 ${isDone ? 'line-through text-slate-500' : ''}`}>{description}</span>
-        </div>
-        <div className='flex items-center gap-2'>
-          <input
-            id='time'
-            type='number'
-            min={0.5}
-            step={0.5}
-            className={`w-18 h-8 text-center text-slate-600 text-xs rounded border border-gray-200 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-300 focus:ring-opacity-50 ${
-              isDone && 'pointer-events-none opacity-50'
-            }`}
-            value={time}
-            onChange={handleTimeChange}
-          />
-          <span className={`italic text-slate-600 text-xs ${isDone ? 'text-slate-500' : ''}`}>hrs</span>
-        </div>
-      </div>
-      <div className='flex items-center justify-end w-15'>
-        <button className='p-1' onClick={handleDeleteClick} title='Remove task'>
-          <TiDelete size='20' className='text-red-600 hover:text-red-700' />
-        </button>
       </div>
     </div>
   );
@@ -276,6 +220,78 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
   );
 }
 
+type TodoProps = Pick<Task, 'id' | 'isDone' | 'description' | 'time'>;
+
+function Todo({ id, isDone, description, time }: TodoProps) {
+  const handleCheckboxChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    await updateTask({
+      id,
+      isDone: e.currentTarget.checked,
+    });
+  };
+
+  const handleTimeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    await updateTask({
+      id,
+      time: e.currentTarget.value,
+    });
+  };
+
+  const handleDeleteClick = async () => {
+    await deleteTask({ id });
+  };
+
+  return (
+    <div className='flex items-center justify-between bg-purple-50 rounded-lg border border-gray-200 p-2 w-full'>
+      <div className='flex items-center justify-between gap-5 w-full'>
+        <div className='flex items-center gap-3'>
+          <input
+            type='checkbox'
+            className='ml-1 form-checkbox bg-purple-300 checked:bg-purple-300 rounded border-purple-400 duration-200 ease-in-out hover:bg-purple-400 hover:checked:bg-purple-600 focus:ring focus:ring-purple-300 focus:checked:bg-purple-400 focus:ring-opacity-50 text-black'
+            checked={isDone}
+            onChange={handleCheckboxChange}
+          />
+          <span
+            className={cn('text-slate-600', {
+              'line-through text-slate-500': isDone,
+            })}
+          >
+            {description}
+          </span>
+        </div>
+        <div className='flex items-center gap-2'>
+          <input
+            id='time'
+            type='number'
+            min={0.5}
+            step={0.5}
+            className={cn(
+              'w-18 h-8 text-center text-slate-600 text-xs rounded border border-gray-200 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-300 focus:ring-opacity-50',
+              {
+                'pointer-events-none opacity-50': isDone,
+              }
+            )}
+            value={time}
+            onChange={handleTimeChange}
+          />
+          <span
+            className={cn('italic text-slate-600 text-xs', {
+              'text-slate-500': isDone,
+            })}
+          >
+            hrs
+          </span>
+        </div>
+      </div>
+      <div className='flex items-center justify-end w-15'>
+        <button className='p-1' onClick={handleDeleteClick} title='Remove task'>
+          <TiDelete size='20' className='text-red-600 hover:text-red-700' />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function TaskTable({ schedule }: { schedule: GeneratedSchedule }) {
   return (
     <div className='flex flex-col gap-6 py-6'>
@@ -309,13 +325,14 @@ function MainTaskTable({ mainTask, subtasks }: { mainTask: MainTask; subtasks: S
       <thead>
         <tr>
           <th
-            className={`flex items-center justify-between gap-5 py-4 px-3 text-slate-800 border rounded-md border-slate-200 bg-opacity-70 ${
-              mainTask.priority === 'high'
-                ? 'bg-red-100'
-                : mainTask.priority === 'low'
-                ? 'bg-green-100'
-                : 'bg-yellow-100'
-            }`}
+            className={cn(
+              'flex items-center justify-between gap-5 py-4 px-3 text-slate-800 border rounded-md border-slate-200 bg-opacity-70',
+              {
+                'bg-red-100': mainTask.priority === 'high',
+                'bg-green-100': mainTask.priority === 'low',
+                'bg-yellow-100': mainTask.priority === 'medium',
+              }
+            )}
           >
             <span>{mainTask.name}</span>
             <span className='opacity-70 text-xs font-medium italic'> {mainTask.priority} priority</span>
@@ -329,13 +346,14 @@ function MainTaskTable({ mainTask, subtasks }: { mainTask: MainTask; subtasks: S
               <tbody key={subtask.description}>
                 <tr>
                   <td
-                    className={`flex items-center justify-between gap-4 py-2 px-3 text-slate-600 border rounded-md border-purple-100 bg-opacity-60 ${
-                      mainTask.priority === 'high'
-                        ? 'bg-red-50'
-                        : mainTask.priority === 'low'
-                        ? 'bg-green-50'
-                        : 'bg-yellow-50'
-                    }`}
+                    className={cn(
+                      'flex items-center justify-between gap-4 py-2 px-3 text-slate-600 border rounded-md border-purple-100 bg-opacity-60',
+                      {
+                        'bg-red-50': mainTask.priority === 'high',
+                        'bg-green-50': mainTask.priority === 'low',
+                        'bg-yellow-50': mainTask.priority === 'medium',
+                      }
+                    )}
                   >
                     <SubtaskTable description={subtask.description} time={subtask.time} />
                   </td>
@@ -372,13 +390,17 @@ function SubtaskTable({ description, time }: { description: string; time: number
         onChange={(e) => setIsDone(e.currentTarget.checked)}
       />
       <span
-        className={`leading-tight justify-self-start w-full text-slate-600 ${
-          isDone ? 'line-through text-slate-500 opacity-50' : ''
-        }`}
+        className={cn('leading-tight justify-self-start w-full text-slate-600', {
+          'line-through text-slate-500 opacity-50': isDone,
+        })}
       >
         {description}
       </span>
-      <span className={`text-slate-600 text-right ${isDone ? 'line-through text-slate-500 opacity-50' : ''}`}>
+      <span
+        className={cn('text-slate-600 text-right', {
+          'line-through text-slate-500 opacity-50': isDone,
+        })}
+      >
         {minutes}
       </span>
     </>

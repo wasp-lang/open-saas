@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import { cn } from '../../../shared/utils';
 
 const CheckboxOne = () => {
-  const [isChecked, setIsChecked] = useState<boolean>( false);
+  const [isChecked, setIsChecked] = useState<boolean>(false);
 
   return (
     <div>
@@ -19,14 +20,14 @@ const CheckboxOne = () => {
             }}
           />
           <div
-            className={`mr-4 flex h-5 w-5 items-center justify-center rounded-full border ${
-              isChecked && 'border-primary'
-            }`}
+            className={cn('mr-4 flex h-5 w-5 items-center justify-center rounded-full border', {
+              'border-primary': isChecked,
+            })}
           >
             <span
-              className={`h-2.5 w-2.5 rounded-full bg-transparent ${
-                isChecked && '!bg-primary'
-              }`}
+              className={cn('h-2.5 w-2.5 rounded-full bg-transparent', {
+                '!bg-primary': isChecked,
+              })}
             >
               {' '}
             </span>
