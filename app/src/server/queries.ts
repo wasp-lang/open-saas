@@ -127,7 +127,7 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
   let subscriptionStatusStrings = allSubscriptionStatusOptions?.filter((status) => status !== null) as string[] | undefined
 
 
-  console.log('subscriptionStatus:', subscribtionStatusStrings);
+  console.log('subscriptionStatus:', subscriptionStatusStrings);
 
   const queryResults = await context.entities.User.findMany({
     skip: args.skip,
