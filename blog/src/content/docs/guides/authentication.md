@@ -40,21 +40,27 @@ The `email` method, with it's use of an Email Sending provider to verify a user'
 
 We've pre-configured the `email` auth method for you in a number of different files but commented out the code in case you'd like to quickly implement it in your app. To do so, you'll first need to fill in your Email Sending provider's API keys. We chose [SendGrid](https://sendgrid.com) as the provider, but Wasp can also handle [MailGun](https://mailgun.com), or SMTP. 
 
-After you've signed up for a Sendgrid account, perform the following steps:
+After you've signed up for a Sendgrid account and [set up your app's `emailSender`](/guides/email-sending/#integrate-your-email-sender), perform the following steps:
 
 1. Add your `SENDGRID_API_KEY` to the `.env.server` file
-2. Remove `usernameAndPassword`and uncomment the `email` properties from the `auth.methods` object in `main.wasp`:
-    ```ts title="main.wasp" del={4} ins={5-7}
+2. Remove `usernameAndPassword` and uncomment the `email` properties from the `auth.methods` object in `main.wasp`:
+    ```ts title="main.wasp" del={4} ins={5-11}
     auth: {
       //...
       methods: {
         usernameAndPassword: {}, 
         email: {
+          fromField: {
+            name: "Open SaaS App",
+            // make sure this address is the same you registered your SendGrid account with!
+            email: "vince@wasp-lang.dev" 
+          },
           //...
         }, 
 
     ```
-2. Uncomment `RequestPasswordResetRoute`, `ResetPasswordRoute`, `EmailVerificationRoute` in the `main.wasp` file
+3. Make sure the email address you use in the `fromField` object is the same one you registered your SendGrid account with, which should also match the info in the [`emailSender` property](/guides/email-sending/#integrate-your-email-sender) of your `main.wasp` file. 
+4. Uncomment `RequestPasswordResetRoute`, `ResetPasswordRoute`, `EmailVerificationRoute` in the `main.wasp` file
    ```ts title="main.wasp"
       route RequestPasswordResetRoute { path: "/request-password-reset", to: RequestPasswordResetPage }
       page RequestPasswordResetPage {
@@ -71,11 +77,11 @@ After you've signed up for a Sendgrid account, perform the following steps:
         component: import { EmailVerification } from "@src/client/auth/EmailVerification",
       }
    ```
-3. Uncomment out the above routes's respective code in the `/src/client/auth` folder:
+5. Uncomment out the above routes's respective code in the `/src/client/auth` folder:
     - `EmailVerification.tsx`
     - `PasswordReset.tsx` 
     - `RequestPasswordReset.tsx`
-4. Uncomment out the code in `app/src/server/auth/email.ts` as well.
+6. Uncomment out the code in `app/src/server/auth/email.ts` as well.
 
 And that's it. Wasp will take care of the rest and update your AuthUI components accordingly.
 

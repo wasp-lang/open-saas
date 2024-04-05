@@ -73,7 +73,7 @@ app SaaSTemplate {
     defaultFrom: {
       name: "SaaS App",
       // make sure this address is the same you registered your SendGrid or MailGun account with!
-      email: "vince@wasp-lang.dev" // TODO change to generic email before pushing to github
+      email: "vince@wasp-lang.dev" 
     },
   },
   // add your dependencies here. the quickest way to find the latest version is `npm view <package-name> version`,
