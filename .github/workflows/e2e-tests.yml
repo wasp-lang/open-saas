@@ -63,12 +63,18 @@ jobs:
           sudo apt update          
           sudo apt install stripe
 
+      - name: Run Stripe CLI to listen for webhooks
+        env: 
+          STRIPE_DEVICE_NAME: ${{ secrets.STRIPE_DEVICE_NAME }}
+        run: |
+          nohup $HOME/.stripe/stripe listen --api-key ${{ secrets.STRIPE_KEY }} --forward-to localhost:3001/stripe-webhook > /dev/null 2>&1 &
+
+
       - name: Run Playwright tests
         env:
           # The e2e tests are testing parts of the app that need OPENAI_API_KEY, so we need to set it here.
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           STRIPE_KEY: ${{ secrets.STRIPE_KEY }}
-          STRIPE_DEVICE_NAME: ${{ secrets.STRIPE_DEVICE_NAME }}
           STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
         run: |
           cd e2e-tests
