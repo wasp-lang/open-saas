@@ -56,14 +56,25 @@ jobs:
           cd e2e-tests
           npx playwright install --with-deps
 
-      - name: Run Stripe CLI to listen for webhooks
+      - name: Install Stripe CLI
         run: |
-          docker run -e STRIPE_SECRET_KEY=${{ secrets.STRIPE_KEY }} -it stripe/stripe-cli:latest listen --forward-to localhost:3001/stripe-webhook
+          curl -s https://packages.stripe.dev/api/security/keypair/stripe-cli-gpg/public | gpg --dearmor | sudo tee /usr/share/keyrings/stripe.gpg
+          echo "deb [signed-by=/usr/share/keyrings/stripe.gpg] https://packages.stripe.dev/stripe-cli-debian-local stable main" | sudo tee -a /etc/apt/sources.list.d/stripe.list
+          sudo apt update          
+          sudo apt install stripe
+
+      - name: Run Stripe CLI to listen for webhooks
+        env: 
+          STRIPE_DEVICE_NAME: ${{ secrets.STRIPE_DEVICE_NAME }}
+        run: |
+          stripe listen --api-key ${{ secrets.STRIPE_KEY }} --forward-to localhost:3001/stripe-webhook
 
       - name: Run Playwright tests
         env:
           # The e2e tests are testing parts of the app that need OPENAI_API_KEY, so we need to set it here.
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          STRIPE_KEY: ${{ secrets.STRIPE_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
         run: |
           cd e2e-tests
           npm run e2e:playwright:debug
