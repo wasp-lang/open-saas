@@ -66,10 +66,5 @@ export const createLoggedInUserFixture = ({ hasPaid, credits }: Pick<User, 'hasP
         data: { hasPaid: testUser.hasPaid, credits: testUser.credits },
       });
       await use(page);
-      // TODO: don't delete this data? is it necessary?
-      // clean up all that nasty data 🤮
-      await prisma.gptResponse.deleteMany({ where: { userId: user.id } });
-      await prisma.task.deleteMany({ where: { userId: user.id } });
-      await prisma.user.delete({ where: { id: user.id } });
     },
   });
