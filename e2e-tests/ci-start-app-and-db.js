@@ -26,7 +26,6 @@ function spawn(name, cmd, args, done) {
       console.log(`\x1b[0m\x1b[33m[${name}][err]\x1b[0m ${data}`);
     });
     proc.on('exit', done);
-
   } catch (error) {
     console.error(error);
   }
@@ -36,7 +35,7 @@ function spawn(name, cmd, args, done) {
 const cb = (code) => {
   if (code !== 0) {
     process.exit(code);
-  }
+  } 
 };
 spawn('app', 'npm', ['run', 'e2e:start-app'], cb);
 spawn('db', 'npm', ['run', 'e2e:start-db'], cb);

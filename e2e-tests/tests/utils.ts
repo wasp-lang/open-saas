@@ -50,6 +50,7 @@ export const createRandomUser = () => {
   return { username, password };
 };
 
+// TODO: change hasPaid to subscriptionStatus
 export const createLoggedInUserFixture = ({ hasPaid, credits }: Pick<User, 'hasPaid' | 'credits'>) =>
   base.extend<{ loggedInPage: Page; testUser: User }>({
     testUser: async ({}, use) => {
@@ -59,11 +60,13 @@ export const createLoggedInUserFixture = ({ hasPaid, credits }: Pick<User, 'hasP
     loggedInPage: async ({ page, testUser }, use) => {
       await signUserUp({ page, user: testUser });
       await page.waitForURL('/demo-app');
+      // TODO: try running stripe webhook in CI
       const user = await prisma.user.update({
         where: { username: testUser.username },
         data: { hasPaid: testUser.hasPaid, credits: testUser.credits },
       });
       await use(page);
+      // TODO: don't delete this data? is it necessary?
       // clean up all that nasty data 🤮
       await prisma.gptResponse.deleteMany({ where: { userId: user.id } });
       await prisma.task.deleteMany({ where: { userId: user.id } });

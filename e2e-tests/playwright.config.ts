@@ -32,16 +32,20 @@ export default defineConfig({
     },
   ],
 
+  // globalSetup: require.resolve('./global-setup'), // TODO add dummy env vars here
+  // globalTeardown: require.resolve('./global-teardown'), 
+
+  // TODO: change this comment for local testing --
   /**
    * There seems to be a bug that keeps the webserver open after running tests locally https://github.com/microsoft/playwright/issues/11907
    * causing errors when trying to run `wasp start` afterwards. To avoid this, we can run the webserver only on CI.
    * For local development, we start the app manually with `wasp start` and then run `npx playwright test` to run the tests.
    */
   webServer: {
-        command: 'npm run e2e:start',
-        // Wait for the backend to start
-        url: 'http://localhost:3001',
-        reuseExistingServer: !process.env.CI,
-        timeout: 120 * 1000,
-      }
+    command: 'npm run e2e:start',
+    // Wait for the backend to start
+    url: 'http://localhost:3001',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+  }
 });

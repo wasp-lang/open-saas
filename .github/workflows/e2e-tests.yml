@@ -37,6 +37,10 @@ jobs:
           path: ~/.npm
           key: ${{ runner.os }}-node${{ steps.setup-node.outputs.node-version }}-node-modules-${{ hashFiles('app/package-lock.json') }}
 
+      # In order for the app to run we need to set env vars even if they aren't used
+      # this step sets mock env vars to pass the validation steps so the app can run 
+      # in the CI environment. For vars that are actually used in tests, we set them in
+      # the GitHub secrets settings and access them in a step below.
       - name: Setup Dummy Env Vars 
         run: |
           cd app
@@ -54,7 +58,7 @@ jobs:
 
       - name: Run Playwright tests
         env:
-          # the e2e tests are testing parts of the app that need OPENAI_API_KEY, so we need to set it here
+          # The e2e tests are testing parts of the app that need OPENAI_API_KEY, so we need to set it here.
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           cd e2e-tests
