@@ -23,7 +23,6 @@ entity User {=psl
   isAdmin                   Boolean         @default(false)
   stripeId                  String? 
   checkoutSessionId         String?
-  hasPaid                   Boolean         @default(false)
   subscriptionTier          String?
   subscriptionStatus        String?
   sendEmail                 Boolean         @default(false)
@@ -47,7 +46,6 @@ entity User {=psl
   //...
   stripeId                  String? 
   checkoutSessionId         String?
-  hasPaid                   Boolean         @default(false)
   subscriptionTier          String?
   subscriptionStatus        String?
   datePaid                  DateTime?
@@ -58,16 +56,13 @@ psl=}
 
 - `stripeId`: The Stripe customer ID. This is created by Stripe on checkout and used to identify the customer.
 - `checkoutSessionId`: The Stripe checkout session ID. This is created by Stripe on checkout and used to identify the checkout session.
-- `hasPaid`: A boolean that indicates whether the user has paid for a subscription or not.
 - `subscriptionTier`: The subscription tier the user is on. This is set by the app and is used to determine what features the user has access to. By default, we have two tiers: `hobby-tier` and `pro-tier`.
 - `subscriptionStatus`: The subscription status of the user. This is set by Stripe and is used to determine whether the user has access to the app or not. By default, we have four statuses: `active`, `past_due`, `canceled`, and `deleted`.
-- `credits` (optional): You can allow a user to trial your product with a limited number of credits before they have to pay.
+- `credits` (optional): By default, a user is given 3 credits to trial your product before they have to pay. You can create a one-time purchase product in Stripe to allow users to purchase more credits if they run out.
 
 ### Subscription Statuses
 
-In general, we determine if a user has paid for an initial subscription by checking if the `hasPaid` field is true. If it is, we know that the user has paid for a subscription and we can grant them access to the app.
-
-The `subscriptionStatus` field is set by Stripe within your webhook handler and is used to signify more detailed information on the user's current status. By default, the template handles four statuses: `active`, `past_due`, `canceled`, and `deleted`.
+In general, we determine if a user has paid for an initial subscription by checking if the `subscriptionStatus` field is set. This field is set by Stripe within your webhook handler and is used to signify more detailed information on the user's current status. By default, the template handles four statuses: `active`, `past_due`, `canceled`, and `deleted`.
 
 - When `active` the user has paid for a subscription and has full access to the app. 
 
@@ -109,7 +104,7 @@ The `subscriptionTier` field is used to determine what features the user has acc
 
 By default, we have two tiers: `hobby-tier` and `pro-tier`. 
 
-You can add more tiers by adding more products and price IDs to your Stripe product  and updating environment variables in your `.env.server` file as well as the relevant code in your app.
+You can add more tiers by adding more products and price IDs to your Stripe product and updating environment variables in your `.env.server` file as well as the relevant code in your app.
 
 See the [Stripe Integration Guide](/guides/stripe-integration) for more info on how to do this.
 

@@ -71,7 +71,7 @@ wasp db studio
 
 ![db studio](/stripe/db-studio.png)
 
-- Navigate to `localhost:5555` and click on the `users` table. You should see `hasPaid`is true and `subscriptionStatus` is `active` for the user that just made the purchase.
+- Navigate to `localhost:5555` and click on the `users` table. You should see the `subscriptionStatus` is `active` for the user that just made the purchase.
 
 :::note
 If you want to learn more about how a user's payment status, subscription status, and subscription tier affect a user's priveledges within the app, check out the [User Overview](/general/user-overview) reference.

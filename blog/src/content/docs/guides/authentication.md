@@ -12,8 +12,9 @@ Setting up your app's authentication is easy with Wasp. In fact, it's aready set
   auth: {
     userEntity: User,
     methods: {
-      usernameAndPassword: {}, // works out-of-the-box!
-      // more auth methods can be added here
+      email: {}, 
+      google: {},
+      gitHub: {}
     },
     onAuthFailedRedirectTo: "/",
   },
@@ -21,22 +22,11 @@ Setting up your app's authentication is easy with Wasp. In fact, it's aready set
 
 The great part is, by defining your auth config in the `main.wasp` file, Wasp manages most of the Auth process for you, including the auth-related databse entities for user credentials and sessions, as well as auto-generated client components for your app on the fly (aka AuthUI -- you can see them in the `src/client/auth` folder).
 
-## Migrating to a different Auth method
+## Email Verified Auth
 
-We've set up the template to get you started with Wasp's simplest auth method, `usernameAndPassword`, but we suggest you only use it to get your app developlment going. 
+The `email` method, with it's use of an Email Sending provider to send a verification email to the user's email address, is the default auth method in Open SaaS.
 
-**In production, you should opt for one or more of Wasp's more secure Auth methods**:
-- `email` (email verified Auth, with forgotten password and reset options),
-- `google`,
-- `gitHub`, 
-
-If you want to use one or a combination of these Auth methods, you can easily do so by changing the `auth.methods` object in the `main.wasp` file.
-
-### Email Verified Auth
-
-The `email` method, with it's use of an Email Sending provider to verify a user's email, is preferrable to `usernameAndPassword` because it's more secure and allows for password reset options. 
-
-🚫 **Note that the `email` and `usernameAndPassword` methods can not be used together.** 
+⚠️ **Note that the `email` method ships with the "Dummy" provider, which should only be used for local development. To obtain a user's email confirmation token on initial sign-up, check your server logs! We suggest you set up SendGrid as the email provider once you're ready** 
 
 We've pre-configured the `email` auth method for you in a number of different files but commented out the code in case you'd like to quickly implement it in your app. To do so, you'll first need to fill in your Email Sending provider's API keys. We chose [SendGrid](https://sendgrid.com) as the provider, but Wasp can also handle [MailGun](https://mailgun.com), or SMTP. 
 
@@ -52,8 +42,8 @@ After you've signed up for a Sendgrid account and [set up your app's `emailSende
         email: {
           fromField: {
             name: "Open SaaS App",
-            // make sure this address is the same you registered your SendGrid account with!
-            email: "vince@wasp-lang.dev" 
+            // When using SendGrid, you must use the same email address that you configured your account to send out emails with!
+            email: "me@example.com" 
           },
           //...
         }, 

@@ -11,7 +11,25 @@ This guide explains how to use the integrated email sender and how you can integ
 
 ## Sending Emails
 
-In the `main.wasp` config file, you'll see we've got the email sender set up for you:
+### The `Dummy` Email Provider (for Local Dev Only)
+By default we've set up the email sender to use the `Dummy` provider. This is **for local development only** and no emails will actually be sent out!
+To obtain an email verification token/link, you must check the server logs on initial sign up. You can click this link to verify your email and continue with the sign up process.
+```tsx title="main.wasp"
+app SaaSTemplate {
+  // ...
+  emailSender: {
+    provider: Dummy,
+    defaultFrom: {
+      name: "Open SaaS App",
+      email: "me@example.com" 
+    },
+  },
+```
+
+Note that your app will not build if using the `Dummy` provider and you must switch to a production-ready provider in order to do so.
+
+### Using a Production-Ready Email Provider (e.g. SendGrid)
+To change your email provider to a production-ready one, such as SendGrid, you'll want to configure your `emailSender` like so:
 
 ```tsx title="main.wasp"
 app SaaSTemplate {
@@ -20,13 +38,13 @@ app SaaSTemplate {
     provider: SendGrid,
     defaultFrom: {
       name: "Open SaaS App",
-      // make sure this address is the same you registered your SendGrid or MailGun account with!
-      email: "my@email.com" 
+      // When using SendGrid, you must use the same email address that you configured your account to send out emails with!
+      email: "me@example.com" 
     },
   },
 ```
 
-This means that you can send emails from your app using the `send` function from the `email` module:
+This means that you can send emails from your app using the `send` function from the `email` modul provided by Wasp:
 
 ```tsx title="src/server/webhooks.ts"
 import { emailSender } from "wasp/server/email";
@@ -47,12 +65,6 @@ In the example above, you can see that we're sending an email to the customer wh
 
 This is a powerful feature and super simple to use.
 
-:::tip[Sending Emails in Development]
-In the `.env.server` file, we've set the `SEND_EMAILS_IN_DEVELOPMENT` env variable to false. This means that emails won't actually be sent in development, rather only logged to the console. 
-
-If you'd like to actually send emails in development, you can turn it on by setting it to true.
-:::
-
 ## Integrate your email sender
 
 To set up your email sender, you first need an account with one of the supported email providers.
@@ -71,14 +83,14 @@ To set up your email sender, you first need an account with one of the supported
   </TabItem>
 </Tabs>
 
-Make sure to change the `defaultFrom` email address in the `main.wasp` file to the same email address you used to register your account with.
+Make sure to change the `defaultFrom` email address in the `main.wasp` file to use the same email address that you configured your account to send out emails with!
 
 ```tsx title="main.wasp" {5}
 emailSender: {
   provider: SendGrid,
   defaultFrom: {
     name: "Open SaaS App",
-    email: "my@email.com" 
+    email: "me@example.com" // <--- same email address you configured your SendGrid account to send emails with!
   },
 ```
 
