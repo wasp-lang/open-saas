@@ -24,8 +24,20 @@ app OpenSaaS {
   auth: {
     userEntity: User,
     methods: {
-      usernameAndPassword: { // !IMPORTANT: this method is only suitable for dev/testing. Use social or email methods in production.
-        userSignupFields: import { getUsernameAndPasswordUserFields } from "@src/server/auth/setUsername.js",
+      email: {
+        fromField: {
+          name: "Open SaaS App",
+          email: "me@example.com" 
+        },
+        emailVerification: {
+          clientRoute: EmailVerificationRoute,
+          getEmailContentFn: import { getVerificationEmailContent } from "@src/server/auth/email.js",
+        },
+        passwordReset: {
+          clientRoute: PasswordResetRoute,
+          getEmailContentFn: import { getPasswordResetEmailContent } from "@src/server/auth/email.js",
+        },
+        userSignupFields: import { getEmailUserFields } from "@src/server/auth/setUsername.js",
       },
       // google: { // Guide for setting up Auth via Google https://wasp-lang.dev/docs/auth/social-auth/overview
       //   userSignupFields: import { getGoogleUserFields } from "@src/server/auth/setUsername.js",
@@ -34,22 +46,6 @@ app OpenSaaS {
       // gitHub: {
       //   userSignupFields: import { getGitHubUserFields } from "@src/server/auth/setUsername.js",
       //   configFn: import { getGitHubAuthConfig } from "@src/server/auth/setUsername.js",
-      // },
-      // email: {
-      //   fromField: {
-      //     name: "Open SaaS App",
-      //     // make sure this address is the same you registered your SendGrid or MailGun account with!
-      //     email: "vince@wasp-lang.dev" 
-      //   },
-      //   emailVerification: {
-      //     clientRoute: EmailVerificationRoute,
-      //     getEmailContentFn: import { getVerificationEmailContent } from "@src/server/auth/email.js",
-      //   },
-      //   passwordReset: {
-      //     clientRoute: PasswordResetRoute,
-      //     getEmailContentFn: import { getPasswordResetEmailContent } from "@src/server/auth/email.js",
-      //   },
-      //   userSignupFields: import { getEmailUserFields } from "@src/server/auth/setUsername.js",
       // },
     },
     onAuthFailedRedirectTo: "/login",
@@ -64,11 +60,15 @@ app OpenSaaS {
   client: {
     rootComponent: import App from "@src/client/App",
   },
+  
   emailSender: {
-    provider: SendGrid,
+    // Note that the "Dummy" provider is just for local development purposes. 
+    // Make sure to check the server logs for the confirmation email token (it will not be sent to an address)!
+    // Please use SendGrid in production. See: https://docs.opensaas.sh/guides/email-sending/
+    provider: Dummy, 
     defaultFrom: {
       name: "Open SaaS App",
-      // make sure this address is the same you registered your SendGrid or MailGun account with!
+      // When using SendGrid, you must use the same email address that you configured your account to send out emails with!
       email: "me@example.com" 
     },
   },
@@ -190,20 +190,20 @@ page SignupPage {
   component: import { Signup } from "@src/client/auth/SignupPage"
 }
 
-// route RequestPasswordResetRoute { path: "/request-password-reset", to: RequestPasswordResetPage }
-// page RequestPasswordResetPage {
-//   component: import { RequestPasswordReset } from "@src/client/auth/RequestPasswordReset",
-// }
+route RequestPasswordResetRoute { path: "/request-password-reset", to: RequestPasswordResetPage }
+page RequestPasswordResetPage {
+  component: import { RequestPasswordReset } from "@src/client/auth/RequestPasswordReset",
+}
 
-// route PasswordResetRoute { path: "/password-reset", to: PasswordResetPage }
-// page PasswordResetPage {
-//   component: import { PasswordReset } from "@src/client/auth/PasswordReset",
-// }
+route PasswordResetRoute { path: "/password-reset", to: PasswordResetPage }
+page PasswordResetPage {
+  component: import { PasswordReset } from "@src/client/auth/PasswordReset",
+}
 
-// route EmailVerificationRoute { path: "/email-verification", to: EmailVerificationPage }
-// page EmailVerificationPage {
-//   component: import { EmailVerification } from "@src/client/auth/EmailVerification",
-// }
+route EmailVerificationRoute { path: "/email-verification", to: EmailVerificationPage }
+page EmailVerificationPage {
+  component: import { EmailVerification } from "@src/client/auth/EmailVerification",
+}
 
 route DemoAppRoute { path: "/demo-app", to: DemoAppPage }
 page DemoAppPage {
