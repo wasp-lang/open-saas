@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test';
 import { createLoggedInUserFixture } from './utils';
 
-const test = createLoggedInUserFixture({ hasPaid: false, credits: 0 });
+const test = createLoggedInUserFixture({ hasPaid: false });
 
 test('Demo app: cannot generate schedule', async ({ loggedInPage }) => {
   const task1 = 'create presentation on SaaS';
