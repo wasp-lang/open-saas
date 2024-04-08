@@ -24,67 +24,64 @@ The great part is, by defining your auth config in the `main.wasp` file, Wasp ma
 
 ## Email Verified Auth
 
-The `email` method, with it's use of an Email Sending provider to send a verification email to the user's email address, is the default auth method in Open SaaS.
+The `email` method, with it's use of an Email Sending provider to send verification and password reset emails to the user's email address, is the default auth method in Open SaaS.
 
-⚠️ **Note that the `email` method ships with the "Dummy" provider, which should only be used for local development. To obtain a user's email confirmation token on initial sign-up, check your server logs! We suggest you set up SendGrid as the email provider once you're ready** 
+:::caution[Dummy Email Provider]
+The `email` method relies on the `emailSender` within the `main.wasp` file. By default, Open SaaS ships with the `Dummy` email provider, which does not send any emails, but instead will log all email verication links/tokens to the server's console! You can follow these links to verify and continue with the sign up process.  
+```tsx title="main.wasp" 
+  emailSender: {
+    provider: Dummy, // logs all email verification links/tokens to the server's console
+    defaultFrom: {
+      name: "Open SaaS App",
+      email: "me@example.com" 
+    },
+  },
+```
 
-We've pre-configured the `email` auth method for you in a number of different files but commented out the code in case you'd like to quickly implement it in your app. To do so, you'll first need to fill in your Email Sending provider's API keys. We chose [SendGrid](https://sendgrid.com) as the provider, but Wasp can also handle [MailGun](https://mailgun.com), or SMTP. 
+You **can not use the Dummy provider in production** and your app **will not build** until you move to a production-ready provider, such as SendGrid. We outline the process of migrating to SendGrid below. 
+:::
 
-After you've signed up for a Sendgrid account and [set up your app's `emailSender`](/guides/email-sending/#integrate-your-email-sender), perform the following steps:
+We've pre-configured the `email` auth method for you in a number of different files so you can get started quickly. In order to use the `email` auth method, you'll need to switch from the `Dummy` email provider to a production-ready provider like SendGrid: 
 
-1. Add your `SENDGRID_API_KEY` to the `.env.server` file
-2. Remove `usernameAndPassword` and uncomment the `email` properties from the `auth.methods` object in `main.wasp`:
-    ```ts title="main.wasp" del={4} ins={5-11}
-    auth: {
-      //...
-      methods: {
-        usernameAndPassword: {}, 
-        email: {
-          fromField: {
-            name: "Open SaaS App",
-            // When using SendGrid, you must use the same email address that you configured your account to send out emails with!
-            email: "me@example.com" 
-          },
-          //...
-        }, 
+1. First, set up the your app's `emailSender` in the `main.wasp` file by following [this guide](/guides/email-sending/#integrate-your-email-sender). 
+2. Add your `SENDGRID_API_KEY` to the `.env.server` file.
+3. Make sure the email address you use in the `fromField` object is the same email address that you configured your SendGrid account to send out emails with. In the end, your `main.wasp` file should look something like this: 
+```ts title="main.wasp" {6,7} del={15} ins={16}
+  auth: {
+    methods: {
+      email: {
+        fromField: {
+          name: "Open SaaS App",
+          // When using SendGrid, you must use the same email address that you configured your account to send out emails with!
+          email: "me@example.com" 
+        },
+        //...
+      }, 
+    }
+  },
+  //...
+  emailSender: {
+    provider: Dummy,
+    provider: SendGrid,
+    defaultFrom: {
+      name: "Open SaaS App",
+      // When using SendGrid, you must use the same email address that you configured your account to send out emails with!
+      email: "me@example.com" 
+    },
+  },
+  ```
 
-    ```
-3. Make sure the email address you use in the `fromField` object is the same one you registered your SendGrid account with, which should also match the info in the [`emailSender` property](/guides/email-sending/#integrate-your-email-sender) of your `main.wasp` file. 
-4. Uncomment `RequestPasswordResetRoute`, `ResetPasswordRoute`, `EmailVerificationRoute` in the `main.wasp` file
-   ```ts title="main.wasp"
-      route RequestPasswordResetRoute { path: "/request-password-reset", to: RequestPasswordResetPage }
-      page RequestPasswordResetPage {
-        component: import { RequestPasswordReset } from "@src/client/auth/RequestPasswordReset",
-      }
-
-      route PasswordResetRoute { path: "/password-reset", to: PasswordResetPage }
-      page PasswordResetPage {
-        component: import { PasswordReset } from "@src/client/auth/PasswordReset",
-      }
-
-      route EmailVerificationRoute { path: "/email-verification", to: EmailVerificationPage }
-      page EmailVerificationPage {
-        component: import { EmailVerification } from "@src/client/auth/EmailVerification",
-      }
-   ```
-5. Uncomment out the above routes's respective code in the `/src/client/auth` folder:
-    - `EmailVerification.tsx`
-    - `PasswordReset.tsx` 
-    - `RequestPasswordReset.tsx`
-6. Uncomment out the code in `app/src/server/auth/email.ts` as well.
 
 And that's it. Wasp will take care of the rest and update your AuthUI components accordingly.
 
 Check out the  [Wasp Auth docs](https://wasp-lang.dev/docs/auth/overview) for more info.
 
-## Google Auth
+## Google & GitHub Auth
 
-We've also customized and pre-built the Google auth flow for you. To start using it you just need to uncomment out the `google` method in `main.wasp` file and fill in your API keys in the `.env.server` file. 
+We've also customized and pre-built the Google and GitHub auth flow for you. To start using them, you just need to uncomment out the methods you want in your `main.wasp` file and obtain the proper API keys to add to your `.env.server` file. 
 
-To get your Google API keys, follow the instructions in Wasp's [Google Auth docs](https://wasp-lang.dev/docs/auth/social-auth/google#3-creating-a-google-oauth-app).
+To create a Google OAuth app and get your Google API keys, follow the instructions in [Wasp's Google Auth docs](https://wasp-lang.dev/docs/auth/social-auth/google#3-creating-a-google-oauth-app).
+
+To create a GitHub OAuth App add get your GitHub API keys, you can follow the instructions in [Wasp's GitHub Auth docs](https://wasp-lang.dev/docs/auth/social-auth/github#3-creating-a-github-oauth-app).
 
 Again, Wasp will take care of the rest and update your AuthUI components accordingly.
-
-## GitHub Auth
-
-To easily add GitHub as a login option, you can follow the instructions in Wasp's [GitHub Auth docs](https://wasp-lang.dev/docs/auth/social-auth/github#3-creating-a-github-oauth-app).
