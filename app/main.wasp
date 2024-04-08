@@ -27,7 +27,6 @@ app OpenSaaS {
       email: {
         fromField: {
           name: "Open SaaS App",
-          // When using SendGrid, you must use the same email address that you configured your account to send out emails with!
           email: "me@example.com" 
         },
         emailVerification: {
