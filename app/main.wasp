@@ -27,7 +27,7 @@ app OpenSaaS {
       email: {
         fromField: {
           name: "Open SaaS App",
-          // You must use the same email address that you configured your SendGrid account to send out emails with!
+          // When using SendGrid, you must use the same email address that you configured your account to send out emails with!
           email: "me@example.com" 
         },
         emailVerification: {
@@ -61,11 +61,15 @@ app OpenSaaS {
   client: {
     rootComponent: import App from "@src/client/App",
   },
+  
   emailSender: {
-    provider: Dummy, // NOTE this is just for local development purposes. Use SendGrid in production. 
+    // Note that the "Dummy" provider is just for local development purposes. 
+    // Make sure to check the server logs for the confirmation email token (it will not be sent to an address)!
+    // Please use SendGrid in production. See: https://docs.opensaas.sh/guides/email-sending/
+    provider: Dummy, 
     defaultFrom: {
       name: "Open SaaS App",
-      // You must use the same email address that you configured your SendGrid account to send out emails with!
+      // When using SendGrid, you must use the same email address that you configured your account to send out emails with!
       email: "me@example.com" 
     },
   },
