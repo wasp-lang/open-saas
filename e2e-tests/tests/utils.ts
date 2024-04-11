@@ -2,11 +2,12 @@ import { test as base, type Page, expect } from '@playwright/test';
 import { randomUUID } from 'crypto';
 import { PrismaClient } from '@prisma/client';
 
+// TODO remove this if not necessary
 const prisma = new PrismaClient();
 
 export type User = {
   id?: number;
-  username: string;
+  email: string;
   password?: string;
   hasPaid?: boolean;
   credits?: number;
@@ -19,14 +20,24 @@ export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
 
   await page.getByRole('link', { name: 'Log in' }).click();
 
-  console.log('logging in...', user);
-  await page.waitForURL('http://localhost:3000/login');
+  await page.waitForURL('http://localhost:3000/login', {
+    waitUntil: 'domcontentloaded',
+  });
 
-  await page.fill('input[name="username"]', user.username);
+  await page.fill('input[name="email"]', user.email);
 
-  await page.fill('input[name="password"]', user.password || DEFAULT_PASSWORD);
+  await page.fill('input[name="password"]', DEFAULT_PASSWORD);
 
-  await page.click('button:has-text("Log in")');
+  const clickLogin = page.click('button:has-text("Log in")');
+
+  await Promise.all([
+    page.waitForResponse((response) => {
+      return response.url().includes('login') && response.status() === 200;
+    }),
+    clickLogin,
+  ]);
+
+  await page.waitForURL('http://localhost:3000/demo-app');
 };
 
 export const signUserUp = async ({ page, user }: { page: Page; user: User }) => {
@@ -36,51 +47,37 @@ export const signUserUp = async ({ page, user }: { page: Page; user: User }) => 
 
   await page.click('text="go to signup"');
 
-  await page.fill('input[name="username"]', user.username);
+  await page.fill('input[name="email"]', user.email);
 
-  await page.fill('input[name="password"]', user.password || DEFAULT_PASSWORD);
+  await page.fill('input[name="password"]', DEFAULT_PASSWORD);
 
   await page.click('button:has-text("Sign up")');
+
+  await page.waitForResponse((response) => {
+    return response.url().includes('signup') && response.status() === 200;
+  });
 };
 
 export const createRandomUser = () => {
-  const username = `user${randomUUID()}`;
+  const email = `${randomUUID()}@test.com`;
   const password = `password${randomUUID()}!`;
-
-  return { username, password };
+  return { email, password };
 };
 
 // TODO: change hasPaid to subscriptionStatus
-export const createLoggedInUserFixture = ({ hasPaid }: Pick<User, 'hasPaid'>) =>
+export const createLoggedInUserFixture = () =>
   base.extend<{ loggedInPage: Page; testUser: User }>({
     testUser: async ({}, use) => {
-      const { username, password } = createRandomUser();
-      await use({ username, password, hasPaid });
+      const { email, password } = createRandomUser();
+      await use({ email, password });
     },
     loggedInPage: async ({ page, testUser }, use) => {
       await signUserUp({ page, user: testUser });
-      await page.waitForURL('/demo-app');
+      await logUserIn({ page, user: testUser });
+
       // TODO: try running stripe webhook in CI ✅
       // TODO: complete a payment in `paidUserTests.spec.ts` instead of manually updating the user below ⏳
 
-      if (testUser.hasPaid) {
-        await page.click('text="Pricing"');
-        await page.click('text="Buy Plan"');
-        // wait for stripe payment page to load
-        
-        await page.fill('input[name="cardNumber"]', '4242424242424242');
-        await page.fill('input[name="expiryDate"]', '1225');
-        await page.fill('input[name="cvc"]', '123');
-        await page.click('button:has-text("Pay")');
-        await page.waitForURL('/account');
-        await page.click('text="Demo App"');
-        await page.waitForURL('/demo-app');
-      }
-
-      // const user = await prisma.user.update({
-      //   where: { username: testUser.username },
-      //   data: { hasPaid: testUser.hasPaid, credits: testUser.credits },
-      // });
       await use(page);
     },
   });

@@ -1,13 +1,49 @@
 import { expect } from '@playwright/test';
 import { createLoggedInUserFixture } from './utils';
 
-const test = createLoggedInUserFixture({ hasPaid: true });
+const test = createLoggedInUserFixture();
 
-test('Demo App: add tasks & generate schedule', async ({ loggedInPage }) => {
+test('make test payment with stripe', async ({ loggedInPage, testUser }) => {
+  console.log('running stripe payment');
+  test.slow();
+  await loggedInPage.click('text="Pricing"');
+  await loggedInPage.waitForURL('**/pricing');
+
+  // find the Buy plan button
+  const buyBtn = await loggedInPage.waitForSelector('button:has-text("Buy plan")', { state: 'visible' });
+  await buyBtn.isEnabled();
+  await buyBtn.click();
+
+  await loggedInPage.waitForURL('https://checkout.stripe.com/**', { waitUntil: 'domcontentloaded' });
+
+  await loggedInPage.fill('input[name="cardNumber"]', '4242424242424242');
+  await loggedInPage.getByPlaceholder('MM / YY').fill('1225');
+  await loggedInPage.getByPlaceholder('CVC').fill('123');
+  await loggedInPage.getByPlaceholder('Full name on card').fill('Test User');
+  const countrySelect = loggedInPage.getByLabel('Country or region');
+  await countrySelect.selectOption('Germany');
+
+  await loggedInPage.waitForResponse(
+    (response) => response.url().includes('trusted-types-checker') && response.status() === 200
+  );
+  const payBtn = await loggedInPage.waitForSelector('button[data-testid="hosted-payment-submit-button"]');
+
+  await payBtn.click();
+
+  // wait for payment to processs
+
+  await loggedInPage.waitForURL('**/checkout?success=true');
+
+  await loggedInPage.waitForURL('**/account');
+
+  await expect(loggedInPage.getByText('Hobby Plan')).toBeVisible();
+});
+
+test('Demo App: add tasks & generate schedule', async ({ loggedInPage, testUser }) => {
   const task1 = 'create presentation on SaaS';
   const task2 = 'build SaaS app draft';
 
-  await loggedInPage.waitForURL('/demo-app');
+  await loggedInPage.waitForURL('**/demo-app');
 
   await loggedInPage.fill('input[id="description"]', task1);
 
