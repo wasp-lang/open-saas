@@ -10,6 +10,7 @@ on:
 
 env:
   WASP_TELEMETRY_DISABLE: 1
+  WASP_VERSION: 0.13.2
 
 jobs:
   test:
@@ -26,16 +27,10 @@ jobs:
           node-version: '20'
 
       - name: Install Wasp
-        run: curl -sSL https://get.wasp-lang.dev/installer.sh | sh -s -- -v 0.13.2
+        run: curl -sSL https://get.wasp-lang.dev/installer.sh | sh -s -- -v ${{ env.WASP_VERSION }}
 
       - name: Docker setup
         uses: docker/setup-buildx-action@v3
-
-      - name: Cache Node Modules
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node${{ steps.setup-node.outputs.node-version }}-node-modules-${{ hashFiles('app/package-lock.json') }}
 
       # In order for the app to run we need to set env vars even if they aren't used
       # this step sets mock env vars to pass the validation steps so the app can run 
@@ -46,12 +41,41 @@ jobs:
           cd app
           cp .env.server.example .env.server
 
+      - name: Cache App Node Modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-wasp${{ env.WASP_VERSION }}-node${{ steps.setup-node.outputs.node-version }}-node-modules-${{ hashFiles('app/package-lock.json') }}
+
+      - name: Cache E2E Tests Node Modules
+        id: cache-e2e-tests
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/e2e-tests
+          key: ${{ runner.os }}-node${{ steps.setup-node.outputs.node-version }}-e2e-tests-${{ hashFiles('e2e-tests/package-lock.json') }}
+
       - name: Install Node.js dependencies for Playwright tests
+        if: steps.cache-e2e-tests.outputs.cache-hit != 'true'
         run: |
           cd e2e-tests
           npm ci
 
+      - name: Store Playwright's Version
+        run: |
+          cd e2e-tests
+          PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')
+          echo "Playwright's Version: $PLAYWRIGHT_VERSION"
+          echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV
+
+      - name: Cache Playwright Browsers for Playwright's Version
+        id: cache-playwright-browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-browsers-${{ env.PLAYWRIGHT_VERSION }}
+      
       - name: Set up Playwright
+        if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
         run: |
           cd e2e-tests
           npx playwright install --with-deps
