@@ -71,7 +71,8 @@ jobs:
 
       - name: Run Playwright tests
         env:
-          # The e2e tests are testing parts of the app that need OPENAI_API_KEY, so we need to set it here.
+          # The e2e tests are testing parts of the app that need certain env vars, so we need to access them here.
+          # These secretes can be set in your GitHub repo settings, e.g. https://github.com/<account>/<repo>/settings/secrets/actions
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           STRIPE_KEY: ${{ secrets.STRIPE_KEY }}
           STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}

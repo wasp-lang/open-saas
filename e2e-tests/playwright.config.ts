@@ -23,7 +23,7 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
   },
-  
+
   /* Configure projects for major browsers */
   projects: [
     {
@@ -32,14 +32,10 @@ export default defineConfig({
     },
   ],
 
-  // globalSetup: require.resolve('./global-setup'), // TODO add dummy env vars here
-  // globalTeardown: require.resolve('./global-teardown'), 
-
-  // TODO: change this comment for local testing --
   /**
    * There seems to be a bug that keeps the webserver open after running tests locally https://github.com/microsoft/playwright/issues/11907
    * causing errors when trying to run `wasp start` afterwards. To avoid this, we can run the webserver only on CI.
-   * For local development, we start the app manually with `wasp start` and then run `npx playwright test` to run the tests.
+   * For local development, we start the app manually with `wasp db start` and `wasp start` and then `npm run local:e2e:start`.
    */
   webServer: {
     command: 'npm run ci:e2e:start',
@@ -47,5 +43,5 @@ export default defineConfig({
     url: 'http://localhost:3001',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
-  }
+  },
 });

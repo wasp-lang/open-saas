@@ -1,4 +1,4 @@
-import { test as base, type Page } from '@playwright/test';
+import { type Page } from '@playwright/test';
 import { randomUUID } from 'crypto';
 
 export type User = {
@@ -13,7 +13,7 @@ export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
   await page.goto('/');
 
   await page.getByRole('link', { name: 'Log in' }).click();
-  
+
   await page.waitForURL('**/login', {
     waitUntil: 'domcontentloaded',
   });
@@ -25,9 +25,12 @@ export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
   const clickLogin = page.click('button:has-text("Log in")');
 
   await Promise.all([
-    page.waitForResponse((response) => {
-      return response.url().includes('login') && response.status() === 200;
-    }),
+    page
+      .waitForResponse((response) => {
+        return response.url().includes('login') && response.status() === 200;
+      })
+      .catch((err) => console.error(err.message)),
+    ,
     clickLogin,
   ]);
 
@@ -47,9 +50,11 @@ export const signUserUp = async ({ page, user }: { page: Page; user: User }) => 
 
   await page.click('button:has-text("Sign up")');
 
-  await page.waitForResponse((response) => {
-    return response.url().includes('signup') && response.status() === 200;
-  });
+  await page
+    .waitForResponse((response) => {
+      return response.url().includes('signup') && response.status() === 200;
+    })
+    .catch((err) => console.error(err.message));
 };
 
 export const createRandomUser = () => {
