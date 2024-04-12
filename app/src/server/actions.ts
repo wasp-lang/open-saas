@@ -60,13 +60,14 @@ export const stripePayment: StripePayment<string, StripePaymentResult> = async (
       customerId: customer.id,
       mode: tier === TierIds.CREDITS ? 'payment' : 'subscription',
     });
+    console.log('session >>> ', session)
   } catch (error: any) {
     const statusCode = error.statusCode || 500;
     const errorMessage = error.message || 'Internal server error';
     throw new HttpError(statusCode, errorMessage);
   }
 
-  await context.entities.User.update({
+  const updatedUser = await context.entities.User.update({
     where: {
       id: context.user.id,
     },
@@ -75,6 +76,8 @@ export const stripePayment: StripePayment<string, StripePaymentResult> = async (
       stripeId: customer.id,
     },
   });
+
+  console.log('updatedUser >>> ', updatedUser)
 
   return {
     sessionUrl: session.url,
