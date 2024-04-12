@@ -26,7 +26,6 @@ function setupOpenAI() {
 }
 
 export const stripePayment: StripePayment<string, StripePaymentResult> = async (tier, context) => {
-  console.log('<><> tier >>> ', tier)
   console.log('<><> context.user >>> ', context.user)
   if (!context.user) {
     throw new HttpError(401);
@@ -50,11 +49,13 @@ export const stripePayment: StripePayment<string, StripePaymentResult> = async (
   } else {
     throw new HttpError(404, 'Invalid tier');
   }
+  console.log('<><> tier >>> ', tier);
 
   let customer: Stripe.Customer;
   let session: Stripe.Checkout.Session;
   try {
     customer = await fetchStripeCustomer(userEmail);
+    console.log('customer >>> ', customer)
     session = await createStripeCheckoutSession({
       priceId,
       customerId: customer.id,
