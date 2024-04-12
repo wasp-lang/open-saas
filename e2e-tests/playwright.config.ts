@@ -42,7 +42,7 @@ export default defineConfig({
    * For local development, we start the app manually with `wasp start` and then run `npx playwright test` to run the tests.
    */
   webServer: {
-    command: 'npm run e2e:start',
+    command: 'npm run ci:e2e:start',
     // Wait for the backend to start
     url: 'http://localhost:3001',
     reuseExistingServer: !process.env.CI,
