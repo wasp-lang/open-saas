@@ -33,20 +33,25 @@ export async function createStripeCheckoutSession({
   customerId: string;
   mode: 'subscription' | 'payment';
 }) {
-  return await stripe.checkout.sessions.create({
-    line_items: [
-      {
-        price: priceId,
-        quantity: 1,
+  try {
+    return await stripe.checkout.sessions.create({
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
+      mode: mode,
+      success_url: `${DOMAIN}/checkout?success=true`,
+      cancel_url: `${DOMAIN}/checkout?canceled=true`,
+      automatic_tax: { enabled: true },
+      customer_update: {
+        address: 'auto',
       },
-    ],
-    mode: mode,
-    success_url: `${DOMAIN}/checkout?success=true`,
-    cancel_url: `${DOMAIN}/checkout?canceled=true`,
-    automatic_tax: { enabled: true },
-    customer_update: {
-      address: 'auto',
-    },
-    customer: customerId,
-  });
+      customer: customerId,
+    });
+    
+  } catch (error) {
+    console.log(error)
+  }
 }
