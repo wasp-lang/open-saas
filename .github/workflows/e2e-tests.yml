@@ -75,6 +75,9 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           STRIPE_KEY: ${{ secrets.STRIPE_KEY }}
           STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+          HOBBY_SUBSCRIPTION_PRICE_ID: ${{ secrets.HOBBY_SUBSCRIPTION_PRICE_ID }}
+          PRO_SUBSCRIPTION_PRICE_ID: ${{ secrets.PRO_SUBSCRIPTION_PRICE_ID }}
+          CREDITS_PRICE_ID: ${{ secrets.CREDITS_PRICE_ID }}
           SKIP_EMAIL_VERIFICATION_IN_DEV: true
         run: |
           cd e2e-tests
