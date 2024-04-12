@@ -75,6 +75,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           STRIPE_KEY: ${{ secrets.STRIPE_KEY }}
           STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+          SKIP_EMAIL_VERIFICATION_IN_DEV: true
         run: |
           cd e2e-tests
           npm run e2e:playwright:debug
