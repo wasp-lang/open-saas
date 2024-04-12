@@ -26,6 +26,8 @@ function setupOpenAI() {
 }
 
 export const stripePayment: StripePayment<string, StripePaymentResult> = async (tier, context) => {
+  console.log('<><> tier >>> ', tier)
+  console.log('<><> context.user >>> ', context.user)
   if (!context.user) {
     throw new HttpError(401);
   }
@@ -37,7 +39,6 @@ export const stripePayment: StripePayment<string, StripePaymentResult> = async (
     );
   }
 
-  console.log('<><> tier >>> ', tier)
 
   let priceId;
   if (tier === TierIds.HOBBY) {
