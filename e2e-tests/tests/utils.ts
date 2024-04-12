@@ -11,9 +11,9 @@ const DEFAULT_PASSWORD = 'password123';
 
 export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
   await page.goto('/');
-
+  
   await page.getByRole('link', { name: 'Log in' }).click();
-
+  
   await page.waitForURL('**/login', {
     waitUntil: 'domcontentloaded',
   });
@@ -26,6 +26,7 @@ export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
 
   await Promise.all([
     page.waitForResponse((response) => {
+      console.log('<><><> response.url()', response.url(), response.status());
       return response.url().includes('login') && response.status() === 200;
     }),
     clickLogin,
