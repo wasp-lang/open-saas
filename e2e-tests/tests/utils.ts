@@ -21,13 +21,11 @@ export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
   await page.fill('input[name="email"]', user.email);
 
   await page.fill('input[name="password"]', DEFAULT_PASSWORD);
-  console.log('user.email', user.email, 'DEFAULT_PASSWORD', DEFAULT_PASSWORD)
 
   const clickLogin = page.click('button:has-text("Log in")');
 
   await Promise.all([
     page.waitForResponse((response) => {
-      console.log('<><><> response.url()', response.url(), response.status());
       return response.url().includes('login') && response.status() === 200;
     }),
     clickLogin,
