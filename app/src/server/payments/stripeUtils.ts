@@ -9,19 +9,23 @@ const DOMAIN = process.env.WASP_WEB_CLIENT_URL || 'http://localhost:3000';
 
 export async function fetchStripeCustomer(customerEmail: string) {
   let customer: Stripe.Customer;
-  const stripeCustomers = await stripe.customers.list({
-    email: customerEmail,
-  });
-  if (!stripeCustomers.data.length) {
-    console.log('creating customer');
-    customer = await stripe.customers.create({
+  try {    
+    const stripeCustomers = await stripe.customers.list({
       email: customerEmail,
     });
-  } else {
-    console.log('using existing customer');
-    customer = stripeCustomers.data[0];
+    if (!stripeCustomers.data.length) {
+      console.log('creating customer');
+      customer = await stripe.customers.create({
+        email: customerEmail,
+      });
+    } else {
+      console.log('using existing customer');
+      customer = stripeCustomers.data[0];
+    }
+    return customer;
+  } catch (error: any) {
+    console.error(error.message)
   }
-  return customer;
 }
 
 export async function createStripeCheckoutSession({
@@ -50,7 +54,6 @@ export async function createStripeCheckoutSession({
       },
       customer: customerId,
     });
-    
   } catch (error: any) {
     console.error(error.message)
   }

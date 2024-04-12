@@ -26,7 +26,6 @@ function setupOpenAI() {
 }
 
 export const stripePayment: StripePayment<string, StripePaymentResult> = async (tier, context) => {
-  console.log('<><> context.user >>> ', context.user)
   if (!context.user) {
     throw new HttpError(401);
   }
@@ -38,7 +37,6 @@ export const stripePayment: StripePayment<string, StripePaymentResult> = async (
     );
   }
 
-
   let priceId;
   if (tier === TierIds.HOBBY) {
     priceId = process.env.HOBBY_SUBSCRIPTION_PRICE_ID!;
@@ -49,19 +47,22 @@ export const stripePayment: StripePayment<string, StripePaymentResult> = async (
   } else {
     throw new HttpError(404, 'Invalid tier');
   }
-  console.log('<><> tier >>> ', tier);
 
-  let customer: Stripe.Customer;
+  let customer: Stripe.Customer | undefined;
   let session: Stripe.Checkout.Session | undefined;
   try {
     customer = await fetchStripeCustomer(userEmail);
-    console.log('customer >>> ', customer)
+    if (!customer) {
+      throw new HttpError(500, 'Error fetching customer');
+    }
     session = await createStripeCheckoutSession({
       priceId,
       customerId: customer.id,
       mode: tier === TierIds.CREDITS ? 'payment' : 'subscription',
     });
-    console.log('session >>> ', session)
+    if (!session) {
+      throw new HttpError(500, 'Error creating session');
+    }
   } catch (error: any) {
     const statusCode = error.statusCode || 500;
     const errorMessage = error.message || 'Internal server error';
@@ -77,8 +78,6 @@ export const stripePayment: StripePayment<string, StripePaymentResult> = async (
       stripeId: customer.id,
     },
   });
-
-  console.log('updatedUser >>> ', updatedUser)
 
   return {
     sessionUrl: session.url,
