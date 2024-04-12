@@ -11,7 +11,7 @@ const DEFAULT_PASSWORD = 'password123';
 
 export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
   await page.goto('/');
-  
+
   await page.getByRole('link', { name: 'Log in' }).click();
   
   await page.waitForURL('**/login', {
@@ -21,6 +21,7 @@ export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
   await page.fill('input[name="email"]', user.email);
 
   await page.fill('input[name="password"]', DEFAULT_PASSWORD);
+  console.log('user.email', user.email, 'DEFAULT_PASSWORD', DEFAULT_PASSWORD)
 
   const clickLogin = page.click('button:has-text("Log in")');
 
