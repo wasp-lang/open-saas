@@ -37,6 +37,8 @@ export const stripePayment: StripePayment<string, StripePaymentResult> = async (
     );
   }
 
+  console.log('<><> tier >>> ', tier)
+
   let priceId;
   if (tier === TierIds.HOBBY) {
     priceId = process.env.HOBBY_SUBSCRIPTION_PRICE_ID!;
