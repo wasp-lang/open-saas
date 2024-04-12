@@ -52,7 +52,7 @@ export const stripePayment: StripePayment<string, StripePaymentResult> = async (
   console.log('<><> tier >>> ', tier);
 
   let customer: Stripe.Customer;
-  let session: Stripe.Checkout.Session;
+  let session: Stripe.Checkout.Session | undefined;
   try {
     customer = await fetchStripeCustomer(userEmail);
     console.log('customer >>> ', customer)

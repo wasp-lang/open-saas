@@ -51,7 +51,7 @@ export async function createStripeCheckoutSession({
       customer: customerId,
     });
     
-  } catch (error) {
-    console.log(error)
+  } catch (error: any) {
+    console.error(error.message)
   }
 }
