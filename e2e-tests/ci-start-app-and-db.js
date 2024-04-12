@@ -37,6 +37,5 @@ const cb = (code) => {
     process.exit(code);
   } 
 };
-spawn('app', 'npm', ['run', 'e2e:start-app'], cb);
-spawn('db', 'npm', ['run', 'e2e:start-db'], cb);
-spawn('prisma', 'npm', ['run', 'e2e:prisma-db-setup'], cb);
+spawn('app', 'npm', ['run', 'ci:e2e:start-app'], cb);
+spawn('db', 'npm', ['run', 'ci:e2e:start-db'], cb);

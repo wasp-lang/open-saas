@@ -1,26 +1,20 @@
-import { test as base, type Page, expect } from '@playwright/test';
+import { test as base, type Page } from '@playwright/test';
 import { randomUUID } from 'crypto';
-import { PrismaClient } from '@prisma/client';
-
-// TODO remove this if not necessary
-const prisma = new PrismaClient();
 
 export type User = {
   id?: number;
   email: string;
   password?: string;
-  hasPaid?: boolean;
-  credits?: number;
 };
 
 const DEFAULT_PASSWORD = 'password123';
 
 export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
-  await page.goto('localhost:3000');
+  await page.goto('/');
 
   await page.getByRole('link', { name: 'Log in' }).click();
 
-  await page.waitForURL('http://localhost:3000/login', {
+  await page.waitForURL('**/login', {
     waitUntil: 'domcontentloaded',
   });
 
@@ -37,7 +31,7 @@ export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
     clickLogin,
   ]);
 
-  await page.waitForURL('http://localhost:3000/demo-app');
+  await page.waitForURL('**/demo-app');
 };
 
 export const signUserUp = async ({ page, user }: { page: Page; user: User }) => {
@@ -60,24 +54,5 @@ export const signUserUp = async ({ page, user }: { page: Page; user: User }) => 
 
 export const createRandomUser = () => {
   const email = `${randomUUID()}@test.com`;
-  const password = `password${randomUUID()}!`;
-  return { email, password };
+  return { email, password: DEFAULT_PASSWORD } as User;
 };
-
-// TODO: change hasPaid to subscriptionStatus
-export const createLoggedInUserFixture = () =>
-  base.extend<{ loggedInPage: Page; testUser: User }>({
-    testUser: async ({}, use) => {
-      const { email, password } = createRandomUser();
-      await use({ email, password });
-    },
-    loggedInPage: async ({ page, testUser }, use) => {
-      await signUserUp({ page, user: testUser });
-      await logUserIn({ page, user: testUser });
-
-      // TODO: try running stripe webhook in CI ✅
-      // TODO: complete a payment in `paidUserTests.spec.ts` instead of manually updating the user below ⏳
-
-      await use(page);
-    },
-  });

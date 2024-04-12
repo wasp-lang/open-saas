@@ -67,7 +67,7 @@ jobs:
         env: 
           STRIPE_DEVICE_NAME: ${{ secrets.STRIPE_DEVICE_NAME }}
         run: |
-          nohup $HOME/.stripe/stripe listen --api-key ${{ secrets.STRIPE_KEY }} --forward-to localhost:3001/stripe-webhook > /dev/null 2>&1 &
+          stripe listen --api-key ${{ secrets.STRIPE_KEY }} --forward-to localhost:3001/stripe-webhook &
 
       - name: Run Playwright tests
         env:
