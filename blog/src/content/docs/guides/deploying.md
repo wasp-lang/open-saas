@@ -18,21 +18,42 @@ If you're looking to deploy your Blog, you can follow the [Deploying your Blog](
 
 ### Prerequisites
 
-Make sure you've got all your API keys and environment variables set up before you deploy. For example, in the [Stripe integration guide](/guides/stripe-integration), you set up your Stripe API keys using test keys and product ids. **You'll need to get the production-ready keys and create actual Product IDs.** 
+Make sure you've got all your API keys and environment variables set up before you deploy. 
+
+For example, in the [Stripe integration guide](/guides/stripe-integration), you set up your Stripe API keys using test keys and product ids. You'll need to get the live/production versions of those keys here:
+- [Production-ready keys](https://dashboard.stripe.com/apikeys) 
+- [Product IDs](https://dashboard.stripe.com/products)
+- [Customer portal URL](https://dashboard.stripe.com/settings/billing/portal) (for the client-side `REACT_APP_STRIPE_CUSTOMER_PORTAL`)
+
+Make sure to save these variables, as we will be need them for the deployment.
 
 ### Deploying to Fly.io
 
 [Fly.io](https://fly.io) is a platform for running your apps globally. It's a great choice for deploying your SaaS app because it's free to get started, can host your entire full-stack app in one place, scales well, and has one-command deploy integration with Wasp.
 
+For the initial deployment to Fly.io, you can use the following command after you've completed the [prerequisites](https://wasp-lang.dev/docs/advanced/deployment/cli) (only run this once!):
 ```sh
-wasp deploy fly launch <app-name> <region>
+REACT_APP_STRIPE_CUSTOMER_PORTAL=<your-url> wasp deploy fly launch <app-name> <region>
 ```
 
-There are a few prequisites to follow before you can initiate the deploy command. For a detailed guide, check out the [Wasp CLI deployment guide](https://wasp-lang.dev/docs/advanced/deployment/cli).
+To redeploy your app after you've made changes, you can use the following command:
+```sh
+REACT_APP_STRIPE_CUSTOMER_PORTAL=<your-url> wasp deploy fly deploy
+```
+:::tip[Full Deployment Guide]
+For a full guide on deploying, including e.g. how to set all environment variables and custom domains, check out the [Wasp CLI deployment guide](https://wasp-lang.dev/docs/advanced/deployment/cli).
+:::
 
 ### Deploying Manually / to Other Providers
 
 If you prefer to deploy manually, your frontend and backend separately, or just prefer using your favorite provider you can follow the [Manual Deployment Guide](https://wasp-lang.dev/docs/advanced/deployment/manually).
+
+:::caution[Client-side Environment Variables]
+Remember to always set additional client-side environment variables, such as `REACT_APP_STRIPE_CUSTOMER_PORTAL` by appending them to the build command, e.g. 
+```sh
+`REACT_APP_STRIPE_CUSTOMER_PORTAL=<your-url> npm run build
+```
+:::
 
 ### Setting up your Stripe Webhook
 

@@ -156,9 +156,9 @@ By defining the auth structure in your `main.wasp` file, Wasp manages all the ne
 
 <!-- TODO: add pic of AuthUI components -->
 
-We've set the template up with Wasp's simplest auth flow, `usernameAndPassword`, **but we suggest you only use it to get your app developlment going and opt for `email`, `google`, `gitHub`, or a combination of them in production**.
+We've set the template up with Wasp's `email`, `google`, and `gitHub`, methods, which are all battle-tested and suitable for production.
 
-You'll notice that `google` and `email` methods are also pre-configured but commented out. If you'd like to use these configurations in your app, make sure to check out the [Authentication Guide](/guides/authentication) which gives you details on obtaining necessary API keys and integrations.
+You'll notice that `google` and `gitHub` methods are pre-configured but commented out. If you'd like to use these configurations in your app, make sure to check out the [Authentication Guide](/guides/authentication) which gives you details on obtaining necessary API keys and integrations.
 
 ### Subscription Payments with Stripe
 
