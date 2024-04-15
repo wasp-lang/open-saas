@@ -10,6 +10,7 @@ import DropdownUser from './DropdownUser';
 import { DOCS_URL, BLOG_URL } from '../../shared/constants';
 import DarkModeSwitcher from '../admin/components/DarkModeSwitcher';
 import { UserMenuItems } from '../components/UserMenuItems';
+import { NavLink } from 'react-router-dom';
 
 const navigation = [
   { name: 'AI Scheduler (Demo App)', href: '/demo-app' },
@@ -45,13 +46,14 @@ export default function AppNavBar() {
         </div>
         <div className='hidden lg:flex lg:gap-x-12'>
           {navigation.map((item) => (
-            <a
+            <NavLink
               key={item.name}
-              href={item.href}
+              to={item.href}
               className='text-sm font-semibold leading-6 text-gray-900 duration-300 ease-in-out hover:text-yellow-500 dark:text-white'
+              activeClassName='text-yellow-500'
             >
               {item.name}
-            </a>
+          </NavLink>
           ))}
         </div>
         <div className='hidden lg:flex lg:flex-1 gap-3 justify-end items-center'>
