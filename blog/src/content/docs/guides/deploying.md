@@ -51,7 +51,7 @@ If you prefer to deploy manually, your frontend and backend separately, or just 
 :::caution[Client-side Environment Variables]
 Remember to always set additional client-side environment variables, such as `REACT_APP_STRIPE_CUSTOMER_PORTAL` by appending them to the build command, e.g. 
 ```sh
-`REACT_APP_STRIPE_CUSTOMER_PORTAL=<your-url> npm run build
+REACT_APP_STRIPE_CUSTOMER_PORTAL=<your-url> npm run build
 ```
 :::
 
