@@ -1,8 +1,8 @@
 import { Link } from 'wasp/client/router';
 import { type User } from 'wasp/entities';
 import { logout } from 'wasp/client/auth';
-import { STRIPE_CUSTOMER_PORTAL_LINK } from '../../shared/constants';
 import { TierIds } from '../../shared/constants';
+import { z } from 'zod';
 
 export default function AccountPage({ user }: { user: User }) {
   return (
@@ -82,7 +82,13 @@ function BuyMoreButton() {
 
 function CustomerPortalButton() {
   const handleClick = () => {
-    window.open(STRIPE_CUSTOMER_PORTAL_LINK, '_blank');
+    try {
+      const schema = z.string().url();
+      const customerPortalUrl = schema.parse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
+      window.open(customerPortalUrl, '_blank');
+    } catch (err) {
+      console.error(err)
+    }
   };
 
   return (
