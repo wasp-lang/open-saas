@@ -32,11 +32,11 @@ jobs:
       - name: Docker setup
         uses: docker/setup-buildx-action@v3
 
-      # In order for the app to run we need to set env vars even if they aren't used
-      # this step sets mock env vars to pass the validation steps so the app can run 
-      # in the CI environment. For vars that are actually used in tests, we set them in
+      # In order for the app to run in the dev mode we need to set the required env vars even if they aren't actually used by the app.
+      # This step sets mock env vars in order to pass the validation steps so the app can run 
+      # in the CI environment. For env vars that are actually used in tests and therefore need real values, we set them in
       # the GitHub secrets settings and access them in a step below.
-      - name: Setup Dummy Env Vars 
+      - name: Set required wasp app env vars to mock values
         run: |
           cd app
           cp .env.server.example .env.server
