@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import { HttpError } from 'wasp/server';
 
 const stripe = new Stripe(process.env.STRIPE_KEY!, {
   apiVersion: '2022-11-15',
@@ -24,7 +25,7 @@ export async function fetchStripeCustomer(customerEmail: string) {
     }
     return customer;
   } catch (error: any) {
-    console.error(error.message)
+    throw new HttpError(500, error.message);
   }
 }
 
@@ -55,6 +56,6 @@ export async function createStripeCheckoutSession({
       customer: customerId,
     });
   } catch (error: any) {
-    console.error(error.message)
+    throw new HttpError(500, error.message);
   }
 }

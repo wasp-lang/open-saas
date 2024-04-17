@@ -41,19 +41,14 @@ jobs:
           cd app
           cp .env.server.example .env.server
 
-      - name: Cache App Node Modules
+      - name: Cache global node modules
         uses: actions/cache@v4
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-wasp${{ env.WASP_VERSION }}-node${{ steps.setup-node.outputs.node-version }}-node-modules-${{ hashFiles('app/package-lock.json') }}
-
-      - name: Cache E2E Tests Node Modules
-        id: cache-e2e-tests
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/e2e-tests
-          key: ${{ runner.os }}-node${{ steps.setup-node.outputs.node-version }}-e2e-tests-${{ hashFiles('e2e-tests/package-lock.json') }}
-
+          key: node-modules-${{ hashFiles('app/package-lock.json') }}-${{ hashFiles('e2e-tests/package-lock.json') }}-${{ runner.os }}-wasp${{ env.WASP_VERSION }}-node${{ steps.setup-node.outputs.node-version }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+            
       - name: Install Node.js dependencies for Playwright tests
         if: steps.cache-e2e-tests.outputs.cache-hit != 'true'
         run: |
@@ -72,7 +67,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-browsers-${{ env.PLAYWRIGHT_VERSION }}
+          key: playwright-browsers-${{ env.PLAYWRIGHT_VERSION }}-${{ runner.os }}
       
       - name: Set up Playwright
         if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
@@ -87,6 +82,9 @@ jobs:
           sudo apt update          
           sudo apt install stripe
 
+      # We need to run the Stripe CLI in the background to listen for webhook events from Stripe payments.
+      # These events are used to update the user's subscription status, which gives them certain permissions. 
+      # If this is not running, the payments will have no effect on a user's subscription status and tests will fail.
       - name: Run Stripe CLI to listen for webhooks
         env: 
           STRIPE_DEVICE_NAME: ${{ secrets.STRIPE_DEVICE_NAME }}
