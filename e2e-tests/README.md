@@ -26,12 +26,9 @@ In another terminal, run the local e2e tests:
 cd e2e-tests && npm run local:e2e:start
 ```
 
-This will start the tests in Playwright's UI mode, which will allow you to see the tests running in an interactive browser environment.
+This will start the tests in Playwright's UI mode, which will allow you to see and run the tests in an interactive browser environment. You should also see the Stripe events being triggered in the terminal where the tests were started.
 
-When the tests finish, you can kill the Stripe CLI process that was started by the tests:
-```shell
-npm run local:e2e:cleanup-stripe
-```
+To exit the local e2e tests, go back to the terminal were you started your tests and press `ctrl + c`.
 
 ## CI/CD
 

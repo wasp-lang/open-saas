@@ -10,7 +10,7 @@ const DOMAIN = process.env.WASP_WEB_CLIENT_URL || 'http://localhost:3000';
 
 export async function fetchStripeCustomer(customerEmail: string) {
   let customer: Stripe.Customer;
-  try {    
+  try {
     const stripeCustomers = await stripe.customers.list({
       email: customerEmail,
     });
@@ -25,7 +25,8 @@ export async function fetchStripeCustomer(customerEmail: string) {
     }
     return customer;
   } catch (error: any) {
-    throw new HttpError(500, error.message);
+    console.error(error.message);
+    throw error;
   }
 }
 
@@ -56,6 +57,7 @@ export async function createStripeCheckoutSession({
       customer: customerId,
     });
   } catch (error: any) {
-    throw new HttpError(500, error.message);
+    console.error(error.message);
+    throw error;
   }
 }
