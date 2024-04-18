@@ -85,7 +85,6 @@ jobs:
       # For Stripe webhooks to work in development, we need to run the Stripe CLI to listen for webhook events. 
       # The Stripe CLI will receive the webhook events from Stripe test payments and
       # forward them to our local server so that we can test the payment flow in our e2e tests.
-      to work in development, we need to run the Stripe CLI to listen for webhook events.
       - name: Run Stripe CLI to listen for webhooks
         env: 
           STRIPE_DEVICE_NAME: ${{ secrets.STRIPE_DEVICE_NAME }}
