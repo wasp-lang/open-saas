@@ -6,7 +6,9 @@ They not only serve as tests for development of the Open SaaS project, but also 
 
 ## Running the tests
 ### Locally
-Install the test dependencies:
+First, make sure you've [integrated Stripe into your app](https://docs.opensaas.sh/guides/stripe-integration/). This includes  [installing the Stripe CLI and logging into it](https://docs.opensaas.sh/guides/stripe-testing/) with your Stripe account.
+
+Next, Install the test dependencies:
 ```shell
 cd e2e-tests && npm install
 ```
