@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import { HttpError } from 'wasp/server';
 
 const stripe = new Stripe(process.env.STRIPE_KEY!, {
   apiVersion: '2022-11-15',
@@ -9,19 +10,24 @@ const DOMAIN = process.env.WASP_WEB_CLIENT_URL || 'http://localhost:3000';
 
 export async function fetchStripeCustomer(customerEmail: string) {
   let customer: Stripe.Customer;
-  const stripeCustomers = await stripe.customers.list({
-    email: customerEmail,
-  });
-  if (!stripeCustomers.data.length) {
-    console.log('creating customer');
-    customer = await stripe.customers.create({
+  try {
+    const stripeCustomers = await stripe.customers.list({
       email: customerEmail,
     });
-  } else {
-    console.log('using existing customer');
-    customer = stripeCustomers.data[0];
+    if (!stripeCustomers.data.length) {
+      console.log('creating customer');
+      customer = await stripe.customers.create({
+        email: customerEmail,
+      });
+    } else {
+      console.log('using existing customer');
+      customer = stripeCustomers.data[0];
+    }
+    return customer;
+  } catch (error: any) {
+    console.error(error.message);
+    throw error;
   }
-  return customer;
 }
 
 export async function createStripeCheckoutSession({
@@ -33,20 +39,25 @@ export async function createStripeCheckoutSession({
   customerId: string;
   mode: 'subscription' | 'payment';
 }) {
-  return await stripe.checkout.sessions.create({
-    line_items: [
-      {
-        price: priceId,
-        quantity: 1,
+  try {
+    return await stripe.checkout.sessions.create({
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
+      mode: mode,
+      success_url: `${DOMAIN}/checkout?success=true`,
+      cancel_url: `${DOMAIN}/checkout?canceled=true`,
+      automatic_tax: { enabled: true },
+      customer_update: {
+        address: 'auto',
       },
-    ],
-    mode: mode,
-    success_url: `${DOMAIN}/checkout?success=true`,
-    cancel_url: `${DOMAIN}/checkout?canceled=true`,
-    automatic_tax: { enabled: true },
-    customer_update: {
-      address: 'auto',
-    },
-    customer: customerId,
-  });
+      customer: customerId,
+    });
+  } catch (error: any) {
+    console.error(error.message);
+    throw error;
+  }
 }
