@@ -129,7 +129,7 @@ const PricingPage = () => {
                   ))}
                 </ul>
               </div>
-              {!!user && user.hasPaid ? (
+              {!!user && !!user.subscriptionStatus ? (
                 <button
                   onClick={handleCustomerPortalClick}
                   aria-describedby='manage-subscription'
