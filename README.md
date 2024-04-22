@@ -28,6 +28,7 @@ The template itself is built on top of some very powerful tools and frameworks, 
 - 📧 [SendGrid](https://sendgrid.com), [MailGun](https://mailgun.com), or SMTP - for email sending
 - 💅 [TailwindCSS](https://tailwindcss.com) - for styling
 - 🧑‍💼 [TailAdmin](https://tailadmin.com/) - admin dashboard & components for TailwindCSS
+- 🧪 [Playwright](https://playwright.dev) - end-to-end tests with Playwright
 
 Because we're using Wasp as the full-stack framework, we can leverage a lot of its features to build our SaaS in record time, including:
 
@@ -62,7 +63,17 @@ For everything you need to know about getting started and using this template, c
 
 We've documented everything in great detail, including installation instructions, pulling updates to the template, guides for integrating services, SEO, deployment, and more. 🚀
 
+
 ## Changes & Contributions
+
+### Template Versioning 
+
+Whenever a user starts a new Open SaaS project with `wasp new -t saas`, Wasp looks for a specific tag on the repo, and pulls the project at the commit associated with that tag. In the case of Open SaaS, the tag is `wasp-v{{version}}-template`, where `{{version}}` is the current version of Wasp, e.g. `wasp-v0.13-template`.
+
+For simplicity, we automatically re-apply the tag to the most recent commit on the `main` branch via the `.github/workflows/retag-commit.yml` workflow. This way, users always get the latest version of the template when they start a new project via `wasp new -t saas`.d
+
+### Contributing
+
 Note that we've tried to get as many of the core features of a SaaS app into this template as possible, but there still might be some missing features or functionality.
 
 We could always use some help tying up loose ends, so consider [contributing](https://github.com/wasp-lang/open-saas/blob/main/CONTRIBUTING.md)!

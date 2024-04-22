@@ -1,10 +1,11 @@
 import { useAuth } from 'wasp/client/auth';
 import { stripePayment } from 'wasp/client/operations';
-import { TierIds, STRIPE_CUSTOMER_PORTAL_LINK } from '../../shared/constants';
+import { TierIds } from '../../shared/constants';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { cn } from '../../shared/utils';
+import { z } from 'zod';
 
 export const tiers = [
   {
@@ -56,6 +57,20 @@ const PricingPage = () => {
       setIsStripePaymentLoading(false);
     }
   }
+
+  const handleCustomerPortalClick = () => {
+    if (!user) {
+      history.push('/login');
+      return;
+    }
+    try {
+      const schema = z.string().url();
+      const customerPortalUrl = schema.parse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
+      window.open(customerPortalUrl, '_blank');
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className='py-10 lg:mt-10'>
@@ -114,9 +129,9 @@ const PricingPage = () => {
                   ))}
                 </ul>
               </div>
-              {!!user && !!user.subscriptionStatus ? (
-                <a
-                  href={STRIPE_CUSTOMER_PORTAL_LINK}
+              {!!user && user.hasPaid ? (
+                <button
+                  onClick={handleCustomerPortalClick}
                   aria-describedby='manage-subscription'
                   className={cn(
                     'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400',
@@ -127,7 +142,7 @@ const PricingPage = () => {
                   )}
                 >
                   Manage Subscription
-                </a>
+                </button>
               ) : (
                 <button
                   onClick={() => handleBuyNowClick(tier.id)}

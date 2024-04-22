@@ -48,22 +48,28 @@ export const stripePayment: StripePayment<string, StripePaymentResult> = async (
     throw new HttpError(404, 'Invalid tier');
   }
 
-  let customer: Stripe.Customer;
-  let session: Stripe.Checkout.Session;
+  let customer: Stripe.Customer | undefined;
+  let session: Stripe.Checkout.Session | undefined;
   try {
     customer = await fetchStripeCustomer(userEmail);
+    if (!customer) {
+      throw new HttpError(500, 'Error fetching customer');
+    }
     session = await createStripeCheckoutSession({
       priceId,
       customerId: customer.id,
       mode: tier === TierIds.CREDITS ? 'payment' : 'subscription',
     });
+    if (!session) {
+      throw new HttpError(500, 'Error creating session');
+    }
   } catch (error: any) {
     const statusCode = error.statusCode || 500;
     const errorMessage = error.message || 'Internal server error';
     throw new HttpError(statusCode, errorMessage);
   }
 
-  await context.entities.User.update({
+  const updatedUser = await context.entities.User.update({
     where: {
       id: context.user.id,
     },
