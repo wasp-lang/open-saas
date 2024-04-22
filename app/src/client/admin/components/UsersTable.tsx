@@ -3,19 +3,18 @@ import { useState, useEffect } from 'react';
 import SwitcherOne from './SwitcherOne';
 import Loader from '../common/Loader';
 import DropdownEditDelete from './DropdownEditDelete';
-
-type StatusOptions = 'past_due' | 'canceled' | 'active' | 'deleted';
+import { type SubscriptionStatusOptions } from '../../../shared/types';
 
 const UsersTable = () => {
   const [skip, setskip] = useState(0);
   const [page, setPage] = useState(1);
   const [email, setEmail] = useState<string | undefined>(undefined);
-  const [statusOptions, setStatusOptions] = useState<StatusOptions[]>([]);
-  const [hasPaidFilter, setHasPaidFilter] = useState<boolean | undefined>(undefined);
+  const [isAdminFilter, setIsAdminFilter] = useState<boolean | undefined>(undefined);
+  const [statusOptions, setStatusOptions] = useState<SubscriptionStatusOptions[]>([]);
   const { data, isLoading, error } = useQuery(getPaginatedUsers, {
     skip,
-    hasPaidFilter: hasPaidFilter,
     emailContains: email,
+    isAdmin: isAdminFilter,
     subscriptionStatus: statusOptions?.length > 0 ? statusOptions : undefined,
   });
 
@@ -57,7 +56,7 @@ const UsersTable = () => {
                         key={opt}
                         className='z-30 flex items-center my-1 mx-2 py-1 px-2 outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary'
                       >
-                        {opt}
+                        {opt ? opt : 'has not subscribed'}
                         <span
                           onClick={(e) => {
                             e.stopPropagation();
@@ -92,11 +91,12 @@ const UsersTable = () => {
                 </div>
                 <select
                   onChange={(e) => {
+                    const targetValue = e.target.value === '' ? null : e.target.value;
                     setStatusOptions((prevValue) => {
-                      if (prevValue?.includes(e.target.value as StatusOptions)) {
-                        return prevValue?.filter((val) => val !== e.target.value);
+                      if (prevValue?.includes(targetValue as SubscriptionStatusOptions)) {
+                        return prevValue?.filter((val) => val !== targetValue);
                       } else if (!!prevValue) {
-                        return [...prevValue, e.target.value as StatusOptions];
+                        return [...prevValue, targetValue as SubscriptionStatusOptions];
                       } else {
                         return prevValue;
                       }
@@ -107,9 +107,9 @@ const UsersTable = () => {
                   className='absolute top-0 left-0 z-20 h-full w-full bg-white opacity-0'
                 >
                   <option value=''>Select filters</option>
-                  {['past_due', 'canceled', 'active'].map((status) => {
-                    if (!statusOptions.includes(status as StatusOptions)) {
-                      return <option value={status}>{status}</option>;
+                  {['past_due', 'canceled', 'active', 'deleted', null].map((status) => {
+                    if (!statusOptions.includes(status as SubscriptionStatusOptions)) {
+                      return <option value={status || ''}>{status ? status : 'has not subscribed'}</option>;
                     }
                   })}
                 </select>
@@ -127,16 +127,16 @@ const UsersTable = () => {
                 </span>
               </div>
               <div className='flex items-center gap-2'>
-                <label htmlFor='hasPaid-filter' className='block text-sm ml-2 text-gray-700 dark:text-white'>
-                  hasPaid:
+                <label htmlFor='isAdmin-filter' className='block text-sm ml-2 text-gray-700 dark:text-white'>
+                  isAdmin:
                 </label>
                 <select
-                  name='hasPaid-filter'
+                  name='isAdmin-filter'
                   onChange={(e) => {
                     if (e.target.value === 'both') {
-                      setHasPaidFilter(undefined);
+                      setIsAdminFilter(undefined);
                     } else {
-                      setHasPaidFilter(e.target.value === 'true');
+                      setIsAdminFilter(e.target.value === 'true');
                     }
                   }}
                   className='relative z-20 w-full appearance-none rounded border border-stroke bg-white p-2 pl-4 pr-8  outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input'
@@ -180,7 +180,7 @@ const UsersTable = () => {
             <p className='font-medium'>Stripe ID</p>
           </div>
           <div className='col-span-1 flex items-center'>
-            <p className='font-medium'>Has Paid</p>
+            <p className='font-medium'>Is Admin</p>
           </div>
           <div className='col-span-1 flex items-center'>
             <p className='font-medium'></p>

@@ -1,5 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
-import { signUserUp, logUserIn, createRandomUser, type User } from './utils';
+import { signUserUp, logUserIn, createRandomUser, makeStripePayment, type User} from './utils';
 
 let page: Page;
 let testUser: User;
@@ -91,36 +91,7 @@ test('AI schedule generation fails on 4th attempt', async () => {
 
 test('Make test payment with Stripe', async () => {
   const PLAN_NAME = 'Hobby';
-  test.slow(); // Stripe payments take a long time to confirm and can cause tests to fail so we use a longer timeout
-
-  await page.click('text="Pricing"');
-  await page.waitForURL('**/pricing');
-
-  const buyBtn = page.getByRole('button', { name: 'Buy plan' }).first();
-  await expect(buyBtn).toBeVisible();
-  await expect(buyBtn).toBeEnabled();
-  await buyBtn.click();
-
-  await page.waitForURL('https://checkout.stripe.com/**', { waitUntil: 'domcontentloaded' });
-  await page.fill('input[name="cardNumber"]', '4242424242424242');
-  await page.getByPlaceholder('MM / YY').fill('1225');
-  await page.getByPlaceholder('CVC').fill('123');
-  await page.getByPlaceholder('Full name on card').fill('Test User');
-  const countrySelect = page.getByLabel('Country or region');
-  await countrySelect.selectOption('Germany');
-  // This is a weird edge case where the `payBtn` assertion tests pass, but the button click still isn't registered.
-  // That's why we wait for stripe responses below to finish loading before clicking the button.
-  await page.waitForResponse(
-    (response) => response.url().includes('trusted-types-checker') && response.status() === 200
-  );
-  const payBtn = page.getByTestId('hosted-payment-submit-button');
-  await expect(payBtn).toBeVisible();
-  await expect(payBtn).toBeEnabled();
-  await payBtn.click();
-
-  await page.waitForURL('**/checkout?success=true');
-  await page.waitForURL('**/account');
-  await expect(page.getByText(PLAN_NAME)).toBeVisible();
+  await makeStripePayment({ test, page, planName: PLAN_NAME });
 });
 
 test('User should be able to generate another schedule after payment', async () => {

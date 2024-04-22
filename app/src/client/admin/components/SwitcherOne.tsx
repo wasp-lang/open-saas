@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { cn } from '../../../shared/utils';
 
 const SwitcherOne = ({ user, updateUserById }: { user?: Partial<User>; updateUserById?: any }) => {
-  const [enabled, setEnabled] = useState<boolean>(user?.hasPaid || false);
+  const [enabled, setEnabled] = useState<boolean>(user?.isAdmin || false);
 
   return (
     <div className='relative'>
@@ -15,7 +15,7 @@ const SwitcherOne = ({ user, updateUserById }: { user?: Partial<User>; updateUse
             className='sr-only'
             onChange={() => {
               setEnabled(!enabled);
-              updateUserById && updateUserById({ id: user?.id, data: { hasPaid: !enabled } });
+              updateUserById && updateUserById({ id: user?.id, data: { isAdmin: !enabled } });
             }}
           />
           <div className='reblock h-8 w-14 rounded-full bg-meta-9 dark:bg-[#5A616B]'></div>

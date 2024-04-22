@@ -129,7 +129,7 @@ const PricingPage = () => {
                   ))}
                 </ul>
               </div>
-              {!!user && user.hasPaid ? (
+              {!!user && !!user.subscriptionStatus ? (
                 <button
                   onClick={handleCustomerPortalClick}
                   aria-describedby='manage-subscription'
@@ -153,7 +153,7 @@ const PricingPage = () => {
                       'text-gray-600  ring-1 ring-inset ring-purple-200 hover:ring-purple-400': !tier.bestDeal,
                     },
                     {
-                      'cursor-wait': isStripePaymentLoading === tier.id,
+                      'opacity-50 cursor-wait cursor-not-allowed': isStripePaymentLoading === tier.id,
                     },
                     'mt-8 block rounded-md py-2 px-3 text-center text-sm dark:text-white font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400'
                   )}

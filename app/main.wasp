@@ -87,7 +87,6 @@ entity User {=psl
   isAdmin                   Boolean         @default(false)
   stripeId                  String? 
   checkoutSessionId         String?
-  hasPaid                   Boolean         @default(false)
   subscriptionTier          String?
   subscriptionStatus        String?
   sendEmail                 Boolean         @default(false)

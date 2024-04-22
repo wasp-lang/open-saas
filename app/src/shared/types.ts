@@ -3,6 +3,8 @@ export type StripePaymentResult = {
   sessionId: string;
 };
 
+export type SubscriptionStatusOptions = 'past_due' | 'canceled' | 'active' | 'deleted' | null;
+
 export type Subtask = {
   description: string; // detailed breakdown and description of sub-task
   time: number; // total time it takes to complete given main task in hours, e.g. 2.75

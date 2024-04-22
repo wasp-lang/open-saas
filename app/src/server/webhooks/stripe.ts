@@ -23,14 +23,15 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
     return response.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  // let event: Stripe.Event;
-  let userStripeId: string | null = null;
-
   try {
     if (event.type === 'checkout.session.completed') {
       console.log('Checkout session completed');
       const session = event.data.object as Stripe.Checkout.Session;
-      userStripeId = session.customer as string;
+      const userStripeId = session.customer as string;
+      if (!userStripeId) {
+        console.log('No userStripeId in session');
+        return response.status(400).send(`Webhook Error: No userStripeId in session`);
+      }
 
       const { line_items } = await stripe.checkout.sessions.retrieve(session.id, {
         expand: ['line_items'],
@@ -48,7 +49,6 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
             stripeId: userStripeId,
           },
           data: {
-            hasPaid: true,
             datePaid: new Date(),
             subscriptionTier: TierIds.HOBBY,
           },
@@ -60,7 +60,6 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
             stripeId: userStripeId,
           },
           data: {
-            hasPaid: true,
             datePaid: new Date(),
             subscriptionTier: TierIds.PRO,
           },
@@ -83,19 +82,19 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
       }
     } else if (event.type === 'invoice.paid') {
       const invoice = event.data.object as Stripe.Invoice;
+      const userStripeId = invoice.customer as string;
       const periodStart = new Date(invoice.period_start * 1000);
       await context.entities.User.updateMany({
         where: {
           stripeId: userStripeId,
         },
         data: {
-          hasPaid: true,
           datePaid: periodStart,
         },
       });
     } else if (event.type === 'customer.subscription.updated') {
       const subscription = event.data.object as Stripe.Subscription;
-      userStripeId = subscription.customer as string;
+      const userStripeId = subscription.customer as string;
       if (subscription.status === 'active') {
         console.log('Subscription active ', userStripeId);
         await context.entities.User.updateMany({
@@ -113,7 +112,7 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
        * this is useful if the user's card expires or is canceled and automatic subscription renewal fails
        */
       if (subscription.status === 'past_due') {
-        console.log('Subscription past due: ', userStripeId);
+        console.log('Subscription past due for user: ', userStripeId);
         await context.entities.User.updateMany({
           where: {
             stripeId: userStripeId,
@@ -130,8 +129,7 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
        * https://stripe.com/docs/billing/subscriptions/cancel#events
        */
       if (subscription.cancel_at_period_end) {
-        console.log('Subscription canceled at period end');
-
+        console.log('Subscription canceled at period end for user: ', userStripeId);
         let customer = await context.entities.User.findFirst({
           where: {
             stripeId: userStripeId,
@@ -164,26 +162,24 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
       }
     } else if (event.type === 'customer.subscription.deleted') {
       const subscription = event.data.object as Stripe.Subscription;
-      userStripeId = subscription.customer as string;
+      const userStripeId = subscription.customer as string;
 
       /**
        * Stripe will send then finally send a subscription.deleted event when subscription period ends
        * https://stripe.com/docs/billing/subscriptions/cancel#events
        */
-      console.log('Subscription deleted/ended');
+      console.log('Subscription deleted/ended for user: ', userStripeId);
       await context.entities.User.updateMany({
         where: {
           stripeId: userStripeId,
         },
         data: {
-          hasPaid: false,
           subscriptionStatus: 'deleted',
         },
       });
     } else {
       console.log(`Unhandled event type ${event.type}`);
     }
-
     response.json({ received: true });
   } catch (err: any) {
     response.status(400).send(`Webhook Error: ${err?.message}`);

@@ -39,7 +39,7 @@ jobs:
       - name: Set required wasp app env vars to mock values
         run: |
           cd app
-          cp .env.server.example .env.server
+          cp .env.server.example .env.server && cp .env.client.example .env.client
 
       - name: Cache global node modules
         uses: actions/cache@v4
