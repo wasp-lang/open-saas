@@ -61,5 +61,4 @@ test('User should see the Manage Subscription button after payment', async () =>
   const newTab = await newTabPromise;
   await newTab.waitForLoadState();
   await expect(newTab).toHaveURL(/^https:\/\/billing\.stripe\.com\//);
-
 });
