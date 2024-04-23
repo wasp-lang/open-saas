@@ -49,7 +49,7 @@ Because we're using Wasp as the full-stack framework, we can leverage a lot of i
 - 🚀 [One-command Deploy](https://wasp-lang.dev/docs/advanced/deployment/overview) - Easily deploy via the CLI to [Fly.io](https://fly.io), or to other providers like [Railway](https://railway.app) and [Netlify](https://netlify.com).
 
 You also get access to Wasp's diverse, helpful community if you get stuck or need help.
-- 🤝 [Wasp Discord](https://discord.gg/aCamt5wCpS)
+- 🤝 [Wasp Discord](https://discord.gg/rzdnErX)
 
 :::caution["Work In Progress"]
 We've tried to get as many of the core features of a SaaS app into this template as possible, but there still might be some missing features or functionality.
