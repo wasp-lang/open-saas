@@ -145,15 +145,19 @@ wasp start db
 
 This will start and connect your app to a Postgres database for you. No need to do anything else! 🤯 Just make sure to leave this terminal window open in the background while developing. Once you terminate the process, your DB will no longer be available to your app.
 
-Now let's initalize the database. Open a new terminal tab/window and run the following command:
+Now let's create our very first database migration, to ensure the database has a correct schema. Open a new terminal tab/window and run the following command:
 
 ```sh
 wasp db migrate-dev
 ```
 
-You will also need to run `wasp db migrate-dev` whenever you make changes to your Prisma schema (entities).
+This might take a bit since this is the first time you are running it and it needs to install all the
+dependencies for your Wasp project.
 
-If you want to see or manage your DB via Prisma's DB Studio GUI, open yet another separate terminal tab/window and run:
+In the future, you will also want to run `wasp db migrate-dev` whenever you make changes to your Prisma schema (Entities),
+to apply those schema changes to the database.
+
+Additionally, if you want to see or manage your DB via Prisma's DB Studio GUI, run:
 
 ```sh
 wasp db studio
@@ -161,19 +165,16 @@ wasp db studio
 
 ### Start your app
 
-In a new terminal window/tab, first make sure you're in the `app/` directory:
+At this point, you should be positioned in the `app/` directory and have the database running in another terminal session.
 
-```sh
-cd app
-```
-
-Copy the `.env.server.example` file to `.env.server`.
+Next, copy the `.env.server.example` file to `.env.server`.
 
 ```sh
 cp .env.server.example .env.server
 ```
 
-You don't have to fill in your API keys right away, but leave the placeholder strings for the time being as this will allow you to run the app.
+`.env.server` is where API keys for services like Stripe, email sender, and similar go, and this is where you will want to put them in later.
+For now, you can leave it as it is (dummy API keys), this will be enough to run the app.
 
 Then run:
 
@@ -181,9 +182,13 @@ Then run:
 wasp start
 ```
 
-This will install all dependencies and start the client and server for you :)
+This will install all the dependencies and start the app (client and server) for you :)!
 
-Go to `localhost:3000` in your browser to view it (your NodeJS server will be running on port `3001`)
+If the app doesn't open automatically in your browser, you can open it manually by visiting `http://localhost:3000` in your browser.
+
+At this point, you should have:
+ - your database running in one terminal session, likely on port `5432`.
+ - your app running in another terminal session, the client likely on port `3000`, and the server likely on port `3001`.
 
 #### Run Blog and Docs
 
@@ -194,7 +199,7 @@ If you do not need this, you can simply delete the `blog` folder from the root o
 If you want to run the Starlight docs and blog, first navigate to the `blog` folder:
 
 ```sh
-cd blog
+cd ../blog
 ```
 
 Then run:
@@ -208,6 +213,8 @@ Then start the development server:
 ```sh
 npm run dev
 ```
+
+Check the instructions in the terminal for the link to open the blog, it will typically be `https://localhost:4321/`.
 
 ### Getting Updates to the Open SaaS Template
 
