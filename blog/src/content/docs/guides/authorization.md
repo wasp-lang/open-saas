@@ -14,9 +14,13 @@ Authorization differs from [authentication](/guides/authentication) in that auth
 
 To learn more about the different types of user permissions built into this SaaS template, including Stripe subscription tiers and statuses, check out the [User Permissions Reference](/general/user-permissions).
 
+Also, check out our [blog post](https://wasp-lang.dev/blog/2022/11/29/permissions-in-web-apps) to learn more about authorization (access control) in web apps.
+
 ### Client-side Authorization
 
-All authenticated users have access to the user-facing app, which is the app that sits behind the login. You can easily authorize access to general users from within the `main.wasp` file by adding the `authRequired: true` property to the `page` definition:
+Open Saas starts with all users having access to the landing page (`/`), but only authenticated users having access to the rest of the app (e.g. to the `/demo-app`, or to the `/account`).
+
+To control which pages require users to be authenticated to access them, you can set the `authRequired` property of the corresponding `page` definition in your `main.wasp` file:
 
 ```tsx title="main.wasp" {3}
 route AccountRoute { path: "/account", to: AccountPage }
@@ -26,7 +30,13 @@ page AccountPage {
 }
 ```
 
-This will automatically redirect users to the login page if they are not logged in.
+This will automatically redirect users to the login page if they are not logged in while trying to access that page.
+
+:::caution[Client Authorization is not Security]
+Users can manipulate the client code as they wish, meaning that client-side access control (authorization) serves the purpose of ergonomics/user experience, not the purpose of restricting access to sensitive data.
+This means that authorization in the client code is a nice-to-have: it is here to make sure users don't get lost in the part of the app they can't work with because data is missing due to them not having access, not to actually restrict them from doing something.
+Actually ensuring they don't have access to the data, that is on the server to ensure, via server-side logic that you will implement for authorization (access control).
+:::
 
 If you want more fine-grained control over what users can access, there are two Wasp-specific options:
 1. When you define the `authRequired: true` property on the `page` definition, Wasp automatically passes the User object to the page component. Here you can check for certain user properties before authorizing access:
@@ -65,7 +75,9 @@ export default function ExampleHomePage() {
 
 ### Server-side Authorization
 
-You can also authorize access to server-side operations by adding a check to for a logged in user on the `context.user` object which is passed to all operations in Wasp:
+Authorization on the server-side is the core of your access control logic, and determines what users actually can or can't do (unlike client-side authorization logic which is there merely for UX).
+
+You can authorize access to server-side operations by adding a check for a logged-in user on the `context.user` object which is passed to all operations in Wasp:
 
 ```tsx title="src/server/actions.ts" 
 export const updateCurrentUser: UpdateCurrentUser<...> = async (args, context) => {
