@@ -32,7 +32,7 @@ page AccountPage {
 
 This will automatically redirect users to the login page if they are not logged in while trying to access that page.
 
-:::caution[Client Authorization is not Security]
+:::caution[Client authorization is just for the looks]
 Users can manipulate the client code as they wish, meaning that client-side access control (authorization) serves the purpose of ergonomics/user experience, not the purpose of restricting access to sensitive data.
 This means that authorization in the client code is a nice-to-have: it is here to make sure users don't get lost in the part of the app they can't work with because data is missing due to them not having access, not to actually restrict them from doing something.
 Actually ensuring they don't have access to the data, that is on the server to ensure, via server-side logic that you will implement for authorization (access control).
