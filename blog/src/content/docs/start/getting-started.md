@@ -185,30 +185,6 @@ This will install all dependencies and start the client and server for you :)
 
 Go to `localhost:3000` in your browser to view it (your NodeJS server will be running on port `3001`)
 
-#### Run Blog and Docs
-
-This SaaS app comes with a docs and blog section built with the [Starlight template on top of the Astro](https://starlight.astro.build) framework. You can use this as a starting point for your own blog and documentation, if necessary.
-
-If you do not need this, you can simply delete the `blog` folder from the root of the project.
-
-If you want to run the Starlight docs and blog, first navigate to the `blog` folder:
-
-```sh
-cd blog
-```
-
-Then run:
-
-```sh
-npm install
-```
-
-Then start the development server:
-
-```sh
-npm run dev
-```
-
 ### Getting Updates to the Open SaaS Template
 
 We will be updating the Open SaaS template with new features and improvements. To get these updates, you can pull the changes from the original template into your own repository.
