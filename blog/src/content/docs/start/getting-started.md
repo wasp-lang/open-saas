@@ -140,7 +140,7 @@ cd app
 Then run:
 
 ```sh
-wasp start db
+wasp db start
 ```
 
 This will start and connect your app to a Postgres database for you. No need to do anything else! 🤯 Just make sure to leave this terminal window open in the background while developing. Once you terminate the process, your DB will no longer be available to your app.
