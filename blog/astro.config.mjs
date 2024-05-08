@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import starlightBlog from 'starlight-blog';
 
-import tailwind from "@astrojs/tailwind";
+import tailwind from '@astrojs/tailwind';
 
 // https://astro.build/config
 export default defineConfig({
@@ -67,21 +67,21 @@ export default defineConfig({
           ],
         },
       ],
-			plugins: [
-				starlightBlog({
-					title: 'Blog',
-					customCss: ['./src/styles/tailwind.css'],
-					authors: {
-						vince: {
-							name: 'Vince',
-							title: 'Dev Rel @ Wasp',
-							picture: '/CRAIG_ROCK.png', // Images in the `public` directory are supported.
-							url: 'https://wasp-lang.dev',
-						},
-					},
-				}),
-			]
-    }), 
-    tailwind({applyBaseStyles: false})
+      plugins: [
+        starlightBlog({
+          title: 'Blog',
+          customCss: ['./src/styles/tailwind.css'],
+          authors: {
+            vince: {
+              name: 'Vince',
+              title: 'Dev Rel @ Wasp',
+              picture: '/CRAIG_ROCK.png', // Images in the `public` directory are supported.
+              url: 'https://wasp-lang.dev',
+            },
+          },
+        }),
+      ],
+    }),
+    tailwind({ applyBaseStyles: false }),
   ],
 });
