@@ -5,6 +5,7 @@ import blogConfig from 'virtual:starlight-blog-config'
 import type { Props } from '@astrojs/starlight/props';
 
 const href = Astro.site
+const { siteTitle } = Astro.props;
 ---
 <a {href} class="site-title sl-flex">
 	{
@@ -31,7 +32,7 @@ const href = Astro.site
 		)
 	}
 	<span class:list={{ 'sr-only': config.logo?.replacesTitle }} class="dark:text-white hover:text-yellow-500">
-		{config.title}
+		{siteTitle}
 	</span>
 </a>
 <div>
