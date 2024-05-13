@@ -72,6 +72,11 @@ app OpenSaaS {
   //...
 ```
 
+:::tip[noscript]
+In the Installation Instructions, Google Tag Manager might also instruct you to paste the `noscript` code snippet immediately after the opening `<body>` tag.
+You should skip this step because this snippet is activated only if users try to browse your app without JavaScript enabled, which is very rare and Wasp needs JS anyway.
+:::
+
 Then, set up the Google Analytics API access by following these steps:
 
 1. **Set up a Google Cloud project:** If you haven't already, start by setting up a project in the [Google Cloud Console](https://console.cloud.google.com/).
