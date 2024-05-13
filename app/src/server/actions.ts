@@ -113,7 +113,7 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, GeneratedSched
       throw openai;
     }
 
-    if (!context.user.subscriptionStatus && !context.user.credits) {
+    if (!context.user.credits && (!context.user.subscriptionStatus || context.user.subscriptionStatus === 'deleted' || context.user.subscriptionStatus === 'past_due')) {
       throw new HttpError(402, 'User has not paid or is out of credits');
     } else if (context.user.credits && !context.user.subscriptionStatus) {
       console.log('decrementing credits');
