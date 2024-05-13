@@ -40,6 +40,7 @@ export default defineConfig({
       },
       components: {
         SiteTitle: './src/components/MyHeader.astro',
+        ThemeSelect: './src/components/MyThemeSelect.astro',
       },
 
       social: {
