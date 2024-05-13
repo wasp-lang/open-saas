@@ -2,24 +2,12 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import starlightBlog from 'starlight-blog';
 
-import tailwind from "@astrojs/tailwind";
+import tailwind from '@astrojs/tailwind';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://opensaas.sh',
   integrations: [
-    starlightBlog({
-      title: 'Blog',
-      customCss: ['./src/styles/tailwind.css'],
-      authors: {
-        vince: {
-          name: 'Vince',
-          title: 'Dev Rel @ Wasp',
-          picture: '/CRAIG_ROCK.png', // Images in the `public` directory are supported.
-          url: 'https://wasp-lang.dev',
-        },
-      },
-    }),
     starlight({
       title: 'OpenSaaS.sh',
       description: 'Open SaaS is a free, open-source, full-stack SaaS starter kit for React + NodeJS.',
@@ -51,9 +39,6 @@ export default defineConfig({
       },
       components: {
         SiteTitle: './src/components/MyHeader.astro',
-        MarkdownContent: 'starlight-blog/overrides/MarkdownContent.astro',
-        Sidebar: 'starlight-blog/overrides/Sidebar.astro',
-        // ThemeSelect: 'starlight-blog/overrides/ThemeSelect.astro',
       },
       social: {
         github: 'https://github.com/wasp-lang/open-saas',
@@ -91,7 +76,21 @@ export default defineConfig({
           ],
         },
       ],
-    }), 
-    tailwind({applyBaseStyles: false})
+      plugins: [
+        starlightBlog({
+          title: 'Blog',
+          customCss: ['./src/styles/tailwind.css'],
+          authors: {
+            vince: {
+              name: 'Vince',
+              title: 'Dev Rel @ Wasp',
+              picture: '/CRAIG_ROCK.png', // Images in the `public` directory are supported.
+              url: 'https://wasp-lang.dev',
+            },
+          },
+        }),
+      ],
+    }),
+    tailwind({ applyBaseStyles: false }),
   ],
 });
