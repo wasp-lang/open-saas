@@ -58,25 +58,30 @@ To create a test customer, go to the test customers url [https://dashboard.strip
 
 ## Get your Customer Portal Link
 
-Go to https://dashboard.stripe.com/test/settings/billing/portal in the Stripe Dashboard and activate and copy the `Customer portal link`. Paste it in your `src/shared/constants.ts` file. 
+Go to https://dashboard.stripe.com/test/settings/billing/portal in the Stripe Dashboard and activate and copy the `Customer portal link`. Paste it in your `.env.client` file:
 
-```ts title="src/shared/constants.ts"
-const customerPortalTestUrl = 'https//billing.stripe.com/p/login/test_...'
-const customerPortalProdUrl = undefined
-
-export const STRIPE_CUSTOMER_PORTAL_LINK = isDev ? customerPortalTestUrl : customerPortalProdUrl;
-
-checkStripePortalLinkExists(STRIPE_CUSTOMER_PORTAL_LINK); // throws an error if the link is not set in production
+```ts title=".env.client"
+REACT_APP_STRIPE_CUSTOMER_PORTAL=<your-test-customer-portal-link>
 ```
 
-Note that there are variables set aside for your test portal link, as well as a production portal link. You will be warned in the console if you there is no link in the development environment, but the app will throw an error if there is no link in the production environment!
+Your Stripe customer portal link is imported into `src/client/app/AccountPage.tsx` and used to redirect users to the Stripe customer portal when they click the `Manage Subscription` button.
 
-```sh
-[Server]  🔍 Validating environment variables...
-[Server!] 🚫 STRIPE_CUSTOMER_PORTAL_LINK is not defined.
-[Server]  🚀 "Email and password" auth initialized
-[Server]  🚀 "Google" auth initialized
+```tsx title="src/client/app/AccountPage.tsx" {5} "import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL"
+function CustomerPortalButton() {
+  const handleClick = () => {
+    try {
+      const schema = z.string().url();
+      const customerPortalUrl = schema.parse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
+      window.open(customerPortalUrl, '_blank');
+    } catch (err) {
+      console.error(err)
+    }
+  };
 ```
+
+:::danger[Client-side Environment Variables]
+Client-side environment variables, unlike server-side environment variables, should never be used to store sensitive information as they are injected at build time and are exposed to the client.
+:::
 
 ## Install the Stripe CLI
 

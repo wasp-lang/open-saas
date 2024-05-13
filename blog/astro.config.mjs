@@ -39,6 +39,7 @@ export default defineConfig({
       },
       components: {
         SiteTitle: './src/components/MyHeader.astro',
+        ThemeSelect: './src/components/MyThemeSelect.astro',
       },
       social: {
         github: 'https://github.com/wasp-lang/open-saas',

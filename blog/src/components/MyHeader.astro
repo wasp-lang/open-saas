@@ -31,7 +31,7 @@ const { siteTitle } = Astro.props;
 			</>
 		)
 	}
-	<span class:list={{ 'sr-only': config.logo?.replacesTitle }} class="dark:text-white hover:text-yellow-500">
+	<span class:list={{ 'sr-only': config.logo?.replacesTitle }} class="title-text dark:text-white hover:text-yellow-500">
 		{siteTitle}
 	</span>
 </a>
@@ -72,11 +72,19 @@ const { siteTitle } = Astro.props;
     height: 100%;
     padding-inline-end: 1rem;
   }
+  .title-text {
+    display: none;
+  }
 
   @media (min-width: 50rem) {
     div {
       align-items: center;
       display: flex;
+    }
+  }
+  @media (min-width: 28rem) {
+    .title-text {
+      display: block;
     }
   }
   a {
