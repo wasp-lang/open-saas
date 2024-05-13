@@ -12,7 +12,7 @@ First, we'll take a look at the project's file structure, then dive into its mai
 
 :::caution[HOLD UP! ✋]
 
-If you haven't already, now would be the right time to [explore the app](https://opensaas.sh) in your browser:
+If you haven't already, now would be the right time to [explore our demo app](https://opensaas.sh) in your browser:
 - [ ] explore the landing page
 - [ ] log in to the demo app
 - [ ] make a test purchase
@@ -40,21 +40,21 @@ At the root of our project, you will see two folders:
 Let's check out what's in the `app` folder in more detail:
 
 :::caution[v0.11 and below]
-If you are using a version of the template with Wasp `v0.11.x` or below, you may see a slightly different file structure. But don't worry, the vast majority of the code and features are the same! 😅
+If you are using a version of the OpenSaaS template with Wasp `v0.11.x` or below, you may see a slightly different file structure. But don't worry, the vast majority of the code and features are the same! 😅
 :::
 
 ```sh
 .
 ├── main.wasp              # Wasp Config file. You define your app structure here.
-├── .wasp                  # Output folder for Wasp. DON'T MODIFY THESE FILES!
-├── public                 # Public assets, e.g. www.yourdomain.com/banner.png
-├── src
-│   ├── client             # Your client code (React) goes here.
-│   ├── server             # Your server code (NodeJS) goes here.
-│   ├── shared             # Your shared (runtime independent) code goes here.
+├── .wasp/                 # Output dir for Wasp. DON'T MODIFY THESE FILES!
+├── public/                # Public assets dir, e.g. www.yourdomain.com/banner.png
+├── src/                   # Your code goes here.
+│   ├── client/            # Your client code (React) goes here.
+│   ├── server/            # Your server code (NodeJS) goes here.
+│   ├── shared/            # Your shared (runtime independent) code goes here.
 │   └── .waspignore
-├── .env.server            # Environment variables for your server code.
-├── .env.client            # Environment variables for your client code.
+├── .env.server            # Dev environment variables for your server code.
+├── .env.client            # Dev environment variables for your client code.
 ├── .prettierrc            # Prettier configuration.
 ├── tailwind.config.js     # TailwindCSS configuration.   
 ├── package.json
@@ -86,7 +86,7 @@ By defining these things in the config file, Wasp continuously handles the boile
 Wasp abstracts away some things that you would normally be used to doing during development, so don't be surprised if you don't see some of the things you're used to seeing.
 
 :::note
-It's possible to learn Wasp's feature set simply through using this template, but if you find yourself unsure how to implement a Wasp-specific feature and/or just want to learn more, a great starting point is the intro tutorial in the [Wasp docs](https://wasp-lang.dev/docs/) which takes ~20 minutes.
+It's possible to learn Wasp's feature set simply through using this template, but if you find yourself unsure how to implement a Wasp-specific feature and/or just want to learn more, a great starting point is the intro tutorial in the [Wasp docs](https://wasp-lang.dev/docs) which takes ~20 minutes.
 :::
 
 ### Client
@@ -225,7 +225,7 @@ Keeping an eye on your metrics is crucial for any SaaS. That's why we've built a
 
 <!-- TODO: add pic of admin dash -->
 
-To do that, we've leveraged Wasp's [Jobs feature](https://wasp-lang.dev/docs/advanced/jobs) to run a cron job that calculates your daily stats. The app stats, such as page views and sources, can be pulled from either Plausible or Google Analytics. All you have to do is create an project with the analytics provider of your choice and import the repsective pre-built helper functions!
+To do that, we've leveraged Wasp's [Jobs feature](https://wasp-lang.dev/docs/advanced/jobs) to run a cron job that calculates your daily stats. The app stats, such as page views and sources, can be pulled from either Plausible or Google Analytics. All you have to do is create a project with the analytics provider of your choice and import the respective pre-built helper functions!
 
 ```js title="main.wasp"
 job dailyStatsJob {
