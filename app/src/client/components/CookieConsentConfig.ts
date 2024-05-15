@@ -8,19 +8,19 @@ declare global {
 
 const getConfig = () => {
   const config: CookieConsentConfig = {
-    // root: 'body',
-    // autoShow: true,
-    // disablePageInteraction: true,
-    // hideFromBots: true,
-    // mode: 'opt-in',
-    // revision: 0,
+    root: 'body',
+    autoShow: true,
+    disablePageInteraction: true,
+    hideFromBots: true,
+    mode: 'opt-in',
+    revision: 0,
 
     cookie: {
-      // name: 'cc_cookie',
-      // domain: location.hostname,
-      // path: '/',
-      // sameSite: "Lax",
-      // expiresAfterDays: 365,
+      name: 'cc_cookie',
+      domain: location.hostname,
+      path: '/',
+      sameSite: "Lax",
+      expiresAfterDays: 365,
     },
 
     /**
@@ -75,20 +75,28 @@ const getConfig = () => {
           ga: {
             label: 'Google Analytics',
             onAccept: () => {
-              const GA_MEASUREMENT_ID = `G-H3LSJCK95H`;
-              window.dataLayer = window.dataLayer || [];
-              function gtag(...args: any[]) {
-                window.dataLayer.push(arguments);
+              try {
+                // TODO: Make sure to replace this with your own GA ID, e.g. 'A-0123456789'
+                const GA_MEASUREMENT_ID = '';
+                if (!GA_MEASUREMENT_ID.length) {
+                  throw new Error('Google Analytics Measurement ID is missing');
+                }
+                window.dataLayer = window.dataLayer || [];
+                function gtag(..._args: unknown[]) {
+                  (window.dataLayer as Array<any>).push(arguments);
+                }
+
+                gtag('js', new Date());
+                gtag('config', GA_MEASUREMENT_ID);
+
+                // Adding the script tag dynamically to the DOM
+                const script = document.createElement('script');
+                script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+                script.async = true;
+                document.body.appendChild(script);
+              } catch (error) {
+                console.error(error);
               }
-              gtag('js', new Date());
-
-              gtag('config', GA_MEASUREMENT_ID);
-
-              // Adding the script tag dynamically to the DOM
-              const script = document.createElement('script');
-              script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
-              script.async = true;
-              document.body.appendChild(script);
             },
             onReject: () => {},
           },
