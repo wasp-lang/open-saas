@@ -85,7 +85,6 @@ const getConfig = () => {
                 function gtag(..._args: unknown[]) {
                   (window.dataLayer as Array<any>).push(arguments);
                 }
-
                 gtag('js', new Date());
                 gtag('config', GA_MEASUREMENT_ID);
 
