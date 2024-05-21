@@ -81,6 +81,7 @@ export default defineConfig({
         starlightBlog({
           title: 'Blog',
           customCss: ['./src/styles/tailwind.css'],
+          trailingSlash: 'always',
           authors: {
             vince: {
               name: 'Vince',
