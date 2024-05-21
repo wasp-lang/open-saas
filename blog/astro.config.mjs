@@ -7,6 +7,7 @@ import tailwind from '@astrojs/tailwind';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://opensaas.sh',
+  trailingSlash: 'always',
   integrations: [
     starlight({
       title: 'OpenSaaS.sh',
@@ -81,7 +82,6 @@ export default defineConfig({
         starlightBlog({
           title: 'Blog',
           customCss: ['./src/styles/tailwind.css'],
-          trailingSlash: 'always',
           authors: {
             vince: {
               name: 'Vince',
