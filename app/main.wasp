@@ -2,7 +2,9 @@ app OpenSaaS {
   wasp: {
     version: "^0.13.2"
   },
+
   title: "My Open SaaS App",
+
   head: [
         "<meta property='og:type' content='website' />",
         "<meta property='og:title' content='My Open SaaS App' />",
@@ -13,13 +15,14 @@ app OpenSaaS {
         "<meta name='twitter:image:width' content='800' />",
         "<meta name='twitter:image:height' content='400' />",
         "<meta name='twitter:card' content='summary_large_image' />",
-        // you can put your analytics scripts here
-        "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.js'></script>",
-        // plausible has script extension `script.local.js` for local development
-        "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.local.js'></script>",
-        // google analytics only needs one script and will automatically detect if you are in dev mode 
-        "<!-- Google tag (gtag.js) --><script>...</script>"
+        // TODO: You can put your analytics scripts below (https://docs.opensaas.sh/guides/analytics/):
+        //   If you are going with Plausible:
+        "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.js'></script>",  // for production
+        "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.local.js'></script>",  // for development
+        //   If you are going with Google Analytics:
+        "<!-- Google tag (gtag.js) --><script>...</script>"  // for both production and development
   ],
+
   // 🔐 Auth out of the box! https://wasp-lang.dev/docs/auth/overview
   auth: {
     userEntity: User,
@@ -39,10 +42,14 @@ app OpenSaaS {
         },
         userSignupFields: import { getEmailUserFields } from "@src/server/auth/setUsername.js",
       },
-      // google: { // Guide for setting up Auth via Google https://wasp-lang.dev/docs/auth/social-auth/overview
+
+      // Uncomment to enable Google Auth (check https://wasp-lang.dev/docs/auth/social-auth/google for setup instructions):
+      // google: { // Guide for setting up Auth via Google 
       //   userSignupFields: import { getGoogleUserFields } from "@src/server/auth/setUsername.js",
       //   configFn: import { getGoogleAuthConfig } from "@src/server/auth/setUsername.js",
       // },
+
+      // Uncomment to enable GitHub Auth (check https://wasp-lang.dev/docs/auth/social-auth/github for setup instructions):
       // gitHub: {
       //   userSignupFields: import { getGitHubUserFields } from "@src/server/auth/setUsername.js",
       //   configFn: import { getGitHubAuthConfig } from "@src/server/auth/setUsername.js",
@@ -51,12 +58,16 @@ app OpenSaaS {
     onAuthFailedRedirectTo: "/login",
     onAuthSucceededRedirectTo: "/demo-app",
   },
+
   db: { 
     system: PostgreSQL,
+    // Run `wasp db seed` to seed the database with the listed scripts:
     seeds: [
+      // Populates the database with a bunch of fake users to work with during development.
       import { devSeedUsers } from "@src/server/scripts/usersSeed.js",
     ]
   },
+
   client: {
     rootComponent: import App from "@src/client/App",
   },
