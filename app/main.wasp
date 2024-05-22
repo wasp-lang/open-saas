@@ -2,32 +2,37 @@ app OpenSaaS {
   wasp: {
     version: "^0.13.2"
   },
+
   title: "My Open SaaS App",
+
   head: [
         "<meta property='og:type' content='website' />",
         "<meta property='og:title' content='My Open SaaS App' />",
-        "<meta property='og:url' content='https://opensaas.sh' />", 
+        "<meta property='og:url' content='https://opensaas.sh' />",
         "<meta property='og:description' content='I made a SaaS App. Buy my stuff.' />",
         "<meta property='og:image' content='https://opensaas.sh/public-banner.png' />",
-        "<meta name='twitter:image' content='https://opensaas.sh/public-banner.png' />", 
+        "<meta name='twitter:image' content='https://opensaas.sh/public-banner.png' />",
         "<meta name='twitter:image:width' content='800' />",
         "<meta name='twitter:image:height' content='400' />",
         "<meta name='twitter:card' content='summary_large_image' />",
-        // you can put your analytics scripts here
-        "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.js'></script>",
-        // plausible has script extension `script.local.js` for local development
-        "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.local.js'></script>",
-        // google analytics only needs one script and will automatically detect if you are in dev mode 
-        "<!-- Google tag (gtag.js) --><script>...</script>"
+        // TODO: You can put your analytics scripts below (https://docs.opensaas.sh/guides/analytics/):
+        //   If you are going with Plausible:
+        "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.js'></script>",  // for production
+        "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.local.js'></script>",  // for development
+        //   If you are going with Google Analytics:
+        "<!-- Google tag (gtag.js) --><script>...</script>"  // for both production and development
   ],
+
   // 🔐 Auth out of the box! https://wasp-lang.dev/docs/auth/overview
   auth: {
     userEntity: User,
     methods: {
+      // NOTE: If you decide to not use email auth, make sure to also delete the related routes and pages below.
+      //   (RequestPasswordReset(Route|Page), PasswordReset(Route|Page), EmailVerification(Route|Page))
       email: {
         fromField: {
           name: "Open SaaS App",
-          email: "me@example.com" 
+          email: "me@example.com"
         },
         emailVerification: {
           clientRoute: EmailVerificationRoute,
@@ -39,10 +44,12 @@ app OpenSaaS {
         },
         userSignupFields: import { getEmailUserFields } from "@src/server/auth/setUsername.js",
       },
-      // google: { // Guide for setting up Auth via Google https://wasp-lang.dev/docs/auth/social-auth/overview
+      // Uncomment to enable Google Auth (check https://wasp-lang.dev/docs/auth/social-auth/google for setup instructions):
+      // google: { // Guide for setting up Auth via Google
       //   userSignupFields: import { getGoogleUserFields } from "@src/server/auth/setUsername.js",
       //   configFn: import { getGoogleAuthConfig } from "@src/server/auth/setUsername.js",
       // },
+      // Uncomment to enable GitHub Auth (check https://wasp-lang.dev/docs/auth/social-auth/github for setup instructions):
       // gitHub: {
       //   userSignupFields: import { getGitHubUserFields } from "@src/server/auth/setUsername.js",
       //   configFn: import { getGitHubAuthConfig } from "@src/server/auth/setUsername.js",
@@ -51,98 +58,114 @@ app OpenSaaS {
     onAuthFailedRedirectTo: "/login",
     onAuthSucceededRedirectTo: "/demo-app",
   },
-  db: { 
+
+  db: {
     system: PostgreSQL,
+    // Run `wasp db seed` to seed the database with the seed functions below:
     seeds: [
+      // Populates the database with a bunch of fake users to work with during development.
       import { devSeedUsers } from "@src/server/scripts/usersSeed.js",
     ]
   },
+
   client: {
     rootComponent: import App from "@src/client/App",
   },
-  
+
   emailSender: {
-    // Note that the "Dummy" provider is just for local development purposes. 
-    // Make sure to check the server logs for the confirmation email token (it will not be sent to an address)!
-    // Please use SendGrid in production. See: https://docs.opensaas.sh/guides/email-sending/
-    provider: Dummy, 
+    // NOTE: "Dummy" provider is just for local development purposes.
+    //   Make sure to check the server logs for the email confirmation url (it will not be sent to an address)!
+    //   Once you are ready for production, switch to e.g. "SendGrid" or "MailGun" providers. Check out https://docs.opensaas.sh/guides/email-sending/ .
+    provider: Dummy,
     defaultFrom: {
       name: "Open SaaS App",
-      // When using SendGrid, you must use the same email address that you configured your account to send out emails with!
-      email: "me@example.com" 
+      // When using a real provider, e.g. SendGrid, you must use the same email address that you configured your account to send out emails with!
+      email: "me@example.com"
     },
   },
 }
 
-/* 💽 Wasp defines DB entities via Prisma Database Models: 
+/* 💽 Wasp defines DB entities via Prisma Database Models:
  * https://wasp-lang.dev/docs/data-model/entities
  */
 
 entity User {=psl
   id                        Int             @id @default(autoincrement())
+  createdAt                 DateTime        @default(now())
+
   email                     String?         @unique
   username                  String?         @unique
-  createdAt                 DateTime        @default(now())
   lastActiveTimestamp       DateTime        @default(now())
   isAdmin                   Boolean         @default(false)
-  stripeId                  String? 
+
+  stripeId                  String?
   checkoutSessionId         String?
   subscriptionTier          String?
   subscriptionStatus        String?
   sendEmail                 Boolean         @default(false)
   datePaid                  DateTime?
   credits                   Int             @default(3)
+
   gptResponses              GptResponse[]
-  contactFormMessages       ContactFormMessage[]     
+  contactFormMessages       ContactFormMessage[]
   tasks                     Task[]
   files                     File[]
 psl=}
 
 entity GptResponse {=psl
   id                        String          @id @default(uuid())
-  content                   String
-  user                      User            @relation(fields: [userId], references: [id])
-  userId                    Int
   createdAt                 DateTime        @default(now())
   updatedAt                 DateTime        @updatedAt
+
+  user                      User            @relation(fields: [userId], references: [id])
+  userId                    Int
+
+  content                   String
 psl=}
 
 entity Task {=psl
   id                        String          @id @default(uuid())
+  createdAt                 DateTime        @default(now())
+
+  user                      User            @relation(fields: [userId], references: [id])
+  userId                    Int
+
   description               String
   time                      String          @default("1")
   isDone                    Boolean         @default(false)
-  user                      User            @relation(fields: [userId], references: [id])
-  userId                    Int
-  createdAt                 DateTime        @default(now())
 psl=}
 
 entity File {=psl
   id                        String          @id @default(uuid())
+  createdAt                 DateTime        @default(now())
+
+  user                      User            @relation(fields: [userId], references: [id])
+  userId                    Int
+
   name                      String
   type                      String
   key                       String
   uploadUrl                 String
-  user                      User            @relation(fields: [userId], references: [id])
-  userId                    Int
-  createdAt                 DateTime        @default(now())
 psl=}
 
 // TODO: add functionality to allow users to send messages to admin
 // and make them accessible via the admin dashboard
 entity ContactFormMessage {=psl
   id                        String          @id @default(uuid())
-  content                   String
+  createdAt                 DateTime        @default(now())
+
   user                      User            @relation(fields: [userId], references: [id])
   userId                    Int
-  createdAt                 DateTime        @default(now())
+
+  content                   String
   isRead                    Boolean         @default(false)
-  repliedAt                 DateTime?       
+  repliedAt                 DateTime?
 psl=}
 
-entity DailyStats {=psl 
+entity DailyStats {=psl
   id                               Int             @id @default(autoincrement())
   date                             DateTime        @default(now()) @unique
+
   totalViews                       Int             @default(0)
   prevDayViewsChangePercent        String          @default("0")
   userCount                        Int             @default(0)
@@ -151,26 +174,31 @@ entity DailyStats {=psl
   paidUserDelta                    Int             @default(0)
   totalRevenue                     Float             @default(0)
   totalProfit                      Float             @default(0)
+
   sources                          PageViewSource[]
 psl=}
 
 entity PageViewSource {=psl
-  date                     DateTime        @default(now())       
-  name                     String          
-  visitors                 Int             
+  @@id([date, name])
+  name                     String
+  date                     DateTime        @default(now())
+
   dailyStats               DailyStats?     @relation(fields: [dailyStatsId], references: [id])
   dailyStatsId             Int?
-  @@id([date, name])
+
+  visitors                 Int
 psl=}
 
 entity Logs {=psl
   id                       Int             @id @default(autoincrement())
   createdAt                DateTime        @default(now())
+
   message                  String
   level                    String
 psl=}
 
-/* 📡 These are the Wasp Routes (You can protect them easily w/ 'authRequired: true');
+/* 📡 These are the Wasp client Routes and Pages.
+ * You can easily make them inaccessible to the unauthenticated user w/ 'authRequired: true'.
  * https://wasp-lang.dev/docs/tutorial/pages
  */
 
@@ -179,6 +207,7 @@ page LandingPage {
   component: import LandingPage from "@src/client/landing-page/LandingPage"
 }
 
+//#region Auth Pages
 route LoginRoute { path: "/login", to: LoginPage }
 page LoginPage {
   component: import Login from "@src/client/auth/LoginPage"
@@ -203,6 +232,7 @@ route EmailVerificationRoute { path: "/email-verification", to: EmailVerificatio
 page EmailVerificationPage {
   component: import { EmailVerification } from "@src/client/auth/EmailVerification",
 }
+//#endregion
 
 route DemoAppRoute { path: "/demo-app", to: DemoAppPage }
 page DemoAppPage {
@@ -233,6 +263,7 @@ page FileUploadPage {
   component: import FileUpload from "@src/client/app/FileUploadPage"
 }
 
+//#region Admin Pages
 route AdminRoute { path: "/admin", to: DashboardPage }
 page DashboardPage {
   authRequired: true,
@@ -292,8 +323,10 @@ page AdminUIButtonsPage {
   authRequired: true,
   component: import AdminUI from "@src/client/admin/pages/UiElements/Buttons"
 }
+//#endregion
 
-/* ⛑ These are the Wasp Operations, which allow the client and server to interact:
+/* ⛑ These are the Wasp Operations: server code that you can easily call
+ * from the client. Queries fetch stuff, Actions modify/do stuff.
  * https://wasp-lang.dev/docs/data-model/operations/overview
  */
 
@@ -373,9 +406,10 @@ query getPaginatedUsers {
 }
 
 /*
- * 📡 These are custom Wasp API Endpoints. Use them for callbacks, webhooks, etc.
+ * 📡 These are custom Wasp API Endpoints.
+ * Use them for callbacks, webhooks, API for other services to consume, etc.
  * https://wasp-lang.dev/docs/advanced/apis
- */ 
+ */
 
 api stripeWebhook {
   fn: import { stripeWebhook } from "@src/server/webhooks/stripe.js",
@@ -384,7 +418,7 @@ api stripeWebhook {
   httpRoute: (POST, "/stripe-webhook")
 }
 
-/* 🕵️‍♂️ These are the Wasp Jobs. Use them to set up recurring tasks and/or queues:
+/* 🕵️‍♂️ These are the Wasp Jobs. Use them to set up recurring tasks and/or queues.
  * https://wasp-lang.dev/docs/advanced/jobs
  */
 
