@@ -26,7 +26,7 @@ export default function AppNavBar() {
 
   const { data: user, isLoading: isUserLoading } = useAuth();
   return (
-    <header className='absolute inset-x-0 top-0 z-50 shadow sticky bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter dark:border dark:border-gray-100/10 dark:bg-boxdark-2'>
+    <header className='absolute inset-x-0 top-0 z-50 shadow bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter dark:border dark:border-gray-100/10 dark:bg-boxdark-2'>
       <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
         <div className='flex lg:flex-1'>
           <a href='/' className='-m-1.5 p-1.5'>
