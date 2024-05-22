@@ -2,7 +2,7 @@ import { useAuth } from 'wasp/client/auth';
 import { updateCurrentUser } from 'wasp/client/operations';
 import './Main.css';
 import AppNavBar from './components/AppNavBar';
-import CookieConsentBanner from './components/CookieConsent';
+import CookieConsentBanner from './components/cookie-consent/Banner';
 import { useMemo, useEffect, ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
 
