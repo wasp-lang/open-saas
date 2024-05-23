@@ -7,14 +7,13 @@ declare global {
 }
 
 const getConfig = () => {
-  
   // See https://cookieconsent.orestbida.com/reference/configuration-reference.html for configuration options
   const config: CookieConsentConfig = {
     // Default configuration for the modal
     root: 'body',
     autoShow: true,
-    disablePageInteraction: true,
-    hideFromBots: true,
+    disablePageInteraction: false,
+    hideFromBots: import.meta.env.PROD ? true : false, // Set this to false for dev/headless tests otherwise the modal will not be visible
     mode: 'opt-in',
     revision: 0,
 
@@ -53,14 +52,13 @@ const getConfig = () => {
           ],
         },
 
-        // a https://cookieconsent.orestbida.com/reference/configuration-reference.html#category-services
+        // https://cookieconsent.orestbida.com/reference/configuration-reference.html#category-services
         services: {
           ga: {
             label: 'Google Analytics',
             onAccept: () => {
               try {
-                // TODO: Make sure to replace this with your own GA ID, e.g. 'A-0123456789'
-                const GA_MEASUREMENT_ID = '';
+                const GA_MEASUREMENT_ID = import.meta.env.REACT_APP_GOOGLE_ANALYTICS_ID;
                 if (!GA_MEASUREMENT_ID.length) {
                   throw new Error('Google Analytics Measurement ID is missing');
                 }
