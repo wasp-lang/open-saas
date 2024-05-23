@@ -1,4 +1,4 @@
-import { Link } from 'wasp/client/router';
+import { Link, routes } from 'wasp/client/router';
 import { useAuth } from 'wasp/client/auth';
 import { useState } from 'react';
 import { Dialog } from '@headlessui/react';
@@ -12,9 +12,9 @@ import DarkModeSwitcher from '../admin/components/DarkModeSwitcher';
 import { UserMenuItems } from '../components/UserMenuItems';
 
 const navigation = [
-  { name: 'AI Scheduler (Demo App)', href: '/demo-app' },
-  { name: 'File Upload (AWS S3)', href: '/file-upload' },
-  { name: 'Pricing', href: '/pricing' },
+  { name: 'AI Scheduler (Demo App)', href: routes.DemoAppRoute.build() },
+  { name: 'File Upload (AWS S3)', href: routes.FileUploadRoute.build() },
+  { name: 'Pricing', href: routes.PricingPageRoute.build() },
   { name: 'Documentation', href: DOCS_URL },
   { name: 'Blog', href: BLOG_URL },
 ];
@@ -26,7 +26,7 @@ export default function AppNavBar() {
 
   const { data: user, isLoading: isUserLoading } = useAuth();
   return (
-    <header className='absolute inset-x-0 top-0 z-50 shadow sticky bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter dark:border dark:border-gray-100/10 dark:bg-boxdark-2'>
+    <header className='absolute inset-x-0 top-0 z-50 shadow bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter dark:border dark:border-gray-100/10 dark:bg-boxdark-2'>
       <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
         <div className='flex lg:flex-1'>
           <a href='/' className='-m-1.5 p-1.5'>
@@ -60,7 +60,7 @@ export default function AppNavBar() {
           </ul>
 
           {isUserLoading ? null : !user ? (
-            <a href={!user ? '/login' : '/account'} className='text-sm font-semibold leading-6 ml-4'>
+            <a href={!user ? routes.LoginRoute.build() : routes.AccountRoute.build()} className='text-sm font-semibold leading-6 ml-4'>
               <div className='flex items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500 dark:text-white'>
                 Log in <BiLogIn size='1.1rem' className='ml-1 mt-[0.1rem]' />
               </div>

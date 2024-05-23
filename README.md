@@ -63,25 +63,15 @@ For everything you need to know about getting started and using this template, c
 
 We've documented everything in great detail, including installation instructions, pulling updates to the template, guides for integrating services, SEO, deployment, and more. 🚀
 
-
-## Changes & Contributions
-
-### Template Versioning 
-
-Whenever a user starts a new Open SaaS project with `wasp new -t saas`, Wasp looks for a specific tag on the repo, and pulls the project at the commit associated with that tag. In the case of Open SaaS, the tag is `wasp-v{{version}}-template`, where `{{version}}` is the current version of Wasp, e.g. `wasp-v0.13-template`.
-
-For simplicity, we automatically re-apply the tag to the most recent commit on the `main` branch via the `.github/workflows/retag-commit.yml` workflow. This way, users always get the latest version of the template when they start a new project via `wasp new -t saas`.d
-
-### Contributing
-
-Note that we've tried to get as many of the core features of a SaaS app into this template as possible, but there still might be some missing features or functionality.
-
-We could always use some help tying up loose ends, so consider [contributing](https://github.com/wasp-lang/open-saas/blob/main/CONTRIBUTING.md)!
-
-As there are a few things to know and consider when contributing, please make sure to read the [CONTRIBUTING.md](https://github.com/wasp-lang/open-saas/blob/main/CONTRIBUTING.md) in this Repo.
-
 ## Getting Help & Providing Feedback
 
 There are two ways to get help or provide feedback (and we try to always respond quickly!):
 1. [Open an issue](https://github.com/wasp-lang/open-saas/issues)
 2. [Wasp Discord](https://discord.gg/aCamt5wCpS) -- please direct questions to the #🙋questions forum channel
+
+## Contributing
+
+Note that we've tried to get as many of the core features of a SaaS app into this template as possible, but there still might be some missing features or functionality.
+
+We could always use some help tying up loose ends: contributions are welcome! Check out [CONTRIBUTING.md](/CONTRIBUTING.md) for more details.
+
