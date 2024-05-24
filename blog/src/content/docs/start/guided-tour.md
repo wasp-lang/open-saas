@@ -156,9 +156,21 @@ By defining the auth structure in your `main.wasp` file, Wasp manages all the ne
 
 <!-- TODO: add pic of AuthUI components -->
 
-We've set the template up with Wasp's `email`, `google`, and `gitHub`, methods, which are all battle-tested and suitable for production.
+We've set the template up with Wasp's `email`, `google`, and `gitHub` methods, which are all battle-tested and suitable for production. 
 
-You'll notice that `google` and `gitHub` methods are pre-configured but commented out. If you'd like to use these configurations in your app, make sure to check out the [Authentication Guide](/guides/authentication) which gives you details on obtaining necessary API keys and integrations.
+You can get started developing your app with the `email` method right away! Note that this method relies on an `emailSender` (configured at `app.emailSender` in the `main.wasp` file), a service which sends emails to verify users and reset passwords. For development purposes, Wasp provides a `Dummy` email sender, which does not actually send any confirmation emails to the specified email address, but instead logs all email verification links/tokens to the console! You can then follow these links to verify the user and continue with the sign-up process.
+
+```tsx title="main.wasp" 
+  emailSender: {
+    provider: Dummy, // logs all email verification links/tokens to the server's console
+    defaultFrom: {
+      name: "Open SaaS App",
+      email: "me@example.com" 
+    },
+  },
+```
+
+We will explain more about these auth methods, and how to properly integrate them into your app, in the [Authentication Guide](/guides/authentication).
 
 ### Subscription Payments with Stripe
 
