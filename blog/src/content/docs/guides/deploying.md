@@ -6,13 +6,13 @@ banner:
     <a href="https://wasp-lang.dev/docs/migrate-from-0-12-to-0-13">migration instructions here</a> ⚠️ 
 ---
 
-Because this SaaS app is a React/NodeJS/Postgres app built on top of [Wasp](https://wasp-lang.dev), you can deploy it anywhere where static files, NodeJS and Postgres can be hosted and served.
+Because this SaaS app is a React/NodeJS/Postgres app built on top of [Wasp](https://wasp-lang.dev), we will direct you to the [Wasp Deployment Guide](https://wasp-lang.dev/docs/advanced/deployment/overview/) for more detailed instructions, except for where the instructions are specific to this template.
 
-The simplest and quickest option is to take advantage of Wasp's one-command deploy to [Fly.io](https://fly.io).
+The simplest and quickest option is to take advantage of Wasp's one-command deploy to [Fly.io](#deploying-to-flyio) (`wasp deploy`).
 
-Or if you prefer to deploy to a different provider, or your frontend and backend separately, you can follow any of the other deployment guides below.
+Or if you prefer to deploy to a different provider, or your frontend and backend separately, you can follow the [Deploying Manually](#deploying-manually--to-other-providers) section below.
 
-If you're looking to deploy your Blog, you can follow the [Deploying your Blog](#deploying-your-blog) section at the end of this guide.
+If you're looking to deploy your Astro Blog, you can follow the [Deploying your Blog](#deploying-your-blog) section at the end of this guide.
 
 ## Deploying your App
 
@@ -20,40 +20,94 @@ If you're looking to deploy your Blog, you can follow the [Deploying your Blog](
 
 Make sure you've got all your API keys and environment variables set up before you deploy. 
 
-For example, in the [Stripe integration guide](/guides/stripe-integration), you set up your Stripe API keys using test keys and product ids. You'll need to get the live/production versions of those keys here:
-- [Production-ready keys](https://dashboard.stripe.com/apikeys) 
-- [Product IDs](https://dashboard.stripe.com/products)
-- [Customer portal URL](https://dashboard.stripe.com/settings/billing/portal) (for the client-side `REACT_APP_STRIPE_CUSTOMER_PORTAL`)
+#### Env Vars
+##### Stripe Vars
+In the [Stripe integration guide](/guides/stripe-integration), you set up your Stripe API keys using test keys and product ids. You'll need to get the live/production versions of those keys at [https://dashboard.stripe.com](https://dashboard.stripe.com). To get these, repeat the instructions in the [Stripe Integration Guide](/guides/stripe-integration) without being in test mode.
+- [ ] `STRIPE_KEY` 
+- [ ] `STRIPE_WEBHOOK_SECRET`
+- [ ] all `PRICE_ID` variables
+- [ ] `REACT_APP_STRIPE_CUSTOMER_PORTAL` (for the client-side)
 
-Make sure to save these variables, as we will be need them for the deployment.
+##### Other Vars
+Many of your other environment variables will probably be the same as in development, but you should double-check that they are set correctly for production.
+
+Here are a list of all of them (some of which you may not be using, e.g. Analytics, Social Auth) in case you need to check:
+###### General Vars
+- [ ] `DATABASE_URL`
+- [ ] `JWT_SECRET`
+- [ ] `WASP_WEB_CLIENT_URL`
+- [ ] `WASP_SERVER_URL`
+
+###### Open AI API Key
+- [ ] `OPENAI_API_KEY`
+
+###### Sendgrid API Key
+- [ ] `SENDGRID_API_KEY`
+
+###### Social Auth Vars
+- [ ] `GOOGLE_CLIENT_ID`
+- [ ] `GOOGLE_CLIENT_SECRET`
+- [ ] `GITHUB_CLIENT_ID`
+- [ ] `GITHUB_CLIENT_SECRET`
+
+###### Analytics Vars
+- [ ] `REACT_APP_PLAUSIBLE_ANALYTICS_ID` (for client-side)
+- [ ] `PLAUSIBLE_API_KEY`
+- [ ] `PLAUSIBLE_SITE_ID`
+- [ ] `PLAUSIBLE_BASE_URL`
+- [ ] `REACT_APP_GOOGLE_ANALYTICS_ID` (for client-side)
+- [ ] `GOOGLE_ANALYTICS_CLIENT_EMAIL`
+- [ ] `GOOGLE_ANALYTICS_PROPERTY_ID` 
+- [ ] `GOOGLE_ANALYTICS_PRIVATE_KEY`
+(Make sure you convert the private key within the JSON file to base64 first with `echo -n "PRIVATE_KEY" | base64`. See the [Analytics docs](/guides/analytics/#google-analytics) for more info)
+
+###### AWS S3 Vars
+- [ ] `AWS_S3_IAM_ACCESS_KEY`
+- [ ] `AWS_S3_IAM_SECRET_KEY`
+- [ ] `AWS_S3_FILES_BUCKET`
+- [ ] `AWS_S3_REGION`
 
 ### Deploying to Fly.io
 
 [Fly.io](https://fly.io) is a platform for running your apps globally. It's a great choice for deploying your SaaS app because it's free to get started, can host your entire full-stack app in one place, scales well, and has one-command deploy integration with Wasp.
 
-For the initial deployment to Fly.io, you can use the following command after you've completed the [prerequisites](https://wasp-lang.dev/docs/advanced/deployment/cli) (only run this once!):
+**Wasp provides the handy `wasp deploy` command to deploy your entire full-stack app (DB, server, and client) in one command.**
+
+To learn how, please follow the detailed guide for [deploying to Fly via the Wasp CLI](https://wasp-lang.dev/docs/advanced/deployment/cli) from the Wasp documentation. We suggest you follow this guide carefully to get your app deployed.
+
+:::caution[Setting Environment Variables]
+Remember, because we've set certain client-side env variables, make sure to pass them to the `wasp deploy` commands so that they can be included in the build: 
 ```sh
-REACT_APP_STRIPE_CUSTOMER_PORTAL=<your-url> wasp deploy fly launch <app-name> <region>
+REACT_APP_CLIENT_ENV_VAR_1=<...> REACT_APP_CLIENT_ENV_VAR_2=<...> wasp deploy 
 ```
 
-To redeploy your app after you've made changes, you can use the following command:
-```sh
-REACT_APP_STRIPE_CUSTOMER_PORTAL=<your-url> wasp deploy fly deploy
-```
-:::tip[Full Deployment Guide]
-For a full guide on deploying, including e.g. how to set all environment variables and custom domains, check out the [Wasp CLI deployment guide](https://wasp-lang.dev/docs/advanced/deployment/cli).
+The `wasp deploy` command will also take care of setting the following server-side environment variables for you so you don't have to:
+- `DATABASE_URL`
+- `PORT`
+- `JWT_SECRET`
+- `WASP_WEB_CLIENT_URL`
+- `WASP_SERVER_URL`
+
+For setting the remaining server-side environment variables, please refer to the [Deploying with the Wasp CLI Guide](https://wasp-lang.dev/docs/advanced/deployment/cli#launch).
 :::
 
 ### Deploying Manually / to Other Providers
 
-If you prefer to deploy manually, your frontend and backend separately, or just prefer using your favorite provider you can follow the [Manual Deployment Guide](https://wasp-lang.dev/docs/advanced/deployment/manually).
+If you prefer to deploy manually, your frontend and backend separately, or just prefer using your favorite provider you can follow [Wasp's Manual Deployment Guide](https://wasp-lang.dev/docs/advanced/deployment/manually).
 
 :::caution[Client-side Environment Variables]
 Remember to always set additional client-side environment variables, such as `REACT_APP_STRIPE_CUSTOMER_PORTAL` by appending them to the build command, e.g. 
 ```sh
-REACT_APP_STRIPE_CUSTOMER_PORTAL=<your-url> npm run build
+REACT_APP_CLIENT_ENV_VAR_1=<...> npm run build
 ```
 :::
+
+### Adding Server Redirect URL's to Social Auth
+
+After deploying your server, you need to add the correct redirect URIs to the credential settings. For this, refer to the following guides from the Wasp Docs:
+
+- [Google Auth](https://wasp-lang.dev/docs/auth/social-auth/google#3-creating-a-google-oauth-app:~:text=Under%20Authorized%20redirect%20URIs)
+- [Github Auth](https://wasp-lang.dev/docs/auth/social-auth/github#3-creating-a-github-oauth-app:~:text=Authorization%20callback%20URL)
 
 ### Setting up your Stripe Webhook
 
