@@ -158,7 +158,12 @@ By defining the auth structure in your `main.wasp` file, Wasp manages all the ne
 
 We've set the template up with Wasp's `email`, `google`, and `gitHub` methods, which are all battle-tested and suitable for production. 
 
-You can get started developing your app with the `email` method right away! Note that this method relies on an `emailSender` (configured at `app.emailSender` in the `main.wasp` file), a service which sends emails to verify users and reset passwords. For development purposes, Wasp provides a `Dummy` email sender, which does not actually send any confirmation emails to the specified email address, but instead logs all email verification links/tokens to the console! You can then follow these links to verify the user and continue with the sign-up process.
+You can get started developing your app with the `email` method right away! 
+
+:::caution[Dummy Email Provider]
+Note that the `email` method relies on an `emailSender` (configured at `app.emailSender` in the `main.wasp` file), a service which sends emails to verify users and reset passwords. 
+
+For development purposes, Wasp provides a `Dummy` email sender which Open SaaS comes with as the default. This provider *does not* actually send any confirmation emails to the specified email address, but instead logs all email verification links/tokens to the console! You can then follow these links to verify the user and continue with the sign-up process.
 
 ```tsx title="main.wasp" 
   emailSender: {
@@ -169,6 +174,7 @@ You can get started developing your app with the `email` method right away! Note
     },
   },
 ```
+:::
 
 We will explain more about these auth methods, and how to properly integrate them into your app, in the [Authentication Guide](/guides/authentication).
 
