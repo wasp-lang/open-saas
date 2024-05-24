@@ -1,0 +1,160 @@
+---
+title: Deploying
+banner:
+  content: |
+    ⚠️ Open SaaS is now running on <a href='https://wasp-lang.dev'>Wasp v0.13</a>! If you're running an older version of Open SaaS, please follow the 
+    <a href="https://wasp-lang.dev/docs/migrate-from-0-12-to-0-13">migration instructions here</a> ⚠️ 
+---
+
+Because this SaaS app is a React/NodeJS/Postgres app built on top of [Wasp](https://wasp-lang.dev), we will direct you to the [Wasp Deployment Guide](https://wasp-lang.dev/docs/advanced/deployment/overview/) for more detailed instructions, except for where the instructions are specific to this template.
+
+The simplest and quickest option is to take advantage of Wasp's one-command deploy to [Fly.io](#deploying-to-flyio) (`wasp deploy`).
+
+Or if you prefer to deploy to a different provider, or your frontend and backend separately, you can follow the [Deploying Manually](#deploying-manually--to-other-providers) section below.
+
+If you're looking to deploy your Astro Blog, you can follow the [Deploying your Blog](#deploying-your-blog) section at the end of this guide.
+
+## Deploying your App
+
+### Prerequisites
+
+Make sure you've got all your API keys and environment variables set up before you deploy. 
+
+#### Env Vars
+##### Stripe Vars
+In the [Stripe integration guide](/guides/stripe-integration), you set up your Stripe API keys using test keys and product ids. You'll need to get the live/production versions of those keys at [https://dashboard.stripe.com](https://dashboard.stripe.com). To get these, repeat the instructions in the [Stripe Integration Guide](/guides/stripe-integration) without being in test mode.
+- [ ] `STRIPE_KEY` 
+- [ ] `STRIPE_WEBHOOK_SECRET`
+- [ ] all `PRICE_ID` variables
+- [ ] `REACT_APP_STRIPE_CUSTOMER_PORTAL` (for the client-side)
+
+##### Other Vars
+Many of your other environment variables will probably be the same as in development, but you should double-check that they are set correctly for production.
+
+Here are a list of all of them (some of which you may not be using, e.g. Analytics, Social Auth) in case you need to check:
+###### General Vars
+- [ ] `DATABASE_URL`
+- [ ] `JWT_SECRET`
+- [ ] `WASP_WEB_CLIENT_URL`
+- [ ] `WASP_SERVER_URL`
+
+###### Open AI API Key
+- [ ] `OPENAI_API_KEY`
+
+###### Sendgrid API Key
+- [ ] `SENDGRID_API_KEY`
+
+###### Social Auth Vars
+- [ ] `GOOGLE_CLIENT_ID`
+- [ ] `GOOGLE_CLIENT_SECRET`
+- [ ] `GITHUB_CLIENT_ID`
+- [ ] `GITHUB_CLIENT_SECRET`
+
+###### Analytics Vars
+- [ ] `REACT_APP_PLAUSIBLE_ANALYTICS_ID` (for client-side)
+- [ ] `PLAUSIBLE_API_KEY`
+- [ ] `PLAUSIBLE_SITE_ID`
+- [ ] `PLAUSIBLE_BASE_URL`
+- [ ] `REACT_APP_GOOGLE_ANALYTICS_ID` (for client-side)
+- [ ] `GOOGLE_ANALYTICS_CLIENT_EMAIL`
+- [ ] `GOOGLE_ANALYTICS_PROPERTY_ID` 
+- [ ] `GOOGLE_ANALYTICS_PRIVATE_KEY`
+(Make sure you convert the private key within the JSON file to base64 first with `echo -n "PRIVATE_KEY" | base64`. See the [Analytics docs](/guides/analytics/#google-analytics) for more info)
+
+###### AWS S3 Vars
+- [ ] `AWS_S3_IAM_ACCESS_KEY`
+- [ ] `AWS_S3_IAM_SECRET_KEY`
+- [ ] `AWS_S3_FILES_BUCKET`
+- [ ] `AWS_S3_REGION`
+
+### Deploying to Fly.io
+
+[Fly.io](https://fly.io) is a platform for running your apps globally. It's a great choice for deploying your SaaS app because it's free to get started, can host your entire full-stack app in one place, scales well, and has one-command deploy integration with Wasp.
+
+**Wasp provides the handy `wasp deploy` command to deploy your entire full-stack app (DB, server, and client) in one command.**
+
+To learn how, please follow the detailed guide for [deploying to Fly via the Wasp CLI](https://wasp-lang.dev/docs/advanced/deployment/cli) from the Wasp documentation. We suggest you follow this guide carefully to get your app deployed.
+
+:::caution[Setting Environment Variables]
+Remember, because we've set certain client-side env variables, make sure to pass them to the `wasp deploy` commands so that they can be included in the build: 
+```sh
+REACT_APP_CLIENT_ENV_VAR_1=<...> REACT_APP_CLIENT_ENV_VAR_2=<...> wasp deploy 
+```
+
+The `wasp deploy` command will also take care of setting the following server-side environment variables for you so you don't have to:
+- `DATABASE_URL`
+- `PORT`
+- `JWT_SECRET`
+- `WASP_WEB_CLIENT_URL`
+- `WASP_SERVER_URL`
+
+For setting the remaining server-side environment variables, please refer to the [Deploying with the Wasp CLI Guide](https://wasp-lang.dev/docs/advanced/deployment/cli#launch).
+:::
+
+### Deploying Manually / to Other Providers
+
+If you prefer to deploy manually, your frontend and backend separately, or just prefer using your favorite provider you can follow [Wasp's Manual Deployment Guide](https://wasp-lang.dev/docs/advanced/deployment/manually).
+
+:::caution[Client-side Environment Variables]
+Remember to always set additional client-side environment variables, such as `REACT_APP_STRIPE_CUSTOMER_PORTAL` by appending them to the build command, e.g. 
+```sh
+REACT_APP_CLIENT_ENV_VAR_1=<...> npm run build
+```
+:::
+
+### Adding Server Redirect URL's to Social Auth
+
+After deploying your server, you need to add the correct redirect URIs to the credential settings. For this, refer to the following guides from the Wasp Docs:
+
+- [Google Auth](https://wasp-lang.dev/docs/auth/social-auth/google#3-creating-a-google-oauth-app:~:text=Under%20Authorized%20redirect%20URIs)
+- [Github Auth](https://wasp-lang.dev/docs/auth/social-auth/github#3-creating-a-github-oauth-app:~:text=Authorization%20callback%20URL)
+
+### Setting up your Stripe Webhook
+
+Now you need to set up your stripe webhook for production use.
+
+1. go to [https://dashboard.stripe.com/webhooks](https://dashboard.stripe.com/webhooks)
+2. click on `+ add endpoint`
+3. enter your endpoint url, which will be the url of your deployed server + `/stripe-webhook`, e.g. `https://open-saas-wasp-sh-server.fly.dev/stripe-webhook`
+![listen-events](/stripe/listen-to-stripe-events.png)
+4. select the events you want to listen to. These should be the same events you're consuming in your webhook. For example, if you haven't added any additional events to the webhook and are using the defaults that came with this template, then you'll need to add:
+  <br/>- `account.updated`
+  <br/>- `checkout.session.completed`
+  <br/>- `customer.subscription.deleted`
+  <br/>- `customer.subscription.updated`
+  <br/>- `invoice.paid`
+![signing-secret](/stripe/stripe-webhook-signing-secret.png)
+5. after that, go to the webhook you just created and `reveal` the new signing secret.
+6. add this secret to your deployed server's `STRIPE_WEBHOOK_SECRET=` environment variable. <br/>If you've deployed to Fly.io, you can do that easily with the following command:
+```sh
+wasp deploy fly cmd --context server secrets set STRIPE_WEBHOOK_SECRET=whsec_...
+```
+
+## Deploying your Blog
+
+Deploying your Astro Starlight blog is a bit different than deploying your SaaS app. As an example, we will show you how to deploy your blog for free to Netlify. You will need a Netlify account and [Netlify CLI](https://docs.netlify.com/cli/get-started/) installed to follow these instructions.
+
+Make sure you are logged in with Netlify CLI. 
+- You can check if you are logged in with `netlify status`, 
+- you can log in with `netlify login`.
+
+Position yourself in the `blog` directory and run the following command:
+
+```sh
+npm run build
+```
+
+This will build your blog into the `blog/dist` directory. Now you can deploy your blog to Netlify with the following command:
+
+```sh
+netlify deploy 
+``` 
+
+Select the `dist` directory as the deploy path.
+
+Finally, if the deployment looks good, you can deploy your blog to production with the following command: 
+  
+```sh
+netlify deploy --prod
+```
+

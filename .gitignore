@@ -1,7 +1,2 @@
-*/.wasp/
-*/.env.server
-*/.env.client
-*/node_modules
-*/migrations
-*/.DS_Store
-.DS_Store
+# There is no need to pollute the template with the migrations.
+template/app/migrations/

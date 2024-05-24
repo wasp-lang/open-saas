@@ -1,0 +1,18 @@
+--- template/app/src/server/queries.ts
++++ opensaas-sh/app/src/server/queries.ts
+@@ -136,6 +136,7 @@
+             mode: 'insensitive',
+           },
+           isAdmin: args.isAdmin,
++          isMockUser: true
+         },
+         {
+           OR: [
+@@ -176,6 +177,7 @@
+             mode: 'insensitive',
+           },
+           isAdmin: args.isAdmin,
++          isMockUser: true
+         },
+         {
+           OR: [
