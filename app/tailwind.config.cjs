@@ -3,7 +3,6 @@ const { resolveProjectPath } = require('wasp/dev');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  // content: ['./src/**/*.{js,jsx,ts,tsx}'],
   content: [resolveProjectPath('./src/**/*.{js,jsx,ts,tsx}')],
   darkMode: 'class',
   theme: {
