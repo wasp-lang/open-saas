@@ -216,28 +216,6 @@ npm run dev
 
 Check the instructions in the terminal for the link to open the blog, it will typically be `https://localhost:4321/`.
 
-### Getting Updates to the Open SaaS Template
-
-We will be updating the Open SaaS template with new features and improvements. To get these updates, you can pull the changes from the original template into your own repository.
-
-First, you need to add the original template as a remote `upstream` repository:
-
-```sh
-git remote add upstream https://github.com/wasp-lang/open-saas.git
-```
-
-Then, you can fetch the changes from the original template:
-
-```sh
-git fetch upstream
-```
-
-And finally, merge the changes into your local repository:
-
-```sh
-git merge upstream/main
-```
-
 ## What's next?
 
 Awesome! We have our new app ready and we know how to run both it and the blog/docs! Now, in the next section, we'll give you a quick "guided tour" of the different parts of the app we created and understand how it works.
