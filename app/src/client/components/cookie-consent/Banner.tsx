@@ -6,7 +6,7 @@ import getConfig from './Config';
 /**
  * NOTE: if you do not want to use the cookie consent banner, you should 
  * run `npm uninstall vanilla-cookieconsent`, and delete this component, its config file,
- * as well as its import in src/client/App.tsx
+ * as well as its import in src/client/App.tsx .
  */
 const CookieConsentBanner = () => {
   useEffect(() => {
