@@ -55,7 +55,7 @@ Then, create a new SaaS app with the following command:
 wasp new -t saas
 ```
 
-This will clone a **clean copy of the Open SaaS template** into a new directory, and you can start building your SaaS app right away!
+This will create a **clean copy of the Open SaaS template** into a new directory, and you can start building your SaaS app right away!
 
 ### Detailed Instructions
 
