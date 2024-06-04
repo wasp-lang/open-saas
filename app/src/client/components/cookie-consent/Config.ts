@@ -9,7 +9,7 @@ declare global {
 const getConfig = () => {
   // See https://cookieconsent.orestbida.com/reference/configuration-reference.html for configuration options.
   const config: CookieConsentConfig = {
-    // Default configuration for the modal
+    // Default configuration for the modal.
     root: 'body',
     autoShow: true,
     disablePageInteraction: false,
