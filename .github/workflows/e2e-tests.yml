@@ -32,11 +32,13 @@ jobs:
       - name: Docker setup
         uses: docker/setup-buildx-action@v3
 
-      # In order for the app to run in the dev mode we need to set the required env vars even if they aren't actually used by the app.
-      # This step sets mock env vars in order to pass the validation steps so the app can run 
-      # in the CI environment. For env vars that are actually used in tests and therefore need real values, we set them in
-      # the GitHub secrets settings and access them in a step below.
+      # In order for the app to run in the dev mode we need to set the required env vars even if
+      # they aren't actually used by the app. This step sets mock env vars in order to pass the
+      # validation steps so the app can run in the CI environment. For env vars that are actually
+      # used in tests and therefore need real values, we set them in the GitHub secrets settings and
+      # access them in a step below.
       - name: Set required wasp app env vars to mock values
+        working-directory: ./template
         run: |
           cd app
           cp .env.server.example .env.server && cp .env.client.example .env.client
@@ -45,17 +47,19 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.npm
-          key: node-modules-${{ runner.os }}-${{ hashFiles('app/package-lock.json') }}-${{ hashFiles('e2e-tests/package-lock.json') }}-wasp${{ env.WASP_VERSION }}-node${{ steps.setup-node.outputs.node-version }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('template/app/package-lock.json') }}-${{ hashFiles('template/e2e-tests/package-lock.json') }}-wasp${{ env.WASP_VERSION }}-node${{ steps.setup-node.outputs.node-version }}
           restore-keys: |
             node-modules-${{ runner.os }}-
-            
+
       - name: Install Node.js dependencies for Playwright tests
         if: steps.cache-e2e-tests.outputs.cache-hit != 'true'
+        working-directory: ./template
         run: |
           cd e2e-tests
           npm ci
 
       - name: Store Playwright's Version
+        working-directory: ./template
         run: |
           cd e2e-tests
           PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')
@@ -68,9 +72,10 @@ jobs:
         with:
           path: ~/.cache/ms-playwright
           key: playwright-browsers-${{ env.PLAYWRIGHT_VERSION }}-${{ runner.os }}
-      
+
       - name: Set up Playwright
         if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
+        working-directory: ./template
         run: |
           cd e2e-tests
           npx playwright install --with-deps
@@ -79,14 +84,14 @@ jobs:
         run: |
           curl -s https://packages.stripe.dev/api/security/keypair/stripe-cli-gpg/public | gpg --dearmor | sudo tee /usr/share/keyrings/stripe.gpg
           echo "deb [signed-by=/usr/share/keyrings/stripe.gpg] https://packages.stripe.dev/stripe-cli-debian-local stable main" | sudo tee -a /etc/apt/sources.list.d/stripe.list
-          sudo apt update          
+          sudo apt update
           sudo apt install stripe
 
-      # For Stripe webhooks to work in development, we need to run the Stripe CLI to listen for webhook events. 
+      # For Stripe webhooks to work in development, we need to run the Stripe CLI to listen for webhook events.
       # The Stripe CLI will receive the webhook events from Stripe test payments and
       # forward them to our local server so that we can test the payment flow in our e2e tests.
       - name: Run Stripe CLI to listen for webhooks
-        env: 
+        env:
           STRIPE_DEVICE_NAME: ${{ secrets.STRIPE_DEVICE_NAME }}
         run: |
           stripe listen --api-key ${{ secrets.STRIPE_KEY }} --forward-to localhost:3001/stripe-webhook &
@@ -102,6 +107,7 @@ jobs:
           PRO_SUBSCRIPTION_PRICE_ID: ${{ secrets.PRO_SUBSCRIPTION_PRICE_ID }}
           CREDITS_PRICE_ID: ${{ secrets.CREDITS_PRICE_ID }}
           SKIP_EMAIL_VERIFICATION_IN_DEV: true
+        working-directory: ./template
         run: |
           cd e2e-tests
           npm run e2e:playwright

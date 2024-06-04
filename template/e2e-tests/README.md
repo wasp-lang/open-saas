@@ -34,7 +34,7 @@ To exit the local e2e tests, go back to the terminal were you started your tests
 
 ## CI/CD
 
-In `.github/workflows/e2e-tests.yml`, you can see the workflow that runs the headless e2e tests in a CI/CD pipeline via GitHub actions. 
+In `.github/workflows/e2e-tests.yml`, you can see the workflow that runs the headless e2e tests in a CI/CD pipeline via GitHub actions.
 
 In order for these tests to run correctly, you need to provide the environment variables mentioned in the `e2e-tests.yml` file within your GitHub repository's "Actions" secrets so that they can be accessed by the tests.
 

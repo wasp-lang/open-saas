@@ -1,0 +1,31 @@
+--- template/app/.gitignore
++++ opensaas-sh/app/.gitignore
+@@ -2,16 +2,24 @@
+ node_modules/
+ **/.DS_Store
+ 
+-# We ignore env files recognized and used by Wasp.
++# We ignore sensitive env files recognized and used by Wasp.
+ .env.server
+-.env.client
+-
+ # To be extra safe, we by default ignore any files with `.env` extension in them.
+ # If this is too agressive for you, consider allowing specific files with `!` operator,
+ # or modify/delete these two lines.
+ *.env
+ *.env.*
+-
++# These two we added only because dotenv-vault keeps adding them if it doesn't find them,
++# even though we don't need them. Remove them once dotenv-vault stops doing that.
++.env*
++.flaskenv*
+ # We don't want to ignore .env example files.
+ !*.env.*.example
+ !*.env.example
++# We don't want to ignore .env.client as it doesn't have any secrets.
++!.env.client
++# These are config files for dotenv-vault, so we don't want to ignore them.
++!.env.project
++!.env.vault
++# .env.me is used by dotenv-vault as a personal credential, so we explicitly ignore it.
++.env.me

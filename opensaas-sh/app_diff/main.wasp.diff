@@ -1,0 +1,99 @@
+--- template/app/main.wasp
++++ opensaas-sh/app/main.wasp
+@@ -3,24 +3,27 @@
+     version: "^0.13.2"
+   },
+ 
+-  title: "My Open SaaS App",
++  title: "Open SaaS",
+ 
+   head: [
+         "<meta property='og:type' content='website' />",
+-        "<meta property='og:title' content='My Open SaaS App' />",
++        "<meta property='og:title' content='Open SaaS' />",
+         "<meta property='og:url' content='https://opensaas.sh' />",
+-        "<meta property='og:description' content='I made a SaaS App. Buy my stuff.' />",
+-        "<meta property='og:image' content='https://opensaas.sh/public-banner.png' />",
+-        "<meta name='twitter:image' content='https://opensaas.sh/public-banner.png' />",
++        "<meta property='og:description' content='Free, open-source SaaS boilerplate starter for React & NodeJS.' />",
++        "<meta property='og:image' content='https://opensaas.sh/banner.png' />",
++
++        "<meta name=\"twitter:title\" content=\"Open SaaS\" />",
++        "<meta name=\"twitter:text:title\" content=\"Open SaaS\" />",
++        "<meta name='twitter:image' content='https://opensaas.sh/banner.png' />",
++        "<meta name=\"twitter:image:alt\" content=\"Open SaaS\" />",
+         "<meta name='twitter:image:width' content='800' />",
+         "<meta name='twitter:image:height' content='400' />",
+         "<meta name='twitter:card' content='summary_large_image' />",
+-        // TODO: You can put your analytics scripts below (https://docs.opensaas.sh/guides/analytics/):
+-        //   If you are going with Plausible:
+-        "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.js'></script>",  // for production
+-        "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.local.js'></script>",  // for development
+-        //   If you are going with Google Analytics:
+-        "<!-- Google tag (gtag.js) --><script>...</script>"  // for both production and development
++
++        "<script defer data-domain='opensaas.sh' src='https://plausible.apps.twoducks.dev/js/script.js'></script>",
++        "<script defer data-domain='opensaas.sh' src='https://plausible.apps.twoducks.dev/js/script.local.js'></script>",
++
++        "<!-- Google tag (gtag.js) --><script async src='https://www.googletagmanager.com/gtag/js?id=G-H3LSJCK95H'></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-H3LSJCK95H');</script>"
+   ],
+ 
+   // 🔐 Auth out of the box! https://wasp-lang.dev/docs/auth/overview
+@@ -32,7 +35,7 @@
+       email: {
+         fromField: {
+           name: "Open SaaS App",
+-          email: "me@example.com"
++          email: "vince@wasp-lang.dev"
+         },
+         emailVerification: {
+           clientRoute: EmailVerificationRoute,
+@@ -44,16 +47,14 @@
+         },
+         userSignupFields: import { getEmailUserFields } from "@src/server/auth/setUsername.js",
+       },
+-      // Uncomment to enable Google Auth (check https://wasp-lang.dev/docs/auth/social-auth/google for setup instructions):
+-      // google: { // Guide for setting up Auth via Google
+-      //   userSignupFields: import { getGoogleUserFields } from "@src/server/auth/setUsername.js",
+-      //   configFn: import { getGoogleAuthConfig } from "@src/server/auth/setUsername.js",
+-      // },
+-      // Uncomment to enable GitHub Auth (check https://wasp-lang.dev/docs/auth/social-auth/github for setup instructions):
+-      // gitHub: {
+-      //   userSignupFields: import { getGitHubUserFields } from "@src/server/auth/setUsername.js",
+-      //   configFn: import { getGitHubAuthConfig } from "@src/server/auth/setUsername.js",
+-      // },
++      google: {
++        userSignupFields: import { getGoogleUserFields } from "@src/server/auth/setUsername",
++        configFn: import { getGoogleAuthConfig } from "@src/server/auth/setUsername",
++      },
++      gitHub: {
++        userSignupFields: import { getGitHubUserFields } from "@src/server/auth/setUsername",
++        configFn: import { getGitHubAuthConfig } from "@src/server/auth/setUsername",
++      },
+     },
+     onAuthFailedRedirectTo: "/login",
+     onAuthSucceededRedirectTo: "/demo-app",
+@@ -76,11 +77,11 @@
+     // NOTE: "Dummy" provider is just for local development purposes.
+     //   Make sure to check the server logs for the email confirmation url (it will not be sent to an address)!
+     //   Once you are ready for production, switch to e.g. "SendGrid" or "MailGun" providers. Check out https://docs.opensaas.sh/guides/email-sending/ .
+-    provider: Dummy,
++    provider: SendGrid,
+     defaultFrom: {
+       name: "Open SaaS App",
+       // When using a real provider, e.g. SendGrid, you must use the same email address that you configured your account to send out emails with!
+-      email: "me@example.com"
++      email: "vince@wasp-lang.dev"
+     },
+   },
+ }
+@@ -97,6 +98,9 @@
+   username                  String?         @unique
+   lastActiveTimestamp       DateTime        @default(now())
+   isAdmin                   Boolean         @default(false)
++  // isMockUser is an extra property for the demo app ensuring that all users can access
++  // the admin dashboard but won't be able to see the other users' data, only mock user data.
++  isMockUser                Boolean         @default(false)
+ 
+   stripeId                  String?
+   checkoutSessionId         String?
