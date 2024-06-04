@@ -44,7 +44,7 @@ test.describe('cookie consent tests', () => {
     expect(cookieObject.categories.includes('analytics')).toBeFalsy();
   });
 
-  test('cookie consent banner acceptance sets cc_cookie', async ({
+  test('cookie consent banner acceptance sets cc_cookie and _ga cookies', async ({
     context,
     page,
   }) => {

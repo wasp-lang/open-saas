@@ -13,11 +13,11 @@ const getConfig = () => {
     root: 'body',
     autoShow: true,
     disablePageInteraction: false,
-    hideFromBots: import.meta.env.PROD ? true : false, // Set this to false for dev/headless tests otherwise the modal will not be visible
+    hideFromBots: import.meta.env.PROD ? true : false, // Set this to false for dev/headless tests otherwise the modal will not be visible.
     mode: 'opt-in',
     revision: 0,
 
-    // Default configuration for the cookie
+    // Default configuration for the cookie.
     cookie: {
       name: 'cc_cookie',
       domain: location.hostname,
@@ -58,20 +58,20 @@ const getConfig = () => {
             label: 'Google Analytics',
             onAccept: () => {
               try {
-                const GA_MEASUREMENT_ID = import.meta.env.REACT_APP_GOOGLE_ANALYTICS_ID;
-                if (!GA_MEASUREMENT_ID.length) {
-                  throw new Error('Google Analytics Measurement ID is missing');
+                const GA_ANALYTICS_ID = import.meta.env.REACT_APP_GOOGLE_ANALYTICS_ID;
+                if (!GA_ANALYTICS_ID.length) {
+                  throw new Error('Google Analytics ID is missing');
                 }
                 window.dataLayer = window.dataLayer || [];
                 function gtag(..._args: unknown[]) {
                   (window.dataLayer as Array<any>).push(arguments);
                 }
                 gtag('js', new Date());
-                gtag('config', GA_MEASUREMENT_ID);
+                gtag('config', GA_ANALYTICS_ID);
 
-                // Adding the script tag dynamically to the DOM
+                // Adding the script tag dynamically to the DOM.
                 const script = document.createElement('script');
-                script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+                script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ANALYTICS_ID}`;
                 script.async = true;
                 document.body.appendChild(script);
               } catch (error) {
@@ -95,9 +95,10 @@ const getConfig = () => {
             acceptAllBtn: 'Accept all',
             acceptNecessaryBtn: 'Reject all',
             // showPreferencesBtn: 'Manage Individual preferences',
+            // TODO: Add your own privacy policy and terms and conditions links below.
             footer: `
-            <a href="#" target="_blank">Privacy Policy</a>
-            <a href="#" target="_blank">Terms and Conditions</a>
+            <a href="<your-url-here>" target="_blank">Privacy Policy</a>
+            <a href="<your-url-here>" target="_blank">Terms and Conditions</a>
                     `,
           },
           // The showPreferencesBtn activates this modal to manage individual preferences https://cookieconsent.orestbida.com/reference/configuration-reference.html#translation-preferencesmodal
