@@ -72,7 +72,7 @@ recreate_derived_dir() {
 
         local patch_output
         local patch_exit_code
-        patch_output=$(patch --merge "${DERIVED_DIR}/${derived_filepath}" < "${diff_filepath}")
+        patch_output=$(patch --no-backup-if-mismatch --merge "${DERIVED_DIR}/${derived_filepath}" < "${diff_filepath}")
         patch_exit_code=$?
         if [ ${patch_exit_code} -eq 0 ]; then
           echo "${patch_output}"
