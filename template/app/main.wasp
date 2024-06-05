@@ -204,7 +204,7 @@ psl=}
 
 route LandingPageRoute { path: "/", to: LandingPage }
 page LandingPage {
-  component: import LandingPage from "@src/client/landing-page/LandingPage"
+  component: import LandingPage from "@src/client/landing-page/Index"
 }
 
 //#region Auth Pages
