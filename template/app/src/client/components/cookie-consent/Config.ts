@@ -94,7 +94,7 @@ const getConfig = () => {
               'We use cookies primarily for analytics to enhance your experience. By accepting, you agree to our use of these cookies. You can manage your preferences or learn more about our cookie policy.',
             acceptAllBtn: 'Accept all',
             acceptNecessaryBtn: 'Reject all',
-            // showPreferencesBtn: 'Manage Individual preferences',
+            // showPreferencesBtn: 'Manage Individual preferences', // (OPTIONAL) Activates the preferences modal
             // TODO: Add your own privacy policy and terms and conditions links below.
             footer: `
             <a href="<your-url-here>" target="_blank">Privacy Policy</a>

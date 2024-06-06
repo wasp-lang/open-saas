@@ -1,0 +1,26 @@
+--- template/app/src/server/auth/setUsername.ts
++++ opensaas-sh/app/src/server/auth/setUsername.ts
+@@ -4,7 +4,6 @@
+ 
+ export const getEmailUserFields = defineUserSignupFields({
+   username: (data: any) => data.email,
+-  isAdmin: (data: any) => adminEmails.includes(data.email),
+   email: (data: any) => data.email,
+ });
+ 
+@@ -13,7 +12,6 @@
+   // instead of ["user"] and access args.profile.username instead
+   email: (data: any) => data.profile.emails[0].email,
+   username: (data: any) => data.profile.login,
+-  isAdmin: (data: any) => adminEmails.includes(data.profile.emails[0].email),
+ });
+ 
+ export function getGitHubAuthConfig() {
+@@ -25,7 +23,6 @@
+ export const getGoogleUserFields = defineUserSignupFields({
+   email: (data: any) => data.profile.email,
+   username: (data: any) => data.profile.name,
+-  isAdmin: (data: any) => adminEmails.includes(data.profile.email),
+ });
+ 
+ export function getGoogleAuthConfig() {

@@ -1,6 +1,6 @@
 --- template/app/main.wasp
 +++ opensaas-sh/app/main.wasp
-@@ -3,24 +3,27 @@
+@@ -3,24 +3,25 @@
      version: "^0.13.2"
    },
  
@@ -25,21 +25,19 @@
          "<meta name='twitter:image:width' content='800' />",
          "<meta name='twitter:image:height' content='400' />",
          "<meta name='twitter:card' content='summary_large_image' />",
--        // TODO: You can put your analytics scripts below (https://docs.opensaas.sh/guides/analytics/):
--        //   If you are going with Plausible:
+-        // TODO: You can put your Plausible analytics scripts below (https://docs.opensaas.sh/guides/analytics/):
+-        // NOTE: Plausible does not use Cookies, so you can simply add the scripts here.
+-        // Google, on the other hand, does, so you must instead add the script dynamically
+-        // via the Cookie Consent component after the user clicks the "Accept" cookies button.
 -        "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.js'></script>",  // for production
 -        "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.local.js'></script>",  // for development
--        //   If you are going with Google Analytics:
--        "<!-- Google tag (gtag.js) --><script>...</script>"  // for both production and development
-+
 +        "<script defer data-domain='opensaas.sh' src='https://plausible.apps.twoducks.dev/js/script.js'></script>",
 +        "<script defer data-domain='opensaas.sh' src='https://plausible.apps.twoducks.dev/js/script.local.js'></script>",
-+
 +        "<!-- Google tag (gtag.js) --><script async src='https://www.googletagmanager.com/gtag/js?id=G-H3LSJCK95H'></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-H3LSJCK95H');</script>"
    ],
  
    // 🔐 Auth out of the box! https://wasp-lang.dev/docs/auth/overview
-@@ -32,7 +35,7 @@
+@@ -32,7 +33,7 @@
        email: {
          fromField: {
            name: "Open SaaS App",
@@ -48,7 +46,7 @@
          },
          emailVerification: {
            clientRoute: EmailVerificationRoute,
-@@ -44,16 +47,14 @@
+@@ -44,16 +45,14 @@
          },
          userSignupFields: import { getEmailUserFields } from "@src/server/auth/setUsername.js",
        },
@@ -73,7 +71,7 @@
      },
      onAuthFailedRedirectTo: "/login",
      onAuthSucceededRedirectTo: "/demo-app",
-@@ -76,11 +77,11 @@
+@@ -76,11 +75,11 @@
      // NOTE: "Dummy" provider is just for local development purposes.
      //   Make sure to check the server logs for the email confirmation url (it will not be sent to an address)!
      //   Once you are ready for production, switch to e.g. "SendGrid" or "MailGun" providers. Check out https://docs.opensaas.sh/guides/email-sending/ .
@@ -87,10 +85,17 @@
      },
    },
  }
-@@ -97,6 +98,9 @@
-   username                  String?         @unique
+@@ -93,10 +92,13 @@
+   id                        Int             @id @default(autoincrement())
+   createdAt                 DateTime        @default(now())
+ 
+-  email                     String?         @unique
+-  username                  String?         @unique
++  email                     String?         
++  username                  String?         
    lastActiveTimestamp       DateTime        @default(now())
-   isAdmin                   Boolean         @default(false)
+-  isAdmin                   Boolean         @default(false)
++  isAdmin                   Boolean         @default(true)
 +  // isMockUser is an extra property for the demo app ensuring that all users can access
 +  // the admin dashboard but won't be able to see the other users' data, only mock user data.
 +  isMockUser                Boolean         @default(false)
