@@ -7,7 +7,7 @@ banner:
 ---
 This guide will show you how to integrate analytics for your app. You can choose between [Google Analytics](#google-analytics) and [Plausible](#plausible).
 
-Google Analytics is free, but uses cookies, so you must implement the [Cookie Consent Modal](./cookie-consent.md) when using it.
+Google Analytics is free, but uses cookies, so you'll probably want/need to implement the [Cookie Consent Modal](./cookie-consent.md) when using it.
 
 Plausible is an open-source, privacy-friendly alternative to Google Analytics. **You DO NOT have to use the cookie consent modal** with Plausible, as it does not use cookies. It's also easier to use than Google if you use their hosted service, but be aware it is a paid feature. It is completely free if you want to self-host it, although this comes with some additional setup steps.
 

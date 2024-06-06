@@ -46,7 +46,7 @@ cc_cookie # Cookie Consent cookie. The name of this cookie can be changed in the
 
 ### Plausible Analytics
 
-If you decide to go with [Plausible Analytics](./analytics.md/#plausible), you **DO NOT** need to ask users for their consent to use cookies becuase Plausible, as a privacy-first analytics provider, [does not use cookies](https://plausible.io/privacy-focused-web-analytics). Instead, It collects website usage data anonymously and in aggregate form only, without any personally identifiable information
+If you decide to go with [Plausible Analytics](./analytics.md/#plausible), you **DO NOT** need to ask users for their consent to use cookies because Plausible, as a privacy-first analytics provider, [does not use cookies](https://plausible.io/privacy-focused-web-analytics). Instead, It collects website usage data anonymously and in aggregate form only, without any personally identifiable information
 
 **By avoiding cookies, Plausible Analytics avoids the need for cookie consent banners.**
 
