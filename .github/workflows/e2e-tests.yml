@@ -107,6 +107,8 @@ jobs:
           PRO_SUBSCRIPTION_PRICE_ID: ${{ secrets.PRO_SUBSCRIPTION_PRICE_ID }}
           CREDITS_PRICE_ID: ${{ secrets.CREDITS_PRICE_ID }}
           SKIP_EMAIL_VERIFICATION_IN_DEV: true
+          # Client-side env vars
+          REACT_APP_GOOGLE_ANALYTICS_ID: G-H3LSJCK95H
         working-directory: ./template
         run: |
           cd e2e-tests

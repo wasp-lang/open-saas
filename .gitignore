@@ -1,2 +1,3 @@
 # There is no need to pollute the template with the migrations.
 template/app/migrations/
+.DS_Store

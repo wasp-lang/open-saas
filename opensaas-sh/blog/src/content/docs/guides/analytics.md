@@ -7,9 +7,9 @@ banner:
 ---
 This guide will show you how to integrate analytics for your app. You can choose between [Google Analytics](#google-analytics) and [Plausible](#plausible).
 
-Google Analytics is free, but tends to be more cumbersome to use.
+Google Analytics is free, but uses cookies, so you'll probably want/need to implement the [Cookie Consent Modal](./cookie-consent.md) when using it.
 
-Plausible is an open-source, privacy-friendly alternative to Google Analytics. It's also easier to use than Google if you use their hosted service, which is a paid feature. But, it is completely free if you want to self-host it, although this comes with some additional setup steps.
+Plausible is an open-source, privacy-friendly alternative to Google Analytics. **You DO NOT have to use the cookie consent modal** with Plausible, as it does not use cookies. It's also easier to use than Google if you use their hosted service, but be aware it is a paid feature. It is completely free if you want to self-host it, although this comes with some additional setup steps.
 
 If you're looking to add analytics to your blog, you can follow the [Adding Analytics to your Blog](#adding-analytics-to-your-blog) section at the end of this guide.
 
@@ -40,6 +40,9 @@ app OpenSaaS {
 
 Go back to your Plausible dashboard, click on your username in the top right, and click on the `Settings` tab. Scroll down, find your API key and paste it into your `.env.server` file under the `PLAUSIBLE_API_KEY` variable.
 
+:::note[No Cookies]
+Plausible does not use cookies, so you don't need to add it to your [Cookie Consent Modal](./cookie-consent.md), hence the script can be added directly to `app.head` in your `main.wasp` file.
+:::
 
 ### Self-hosted Plausible
 
@@ -58,18 +61,15 @@ As a completely free, open-source project, we appreciate any help 🙏
 
 After you sign up for [Google analytics](https://analytics.google.com/), go to your `Admin` panel in the bottom of the left sidebar and then create a "Property" for your app.
 
-Once you've completed the steps to create a new Property, some Installation Instructions will pop up. Select `install manually` and copy and paste the Google script tag into the `main.wasp` file's head section. 
+Once you've completed the steps to create a new Property, some Installation Instructions will pop up. Select `install manually` where you should see a string that looks like this:
 
-```js {7}
-app OpenSaaS {
-  wasp: {
-    version: "^0.13.0"
-  },
-  title: "My SaaS App",
-  head: [
-        "<your google analytics script tag here>",
-  ],
-  //...
+```sh "<your-google-analytics-id>"
+ https://www.googletagmanager.com/gtag/js?id=<your-google-analytics-id>
+```
+and copy and paste the Google Analytics ID into your `.env.client` file to get it working with the [Cookie Consent Modal](./cookie-consent.md) provided with this template:
+
+```sh title=".env.client"
+REACT_APP_GOOGLE_ANALYTICS_ID=<your-google-analytics-id> # e.g. G-1234567890
 ```
 
 :::tip[noscript]

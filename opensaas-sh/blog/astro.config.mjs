@@ -67,6 +67,7 @@ export default defineConfig({
             { label: 'SEO', link: '/guides/seo/' },
             { label: 'Email Sending', link: '/guides/email-sending/' },
             { label: 'File Uploading', link: '/guides/file-uploading/' },
+            { label: 'Cookie Consent', link: '/guides/cookie-consent/' },
             { label: 'Deploying', link: '/guides/deploying/' },
           ],
         },
