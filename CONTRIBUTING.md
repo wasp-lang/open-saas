@@ -1,41 +1,41 @@
 Thanks so much for considering contributing to Open SaaS 🙏
 
 ## Considerations before Contributing
+Check if there is a GitHub issue already for the thing you would like to work on. If there is no issue yet, create a new one.
 
-### General Considerations
-1. If there's something you'd like to add, and the issue doesn't already exist, create a new one and assign yourself to it. Wait until we've agreed on a plan of action before beginning your work.
-2. If the issue does already exist, and noone is assigned to it, assign yourself and feel free to begin working on it.
+Let us know, in the issue, that you would like to work on it and how you plan to approach it.
+This helps, especially with the more complex issues, as it allows us to discuss the solution upfront and make sure it is well planned and fits with the rest of the project.
 
-### How Users Get the Starter Template
+## Repo organization
 
-We currently have two ways to pull the template:
-1. the `use this template` button on the [repo homepage](https://github.com/wasp-lang/open-saas)
-2. the [Wasp CLI's](https://wasp-lang.dev/docs/quick-start) `wasp new` command
+Repo is divided into two main parts: [template](/template) dir and [opensaas-sh](/opensaas-sh) dir.
 
-When pulling the template via `wasp new`, the Wasp CLI looks for a tag `wasp-{CURRENT_VERSION}-template` associated with a specific commit on the Open SaaS repo.
+`template` contains the actual open saas template that will be used by Wasp to create your new open-saas-based app when you run `wasp new -t saas`.
 
-In order to keep this tag up to date, we've created a github action, `.github/workflows/retag-commit.yml`, that automatically reassigns the tag (defined as `TAG_NAME` in the action) to the most recent commit on `main`.
+`opensaas-sh` is the app deployed to https://opensaas.sh , and is actually made with open saas! It contains a demo app and open saas docs. We keep it updated as we work on the template.
 
-**This means, that whenever a user pulls the template, they are getting the version present in the most recent commit on `main`**
+## How to Contribute
+1. Make sure you understand the basics of how open-saas works (check out [docs](https://docs.opensaas.sh)).
+2. Check out this repo (`main` branch) and make sure you are able to get the app in [template/app/](/template/app) running (to set it up, follow the same steps as for running a new open-saas app, as explained in the open-saas docs).
+3. Create a new git branch for your work (aka feature branch) and do your changes on it.
+4. Update e2e tests in [template/e2e-tests](/template/e2e-tests/) if needed and make sure they are passing.
+5. Update docs in [opensaas-sh/blog/src/content/docs](/opensaas-sh/blog/src/content/docs/) if needed. Check [opensaas-sh/README.md](/opensaas-sh/README.md) for more details.
+6. Update demo app in [opensaas-sh/app_diff](/opensaas-sh/app_diff) if needed. Check [opensaas-sh/README.md](/opensaas-sh/README.md) for more details.
+7. Create a pull request (towards `main` as a base branch).
+8. Make a "Da Boi" meme while you wait for us to review your PR(s).
+9. If you don't know who "Da Boi" is, head back to the [Wasp Discord](https://discord.gg/aCamt5wCpS) and find out :)
 
-Also, If we update Wasp to a new major version, we should also update the `TAG_NAME` in the action.
+## Additional Info
 
-### The Default Template vs. the Deployed Site / Docs
+### Template Versioning
 
-There are two main branches for development:
-- `main`
-- `deployed-version`
+Whenever a user starts a new Wasp project with `wasp new -t <template_name>`, Wasp looks for a specific tag on the template repo, and pulls the project at the commit associated with that tag.
 
-The default, clean template that users get when cloning the starter lives on `main`, while `deployed-version` is what you see when you go to [OpenSaaS.sh](https://opensaas.sh) and the [docs](https://docs.opensaas.sh) 
+In the case of Open SaaS, which is a Wasp template, the tag is `wasp-v{{version}}-template`, where `{{version}}` is the current version of Wasp, e.g. `wasp-v0.13-template`.
 
-If you want to make changes to the default starter template, base feature branches and Pull Requests off of `main`
-If you want to make changes to the OpenSaaS.sh site or it's Documentation, base feature branches and Pull Requests off of `deployed-version`
+We manually (re)assign the appropriate tag when we are ready to release a new version of Open Saas.
 
-## How to contribute
-Contributing is simple:
-1. Make sure you've installed and run the app.
-2. Find something you'd like to work on. Check out the [issues](https://github.com/wasp-lang/open-saas/issues) or contact us on the [Wasp Discord](https://discord.gg/aCamt5wCpS) to discuss.
-3. Create a new feature branch for your work. See [above](#the-default-template-vs-the-deployed-site--docs) for which branch to base your feature branch off of.
-4. Create a pull request.
-5. Make a "Da Boi" meme while you wait for us to review your PR.
-6. If you don't know who "Da Boi" is, head back to the [Wasp Discord](https://discord.gg/aCamt5wCpS) and find out :)
+### Releasing
+
+1. Assign appropriate tag to the commit we want to release (usually current `main`) so `wasp new -t saas` can pick up code from the [/template](/template).
+2. Deploy the demo app + landing page and blog + docs: [/opensaas-sh/README.md#Deployment](/opensaas-sh/README.md#Deployment).

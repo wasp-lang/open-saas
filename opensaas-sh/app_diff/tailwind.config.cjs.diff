@@ -1,0 +1,20 @@
+--- template/app/tailwind.config.cjs
++++ opensaas-sh/app/tailwind.config.cjs
+@@ -8,6 +8,7 @@
+   theme: {
+     extend: {
+       fontFamily: {
++        sans: ['ui-monospace', 'Liberation Mono', 'Menlo', 'monospace'],
+         satoshi: ['Satoshi', 'sans-serif'],
+       },
+       colors: {
+@@ -246,6 +247,9 @@
+         'spin-2': 'spin 2s linear infinite',
+         'spin-3': 'spin 3s linear infinite',
+       },
++      aspectRatio: {
++        '4/3': '4 / 3',
++      },
+     },
+   },
+   plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography'), require('@tailwindcss/forms')],
