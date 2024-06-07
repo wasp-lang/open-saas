@@ -6,8 +6,6 @@ node_modules/
 # or modify/delete these two lines.
 .env
 .env.*
-# Don't ignore .env.client as it can't contain any secrets.
-!.env.client
 # Don't ignore example env files.
 !.env.example
 !.env.*.example
