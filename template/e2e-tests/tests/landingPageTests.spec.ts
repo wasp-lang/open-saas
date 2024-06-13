@@ -54,6 +54,7 @@ test.describe('cookie consent tests', () => {
     let cookies = await context.cookies();
     const consentCookie = cookies.find((c) => c.name === 'cc_cookie');
     const cookieObject = JSON.parse(decodeURIComponent(consentCookie.value));
+    // Check that the Cookie Consent cookie is set. This should happen immediately, and then the GA cookies will get set after it, dynamically.
     expect(cookieObject.categories.includes('analytics')).toBeTruthy();
 
     // Wait for Google Analytics cookies to be set after accepting
@@ -68,6 +69,6 @@ test.describe('cookie consent tests', () => {
     }
     let gaCookiesArr = await context.cookies(); // Call the cookies method again to avoid race condition
     gaCookiesArr = gaCookiesArr.filter((c) => c.name.startsWith('_ga'));
-    expect(gaCookiesArr.length).toBe(2)
+    expect(gaCookiesArr.length).toBe(2);
   });
 });
