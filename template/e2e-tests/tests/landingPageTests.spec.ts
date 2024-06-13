@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Cookie } from '@playwright/test';
 
 const DOCS_URL = 'https://docs.opensaas.sh';
 
@@ -54,19 +54,24 @@ test.describe('cookie consent tests', () => {
     let cookies = await context.cookies();
     const consentCookie = cookies.find((c) => c.name === 'cc_cookie');
     const cookieObject = JSON.parse(decodeURIComponent(consentCookie.value));
+    // Check that the Cookie Consent cookie is set. This should happen immediately, and then the GA cookies will get set after it, dynamically.
     expect(cookieObject.categories.includes('analytics')).toBeTruthy();
 
-    // Wait for Google Analytics cookies to be set after accepting
-    const MAX_TIME = 15000;
+    const areGaCookiesSet = (cookies: Cookie[]) => {
+      const gaCookiesArr = cookies.filter((c) => c.name.startsWith('_ga'));
+      return gaCookiesArr.length === 2; // GA cookies are _ga and _ga_<GA_ANALYTICS_ID>
+    };
+
     const startTime = Date.now();
-    while (cookies.length === 1) {
-      if (Date.now() - startTime > MAX_TIME) {
-        throw new Error('Timeout: Google Analytics cookies not set.');
-      }
+    const MAX_TIME_MS = 10000;
+    let timeElapsed = 0;
+
+    while (!areGaCookiesSet(cookies) && timeElapsed < MAX_TIME_MS) {
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for 1 second before checking again
       cookies = await context.cookies();
+      timeElapsed = Date.now() - startTime;
     }
 
-    const gaCookiesArr = cookies.filter((c) => c.name.startsWith('_ga'));
-    expect(gaCookiesArr.length === 2).toBeTruthy();
+    expect(timeElapsed).toBeLessThan(MAX_TIME_MS);
   });
 });
