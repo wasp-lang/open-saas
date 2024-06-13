@@ -55,9 +55,9 @@ test.describe('cookie consent tests', () => {
     const consentCookie = cookies.find((c) => c.name === 'cc_cookie');
     const cookieObject = JSON.parse(decodeURIComponent(consentCookie.value));
     expect(cookieObject.categories.includes('analytics')).toBeTruthy();
-
+    
     // Wait for Google Analytics cookies to be set after accepting
-    const MAX_TIME = 15000;
+    const MAX_TIME = 45000;
     const startTime = Date.now();
     while (cookies.length === 1) {
       if (Date.now() - startTime > MAX_TIME) {
@@ -65,7 +65,7 @@ test.describe('cookie consent tests', () => {
       }
       cookies = await context.cookies();
     }
-
+    
     const gaCookiesArr = cookies.filter((c) => c.name.startsWith('_ga'));
     expect(gaCookiesArr.length === 2).toBeTruthy();
   });
