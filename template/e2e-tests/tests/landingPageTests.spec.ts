@@ -60,15 +60,14 @@ test.describe('cookie consent tests', () => {
     // Wait for Google Analytics cookies to be set after accepting
     const MAX_TIME_MS = 45000;
     const startTime = Date.now();
-    while (cookies.length === 1) {
+    while (cookies.length < 3) { // 3 cookies will be set: cc_cookie, _ga, _ga_xxx
       if (Date.now() - startTime > MAX_TIME_MS) {
         throw new Error('Timeout: Google Analytics cookies not set.');
       }
-      cookies = await context.cookies();
       await new Promise((resolve) => setTimeout(resolve, 1000));
+      cookies = await context.cookies();
     }
-    let gaCookiesArr = await context.cookies(); // Call the cookies method again to avoid race condition
-    gaCookiesArr = gaCookiesArr.filter((c) => c.name.startsWith('_ga'));
+    let gaCookiesArr = cookies.filter((c) => c.name.startsWith('_ga'));
     expect(gaCookiesArr.length).toBe(2);
   });
 });
