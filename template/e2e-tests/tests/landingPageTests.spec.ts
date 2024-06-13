@@ -55,7 +55,7 @@ test.describe('cookie consent tests', () => {
     const consentCookie = cookies.find((c) => c.name === 'cc_cookie');
     const cookieObject = JSON.parse(decodeURIComponent(consentCookie.value));
     expect(cookieObject.categories.includes('analytics')).toBeTruthy();
-    
+
     // Wait for Google Analytics cookies to be set after accepting
     const MAX_TIME = 45000;
     const startTime = Date.now();
@@ -64,6 +64,7 @@ test.describe('cookie consent tests', () => {
         throw new Error('Timeout: Google Analytics cookies not set.');
       }
       cookies = await context.cookies();
+      console.log('cookies >>> ', cookies)
     }
     
     const gaCookiesArr = cookies.filter((c) => c.name.startsWith('_ga'));
