@@ -63,19 +63,15 @@ test.describe('cookie consent tests', () => {
     };
 
     const startTime = Date.now();
-    const MAX_TIME_MS = 45000;
+    const MAX_TIME_MS = 10000;
     let timeElapsed = 0;
 
     while (!areGaCookiesSet(cookies) && timeElapsed < MAX_TIME_MS) {
       await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for 1 second before checking again
-      timeElapsed = Date.now() - startTime;
       cookies = await context.cookies();
+      timeElapsed = Date.now() - startTime;
     }
 
-    if (timeElapsed >= MAX_TIME_MS) {
-      throw new Error('Timeout: Google Analytics cookies not set.');
-    }
-
-    expect(areGaCookiesSet(cookies)).toBeTruthy();
+    expect(timeElapsed).toBeLessThan(MAX_TIME_MS);
   });
 });
