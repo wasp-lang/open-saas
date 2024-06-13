@@ -64,10 +64,9 @@ test.describe('cookie consent tests', () => {
         throw new Error('Timeout: Google Analytics cookies not set.');
       }
       cookies = await context.cookies();
-      console.log('cookies >>> ', cookies)
     }
-    
-    const gaCookiesArr = cookies.filter((c) => c.name.startsWith('_ga'));
+    let gaCookiesArr = await context.cookies(); // Call the cookies method again to avoid race condition
+    gaCookiesArr = gaCookiesArr.filter((c) => c.name.startsWith('_ga'));
     expect(gaCookiesArr.length === 2).toBeTruthy();
   });
 });
