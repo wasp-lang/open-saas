@@ -25,6 +25,6 @@
  
 +## Deployment
 +
-+This app is deployed to fly.io, Wasp org, via `wasp deploy`.
++This app is deployed to fly.io, Wasp org, via `wasp deploy fly deploy`.
 +
-+You can run `npm run deploy` to deploy it via `wasp deploy` with required client side env vars correctly set.
++You can run `npm run deploy` to deploy it via `wasp deploy fly deploy` with required client side env vars correctly set.
