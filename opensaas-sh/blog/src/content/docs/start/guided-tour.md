@@ -6,23 +6,18 @@ banner:
     <a href="https://wasp-lang.dev/docs/migrate-from-0-12-to-0-13">migration instructions here</a> ⚠️ 
 ---
 
-Let's get to know our new SaaS app.
+Awesome, you now have your very own SaaS app up and running! But, first, here are some important things you need to know about your app in its current state:
 
-First, we'll take a look at the project's file structure, then dive into its main features and how you can get started customizing them.
+1. When signing up with a new user, you will get a message to check your email for a verification link. But, in development, these emails are simply written to your terminal. **So, to continue with the registration process, check your server logs after sign up**! 
+2. Your app is still missing some key configurations (e.g. Stripe, OpenAI, AWS S3, Auth, Analytics). These services won't work at the moment, but don't fear, because **we've provided detailed guides in these docs to help you set up all the services in this template**.
+3. If you want to get a feel for what your SaaS could look like when finished, **check out [OpenSaaS.sh](https://opensaas.sh) in your browser. It was built using this template!** So make sure to log in, play around with the demo app, make a test Stripe payment, and check out the admin dashboard.
 
-:::caution[HOLD UP! ✋]
+In the sections below, we will take a short guide through the codebase and the app's main features. At the end, we also prepared a checklist of likely changes you will want to make to the app to make it your own. 
 
-If you haven't already, now would be the right time to [explore our demo app](https://opensaas.sh) in your browser:
-- [ ] explore the landing page
-- [ ] log in to the demo app
-- [ ] make a test purchase
-- [ ] check out the admin dashboard
-- [ ] check out your account settings
-- [ ] check out the blog
-:::
+We're looking forward to seeing what you build!
 
 ## Getting acquainted with the codebase
-Now that you've gotten a feel for the app and how it works, let's dive into the codebase.
+Now that you've gotten a first look at the app, let's dive into the codebase.
 
 At the root of our project, you will see two folders:
 ```sh
@@ -279,10 +274,10 @@ Now would be a good time to decided which features you do and do not need for yo
 For the features you will use, the next section of the documentation, `Guides`, will walk you through how to set each one up!
 
 :::note[Open SaaS is built on Wasp]
-Remember, this template is built on the Wasp framework. If, at any time, these docs fail to provide more information about a certain built-in feature, make sure to check out the [Wasp docs](https://wasp-lang.dev/docs)!
+Remember, this template is built on the Wasp framework. If, at any time, these docs fail to provide enough information about a certain built-in feature, make sure to check out the [Wasp docs](https://wasp-lang.dev/docs)!
 :::
 
-But before you start setting up the main features, let's walk through the first customizations you should make the template to make it your own.
+But before you start setting up the main features, let's walk through the customizations you will likely want to make to the template to make it your own.
 
 ### Customizations Checklist
 #### `main.wasp` Config File
@@ -309,10 +304,10 @@ But before you start setting up the main features, let's walk through the first 
   - [ ] File Uploading - `entity File`, `route FileUploadRoute`, `action createFile`, `query getAllFilesByUser`, `getDownloadFileSignedURL`
 
 #### Customizing the Look / Style of the App
-- [ ] Update your favicon at `public/favicon.ico`
+- [ ] Update your favicon at `public/favicon.ico`.
 - [ ] Update the banner image used when posting links to your site at `public/public-banner.png`.
   - [ ] Update the URL for this banner at `og:image` and `twitter:image` in `app.head` of the `main.wasp` file.
-- [ ] Make changes to your landing page, `landingPage.tsx`
+- [ ] Make changes to your landing page, `landingPage.tsx`.
   - [ ] Customize the `navBar`, `features`, `testimonials`, and `faqs` in the `contentSections.ts` file.
   - [ ] Change/rename the `logo.png` and main banner (`open-saas-banner.png`) in the `static` folder.
 - [ ] If you want to make changes to the global styles of the app, you can do so in `tailwind.config.cjs`. **Be aware that the current custom global styles defined already are mostly used in the app's Admin Dashboard!**
