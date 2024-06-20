@@ -25,7 +25,7 @@ Make sure you've got all your API keys and environment variables set up before y
 In the [Stripe integration guide](/guides/stripe-integration), you set up your Stripe API keys using test keys and product ids. You'll need to get the live/production versions of those keys at [https://dashboard.stripe.com](https://dashboard.stripe.com). To get these, repeat the instructions in the [Stripe Integration Guide](/guides/stripe-integration) without being in test mode.
 - [ ] `STRIPE_KEY` 
 - [ ] `STRIPE_WEBHOOK_SECRET`
-- [ ] all `PRICE_ID` variables
+- [ ] all `STRIPE_..._PRICE_ID` variables
 - [ ] `REACT_APP_STRIPE_CUSTOMER_PORTAL` (for the client-side)
 
 ##### Other Vars
