@@ -1,4 +1,5 @@
 import { defineUserSignupFields } from 'wasp/auth/providers/types';
+import { z } from 'zod';
 
 const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
 
@@ -8,24 +9,59 @@ export const getEmailUserFields = defineUserSignupFields({
   email: (data: any) => data.email,
 });
 
-export const getGitHubUserFields = defineUserSignupFields({
-  // NOTE: if we don't want to access users' emails, we can use scope ["user:read"]
-  // instead of ["user"] and access args.profile.username instead
-  email: (data: any) => data.profile.emails[0].email,
-  username: (data: any) => data.profile.login,
-  isAdmin: (data: any) => adminEmails.includes(data.profile.emails[0].email),
+const githubDataSchema = z.object({
+  profile: z.object({
+    emails: z.array(
+      z.object({
+        email: z.string(),
+      })
+    ),
+    login: z.string(),
+  }),
 });
-
+  
+  export const getGitHubUserFields = defineUserSignupFields({
+    email: (data) => {
+      const githubData = githubDataSchema.parse(data);
+      return githubData.profile.emails[0].email;
+    },
+    username: (data) => {
+      const githubData = githubDataSchema.parse(data);
+      return githubData.profile.login;
+    },
+    isAdmin: (data) => {
+      const githubData = githubDataSchema.parse(data);
+      return adminEmails.includes(githubData.profile.emails[0].email);
+    },
+  });
+  
+// NOTE: if we don't want to access users' emails, we can use scope ["user:read"]
+// instead of ["user"] and access args.profile.username instead
 export function getGitHubAuthConfig() {
   return {
     scopes: ['user'],
   };
 }
 
+const googleDataSchema = z.object({
+  profile: z.object({
+    email: z.string(),
+  }),
+});
+
 export const getGoogleUserFields = defineUserSignupFields({
-  email: (data: any) => data.profile.email,
-  username: (data: any) => data.profile.name,
-  isAdmin: (data: any) => adminEmails.includes(data.profile.email),
+  email: (data) => {
+    const googleData = googleDataSchema.parse(data);
+    return googleData.profile.email;
+  },
+  username: (data) => {
+    const googleData = googleDataSchema.parse(data);
+    return googleData.profile.email;
+  },
+  isAdmin: (data) => {
+    const googleData = googleDataSchema.parse(data);
+    return adminEmails.includes(googleData.profile.email)
+  },
 });
 
 export function getGoogleAuthConfig() {
