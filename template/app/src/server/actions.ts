@@ -39,11 +39,11 @@ export const stripePayment: StripePayment<string, StripePaymentResult> = async (
 
   let priceId;
   if (tier === TierIds.HOBBY) {
-    priceId = process.env.HOBBY_SUBSCRIPTION_PRICE_ID!;
+    priceId = process.env.STRIPE_HOBBY_SUBSCRIPTION_PRICE_ID!;
   } else if (tier === TierIds.PRO) {
-    priceId = process.env.PRO_SUBSCRIPTION_PRICE_ID!;
+    priceId = process.env.STRIPE_PRO_SUBSCRIPTION_PRICE_ID!;
   } else if (tier === TierIds.CREDITS) {
-    priceId = process.env.CREDITS_PRICE_ID!;
+    priceId = process.env.STRIPE_CREDITS_PRICE_ID!;
   } else {
     throw new HttpError(404, 'Invalid tier');
   }

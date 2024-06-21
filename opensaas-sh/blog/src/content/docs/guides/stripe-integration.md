@@ -43,8 +43,8 @@ To create a test product, go to the test products url [https://dashboard.stripe.
 
 - After you save the product, you'll be directed to the product page. 
 - Copy the price IDs and paste them in the `.env.server` file
-  - We've set you up with two example subscription product environment variables, `HOBBY_SUBSCRIPTION_PRICE_ID=` and `PRO_SUBSCRIPTION_PRICE_ID=`.
-  - As well as a one-time payment product/credits-based environment variable, `CREDITS_PRICE_ID=`.
+  - We've set you up with two example subscription product environment variables, `STRIPE_HOBBY_SUBSCRIPTION_PRICE_ID=` and `STRIPE_PRO_SUBSCRIPTION_PRICE_ID=`.
+  - As well as a one-time payment product/credits-based environment variable, `STRIPE_CREDITS_PRICE_ID=`.
 - Note that if you change the names of the price IDs, you'll need to update your server code to match these names as well
 
 ## Create a Test Customer

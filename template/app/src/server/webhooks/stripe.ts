@@ -42,7 +42,7 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
        * make sure to configure them in the Stripe dashboard first!
        * see: https://docs.opensaas.sh/guides/stripe-integration/
        */
-      if (line_items?.data[0]?.price?.id === process.env.HOBBY_SUBSCRIPTION_PRICE_ID) {
+      if (line_items?.data[0]?.price?.id === process.env.STRIPE_HOBBY_SUBSCRIPTION_PRICE_ID) {
         console.log('Hobby subscription purchased');
         await context.entities.User.updateMany({
           where: {
@@ -53,7 +53,7 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
             subscriptionTier: TierIds.HOBBY,
           },
         });
-      } else if (line_items?.data[0]?.price?.id === process.env.PRO_SUBSCRIPTION_PRICE_ID) {
+      } else if (line_items?.data[0]?.price?.id === process.env.STRIPE_PRO_SUBSCRIPTION_PRICE_ID) {
         console.log('Pro subscription purchased');
         await context.entities.User.updateMany({
           where: {
@@ -64,7 +64,7 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
             subscriptionTier: TierIds.PRO,
           },
         });
-      } else if (line_items?.data[0]?.price?.id === process.env.CREDITS_PRICE_ID) {
+      } else if (line_items?.data[0]?.price?.id === process.env.STRIPE_CREDITS_PRICE_ID) {
         console.log('Credits purchased');
         await context.entities.User.updateMany({
           where: {
