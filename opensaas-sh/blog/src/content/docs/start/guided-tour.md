@@ -9,6 +9,20 @@ banner:
 Awesome, you now have your very own SaaS app up and running! But, first, here are some important things you need to know about your app in its current state:
 
 1. When signing up with a new user, you will get a message to check your email for a verification link. But, in development, these emails are simply written to your terminal. **So, to continue with the registration process, check your server logs after sign up**! 
+```sh title="server logs"
+[ Server ] ╔═══════════════════════╗
+[ Server ] ║ Dummy email sender ✉️  ║
+[ Server ] ╚═══════════════════════╝
+[ Server ] From:    Open SaaS App <me@example.com>
+[ Server ] To:      vinny@wasp.sh
+[ Server ] Subject: Verify your email
+[ Server ] ═════════ Text ═════════
+[ Server ] Click the link below to verify your email: http://localhost:3000/email-verification?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZpbm55QHdhc3Auc2giLCJleHAiOjE3MTg5NjUyNTB9.PkRGrmuDPuYFXkTprf7QpAye0e_O9a70xbER6LfxGJw
+[ Server ] ═════════ HTML ═════════
+[ Server ] <p>Click the link below to verify your email</p>
+[ Server ] <a href="http://localhost:3000/email-verification?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZpbm55QHdhc3Auc2giLCJleHAiOjE3MTg5NjUyNTB9.PkRGrmuDPuYFXkTprf7QpAye0e_O9a70xbER6LfxGJw">Verify email</a> 
+[ Server ] ════════════════════════
+```
 2. Your app is still missing some key configurations (e.g. API keys for Stripe, OpenAI, AWS S3, Auth, Analytics). These services won't work at the moment, but don't fear, because **we've provided detailed guides in these docs to help you set up all the services in this template**.
 3. If you want to get a feel for what your SaaS could look like when finished, **check out [OpenSaaS.sh](https://opensaas.sh) in your browser. It was built using this template!** So make sure to log in, play around with the demo app, make a test Stripe payment, and check out the admin dashboard.
 
