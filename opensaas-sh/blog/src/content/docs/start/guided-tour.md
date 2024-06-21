@@ -19,7 +19,7 @@ We're looking forward to seeing what you build!
 ## Getting acquainted with the codebase
 Now that you've gotten a first look at the app, let's dive into the codebase.
 
-At the root of our project, you will see two folders:
+At the root of our project, you will see three folders:
 ```sh
 .
 ├── app
@@ -269,7 +269,7 @@ When you first start your Open SaaS app straight from the template, it will run,
 - Analytics (Plausible or Google Analytics)
 - File Uploading (AWS S3)
 
-Now would be a good time to decided which features you do and do not need for your app, and remove the ones from the codebase that you don't need.
+Now would be a good time to decide which features you do and do not need for your app, and remove the ones from the codebase that you don't need.
 
 For the features you will use, the next section of the documentation, `Guides`, will walk you through how to set each one up!
 
