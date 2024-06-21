@@ -9,7 +9,7 @@ banner:
 Awesome, you now have your very own SaaS app up and running! But, first, here are some important things you need to know about your app in its current state:
 
 1. When signing up with a new user, you will get a message to check your email for a verification link. But, in development, these emails are simply written to your terminal. **So, to continue with the registration process, check your server logs after sign up**! 
-2. Your app is still missing some key configurations (e.g. Stripe, OpenAI, AWS S3, Auth, Analytics). These services won't work at the moment, but don't fear, because **we've provided detailed guides in these docs to help you set up all the services in this template**.
+2. Your app is still missing some key configurations (e.g. API keys for Stripe, OpenAI, AWS S3, Auth, Analytics). These services won't work at the moment, but don't fear, because **we've provided detailed guides in these docs to help you set up all the services in this template**.
 3. If you want to get a feel for what your SaaS could look like when finished, **check out [OpenSaaS.sh](https://opensaas.sh) in your browser. It was built using this template!** So make sure to log in, play around with the demo app, make a test Stripe payment, and check out the admin dashboard.
 
 In the sections below, we will take a short guide through the codebase and the app's main features. Then at the end of this tour, we also prepared a checklist of likely changes you will want to make to the app to make it your own. 
@@ -19,7 +19,7 @@ We're looking forward to seeing what you build!
 ## Getting acquainted with the codebase
 Now that you've gotten a first look at the app, let's dive into the codebase.
 
-At the root of our project, you will see two folders:
+At the root of our project, you will see three folders:
 ```sh
 .
 ├── app
@@ -269,7 +269,7 @@ When you first start your Open SaaS app straight from the template, it will run,
 - Analytics (Plausible or Google Analytics)
 - File Uploading (AWS S3)
 
-Now would be a good time to decided which features you do and do not need for your app, and remove the ones from the codebase that you don't need.
+Now would be a good time to decide which features you do and do not need for your app, and remove the ones from the codebase that you don't need.
 
 For the features you will use, the next section of the documentation, `Guides`, will walk you through how to set each one up!
 
