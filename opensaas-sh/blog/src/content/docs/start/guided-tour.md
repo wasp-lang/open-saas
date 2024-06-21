@@ -6,36 +6,32 @@ banner:
     <a href="https://wasp-lang.dev/docs/migrate-from-0-12-to-0-13">migration instructions here</a> ⚠️ 
 ---
 
-Let's get to know our new SaaS app.
+Awesome, you now have your very own SaaS app up and running! But, first, here are some important things you need to know about your app in its current state:
 
-First, we'll take a look at the project's file structure, then dive into its main features and how you can get started customizing them.
+1. When signing up with a new user, you will get a message to check your email for a verification link. But, in development, these emails are simply written to your terminal. **So, to continue with the registration process, check your server logs after sign up**! 
+2. Your app is still missing some key configurations (e.g. API keys for Stripe, OpenAI, AWS S3, Auth, Analytics). These services won't work at the moment, but don't fear, because **we've provided detailed guides in these docs to help you set up all the services in this template**.
+3. If you want to get a feel for what your SaaS could look like when finished, **check out [OpenSaaS.sh](https://opensaas.sh) in your browser. It was built using this template!** So make sure to log in, play around with the demo app, make a test Stripe payment, and check out the admin dashboard.
 
-:::caution[HOLD UP! ✋]
+In the sections below, we will take a short guide through the codebase and the app's main features. Then at the end of this tour, we also prepared a checklist of likely changes you will want to make to the app to make it your own. 
 
-If you haven't already, now would be the right time to [explore our demo app](https://opensaas.sh) in your browser:
-- [ ] explore the landing page
-- [ ] log in to the demo app
-- [ ] make a test purchase
-- [ ] check out the admin dashboard
-- [ ] check out your account settings
-- [ ] check out the blog
-:::
-
-
+We're looking forward to seeing what you build!
 
 ## Getting acquainted with the codebase
-Now that you've gotten a feel for the app and how it works, let's dive into the codebase.
+Now that you've gotten a first look at the app, let's dive into the codebase.
 
-At the root of our project, you will see two folders:
+At the root of our project, you will see three folders:
 ```sh
 .
 ├── app
-└── blog
+├── blog
+└── e2e-tests
 ```
 
 `app` contains the Wasp project files, which is your full-stack React + NodeJS + Prisma app along with a Wasp config file, `main.wasp`, which will be explained in more detail below.
 
 `blog` contains the [Astro Starlight template](https://starlight.astro.build/) for the blog and documentation section. 
+
+`e2e-tests` contains the end-to-end tests using Playwright, which you can run to test your app's functionality.
 
 Let's check out what's in the `app` folder in more detail:
 
@@ -260,6 +256,80 @@ job dailyStatsJob {
 
 For more info on integrating Plausible or Google Analytics, check out the [Analytics guide](/guides/analytics).
 
+## App Customization Walkthrough
+
+### General Considerations
+
+When you first start your Open SaaS app straight from the template, it will run, but many of the services won't work because they lack your own API keys. Here are list of services that need your API keys to work properly:
+
+- Auth Methods (Google, GitHub)
+- Stripe 
+- OpenAI (Chat GPT API)
+- Email Sending (Sendgrid) -- you must set this up if you're using the `email` Auth method 
+- Analytics (Plausible or Google Analytics)
+- File Uploading (AWS S3)
+
+Now would be a good time to decide which features you do and do not need for your app, and remove the ones from the codebase that you don't need.
+
+For the features you will use, the next section of the documentation, `Guides`, will walk you through how to set each one up!
+
+:::note[Open SaaS is built on Wasp]
+Remember, this template is built on the Wasp framework. If, at any time, these docs fail to provide enough information about a certain built-in feature, make sure to check out the [Wasp docs](https://wasp-lang.dev/docs)!
+:::
+
+But before you start setting up the main features, let's walk through the customizations you will likely want to make to the template to make it your own.
+
+### Customizations Checklist
+#### `main.wasp` Config File
+- [ ] Change the app name and title:
+  ```ts title="main.wasp" {1, 6}
+    app YourAppName { 
+      wasp: {
+        version: "^0.13.2"
+      },
+
+      title: "Your App Name",
+  ```
+  :::caution[Restart Your App]
+  After changing the app name, you'll need to rerun `wasp db start` and `wasp start`!
+  :::
+- [ ] Update meta tags in `app.head` (even if you don't have a custom domain yet, put one you would like to have, as this won't affect development).
+- [ ] Update `app.emailSender.defaultFrom.name` with the name of your app/company/whatever you want your users to see in their inbox, if you're using the `emailSender` feature and/or `email` Auth method.
+- [ ] Remove any features you might not use or need:
+  - [ ] Auth methods - `app.auth.methods`
+    - [ ] If you're not using `email` Auth method, remove the routes/pages `RequestPasswordReset`, `PasswordReset`, and `EmailVerification`
+  - [ ] Email Sending - `app.emailSender`, `job emailChecker`
+  - [ ] Plausible analytics - `app.head`
+  - [ ] File Uploading - `entity File`, `route FileUploadRoute`, `action createFile`, `query getAllFilesByUser`, `getDownloadFileSignedURL`
+- [ ] Rename Entites and their properties, Routes/Pages, & Operations, if you wish.
+
+#### Customizing the Look / Style of the App
+- [ ] Update your favicon at `public/favicon.ico`.
+- [ ] Update the banner image used when posting links to your site at `public/public-banner.png`.
+  - [ ] Update the URL for this banner at `og:image` and `twitter:image` in `app.head` of the `main.wasp` file.
+- [ ] Make changes to your landing page, `landingPage.tsx`.
+  - [ ] Customize the `navBar`, `features`, `testimonials`, and `faqs` in the `contentSections.ts` file.
+  - [ ] Change/rename the `logo.png` and main banner (`open-saas-banner.png`) in the `static` folder.
+- [ ] If you want to make changes to the global styles of the app, you can do so in `tailwind.config.cjs`. **Be aware that the current custom global styles defined already are mostly used in the app's Admin Dashboard!**
+
+#### Customizing the Analytics & Admin Dashboard
+- [ ] If you're using Plausible, update the `app.head` with your Plausible domain.
+- [ ] Update the `calculateDailyStats` function in `src/server/workers/calculateDailyStats.ts` to pull the stats from the analytics provider you've chosen (Plausible or Google Analytics).
+- [ ] Change the cron schedule in the `dailyStatsJob` in the `main.wasp` file to match how often you want your stats to be calculated.
+- [ ] Update the `AdminDashboard` components to display the stats you do/don't want to see.
+
+#### `.env.server` and `.env.client` Files
+- [ ] After you've followed the `Guides` in the next section, you'll need to update the `.env.server` and `.env.client` files with your API keys and other environment variables for the services you've decided to use.
+- [ ] Delete any redundant environment variables that you're not using, from the `.env.*` files as well as the `.env.*.example` files.
+
+#### Other Customizations
+- [ ] Make a new GitHub Repo for your app.
+- [ ] Deploy your app to a hosting provider.
+- [ ] Buy a domain name for your app and get it set up with your hosting provider.
+- [ ] Read the `e2e-tests` README and get your end-to-end tests set up.
+  - [ ] Change the tests to suit the changes you've made to your app
+- [ ] Get the CI pipeline set up for your app (you can get started by using the Open SaaS development CI [example here](https://github.com/wasp-lang/open-saas/tree/main/.github/workflows))
+
 ## What's next?
 
-And that concludes our guided tour! For next steps, we recommend ...
+In the following `Guides` sections, we'll walk you through getting those API keys and setting up the finer points of features such as Stripe Payments & Webhooks, Auth, Email Sending, Analytics, and more.
