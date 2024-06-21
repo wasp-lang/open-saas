@@ -9,7 +9,7 @@ banner:
 Awesome, you now have your very own SaaS app up and running! But, first, here are some important things you need to know about your app in its current state:
 
 1. When signing up with a new user, you will get a message to check your email for a verification link. But, in development, these emails are simply written to your terminal. **So, to continue with the registration process, check your server logs after sign up**! 
-2. Your app is still missing some key configurations (e.g. Stripe, OpenAI, AWS S3, Auth, Analytics). These services won't work at the moment, but don't fear, because **we've provided detailed guides in these docs to help you set up all the services in this template**.
+2. Your app is still missing some key configurations (e.g. API keys for Stripe, OpenAI, AWS S3, Auth, Analytics). These services won't work at the moment, but don't fear, because **we've provided detailed guides in these docs to help you set up all the services in this template**.
 3. If you want to get a feel for what your SaaS could look like when finished, **check out [OpenSaaS.sh](https://opensaas.sh) in your browser. It was built using this template!** So make sure to log in, play around with the demo app, make a test Stripe payment, and check out the admin dashboard.
 
 In the sections below, we will take a short guide through the codebase and the app's main features. At the end, we also prepared a checklist of likely changes you will want to make to the app to make it your own. 
