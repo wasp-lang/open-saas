@@ -12,7 +12,7 @@ Awesome, you now have your very own SaaS app up and running! But, first, here ar
 2. Your app is still missing some key configurations (e.g. Stripe, OpenAI, AWS S3, Auth, Analytics). These services won't work at the moment, but don't fear, because **we've provided detailed guides in these docs to help you set up all the services in this template**.
 3. If you want to get a feel for what your SaaS could look like when finished, **check out [OpenSaaS.sh](https://opensaas.sh) in your browser. It was built using this template!** So make sure to log in, play around with the demo app, make a test Stripe payment, and check out the admin dashboard.
 
-In the sections below, we will take a short guide through the codebase and the app's main features. At the end, we also prepared a checklist of likely changes you will want to make to the app to make it your own. 
+In the sections below, we will take a short guide through the codebase and the app's main features. Then at the end of this tour, we also prepared a checklist of likely changes you will want to make to the app to make it your own. 
 
 We're looking forward to seeing what you build!
 
@@ -295,13 +295,13 @@ But before you start setting up the main features, let's walk through the custom
   :::
 - [ ] Update meta tags in `app.head` (even if you don't have a custom domain yet, put one you would like to have, as this won't affect development).
 - [ ] Update `app.emailSender.defaultFrom.name` with the name of your app/company/whatever you want your users to see in their inbox, if you're using the `emailSender` feature and/or `email` Auth method.
-- [ ] Rename Entites and their properties, Routes/Pages, & Operations, if you wish.
 - [ ] Remove any features you might not use or need:
   - [ ] Auth methods - `app.auth.methods`
     - [ ] If you're not using `email` Auth method, remove the routes/pages `RequestPasswordReset`, `PasswordReset`, and `EmailVerification`
   - [ ] Email Sending - `app.emailSender`, `job emailChecker`
   - [ ] Plausible analytics - `app.head`
   - [ ] File Uploading - `entity File`, `route FileUploadRoute`, `action createFile`, `query getAllFilesByUser`, `getDownloadFileSignedURL`
+- [ ] Rename Entites and their properties, Routes/Pages, & Operations, if you wish.
 
 #### Customizing the Look / Style of the App
 - [ ] Update your favicon at `public/favicon.ico`.
