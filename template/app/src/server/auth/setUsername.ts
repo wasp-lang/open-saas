@@ -19,22 +19,22 @@ const githubDataSchema = z.object({
     login: z.string(),
   }),
 });
-  
-  export const getGitHubUserFields = defineUserSignupFields({
-    email: (data) => {
-      const githubData = githubDataSchema.parse(data);
-      return githubData.profile.emails[0].email;
-    },
-    username: (data) => {
-      const githubData = githubDataSchema.parse(data);
-      return githubData.profile.login;
-    },
-    isAdmin: (data) => {
-      const githubData = githubDataSchema.parse(data);
-      return adminEmails.includes(githubData.profile.emails[0].email);
-    },
-  });
-  
+
+export const getGitHubUserFields = defineUserSignupFields({
+  email: (data) => {
+    const githubData = githubDataSchema.parse(data);
+    return githubData.profile.emails[0].email;
+  },
+  username: (data) => {
+    const githubData = githubDataSchema.parse(data);
+    return githubData.profile.login;
+  },
+  isAdmin: (data) => {
+    const githubData = githubDataSchema.parse(data);
+    return adminEmails.includes(githubData.profile.emails[0].email);
+  },
+});
+
 // NOTE: if we don't want to access users' emails, we can use scope ["user:read"]
 // instead of ["user"] and access args.profile.username instead
 export function getGitHubAuthConfig() {
@@ -60,7 +60,7 @@ export const getGoogleUserFields = defineUserSignupFields({
   },
   isAdmin: (data) => {
     const googleData = googleDataSchema.parse(data);
-    return adminEmails.includes(googleData.profile.email)
+    return adminEmails.includes(googleData.profile.email);
   },
 });
 
