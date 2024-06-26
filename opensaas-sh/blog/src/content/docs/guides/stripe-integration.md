@@ -101,12 +101,7 @@ stripe login
 ```
 
 :::caution[Errors running the Stripe CLI]
-If you're seeing errors, try appending `sudo` to the stripe commands:
-```sh
-sudo stripe login
-sudo stripe listen --forward-to localhost:3001/stripe-webhook
-```
-
+If you're seeing errors, consider appending `sudo` to the stripe commands.
 See this [GitHuh issue](https://github.com/stripe/stripe-cli/issues/933) for more details.
 :::
 
