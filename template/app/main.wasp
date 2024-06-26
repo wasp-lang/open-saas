@@ -36,23 +36,23 @@ app OpenSaaS {
         },
         emailVerification: {
           clientRoute: EmailVerificationRoute,
-          getEmailContentFn: import { getVerificationEmailContent } from "@src/server/auth/email.js",
+          getEmailContentFn: import { getVerificationEmailContent } from "@src/server/auth/emailContentFns",
         },
         passwordReset: {
           clientRoute: PasswordResetRoute,
-          getEmailContentFn: import { getPasswordResetEmailContent } from "@src/server/auth/email.js",
+          getEmailContentFn: import { getPasswordResetEmailContent } from "@src/server/auth/emailContentFns",
         },
-        userSignupFields: import { getEmailUserFields } from "@src/server/auth/setUsername.js",
+        userSignupFields: import { getEmailUserFields } from "@src/server/auth/setUserSignupFields",
       },
       // Uncomment to enable Google Auth (check https://wasp-lang.dev/docs/auth/social-auth/google for setup instructions):
       // google: { // Guide for setting up Auth via Google
-      //   userSignupFields: import { getGoogleUserFields } from "@src/server/auth/setUsername.js",
-      //   configFn: import { getGoogleAuthConfig } from "@src/server/auth/setUsername.js",
+      //   userSignupFields: import { getGoogleUserFields } from "@src/server/auth/setUserSignupFields",
+      //   configFn: import { getGoogleAuthConfig } from "@src/server/auth/setUserSignupFields",
       // },
       // Uncomment to enable GitHub Auth (check https://wasp-lang.dev/docs/auth/social-auth/github for setup instructions):
       // gitHub: {
-      //   userSignupFields: import { getGitHubUserFields } from "@src/server/auth/setUsername.js",
-      //   configFn: import { getGitHubAuthConfig } from "@src/server/auth/setUsername.js",
+      //   userSignupFields: import { getGitHubUserFields } from "@src/server/auth/setUserSignupFields",
+      //   configFn: import { getGitHubAuthConfig } from "@src/server/auth/setUserSignupFields",
       // },
     },
     onAuthFailedRedirectTo: "/login",
