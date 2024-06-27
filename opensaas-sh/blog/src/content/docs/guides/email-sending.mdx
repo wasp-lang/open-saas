@@ -72,26 +72,37 @@ To set up your email sender, you first need an account with one of the supported
 <Tabs>
   <TabItem label="SendGrid">
     - Register at SendGrid.com and then get your [API KEYS](https://app.sendgrid.com/settings/api_keys).
-    - Copy yours to the `.env.server` file under the `SENDGRID_API_KEY` variable.  
+    - Copy yours to the `.env.server` file under the `SENDGRID_API_KEY` variable. 
+
+    Make sure to change the `defaultFrom` email address in the `main.wasp` file to use the same email address that you configured your account to send out emails with!
+
+    ```tsx title="main.wasp" {5}
+    emailSender: {
+      provider: SendGrid,
+      defaultFrom: {
+        name: "Open SaaS App",
+        email: "me@example.com" // <--- same email address you configured your SendGrid account to send emails with!
+      },
+    ``` 
   </TabItem>
-  <TabItem label="MailGun">
+  <TabItem label="Mailgun">
     - Go to [Mailgun](https://mailgun.com) and create an account.
     - Go to [API Keys](https://app.mailgun.com/app/account/security/api_keys) and create a new API key.
     - Copy the API key and add it to your .env.server file under the `MAILGUN_API_KEY=` variable.
     - Go to [Domains](https://app.mailgun.com/app/domains) and create a new domain.
     - Copy the domain and add it to your .env.server file as `MAILGUN_DOMAIN=`.
+
+    Make sure to change the `defaultFrom` email address in the `main.wasp` file to use the same email address that you configured your account to send out emails with!
+
+    ```tsx title="main.wasp" {5}
+    emailSender: {
+      provider: Mailgun,
+      defaultFrom: {
+        name: "Open SaaS App",
+        email: "me@example.com" // <--- same email address you configured your Mailgun account to send emails with!
+      },
+    ```
   </TabItem>
 </Tabs>
-
-Make sure to change the `defaultFrom` email address in the `main.wasp` file to use the same email address that you configured your account to send out emails with!
-
-```tsx title="main.wasp" {5}
-emailSender: {
-  provider: SendGrid,
-  defaultFrom: {
-    name: "Open SaaS App",
-    email: "me@example.com" // <--- same email address you configured your SendGrid account to send emails with!
-  },
-```
 
 If you want more detailed info, or would like to use SMTP, check out the [Wasp docs](https://wasp-lang.dev/docs/advanced/email).
