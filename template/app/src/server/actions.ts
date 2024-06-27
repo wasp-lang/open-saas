@@ -286,7 +286,7 @@ export const deleteTask: DeleteTask<Pick<Task, 'id'>, Task> = async ({ id }, con
   return task;
 };
 
-export const updateUserById: UpdateUserById<{ id: number; data: Partial<User> }, User> = async (
+export const updateUserById: UpdateUserById<{ id: string; data: Partial<User> }, User> = async (
   { id, data },
   context
 ) => {
@@ -318,7 +318,7 @@ export const createFile: CreateFile<fileArgs, File> = async ({ fileType, name },
     throw new HttpError(401);
   }
 
-  const userInfo = context.user.id.toString();
+  const userInfo = context.user.id;
 
   const { uploadUrl, key } = await getUploadFileSignedURLFromS3({ fileType, userInfo });
 
