@@ -95,6 +95,16 @@ or for other install scripts or OSes, follow the instructions [here](https://str
 
 Now, let's start the webhook server and get our webhook signing secret.
 
+First, login:
+```sh
+stripe login
+```
+
+:::caution[Errors running the Stripe CLI]
+If you're seeing errors, consider appending `sudo` to the stripe commands.
+See this [GitHuh issue](https://github.com/stripe/stripe-cli/issues/933) for more details.
+:::
+
 ```sh
 stripe listen --forward-to localhost:3001/stripe-webhook
 ```
