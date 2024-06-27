@@ -17,6 +17,17 @@ So because we don't version the actual demo app (`app/`) but its diffs instead (
 2. If there are any conflicts (normally due to updates to the template), modify `app_diff/` till you resolve them.
 3. Make any changes in the `app/` if you wish, and then generate new `app_diff/` by running `./tools/diff.sh`.
 
+> [!WARNING]  
+> If you're running the `patch.sh` or `diff.sh` scripts on Mac, you need to have `grealpath` (packaged within `coreutils`) and `gpatch` installed. You should also create aliases for `realpath` and `patch`:
+> ```sh
+> brew install coreutils # contains grealpath
+> brew install gpatch
+>
+> echo 'alias realpath="grealpath"' >> ~/.zshrc
+> echo 'alias patch="gpatch"' >> ~/.zshrc
+> source ~/.zshrc
+> ```
+
 Make sure not to commit `app/` to git. It is currently (until we resolve this) not added to .gitignore because that messes up diffing for us.
 
 ### Blog (blog/)
