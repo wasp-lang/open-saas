@@ -20,7 +20,7 @@ entity User {=psl
   //...
 ```
 
-To give yourself administrator priveledges, make sure you add your email adderesses to the `ADMIN_EMAILS` environment variable in `.env.server` file before registering/logging in with that email address.
+To give yourself administrator priveledges, make sure you add your email addresses to the `ADMIN_EMAILS` environment variable in `.env.server` file before registering/logging in with that email address.
 
 ```sh title=".env.server"
 ADMIN_EMAILS=me@example.com
