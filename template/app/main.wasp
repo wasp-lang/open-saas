@@ -64,7 +64,7 @@ app OpenSaaS {
     // Run `wasp db seed` to seed the database with the seed functions below:
     seeds: [
       // Populates the database with a bunch of fake users to work with during development.
-      import { devSeedUsers } from "@src/server/scripts/usersSeed.js",
+      import { seedMockUsersToDB } from "@src/server/scripts/dbSeeds",
     ]
   },
 

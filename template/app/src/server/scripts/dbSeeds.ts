@@ -3,8 +3,33 @@ import { faker } from '@faker-js/faker';
 import type { PrismaClient } from '@prisma/client';
 import { TierIds } from '../../shared/constants.js';
 
-// in a terminal window run `wasp db seed` to seed your dev database with mock user data
-export function createRandomUser() {
+/**
+ * This function, which we've imported in `app.db.seeds` in the `main.wasp` file, 
+ * seeds the database with mock users via the `wasp db seed` command.
+ * For more info see: https://wasp-lang.dev/docs/data-model/backends#seeding-the-database
+ */
+export async function seedMockUsersToDB(prismaClient: PrismaClient) {
+  const mockUsers: Omit<User, 'id'>[] = getMockUsers(50);
+  const persistUsersToDB = mockUsers.map((user) => {
+    return prismaClient.user.create({
+      data: user,
+    });
+  });
+
+  try {
+    await Promise.all(persistUsersToDB);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function getMockUsers(numOfUsers: number): Omit<User, 'id'>[] {
+  return faker.helpers.multiple(defineMockUser, {
+    count: numOfUsers,
+  });
+}
+
+function defineMockUser(): Omit<User, 'id'> {
   const firstName = faker.person.firstName();
   const lastName = faker.person.lastName();
   const user: Omit<User, 'id'> = {
@@ -28,22 +53,4 @@ export function createRandomUser() {
     subscriptionTier: faker.helpers.arrayElement([TierIds.HOBBY, TierIds.PRO]),
   };
   return user;
-}
-
-const USERS: Omit<User, 'id'>[] = faker.helpers.multiple(createRandomUser, {
-  count: 50,
-});
-
-export async function devSeedUsers(prismaClient: PrismaClient) {
-  try {
-    await Promise.all(
-      USERS.map(async (user) => {
-        await prismaClient.user.create({
-          data: user,
-        });
-      })
-    );
-  } catch (error) {
-    console.error(error);
-  }
-}
+};
