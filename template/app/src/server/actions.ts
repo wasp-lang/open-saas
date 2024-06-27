@@ -308,12 +308,12 @@ export const updateUserById: UpdateUserById<{ id: string; data: Partial<User> },
   return updatedUser;
 };
 
-type fileArgs = {
+type FileDescription = {
   fileType: string;
   name: string;
 };
 
-export const createFile: CreateFile<fileArgs, File> = async ({ fileType, name }, context) => {
+export const createFile: CreateFile<FileDescription, File> = async ({ fileType, name }, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
