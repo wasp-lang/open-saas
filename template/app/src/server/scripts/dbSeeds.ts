@@ -2,6 +2,7 @@ import { type User } from 'wasp/entities';
 import { faker } from '@faker-js/faker';
 import type { PrismaClient } from '@prisma/client';
 import { TierIds } from '../../shared/constants.js';
+import { type SubscriptionStatusOptions } from '../../shared/types.js';
 
 type MockUserData = Omit<User, 'id'>;
 
@@ -23,7 +24,7 @@ function generateMockUsersData(numOfUsers: number): MockUserData[] {
 function generateMockUserData(): MockUserData {
   const firstName = faker.person.firstName();
   const lastName = faker.person.lastName();
-  const subscriptionStatus = faker.helpers.arrayElement(['active', 'canceled', 'past_due', 'deleted', null]);
+  const subscriptionStatus = faker.helpers.arrayElement<SubscriptionStatusOptions>(['active', 'canceled', 'past_due', 'deleted', null]);
   const now = new Date();
   const createdAt = faker.date.past({ refDate: now });
   const lastActiveTimestamp = faker.date.between({ from: createdAt, to: now });
