@@ -1,7 +1,7 @@
 import { Link } from 'wasp/client/router';
 import { type User } from 'wasp/entities';
 import { logout } from 'wasp/client/auth';
-import { TierIds } from '../../shared/constants';
+import { PaymentPlanIds } from '../../shared/constants';
 import { z } from 'zod';
 
 export default function AccountPage({ user }: { user: User }) {
@@ -31,7 +31,7 @@ export default function AccountPage({ user }: { user: User }) {
                 <>
                   {user.subscriptionStatus !== 'past_due' ? (
                     <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
-                      {user.subscriptionTier === TierIds.HOBBY ? 'Hobby' : 'Pro'} Plan
+                      {user.subscriptionTier === PaymentPlanIds.HOBBY ? 'Hobby' : 'Pro'} Plan
                     </dd>
                   ) : (
                     <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>

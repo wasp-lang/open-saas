@@ -1,6 +1,6 @@
 import { useAuth } from 'wasp/client/auth';
 import { stripePayment } from 'wasp/client/operations';
-import { TierIds } from '../../shared/constants';
+import { PaymentPlanIds } from '../../shared/constants';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -10,14 +10,14 @@ import { z } from 'zod';
 export const tiers = [
   {
     name: 'Hobby',
-    id: TierIds.HOBBY,
+    id: PaymentPlanIds.HOBBY,
     price: '$9.99',
     description: 'All you need to get started',
     features: ['Limited monthly usage', 'Basic support'],
   },
   {
     name: 'Pro',
-    id: TierIds.PRO,
+    id: PaymentPlanIds.PRO,
     price: '$19.99',
     description: 'Our most popular plan',
     features: ['Unlimited monthly usage', 'Priority customer support'],
@@ -25,7 +25,7 @@ export const tiers = [
   },
   {
     name: '10 Credits',
-    id: TierIds.CREDITS,
+    id: PaymentPlanIds.CREDITS,
     price: '$9.99',
     description: 'One-time purchase of 10 credits for your account',
     features: ['Use credits for e.g. OpenAI API calls', 'No expiration date'],
@@ -39,14 +39,14 @@ const PricingPage = () => {
 
   const history = useHistory();
 
-  async function handleBuyNowClick(tierId: string) {
+  async function handleBuyNowClick(paymentPlanId: PaymentPlanIds) {
     if (!user) {
       history.push('/login');
       return;
     }
     try {
-      setIsStripePaymentLoading(tierId);
-      let stripeResults = await stripePayment(tierId);
+      setIsStripePaymentLoading(paymentPlanId);
+      let stripeResults = await stripePayment(paymentPlanId);
 
       if (stripeResults?.sessionUrl) {
         window.open(stripeResults.sessionUrl, '_self');
@@ -117,7 +117,7 @@ const PricingPage = () => {
                 <p className='mt-6 flex items-baseline gap-x-1 dark:text-white'>
                   <span className='text-4xl font-bold tracking-tight text-gray-900 dark:text-white'>{tier.price}</span>
                   <span className='text-sm font-semibold leading-6 text-gray-600 dark:text-white'>
-                    {tier.id !== TierIds.CREDITS && '/month'}
+                    {tier.id !== PaymentPlanIds.CREDITS && '/month'}
                   </span>
                 </p>
                 <ul role='list' className='mt-8 space-y-3 text-sm leading-6 text-gray-600 dark:text-white'>

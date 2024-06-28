@@ -1,4 +1,4 @@
-export enum TierIds {
+export enum PaymentPlanIds {
   HOBBY = 'hobby-tier',
   PRO = 'pro-tier',
   CREDITS = 'credits',
