@@ -9,8 +9,7 @@ import { TierIds } from '../../shared/constants.js';
  * For more info see: https://wasp-lang.dev/docs/data-model/backends#seeding-the-database
  */
 export async function seedMockUsers(prismaClient: PrismaClient) {
-  const createUser = (data: Omit<User, 'id'>) => prismaClient.user.create({ data });
-  await Promise.all(generateMockUsersData(50).map(createUser));
+  await Promise.all(generateMockUsersData(50).map((user) => prismaClient.user.create({ data: user })));
 }
 
 function generateMockUsersData(numOfUsers: number) {
