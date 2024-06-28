@@ -4,53 +4,38 @@ import type { PrismaClient } from '@prisma/client';
 import { TierIds } from '../../shared/constants.js';
 
 /**
- * This function, which we've imported in `app.db.seeds` in the `main.wasp` file, 
+ * This function, which we've imported in `app.db.seeds` in the `main.wasp` file,
  * seeds the database with mock users via the `wasp db seed` command.
  * For more info see: https://wasp-lang.dev/docs/data-model/backends#seeding-the-database
  */
-export async function seedMockUsersToDB(prismaClient: PrismaClient) {
-  const mockUsers: Omit<User, 'id'>[] = getMockUsers(50);
-  const persistUsersToDB = mockUsers.map((user) => {
-    return prismaClient.user.create({
-      data: user,
-    });
-  });
-
-  try {
-    await Promise.all(persistUsersToDB);
-  } catch (error) {
-    console.error(error);
-  }
+export async function seedMockUsers(prismaClient: PrismaClient) {
+  const createUser = (data: Omit<User, 'id'>) => prismaClient.user.create({ data });
+  await Promise.all(generateMockUsersData(50).map(createUser));
 }
 
-function getMockUsers(numOfUsers: number): Omit<User, 'id'>[] {
-  return faker.helpers.multiple(defineMockUser, {
-    count: numOfUsers,
-  });
+function generateMockUsersData(numOfUsers: number) {
+  return faker.helpers.multiple(generateMockUserData, { count: numOfUsers });
 }
 
-function defineMockUser(): Omit<User, 'id'> {
+function generateMockUserData() {
   const firstName = faker.person.firstName();
   const lastName = faker.person.lastName();
-  const user: Omit<User, 'id'> = {
-    email: faker.internet.email({
-      firstName,
-      lastName,
-    }),
-    username: faker.internet.userName({
-      firstName,
-      lastName,
-    }),
-    createdAt: faker.date.between({ from: new Date('2023-01-01'), to: new Date() }),
-    lastActiveTimestamp: faker.date.recent(),
+  const now = new Date();
+  const recently = faker.date.recent({ refDate: now }); // Creates a random date up to 24 hrs ago from refDate
+  const past = faker.date.past({ refDate: now }); // Creates a random date in past up to 1 year from refDate
+  const user = {
+    email: faker.internet.email({ firstName, lastName }),
+    username: faker.internet.userName({ firstName, lastName }),
+    createdAt: past,
+    lastActiveTimestamp: recently,
     isAdmin: false,
     stripeId: `cus_${faker.string.uuid()}`,
     sendEmail: false,
     subscriptionStatus: faker.helpers.arrayElement(['active', 'canceled', 'past_due', 'deleted', null]),
-    datePaid: faker.date.recent(),
+    datePaid: faker.date.between({ from: past, to: recently }),
     credits: faker.number.int({ min: 0, max: 3 }),
     checkoutSessionId: null,
     subscriptionTier: faker.helpers.arrayElement([TierIds.HOBBY, TierIds.PRO]),
-  };
+  } satisfies Omit<User, 'id'>;
   return user;
-};
+}
