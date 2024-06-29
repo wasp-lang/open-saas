@@ -305,7 +305,7 @@ But before you start setting up the main features, let's walk through the custom
       title: "Your App Name",
   ```
   :::caution[Restart Your App]
-  After changing the app name, you'll need to rerun `wasp db start` and `wasp start`!
+  After changing the app name, you'll need to rerun `wasp db start`, `wasp db migrate-dev` and `wasp start`! A new database should be created and migrated any time you change the app name. That also means all previous data will be lost!
   :::
 - [ ] Update meta tags in `app.head` (even if you don't have a custom domain yet, put one you would like to have, as this won't affect development).
 - [ ] Update `app.emailSender.defaultFrom.name` with the name of your app/company/whatever you want your users to see in their inbox, if you're using the `emailSender` feature and/or `email` Auth method.
