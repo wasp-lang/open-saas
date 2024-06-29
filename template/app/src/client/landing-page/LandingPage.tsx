@@ -1,17 +1,17 @@
-import { Dialog } from '@headlessui/react';
-import { useState } from 'react';
-import { AiFillCloseCircle } from 'react-icons/ai';
-import { BiLogIn } from 'react-icons/bi';
-import { HiBars3 } from 'react-icons/hi2';
-import { useAuth } from 'wasp/client/auth';
 import { Link } from 'wasp/client/router';
-import { DOCS_URL } from '../../shared/constants';
-import DarkModeSwitcher from '../admin/components/DarkModeSwitcher';
-import DropdownUser from '../components/DropdownUser';
-import { UserMenuItems } from '../components/UserMenuItems';
+import { useAuth } from 'wasp/client/auth';
+import { useState } from 'react';
+import { Dialog } from '@headlessui/react';
+import { AiFillCloseCircle } from 'react-icons/ai';
+import { HiBars3 } from 'react-icons/hi2';
+import { BiLogIn } from 'react-icons/bi';
 import logo from '../static/logo.png';
 import openSaasBanner from '../static/open-saas-banner.png';
-import { faqs, features, footerNavigation, navigation, testimonials } from './contentSections';
+import { features, navigation, faqs, footerNavigation, testimonials } from './contentSections';
+import DropdownUser from '../components/DropdownUser';
+import { DOCS_URL } from '../../shared/constants';
+import { UserMenuItems } from '../components/UserMenuItems';
+import DarkModeSwitcher from '../admin/components/DarkModeSwitcher';
 
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
