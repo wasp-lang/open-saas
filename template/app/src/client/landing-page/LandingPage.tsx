@@ -1,17 +1,17 @@
-import { Link } from 'wasp/client/router';
-import { useAuth } from 'wasp/client/auth';
-import { useState } from 'react';
 import { Dialog } from '@headlessui/react';
+import { useState } from 'react';
 import { AiFillCloseCircle } from 'react-icons/ai';
-import { HiBars3 } from 'react-icons/hi2';
 import { BiLogIn } from 'react-icons/bi';
+import { HiBars3 } from 'react-icons/hi2';
+import { useAuth } from 'wasp/client/auth';
+import { Link } from 'wasp/client/router';
+import { DOCS_URL } from '../../shared/constants';
+import DarkModeSwitcher from '../admin/components/DarkModeSwitcher';
+import DropdownUser from '../components/DropdownUser';
+import { UserMenuItems } from '../components/UserMenuItems';
 import logo from '../static/logo.png';
 import openSaasBanner from '../static/open-saas-banner.png';
-import { features, navigation, faqs, footerNavigation, testimonials } from './contentSections';
-import DropdownUser from '../components/DropdownUser';
-import { DOCS_URL } from '../../shared/constants';
-import { UserMenuItems } from '../components/UserMenuItems';
-import DarkModeSwitcher from '../admin/components/DarkModeSwitcher';
+import { faqs, features, footerNavigation, navigation, testimonials } from './contentSections';
 
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -279,7 +279,7 @@ export default function LandingPage() {
 
         {/* Testimonial section */}
         <div className='mx-auto mt-32 max-w-7xl sm:mt-56 sm:px-6 lg:px-8'>
-          <div className='relative sm:left-5 -m-2 rounded-xl bg-yellow-400/20 lg:ring-1 lg:ring-yellow-500/50 lg:-m-4 '>
+          <div className='relative sm:left-5 rounded-xl bg-yellow-400/20 lg:ring-1 lg:ring-yellow-500/50 lg:-m-4 '>
             <div className='relative sm:top-5 sm:right-5 bg-gray-900 dark:bg-boxdark px-8 py-20 shadow-xl sm:rounded-xl sm:px-10 sm:py-16 md:px-12 lg:px-20'>
               <h2 className='text-left text-xl font-semibold tracking-wide leading-7 text-gray-500 dark:text-white'>
                 What Our Users Say
