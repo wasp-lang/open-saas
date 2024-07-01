@@ -12,7 +12,7 @@ import {
 } from 'wasp/server/operations';
 import Stripe from 'stripe';
 import type { GeneratedSchedule, StripePaymentResult } from '../shared/types';
-import { fetchStripeCustomer, createStripeCheckoutSession } from './payments/stripeUtils.js';
+import { fetchStripeCustomer, createStripeCheckoutSession } from './stripe/checkoutUtils.js';
 import { PaymentPlanIds } from '../shared/constants.js';
 import { getUploadFileSignedURLFromS3 } from './file-upload/s3Utils.js';
 import OpenAI from 'openai';
