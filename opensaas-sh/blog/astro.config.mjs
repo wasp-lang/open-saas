@@ -36,7 +36,7 @@ export default defineConfig({
         },
       ],
       editLink: {
-        baseUrl: 'https://github.com/wasp-lang/open-saas/edit/deployed-version/blog',
+        baseUrl: 'https://github.com/wasp-lang/open-saas/edit/main/opensaas-sh/blog',
       },
       components: {
         SiteTitle: './src/components/MyHeader.astro',
