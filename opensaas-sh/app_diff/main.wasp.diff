@@ -47,25 +47,25 @@
            clientRoute: EmailVerificationRoute,
 @@ -44,16 +44,14 @@
          },
-         userSignupFields: import { getEmailUserFields } from "@src/server/auth/setUsername.js",
+         userSignupFields: import { getEmailUserFields } from "@src/server/auth/userSignupFields",
        },
 -      // Uncomment to enable Google Auth (check https://wasp-lang.dev/docs/auth/social-auth/google for setup instructions):
 -      // google: { // Guide for setting up Auth via Google
--      //   userSignupFields: import { getGoogleUserFields } from "@src/server/auth/setUsername.js",
--      //   configFn: import { getGoogleAuthConfig } from "@src/server/auth/setUsername.js",
+-      //   userSignupFields: import { getGoogleUserFields } from "@src/server/auth/userSignupFields",
+-      //   configFn: import { getGoogleAuthConfig } from "@src/server/auth/userSignupFields",
 -      // },
 -      // Uncomment to enable GitHub Auth (check https://wasp-lang.dev/docs/auth/social-auth/github for setup instructions):
 -      // gitHub: {
--      //   userSignupFields: import { getGitHubUserFields } from "@src/server/auth/setUsername.js",
--      //   configFn: import { getGitHubAuthConfig } from "@src/server/auth/setUsername.js",
+-      //   userSignupFields: import { getGitHubUserFields } from "@src/server/auth/userSignupFields",
+-      //   configFn: import { getGitHubAuthConfig } from "@src/server/auth/userSignupFields",
 -      // },
 +      google: {
-+        userSignupFields: import { getGoogleUserFields } from "@src/server/auth/setUsername",
-+        configFn: import { getGoogleAuthConfig } from "@src/server/auth/setUsername",
++        userSignupFields: import { getGoogleUserFields } from "@src/server/auth/userSignupFields",
++        configFn: import { getGoogleAuthConfig } from "@src/server/auth/userSignupFields",
 +      },
 +      gitHub: {
-+        userSignupFields: import { getGitHubUserFields } from "@src/server/auth/setUsername",
-+        configFn: import { getGitHubAuthConfig } from "@src/server/auth/setUsername",
++        userSignupFields: import { getGitHubUserFields } from "@src/server/auth/userSignupFields",
++        configFn: import { getGitHubAuthConfig } from "@src/server/auth/userSignupFields",
 +      },
      },
      onAuthFailedRedirectTo: "/login",
@@ -84,8 +84,12 @@
      },
    },
  }
-@@ -93,10 +91,13 @@
-   id                        Int             @id @default(autoincrement())
+@@ -90,13 +88,16 @@
+  */
+ 
+ entity User {=psl
+-  id                        String          @id @default(uuid())
++  id                        Int             @id @default(autoincrement())
    createdAt                 DateTime        @default(now())
  
 -  email                     String?         @unique
@@ -101,3 +105,39 @@
  
    stripeId                  String?
    checkoutSessionId         String?
+@@ -118,7 +119,7 @@
+   updatedAt                 DateTime        @updatedAt
+ 
+   user                      User            @relation(fields: [userId], references: [id])
+-  userId                    String
++  userId                    Int
+ 
+   content                   String
+ psl=}
+@@ -128,7 +129,7 @@
+   createdAt                 DateTime        @default(now())
+ 
+   user                      User            @relation(fields: [userId], references: [id])
+-  userId                    String
++  userId                    Int
+ 
+   description               String
+   time                      String          @default("1")
+@@ -140,7 +141,7 @@
+   createdAt                 DateTime        @default(now())
+ 
+   user                      User            @relation(fields: [userId], references: [id])
+-  userId                    String
++  userId                    Int
+ 
+   name                      String
+   type                      String
+@@ -155,7 +156,7 @@
+   createdAt                 DateTime        @default(now())
+ 
+   user                      User            @relation(fields: [userId], references: [id])
+-  userId                    String
++  userId                    Int
+ 
+   content                   String
+   isRead                    Boolean         @default(false)

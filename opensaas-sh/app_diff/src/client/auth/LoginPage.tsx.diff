@@ -1,8 +1,9 @@
 --- template/app/src/client/auth/LoginPage.tsx
 +++ opensaas-sh/app/src/client/auth/LoginPage.tsx
 @@ -1,8 +1,15 @@
- import { LoginForm } from 'wasp/client/auth';
+-import { LoginForm } from 'wasp/client/auth';
 -import { Link } from 'react-router-dom';
++import { LoginForm, useAuth } from 'wasp/client/auth';
 +import { Redirect, Link } from 'react-router-dom';
  import { AuthWrapper } from './authWrapper';
  

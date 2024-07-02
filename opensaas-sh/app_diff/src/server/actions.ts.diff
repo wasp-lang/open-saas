@@ -1,9 +1,42 @@
 --- template/app/src/server/actions.ts
 +++ opensaas-sh/app/src/server/actions.ts
-@@ -318,6 +318,18 @@
+@@ -113,7 +113,12 @@
+       throw openai;
+     }
+ 
+-    if (!context.user.credits && (!context.user.subscriptionStatus || context.user.subscriptionStatus === 'deleted' || context.user.subscriptionStatus === 'past_due')) {
++    if (
++      !context.user.credits &&
++      (!context.user.subscriptionStatus ||
++        context.user.subscriptionStatus === 'deleted' ||
++        context.user.subscriptionStatus === 'past_due')
++    ) {
+       throw new HttpError(402, 'User has not paid or is out of credits');
+     } else if (context.user.credits && !context.user.subscriptionStatus) {
+       console.log('decrementing credits');
+@@ -128,7 +133,7 @@
+     }
+ 
+     const completion = await openai.chat.completions.create({
+-      model: 'gpt-3.5-turbo', // you can use any model here, e.g. 'gpt-3.5-turbo', 'gpt-4', etc. 
++      model: 'gpt-3.5-turbo', // you can use any model here, e.g. 'gpt-3.5-turbo', 'gpt-4', etc.
+       messages: [
+         {
+           role: 'system',
+@@ -286,7 +291,7 @@
+   return task;
+ };
+ 
+-export const updateUserById: UpdateUserById<{ id: string; data: Partial<User> }, User> = async (
++export const updateUserById: UpdateUserById<{ id: number; data: Partial<User> }, User> = async (
+   { id, data },
+   context
+ ) => {
+@@ -318,7 +323,19 @@
      throw new HttpError(401);
    }
  
+-  const userInfo = context.user.id;
 +  const numberOfFilesByUser = await context.entities.File.count({
 +    where: {
 +      user: {
@@ -16,6 +49,7 @@
 +    throw new HttpError(403, 'Thanks for trying Open SaaS. This demo only allows 2 file uploads per user.');
 +  }
 +
-   const userInfo = context.user.id.toString();
++  const userInfo = context.user.id.toString();
  
    const { uploadUrl, key } = await getUploadFileSignedURLFromS3({ fileType, userInfo });
+ 
