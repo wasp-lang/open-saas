@@ -1,10 +1,10 @@
-import { SignupForm } from 'wasp/client/auth';
 import { Link } from 'react-router-dom';
-import { AuthWrapper } from './authWrapper';
+import { SignupForm } from 'wasp/client/auth';
+import { AuthPageLayout } from './AuthPageLayout';
 
 export function Signup() {
   return (
-    <AuthWrapper>
+    <AuthPageLayout>
       <SignupForm />
       <br />
       <span className='text-sm font-medium text-gray-900'>
@@ -15,6 +15,6 @@ export function Signup() {
         ).
       </span>
       <br />
-    </AuthWrapper>
+    </AuthPageLayout>
   );
 }
