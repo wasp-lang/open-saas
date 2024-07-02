@@ -83,7 +83,9 @@ recreate_derived_dir() {
     done <<< "${BASE_FILES}"
 
     # For each .diff file in diff dir, apply the patch to the corresponding base file in the derived dir.
-    find "${DIFF_DIR}" -name "*.diff" | while IFS= read -r diff_filepath; do
+    #local num_patches_failed
+    local num_patches_failed=0
+    while IFS= read -r diff_filepath; do
         local derived_filepath
         derived_filepath="${diff_filepath#${DIFF_DIR}/}"
         derived_filepath="${derived_filepath%.diff}"
@@ -98,9 +100,10 @@ recreate_derived_dir() {
         else
           echo "${patch_output}"
           echo -e "${RED_COLOR}[Failed with exit code ${patch_exit_code}]${RESET_COLOR}"
+          num_patches_failed=$((num_patches_failed + 1))
         fi
         echo ""
-    done
+    done < <(find "${DIFF_DIR}" -name "*.diff")
 
     # Delete any files that exist in the base dir but shouldn't exist in the derived dir.
     # TODO: also allow deletion of dirs.
@@ -123,6 +126,14 @@ recreate_derived_dir() {
     fi
 
     echo "DONE: generated ${DERIVED_DIR}/"
+
+    if [ ${num_patches_failed} -gt 0 ]; then
+        echo -e "${RED_COLOR}${num_patches_failed} patches failed, look into generated files for merge conflicts.${RESET_COLOR}"
+        exit 1;
+    else
+        echo -e "${GREEN_COLOR}All patches successfully applied.${RESET_COLOR}"
+    fi
+
 }
 
 if [ "$ACTION" == "diff" ]; then
