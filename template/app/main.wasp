@@ -64,7 +64,7 @@ app OpenSaaS {
     // Run `wasp db seed` to seed the database with the seed functions below:
     seeds: [
       // Populates the database with a bunch of fake users to work with during development.
-      import { devSeedUsers } from "@src/server/scripts/usersSeed.js",
+      import { seedMockUsers } from "@src/server/scripts/dbSeeds",
     ]
   },
 
@@ -100,8 +100,8 @@ entity User {=psl
 
   stripeId                  String?
   checkoutSessionId         String?
-  subscriptionTier          String?
-  subscriptionStatus        String?
+  subscriptionStatus        String?         // 'active', 'canceled', 'past_due', 'deleted', null
+  subscriptionTier          String?         // 'hobby-tier', 'pro-tier', null
   sendEmail                 Boolean         @default(false)
   datePaid                  DateTime?
   credits                   Int             @default(3)
