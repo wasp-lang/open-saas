@@ -119,26 +119,13 @@ With your S3 bucket set up and your AWS credentials in place, you can now start 
 
 To begin customizing file uploads, is important to know where everything lives in your app. Here's a quick overview:
 - `main.wasp`:
-  - The `File entity` can be found here. Here you can modify the fields to suit your needs:
-    ```c
-      entity File {=psl
-        id                        String          @id @default(uuid())
-        name                      String
-        type                      String
-        key                       String
-        uploadUrl                 String
-        user                      User            @relation(fields: [userId], references: [id])
-        userId                    Int
-        createdAt                 DateTime        @default(now())
-      psl=}
-    ```
-- `src/server/actions.ts`:
+  - The `File entity` can be found here. Here you can modify the fields to suit your needs.
+- `src/file-upload/FileUploadPage.tsx`:
+  - The `FileUploadPage` component is where the file upload form lives. It also allows you to download the file from S3 by calling the `getDownloadFileSignedURL` based on that files `key` in the app DB.
+- `src/file-upload/operations.ts`:
   - The `createFile` action lives here and calls the `getUploadFileSignedURLFromS3` within it using your AWS credentials before passing it to the client. This function stores the files in the S3 bucket within folders named after the user's ID, so that each user's files are stored separately.
-- `src/server/queries.ts`:
-  - The `getAllFilesByUser` fetches all File information uploaded by the user. Note that the files do not exist in the app database, but rather the file data, name its `key`, which is used to fetch the file from S3
-  - The `getDownloadFileSignedURL` query fetches the presigned URL for a file to be downloaded from S3 using the file's `key` stored in the app's database
-- `src/client/app/FileUploadPage.tsx`:
-  - The `FileUploadPage` component is where the file upload form lives. It also allows you to download the file from S3 by calling the `getDownloadFileSignedURL` based on that files `key` in the app DB. 
+  - The `getAllFilesByUser` fetches all File information uploaded by the user. Note that the files do not exist in the app database, but rather the file data, its name and its `key`, which is used to fetch the file from S3.
+  - The `getDownloadFileSignedURL` query fetches the presigned URL for a file to be downloaded from S3 using the file's `key` stored in the app's database.
 
 ## Using Multer to upload files to your server
 

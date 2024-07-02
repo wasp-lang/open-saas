@@ -135,19 +135,6 @@ entity Task {=psl
   isDone                    Boolean         @default(false)
 psl=}
 
-entity File {=psl
-  id                        String          @id @default(uuid())
-  createdAt                 DateTime        @default(now())
-
-  user                      User            @relation(fields: [userId], references: [id])
-  userId                    String
-
-  name                      String
-  type                      String
-  key                       String
-  uploadUrl                 String
-psl=}
-
 // TODO: add functionality to allow users to send messages to admin
 // and make them accessible via the admin dashboard
 entity ContactFormMessage {=psl
@@ -257,12 +244,6 @@ page CheckoutPage {
   component: import Checkout from "@src/client/app/CheckoutPage"
 }
 
-route FileUploadRoute { path: "/file-upload", to: FileUploadPage }
-page FileUploadPage {
-  authRequired: true,
-  component: import FileUpload from "@src/client/app/FileUploadPage"
-}
-
 //#region Admin Pages
 route AdminRoute { path: "/admin", to: DashboardPage }
 page DashboardPage {
@@ -367,11 +348,6 @@ action updateUserById {
   entities: [User]
 }
 
-action createFile {
-  fn: import { createFile } from "@src/server/actions.js",
-  entities: [User, File]
-}
-
 
 // 📚 Queries
 
@@ -383,16 +359,6 @@ query getGptResponses {
 query getAllTasksByUser {
   fn: import { getAllTasksByUser } from "@src/server/queries.js",
   entities: [Task]
-}
-
-query getAllFilesByUser {
-  fn: import { getAllFilesByUser } from "@src/server/queries.js",
-  entities: [User, File]
-}
-
-query getDownloadFileSignedURL {
-  fn: import { getDownloadFileSignedURL } from "@src/server/queries.js",
-  entities: [User, File]
 }
 
 query getDailyStats {
@@ -444,3 +410,40 @@ job dailyStatsJob {
   },
   entities: [User, DailyStats, Logs, PageViewSource]
 }
+
+
+//#region File Upload
+route FileUploadRoute { path: "/file-upload", to: FileUploadPage }
+page FileUploadPage {
+  authRequired: true,
+  component: import FileUpload from "@src/file-upload/FileUploadPage"
+}
+
+action createFile {
+  fn: import { createFile } from "@src/file-upload/operations",
+  entities: [User, File]
+}
+
+query getAllFilesByUser {
+  fn: import { getAllFilesByUser } from "@src/file-upload/operations",
+  entities: [User, File]
+}
+
+query getDownloadFileSignedURL {
+  fn: import { getDownloadFileSignedURL } from "@src/file-upload/operations",
+  entities: [User, File]
+}
+
+entity File {=psl
+  id                        String          @id @default(uuid())
+  createdAt                 DateTime        @default(now())
+
+  user                      User            @relation(fields: [userId], references: [id])
+  userId                    String
+
+  name                      String
+  type                      String
+  key                       String
+  uploadUrl                 String
+psl=}
+//#endregion
