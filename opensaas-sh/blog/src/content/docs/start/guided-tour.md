@@ -62,6 +62,7 @@ If you are using a version of the OpenSaaS template with Wasp `v0.11.x` or below
 │   ├── client/            # Your client code (React) goes here.
 │   ├── server/            # Your server code (NodeJS) goes here.
 │   ├── shared/            # Your shared (runtime independent) code goes here.
+│   ├── file-upload/       # Logic for uploading files to S3.
 │   └── .waspignore
 ├── .env.server            # Dev environment variables for your server code.
 ├── .env.client            # Dev environment variables for your client code.
@@ -101,7 +102,7 @@ It's possible to learn Wasp's feature set simply through using this template, bu
 
 ### Client
 
-The `src/client` folder contains all the code that runs in the browser. It's a standard React app, with a few Wasp-specific things sprinkled in.
+The `src/client` folder contains the code that runs in the browser. It's a standard React app, with a few Wasp-specific things sprinkled in.
 
 ```sh
 .
@@ -120,14 +121,13 @@ The `src/client` folder contains all the code that runs in the browser. It's a s
 
 ### Server
 
-The `src/server` folder contains all the code that runs on the server. Wasp compiles everything into a NodeJS server for you. 
+The `src/server` folder contains the code that runs on the server. Wasp compiles everything into a NodeJS server for you. 
 
 All you have to do is define your server-side functions in the `main.wasp` file, write the logic in a function within `src/server` and Wasp will generate the boilerplate code for you.
 
 ```sh
 └── server
     ├── auth               # Some small auth-related functions to customize the auth flow.
-    ├── file-upload        # File upload utility functions.
     ├── payments           # Payments utility functions.
     ├── scripts            # Scripts to run via Wasp, e.g. database seeding.
     ├── webhooks           # The webhook handler for Stripe.

@@ -1,6 +1,6 @@
---- template/app/src/server/actions.ts
-+++ opensaas-sh/app/src/server/actions.ts
-@@ -318,6 +318,18 @@
+--- template/app/src/file-upload/operations.ts
++++ opensaas-sh/app/src/file-upload/operations.ts
+@@ -21,6 +21,18 @@
      throw new HttpError(401);
    }
  
