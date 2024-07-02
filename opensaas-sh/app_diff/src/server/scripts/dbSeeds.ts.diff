@@ -1,0 +1,9 @@
+--- template/app/src/server/scripts/dbSeeds.ts
++++ opensaas-sh/app/src/server/scripts/dbSeeds.ts
+@@ -43,5 +43,6 @@
+     datePaid: hasUserPaidOnStripe ? faker.date.between({ from: createdAt, to: lastActiveTimestamp }) : null,
+     checkoutSessionId: hasUserPaidOnStripe ? `cs_test_${faker.string.uuid()}` : null,
+     subscriptionTier: subscriptionStatus ? faker.helpers.arrayElement([TierIds.HOBBY, TierIds.PRO]) : null,
++    isMockUser: true,
+   };
+ }
