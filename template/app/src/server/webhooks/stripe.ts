@@ -6,7 +6,7 @@ import { PaymentPlanIds } from '../../shared/constants';
 import { Stripe } from 'stripe';
 import { stripe } from '../stripe/stripeClient';
 import { type SubscriptionStatusOptions } from '../../shared/types';
-import { updateUserPaymentDetails } from '../stripe/webhookUtils';
+import { updateUserPaymentDetails } from './stripeUserPaymentDetails';
 
 export const stripeWebhook: StripeWebhook = async (request, response, context) => {
   const sig = request.headers['stripe-signature'];
@@ -17,7 +17,6 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
   let event: Stripe.Event;
   try {
     event = stripe.webhooks.constructEvent(request.body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
-    // console.table({sig: 'stripe webhook signature verified', type: event.type})
   } catch (err) {
     throw new HttpError(400, 'Error Constructing Stripe Webhook Event');
   }
@@ -47,26 +46,15 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
       }
 
       await updateUserPaymentDetails(
-        {
-          userStripeId,
-          subscriptionTier,
-          numOfCreditsPurchased,
-          datePaid: new Date(),
-        },
-        context
+        { userStripeId, subscriptionTier, numOfCreditsPurchased, datePaid: new Date() },
+        context.entities.User
       );
     } else if (event.type === 'invoice.paid') {
       const invoice = event.data.object as Stripe.Invoice;
       const userStripeId = invoice.customer as string;
       const periodStart = new Date(invoice.period_start * 1000);
 
-      await updateUserPaymentDetails(
-        {
-          userStripeId,
-          datePaid: periodStart,
-        },
-        context
-      );
+      await updateUserPaymentDetails({ userStripeId, datePaid: periodStart }, context.entities.User);
     } else if (event.type === 'customer.subscription.updated') {
       const subscription = event.data.object as Stripe.Subscription;
       const userStripeId = subscription.customer as string;
@@ -75,13 +63,7 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
       if (subscription.status === 'past_due') subscriptionStatus = 'past_due';
       if (subscription.cancel_at_period_end) subscriptionStatus = 'canceled';
 
-      const user = await updateUserPaymentDetails(
-        {
-          userStripeId,
-          subscriptionStatus,
-        },
-        context
-      );
+      const user = await updateUserPaymentDetails({ userStripeId, subscriptionStatus }, context.entities.User);
 
       if (subscription.cancel_at_period_end) {
         if (user.email) {
@@ -97,13 +79,7 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
       const subscription = event.data.object as Stripe.Subscription;
       const userStripeId = subscription.customer as string;
 
-      await updateUserPaymentDetails(
-        {
-          userStripeId,
-          subscriptionStatus: 'deleted',
-        },
-        context
-      );
+      await updateUserPaymentDetails({ userStripeId, subscriptionStatus: 'deleted' }, context.entities.User);
     }
     response.json({ received: true }); // Stripe expects a 200 response to acknowledge receipt of the webhook
   } catch (err) {
