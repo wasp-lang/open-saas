@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'wasp/client/router';
 interface BreadcrumbProps {
   pageName: string;
 }
