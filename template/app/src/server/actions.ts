@@ -11,8 +11,9 @@ import {
 } from 'wasp/server/operations';
 import Stripe from 'stripe';
 import type { GeneratedSchedule, StripePaymentResult } from '../shared/types';
-import { fetchStripeCustomer, createStripeCheckoutSession } from './payments/stripeUtils.js';
-import { TierIds } from '../shared/constants.js';
+import { fetchStripeCustomer, createStripeCheckoutSession } from './stripe/checkoutUtils.js';
+import { PaymentPlanIds } from '../shared/constants.js';
+
 import OpenAI from 'openai';
 
 const openai = setupOpenAI();
@@ -23,7 +24,7 @@ function setupOpenAI() {
   return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 }
 
-export const stripePayment: StripePayment<string, StripePaymentResult> = async (tier, context) => {
+export const stripePayment: StripePayment<string, StripePaymentResult> = async (paymentPlanId, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
@@ -36,14 +37,14 @@ export const stripePayment: StripePayment<string, StripePaymentResult> = async (
   }
 
   let priceId;
-  if (tier === TierIds.HOBBY) {
+  if (paymentPlanId === PaymentPlanIds.HOBBY) {
     priceId = process.env.STRIPE_HOBBY_SUBSCRIPTION_PRICE_ID!;
-  } else if (tier === TierIds.PRO) {
+  } else if (paymentPlanId === PaymentPlanIds.PRO) {
     priceId = process.env.STRIPE_PRO_SUBSCRIPTION_PRICE_ID!;
-  } else if (tier === TierIds.CREDITS) {
+  } else if (paymentPlanId === PaymentPlanIds.CREDITS) {
     priceId = process.env.STRIPE_CREDITS_PRICE_ID!;
   } else {
-    throw new HttpError(404, 'Invalid tier');
+    throw new HttpError(404, 'Invalid paymentPlanId');
   }
 
   let customer: Stripe.Customer | undefined;
@@ -56,7 +57,7 @@ export const stripePayment: StripePayment<string, StripePaymentResult> = async (
     session = await createStripeCheckoutSession({
       priceId,
       customerId: customer.id,
-      mode: tier === TierIds.CREDITS ? 'payment' : 'subscription',
+      mode: paymentPlanId === PaymentPlanIds.CREDITS ? 'payment' : 'subscription',
     });
     if (!session) {
       throw new HttpError(500, 'Error creating session');
@@ -67,7 +68,7 @@ export const stripePayment: StripePayment<string, StripePaymentResult> = async (
     throw new HttpError(statusCode, errorMessage);
   }
 
-  const updatedUser = await context.entities.User.update({
+  await context.entities.User.update({
     where: {
       id: context.user.id,
     },

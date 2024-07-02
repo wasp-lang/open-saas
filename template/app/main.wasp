@@ -98,7 +98,7 @@ entity User {=psl
   lastActiveTimestamp       DateTime        @default(now())
   isAdmin                   Boolean         @default(false)
 
-  stripeId                  String?
+  stripeId                  String?         @unique
   checkoutSessionId         String?
   subscriptionStatus        String?         // 'active', 'canceled', 'past_due', 'deleted', null
   subscriptionTier          String?         // 'hobby-tier', 'pro-tier', null
