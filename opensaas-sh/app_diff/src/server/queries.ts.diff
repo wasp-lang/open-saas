@@ -1,6 +1,6 @@
 --- template/app/src/server/queries.ts
 +++ opensaas-sh/app/src/server/queries.ts
-@@ -136,6 +136,7 @@
+@@ -110,6 +110,7 @@
              mode: 'insensitive',
            },
            isAdmin: args.isAdmin,
@@ -8,7 +8,7 @@
          },
          {
            OR: [
-@@ -176,6 +177,7 @@
+@@ -150,6 +151,7 @@
              mode: 'insensitive',
            },
            isAdmin: args.isAdmin,

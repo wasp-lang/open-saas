@@ -1,4 +1,4 @@
-import { type User, type Task, type File } from 'wasp/entities';
+import { type User, type Task } from 'wasp/entities';
 import { HttpError } from 'wasp/server';
 import {
   type GenerateGptResponse,
@@ -8,13 +8,12 @@ import {
   type CreateTask,
   type DeleteTask,
   type UpdateTask,
-  type CreateFile,
 } from 'wasp/server/operations';
 import Stripe from 'stripe';
 import type { GeneratedSchedule, StripePaymentResult } from '../shared/types';
 import { fetchStripeCustomer, createStripeCheckoutSession } from './stripe/checkoutUtils.js';
 import { PaymentPlanIds } from '../shared/constants.js';
-import { getUploadFileSignedURLFromS3 } from './file-upload/s3Utils.js';
+
 import OpenAI from 'openai';
 
 const openai = setupOpenAI();
@@ -306,31 +305,6 @@ export const updateUserById: UpdateUserById<{ id: string; data: Partial<User> },
   });
 
   return updatedUser;
-};
-
-type FileDescription = {
-  fileType: string;
-  name: string;
-};
-
-export const createFile: CreateFile<FileDescription, File> = async ({ fileType, name }, context) => {
-  if (!context.user) {
-    throw new HttpError(401);
-  }
-
-  const userInfo = context.user.id;
-
-  const { uploadUrl, key } = await getUploadFileSignedURLFromS3({ fileType, userInfo });
-
-  return await context.entities.File.create({
-    data: {
-      name,
-      key,
-      uploadUrl,
-      type: fileType,
-      user: { connect: { id: context.user.id } },
-    },
-  });
 };
 
 export const updateCurrentUser: UpdateCurrentUser<Partial<User>, User> = async (user, context) => {

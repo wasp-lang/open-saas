@@ -1,6 +1,6 @@
---- template/app/src/server/actions.ts
-+++ opensaas-sh/app/src/server/actions.ts
-@@ -318,6 +318,18 @@
+--- template/app/src/file-upload/operations.ts
++++ opensaas-sh/app/src/file-upload/operations.ts
+@@ -21,6 +21,18 @@
      throw new HttpError(401);
    }
  
@@ -16,6 +16,6 @@
 +    throw new HttpError(403, 'Thanks for trying Open SaaS. This demo only allows 2 file uploads per user.');
 +  }
 +
-   const userInfo = context.user.id.toString();
+   const userInfo = context.user.id;
  
    const { uploadUrl, key } = await getUploadFileSignedURLFromS3({ fileType, userInfo });

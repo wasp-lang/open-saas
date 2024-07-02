@@ -1,7 +1,7 @@
 import { createFile, useQuery, getAllFilesByUser, getDownloadFileSignedURL } from 'wasp/client/operations';
 import axios from 'axios';
 import { useState, useEffect, FormEvent } from 'react';
-import { cn } from '../../shared/utils';
+import { cn } from '../shared/utils';
 
 export default function FileUploadPage() {
   const [fileToDownload, setFileToDownload] = useState<string>('');
