@@ -1,9 +1,11 @@
 --- template/app/src/server/scripts/dbSeeds.ts
 +++ opensaas-sh/app/src/server/scripts/dbSeeds.ts
-@@ -43,5 +43,6 @@
+@@ -43,5 +43,8 @@
      datePaid: hasUserPaidOnStripe ? faker.date.between({ from: createdAt, to: lastActiveTimestamp }) : null,
      checkoutSessionId: hasUserPaidOnStripe ? `cs_test_${faker.string.uuid()}` : null,
-     subscriptionTier: subscriptionStatus ? faker.helpers.arrayElement([TierIds.HOBBY, TierIds.PRO]) : null,
-+    isMockUser: true,
+     subscriptionTier: subscriptionStatus ? faker.helpers.arrayElement([PaymentPlanIds.HOBBY, PaymentPlanIds.PRO]) : null,
++    // For the demo app, we want to default isMockUser to true so that our admin dash only shows mock users
++    // and not real users signing up to test the app
++    isMockUser: true
    };
  }
