@@ -1,19 +1,18 @@
-import { type SubscriptionStatusOptions } from '../../shared/types';
-import { type PaymentPlanIds } from '../../shared/constants';
-import { PrismaClient } from '@prisma/client';
+import type { SubscriptionStatusOptions, PrismaUserDelegate  } from '../../shared/types';
+import { SubscriptionPlanId } from '../../shared/constants'; 
 
-type UserPaymentDetails = {
+type UserStripePaymentDetails = {
   userStripeId: string;
-  subscriptionTier?: Omit<PaymentPlanIds, 'CREDITS'>;
+  subscriptionPlan?: SubscriptionPlanId
   subscriptionStatus?: SubscriptionStatusOptions;
   numOfCreditsPurchased?: number;
   datePaid?: Date;
 };
 
-export const updateUserPaymentDetails = async (args: UserPaymentDetails, userDelegate: PrismaClient['user']) => {
+export const updateUserStripePaymentDetails = async (args: UserStripePaymentDetails, userDelegate: PrismaUserDelegate ) => {
   let data: any = {};
   if (args.datePaid) data.datePaid = args.datePaid;
-  if (args.subscriptionTier) data.subscriptionTier = args.subscriptionTier as string;
+  if (args.subscriptionPlan) data.subscriptionPlan = args.subscriptionPlan;
   if (args.subscriptionStatus) data.subscriptionStatus = args.subscriptionStatus;
   if (args.numOfCreditsPurchased) {
     data.credits = { increment: args.numOfCreditsPurchased };

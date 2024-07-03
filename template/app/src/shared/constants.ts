@@ -1,7 +1,11 @@
-export enum PaymentPlanIds {
-  HOBBY = 'hobby-tier',
-  PRO = 'pro-tier',
-  CREDITS = 'credits',
+export enum SubscriptionPlanId {
+  HOBBY = 'hobby',
+  PRO = 'pro'
+}
+
+export enum CreditsPlanId {
+  TEN_CREDITS = 'ten-credits',
+  // TWENTY_CREDITS = 'twenty-credits'
 }
 
 export const DOCS_URL = 'https://docs.opensaas.sh';

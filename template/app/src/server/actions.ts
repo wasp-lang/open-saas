@@ -9,11 +9,10 @@ import {
   type DeleteTask,
   type UpdateTask,
 } from 'wasp/server/operations';
-import Stripe from 'stripe';
-import type { GeneratedSchedule, StripePaymentResult } from '../shared/types';
+import { SubscriptionPlanId, CreditsPlanId } from '../shared/constants.js';
+import type { GeneratedSchedule, StripePaymentResult, PaymentPlanId } from '../shared/types';
 import { fetchStripeCustomer, createStripeCheckoutSession } from './stripe/checkoutUtils.js';
-import { PaymentPlanIds } from '../shared/constants.js';
-
+import Stripe from 'stripe';
 import OpenAI from 'openai';
 
 const openai = setupOpenAI();
@@ -37,11 +36,11 @@ export const stripePayment: StripePayment<string, StripePaymentResult> = async (
   }
 
   let priceId;
-  if (paymentPlanId === PaymentPlanIds.HOBBY) {
+  if (paymentPlanId === SubscriptionPlanId.HOBBY) {
     priceId = process.env.STRIPE_HOBBY_SUBSCRIPTION_PRICE_ID!;
-  } else if (paymentPlanId === PaymentPlanIds.PRO) {
+  } else if (paymentPlanId === SubscriptionPlanId.PRO) {
     priceId = process.env.STRIPE_PRO_SUBSCRIPTION_PRICE_ID!;
-  } else if (paymentPlanId === PaymentPlanIds.CREDITS) {
+  } else if (paymentPlanId === CreditsPlanId.TEN_CREDITS) {
     priceId = process.env.STRIPE_CREDITS_PRICE_ID!;
   } else {
     throw new HttpError(404, 'Invalid paymentPlanId');
@@ -57,7 +56,7 @@ export const stripePayment: StripePayment<string, StripePaymentResult> = async (
     session = await createStripeCheckoutSession({
       priceId,
       customerId: customer.id,
-      mode: paymentPlanId === PaymentPlanIds.CREDITS ? 'payment' : 'subscription',
+      mode: paymentPlanId === CreditsPlanId.TEN_CREDITS ? 'payment' : 'subscription',
     });
     if (!session) {
       throw new HttpError(500, 'Error creating session');

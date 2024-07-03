@@ -1,23 +1,33 @@
 import { useAuth } from 'wasp/client/auth';
 import { stripePayment } from 'wasp/client/operations';
-import { PaymentPlanIds } from '../../shared/constants';
+import { type PaymentPlanId } from '../../shared/types';
+import { CreditsPlanId, SubscriptionPlanId } from '../../shared/constants';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { cn } from '../../shared/utils';
 import { z } from 'zod';
 
-export const tiers = [
+type PaymentPlan = {
+  name: string;
+  id: PaymentPlanId;
+  price: string;
+  description: string;
+  features: string[];
+  bestDeal?: boolean;
+};
+
+export const paymentPlans: PaymentPlan[] = [
   {
     name: 'Hobby',
-    id: PaymentPlanIds.HOBBY,
+    id: SubscriptionPlanId.HOBBY,
     price: '$9.99',
     description: 'All you need to get started',
     features: ['Limited monthly usage', 'Basic support'],
   },
   {
     name: 'Pro',
-    id: PaymentPlanIds.PRO,
+    id: SubscriptionPlanId.PRO,
     price: '$19.99',
     description: 'Our most popular plan',
     features: ['Unlimited monthly usage', 'Priority customer support'],
@@ -25,7 +35,7 @@ export const tiers = [
   },
   {
     name: '10 Credits',
-    id: PaymentPlanIds.CREDITS,
+    id: CreditsPlanId.TEN_CREDITS,
     price: '$9.99',
     description: 'One-time purchase of 10 credits for your account',
     features: ['Use credits for e.g. OpenAI API calls', 'No expiration date'],
@@ -39,7 +49,7 @@ const PricingPage = () => {
 
   const history = useHistory();
 
-  async function handleBuyNowClick(paymentPlanId: PaymentPlanIds) {
+  async function handleBuyNowClick(paymentPlanId: PaymentPlanId) {
     if (!user) {
       history.push('/login');
       return;
@@ -86,7 +96,7 @@ const PricingPage = () => {
           <span className='px-2 py-1 bg-gray-100 rounded-md text-gray-500'>4242 4242 4242 4242 4242</span>
         </p>
         <div className='isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 lg:gap-x-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3'>
-          {tiers.map((tier) => (
+          {paymentPlans.map((tier) => (
             <div
               key={tier.id}
               className={cn(
@@ -117,7 +127,7 @@ const PricingPage = () => {
                 <p className='mt-6 flex items-baseline gap-x-1 dark:text-white'>
                   <span className='text-4xl font-bold tracking-tight text-gray-900 dark:text-white'>{tier.price}</span>
                   <span className='text-sm font-semibold leading-6 text-gray-600 dark:text-white'>
-                    {tier.id !== PaymentPlanIds.CREDITS && '/month'}
+                    {tier.id !== CreditsPlanId.TEN_CREDITS && '/month'}
                   </span>
                 </p>
                 <ul role='list' className='mt-8 space-y-3 text-sm leading-6 text-gray-600 dark:text-white'>

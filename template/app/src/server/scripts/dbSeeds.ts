@@ -1,7 +1,7 @@
 import { type User } from 'wasp/entities';
 import { faker } from '@faker-js/faker';
 import type { PrismaClient } from '@prisma/client';
-import { PaymentPlanIds } from '../../shared/constants.js';
+import { SubscriptionPlanId } from '../../shared/constants.js';
 import { type SubscriptionStatusOptions } from '../../shared/types.js';
 
 type MockUserData = Omit<User, 'id'>;
@@ -42,6 +42,6 @@ function generateMockUserData(): MockUserData {
     stripeId: hasUserPaidOnStripe ? `cus_test_${faker.string.uuid()}` : null,
     datePaid: hasUserPaidOnStripe ? faker.date.between({ from: createdAt, to: lastActiveTimestamp }) : null,
     checkoutSessionId: hasUserPaidOnStripe ? `cs_test_${faker.string.uuid()}` : null,
-    subscriptionTier: subscriptionStatus ? faker.helpers.arrayElement([PaymentPlanIds.HOBBY, PaymentPlanIds.PRO]) : null,
+    subscriptionPlan: subscriptionStatus ? faker.helpers.arrayElement([SubscriptionPlanId.HOBBY, SubscriptionPlanId.PRO]) : null,
   };
 }

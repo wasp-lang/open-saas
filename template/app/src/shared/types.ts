@@ -1,3 +1,10 @@
+import { SubscriptionPlanId, CreditsPlanId } from './constants';
+import { PrismaClient } from '@prisma/client';
+
+export type PrismaUserDelegate = PrismaClient['user']
+
+export type PaymentPlanId = SubscriptionPlanId | CreditsPlanId;
+
 export type StripePaymentResult = {
   sessionUrl: string | null;
   sessionId: string;
