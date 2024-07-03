@@ -1,8 +1,11 @@
 import Stripe from 'stripe';
 
 export const stripe = new Stripe(process.env.STRIPE_KEY!, {
-  // Note: make sure this version matches the API version in your Stripe dashboard.
-  // You can do by specificing the same version in the developer tab of your Stripe Dashboard 
-  // or upgrading your Stripe SDK to match the version specified in your Stripe Dashboard.
+  // NOTE:
+  // API version below should ideally match the API version in your Stripe dashboard. 
+  // If that is not the case, you will most likely want to (up/down)grade the `stripe` 
+  // npm package to the API version that matches your Stripe dashboard's one.
+  // For more details and alternative setups check 
+  // https://docs.stripe.com/api/versioning .
   apiVersion: '2022-11-15',
 });
