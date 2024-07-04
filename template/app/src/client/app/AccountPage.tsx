@@ -1,7 +1,8 @@
-import { Link } from 'wasp/client/router';
-import { type User } from 'wasp/entities';
-import { logout } from 'wasp/client/auth';
+import type { User } from 'wasp/entities';
+import type { SubscriptionStatusOptions } from '../../shared/types';
 import { SubscriptionPlanId } from '../../shared/constants';
+import { Link } from 'wasp/client/router';
+import { logout } from 'wasp/client/auth';
 import { z } from 'zod';
 
 export default function AccountPage({ user }: { user: User }) {
@@ -27,27 +28,7 @@ export default function AccountPage({ user }: { user: User }) {
             )}
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
               <dt className='text-sm font-medium text-gray-500 dark:text-white'>Your Plan</dt>
-              {!!user.subscriptionStatus ? (
-                <>
-                  {user.subscriptionStatus !== 'past_due' ? (
-                    <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
-                      {user.subscriptionPlan === SubscriptionPlanId.HOBBY ? 'Hobby' : 'Pro'} Plan
-                    </dd>
-                  ) : (
-                    <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
-                      Your Account is Past Due! Please Update your Payment Information
-                    </dd>
-                  )}
-                  <CustomerPortalButton />
-                </>
-              ) : (
-                <>
-                  <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
-                    Credits remaining: {user.credits}
-                  </dd>
-                  <BuyMoreButton />
-                </>
-              )}
+              <UserCurrentSubscriptionStatus {...user} />
             </div>
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
               <dt className='text-sm font-medium text-gray-500 dark:text-white'>About</dt>
@@ -70,6 +51,65 @@ export default function AccountPage({ user }: { user: User }) {
   );
 }
 
+function UserCurrentSubscriptionStatus(user: User) {
+  const prettyPrintSubscriptionPlan = (userSubscriptionPlan: User['subscriptionPlan']) => {
+    const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+    if (!userSubscriptionPlan) console.error('User subscription plan is missing');
+    if (userSubscriptionPlan === SubscriptionPlanId.HOBBY) {
+      return capitalizeFirstLetter(SubscriptionPlanId.HOBBY);
+    }
+    if (userSubscriptionPlan === SubscriptionPlanId.PRO) {
+      return capitalizeFirstLetter(SubscriptionPlanId.HOBBY);
+    }
+  };
+
+  const prettyPrintEndOfBillingPeriod = (date: Date | null) => {
+    if (!date) {
+      console.error('User date paid is missing');
+      return '.';
+    }
+    const oneMonthFromNow = new Date(date);
+    oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
+    return ': ' + oneMonthFromNow.toLocaleDateString();
+  };
+
+  function getSubscriptionMessage(subscriptionStatus: User['subscriptionStatus']) {
+    const plan = prettyPrintSubscriptionPlan(user.subscriptionPlan);
+    const endOfBillingPeriod = prettyPrintEndOfBillingPeriod(user.datePaid);
+
+    switch (subscriptionStatus) {
+      case 'active' satisfies SubscriptionStatusOptions:
+        return `${plan}`;
+      case 'past_due' satisfies SubscriptionStatusOptions:
+        return `Payment for your ${plan} plan is past due! Please update your subscription payment information.`;
+      case 'canceled' satisfies SubscriptionStatusOptions:
+        return `Your ${plan} plan subscription has been canceled, but remains active until the end of the current billing period${endOfBillingPeriod}`;
+      case 'deleted' satisfies SubscriptionStatusOptions:
+        return `Your previous subscription has been canceled and is no longer active.`;
+    }
+  }
+
+  if (user.subscriptionStatus) {
+    return (
+      <>
+        <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
+          {getSubscriptionMessage(user.subscriptionStatus)}
+        </dd>
+        {user.subscriptionStatus !== ('deleted' satisfies SubscriptionStatusOptions) ? <CustomerPortalButton /> : <BuyMoreButton />}
+      </>
+    );
+  }
+
+  return (
+    <>
+      <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
+        Credits remaining: {user.credits}
+      </dd>
+      <BuyMoreButton />
+    </>
+  );
+}
+
 function BuyMoreButton() {
   return (
     <div className='ml-4 flex-shrink-0 sm:col-span-1 sm:mt-0'>
@@ -87,13 +127,16 @@ function CustomerPortalButton() {
       const customerPortalUrl = schema.parse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
       window.open(customerPortalUrl, '_blank');
     } catch (err) {
-      console.error(err)
+      console.error(err);
     }
   };
 
   return (
     <div className='ml-4 flex-shrink-0 sm:col-span-1 sm:mt-0'>
-      <button onClick={handleClick} className='font-medium text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300'>
+      <button
+        onClick={handleClick}
+        className='font-medium text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300'
+      >
         Manage Subscription
       </button>
     </div>
