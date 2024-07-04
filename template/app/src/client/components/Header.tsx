@@ -5,10 +5,10 @@ import { useAuth } from 'wasp/client/auth';
 import { HiBars3 } from 'react-icons/hi2';
 import DarkModeSwitcher from '../admin/components/DarkModeSwitcher';
 import { BiLogIn } from 'react-icons/bi';
-import DropdownUser from '../components/DropdownUser';
+import DropdownUser from './DropdownUser';
 import { Dialog } from '@headlessui/react';
 import { AiFillCloseCircle } from 'react-icons/ai';
-import { UserMenuItems } from '../components/UserMenuItems';
+import { UserMenuItems } from './UserMenuItems';
 
 export default function Header({navigation}: any) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
