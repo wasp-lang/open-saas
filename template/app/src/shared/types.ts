@@ -1,16 +1,13 @@
-import { SubscriptionPlanId, CreditsPlanId } from './constants';
 import { PrismaClient } from '@prisma/client';
 
 export type PrismaUserDelegate = PrismaClient['user']
-
-export type PaymentPlanId = SubscriptionPlanId | CreditsPlanId;
 
 export type StripePaymentResult = {
   sessionUrl: string | null;
   sessionId: string;
 };
 
-export type SubscriptionStatusOptions = 'past_due' | 'canceled' | 'active' | 'deleted' | null;
+export type SubscriptionStatusOptions = 'past_due' | 'cancel_at_period_end' | 'active' | 'deleted';
 
 export type Subtask = {
   description: string; // detailed breakdown and description of sub-task

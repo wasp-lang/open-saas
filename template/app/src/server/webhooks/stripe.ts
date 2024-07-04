@@ -10,28 +10,47 @@ import {
   handleCustomerSubscriptionUpdated,
 } from './stripeEventHandlers';
 
+type StripeEventTypes =
+  | 'checkout.session.completed'
+  | 'invoice.paid'
+  | 'customer.subscription.updated'
+  | 'customer.subscription.deleted';
+
 export const stripeWebhook: StripeWebhook = async (request, response, context) => {
+  const secret = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!secret || secret.length <= 9) {
+    throw new HttpError(500, 'Stripe Webhook Secret Not Set');
+  }
   const sig = request.headers['stripe-signature'];
   if (!sig) {
     throw new HttpError(400, 'Stripe Webhook Signature Not Provided');
   }
-
   let event: Stripe.Event;
   try {
-    event = stripe.webhooks.constructEvent(request.body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
+    event = stripe.webhooks.constructEvent(request.body, sig, secret);
   } catch (err) {
     throw new HttpError(400, 'Error Constructing Stripe Webhook Event');
   }
-
   const prismaUserDelegate = context.entities.User;
-  if (event.type === 'checkout.session.completed') {
-    await handleCheckoutSessionCompleted(event, prismaUserDelegate);
-  } else if (event.type === 'invoice.paid') {
-    await handleInvoicePaid(event, prismaUserDelegate);
-  } else if (event.type === 'customer.subscription.updated') {
-    await handleCustomerSubscriptionUpdated(event, prismaUserDelegate);
-  } else if (event.type === 'customer.subscription.deleted') {
-    await handleCustomerSubscriptionDeleted(event, prismaUserDelegate);
+  switch (event.type as StripeEventTypes) {
+    case 'checkout.session.completed':
+      const session = event.data.object as Stripe.Checkout.Session;
+      await handleCheckoutSessionCompleted(session, prismaUserDelegate);
+      break;
+    case 'invoice.paid':
+      const invoice = event.data.object as Stripe.Invoice;
+      await handleInvoicePaid(invoice, prismaUserDelegate);
+      break;
+    case 'customer.subscription.updated': 
+      const updatedSubscription = event.data.object as Stripe.Subscription;
+      await handleCustomerSubscriptionUpdated(updatedSubscription, prismaUserDelegate);
+      break;
+    case 'customer.subscription.deleted':
+      const deletedSubscription = event.data.object as Stripe.Subscription;
+      await handleCustomerSubscriptionDeleted(deletedSubscription, prismaUserDelegate);
+      break;
+    default:
+      console.log('Unhandled event type: ', event.type);
   }
   response.json({ received: true }); // Stripe expects a 200 response to acknowledge receipt of the webhook
 };

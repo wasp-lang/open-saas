@@ -9,10 +9,10 @@ import {
   type DeleteTask,
   type UpdateTask,
 } from 'wasp/server/operations';
-import { SubscriptionPlanId, CreditsPlanId } from '../shared/constants.js';
-import type { GeneratedSchedule, StripePaymentResult, PaymentPlanId } from '../shared/types';
+import { getStripePriceIdForPaymentPlanId, getModeForPaymentPlanId } from './stripe/paymentPlans';
+import { PaymentPlanId } from '../shared/constants';
+import type { GeneratedSchedule, StripePaymentResult } from '../shared/types';
 import { fetchStripeCustomer, createStripeCheckoutSession } from './stripe/checkoutUtils.js';
-import Stripe from 'stripe';
 import OpenAI from 'openai';
 
 const openai = setupOpenAI();
@@ -23,7 +23,7 @@ function setupOpenAI() {
   return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 }
 
-export const stripePayment: StripePayment<string, StripePaymentResult> = async (paymentPlanId, context) => {
+export const stripePayment: StripePayment<PaymentPlanId, StripePaymentResult> = async (paymentPlanId, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
@@ -35,36 +35,23 @@ export const stripePayment: StripePayment<string, StripePaymentResult> = async (
     );
   }
 
-  let priceId;
-  if (paymentPlanId === SubscriptionPlanId.HOBBY) {
-    priceId = process.env.STRIPE_HOBBY_SUBSCRIPTION_PRICE_ID!;
-  } else if (paymentPlanId === SubscriptionPlanId.PRO) {
-    priceId = process.env.STRIPE_PRO_SUBSCRIPTION_PRICE_ID!;
-  } else if (paymentPlanId === CreditsPlanId.TEN_CREDITS) {
-    priceId = process.env.STRIPE_CREDITS_PRICE_ID!;
-  } else {
-    throw new HttpError(404, 'Invalid paymentPlanId');
+  const priceId = getStripePriceIdForPaymentPlanId(paymentPlanId);
+  const mode = getModeForPaymentPlanId(paymentPlanId);
+  if (!priceId || !mode) {
+    throw new HttpError(404, 'Invalid Payment Plan'); 
   }
 
-  let customer: Stripe.Customer | undefined;
-  let session: Stripe.Checkout.Session | undefined;
-  try {
-    customer = await fetchStripeCustomer(userEmail);
-    if (!customer) {
-      throw new HttpError(500, 'Error fetching customer');
-    }
-    session = await createStripeCheckoutSession({
-      priceId,
-      customerId: customer.id,
-      mode: paymentPlanId === CreditsPlanId.TEN_CREDITS ? 'payment' : 'subscription',
-    });
-    if (!session) {
-      throw new HttpError(500, 'Error creating session');
-    }
-  } catch (error: any) {
-    const statusCode = error.statusCode || 500;
-    const errorMessage = error.message || 'Internal server error';
-    throw new HttpError(statusCode, errorMessage);
+  let customer =  await fetchStripeCustomer(userEmail);
+  let session = await createStripeCheckoutSession({
+    priceId,
+    customerId: customer.id,
+    mode,
+  });
+  if (!customer) {
+    throw new HttpError(500, 'Error fetching customer');
+  }
+  if (!session) {
+    throw new HttpError(500, 'Error creating session');
   }
 
   await context.entities.User.update({
@@ -126,7 +113,7 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, GeneratedSched
     }
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo', // you can use any model here, e.g. 'gpt-3.5-turbo', 'gpt-4', etc. 
+      model: 'gpt-3.5-turbo', // you can use any model here, e.g. 'gpt-3.5-turbo', 'gpt-4', etc.
       messages: [
         {
           role: 'system',

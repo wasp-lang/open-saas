@@ -1,6 +1,6 @@
 import type { User } from 'wasp/entities';
 import type { SubscriptionStatusOptions } from '../../shared/types';
-import { SubscriptionPlanId } from '../../shared/constants';
+import { SubscriptionPlanId } from '../../shared/constants'; 
 import { Link } from 'wasp/client/router';
 import { logout } from 'wasp/client/auth';
 import { z } from 'zod';
@@ -55,11 +55,11 @@ function UserCurrentSubscriptionStatus(user: User) {
   const prettyPrintSubscriptionPlan = (userSubscriptionPlan: User['subscriptionPlan']) => {
     const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
     if (!userSubscriptionPlan) console.error('User subscription plan is missing');
-    if (userSubscriptionPlan === SubscriptionPlanId.HOBBY) {
-      return capitalizeFirstLetter(SubscriptionPlanId.HOBBY);
+    if (userSubscriptionPlan === SubscriptionPlanId.Hobby) {
+      return capitalizeFirstLetter(SubscriptionPlanId.Hobby);
     }
-    if (userSubscriptionPlan === SubscriptionPlanId.PRO) {
-      return capitalizeFirstLetter(SubscriptionPlanId.HOBBY);
+    if (userSubscriptionPlan === SubscriptionPlanId.Pro) {
+      return capitalizeFirstLetter(SubscriptionPlanId.Hobby);
     }
   };
 
@@ -77,12 +77,13 @@ function UserCurrentSubscriptionStatus(user: User) {
     const plan = prettyPrintSubscriptionPlan(user.subscriptionPlan);
     const endOfBillingPeriod = prettyPrintEndOfBillingPeriod(user.datePaid);
 
+    // TODO: refactor this as a Record<SubscriptionStatusOptions, string> instead of a switch statement?
     switch (subscriptionStatus) {
       case 'active' satisfies SubscriptionStatusOptions:
         return `${plan}`;
       case 'past_due' satisfies SubscriptionStatusOptions:
         return `Payment for your ${plan} plan is past due! Please update your subscription payment information.`;
-      case 'canceled' satisfies SubscriptionStatusOptions:
+      case 'cancel_at_period_end' satisfies SubscriptionStatusOptions:
         return `Your ${plan} plan subscription has been canceled, but remains active until the end of the current billing period${endOfBillingPeriod}`;
       case 'deleted' satisfies SubscriptionStatusOptions:
         return `Your previous subscription has been canceled and is no longer active.`;

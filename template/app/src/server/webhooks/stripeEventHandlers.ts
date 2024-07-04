@@ -1,60 +1,62 @@
 import type { PrismaUserDelegate, SubscriptionStatusOptions } from '../../shared/types';
 import { Stripe } from 'stripe';
 import { stripe } from '../stripe/stripeClient';
-import { SubscriptionPlanId } from '../../shared/constants';
-import { updateUserStripePaymentDetails } from './userStripePaymentDetails';
+import { paymentPlans } from '../stripe/paymentPlans';
+import { SubscriptionPlanId } from '../../shared/constants'; 
+import { updateUserStripePaymentDetails } from './stripePaymentDetails';
 import { HttpError } from 'wasp/server';
 import { emailSender } from 'wasp/server/email';
 
-const getCustomerIdStringOrThrow = (userStripeId: unknown): string => {
-  if (!userStripeId) throw new HttpError(400, 'No customer id in session');
+const validateUserStripeIdOrThrow = (userStripeId: Stripe.Checkout.Session['customer']) => {
+  if (!userStripeId) throw new HttpError(400, 'No customer id');
   if (typeof userStripeId !== 'string') throw new HttpError(400, 'Customer id is not a string');
   return userStripeId;
-};
+}
 
-export const handleCheckoutSessionCompleted = async (event: Stripe.Event, prismaUserDelegate: PrismaUserDelegate) => {
-  let session = event.data.object as Stripe.Checkout.Session;
-  const userStripeId = getCustomerIdStringOrThrow(session.customer);
+export const handleCheckoutSessionCompleted = async (session: Stripe.Checkout.Session, prismaUserDelegate: PrismaUserDelegate) => {
+  const userStripeId = validateUserStripeIdOrThrow(session.customer);
   const { line_items } = await stripe.checkout.sessions.retrieve(session.id, {
     expand: ['line_items'],
   });
+  if (!line_items?.data?.length) throw new HttpError(400, 'No line items');
+  if (line_items.data.length > 1) throw new HttpError(400, 'More than one line item in session');
   const lineItemPriceId = line_items?.data[0]?.price?.id;
-  if (!lineItemPriceId) throw new HttpError(400, 'No line item price id');
+  if (!lineItemPriceId) throw new HttpError(400, 'No price id in line item');
 
   let subscriptionPlan: SubscriptionPlanId | undefined;
   let numOfCreditsPurchased: number | undefined;
-  switch (lineItemPriceId) {
-    case process.env.STRIPE_HOBBY_SUBSCRIPTION_PRICE_ID:
-      subscriptionPlan = SubscriptionPlanId.HOBBY;
-      break;
-    case process.env.STRIPE_PRO_SUBSCRIPTION_PRICE_ID:
-      subscriptionPlan = SubscriptionPlanId.PRO;
-      break;
-    case process.env.STRIPE_CREDITS_PRICE_ID:
-      numOfCreditsPurchased = 10;
-      break;
+  for (const paymentPlan of Object.values(paymentPlans)) {
+    if (paymentPlan.stripePriceID === lineItemPriceId) {
+      subscriptionPlan = paymentPlan.subscriptionPlan;
+      numOfCreditsPurchased = paymentPlan.credits;
+      break; 
+    }
   }
 
   return await updateUserStripePaymentDetails(
-    { userStripeId, subscriptionPlan: subscriptionPlan, numOfCreditsPurchased, datePaid: new Date() },
+    { userStripeId, subscriptionPlan, numOfCreditsPurchased, datePaid: new Date() },
     prismaUserDelegate
   );
 };
 
-export const handleInvoicePaid = async (event: Stripe.Event, prismaUserDelegate: PrismaUserDelegate) => {
-  const invoice = event.data.object as Stripe.Invoice;
-  const userStripeId = getCustomerIdStringOrThrow(invoice.customer);
-  const periodStart = new Date(invoice.period_start * 1000);
-  return await updateUserStripePaymentDetails({ userStripeId, datePaid: periodStart }, prismaUserDelegate);
+export const handleInvoicePaid = async (invoice: Stripe.Invoice, prismaUserDelegate: PrismaUserDelegate) => {
+  const userStripeId = validateUserStripeIdOrThrow(invoice.customer);
+  const datePaid = new Date(invoice.period_start * 1000);
+  return await updateUserStripePaymentDetails({ userStripeId, datePaid }, prismaUserDelegate);
 };
 
-export const handleCustomerSubscriptionUpdated = async (event: Stripe.Event, prismaUserDelegate: PrismaUserDelegate) => {
-  const subscription = event.data.object as Stripe.Subscription;
-  const userStripeId = getCustomerIdStringOrThrow(subscription.customer);
+export const handleCustomerSubscriptionUpdated = async (subscription: Stripe.Subscription, prismaUserDelegate: PrismaUserDelegate) => {
+  const userStripeId = validateUserStripeIdOrThrow(subscription.customer)
 
-  let subscriptionStatus: SubscriptionStatusOptions = 'active';
-  if (subscription.status === 'past_due') subscriptionStatus = 'past_due';
-  if (subscription.cancel_at_period_end) subscriptionStatus = 'canceled';
+  const statusMapping: Record<string, SubscriptionStatusOptions> = {
+    active: 'active',
+    past_due: 'past_due',
+    cancel_at_period_end: 'cancel_at_period_end',
+  };
+  let subscriptionStatus = statusMapping[subscription.status];
+  if (subscription.cancel_at_period_end) {
+    subscriptionStatus = 'cancel_at_period_end';
+  }
 
   const user = await updateUserStripePaymentDetails({ userStripeId, subscriptionStatus }, prismaUserDelegate);
 
@@ -72,9 +74,7 @@ export const handleCustomerSubscriptionUpdated = async (event: Stripe.Event, pri
   return user;
 };
 
-export const handleCustomerSubscriptionDeleted = async (event: Stripe.Event, prismaUserDelegate: PrismaUserDelegate) => {
-  const subscription = event.data.object as Stripe.Subscription;
-  const userStripeId = getCustomerIdStringOrThrow(subscription.customer);
-
-  await updateUserStripePaymentDetails({ userStripeId, subscriptionStatus: 'deleted' }, prismaUserDelegate);
+export const handleCustomerSubscriptionDeleted = async (subscription: Stripe.Subscription, prismaUserDelegate: PrismaUserDelegate) => {
+  const userStripeId = validateUserStripeIdOrThrow(subscription.customer);
+  return await updateUserStripePaymentDetails({ userStripeId, subscriptionStatus: 'deleted' }, prismaUserDelegate);
 };
