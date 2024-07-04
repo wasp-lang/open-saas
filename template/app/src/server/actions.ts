@@ -38,7 +38,7 @@ export const stripePayment: StripePayment<PaymentPlanId, StripePaymentResult> = 
 
   const customer = await fetchStripeCustomer(userEmail);
   const session = await createStripeCheckoutSession({
-    priceId: paymentPlan.stripePriceId,
+    priceId: paymentPlan.getStripePriceId(),
     customerId: customer.id,
     mode: paymentPlanEffectToStripeMode(paymentPlan.effect)
   });

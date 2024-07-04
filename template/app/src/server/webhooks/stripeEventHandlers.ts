@@ -22,7 +22,7 @@ export const handleCheckoutSessionCompleted = async (session: Stripe.Checkout.Se
   const lineItemPriceId = line_items?.data[0]?.price?.id;
   if (!lineItemPriceId) throw new HttpError(400, 'No price id in line item');
 
-  const planId = Object.values(PaymentPlanId).find(planId => paymentPlans[planId].stripePriceId === lineItemPriceId);
+  const planId = Object.values(PaymentPlanId).find(planId => paymentPlans[planId].getStripePriceId() === lineItemPriceId);
   if (!planId) {
     throw new Error(`No plan with stripe price id ${lineItemPriceId}`);
   }

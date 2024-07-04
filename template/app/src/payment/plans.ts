@@ -6,7 +6,7 @@ export enum PaymentPlanId {
 }
 
 export interface PaymentPlan {
-  stripePriceId: string,
+  getStripePriceId: () => string,
   effect: PaymentPlanEffect
 }
 
@@ -15,15 +15,15 @@ export type PaymentPlanEffectKinds = PaymentPlanEffect extends { kind: infer K }
 
 export const paymentPlans: Record<PaymentPlanId, PaymentPlan> = {
   [PaymentPlanId.Hobby]: {
-    stripePriceId: requireNodeEnvVar('STRIPE_HOBBY_SUBSCRIPTION_PRICE_ID'),
+    getStripePriceId: () => requireNodeEnvVar('STRIPE_HOBBY_SUBSCRIPTION_PRICE_ID'),
     effect: { kind: 'subscription' }
   },
   [PaymentPlanId.Pro]: {
-    stripePriceId: requireNodeEnvVar('STRIPE_PRO_SUBSCRIPTION_PRICE_ID'),
+    getStripePriceId: () => requireNodeEnvVar('STRIPE_PRO_SUBSCRIPTION_PRICE_ID'),
     effect: { kind: 'subscription' }
   },
   [PaymentPlanId.Credits10]: {
-    stripePriceId: requireNodeEnvVar('STRIPE_CREDITS_PRICE_ID'),
+    getStripePriceId: () => requireNodeEnvVar('STRIPE_CREDITS_PRICE_ID'),
     effect: { kind: 'credits', amount: 10 }
   }
 }
