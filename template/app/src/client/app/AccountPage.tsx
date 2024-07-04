@@ -1,6 +1,6 @@
 import type { User } from 'wasp/entities';
 import type { SubscriptionStatusOptions } from '../../shared/types';
-import { SubscriptionPlanId } from '../../shared/constants'; 
+import { PaymentPlanId, parsePaymentPlanId } from '../../payment/plans'; 
 import { Link } from 'wasp/client/router';
 import { logout } from 'wasp/client/auth';
 import { z } from 'zod';
@@ -52,17 +52,6 @@ export default function AccountPage({ user }: { user: User }) {
 }
 
 function UserCurrentSubscriptionStatus(user: User) {
-  const prettyPrintSubscriptionPlan = (userSubscriptionPlan: User['subscriptionPlan']) => {
-    const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
-    if (!userSubscriptionPlan) console.error('User subscription plan is missing');
-    if (userSubscriptionPlan === SubscriptionPlanId.Hobby) {
-      return capitalizeFirstLetter(SubscriptionPlanId.Hobby);
-    }
-    if (userSubscriptionPlan === SubscriptionPlanId.Pro) {
-      return capitalizeFirstLetter(SubscriptionPlanId.Hobby);
-    }
-  };
-
   const prettyPrintEndOfBillingPeriod = (date: Date | null) => {
     if (!date) {
       console.error('User date paid is missing');
@@ -73,18 +62,21 @@ function UserCurrentSubscriptionStatus(user: User) {
     return ': ' + oneMonthFromNow.toLocaleDateString();
   };
 
-  function getSubscriptionMessage(subscriptionStatus: User['subscriptionStatus']) {
-    const plan = prettyPrintSubscriptionPlan(user.subscriptionPlan);
+  function getSubscriptionMessage(subscriptionStatus: string) {
+    if (!user.subscriptionPlan) {
+      throw new Error('User is missing a subscriptionPlan');
+    }
+    const planName = prettyPaymentPlanName(parsePaymentPlanId(user.subscriptionPlan));
     const endOfBillingPeriod = prettyPrintEndOfBillingPeriod(user.datePaid);
 
     // TODO: refactor this as a Record<SubscriptionStatusOptions, string> instead of a switch statement?
     switch (subscriptionStatus) {
       case 'active' satisfies SubscriptionStatusOptions:
-        return `${plan}`;
+        return `${planName}`;
       case 'past_due' satisfies SubscriptionStatusOptions:
-        return `Payment for your ${plan} plan is past due! Please update your subscription payment information.`;
+        return `Payment for your ${planName} plan is past due! Please update your subscription payment information.`;
       case 'cancel_at_period_end' satisfies SubscriptionStatusOptions:
-        return `Your ${plan} plan subscription has been canceled, but remains active until the end of the current billing period${endOfBillingPeriod}`;
+        return `Your ${planName} plan subscription has been canceled, but remains active until the end of the current billing period${endOfBillingPeriod}`;
       case 'deleted' satisfies SubscriptionStatusOptions:
         return `Your previous subscription has been canceled and is no longer active.`;
     }
@@ -109,6 +101,15 @@ function UserCurrentSubscriptionStatus(user: User) {
       <BuyMoreButton />
     </>
   );
+}
+
+function prettyPaymentPlanName (planId: PaymentPlanId): string {
+  const planToName: Record<PaymentPlanId, string> = {
+    [PaymentPlanId.Hobby]: 'Hobby',
+    [PaymentPlanId.Pro]: 'Pro',
+    [PaymentPlanId.Credits10]: '10 Credits'
+  };
+  return planToName[planId];
 }
 
 function BuyMoreButton() {

@@ -1,8 +1,7 @@
 import type { PrismaUserDelegate, SubscriptionStatusOptions } from '../../shared/types';
 import { Stripe } from 'stripe';
 import { stripe } from '../stripe/stripeClient';
-import { paymentPlans } from '../stripe/paymentPlans';
-import { SubscriptionPlanId } from '../../shared/constants'; 
+import { paymentPlans, PaymentPlanId } from '../../payment/plans';
 import { updateUserStripePaymentDetails } from './stripePaymentDetails';
 import { HttpError } from 'wasp/server';
 import { emailSender } from 'wasp/server/email';
@@ -23,14 +22,24 @@ export const handleCheckoutSessionCompleted = async (session: Stripe.Checkout.Se
   const lineItemPriceId = line_items?.data[0]?.price?.id;
   if (!lineItemPriceId) throw new HttpError(400, 'No price id in line item');
 
-  let subscriptionPlan: SubscriptionPlanId | undefined;
+  const planId = Object.values(PaymentPlanId).find(planId => paymentPlans[planId].stripePriceId === lineItemPriceId);
+  if (!planId) {
+    throw new Error(`No plan with stripe price id ${lineItemPriceId}`);
+  }
+  const plan = paymentPlans[planId];
+
+  let subscriptionPlan: PaymentPlanId | undefined;
   let numOfCreditsPurchased: number | undefined;
-  for (const paymentPlan of Object.values(paymentPlans)) {
-    if (paymentPlan.stripePriceID === lineItemPriceId) {
-      subscriptionPlan = paymentPlan.subscriptionPlan;
-      numOfCreditsPurchased = paymentPlan.credits;
-      break; 
-    }
+  switch (plan.effect.kind) {
+    case 'subscription':
+      subscriptionPlan = planId;
+      break;
+    case 'credits':
+      numOfCreditsPurchased = plan.effect.amount;
+      break;
+    default:
+      const exhaustiveCheck: never = plan.effect;
+      throw new Error(`Unhandled case: ${exhaustiveCheck}`);
   }
 
   return await updateUserStripePaymentDetails(

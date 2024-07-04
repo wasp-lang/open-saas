@@ -26,6 +26,8 @@ export async function fetchStripeCustomer(customerEmail: string) {
   }
 }
 
+export type StripeMode = 'subscription' | 'payment';
+
 export async function createStripeCheckoutSession({
   priceId,
   customerId,
@@ -33,7 +35,7 @@ export async function createStripeCheckoutSession({
 }: {
   priceId: string;
   customerId: string;
-  mode: 'subscription' | 'payment';
+  mode: StripeMode;
 }) {
   try {
     return await stripe.checkout.sessions.create({
