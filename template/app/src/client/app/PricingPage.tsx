@@ -12,33 +12,30 @@ const bestDealPaymentPlanId: PaymentPlanId = PaymentPlanId.SubscriptionPro;
 type PaymentPlan = {
   name: string;
   id: PaymentPlanId;
-  mode: 'subscription' | 'payment';
-  price: string;
-  description: string;
-  features: string[];
+  pricePerMonth?: string;
+  price?: string;
+  description?: string;
+  features?: string[];
 };
 
-export const paymentPlanArr: PaymentPlan[] = [
+const paymentPlans: PaymentPlan[] = [
   {
     name: 'Hobby',
     id: PaymentPlanId.SubscriptionHobby,
-    mode: 'subscription',
-    price: '$9.99',
+    pricePerMonth: '$9.99',
     description: 'All you need to get started',
     features: ['Limited monthly usage', 'Basic support'],
   },
   {
     name: 'Pro',
     id: PaymentPlanId.SubscriptionPro,
-    mode: 'subscription',
-    price: '$19.99',
+    pricePerMonth: '$19.99',
     description: 'Our most popular plan',
     features: ['Unlimited monthly usage', 'Priority customer support'],
   },
   {
     name: '10 Credits',
     id: PaymentPlanId.Credits10,
-    mode: 'payment',
     price: '$9.99',
     description: 'One-time purchase of 10 credits for your account',
     features: ['Use credits for e.g. OpenAI API calls', 'No expiration date'],
@@ -99,7 +96,7 @@ const PricingPage = () => {
           <span className='px-2 py-1 bg-gray-100 rounded-md text-gray-500'>4242 4242 4242 4242 4242</span>
         </p>
         <div className='isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 lg:gap-x-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3'>
-          {paymentPlanArr.map((plan) => (
+          {paymentPlans.map((plan) => (
             <div
               key={plan.id}
               className={cn(
@@ -128,13 +125,13 @@ const PricingPage = () => {
                 </div>
                 <p className='mt-4 text-sm leading-6 text-gray-600 dark:text-white'>{plan.description}</p>
                 <p className='mt-6 flex items-baseline gap-x-1 dark:text-white'>
-                  <span className='text-4xl font-bold tracking-tight text-gray-900 dark:text-white'>{plan.price}</span>
+                  <span className='text-4xl font-bold tracking-tight text-gray-900 dark:text-white'>{plan.pricePerMonth || plan.price}</span>
                   <span className='text-sm font-semibold leading-6 text-gray-600 dark:text-white'>
-                    {plan.mode === 'subscription' && '/month'}
+                    {plan.pricePerMonth && '/ month'}
                   </span>
                 </p>
                 <ul role='list' className='mt-8 space-y-3 text-sm leading-6 text-gray-600 dark:text-white'>
-                  {plan.features.map((feature) => (
+                  {plan.features && plan.features.map((feature) => (
                     <li key={feature} className='flex gap-x-3'>
                       <AiFillCheckCircle className='h-6 w-5 flex-none text-yellow-500' aria-hidden='true' />
                       {feature}
