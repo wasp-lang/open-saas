@@ -10,7 +10,7 @@ export interface PaymentPlan {
   effect: PaymentPlanEffect
 }
 
-export type PaymentPlanEffect = { kind: 'subscription' } | { kind: 'credits', amount: number }
+export type PaymentPlanEffect = { kind: 'subscription' } | { kind: 'credits', amount: number };
 export type PaymentPlanEffectKinds = PaymentPlanEffect extends { kind: infer K } ? K : never;
 
 export const paymentPlans: Record<PaymentPlanId, PaymentPlan> = {

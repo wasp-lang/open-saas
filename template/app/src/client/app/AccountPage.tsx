@@ -69,17 +69,14 @@ function UserCurrentSubscriptionStatus(user: User) {
     const planName = prettyPaymentPlanName(parsePaymentPlanId(user.subscriptionPlan));
     const endOfBillingPeriod = prettyPrintEndOfBillingPeriod(user.datePaid);
 
-    // TODO: refactor this as a Record<SubscriptionStatusOptions, string> instead of a switch statement?
-    switch (subscriptionStatus) {
-      case 'active' satisfies SubscriptionStatusOptions:
-        return `${planName}`;
-      case 'past_due' satisfies SubscriptionStatusOptions:
-        return `Payment for your ${planName} plan is past due! Please update your subscription payment information.`;
-      case 'cancel_at_period_end' satisfies SubscriptionStatusOptions:
-        return `Your ${planName} plan subscription has been canceled, but remains active until the end of the current billing period${endOfBillingPeriod}`;
-      case 'deleted' satisfies SubscriptionStatusOptions:
-        return `Your previous subscription has been canceled and is no longer active.`;
-    }
+    const statusToMessage: Record<SubscriptionStatusOptions, string> = {
+      active: `${planName}`,
+      past_due: `Payment for your ${planName} plan is past due! Please update your subscription payment information.`,
+      cancel_at_period_end: `Your ${planName} plan subscription has been canceled, but remains active until the end of the current billing period${endOfBillingPeriod}`,
+      deleted: `Your previous subscription has been canceled and is no longer active.`
+    };
+
+    return statusToMessage[subscriptionStatus as SubscriptionStatusOptions];
   }
 
   if (user.subscriptionStatus) {
@@ -88,7 +85,7 @@ function UserCurrentSubscriptionStatus(user: User) {
         <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
           {getSubscriptionMessage(user.subscriptionStatus)}
         </dd>
-        {user.subscriptionStatus !== ('deleted' satisfies SubscriptionStatusOptions) ? <CustomerPortalButton /> : <BuyMoreButton />}
+        {user.subscriptionStatus as SubscriptionStatusOptions !== 'deleted' ? <CustomerPortalButton /> : <BuyMoreButton />}
       </>
     );
   }
