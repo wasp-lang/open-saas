@@ -1,5 +1,5 @@
 import type { SubscriptionStatusOptions, PrismaUserDelegate  } from '../../shared/types';
-import { SubscriptionPlanId } from '../../shared/constants'; 
+import { SubscriptionPlanId } from '../../payment/plans'; 
 
 type UserStripePaymentDetails = {
   userStripeId: string;

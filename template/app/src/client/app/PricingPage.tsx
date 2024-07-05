@@ -1,13 +1,13 @@
 import { useAuth } from 'wasp/client/auth';
 import { stripePayment } from 'wasp/client/operations';
-import { PaymentPlanId, paymentPlans } from '../../payment/plans';
+import { CreditsPlanId, PaymentPlanId, SubscriptionPlanId, isSubscriptionPlan, paymentPlanIds } from '../../payment/plans';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { cn } from '../../shared/utils';
 import { z } from 'zod';
 
-const bestDealPaymentPlanId: PaymentPlanId = PaymentPlanId.Pro;
+const bestDealPaymentPlanId: PaymentPlanId = SubscriptionPlanId.Pro;
 
 interface PaymentPlanCard {
   name: string;
@@ -17,19 +17,19 @@ interface PaymentPlanCard {
 };
 
 export const paymentPlanCards: Record<PaymentPlanId, PaymentPlanCard> = {
-  [PaymentPlanId.Hobby]: {
+  [SubscriptionPlanId.Hobby]: {
     name: 'Hobby',
     price: '$9.99',
     description: 'All you need to get started',
     features: ['Limited monthly usage', 'Basic support'],
   },
-  [PaymentPlanId.Pro]: {
+  [SubscriptionPlanId.Pro]: {
     name: 'Pro',
     price: '$19.99',
     description: 'Our most popular plan',
     features: ['Unlimited monthly usage', 'Priority customer support'],
   },
-  [PaymentPlanId.Credits10]: {
+  [CreditsPlanId.Credits10]: {
     name: '10 Credits',
     price: '$9.99',
     description: 'One-time purchase of 10 credits for your account',
@@ -91,7 +91,7 @@ const PricingPage = () => {
           <span className='px-2 py-1 bg-gray-100 rounded-md text-gray-500'>4242 4242 4242 4242 4242</span>
         </p>
         <div className='isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 lg:gap-x-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3'>
-          {Object.values(PaymentPlanId).map((planId) => (
+          {paymentPlanIds.map((planId) => (
             <div
               key={planId}
               className={cn(
@@ -126,7 +126,7 @@ const PricingPage = () => {
                     {paymentPlanCards[planId].price}
                   </span>
                   <span className='text-sm font-semibold leading-6 text-gray-600 dark:text-white'>
-                    {paymentPlans[planId].effect.kind === 'subscription' && '/month'}
+                    {isSubscriptionPlan(planId) && '/month'}
                   </span>
                 </p>
                 <ul role='list' className='mt-8 space-y-3 text-sm leading-6 text-gray-600 dark:text-white'>

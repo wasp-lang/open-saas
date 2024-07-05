@@ -1,6 +1,6 @@
 import type { User } from 'wasp/entities';
 import type { SubscriptionStatusOptions } from '../../shared/types';
-import { PaymentPlanId, parsePaymentPlanId } from '../../payment/plans'; 
+import { PaymentPlanId, SubscriptionPlanId, parseSubscriptionPlanId } from '../../payment/plans'; 
 import { Link } from 'wasp/client/router';
 import { logout } from 'wasp/client/auth';
 import { z } from 'zod';
@@ -66,7 +66,7 @@ function UserCurrentSubscriptionStatus(user: User) {
     if (!user.subscriptionPlan) {
       throw new Error('User is missing a subscriptionPlan');
     }
-    const planName = prettyPaymentPlanName(parsePaymentPlanId(user.subscriptionPlan));
+    const planName = prettySubscriptionPlanName(parseSubscriptionPlanId(user.subscriptionPlan));
     const endOfBillingPeriod = prettyPrintEndOfBillingPeriod(user.datePaid);
 
     // TODO: refactor this as a Record<SubscriptionStatusOptions, string> instead of a switch statement?
@@ -103,11 +103,10 @@ function UserCurrentSubscriptionStatus(user: User) {
   );
 }
 
-function prettyPaymentPlanName (planId: PaymentPlanId): string {
-  const planToName: Record<PaymentPlanId, string> = {
-    [PaymentPlanId.Hobby]: 'Hobby',
-    [PaymentPlanId.Pro]: 'Pro',
-    [PaymentPlanId.Credits10]: '10 Credits'
+function prettySubscriptionPlanName (planId: SubscriptionPlanId): string {
+  const planToName: Record<SubscriptionPlanId, string> = {
+    [SubscriptionPlanId.Hobby]: 'Hobby',
+    [SubscriptionPlanId.Pro]: 'Pro'
   };
   return planToName[planId];
 }

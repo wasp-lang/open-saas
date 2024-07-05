@@ -1,10 +1,11 @@
 import type { PrismaUserDelegate, SubscriptionStatusOptions } from '../../shared/types';
 import { Stripe } from 'stripe';
 import { stripe } from '../stripe/stripeClient';
-import { paymentPlans, PaymentPlanId } from '../../payment/plans';
+import { SubscriptionPlanId, getCreditsPlanAmount, getPaymentPlanStripePriceId, paymentPlanIds } from '../../payment/plans';
 import { updateUserStripePaymentDetails } from './stripePaymentDetails';
 import { HttpError } from 'wasp/server';
 import { emailSender } from 'wasp/server/email';
+import { isCreditsPlan, isSubscriptionPlan } from 'wasp/ext-src/payment/plans';
 
 const validateUserStripeIdOrThrow = (userStripeId: Stripe.Checkout.Session['customer']) => {
   if (!userStripeId) throw new HttpError(400, 'No customer id');
@@ -22,24 +23,19 @@ export const handleCheckoutSessionCompleted = async (session: Stripe.Checkout.Se
   const lineItemPriceId = line_items?.data[0]?.price?.id;
   if (!lineItemPriceId) throw new HttpError(400, 'No price id in line item');
 
-  const planId = Object.values(PaymentPlanId).find(planId => paymentPlans[planId].getStripePriceId() === lineItemPriceId);
+  const planId = paymentPlanIds.find(planId => getPaymentPlanStripePriceId(planId) === lineItemPriceId);
   if (!planId) {
     throw new Error(`No plan with stripe price id ${lineItemPriceId}`);
   }
-  const plan = paymentPlans[planId];
 
-  let subscriptionPlan: PaymentPlanId | undefined;
+  let subscriptionPlan: SubscriptionPlanId | undefined;
   let numOfCreditsPurchased: number | undefined;
-  switch (plan.effect.kind) {
-    case 'subscription':
-      subscriptionPlan = planId;
-      break;
-    case 'credits':
-      numOfCreditsPurchased = plan.effect.amount;
-      break;
-    default:
-      const exhaustiveCheck: never = plan.effect;
-      throw new Error(`Unhandled case: ${exhaustiveCheck}`);
+  if (isSubscriptionPlan(planId)) {
+    subscriptionPlan = planId;
+  } else if (isCreditsPlan(planId)) {
+    numOfCreditsPurchased = getCreditsPlanAmount(planId);
+  } else {
+    throw new Error(`Plan ${planId} is neither subscription nor credits plan!`);
   }
 
   return await updateUserStripePaymentDetails(

@@ -9,7 +9,7 @@ import {
   type DeleteTask,
   type UpdateTask,
 } from 'wasp/server/operations';
-import { PaymentPlanId, paymentPlans, type PaymentPlanEffect, type PaymentPlanEffectKinds } from '../payment/plans';
+import { PaymentPlanId, getPaymentPlanStripePriceId, isCreditsPlan, isSubscriptionPlan } from '../payment/plans';
 import type { GeneratedSchedule, StripePaymentResult } from '../shared/types';
 import { fetchStripeCustomer, createStripeCheckoutSession, type StripeMode } from './stripe/checkoutUtils.js';
 import OpenAI from 'openai';
@@ -34,13 +34,11 @@ export const stripePayment: StripePayment<PaymentPlanId, StripePaymentResult> = 
     );
   }
 
-  const paymentPlan = paymentPlans[paymentPlanId];
-
   const customer = await fetchStripeCustomer(userEmail);
   const session = await createStripeCheckoutSession({
-    priceId: paymentPlan.getStripePriceId(),
+    priceId: getPaymentPlanStripePriceId(paymentPlanId),
     customerId: customer.id,
-    mode: paymentPlanEffectToStripeMode(paymentPlan.effect)
+    mode: getPaymentPlanStripeMode(paymentPlanId)
   });
   if (!customer) {
     throw new HttpError(500, 'Error fetching customer');
@@ -65,12 +63,14 @@ export const stripePayment: StripePayment<PaymentPlanId, StripePaymentResult> = 
   };
 };
 
-function paymentPlanEffectToStripeMode (planEffect: PaymentPlanEffect): StripeMode {
-  const effectToMode: Record<PaymentPlanEffectKinds, StripeMode> = {
-    'subscription': 'subscription',
-    'credits': 'payment'
-  };
-  return effectToMode[planEffect.kind];
+function getPaymentPlanStripeMode (planId: PaymentPlanId): StripeMode {
+  if (isSubscriptionPlan(planId)) {
+    return 'subscription';
+  }
+  if (isCreditsPlan(planId)) {
+    return 'payment';
+  }
+  throw new Error(`Plan with id ${planId} is neither subscription nor credit plan!`);
 }
 
 type GptPayload = {

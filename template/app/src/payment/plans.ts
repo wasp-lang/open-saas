@@ -1,31 +1,31 @@
 
-export enum PaymentPlanId {
+export enum SubscriptionPlanId {
   Hobby = 'hobby',
-  Pro = 'pro',
+  Pro = 'pro'
+}
+
+export enum CreditsPlanId {
   Credits10 = 'credits10'
 }
 
-export interface PaymentPlan {
-  getStripePriceId: () => string,
-  effect: PaymentPlanEffect
+export type PaymentPlanId = SubscriptionPlanId | CreditsPlanId
+export const paymentPlanIds: PaymentPlanId[] = [...Object.values(SubscriptionPlanId), ...Object.values(CreditsPlanId)];
+
+
+export function getPaymentPlanStripePriceId (planId: PaymentPlanId): string {
+  const planToPriceId: Record<PaymentPlanId, string> = {
+    [SubscriptionPlanId.Hobby]: requireNodeEnvVar('STRIPE_HOBBY_SUBSCRIPTION_PRICE_ID'),
+    [SubscriptionPlanId.Pro]: requireNodeEnvVar('STRIPE_PRO_SUBSCRIPTION_PRICE_ID'),
+    [CreditsPlanId.Credits10]: requireNodeEnvVar('STRIPE_CREDITS_PRICE_ID'),
+  };
+  return planToPriceId[planId];
 }
 
-export type PaymentPlanEffect = { kind: 'subscription' } | { kind: 'credits', amount: number }
-export type PaymentPlanEffectKinds = PaymentPlanEffect extends { kind: infer K } ? K : never;
-
-export const paymentPlans: Record<PaymentPlanId, PaymentPlan> = {
-  [PaymentPlanId.Hobby]: {
-    getStripePriceId: () => requireNodeEnvVar('STRIPE_HOBBY_SUBSCRIPTION_PRICE_ID'),
-    effect: { kind: 'subscription' }
-  },
-  [PaymentPlanId.Pro]: {
-    getStripePriceId: () => requireNodeEnvVar('STRIPE_PRO_SUBSCRIPTION_PRICE_ID'),
-    effect: { kind: 'subscription' }
-  },
-  [PaymentPlanId.Credits10]: {
-    getStripePriceId: () => requireNodeEnvVar('STRIPE_CREDITS_PRICE_ID'),
-    effect: { kind: 'credits', amount: 10 }
-  }
+export function getCreditsPlanAmount (planId: CreditsPlanId): number {
+  const planToAmount: Record<CreditsPlanId, number> = {
+    [CreditsPlanId.Credits10]: 10,
+  };
+  return planToAmount[planId];
 }
 
 // TODO: Move to some server/utils.js?
@@ -38,14 +38,22 @@ function requireNodeEnvVar(name: string): string {
   }
 }
 
-export function parsePaymentPlanId(planId: string): PaymentPlanId {
-  if ((Object.values(PaymentPlanId) as string[]).includes(planId)) {
-    return planId as PaymentPlanId;
+export function parseSubscriptionPlanId(planId: string): SubscriptionPlanId {
+  if ((Object.values(SubscriptionPlanId) as string[]).includes(planId)) {
+    return planId as SubscriptionPlanId;
   } else {
-    throw new Error(`Invalid PaymentPlanId: ${planId}`);
+    throw new Error(`Invalid SubscriptionPlanId: ${planId}`);
   }
 }
 
-export function getSubscriptionPaymentPlanIds(): PaymentPlanId[] {
-  return Object.values(PaymentPlanId).filter(planId => paymentPlans[planId].effect.kind === 'subscription');
+export function getSubscriptionPaymentPlanIds(): SubscriptionPlanId[] {
+  return Object.values(SubscriptionPlanId);
+}
+
+export function isSubscriptionPlan(planId: PaymentPlanId): planId is SubscriptionPlanId {
+  return (Object.values(SubscriptionPlanId) as string[]).includes(planId);
+}
+
+export function isCreditsPlan(planId: PaymentPlanId): planId is CreditsPlanId {
+  return (Object.values(CreditsPlanId) as string[]).includes(planId);
 }
