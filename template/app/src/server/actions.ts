@@ -9,10 +9,9 @@ import {
   type DeleteTask,
   type UpdateTask,
 } from 'wasp/server/operations';
-import { getStripePriceIdForPaymentPlanId, getModeForPaymentPlanId } from './stripe/paymentPlans';
-import { PaymentPlanId } from '../shared/constants';
+import { PaymentPlanId, paymentPlans, type PaymentPlanEffect, type PaymentPlanEffectKinds } from '../payment/plans';
 import type { GeneratedSchedule, StripePaymentResult } from '../shared/types';
-import { fetchStripeCustomer, createStripeCheckoutSession } from './stripe/checkoutUtils.js';
+import { fetchStripeCustomer, createStripeCheckoutSession, type StripeMode } from './stripe/checkoutUtils.js';
 import OpenAI from 'openai';
 
 const openai = setupOpenAI();
@@ -35,17 +34,13 @@ export const stripePayment: StripePayment<PaymentPlanId, StripePaymentResult> = 
     );
   }
 
-  const priceId = getStripePriceIdForPaymentPlanId(paymentPlanId);
-  const mode = getModeForPaymentPlanId(paymentPlanId);
-  if (!priceId || !mode) {
-    throw new HttpError(404, 'Invalid Payment Plan'); 
-  }
+  const paymentPlan = paymentPlans[paymentPlanId];
 
-  let customer =  await fetchStripeCustomer(userEmail);
-  let session = await createStripeCheckoutSession({
-    priceId,
+  const customer = await fetchStripeCustomer(userEmail);
+  const session = await createStripeCheckoutSession({
+    priceId: paymentPlan.getStripePriceId(),
     customerId: customer.id,
-    mode,
+    mode: paymentPlanEffectToStripeMode(paymentPlan.effect)
   });
   if (!customer) {
     throw new HttpError(500, 'Error fetching customer');
@@ -69,6 +64,14 @@ export const stripePayment: StripePayment<PaymentPlanId, StripePaymentResult> = 
     sessionId: session.id,
   };
 };
+
+function paymentPlanEffectToStripeMode (planEffect: PaymentPlanEffect): StripeMode {
+  const effectToMode: Record<PaymentPlanEffectKinds, StripeMode> = {
+    'subscription': 'subscription',
+    'credits': 'payment'
+  };
+  return effectToMode[planEffect.kind];
+}
 
 type GptPayload = {
   hours: string;
