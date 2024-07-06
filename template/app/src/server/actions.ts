@@ -10,7 +10,6 @@ import {
   type UpdateTask,
 } from 'wasp/server/operations';
 import { PaymentPlanId, paymentPlans, type PaymentPlanEffect, type PaymentPlanEffectKinds } from '../payment/plans';
-import type { GeneratedSchedule, StripePaymentResult } from '../shared/types';
 import { fetchStripeCustomer, createStripeCheckoutSession, type StripeMode } from './stripe/checkoutUtils.js';
 import OpenAI from 'openai';
 
@@ -21,6 +20,11 @@ function setupOpenAI() {
   }
   return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 }
+
+export type StripePaymentResult = {
+  sessionUrl: string | null;
+  sessionId: string;
+};
 
 export const stripePayment: StripePayment<PaymentPlanId, StripePaymentResult> = async (paymentPlanId, context) => {
   if (!context.user) {
@@ -75,6 +79,18 @@ function paymentPlanEffectToStripeMode (planEffect: PaymentPlanEffect): StripeMo
 
 type GptPayload = {
   hours: string;
+};
+
+type GeneratedSchedule = {
+  mainTasks: {
+    name: string;
+    priority: 'low' | 'medium' | 'high';
+  }[]; // Main tasks provided by user, ordered by priority
+  subtasks: {
+    description: string; 
+    time: number; // total time it takes to complete given main task in hours, e.g. 2.75
+    mainTaskName: string; // name of main task related to subtask
+  }[]; 
 };
 
 export const generateGptResponse: GenerateGptResponse<GptPayload, GeneratedSchedule> = async ({ hours }, context) => {
