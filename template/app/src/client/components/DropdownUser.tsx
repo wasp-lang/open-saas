@@ -2,7 +2,7 @@ import { type User } from 'wasp/entities';
 import { useEffect, useRef, useState } from 'react';
 import { CgProfile } from 'react-icons/cg';
 import { UserMenuItems } from './UserMenuItems';
-import { cn } from '../../shared/utils';
+import { cn } from '../cn';
 
 const DropdownUser = ({ user }: { user: Partial<User> }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);

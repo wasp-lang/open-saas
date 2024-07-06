@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { UpArrow } from '../images/icon/icons-arrows';
 import type { DailyStatsProps } from '../common/types';
-import { cn } from '../../../shared/utils';
+import { cn } from '../../cn';
 
 const TotalSignupsCard = ({ dailyStats, isLoading }: DailyStatsProps) => {
   const isDeltaPositive = useMemo(() => {

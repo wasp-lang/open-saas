@@ -20,8 +20,8 @@ export async function fetchStripeCustomer(customerEmail: string) {
       customer = stripeCustomers.data[0];
     }
     return customer;
-  } catch (error: any) {
-    console.error(error.message);
+  } catch (error) {
+    console.error(error);
     throw error;
   }
 }
@@ -54,8 +54,8 @@ export async function createStripeCheckoutSession({
       },
       customer: customerId,
     });
-  } catch (error: any) {
-    console.error(error.message);
+  } catch (error) {
+    console.error(error);
     throw error;
   }
 }

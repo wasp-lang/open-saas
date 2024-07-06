@@ -1,4 +1,4 @@
-import { cn } from '../../../shared/utils';
+import { cn } from '../../cn';
 import { UpArrow, DownArrow } from '../images/icon/icons-arrows';
 
 type PageViewsStats = {

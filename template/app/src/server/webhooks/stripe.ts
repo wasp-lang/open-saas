@@ -1,9 +1,13 @@
 import { type MiddlewareConfigFn, HttpError } from 'wasp/server';
 import { type StripeWebhook } from 'wasp/server/api';
+import { type PrismaUserDelegate } from './stripePaymentDetails';
 import express from 'express';
 import { Stripe } from 'stripe';
 import { stripe } from '../stripe/stripeClient';
-import { handleCheckoutSessionCompleted, handleCustomerSubscriptionDeleted, handleCustomerSubscriptionUpdated, handleInvoicePaid } from './stripeEventHandlers';
+import { paymentPlans, PaymentPlanId, SubscriptionStatusOptions } from '../../payment/plans';
+import { updateUserStripePaymentDetails } from './stripePaymentDetails';
+import { emailSender } from 'wasp/server/email';
+import { z } from 'zod';
 
 export const stripeWebhook: StripeWebhook = async (request, response, context) => {
   const secret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -54,3 +58,120 @@ export const stripeMiddlewareFn: MiddlewareConfigFn = (middlewareConfig) => {
   middlewareConfig.set('express.raw', express.raw({ type: 'application/json' }));
   return middlewareConfig;
 };
+
+export async function handleCheckoutSessionCompleted(
+  session: Stripe.Checkout.Session,
+  prismaUserDelegate: PrismaUserDelegate
+) {
+  const userStripeId = validateUserStripeIdOrThrow(session.customer);
+  const { line_items } = await stripe.checkout.sessions.retrieve(session.id, {
+    expand: ['line_items'],
+  });
+  console.log('line_items: ', line_items);
+  const lineItemPriceId = validateAndUseLineItemData(line_items);
+
+  const planId = Object.values(PaymentPlanId).find(
+    (planId) => paymentPlans[planId].getStripePriceId() === lineItemPriceId
+  );
+  if (!planId) {
+    throw new Error(`No plan with stripe price id ${lineItemPriceId}`);
+  }
+  const plan = paymentPlans[planId];
+
+  let subscriptionPlan: PaymentPlanId | undefined;
+  let numOfCreditsPurchased: number | undefined;
+  switch (plan.effect.kind) {
+    case 'subscription':
+      subscriptionPlan = planId;
+      break;
+    case 'credits':
+      numOfCreditsPurchased = plan.effect.amount;
+      break;
+    default:
+      const exhaustiveCheck: never = plan.effect;
+      throw new Error(`Unhandled case: ${exhaustiveCheck}`);
+  }
+
+  return await updateUserStripePaymentDetails(
+    { userStripeId, subscriptionPlan, numOfCreditsPurchased, datePaid: new Date() },
+    prismaUserDelegate
+  );
+}
+
+export async function handleInvoicePaid(invoice: Stripe.Invoice, prismaUserDelegate: PrismaUserDelegate) {
+  const userStripeId = validateUserStripeIdOrThrow(invoice.customer);
+  const datePaid = new Date(invoice.period_start * 1000);
+  return await updateUserStripePaymentDetails({ userStripeId, datePaid }, prismaUserDelegate);
+}
+
+export async function handleCustomerSubscriptionUpdated(
+  subscription: Stripe.Subscription,
+  prismaUserDelegate: PrismaUserDelegate
+) {
+  const userStripeId = validateUserStripeIdOrThrow(subscription.customer);
+  let subscriptionStatus: SubscriptionStatusOptions | undefined;
+
+  switch (subscription.status as Stripe.Subscription.Status) {
+    case 'active':
+      subscriptionStatus = 'active';
+      break;
+    case 'past_due':
+      subscriptionStatus = 'past_due';
+      break;
+  }
+  if (subscription.cancel_at_period_end) {
+    subscriptionStatus = 'cancel_at_period_end';
+  }
+  if (!subscriptionStatus) throw new HttpError(400, 'Subscription status not handled');
+
+  const user = await updateUserStripePaymentDetails({ userStripeId, subscriptionStatus }, prismaUserDelegate);
+
+  if (subscription.cancel_at_period_end) {
+    if (user.email) {
+      await emailSender.send({
+        to: user.email,
+        subject: 'We hate to see you go :(',
+        text: 'We hate to see you go. Here is a sweet offer...',
+        html: 'We hate to see you go. Here is a sweet offer...',
+      });
+    }
+  }
+
+  return user;
+}
+
+export async function handleCustomerSubscriptionDeleted(
+  subscription: Stripe.Subscription,
+  prismaUserDelegate: PrismaUserDelegate
+) {
+  const userStripeId = validateUserStripeIdOrThrow(subscription.customer);
+  return await updateUserStripePaymentDetails({ userStripeId, subscriptionStatus: 'deleted' }, prismaUserDelegate);
+}
+
+const LineItemsPriceSchema = z.object({
+  data: z.array(
+    z.object({
+      price: z.object({
+        id: z.string(),
+      }),
+    })
+  ),
+});
+
+function validateAndUseLineItemData(line_items: Stripe.ApiList<Stripe.LineItem> | undefined) {
+  const result = LineItemsPriceSchema.safeParse(line_items);
+
+  if (!result.success) {
+    throw new HttpError(400, 'No price id in line item');
+  }
+  if (result.data.data.length > 1) {
+    throw new HttpError(400, 'More than one line item in session');
+  }
+  return result.data.data[0].price.id;
+}
+
+function validateUserStripeIdOrThrow(userStripeId: Stripe.Checkout.Session['customer']) {
+  if (!userStripeId) throw new HttpError(400, 'No customer id');
+  if (typeof userStripeId !== 'string') throw new HttpError(400, 'Customer id is not a string');
+  return userStripeId;
+}

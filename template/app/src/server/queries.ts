@@ -6,7 +6,7 @@ import {
   type GetPaginatedUsers,
   type GetAllTasksByUser,
 } from 'wasp/server/operations';
-import { type SubscriptionStatusOptions } from '../shared/types.js';
+import { type SubscriptionStatusOptions } from '../payment/plans';
 
 type DailyStatsWithSources = DailyStats & {
   sources: PageViewSource[];

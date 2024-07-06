@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import SwitcherOne from './SwitcherOne';
 import Loader from '../common/Loader';
 import DropdownEditDelete from './DropdownEditDelete';
-import { type SubscriptionStatusOptions } from '../../../shared/types';
+import { type SubscriptionStatusOptions } from '../../../payment/plans';
 
 const UsersTable = () => {
   const [skip, setskip] = useState(0);

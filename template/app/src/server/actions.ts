@@ -9,6 +9,7 @@ import {
   type DeleteTask,
   type UpdateTask,
 } from 'wasp/server/operations';
+import { GeneratedSchedule } from '../gpt/schedule';
 import { PaymentPlanId, paymentPlans, type PaymentPlanEffect, type PaymentPlanEffectKinds } from '../payment/plans';
 import { fetchStripeCustomer, createStripeCheckoutSession, type StripeMode } from './stripe/checkoutUtils.js';
 import OpenAI from 'openai';
@@ -39,19 +40,12 @@ export const stripePayment: StripePayment<PaymentPlanId, StripePaymentResult> = 
   }
 
   const paymentPlan = paymentPlans[paymentPlanId];
-
   const customer = await fetchStripeCustomer(userEmail);
   const session = await createStripeCheckoutSession({
     priceId: paymentPlan.getStripePriceId(),
     customerId: customer.id,
     mode: paymentPlanEffectToStripeMode(paymentPlan.effect)
   });
-  if (!customer) {
-    throw new HttpError(500, 'Error fetching customer');
-  }
-  if (!session) {
-    throw new HttpError(500, 'Error creating session');
-  }
 
   await context.entities.User.update({
     where: {
@@ -79,18 +73,6 @@ function paymentPlanEffectToStripeMode (planEffect: PaymentPlanEffect): StripeMo
 
 type GptPayload = {
   hours: string;
-};
-
-type GeneratedSchedule = {
-  mainTasks: {
-    name: string;
-    priority: 'low' | 'medium' | 'high';
-  }[]; // Main tasks provided by user, ordered by priority
-  subtasks: {
-    description: string; 
-    time: number; // total time it takes to complete given main task in hours, e.g. 2.75
-    mainTaskName: string; // name of main task related to subtask
-  }[]; 
 };
 
 export const generateGptResponse: GenerateGptResponse<GptPayload, GeneratedSchedule> = async ({ hours }, context) => {

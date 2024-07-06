@@ -1,5 +1,5 @@
 import type { User } from 'wasp/entities';
-import type { SubscriptionStatusOptions } from '../../shared/types';
+import type { SubscriptionStatusOptions } from '../../payment/plans';
 import { PaymentPlanId, parsePaymentPlanId } from '../../payment/plans'; 
 import { Link } from 'wasp/client/router';
 import { logout } from 'wasp/client/auth';
@@ -28,7 +28,7 @@ export default function AccountPage({ user }: { user: User }) {
             )}
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
               <dt className='text-sm font-medium text-gray-500 dark:text-white'>Your Plan</dt>
-              <UserCurrentSubscriptionStatus {...user} />
+              <UserCurrentPaymentPlan {...user} />
             </div>
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
               <dt className='text-sm font-medium text-gray-500 dark:text-white'>About</dt>
@@ -51,41 +51,14 @@ export default function AccountPage({ user }: { user: User }) {
   );
 }
 
-function UserCurrentSubscriptionStatus(user: User) {
-  const prettyPrintEndOfBillingPeriod = (date: Date | null) => {
-    if (!date) {
-      console.error('User date paid is missing');
-      return '.';
-    }
-    const oneMonthFromNow = new Date(date);
-    oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
-    return ': ' + oneMonthFromNow.toLocaleDateString();
-  };
-
-  function getSubscriptionMessage(subscriptionStatus: string) {
-    if (!user.subscriptionPlan) {
-      throw new Error('User is missing a subscriptionPlan');
-    }
-    const planName = prettyPaymentPlanName(parsePaymentPlanId(user.subscriptionPlan));
-    const endOfBillingPeriod = prettyPrintEndOfBillingPeriod(user.datePaid);
-
-    const statusToMessage: Record<SubscriptionStatusOptions, string> = {
-      active: `${planName}`,
-      past_due: `Payment for your ${planName} plan is past due! Please update your subscription payment information.`,
-      cancel_at_period_end: `Your ${planName} plan subscription has been canceled, but remains active until the end of the current billing period${endOfBillingPeriod}`,
-      deleted: `Your previous subscription has been canceled and is no longer active.`
-    };
-
-    return statusToMessage[subscriptionStatus as SubscriptionStatusOptions];
-  }
-
-  if (user.subscriptionStatus) {
+function UserCurrentPaymentPlan({ subscriptionPlan, subscriptionStatus, datePaid, credits }: Pick<User, 'subscriptionPlan' | 'subscriptionStatus' | 'datePaid' | 'credits'>) { 
+  if (subscriptionStatus && subscriptionPlan) {
     return (
       <>
         <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
-          {getSubscriptionMessage(user.subscriptionStatus)}
+          {getUserSubscriptionPlanMessage({ subscriptionPlan: subscriptionPlan, subscriptionStatus: subscriptionStatus, datePaid: datePaid })}
         </dd>
-        {user.subscriptionStatus as SubscriptionStatusOptions !== 'deleted' ? <CustomerPortalButton /> : <BuyMoreButton />}
+        {subscriptionStatus as SubscriptionStatusOptions !== 'deleted' ? <CustomerPortalButton /> : <BuyMoreButton />}
       </>
     );
   }
@@ -93,11 +66,45 @@ function UserCurrentSubscriptionStatus(user: User) {
   return (
     <>
       <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
-        Credits remaining: {user.credits}
+        Credits remaining: {credits}
       </dd>
       <BuyMoreButton />
     </>
   );
+}
+
+function prettyPrintEndOfBillingPeriod(date: Date | null) {
+  if (!date) {
+    throw new Error('User date paid is missing');
+  }
+  const oneMonthFromNow = new Date(date);
+  oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
+  return ': ' + oneMonthFromNow.toLocaleDateString();
+}
+
+function getUserSubscriptionPlanMessage({
+  subscriptionPlan,
+  subscriptionStatus,
+  datePaid,
+}: {
+  subscriptionPlan: string | null;
+  subscriptionStatus: string | null;
+  datePaid: Date | null;
+}) {
+  if (!subscriptionPlan) {
+    throw new Error('User is missing a subscriptionPlan');
+  }
+  const planName = prettyPaymentPlanName(parsePaymentPlanId(subscriptionPlan));
+  const endOfBillingPeriod = prettyPrintEndOfBillingPeriod(datePaid);
+
+  const statusToMessage: Record<SubscriptionStatusOptions, string> = {
+    active: `${planName}`,
+    past_due: `Payment for your ${planName} plan is past due! Please update your subscription payment information.`,
+    cancel_at_period_end: `Your ${planName} plan subscription has been canceled, but remains active until the end of the current billing period${endOfBillingPeriod}`,
+    deleted: `Your previous subscription has been canceled and is no longer active.`,
+  };
+
+  return statusToMessage[subscriptionStatus as SubscriptionStatusOptions];
 }
 
 function prettyPaymentPlanName (planId: PaymentPlanId): string {

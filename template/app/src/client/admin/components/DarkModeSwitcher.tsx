@@ -1,4 +1,4 @@
-import { cn } from '../../../shared/utils';
+import { cn } from '../../cn';
 import useColorMode from '../../hooks/useColorMode';
 
 const DarkModeSwitcher = () => {

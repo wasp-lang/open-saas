@@ -1,32 +1,33 @@
+export type SubscriptionStatusOptions = 'past_due' | 'cancel_at_period_end' | 'active' | 'deleted';
 
 export enum PaymentPlanId {
   Hobby = 'hobby',
   Pro = 'pro',
-  Credits10 = 'credits10'
+  Credits10 = 'credits10',
 }
 
 export interface PaymentPlan {
-  getStripePriceId: () => string,
-  effect: PaymentPlanEffect
+  getStripePriceId: () => string;
+  effect: PaymentPlanEffect;
 }
 
-export type PaymentPlanEffect = { kind: 'subscription' } | { kind: 'credits', amount: number };
+export type PaymentPlanEffect = { kind: 'subscription' } | { kind: 'credits'; amount: number };
 export type PaymentPlanEffectKinds = PaymentPlanEffect extends { kind: infer K } ? K : never;
 
 export const paymentPlans: Record<PaymentPlanId, PaymentPlan> = {
   [PaymentPlanId.Hobby]: {
     getStripePriceId: () => requireNodeEnvVar('STRIPE_HOBBY_SUBSCRIPTION_PRICE_ID'),
-    effect: { kind: 'subscription' }
+    effect: { kind: 'subscription' },
   },
   [PaymentPlanId.Pro]: {
     getStripePriceId: () => requireNodeEnvVar('STRIPE_PRO_SUBSCRIPTION_PRICE_ID'),
-    effect: { kind: 'subscription' }
+    effect: { kind: 'subscription' },
   },
   [PaymentPlanId.Credits10]: {
     getStripePriceId: () => requireNodeEnvVar('STRIPE_CREDITS_PRICE_ID'),
-    effect: { kind: 'credits', amount: 10 }
-  }
-}
+    effect: { kind: 'credits', amount: 10 },
+  },
+};
 
 // TODO: Move to some server/utils.js?
 function requireNodeEnvVar(name: string): string {
@@ -47,5 +48,5 @@ export function parsePaymentPlanId(planId: string): PaymentPlanId {
 }
 
 export function getSubscriptionPaymentPlanIds(): PaymentPlanId[] {
-  return Object.values(PaymentPlanId).filter(planId => paymentPlans[planId].effect.kind === 'subscription');
+  return Object.values(PaymentPlanId).filter((planId) => paymentPlans[planId].effect.kind === 'subscription');
 }

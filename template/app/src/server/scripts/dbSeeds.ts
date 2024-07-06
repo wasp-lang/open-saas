@@ -1,8 +1,7 @@
 import { type User } from 'wasp/entities';
 import { faker } from '@faker-js/faker';
 import type { PrismaClient } from '@prisma/client';
-import { getSubscriptionPaymentPlanIds } from '../../payment/plans';
-import { type SubscriptionStatusOptions } from '../../shared/types';
+import { getSubscriptionPaymentPlanIds, type SubscriptionStatusOptions } from '../../payment/plans';
 
 type MockUserData = Omit<User, 'id'>;
 

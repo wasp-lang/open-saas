@@ -4,7 +4,7 @@ import { PaymentPlanId, paymentPlans } from '../../payment/plans';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { cn } from '../../shared/utils';
+import { cn } from '../cn';
 import { z } from 'zod';
 
 const bestDealPaymentPlanId: PaymentPlanId = PaymentPlanId.Pro;

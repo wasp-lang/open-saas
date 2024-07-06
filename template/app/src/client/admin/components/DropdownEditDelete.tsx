@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { cn } from '../../../shared/utils';
+import { cn } from '../../cn';
 
 const DropdownDefault = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);

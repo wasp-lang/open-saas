@@ -1,4 +1,4 @@
-import { DOCS_URL, BLOG_URL } from '../../shared/constants';
+import { DocsUrl, BlogUrl } from './urls';
 import daBoiAvatar from '../static/da-boi.png';
 import avatarPlaceholder from '../static/avatar-placeholder.png';
 import { routes } from 'wasp/client/router';
@@ -6,33 +6,33 @@ import { routes } from 'wasp/client/router';
 export const navigation = [
   { name: 'Features', href: '#features' },
   { name: 'Pricing', href: routes.PricingPageRoute.build() },
-  { name: 'Documentation', href: DOCS_URL },
-  { name: 'Blog', href: BLOG_URL },
+  { name: 'Documentation', href: DocsUrl },
+  { name: 'Blog', href: BlogUrl },
 ];
 export const features = [
   {
     name: 'Cool Feature #1',
     description: 'Describe your cool feature here.',
     icon: '🤝',
-    href: DOCS_URL,
+    href: DocsUrl,
   },
   {
     name: 'Cool Feature #2',
     description: 'Describe your cool feature here.',
     icon: '🔐',
-    href: DOCS_URL,
+    href: DocsUrl,
   },
   {
     name: 'Cool Feature #3',
     description: 'Describe your cool feature here.',
     icon: '🥞',
-    href: DOCS_URL,
+    href: DocsUrl,
   },
   {
     name: 'Cool Feature #4',
     description: 'Describe your cool feature here.',
     icon: '💸',
-    href: DOCS_URL,
+    href: DocsUrl,
   },
 ];
 export const testimonials = [
@@ -69,8 +69,8 @@ export const faqs = [
 ];
 export const footerNavigation = {
   app: [
-    { name: 'Documentation', href: DOCS_URL },
-    { name: 'Blog', href: BLOG_URL },
+    { name: 'Documentation', href: DocsUrl },
+    { name: 'Blog', href: BlogUrl },
   ],
   company: [
     { name: 'About', href: 'https://wasp-lang.dev' },
