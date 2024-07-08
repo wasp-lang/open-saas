@@ -7,6 +7,7 @@ import { stripe } from '../stripe/stripeClient';
 import { paymentPlans, PaymentPlanId, SubscriptionStatus } from '../../payment/plans';
 import { updateUserStripePaymentDetails } from './stripePaymentDetails';
 import { emailSender } from 'wasp/server/email';
+import { assertUnreachable } from '../../utils';
 import { z } from 'zod';
 
 export const stripeWebhook: StripeWebhook = async (request, response, context) => {
@@ -87,8 +88,7 @@ export async function handleCheckoutSessionCompleted(
       numOfCreditsPurchased = plan.effect.amount;
       break;
     default:
-      const exhaustiveCheck: never = plan.effect;
-      throw new Error(`Unhandled case: ${exhaustiveCheck}`);
+      assertUnreachable(plan.effect);
   }
 
   return updateUserStripePaymentDetails(
