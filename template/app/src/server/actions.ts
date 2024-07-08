@@ -10,7 +10,7 @@ import {
   type UpdateTask,
 } from 'wasp/server/operations';
 import { GeneratedSchedule } from '../gpt/schedule';
-import { PaymentPlanId, paymentPlans, type PaymentPlanEffect, type PaymentPlanEffectKinds } from '../payment/plans';
+import { PaymentPlanId, paymentPlans, type PaymentPlanEffect } from '../payment/plans';
 import { fetchStripeCustomer, createStripeCheckoutSession, type StripeMode } from './stripe/checkoutUtils.js';
 import OpenAI from 'openai';
 
