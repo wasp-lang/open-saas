@@ -67,7 +67,6 @@ export async function handleCheckoutSessionCompleted(
   const { line_items } = await stripe.checkout.sessions.retrieve(session.id, {
     expand: ['line_items'],
   });
-  console.log('line_items: ', line_items);
   const lineItemPriceId = validateAndUseLineItemData(line_items);
 
   const planId = Object.values(PaymentPlanId).find(
