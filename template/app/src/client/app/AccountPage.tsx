@@ -52,11 +52,11 @@ export default function AccountPage({ user }: { user: User }) {
 }
 
 function UserCurrentPaymentPlan({ subscriptionPlan, subscriptionStatus, datePaid, credits }: Pick<User, 'subscriptionPlan' | 'subscriptionStatus' | 'datePaid' | 'credits'>) { 
-  if (subscriptionStatus && subscriptionPlan) {
+  if (subscriptionStatus && subscriptionPlan && datePaid) {
     return (
       <>
         <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
-          {getUserSubscriptionPlanMessage({ subscriptionPlan: subscriptionPlan, subscriptionStatus: subscriptionStatus, datePaid: datePaid })}
+          {getUserSubscriptionPlanMessage({ subscriptionPlan, subscriptionStatus, datePaid })}
         </dd>
         {subscriptionStatus as SubscriptionStatusOptions !== 'deleted' ? <CustomerPortalButton /> : <BuyMoreButton />}
       </>
@@ -73,27 +73,15 @@ function UserCurrentPaymentPlan({ subscriptionPlan, subscriptionStatus, datePaid
   );
 }
 
-function prettyPrintEndOfBillingPeriod(date: Date | null) {
-  if (!date) {
-    throw new Error('User date paid is missing');
-  }
-  const oneMonthFromNow = new Date(date);
-  oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
-  return ': ' + oneMonthFromNow.toLocaleDateString();
-}
-
 function getUserSubscriptionPlanMessage({
   subscriptionPlan,
   subscriptionStatus,
   datePaid,
 }: {
-  subscriptionPlan: string | null;
-  subscriptionStatus: string | null;
-  datePaid: Date | null;
+  subscriptionPlan: string
+  subscriptionStatus: string
+  datePaid: Date;
 }) {
-  if (!subscriptionPlan) {
-    throw new Error('User is missing a subscriptionPlan');
-  }
   const planName = prettyPaymentPlanName(parsePaymentPlanId(subscriptionPlan));
   const endOfBillingPeriod = prettyPrintEndOfBillingPeriod(datePaid);
 
@@ -114,6 +102,12 @@ function prettyPaymentPlanName (planId: PaymentPlanId): string {
     [PaymentPlanId.Credits10]: '10 Credits'
   };
   return planToName[planId];
+}
+
+function prettyPrintEndOfBillingPeriod(date: Date) {
+  const oneMonthFromNow = new Date(date);
+  oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
+  return ': ' + oneMonthFromNow.toLocaleDateString();
 }
 
 function BuyMoreButton() {
