@@ -3,14 +3,14 @@ import { useState, useEffect } from 'react';
 import SwitcherOne from './SwitcherOne';
 import Loader from '../common/Loader';
 import DropdownEditDelete from './DropdownEditDelete';
-import { type SubscriptionStatusOptions } from '../../../payment/plans';
+import { type SubscriptionStatus } from '../../../payment/plans';
 
 const UsersTable = () => {
   const [skip, setskip] = useState(0);
   const [page, setPage] = useState(1);
   const [email, setEmail] = useState<string | undefined>(undefined);
   const [isAdminFilter, setIsAdminFilter] = useState<boolean | undefined>(undefined);
-  const [statusOptions, setStatusOptions] = useState<SubscriptionStatusOptions[]>([]);
+  const [statusOptions, setStatusOptions] = useState<SubscriptionStatus[]>([]);
   const { data, isLoading, error } = useQuery(getPaginatedUsers, {
     skip,
     emailContains: email,
@@ -93,10 +93,10 @@ const UsersTable = () => {
                   onChange={(e) => {
                     const targetValue = e.target.value === '' ? null : e.target.value;
                     setStatusOptions((prevValue) => {
-                      if (prevValue?.includes(targetValue as SubscriptionStatusOptions)) {
+                      if (prevValue?.includes(targetValue as SubscriptionStatus)) {
                         return prevValue?.filter((val) => val !== targetValue);
                       } else if (!!prevValue) {
-                        return [...prevValue, targetValue as SubscriptionStatusOptions];
+                        return [...prevValue, targetValue as SubscriptionStatus];
                       } else {
                         return prevValue;
                       }
@@ -108,7 +108,7 @@ const UsersTable = () => {
                 >
                   <option value=''>Select filters</option>
                   {['past_due', 'canceled', 'active', 'deleted', null].map((status) => {
-                    if (!statusOptions.includes(status as SubscriptionStatusOptions)) {
+                    if (!statusOptions.includes(status as SubscriptionStatus)) {
                       return <option value={status || ''}>{status ? status : 'has not subscribed'}</option>;
                     }
                   })}

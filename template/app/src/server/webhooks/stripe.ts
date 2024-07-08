@@ -4,14 +4,14 @@ import { type PrismaUserDelegate } from './stripePaymentDetails';
 import express from 'express';
 import { Stripe } from 'stripe';
 import { stripe } from '../stripe/stripeClient';
-import { paymentPlans, PaymentPlanId, SubscriptionStatusOptions } from '../../payment/plans';
+import { paymentPlans, PaymentPlanId, SubscriptionStatus } from '../../payment/plans';
 import { updateUserStripePaymentDetails } from './stripePaymentDetails';
 import { emailSender } from 'wasp/server/email';
 import { z } from 'zod';
 
 export const stripeWebhook: StripeWebhook = async (request, response, context) => {
   const secret = process.env.STRIPE_WEBHOOK_SECRET;
-  if (!secret || secret.length <= 9) {
+  if (!secret) {
     throw new HttpError(500, 'Stripe Webhook Secret Not Set');
   }
   const sig = request.headers['stripe-signature'];
@@ -91,7 +91,7 @@ export async function handleCheckoutSessionCompleted(
       throw new Error(`Unhandled case: ${exhaustiveCheck}`);
   }
 
-  return await updateUserStripePaymentDetails(
+  return updateUserStripePaymentDetails(
     { userStripeId, subscriptionPlan, numOfCreditsPurchased, datePaid: new Date() },
     prismaUserDelegate
   );
@@ -100,7 +100,7 @@ export async function handleCheckoutSessionCompleted(
 export async function handleInvoicePaid(invoice: Stripe.Invoice, prismaUserDelegate: PrismaUserDelegate) {
   const userStripeId = validateUserStripeIdOrThrow(invoice.customer);
   const datePaid = new Date(invoice.period_start * 1000);
-  return await updateUserStripePaymentDetails({ userStripeId, datePaid }, prismaUserDelegate);
+  return updateUserStripePaymentDetails({ userStripeId, datePaid }, prismaUserDelegate);
 }
 
 export async function handleCustomerSubscriptionUpdated(
@@ -108,7 +108,7 @@ export async function handleCustomerSubscriptionUpdated(
   prismaUserDelegate: PrismaUserDelegate
 ) {
   const userStripeId = validateUserStripeIdOrThrow(subscription.customer);
-  let subscriptionStatus: SubscriptionStatusOptions | undefined;
+  let subscriptionStatus: SubscriptionStatus | undefined;
 
   switch (subscription.status as Stripe.Subscription.Status) {
     case 'active':
@@ -144,7 +144,7 @@ export async function handleCustomerSubscriptionDeleted(
   prismaUserDelegate: PrismaUserDelegate
 ) {
   const userStripeId = validateUserStripeIdOrThrow(subscription.customer);
-  return await updateUserStripePaymentDetails({ userStripeId, subscriptionStatus: 'deleted' }, prismaUserDelegate);
+  return updateUserStripePaymentDetails({ userStripeId, subscriptionStatus: 'deleted' }, prismaUserDelegate);
 }
 
 const LineItemsPriceSchema = z.object({

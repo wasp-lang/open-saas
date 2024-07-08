@@ -1,4 +1,4 @@
-export type SubscriptionStatusOptions = 'past_due' | 'cancel_at_period_end' | 'active' | 'deleted';
+export type SubscriptionStatus = 'past_due' | 'cancel_at_period_end' | 'active' | 'deleted';
 
 export enum PaymentPlanId {
   Hobby = 'hobby',
@@ -12,7 +12,6 @@ export interface PaymentPlan {
 }
 
 export type PaymentPlanEffect = { kind: 'subscription' } | { kind: 'credits'; amount: number };
-export type PaymentPlanEffectKinds = PaymentPlanEffect extends { kind: infer K } ? K : never;
 
 export const paymentPlans: Record<PaymentPlanId, PaymentPlan> = {
   [PaymentPlanId.Hobby]: {

@@ -1,33 +1,30 @@
-import type { SubscriptionStatusOptions } from '../../payment/plans';
+import type { SubscriptionStatus } from '../../payment/plans';
 import { PaymentPlanId } from '../../payment/plans';
-import { PrismaClient } from '@prisma/client';
+import { type StripeWebhook } from 'wasp/server/api';
 
-export type PrismaUserDelegate = PrismaClient['user'];
+export type PrismaUserDelegate = Parameters<StripeWebhook>[2]['entities']['User'];
 
 type UserStripePaymentDetails = {
   userStripeId: string;
   subscriptionPlan?: PaymentPlanId;
-  subscriptionStatus?: SubscriptionStatusOptions;
+  subscriptionStatus?: SubscriptionStatus;
   numOfCreditsPurchased?: number;
   datePaid?: Date;
 };
 
-export const updateUserStripePaymentDetails = async (
-  args: UserStripePaymentDetails,
+export const updateUserStripePaymentDetails = (
+  { userStripeId, subscriptionPlan, subscriptionStatus, datePaid, numOfCreditsPurchased }: UserStripePaymentDetails,
   userDelegate: PrismaUserDelegate
 ) => {
-  let data: any = {};
-  if (args.datePaid) data.datePaid = args.datePaid;
-  if (args.subscriptionPlan) data.subscriptionPlan = args.subscriptionPlan;
-  if (args.subscriptionStatus) data.subscriptionStatus = args.subscriptionStatus;
-  if (args.numOfCreditsPurchased) {
-    data.credits = { increment: args.numOfCreditsPurchased };
-  }
-
-  return await userDelegate.update({
+  return userDelegate.update({
     where: {
-      stripeId: args.userStripeId,
+      stripeId: userStripeId,
     },
-    data,
+    data: {
+      subscriptionPlan,
+      subscriptionStatus,
+      datePaid,
+      credits: numOfCreditsPurchased !== undefined ? { increment: numOfCreditsPurchased } : undefined,
+    },
   });
 };

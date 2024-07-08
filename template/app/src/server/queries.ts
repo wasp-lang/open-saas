@@ -6,7 +6,7 @@ import {
   type GetPaginatedUsers,
   type GetAllTasksByUser,
 } from 'wasp/server/operations';
-import { type SubscriptionStatusOptions } from '../payment/plans';
+import { type SubscriptionStatus } from '../payment/plans';
 
 type DailyStatsWithSources = DailyStats & {
   sources: PageViewSource[];
@@ -77,7 +77,7 @@ type GetPaginatedUsersInput = {
   cursor?: number | undefined;
   emailContains?: string;
   isAdmin?: boolean;
-  subscriptionStatus?: SubscriptionStatusOptions[];
+  subscriptionStatus?: SubscriptionStatus[];
 };
 type GetPaginatedUsersOutput = {
   users: Pick<

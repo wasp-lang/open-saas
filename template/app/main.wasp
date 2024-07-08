@@ -100,8 +100,8 @@ entity User {=psl
 
   stripeId                  String?         @unique
   checkoutSessionId         String?
-  subscriptionStatus        String?         // 'active', 'canceled', 'past_due', 'deleted', null
-  subscriptionPlan          String?         // 'hobby', 'pro', null
+  subscriptionStatus        String?         // 'active', 'canceled', 'past_due', 'deleted'
+  subscriptionPlan          String?         // 'hobby', 'pro'
   sendEmail                 Boolean         @default(false)
   datePaid                  DateTime?
   credits                   Int             @default(3)

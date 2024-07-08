@@ -1,5 +1,5 @@
 import type { User } from 'wasp/entities';
-import type { SubscriptionStatusOptions } from '../../payment/plans';
+import type { SubscriptionStatus } from '../../payment/plans';
 import { PaymentPlanId, parsePaymentPlanId } from '../../payment/plans'; 
 import { Link } from 'wasp/client/router';
 import { logout } from 'wasp/client/auth';
@@ -58,7 +58,7 @@ function UserCurrentPaymentPlan({ subscriptionPlan, subscriptionStatus, datePaid
         <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
           {getUserSubscriptionPlanMessage({ subscriptionPlan, subscriptionStatus, datePaid })}
         </dd>
-        {subscriptionStatus as SubscriptionStatusOptions !== 'deleted' ? <CustomerPortalButton /> : <BuyMoreButton />}
+        {subscriptionStatus as SubscriptionStatus !== 'deleted' ? <CustomerPortalButton /> : <BuyMoreButton />}
       </>
     );
   }
@@ -85,14 +85,14 @@ function getUserSubscriptionPlanMessage({
   const planName = prettyPaymentPlanName(parsePaymentPlanId(subscriptionPlan));
   const endOfBillingPeriod = prettyPrintEndOfBillingPeriod(datePaid);
 
-  const statusToMessage: Record<SubscriptionStatusOptions, string> = {
+  const statusToMessage: Record<SubscriptionStatus, string> = {
     active: `${planName}`,
     past_due: `Payment for your ${planName} plan is past due! Please update your subscription payment information.`,
     cancel_at_period_end: `Your ${planName} plan subscription has been canceled, but remains active until the end of the current billing period${endOfBillingPeriod}`,
     deleted: `Your previous subscription has been canceled and is no longer active.`,
   };
 
-  return statusToMessage[subscriptionStatus as SubscriptionStatusOptions];
+  return statusToMessage[subscriptionStatus as SubscriptionStatus];
 }
 
 function prettyPaymentPlanName (planId: PaymentPlanId): string {
