@@ -9,30 +9,30 @@ import Footer from './Footer';
 
 export default function LandingPage() {
 
-	return (
-		<div className='bg-white dark:text-white dark:bg-boxdark-2'>
-			{/* Header */}
-			<Header navigation={navigation} />
+  return (
+    <div className='bg-white dark:text-white dark:bg-boxdark-2'>
+	  {/* Header */}	
+      <Header navigation={navigation}/>
 
-			<main className='isolate dark:bg-boxdark-2'>
-				{/* Hero section */}
-				<Hero />
+      <main className='isolate dark:bg-boxdark-2'>
+        {/* Hero section */}
+        <Hero />
 
-				{/* Clients section */}
-				<Clients />
+        {/* Clients section */}
+        <Clients />
 
-				{/* Feature section */}
-				<Feature features={features} />
+        {/* Feature section */}
+        <Feature features={features}/>
 
-				{/* Testimonial section */}
-				<Testimonial testimonials={testimonials} />
+        {/* Testimonial section */}
+        <Testimonial testimonials={testimonials}/>
 
-				{/* FAQ */}
-				<FAQ faqs={faqs} />
-			</main>
+        {/* FAQ */}
+        <FAQ faqs={faqs}/>
+      </main>
 
-			{/* Footer */}
-			<Footer footerNavigation={footerNavigation} />
-		</div>
-	);
+      {/* Footer */}
+      <Footer footerNavigation={footerNavigation}/>
+    </div>
+  );
 }
