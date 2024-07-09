@@ -1,7 +1,8 @@
-export default function Footer({footerNavigation}: any) {
+import { FooterProps } from "./types";
+
+export default function Footer({footerNavigation}: FooterProps) {
   return (
-	<>
-	 <div className='mx-auto mt-6 max-w-7xl px-6 lg:px-8 dark:bg-boxdark-2'>
+	  <div className='mx-auto mt-6 max-w-7xl px-6 lg:px-8 dark:bg-boxdark-2'>
         <footer
           aria-labelledby='footer-heading'
           className='relative border-t border-gray-900/10 dark:border-gray-200/10 py-24 sm:mt-32'
@@ -37,6 +38,5 @@ export default function Footer({footerNavigation}: any) {
           </div>
         </footer>
       </div>
-	</>
-  )
+  	)
 }

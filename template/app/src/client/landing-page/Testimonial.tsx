@@ -1,7 +1,8 @@
-export default function Testimonial({testimonials}: any) {
+import { TestimonialProps } from "./types";
+
+export default function Testimonial({testimonials}: TestimonialProps) {
   return (
-	<>
-	  <div className='mx-auto mt-32 max-w-7xl sm:mt-56 sm:px-6 lg:px-8'>
+	    <div className='mx-auto mt-32 max-w-7xl sm:mt-56 sm:px-6 lg:px-8'>
           <div className='relative sm:left-5 -m-2 rounded-xl bg-yellow-400/20 lg:ring-1 lg:ring-yellow-500/50 lg:-m-4 '>
             <div className='relative sm:top-5 sm:right-5 bg-gray-900 dark:bg-boxdark px-8 py-20 shadow-xl sm:rounded-xl sm:px-10 sm:py-16 md:px-12 lg:px-20'>
               <h2 className='text-left text-xl font-semibold tracking-wide leading-7 text-gray-500 dark:text-white'>
@@ -28,6 +29,5 @@ export default function Testimonial({testimonials}: any) {
             </div>
           </div>
         </div>
-	</>
-  )
+      )
 }

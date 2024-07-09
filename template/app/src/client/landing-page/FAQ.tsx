@@ -1,7 +1,8 @@
-export default function FAQ({faqs}: any) {
+import { FAQProps } from "./types";
+
+export default function FAQ({faqs}: FAQProps) {
   return (
-	<>
-	  <div className='mt-32 mx-auto max-w-2xl divide-y divide-gray-900/10 dark:divide-gray-200/10 px-6 pb-8 sm:pb-24 sm:pt-12 lg:max-w-7xl lg:px-8 lg:py-32'>
+	    <div className='mt-32 mx-auto max-w-2xl divide-y divide-gray-900/10 dark:divide-gray-200/10 px-6 pb-8 sm:pb-24 sm:pt-12 lg:max-w-7xl lg:px-8 lg:py-32'>
           <h2 className='text-2xl font-bold leading-10 tracking-tight text-gray-900 dark:text-white'>
             Frequently asked questions
           </h2>
@@ -23,6 +24,5 @@ export default function FAQ({faqs}: any) {
             ))}
           </dl>
         </div>
-	</>
-  )
+      )
 }

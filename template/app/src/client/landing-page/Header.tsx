@@ -9,8 +9,9 @@ import DropdownUser from './DropdownUser';
 import { Dialog } from '@headlessui/react';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { UserMenuItems } from './UserMenuItems';
+import { HeaderProps } from './types';
 
-export default function Header({navigation}: any) {
+export default function Header({navigation}: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const { data: user, isLoading: isUserLoading } = useAuth();
@@ -18,8 +19,7 @@ export default function Header({navigation}: any) {
   const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Your SaaS App' />;
   
   return (
-	<>
-	 <header className='absolute inset-x-0 top-0 z-50 dark:bg-boxdark-2'>
+	  <header className='absolute inset-x-0 top-0 z-50 dark:bg-boxdark-2'>
         <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
           <div className='flex items-center lg:flex-1'>
             <a
@@ -118,6 +118,6 @@ export default function Header({navigation}: any) {
             </div>
           </Dialog.Panel>
         </Dialog>
-      </header></>
-  )
+      </header>
+    )
 }

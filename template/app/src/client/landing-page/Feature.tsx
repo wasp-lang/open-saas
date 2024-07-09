@@ -1,7 +1,8 @@
-export default function Feature({features}: any) {
+import { FeatureProps } from "./types";
+
+export default function Feature({features}: FeatureProps) {
   return (
-	<>
-	  <div id='features' className='mx-auto mt-48 max-w-7xl px-6 lg:px-8'>
+	    <div id='features' className='mx-auto mt-48 max-w-7xl px-6 lg:px-8'>
           <div className='mx-auto max-w-2xl text-center'>
             <p className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white'>
               The <span className='text-yellow-500'>Best</span> Features
@@ -27,6 +28,5 @@ export default function Feature({features}: any) {
             </dl>
           </div>
         </div>
-	</>
-  )
+      )
 }
