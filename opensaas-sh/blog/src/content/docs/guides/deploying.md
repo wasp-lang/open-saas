@@ -115,7 +115,7 @@ Now you need to set up your stripe webhook for production use. Below are some im
 
 #### Stripe API Versions
 
-When you create your Stripe account, Stripe will automatically assign you to their latest API version at that time. This API version is important because it determines the structure of the responses Stripe sends to your webhook.
+When you create your Stripe account, Stripe will automatically assign you to their latest API version at that time. This API version is important because it determines the structure of the responses Stripe sends to your webhook, as well as the structure it expects of the requests you make toward the Stripe API.
   
 Because this template was built with a specific version of the Stripe API in mind, it could be that your Stripe account is set to a different API version. 
 
