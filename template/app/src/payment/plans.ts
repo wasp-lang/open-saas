@@ -1,3 +1,5 @@
+import { requireNodeEnvVar } from '../server/utils';
+
 export type SubscriptionStatus = 'past_due' | 'cancel_at_period_end' | 'active' | 'deleted';
 
 export enum PaymentPlanId {
@@ -28,14 +30,13 @@ export const paymentPlans: Record<PaymentPlanId, PaymentPlan> = {
   },
 };
 
-// TODO: Move to some server/utils.js?
-function requireNodeEnvVar(name: string): string {
-  const value = process.env[name];
-  if (value === undefined) {
-    throw new Error(`Env var ${name} is undefined`);
-  } else {
-    return value;
-  }
+export function prettyPaymentPlanName(planId: PaymentPlanId): string {
+  const planToName: Record<PaymentPlanId, string> = {
+    [PaymentPlanId.Hobby]: 'Hobby',
+    [PaymentPlanId.Pro]: 'Pro',
+    [PaymentPlanId.Credits10]: '10 Credits',
+  };
+  return planToName[planId];
 }
 
 export function parsePaymentPlanId(planId: string): PaymentPlanId {

@@ -1,6 +1,6 @@
 import type { User } from 'wasp/entities';
 import type { SubscriptionStatus } from '../../payment/plans';
-import { PaymentPlanId, parsePaymentPlanId } from '../../payment/plans'; 
+import { prettyPaymentPlanName, parsePaymentPlanId } from '../../payment/plans'; 
 import { Link } from 'wasp/client/router';
 import { logout } from 'wasp/client/auth';
 import { z } from 'zod';
@@ -84,24 +84,21 @@ function getUserSubscriptionPlanMessage({
 }) {
   const planName = prettyPaymentPlanName(parsePaymentPlanId(subscriptionPlan));
   const endOfBillingPeriod = prettyPrintEndOfBillingPeriod(datePaid);
+  return prettyPrintStatus(planName, subscriptionStatus, endOfBillingPeriod);
+}
 
+function prettyPrintStatus(planName: string, subscriptionStatus: string, endOfBillingPeriod: string): string {
   const statusToMessage: Record<SubscriptionStatus, string> = {
     active: `${planName}`,
     past_due: `Payment for your ${planName} plan is past due! Please update your subscription payment information.`,
     cancel_at_period_end: `Your ${planName} plan subscription has been canceled, but remains active until the end of the current billing period${endOfBillingPeriod}`,
     deleted: `Your previous subscription has been canceled and is no longer active.`,
   };
-
-  return statusToMessage[subscriptionStatus as SubscriptionStatus];
-}
-
-function prettyPaymentPlanName (planId: PaymentPlanId): string {
-  const planToName: Record<PaymentPlanId, string> = {
-    [PaymentPlanId.Hobby]: 'Hobby',
-    [PaymentPlanId.Pro]: 'Pro',
-    [PaymentPlanId.Credits10]: '10 Credits'
-  };
-  return planToName[planId];
+  if (Object.keys(statusToMessage).includes(subscriptionStatus)) {
+    return statusToMessage[subscriptionStatus as SubscriptionStatus];
+  } else {
+    throw new Error(`Invalid subscriptionStatus: ${subscriptionStatus}`);
+  }
 }
 
 function prettyPrintEndOfBillingPeriod(date: Date) {

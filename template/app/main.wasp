@@ -333,8 +333,8 @@ action updateTask {
   entities: [Task]
 }
 
-action stripePayment {
-  fn: import { stripePayment } from "@src/server/actions.js",
+action generateStripeCheckoutSession {
+  fn: import { generateStripeCheckoutSession } from "@src/server/actions.js",
   entities: [User]
 }
 

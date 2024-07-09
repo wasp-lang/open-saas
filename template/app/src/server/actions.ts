@@ -2,7 +2,7 @@ import { type User, type Task } from 'wasp/entities';
 import { HttpError } from 'wasp/server';
 import {
   type GenerateGptResponse,
-  type StripePayment,
+  type GenerateStripeCheckoutSession,
   type UpdateCurrentUser,
   type UpdateUserById,
   type CreateTask,
@@ -22,12 +22,15 @@ function setupOpenAI() {
   return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 }
 
-export type StripePaymentResult = {
+export type StripeCheckoutSession = {
   sessionUrl: string | null;
   sessionId: string;
 };
 
-export const stripePayment: StripePayment<PaymentPlanId, StripePaymentResult> = async (paymentPlanId, context) => {
+export const generateStripeCheckoutSession: GenerateStripeCheckoutSession<PaymentPlanId, StripeCheckoutSession> = async (
+  paymentPlanId,
+  context
+) => {
   if (!context.user) {
     throw new HttpError(401);
   }
@@ -44,7 +47,7 @@ export const stripePayment: StripePayment<PaymentPlanId, StripePaymentResult> = 
   const session = await createStripeCheckoutSession({
     priceId: paymentPlan.getStripePriceId(),
     customerId: customer.id,
-    mode: paymentPlanEffectToStripeMode(paymentPlan.effect)
+    mode: paymentPlanEffectToStripeMode(paymentPlan.effect),
   });
 
   await context.entities.User.update({

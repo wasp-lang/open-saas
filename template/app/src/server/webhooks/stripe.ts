@@ -8,13 +8,11 @@ import { paymentPlans, PaymentPlanId, SubscriptionStatus } from '../../payment/p
 import { updateUserStripePaymentDetails } from './stripePaymentDetails';
 import { emailSender } from 'wasp/server/email';
 import { assertUnreachable } from '../../utils';
+import { requireNodeEnvVar } from '../utils';
 import { z } from 'zod';
 
 export const stripeWebhook: StripeWebhook = async (request, response, context) => {
-  const secret = process.env.STRIPE_WEBHOOK_SECRET;
-  if (!secret) {
-    throw new HttpError(500, 'Stripe Webhook Secret Not Set');
-  }
+  const secret = requireNodeEnvVar('STRIPE_WEBHOOK_SECRET');
   const sig = request.headers['stripe-signature'];
   if (!sig) {
     throw new HttpError(400, 'Stripe Webhook Signature Not Provided');
@@ -68,7 +66,7 @@ export async function handleCheckoutSessionCompleted(
   const { line_items } = await stripe.checkout.sessions.retrieve(session.id, {
     expand: ['line_items'],
   });
-  const lineItemPriceId = validateAndUseLineItemData(line_items);
+  const lineItemPriceId = validateLineItemAndGetPriceId(line_items);
 
   const planId = Object.values(PaymentPlanId).find(
     (planId) => paymentPlans[planId].getStripePriceId() === lineItemPriceId
@@ -110,7 +108,7 @@ export async function handleCustomerSubscriptionUpdated(
   const userStripeId = validateUserStripeIdOrThrow(subscription.customer);
   let subscriptionStatus: SubscriptionStatus | undefined;
 
-  switch (subscription.status as Stripe.Subscription.Status) {
+  switch (subscription.status) {
     case 'active':
       subscriptionStatus = 'active';
       break;
@@ -121,22 +119,22 @@ export async function handleCustomerSubscriptionUpdated(
   if (subscription.cancel_at_period_end) {
     subscriptionStatus = 'cancel_at_period_end';
   }
-  if (!subscriptionStatus) throw new HttpError(400, 'Subscription status not handled');
-
-  const user = await updateUserStripePaymentDetails({ userStripeId, subscriptionStatus }, prismaUserDelegate);
-
-  if (subscription.cancel_at_period_end) {
-    if (user.email) {
-      await emailSender.send({
-        to: user.email,
-        subject: 'We hate to see you go :(',
-        text: 'We hate to see you go. Here is a sweet offer...',
-        html: 'We hate to see you go. Here is a sweet offer...',
-      });
+  // There are other subscription statuses, such as `trialing` that we are not handling and simply ignore
+  // If you'd like to handle more statuses, you can add more cases above. Make sure to update the `SubscriptionStatus` type in `payment/plans.ts` as well
+  if (subscriptionStatus) {
+    const user = await updateUserStripePaymentDetails({ userStripeId, subscriptionStatus }, prismaUserDelegate);
+    if (subscription.cancel_at_period_end) {
+      if (user.email) {
+        await emailSender.send({
+          to: user.email,
+          subject: 'We hate to see you go :(',
+          text: 'We hate to see you go. Here is a sweet offer...',
+          html: 'We hate to see you go. Here is a sweet offer...',
+        });
+      }
     }
+    return user;
   }
-
-  return user;
 }
 
 export async function handleCustomerSubscriptionDeleted(
@@ -157,9 +155,8 @@ const LineItemsPriceSchema = z.object({
   ),
 });
 
-function validateAndUseLineItemData(line_items: Stripe.ApiList<Stripe.LineItem> | undefined) {
+function validateLineItemAndGetPriceId(line_items: Stripe.ApiList<Stripe.LineItem> | undefined): string {
   const result = LineItemsPriceSchema.safeParse(line_items);
-
   if (!result.success) {
     throw new HttpError(400, 'No price id in line item');
   }
@@ -169,7 +166,7 @@ function validateAndUseLineItemData(line_items: Stripe.ApiList<Stripe.LineItem> 
   return result.data.data[0].price.id;
 }
 
-function validateUserStripeIdOrThrow(userStripeId: Stripe.Checkout.Session['customer']) {
+function validateUserStripeIdOrThrow(userStripeId: Stripe.Checkout.Session['customer']): string {
   if (!userStripeId) throw new HttpError(400, 'No customer id');
   if (typeof userStripeId !== 'string') throw new HttpError(400, 'Customer id is not a string');
   return userStripeId;

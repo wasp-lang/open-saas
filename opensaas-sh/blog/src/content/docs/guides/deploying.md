@@ -125,7 +125,7 @@ export const stripe = new Stripe(process.env.STRIPE_KEY!, {
   apiVersion: 'YYYY-MM-DD', // e.g. 2023-08-16
 });
 ```
-Even if you specify a specific API version in your Stripe client, Stripe will still send some of the responses, like those made after a user completes a payment on checkout, using their latest version of the API. It's only when you send a request from your server (with a specified API version in your client) that Stripe sends a response back matching this version. 
+When you specify a specific API version in your Stripe client, the requests you send to Stripe from your server, along with their responses, will match that API version. On the other hand, Stripe will send all other events to your webhook that didn't originate as a request sent from your server, like those made after a user completes a payment on checkout, using the default API version of the API.
 
 This is why it's important to make sure your Stripe client version also matches the API version in your Stripe account, and to thoroughly test any changes you make to your Stripe client before deploying to production.
 :::
@@ -139,9 +139,9 @@ export const stripe = new Stripe(process.env.STRIPE_KEY!, {
   apiVersion: 'YYYY-MM-DD', // e.g. 2023-08-16
 });
 ```
-3. If they don't match, you can upgrade/downgrade your Stripe NPM package to match the API version in your dashboard:
-  - If your default version is also the latest version of the API, you can simply upgrade to most current version of the Stripe NPM package.
-  - If your default version is not the latest version, and you don't want to [upgrade to the latest version](https://docs.stripe.com/upgrades#how-can-i-upgrade-my-api), because e.g. you have other projects that depend on the current version, you can find and install the Stripe NPM package version that matches your default API version by following these steps:
+3. If they don't match, you can upgrade/downgrade your Stripe NPM package in `package.json` to match the API version in your dashboard:
+  - If your default version on the Stripe dashboard is also the latest version of the API, you can simply upgrade your Stripe NPM package to the latest version.
+  - If your default version on the Stripe dashboard is not the latest version, and you don't want to [upgrade to the latest version](https://docs.stripe.com/upgrades#how-can-i-upgrade-my-api), because e.g. you have other projects that depend on the current version, you can find and install the Stripe NPM package version that matches your default API version by following these steps:
     - Find and note the date of your default API version in the [developer dashboard](https://dashboard.stripe.com/developers).
     - Go to the [Stripe NPM package](https://www.npmjs.com/package/stripe) page and hover over `Published` date column until you find the package release that matches your version. For example, here we find the NPM version that matches the default API version of `2023-08-16` in our dashboard, which is `13.x.x`.
     ![stripe-npm-versions](/stripe/npm-version.png)

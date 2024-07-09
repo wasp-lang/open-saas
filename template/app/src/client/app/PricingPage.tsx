@@ -1,6 +1,6 @@
 import { useAuth } from 'wasp/client/auth';
-import { stripePayment } from 'wasp/client/operations';
-import { PaymentPlanId, paymentPlans } from '../../payment/plans';
+import { generateStripeCheckoutSession } from 'wasp/client/operations';
+import { PaymentPlanId, paymentPlans, prettyPaymentPlanName } from '../../payment/plans';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -18,19 +18,19 @@ interface PaymentPlanCard {
 
 export const paymentPlanCards: Record<PaymentPlanId, PaymentPlanCard> = {
   [PaymentPlanId.Hobby]: {
-    name: 'Hobby',
+    name: prettyPaymentPlanName(PaymentPlanId.Hobby),
     price: '$9.99',
     description: 'All you need to get started',
     features: ['Limited monthly usage', 'Basic support'],
   },
   [PaymentPlanId.Pro]: {
-    name: 'Pro',
+    name: prettyPaymentPlanName(PaymentPlanId.Pro),
     price: '$19.99',
     description: 'Our most popular plan',
     features: ['Unlimited monthly usage', 'Priority customer support'],
   },
   [PaymentPlanId.Credits10]: {
-    name: '10 Credits',
+    name: prettyPaymentPlanName(PaymentPlanId.Credits10),
     price: '$9.99',
     description: 'One-time purchase of 10 credits for your account',
     features: ['Use credits for e.g. OpenAI API calls', 'No expiration date'],
@@ -51,7 +51,7 @@ const PricingPage = () => {
     }
     try {
       setIsStripePaymentLoading(paymentPlanId);
-      let stripeResults = await stripePayment(paymentPlanId);
+      let stripeResults = await generateStripeCheckoutSession(paymentPlanId);
 
       if (stripeResults?.sessionUrl) {
         window.open(stripeResults.sessionUrl, '_self');
