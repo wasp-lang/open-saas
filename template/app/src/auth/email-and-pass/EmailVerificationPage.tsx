@@ -1,15 +1,15 @@
-import { VerifyEmailForm } from 'wasp/client/auth';
 import { Link } from 'react-router-dom';
-import { AuthWrapper } from './authWrapper';
+import { VerifyEmailForm } from 'wasp/client/auth';
+import { AuthPageLayout } from '../AuthPageLayout';
 
-export function EmailVerification() {
+export function EmailVerificationPage() {
   return (
-    <AuthWrapper>
+    <AuthPageLayout>
       <VerifyEmailForm />
       <br />
       <span className='text-sm font-medium text-gray-900'>
         If everything is okay, <Link to='/login' className='underline'>go to login</Link>
       </span>
-    </AuthWrapper>
+    </AuthPageLayout>
   );
 }

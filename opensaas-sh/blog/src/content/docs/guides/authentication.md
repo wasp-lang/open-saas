@@ -20,7 +20,7 @@ Setting up your app's authentication is easy with Wasp. In fact, it's already se
   },
 ```
 
-The great part is, by defining your auth config in the `main.wasp` file, Wasp manages most of the Auth process for you, including the auth-related database entities for user credentials and sessions, as well as auto-generated client components for your app on the fly (aka AuthUI -- you can see them in the `src/client/auth` folder).
+The great part is, by defining your auth config in the `main.wasp` file, Wasp manages most of the Auth process for you, including the auth-related database entities for user credentials and sessions, as well as auto-generated client components for your app on the fly (aka AuthUI -- you can see them in use in the `src/auth` folder).
 
 ## Email Verified Auth
 

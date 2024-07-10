@@ -62,6 +62,7 @@ If you are using a version of the OpenSaaS template with Wasp `v0.11.x` or below
 │   ├── client/            # Your client code (React) goes here.
 │   ├── server/            # Your server code (NodeJS) goes here.
 │   ├── shared/            # Your shared (runtime independent) code goes here.
+│   ├── auth/              # All auth-related pages/components and logic.
 │   ├── file-upload/       # Logic for uploading files to S3.
 │   └── .waspignore
 ├── .env.server            # Dev environment variables for your server code.
@@ -109,7 +110,6 @@ The `src/client` folder contains the code that runs in the browser. It's a stand
 └── client
     ├── admin              # Admin dashboard pages and components
     ├── app                # Your user-facing app that sits behind the paywall/login.
-    ├── auth               # All auth-related pages and components.
     ├── components         # Your shared React components.
     ├── hooks              # Your shared React hooks.
     ├── landing-page       # Landing page related code
@@ -127,7 +127,6 @@ All you have to do is define your server-side functions in the `main.wasp` file,
 
 ```sh
 └── server
-    ├── auth               # Some small auth-related functions to customize the auth flow.
     ├── payments           # Payments utility functions.
     ├── scripts            # Scripts to run via Wasp, e.g. database seeding.
     ├── webhooks           # The webhook handler for Stripe.
