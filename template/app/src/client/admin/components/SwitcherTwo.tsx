@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { cn } from '../../../shared/utils';
+import { cn } from '../../cn';
 
 const SwitcherTwo = () => {
   const [enabled, setEnabled] = useState(false);

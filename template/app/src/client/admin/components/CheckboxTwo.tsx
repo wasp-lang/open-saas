@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { cn } from '../../../shared/utils';
+import { cn } from '../../cn';
 
 const CheckboxTwo = () => {
   const [enabled, setEnabled] = useState<boolean>(false);

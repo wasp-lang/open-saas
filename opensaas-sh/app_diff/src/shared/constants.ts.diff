@@ -1,7 +1,0 @@
---- template/app/src/shared/constants.ts
-+++ opensaas-sh/app/src/shared/constants.ts
-@@ -6,3 +6,4 @@
- 
- export const DOCS_URL = 'https://docs.opensaas.sh';
- export const BLOG_URL = 'https://docs.opensaas.sh/blog';
-+export const GITHUB_URL = 'https://github.com/wasp-lang/open-saas';

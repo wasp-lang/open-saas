@@ -1,9 +1,5 @@
 import Stripe from 'stripe';
-import { HttpError } from 'wasp/server';
-
-const stripe = new Stripe(process.env.STRIPE_KEY!, {
-  apiVersion: '2022-11-15',
-});
+import { stripe } from './stripeClient';
 
 // WASP_WEB_CLIENT_URL will be set up by Wasp when deploying to production: https://wasp-lang.dev/docs/deploying
 const DOMAIN = process.env.WASP_WEB_CLIENT_URL || 'http://localhost:3000';
@@ -24,11 +20,13 @@ export async function fetchStripeCustomer(customerEmail: string) {
       customer = stripeCustomers.data[0];
     }
     return customer;
-  } catch (error: any) {
-    console.error(error.message);
+  } catch (error) {
+    console.error(error);
     throw error;
   }
 }
+
+export type StripeMode = 'subscription' | 'payment';
 
 export async function createStripeCheckoutSession({
   priceId,
@@ -37,7 +35,7 @@ export async function createStripeCheckoutSession({
 }: {
   priceId: string;
   customerId: string;
-  mode: 'subscription' | 'payment';
+  mode: StripeMode;
 }) {
   try {
     return await stripe.checkout.sessions.create({
@@ -56,8 +54,8 @@ export async function createStripeCheckoutSession({
       },
       customer: customerId,
     });
-  } catch (error: any) {
-    console.error(error.message);
+  } catch (error) {
+    console.error(error);
     throw error;
   }
 }

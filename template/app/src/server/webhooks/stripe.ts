@@ -1,189 +1,54 @@
-import { emailSender } from 'wasp/server/email';
-import { type MiddlewareConfigFn } from 'wasp/server';
+import { type MiddlewareConfigFn, HttpError } from 'wasp/server';
 import { type StripeWebhook } from 'wasp/server/api';
+import { type PrismaClient } from '@prisma/client';
 import express from 'express';
-import { TierIds } from '../../shared/constants.js';
-
-import Stripe from 'stripe';
-
-// make sure the api version matches the version in the Stripe dashboard
-const stripe = new Stripe(process.env.STRIPE_KEY!, {
-  apiVersion: '2022-11-15', // TODO find out where this is in the Stripe dashboard and document
-});
+import { Stripe } from 'stripe';
+import { stripe } from '../stripe/stripeClient';
+import { paymentPlans, PaymentPlanId, SubscriptionStatus } from '../../payment/plans';
+import { updateUserStripePaymentDetails } from './stripePaymentDetails';
+import { emailSender } from 'wasp/server/email';
+import { assertUnreachable } from '../../utils';
+import { requireNodeEnvVar } from '../utils';
+import { z } from 'zod';
 
 export const stripeWebhook: StripeWebhook = async (request, response, context) => {
-  const sig = request.headers['stripe-signature'] as string;
+  const secret = requireNodeEnvVar('STRIPE_WEBHOOK_SECRET');
+  const sig = request.headers['stripe-signature'];
+  if (!sig) {
+    throw new HttpError(400, 'Stripe Webhook Signature Not Provided');
+  }
   let event: Stripe.Event;
-
   try {
-    event = stripe.webhooks.constructEvent(request.body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
-    // console.table({sig: 'stripe webhook signature verified', type: event.type})
-  } catch (err: any) {
-    console.log(err.message);
-    return response.status(400).send(`Webhook Error: ${err.message}`);
+    event = stripe.webhooks.constructEvent(request.body, sig, secret);
+  } catch (err) {
+    throw new HttpError(400, 'Error Constructing Stripe Webhook Event');
   }
-
-  try {
-    if (event.type === 'checkout.session.completed') {
-      console.log('Checkout session completed');
+  const prismaUserDelegate = context.entities.User;
+  switch (event.type) {
+    case 'checkout.session.completed':
       const session = event.data.object as Stripe.Checkout.Session;
-      const userStripeId = session.customer as string;
-      if (!userStripeId) {
-        console.log('No userStripeId in session');
-        return response.status(400).send(`Webhook Error: No userStripeId in session`);
-      }
-
-      const { line_items } = await stripe.checkout.sessions.retrieve(session.id, {
-        expand: ['line_items'],
-      });
-
-      /**
-       * here are your products, both subscriptions and one-time payments.
-       * make sure to configure them in the Stripe dashboard first!
-       * see: https://docs.opensaas.sh/guides/stripe-integration/
-       */
-      if (line_items?.data[0]?.price?.id === process.env.STRIPE_HOBBY_SUBSCRIPTION_PRICE_ID) {
-        console.log('Hobby subscription purchased');
-        await context.entities.User.updateMany({
-          where: {
-            stripeId: userStripeId,
-          },
-          data: {
-            datePaid: new Date(),
-            subscriptionTier: TierIds.HOBBY,
-          },
-        });
-      } else if (line_items?.data[0]?.price?.id === process.env.STRIPE_PRO_SUBSCRIPTION_PRICE_ID) {
-        console.log('Pro subscription purchased');
-        await context.entities.User.updateMany({
-          where: {
-            stripeId: userStripeId,
-          },
-          data: {
-            datePaid: new Date(),
-            subscriptionTier: TierIds.PRO,
-          },
-        });
-      } else if (line_items?.data[0]?.price?.id === process.env.STRIPE_CREDITS_PRICE_ID) {
-        console.log('Credits purchased');
-        await context.entities.User.updateMany({
-          where: {
-            stripeId: userStripeId,
-          },
-          data: {
-            credits: {
-              increment: 10,
-            },
-            datePaid: new Date(),
-          },
-        });
-      } else {
-        response.status(404).send('Invalid product');
-      }
-    } else if (event.type === 'invoice.paid') {
+      await handleCheckoutSessionCompleted(session, prismaUserDelegate);
+      break;
+    case 'invoice.paid':
       const invoice = event.data.object as Stripe.Invoice;
-      const userStripeId = invoice.customer as string;
-      const periodStart = new Date(invoice.period_start * 1000);
-      await context.entities.User.updateMany({
-        where: {
-          stripeId: userStripeId,
-        },
-        data: {
-          datePaid: periodStart,
-        },
-      });
-    } else if (event.type === 'customer.subscription.updated') {
-      const subscription = event.data.object as Stripe.Subscription;
-      const userStripeId = subscription.customer as string;
-      if (subscription.status === 'active') {
-        console.log('Subscription active ', userStripeId);
-        await context.entities.User.updateMany({
-          where: {
-            stripeId: userStripeId,
-          },
-          data: {
-            subscriptionStatus: 'active',
-          },
-        });
-      }
-      /**
-       * you'll want to make a check on the front end to see if the subscription is past due
-       * and then prompt the user to update their payment method
-       * this is useful if the user's card expires or is canceled and automatic subscription renewal fails
-       */
-      if (subscription.status === 'past_due') {
-        console.log('Subscription past due for user: ', userStripeId);
-        await context.entities.User.updateMany({
-          where: {
-            stripeId: userStripeId,
-          },
-          data: {
-            subscriptionStatus: 'past_due',
-          },
-        });
-      }
-      /**
-       * Stripe will send a subscription.updated event when a subscription is canceled
-       * but the subscription is still active until the end of the period.
-       * So we check if cancel_at_period_end is true and send an email to the customer.
-       * https://stripe.com/docs/billing/subscriptions/cancel#events
-       */
-      if (subscription.cancel_at_period_end) {
-        console.log('Subscription canceled at period end for user: ', userStripeId);
-        let customer = await context.entities.User.findFirst({
-          where: {
-            stripeId: userStripeId,
-          },
-          select: {
-            id: true,
-            email: true,
-          },
-        });
-
-        if (customer) {
-          await context.entities.User.update({
-            where: {
-              id: customer.id,
-            },
-            data: {
-              subscriptionStatus: 'canceled',
-            },
-          });
-
-          if (customer.email) {
-            await emailSender.send({
-              to: customer.email,
-              subject: 'We hate to see you go :(',
-              text: 'We hate to see you go. Here is a sweet offer...',
-              html: 'We hate to see you go. Here is a sweet offer...',
-            });
-          }
-        }
-      }
-    } else if (event.type === 'customer.subscription.deleted') {
-      const subscription = event.data.object as Stripe.Subscription;
-      const userStripeId = subscription.customer as string;
-
-      /**
-       * Stripe will send then finally send a subscription.deleted event when subscription period ends
-       * https://stripe.com/docs/billing/subscriptions/cancel#events
-       */
-      console.log('Subscription deleted/ended for user: ', userStripeId);
-      await context.entities.User.updateMany({
-        where: {
-          stripeId: userStripeId,
-        },
-        data: {
-          subscriptionStatus: 'deleted',
-        },
-      });
-    } else {
-      console.log(`Unhandled event type ${event.type}`);
-    }
-    response.json({ received: true });
-  } catch (err: any) {
-    response.status(400).send(`Webhook Error: ${err?.message}`);
+      await handleInvoicePaid(invoice, prismaUserDelegate);
+      break;
+    case 'customer.subscription.updated':
+      const updatedSubscription = event.data.object as Stripe.Subscription;
+      await handleCustomerSubscriptionUpdated(updatedSubscription, prismaUserDelegate);
+      break;
+    case 'customer.subscription.deleted':
+      const deletedSubscription = event.data.object as Stripe.Subscription;
+      await handleCustomerSubscriptionDeleted(deletedSubscription, prismaUserDelegate);
+      break;
+    default:
+      // If you'd like to handle more events, you can add more cases above.
+      // When deploying your app, you configure your webhook in the Stripe dashboard to only send the events that you're
+      // handling above and that are necessary for the functioning of your app. See: https://docs.opensaas.sh/guides/deploying/#setting-up-your-stripe-webhook 
+      // In development, it is likely that you will receive other events that you are not handling, and that's fine. These can be ignored without any issues.
+      console.error('Unhandled event type: ', event.type);
   }
+  response.json({ received: true }); // Stripe expects a 200 response to acknowledge receipt of the webhook
 };
 
 // This allows us to override Wasp's defaults and parse the raw body of the request from Stripe to verify the signature
@@ -192,3 +57,107 @@ export const stripeMiddlewareFn: MiddlewareConfigFn = (middlewareConfig) => {
   middlewareConfig.set('express.raw', express.raw({ type: 'application/json' }));
   return middlewareConfig;
 };
+
+const LineItemsPriceSchema = z.object({
+  data: z.array(
+    z.object({
+      price: z.object({
+        id: z.string(),
+      }),
+    })
+  ),
+});
+
+export async function handleCheckoutSessionCompleted(
+  session: Stripe.Checkout.Session,
+  prismaUserDelegate: PrismaClient["user"]
+) {
+  const userStripeId = validateUserStripeIdOrThrow(session.customer);
+  const { line_items } = await stripe.checkout.sessions.retrieve(session.id, {
+    expand: ['line_items'],
+  });
+  const result = LineItemsPriceSchema.safeParse(line_items);
+  if (!result.success) {
+    throw new HttpError(400, 'No price id in line item');
+  }
+  if (result.data.data.length > 1) {
+    throw new HttpError(400, 'More than one line item in session');
+  }
+  const lineItemPriceId =  result.data.data[0].price.id;
+
+  const planId = Object.values(PaymentPlanId).find(
+    (planId) => paymentPlans[planId].getStripePriceId() === lineItemPriceId
+  );
+  if (!planId) {
+    throw new Error(`No plan with stripe price id ${lineItemPriceId}`);
+  }
+  const plan = paymentPlans[planId];
+
+  let subscriptionPlan: PaymentPlanId | undefined;
+  let numOfCreditsPurchased: number | undefined;
+  switch (plan.effect.kind) {
+    case 'subscription':
+      subscriptionPlan = planId;
+      break;
+    case 'credits':
+      numOfCreditsPurchased = plan.effect.amount;
+      break;
+    default:
+      assertUnreachable(plan.effect);
+  }
+
+  return updateUserStripePaymentDetails(
+    { userStripeId, subscriptionPlan, numOfCreditsPurchased, datePaid: new Date() },
+    prismaUserDelegate
+  );
+}
+
+export async function handleInvoicePaid(invoice: Stripe.Invoice, prismaUserDelegate: PrismaClient["user"]) {
+  const userStripeId = validateUserStripeIdOrThrow(invoice.customer);
+  const datePaid = new Date(invoice.period_start * 1000);
+  return updateUserStripePaymentDetails({ userStripeId, datePaid }, prismaUserDelegate);
+}
+
+export async function handleCustomerSubscriptionUpdated(
+  subscription: Stripe.Subscription,
+  prismaUserDelegate: PrismaClient["user"]
+) {
+  const userStripeId = validateUserStripeIdOrThrow(subscription.customer);
+  let subscriptionStatus: SubscriptionStatus | undefined;
+
+  // There are other subscription statuses, such as `trialing` that we are not handling and simply ignore
+  // If you'd like to handle more statuses, you can add more cases above. Make sure to update the `SubscriptionStatus` type in `payment/plans.ts` as well
+  if (subscription.status === 'active') {
+    subscriptionStatus = subscription.cancel_at_period_end ? 'cancel_at_period_end' : 'active';
+  } else if (subscription.status === 'past_due') {
+    subscriptionStatus = 'past_due';
+  } 
+  if (subscriptionStatus) {
+    const user = await updateUserStripePaymentDetails({ userStripeId, subscriptionStatus }, prismaUserDelegate);
+    if (subscription.cancel_at_period_end) {
+      if (user.email) {
+        await emailSender.send({
+          to: user.email,
+          subject: 'We hate to see you go :(',
+          text: 'We hate to see you go. Here is a sweet offer...',
+          html: 'We hate to see you go. Here is a sweet offer...',
+        });
+      }
+    }
+    return user;
+  }
+}
+
+export async function handleCustomerSubscriptionDeleted(
+  subscription: Stripe.Subscription,
+  prismaUserDelegate: PrismaClient["user"]
+) {
+  const userStripeId = validateUserStripeIdOrThrow(subscription.customer);
+  return updateUserStripePaymentDetails({ userStripeId, subscriptionStatus: 'deleted' }, prismaUserDelegate);
+}
+
+function validateUserStripeIdOrThrow(userStripeId: Stripe.Checkout.Session['customer']): string {
+  if (!userStripeId) throw new HttpError(400, 'No customer id');
+  if (typeof userStripeId !== 'string') throw new HttpError(400, 'Customer id is not a string');
+  return userStripeId;
+}

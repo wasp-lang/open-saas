@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from 'react';
+import { useMemo } from 'react';
 import { UpArrow, DownArrow } from '../images/icon/icons-arrows';
 import type { DailyStatsProps } from '../common/types';
 

@@ -1,5 +1,5 @@
-import { defineUserSignupFields } from 'wasp/auth/providers/types';
 import { z } from 'zod';
+import { defineUserSignupFields } from 'wasp/auth/providers/types';
 
 const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
 
