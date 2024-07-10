@@ -1,6 +1,6 @@
 import { type DailyStatsJob } from 'wasp/server/jobs';
 import Stripe from 'stripe';
-import { stripe } from '../stripe/stripeClient';
+import { stripe } from '../../payment/stripe/stripeClient';
 import { getDailyPageViews, getSources } from './plausibleAnalyticsUtils.js';
 // import { getDailyPageViews, getSources } from './googleAnalyticsUtils.js';
 

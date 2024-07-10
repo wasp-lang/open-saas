@@ -227,21 +227,10 @@ page DemoAppPage {
   component: import DemoAppPage from "@src/client/app/DemoAppPage"
 }
 
-route PricingPageRoute { path: "/pricing", to: PricingPage }
-page PricingPage {
-  component: import PricingPage from "@src/client/app/PricingPage"
-}
-
 route AccountRoute { path: "/account", to: AccountPage }
 page AccountPage {
   authRequired: true,
   component: import Account from "@src/client/app/AccountPage"
-}
-
-route CheckoutRoute { path: "/checkout", to: CheckoutPage }
-page CheckoutPage {
-  authRequired: true,
-  component: import Checkout from "@src/client/app/CheckoutPage"
 }
 
 //#region Admin Pages
@@ -333,11 +322,6 @@ action updateTask {
   entities: [Task]
 }
 
-action generateStripeCheckoutSession {
-  fn: import { generateStripeCheckoutSession } from "@src/server/actions.js",
-  entities: [User]
-}
-
 action updateCurrentUser {
   fn: import { updateCurrentUser } from "@src/server/actions.js",
   entities: [User]
@@ -371,19 +355,6 @@ query getPaginatedUsers {
   entities: [User]
 }
 
-/*
- * 📡 These are custom Wasp API Endpoints.
- * Use them for callbacks, webhooks, API for other services to consume, etc.
- * https://wasp-lang.dev/docs/advanced/apis
- */
-
-api stripeWebhook {
-  fn: import { stripeWebhook } from "@src/server/webhooks/stripe.js",
-  entities: [User],
-  middlewareConfigFn: import { stripeMiddlewareFn } from "@src/server/webhooks/stripe.js",
-  httpRoute: (POST, "/stripe-webhook")
-}
-
 /* 🕵️‍♂️ These are the Wasp Jobs. Use them to set up recurring tasks and/or queues.
  * https://wasp-lang.dev/docs/advanced/jobs
  */
@@ -410,6 +381,37 @@ job dailyStatsJob {
   },
   entities: [User, DailyStats, Logs, PageViewSource]
 }
+
+//#region Payments
+route PricingPageRoute { path: "/pricing", to: PricingPage }
+page PricingPage {
+  component: import PricingPage from "@src/payment/PricingPage"
+}
+
+route CheckoutRoute { path: "/checkout", to: CheckoutPage }
+page CheckoutPage {
+  authRequired: true,
+  component: import Checkout from "@src/client/app/CheckoutPage"
+}
+
+action generateStripeCheckoutSession {
+  fn: import { generateStripeCheckoutSession } from "@src/payment/operations",
+  entities: [User]
+}
+
+/*
+ * 📡 These are custom Wasp API Endpoints.
+ * Use them for callbacks, webhooks, API for other services to consume, etc.
+ * https://wasp-lang.dev/docs/advanced/apis
+ */
+
+api stripeWebhook {
+  fn: import { stripeWebhook } from "@src/payment/stripe/webhook",
+  entities: [User],
+  middlewareConfigFn: import { stripeMiddlewareFn } from "@src/payment/stripe/webhook",
+  httpRoute: (POST, "/stripe-webhook")
+}
+//#endregion
 
 
 //#region File Upload
