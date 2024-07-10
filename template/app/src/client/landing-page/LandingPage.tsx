@@ -9,7 +9,7 @@ import logo from '../static/logo.png';
 import openSaasBanner from '../static/open-saas-banner.png';
 import { features, navigation, faqs, footerNavigation, testimonials } from './contentSections';
 import DropdownUser from '../components/DropdownUser';
-import { DOCS_URL } from '../../shared/constants';
+import { DocsUrl } from '../../common';
 import { UserMenuItems } from '../components/UserMenuItems';
 import DarkModeSwitcher from '../admin/components/DarkModeSwitcher';
 
@@ -160,7 +160,7 @@ export default function LandingPage() {
                 </p>
                 <div className='mt-10 flex items-center justify-center gap-x-6'>
                   <a
-                    href={DOCS_URL}
+                    href={DocsUrl}
                     className='rounded-md px-3.5 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-yellow-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-white'
                   >
                     Get Started <span aria-hidden='true'>→</span>

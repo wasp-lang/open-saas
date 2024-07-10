@@ -2,17 +2,16 @@ import { type User, type Task } from 'wasp/entities';
 import { HttpError } from 'wasp/server';
 import {
   type GenerateGptResponse,
-  type StripePayment,
+  type GenerateStripeCheckoutSession,
   type UpdateCurrentUser,
   type UpdateUserById,
   type CreateTask,
   type DeleteTask,
   type UpdateTask,
 } from 'wasp/server/operations';
-import Stripe from 'stripe';
-import type { GeneratedSchedule, StripePaymentResult } from '../shared/types';
-import { fetchStripeCustomer, createStripeCheckoutSession } from './payments/stripeUtils.js';
-import { TierIds } from '../shared/constants.js';
+import { GeneratedSchedule } from '../gpt/schedule';
+import { PaymentPlanId, paymentPlans, type PaymentPlanEffect } from '../payment/plans';
+import { fetchStripeCustomer, createStripeCheckoutSession, type StripeMode } from './stripe/checkoutUtils.js';
 import OpenAI from 'openai';
 
 const openai = setupOpenAI();
@@ -23,7 +22,15 @@ function setupOpenAI() {
   return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 }
 
-export const stripePayment: StripePayment<string, StripePaymentResult> = async (tier, context) => {
+export type StripeCheckoutSession = {
+  sessionUrl: string | null;
+  sessionId: string;
+};
+
+export const generateStripeCheckoutSession: GenerateStripeCheckoutSession<PaymentPlanId, StripeCheckoutSession> = async (
+  paymentPlanId,
+  context
+) => {
   if (!context.user) {
     throw new HttpError(401);
   }
@@ -35,39 +42,15 @@ export const stripePayment: StripePayment<string, StripePaymentResult> = async (
     );
   }
 
-  let priceId;
-  if (tier === TierIds.HOBBY) {
-    priceId = process.env.STRIPE_HOBBY_SUBSCRIPTION_PRICE_ID!;
-  } else if (tier === TierIds.PRO) {
-    priceId = process.env.STRIPE_PRO_SUBSCRIPTION_PRICE_ID!;
-  } else if (tier === TierIds.CREDITS) {
-    priceId = process.env.STRIPE_CREDITS_PRICE_ID!;
-  } else {
-    throw new HttpError(404, 'Invalid tier');
-  }
+  const paymentPlan = paymentPlans[paymentPlanId];
+  const customer = await fetchStripeCustomer(userEmail);
+  const session = await createStripeCheckoutSession({
+    priceId: paymentPlan.getStripePriceId(),
+    customerId: customer.id,
+    mode: paymentPlanEffectToStripeMode(paymentPlan.effect),
+  });
 
-  let customer: Stripe.Customer | undefined;
-  let session: Stripe.Checkout.Session | undefined;
-  try {
-    customer = await fetchStripeCustomer(userEmail);
-    if (!customer) {
-      throw new HttpError(500, 'Error fetching customer');
-    }
-    session = await createStripeCheckoutSession({
-      priceId,
-      customerId: customer.id,
-      mode: tier === TierIds.CREDITS ? 'payment' : 'subscription',
-    });
-    if (!session) {
-      throw new HttpError(500, 'Error creating session');
-    }
-  } catch (error: any) {
-    const statusCode = error.statusCode || 500;
-    const errorMessage = error.message || 'Internal server error';
-    throw new HttpError(statusCode, errorMessage);
-  }
-
-  const updatedUser = await context.entities.User.update({
+  await context.entities.User.update({
     where: {
       id: context.user.id,
     },
@@ -82,6 +65,14 @@ export const stripePayment: StripePayment<string, StripePaymentResult> = async (
     sessionId: session.id,
   };
 };
+
+function paymentPlanEffectToStripeMode (planEffect: PaymentPlanEffect): StripeMode {
+  const effectToMode: Record<PaymentPlanEffect['kind'], StripeMode> = {
+    'subscription': 'subscription',
+    'credits': 'payment'
+  };
+  return effectToMode[planEffect.kind];
+}
 
 type GptPayload = {
   hours: string;
@@ -126,7 +117,7 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, GeneratedSched
     }
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo', // you can use any model here, e.g. 'gpt-3.5-turbo', 'gpt-4', etc. 
+      model: 'gpt-3.5-turbo', // you can use any model here, e.g. 'gpt-3.5-turbo', 'gpt-4', etc.
       messages: [
         {
           role: 'system',

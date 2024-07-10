@@ -12,9 +12,8 @@ import {
 import { useState, useMemo } from 'react';
 import { CgSpinner } from 'react-icons/cg';
 import { TiDelete } from 'react-icons/ti';
-import { type GeneratedSchedule } from '../../shared/types';
-import { MainTask, Subtask } from '../../shared/types';
-import { cn } from '../../shared/utils';
+import type { GeneratedSchedule, MainTask, SubTask } from '../../gpt/schedule';
+import { cn } from '../cn';
 
 export default function DemoAppPage() {
   return (
@@ -319,7 +318,7 @@ function TaskTable({ schedule }: { schedule: GeneratedSchedule }) {
   );
 }
 
-function MainTaskTable({ mainTask, subtasks }: { mainTask: MainTask; subtasks: Subtask[] }) {
+function MainTaskTable({ mainTask, subtasks }: { mainTask: MainTask; subtasks: SubTask[] }) {
   return (
     <>
       <thead>

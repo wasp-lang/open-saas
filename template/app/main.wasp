@@ -98,10 +98,10 @@ entity User {=psl
   lastActiveTimestamp       DateTime        @default(now())
   isAdmin                   Boolean         @default(false)
 
-  stripeId                  String?
+  stripeId                  String?         @unique
   checkoutSessionId         String?
-  subscriptionStatus        String?         // 'active', 'canceled', 'past_due', 'deleted', null
-  subscriptionTier          String?         // 'hobby-tier', 'pro-tier', null
+  subscriptionStatus        String?         // 'active', 'canceled', 'past_due', 'deleted'
+  subscriptionPlan          String?         // 'hobby', 'pro'
   sendEmail                 Boolean         @default(false)
   datePaid                  DateTime?
   credits                   Int             @default(3)
@@ -333,8 +333,8 @@ action updateTask {
   entities: [Task]
 }
 
-action stripePayment {
-  fn: import { stripePayment } from "@src/server/actions.js",
+action generateStripeCheckoutSession {
+  fn: import { generateStripeCheckoutSession } from "@src/server/actions.js",
   entities: [User]
 }
 

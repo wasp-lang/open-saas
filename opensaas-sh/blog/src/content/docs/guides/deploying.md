@@ -111,8 +111,48 @@ After deploying your server, you need to add the correct redirect URIs to the cr
 
 ### Setting up your Stripe Webhook
 
-Now you need to set up your stripe webhook for production use.
+Now you need to set up your stripe webhook for production use. Below are some important steps and considerations you should take as you prepare to deploy your app to production.
 
+#### Stripe API Versions
+
+When you create your Stripe account, Stripe will automatically assign you to their latest API version at that time. This API version is important because it determines the structure of the responses Stripe sends to your webhook, as well as the structure it expects of the requests you make toward the Stripe API.
+  
+Because this template was built with a specific version of the Stripe API in mind, it could be that your Stripe account is set to a different API version. 
+
+:::note
+```ts title="stripeClient.ts"
+export const stripe = new Stripe(process.env.STRIPE_KEY!, {
+  apiVersion: 'YYYY-MM-DD', // e.g. 2023-08-16
+});
+```
+When you specify a specific API version in your Stripe client, the requests you send to Stripe from your server, along with their responses, will match that API version. On the other hand, Stripe will send all other events to your webhook that didn't originate as a request sent from your server, like those made after a user completes a payment on checkout, using the default API version of the API.
+
+This is why it's important to make sure your Stripe client version also matches the API version in your Stripe account, and to thoroughly test any changes you make to your Stripe client before deploying to production.
+:::
+
+To make sure your app is consistent with your Stripe account, here are some steps you can follow:
+
+1. You can find your `default` API version in the Stripe dashboard under the [Developers](https://dashboard.stripe.com/developers) section.
+2. Check that the API version in your `stripe/stripeClient.ts` file matches the default API version in your dashboard:
+```ts title="stripeClient.ts" {2}
+export const stripe = new Stripe(process.env.STRIPE_KEY!, {
+  apiVersion: 'YYYY-MM-DD', // e.g. 2023-08-16
+});
+```
+3. If they don't match, you can upgrade/downgrade your Stripe NPM package in `package.json` to match the API version in your dashboard:
+  - If your default version on the Stripe dashboard is also the latest version of the API, you can simply upgrade your Stripe NPM package to the latest version.
+  - If your default version on the Stripe dashboard is not the latest version, and you don't want to [upgrade to the latest version](https://docs.stripe.com/upgrades#how-can-i-upgrade-my-api), because e.g. you have other projects that depend on the current version, you can find and install the Stripe NPM package version that matches your default API version by following these steps:
+    - Find and note the date of your default API version in the [developer dashboard](https://dashboard.stripe.com/developers).
+    - Go to the [Stripe NPM package](https://www.npmjs.com/package/stripe) page and hover over `Published` date column until you find the package release that matches your version. For example, here we find the NPM version that matches the default API version of `2023-08-16` in our dashboard, which is `13.x.x`.
+    ![stripe-npm-versions](/stripe/npm-version.png)
+    - Install the correct version of the Stripe NPM package by running, :
+    ```sh
+      npm install stripe@x.x.x # e.g. npm install stripe@13.11.0
+    ```
+4. **Test your app thoroughly** to make sure that the changes you made to your Stripe client are working as expected before deploying to production.
+
+
+#### Creating Your Production Webhook
 1. go to [https://dashboard.stripe.com/webhooks](https://dashboard.stripe.com/webhooks)
 2. click on `+ add endpoint`
 3. enter your endpoint url, which will be the url of your deployed server + `/stripe-webhook`, e.g. `https://open-saas-wasp-sh-server.fly.dev/stripe-webhook`

@@ -1,7 +1,8 @@
+import type { User } from 'wasp/entities';
+import type { SubscriptionStatus } from '../../payment/plans';
+import { prettyPaymentPlanName, parsePaymentPlanId } from '../../payment/plans'; 
 import { Link } from 'wasp/client/router';
-import { type User } from 'wasp/entities';
 import { logout } from 'wasp/client/auth';
-import { TierIds } from '../../shared/constants';
 import { z } from 'zod';
 
 export default function AccountPage({ user }: { user: User }) {
@@ -27,27 +28,12 @@ export default function AccountPage({ user }: { user: User }) {
             )}
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
               <dt className='text-sm font-medium text-gray-500 dark:text-white'>Your Plan</dt>
-              {!!user.subscriptionStatus ? (
-                <>
-                  {user.subscriptionStatus !== 'past_due' ? (
-                    <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
-                      {user.subscriptionTier === TierIds.HOBBY ? 'Hobby' : 'Pro'} Plan
-                    </dd>
-                  ) : (
-                    <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
-                      Your Account is Past Due! Please Update your Payment Information
-                    </dd>
-                  )}
-                  <CustomerPortalButton />
-                </>
-              ) : (
-                <>
-                  <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
-                    Credits remaining: {user.credits}
-                  </dd>
-                  <BuyMoreButton />
-                </>
-              )}
+              <UserCurrentPaymentPlan  
+                subscriptionStatus={ user.subscriptionStatus as SubscriptionStatus} 
+                subscriptionPlan={ user.subscriptionPlan } 
+                datePaid={ user.datePaid }
+                credits={ user.credits }
+                 />
             </div>
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
               <dt className='text-sm font-medium text-gray-500 dark:text-white'>About</dt>
@@ -70,6 +56,69 @@ export default function AccountPage({ user }: { user: User }) {
   );
 }
 
+type UserCurrentPaymentPlanProps = {
+  subscriptionPlan: string | null
+  subscriptionStatus: SubscriptionStatus | null
+  datePaid: Date | null
+  credits: number
+}
+
+function UserCurrentPaymentPlan({ subscriptionPlan, subscriptionStatus, datePaid, credits }: UserCurrentPaymentPlanProps) { 
+  if (subscriptionStatus && subscriptionPlan && datePaid) {
+    return (
+      <>
+        <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
+          {getUserSubscriptionStatusDescription({ subscriptionPlan, subscriptionStatus, datePaid })}
+        </dd>
+        {subscriptionStatus !== 'deleted' ? <CustomerPortalButton /> : <BuyMoreButton />}
+      </>
+    );
+  }
+
+  return (
+    <>
+      <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
+        Credits remaining: {credits}
+      </dd>
+      <BuyMoreButton />
+    </>
+  );
+}
+
+function getUserSubscriptionStatusDescription({
+  subscriptionPlan,
+  subscriptionStatus,
+  datePaid,
+}: {
+  subscriptionPlan: string
+  subscriptionStatus: SubscriptionStatus
+  datePaid: Date;
+}) {
+  const planName = prettyPaymentPlanName(parsePaymentPlanId(subscriptionPlan));
+  const endOfBillingPeriod = prettyPrintEndOfBillingPeriod(datePaid);
+  return prettyPrintStatus(planName, subscriptionStatus, endOfBillingPeriod);
+}
+
+function prettyPrintStatus(planName: string, subscriptionStatus: SubscriptionStatus, endOfBillingPeriod: string): string {
+  const statusToMessage: Record<SubscriptionStatus, string> = {
+    active: `${planName}`,
+    past_due: `Payment for your ${planName} plan is past due! Please update your subscription payment information.`,
+    cancel_at_period_end: `Your ${planName} plan subscription has been canceled, but remains active until the end of the current billing period${endOfBillingPeriod}`,
+    deleted: `Your previous subscription has been canceled and is no longer active.`,
+  };
+  if (Object.keys(statusToMessage).includes(subscriptionStatus)) {
+    return statusToMessage[subscriptionStatus];
+  } else {
+    throw new Error(`Invalid subscriptionStatus: ${subscriptionStatus}`);
+  }
+}
+
+function prettyPrintEndOfBillingPeriod(date: Date) {
+  const oneMonthFromNow = new Date(date);
+  oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
+  return ': ' + oneMonthFromNow.toLocaleDateString();
+}
+
 function BuyMoreButton() {
   return (
     <div className='ml-4 flex-shrink-0 sm:col-span-1 sm:mt-0'>
@@ -87,13 +136,16 @@ function CustomerPortalButton() {
       const customerPortalUrl = schema.parse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
       window.open(customerPortalUrl, '_blank');
     } catch (err) {
-      console.error(err)
+      console.error(err);
     }
   };
 
   return (
     <div className='ml-4 flex-shrink-0 sm:col-span-1 sm:mt-0'>
-      <button onClick={handleClick} className='font-medium text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300'>
+      <button
+        onClick={handleClick}
+        className='font-medium text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300'
+      >
         Manage Subscription
       </button>
     </div>

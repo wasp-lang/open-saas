@@ -1,11 +1,8 @@
 import { type DailyStatsJob } from 'wasp/server/jobs';
 import Stripe from 'stripe';
+import { stripe } from '../stripe/stripeClient';
 import { getDailyPageViews, getSources } from './plausibleAnalyticsUtils.js';
 // import { getDailyPageViews, getSources } from './googleAnalyticsUtils.js';
-
-const stripe = new Stripe(process.env.STRIPE_KEY!, {
-  apiVersion: '2022-11-15', // TODO find out where this is in the Stripe dashboard and document
-});
 
 export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, context) => {
   const nowUTC = new Date(Date.now());

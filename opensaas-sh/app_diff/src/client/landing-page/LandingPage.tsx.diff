@@ -21,8 +21,8 @@
 +  testimonials,
 +} from './contentSections';
  import DropdownUser from '../components/DropdownUser';
--import { DOCS_URL } from '../../shared/constants';
-+import { DOCS_URL, GITHUB_URL } from '../../shared/constants';
+-import { DocsUrl } from '../../common';
++import { DocsUrl, GithubUrl } from '../../common';
  import { UserMenuItems } from '../components/UserMenuItems';
  import DarkModeSwitcher from '../admin/components/DarkModeSwitcher';
  
@@ -137,14 +137,14 @@
                  </p>
                  <div className='mt-10 flex items-center justify-center gap-x-6'>
                    <a
-                     href={DOCS_URL}
+                     href={DocsUrl}
 -                    className='rounded-md px-3.5 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-yellow-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-white'
 +                    className='rounded-md px-6 py-4 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-yellow-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-white'
                    >
                      Get Started <span aria-hidden='true'>→</span>
                    </a>
 +                  <a
-+                    href={GITHUB_URL}
++                    href={GithubUrl}
 +                    className='group relative flex items-center justify-center rounded-md bg-gray-100 px-6 py-4 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-200 dark:bg-gray-700 hover:ring-2 hover:ring-yellow-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
 +                  >
 +                    {/* <AiFillGithub size='1.25rem' className='mr-2' /> */}

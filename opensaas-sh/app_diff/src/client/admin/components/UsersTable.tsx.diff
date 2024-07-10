@@ -3,7 +3,7 @@
 @@ -11,6 +11,7 @@
    const [email, setEmail] = useState<string | undefined>(undefined);
    const [isAdminFilter, setIsAdminFilter] = useState<boolean | undefined>(undefined);
-   const [statusOptions, setStatusOptions] = useState<SubscriptionStatusOptions[]>([]);
+   const [statusOptions, setStatusOptions] = useState<SubscriptionStatus[]>([]);
 +  const [isDemoInfoVisible, setIsDemoInfoVisible] = useState(false);
    const { data, isLoading, error } = useQuery(getPaginatedUsers, {
      skip,
