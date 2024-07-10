@@ -382,7 +382,7 @@ job dailyStatsJob {
   entities: [User, DailyStats, Logs, PageViewSource]
 }
 
-//#region Payments
+//#region Payment
 route PricingPageRoute { path: "/pricing", to: PricingPage }
 page PricingPage {
   component: import PricingPage from "@src/payment/PricingPage"

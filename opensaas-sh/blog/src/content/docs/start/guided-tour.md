@@ -61,16 +61,16 @@ If you are using a version of the OpenSaaS template with Wasp `v0.11.x` or below
 ├── src/                   # Your code goes here.
 │   ├── client/            # Your client code (React) goes here.
 │   ├── server/            # Your server code (NodeJS) goes here.
-│   ├── shared/            # Your shared (runtime independent) code goes here.
 │   ├── auth/              # All auth-related pages/components and logic.
 │   ├── file-upload/       # Logic for uploading files to S3.
-│   └── .waspignore
+│   └── payment/           # Logic for handling Stripe payments and webhooks.
 ├── .env.server            # Dev environment variables for your server code.
 ├── .env.client            # Dev environment variables for your client code.
 ├── .prettierrc            # Prettier configuration.
 ├── tailwind.config.js     # TailwindCSS configuration.   
 ├── package.json
 ├── package-lock.json
+
 └── .wasproot
 ```
 
@@ -127,13 +127,11 @@ All you have to do is define your server-side functions in the `main.wasp` file,
 
 ```sh
 └── server
-    ├── payments           # Payments utility functions.
     ├── scripts            # Scripts to run via Wasp, e.g. database seeding.
-    ├── webhooks           # The webhook handler for Stripe.
     ├── workers            # Functions that run in the background as Wasp Jobs, e.g. daily stats calculation.
     ├── actions.ts         # Your server-side write/mutation functions.
     ├── queries.ts         # Your server-side read functions.
-    └── types.ts  
+    └── utils.ts  
 ```
 
 ## Main Features
@@ -199,17 +197,17 @@ Let's take a quick look at how payments are handled in this template.
 4. Stripe sends a webhook event to the server with the payment info
 5. The app server's **webhook handler** handles the event and updates the user's subscription status
 
-The logic for creating the Stripe Checkout session is defined in the `src/server/actions.ts` file. [Actions](https://wasp-lang.dev/docs/data-model/operations/actions) are your server-side functions that are used to write or update data to the database. Once they're defined in the `main.wasp` file, you can easily call them on the client-side:
+The logic for creating the Stripe Checkout session is defined in the `src/payment/operation.ts` file. [Actions](https://wasp-lang.dev/docs/data-model/operations/actions) are a type of Wasp Operation, specifically your server-side functions that are used to **write** or **update** data to the database. Once they're defined in the `main.wasp` file, you can easily call them on the client-side:
 
 a) define the action in the `main.wasp` file
 ```js title="main.wasp"
 action generateStripeCheckoutSession {
-  fn: import { generateStripeCheckoutSession } from "@src/server/actions.js",
+  fn: import { generateStripeCheckoutSession } from "@src/payment/operations",
   entities: [User]
 }
 ```
 
-b) implement the action in the `src/server/actions.ts` file
+b) implement the action in the `src/payment/operations` file
 ```js title="src/server/actions.ts"
 export const generateStripeCheckoutSession = async (paymentPlanId, context) => { 
   //...
@@ -225,11 +223,11 @@ const handleBuyClick = async (paymentPlanId) => {
 };
 ```
 
-The webhook handler is defined in the `src/server/webhooks/stripe.ts` file. Unlike Actions and Queries in Wasp which are only to be used internally, we define the webhook handler in the `main.wasp` file as an API endpoint in order to expose it externally to Stripe
+The webhook handler is defined in the `src/payment/stripe/webhook.ts` file. Unlike Actions and Queries in Wasp which are only to be used internally, we define the webhook handler in the `main.wasp` file as an API endpoint in order to expose it externally to Stripe
 
 ```js title="main.wasp"
 api stripeWebhook {
-  fn: import { stripeWebhook } from "@src/server/webhooks/stripe.js",
+  fn: import { stripeWebhook } from "@src/payment/stripe/webhook",
   httpRoute: (POST, "/stripe-webhook")
   entities: [User],
 }
