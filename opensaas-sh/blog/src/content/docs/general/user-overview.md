@@ -7,7 +7,7 @@ banner:
 ---
 
 This reference will help you understand how the User entity works in this template.
-This includes the user roles, subscription tiers and statuses, and how to authorize access to certain pages and components.
+This includes the user roles, subscription plans and statuses, and how to authorize access to certain pages and components.
 
 ## User Entity
 
@@ -23,14 +23,15 @@ entity User {=psl
   isAdmin                   Boolean         @default(false)
   stripeId                  String? 
   checkoutSessionId         String?
-  subscriptionTier          String?
+  subscriptionPlan          String?
   subscriptionStatus        String?
   sendEmail                 Boolean         @default(false)
   datePaid                  DateTime?
   credits                   Int             @default(3)
-  relatedObject             RelatedObject[]
-  externalAuthAssociations  SocialLogin[]
-  contactFormMessages       ContactFormMessage[]      
+  gptResponses              GptResponse[]
+  contactFormMessages       ContactFormMessage[]
+  tasks                     Task[]
+  files                     File[] 
 psl=}
 ```
 
@@ -46,7 +47,7 @@ entity User {=psl
   //...
   stripeId                  String? 
   checkoutSessionId         String?
-  subscriptionTier          String?
+  subscriptionPlan          String?
   subscriptionStatus        String?
   datePaid                  DateTime?
   credits                   Int             @default(3)
@@ -56,17 +57,17 @@ psl=}
 
 - `stripeId`: The Stripe customer ID. This is created by Stripe on checkout and used to identify the customer.
 - `checkoutSessionId`: The Stripe checkout session ID. This is created by Stripe on checkout and used to identify the checkout session.
-- `subscriptionTier`: The subscription tier the user is on. This is set by the app and is used to determine what features the user has access to. By default, we have two tiers: `hobby-tier` and `pro-tier`.
+- `subscriptionPlan`: The subscription plan the user is on. This is set by the app and is used to determine what features the user has access to. By default, we have two plan: `hobby` and `pro`.
 - `subscriptionStatus`: The subscription status of the user. This is set by Stripe and is used to determine whether the user has access to the app or not. By default, we have four statuses: `active`, `past_due`, `canceled`, and `deleted`.
 - `credits` (optional): By default, a user is given 3 credits to trial your product before they have to pay. You can create a one-time purchase product in Stripe to allow users to purchase more credits if they run out.
 
 ### Subscription Statuses
 
-In general, we determine if a user has paid for an initial subscription by checking if the `subscriptionStatus` field is set. This field is set by Stripe within your webhook handler and is used to signify more detailed information on the user's current status. By default, the template handles four statuses: `active`, `past_due`, `canceled`, and `deleted`.
+In general, we determine if a user has paid for an initial subscription by checking if the `subscriptionStatus` field is set. This field is set by Stripe within your webhook handler and is used to signify more detailed information on the user's current status. By default, the template handles four statuses: `active`, `past_due`, `canceled_at_period_end`, and `deleted`.
 
 - When `active` the user has paid for a subscription and has full access to the app. 
 
-- When `canceled`, the user has canceled their subscription and has access to the app until the end of their billing period. 
+- When `canceled_at_period_end`, the user has canceled their subscription and has access to the app until the end of their billing period. 
 
 - When `deleted`, the user has reached the end of their subscription period after canceling and no longer has access to the app.
 
@@ -98,13 +99,13 @@ if (subscription.status === 'past_due') {
 
 See the client-side [authorization section](/guides/authorization) below for more info on how to handle these statuses within your app.
 
-### Subscription Tiers
+### Subscription Plans
 
-The `subscriptionTier` field is used to determine what features the user has access to. 
+The `subscriptionPlan` field is used to determine what features the user has access to. 
 
-By default, we have two tiers: `hobby-tier` and `pro-tier`. 
+By default, we have two plans: `hobby` and `pro`. 
 
-You can add more tiers by adding more products and price IDs to your Stripe product and updating environment variables in your `.env.server` file as well as the relevant code in your app.
+You can add more plans by adding more products and price IDs to your Stripe product and updating environment variables in your `.env.server` file as well as the relevant code in your app.
 
 See the [Stripe Integration Guide](/guides/stripe-integration) for more info on how to do this.
 

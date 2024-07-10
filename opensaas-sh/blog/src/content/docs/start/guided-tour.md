@@ -204,25 +204,25 @@ The logic for creating the Stripe Checkout session is defined in the `src/server
 
 a) define the action in the `main.wasp` file
 ```js title="main.wasp"
-action stripePayment {
-  fn: import { stripePayment } from "@src/server/actions.js",
+action generateStripeCheckoutSession {
+  fn: import { generateStripeCheckoutSession } from "@src/server/actions.js",
   entities: [User]
 }
 ```
 
 b) implement the action in the `src/server/actions.ts` file
 ```js title="src/server/actions.ts"
-export const stripePayment = async (tier, context) => { 
+export const generateStripeCheckoutSession = async (paymentPlanId, context) => { 
   //...
  }
- ```
+```
 
 c) call the action on the client-side
 ```js title="src/client/app/SubscriptionPage.tsx"
-import { stripePayment } from "wasp/client/operations";
+import { generateStripeCheckoutSession } from "wasp/client/operations";
 
-const handleBuyClick = async (tierId) => {
-  const stripeResults = await stripePayment(tierId);
+const handleBuyClick = async (paymentPlanId) => {
+  const stripeCheckoutSession = await generateStripeCheckoutSession(paymentPlanId);
 };
 ```
 

@@ -1,8 +1,6 @@
 import type { SubscriptionStatus } from '../../payment/plans';
 import { PaymentPlanId } from '../../payment/plans';
-import { type StripeWebhook } from 'wasp/server/api';
-
-export type PrismaUserDelegate = Parameters<StripeWebhook>[2]['entities']['User'];
+import { PrismaClient } from '@prisma/client';
 
 type UserStripePaymentDetails = {
   userStripeId: string;
@@ -14,7 +12,7 @@ type UserStripePaymentDetails = {
 
 export const updateUserStripePaymentDetails = (
   { userStripeId, subscriptionPlan, subscriptionStatus, datePaid, numOfCreditsPurchased }: UserStripePaymentDetails,
-  userDelegate: PrismaUserDelegate
+  userDelegate: PrismaClient['user']
 ) => {
   return userDelegate.update({
     where: {

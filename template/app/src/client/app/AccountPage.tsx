@@ -28,7 +28,12 @@ export default function AccountPage({ user }: { user: User }) {
             )}
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
               <dt className='text-sm font-medium text-gray-500 dark:text-white'>Your Plan</dt>
-              <UserCurrentPaymentPlan {...user} />
+              <UserCurrentPaymentPlan  
+                subscriptionStatus={ user.subscriptionStatus as SubscriptionStatus} 
+                subscriptionPlan={ user.subscriptionPlan } 
+                datePaid={ user.datePaid }
+                credits={ user.credits }
+                 />
             </div>
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
               <dt className='text-sm font-medium text-gray-500 dark:text-white'>About</dt>
@@ -51,14 +56,21 @@ export default function AccountPage({ user }: { user: User }) {
   );
 }
 
-function UserCurrentPaymentPlan({ subscriptionPlan, subscriptionStatus, datePaid, credits }: Pick<User, 'subscriptionPlan' | 'subscriptionStatus' | 'datePaid' | 'credits'>) { 
+type UserCurrentPaymentPlanProps = {
+  subscriptionPlan: string | null
+  subscriptionStatus: SubscriptionStatus | null
+  datePaid: Date | null
+  credits: number
+}
+
+function UserCurrentPaymentPlan({ subscriptionPlan, subscriptionStatus, datePaid, credits }: UserCurrentPaymentPlanProps) { 
   if (subscriptionStatus && subscriptionPlan && datePaid) {
     return (
       <>
         <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
-          {getUserSubscriptionPlanMessage({ subscriptionPlan, subscriptionStatus, datePaid })}
+          {getUserSubscriptionStatusDescription({ subscriptionPlan, subscriptionStatus, datePaid })}
         </dd>
-        {subscriptionStatus as SubscriptionStatus !== 'deleted' ? <CustomerPortalButton /> : <BuyMoreButton />}
+        {subscriptionStatus !== 'deleted' ? <CustomerPortalButton /> : <BuyMoreButton />}
       </>
     );
   }
@@ -73,13 +85,13 @@ function UserCurrentPaymentPlan({ subscriptionPlan, subscriptionStatus, datePaid
   );
 }
 
-function getUserSubscriptionPlanMessage({
+function getUserSubscriptionStatusDescription({
   subscriptionPlan,
   subscriptionStatus,
   datePaid,
 }: {
   subscriptionPlan: string
-  subscriptionStatus: string
+  subscriptionStatus: SubscriptionStatus
   datePaid: Date;
 }) {
   const planName = prettyPaymentPlanName(parsePaymentPlanId(subscriptionPlan));
@@ -87,7 +99,7 @@ function getUserSubscriptionPlanMessage({
   return prettyPrintStatus(planName, subscriptionStatus, endOfBillingPeriod);
 }
 
-function prettyPrintStatus(planName: string, subscriptionStatus: string, endOfBillingPeriod: string): string {
+function prettyPrintStatus(planName: string, subscriptionStatus: SubscriptionStatus, endOfBillingPeriod: string): string {
   const statusToMessage: Record<SubscriptionStatus, string> = {
     active: `${planName}`,
     past_due: `Payment for your ${planName} plan is past due! Please update your subscription payment information.`,
@@ -95,7 +107,7 @@ function prettyPrintStatus(planName: string, subscriptionStatus: string, endOfBi
     deleted: `Your previous subscription has been canceled and is no longer active.`,
   };
   if (Object.keys(statusToMessage).includes(subscriptionStatus)) {
-    return statusToMessage[subscriptionStatus as SubscriptionStatus];
+    return statusToMessage[subscriptionStatus];
   } else {
     throw new Error(`Invalid subscriptionStatus: ${subscriptionStatus}`);
   }

@@ -1,6 +1,6 @@
 import { type MiddlewareConfigFn, HttpError } from 'wasp/server';
 import { type StripeWebhook } from 'wasp/server/api';
-import { type PrismaUserDelegate } from './stripePaymentDetails';
+import { type PrismaClient } from '@prisma/client';
 import express from 'express';
 import { Stripe } from 'stripe';
 import { stripe } from '../stripe/stripeClient';
@@ -58,15 +58,32 @@ export const stripeMiddlewareFn: MiddlewareConfigFn = (middlewareConfig) => {
   return middlewareConfig;
 };
 
+const LineItemsPriceSchema = z.object({
+  data: z.array(
+    z.object({
+      price: z.object({
+        id: z.string(),
+      }),
+    })
+  ),
+});
+
 export async function handleCheckoutSessionCompleted(
   session: Stripe.Checkout.Session,
-  prismaUserDelegate: PrismaUserDelegate
+  prismaUserDelegate: PrismaClient["user"]
 ) {
   const userStripeId = validateUserStripeIdOrThrow(session.customer);
   const { line_items } = await stripe.checkout.sessions.retrieve(session.id, {
     expand: ['line_items'],
   });
-  const lineItemPriceId = validateLineItemAndGetPriceId(line_items);
+  const result = LineItemsPriceSchema.safeParse(line_items);
+  if (!result.success) {
+    throw new HttpError(400, 'No price id in line item');
+  }
+  if (result.data.data.length > 1) {
+    throw new HttpError(400, 'More than one line item in session');
+  }
+  const lineItemPriceId =  result.data.data[0].price.id;
 
   const planId = Object.values(PaymentPlanId).find(
     (planId) => paymentPlans[planId].getStripePriceId() === lineItemPriceId
@@ -95,7 +112,7 @@ export async function handleCheckoutSessionCompleted(
   );
 }
 
-export async function handleInvoicePaid(invoice: Stripe.Invoice, prismaUserDelegate: PrismaUserDelegate) {
+export async function handleInvoicePaid(invoice: Stripe.Invoice, prismaUserDelegate: PrismaClient["user"]) {
   const userStripeId = validateUserStripeIdOrThrow(invoice.customer);
   const datePaid = new Date(invoice.period_start * 1000);
   return updateUserStripePaymentDetails({ userStripeId, datePaid }, prismaUserDelegate);
@@ -103,24 +120,18 @@ export async function handleInvoicePaid(invoice: Stripe.Invoice, prismaUserDeleg
 
 export async function handleCustomerSubscriptionUpdated(
   subscription: Stripe.Subscription,
-  prismaUserDelegate: PrismaUserDelegate
+  prismaUserDelegate: PrismaClient["user"]
 ) {
   const userStripeId = validateUserStripeIdOrThrow(subscription.customer);
   let subscriptionStatus: SubscriptionStatus | undefined;
 
-  switch (subscription.status) {
-    case 'active':
-      subscriptionStatus = 'active';
-      break;
-    case 'past_due':
-      subscriptionStatus = 'past_due';
-      break;
-  }
-  if (subscription.cancel_at_period_end) {
-    subscriptionStatus = 'cancel_at_period_end';
-  }
   // There are other subscription statuses, such as `trialing` that we are not handling and simply ignore
   // If you'd like to handle more statuses, you can add more cases above. Make sure to update the `SubscriptionStatus` type in `payment/plans.ts` as well
+  if (subscription.status === 'active') {
+    subscriptionStatus = subscription.cancel_at_period_end ? 'cancel_at_period_end' : 'active';
+  } else if (subscription.status === 'past_due') {
+    subscriptionStatus = 'past_due';
+  } 
   if (subscriptionStatus) {
     const user = await updateUserStripePaymentDetails({ userStripeId, subscriptionStatus }, prismaUserDelegate);
     if (subscription.cancel_at_period_end) {
@@ -139,31 +150,10 @@ export async function handleCustomerSubscriptionUpdated(
 
 export async function handleCustomerSubscriptionDeleted(
   subscription: Stripe.Subscription,
-  prismaUserDelegate: PrismaUserDelegate
+  prismaUserDelegate: PrismaClient["user"]
 ) {
   const userStripeId = validateUserStripeIdOrThrow(subscription.customer);
   return updateUserStripePaymentDetails({ userStripeId, subscriptionStatus: 'deleted' }, prismaUserDelegate);
-}
-
-const LineItemsPriceSchema = z.object({
-  data: z.array(
-    z.object({
-      price: z.object({
-        id: z.string(),
-      }),
-    })
-  ),
-});
-
-function validateLineItemAndGetPriceId(line_items: Stripe.ApiList<Stripe.LineItem> | undefined): string {
-  const result = LineItemsPriceSchema.safeParse(line_items);
-  if (!result.success) {
-    throw new HttpError(400, 'No price id in line item');
-  }
-  if (result.data.data.length > 1) {
-    throw new HttpError(400, 'More than one line item in session');
-  }
-  return result.data.data[0].price.id;
 }
 
 function validateUserStripeIdOrThrow(userStripeId: Stripe.Checkout.Session['customer']): string {
