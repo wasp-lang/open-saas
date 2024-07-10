@@ -1,6 +1,9 @@
 import type { User } from 'wasp/entities';
-import type { SubscriptionStatus } from '../../payment/plans';
-import { prettyPaymentPlanName, parsePaymentPlanId } from '../../payment/plans'; 
+import {
+  type SubscriptionStatus,
+  prettyPaymentPlanName,
+  parsePaymentPlanId
+} from '../payment/plans';
 import { Link } from 'wasp/client/router';
 import { logout } from 'wasp/client/auth';
 import { z } from 'zod';

@@ -63,11 +63,12 @@ If you are using a version of the OpenSaaS template with Wasp `v0.11.x` or below
 │   ├── server/            # Your server code (NodeJS) goes here.
 │   ├── auth/              # All auth-related pages/components and logic.
 │   ├── file-upload/       # Logic for uploading files to S3.
-│   └── payment/           # Logic for handling Stripe payments and webhooks.
+│   ├── payment/           # Logic for handling Stripe payments and webhooks.
+│   └── user/              # Logic related to users and their accounts.
 ├── .env.server            # Dev environment variables for your server code.
 ├── .env.client            # Dev environment variables for your client code.
 ├── .prettierrc            # Prettier configuration.
-├── tailwind.config.js     # TailwindCSS configuration.   
+├── tailwind.config.js     # TailwindCSS configuration.
 ├── package.json
 ├── package-lock.json
 
@@ -131,7 +132,7 @@ All you have to do is define your server-side functions in the `main.wasp` file,
     ├── workers            # Functions that run in the background as Wasp Jobs, e.g. daily stats calculation.
     ├── actions.ts         # Your server-side write/mutation functions.
     ├── queries.ts         # Your server-side read functions.
-    └── utils.ts  
+    └── utils.ts
 ```
 
 ## Main Features

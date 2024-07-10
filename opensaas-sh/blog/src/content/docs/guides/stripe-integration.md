@@ -64,9 +64,9 @@ Go to https://dashboard.stripe.com/test/settings/billing/portal in the Stripe Da
 REACT_APP_STRIPE_CUSTOMER_PORTAL=<your-test-customer-portal-link>
 ```
 
-Your Stripe customer portal link is imported into `src/client/app/AccountPage.tsx` and used to redirect users to the Stripe customer portal when they click the `Manage Subscription` button.
+Your Stripe customer portal link is imported into `src/user/AccountPage.tsx` and used to redirect users to the Stripe customer portal when they click the `Manage Subscription` button.
 
-```tsx title="src/client/app/AccountPage.tsx" {5} "import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL"
+```tsx title="src/user/AccountPage.tsx" {5} "import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL"
 function CustomerPortalButton() {
   const handleClick = () => {
     try {
