@@ -86,12 +86,12 @@ This template at its core is a Wasp project, where [Wasp](https://wasp-lang.dev)
 
 In this template, we've already defined a number of things in the `main.wasp` config file, including:
 
-- Auth
-- Routes and Pages
-- Prisma Database Models
-- Operations (data read and write functions)
-- Background Jobs
-- Email Sending
+- [Auth](https://wasp-lang.dev/docs/auth/overview)
+- [Routes and Pages](https://wasp-lang.dev/docs/tutorial/pages)
+- [Prisma Database Models](https://wasp-lang.dev/docs/data-model/entities)
+- [Operations (data read and write functions)](https://wasp-lang.dev/docs/data-model/operations/overview)
+- [Background Jobs](https://wasp-lang.dev/docs/advanced/jobs)
+- [Email Sending](https://wasp-lang.dev/docs/advanced/email)
 
 By defining these things in the config file, Wasp continuously handles the boilerplate necessary with putting all these features together. You just need to focus on the business logic of your app.
 
