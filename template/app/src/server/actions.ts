@@ -2,8 +2,6 @@ import { type User, type Task } from 'wasp/entities';
 import { HttpError } from 'wasp/server';
 import {
   type GenerateGptResponse,
-  type UpdateCurrentUser,
-  type UpdateUserById,
   type CreateTask,
   type DeleteTask,
   type UpdateTask,
@@ -18,8 +16,6 @@ function setupOpenAI() {
   }
   return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 }
-
-
 
 type GptPayload = {
   hours: string;
@@ -220,39 +216,4 @@ export const deleteTask: DeleteTask<Pick<Task, 'id'>, Task> = async ({ id }, con
   });
 
   return task;
-};
-
-export const updateUserById: UpdateUserById<{ id: string; data: Partial<User> }, User> = async (
-  { id, data },
-  context
-) => {
-  if (!context.user) {
-    throw new HttpError(401);
-  }
-
-  if (!context.user.isAdmin) {
-    throw new HttpError(403);
-  }
-
-  const updatedUser = await context.entities.User.update({
-    where: {
-      id,
-    },
-    data,
-  });
-
-  return updatedUser;
-};
-
-export const updateCurrentUser: UpdateCurrentUser<Partial<User>, User> = async (user, context) => {
-  if (!context.user) {
-    throw new HttpError(401);
-  }
-
-  return context.entities.User.update({
-    where: {
-      id: context.user.id,
-    },
-    data: user,
-  });
 };

@@ -3,7 +3,7 @@ import { type User } from 'wasp/entities';
 import { logout } from 'wasp/client/auth';
 import { MdOutlineSpaceDashboard } from 'react-icons/md';
 import { TfiDashboard } from 'react-icons/tfi';
-import { cn } from '../cn';
+import { cn } from '../client/cn';
 
 export const UserMenuItems = ({ user, setMobileMenuOpen }: { user?: Partial<User>; setMobileMenuOpen?: any }) => {
   const path = window.location.pathname;

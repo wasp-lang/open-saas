@@ -6,10 +6,10 @@ import { BiLogIn } from 'react-icons/bi';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { HiBars3 } from 'react-icons/hi2';
 import logo from '../static/logo.png';
-import DropdownUser from './DropdownUser';
+import DropdownUser from '../../user/DropdownUser';
+import { UserMenuItems } from '../../user/UserMenuItems';
 import { DocsUrl, BlogUrl } from '../../common';
 import DarkModeSwitcher from '../admin/components/DarkModeSwitcher';
-import { UserMenuItems } from '../components/UserMenuItems';
 
 const navigation = [
   { name: 'AI Scheduler (Demo App)', href: routes.DemoAppRoute.build() },

@@ -5,7 +5,7 @@ import Clients from './_components/Clients';
 import Features from './_components/Features';
 import Testimonials from './_components/Testimonials';
 import FAQ from './_components/FAQ';
-import Footer from './_components/Footer'
+import Footer from './_components/Footer';
 
 export default function LandingPage() {
 

@@ -26,7 +26,7 @@ To control which pages require users to be authenticated to access them, you can
 route AccountRoute { path: "/account", to: AccountPage }
 page AccountPage {
   authRequired: true,
-  component: import Account from "@src/client/app/AccountPage"
+  component: import Account from "@src/user/AccountPage"
 }
 ```
 
