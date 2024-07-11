@@ -108,55 +108,6 @@ entity Task {=psl
   isDone                    Boolean         @default(false)
 psl=}
 
-// TODO: add functionality to allow users to send messages to admin
-// and make them accessible via the admin dashboard
-entity ContactFormMessage {=psl
-  id                        String          @id @default(uuid())
-  createdAt                 DateTime        @default(now())
-
-  user                      User            @relation(fields: [userId], references: [id])
-  userId                    String
-
-  content                   String
-  isRead                    Boolean         @default(false)
-  repliedAt                 DateTime?
-psl=}
-
-entity DailyStats {=psl
-  id                               Int             @id @default(autoincrement())
-  date                             DateTime        @default(now()) @unique
-
-  totalViews                       Int             @default(0)
-  prevDayViewsChangePercent        String          @default("0")
-  userCount                        Int             @default(0)
-  paidUserCount                    Int             @default(0)
-  userDelta                        Int             @default(0)
-  paidUserDelta                    Int             @default(0)
-  totalRevenue                     Float             @default(0)
-  totalProfit                      Float             @default(0)
-
-  sources                          PageViewSource[]
-psl=}
-
-entity PageViewSource {=psl
-  @@id([date, name])
-  name                     String
-  date                     DateTime        @default(now())
-
-  dailyStats               DailyStats?     @relation(fields: [dailyStatsId], references: [id])
-  dailyStatsId             Int?
-
-  visitors                 Int
-psl=}
-
-entity Logs {=psl
-  id                       Int             @id @default(autoincrement())
-  createdAt                DateTime        @default(now())
-
-  message                  String
-  level                    String
-psl=}
-
 route LandingPageRoute { path: "/", to: LandingPage }
 page LandingPage {
   component: import LandingPage from "@src/client/landing-page/LandingPage"
@@ -195,68 +146,6 @@ page DemoAppPage {
   component: import DemoAppPage from "@src/client/app/DemoAppPage"
 }
 
-//#region Admin Pages
-route AdminRoute { path: "/admin", to: DashboardPage }
-page DashboardPage {
-  authRequired: true,
-  component: import Dashboard from "@src/client/admin/pages/DashboardPage"
-}
-
-route AdminUsersRoute { path: "/admin/users", to: AdminUsersPage }
-page AdminUsersPage {
-  authRequired: true,
-  component: import AdminUsers from "@src/client/admin/pages/Users"
-}
-
-route AdminSettingsRoute { path: "/admin/settings", to: AdminSettingsPage }
-page AdminSettingsPage {
-  authRequired: true,
-  component: import AdminSettings from "@src/client/admin/pages/Settings"
-}
-
-route AdminChartsRoute { path: "/admin/chart", to: AdminChartsPage }
-page AdminChartsPage {
-  authRequired: true,
-  component: import AdminCharts from "@src/client/admin/pages/Chart"
-}
-
-route AdminMessagesRoute { path: "/admin/messages", to: AdminMessagesPage }
-page AdminMessagesPage {
-  authRequired: true,
-  component: import AdminMessages from "@src/client/admin/pages/Messages"
-}
-
-route AdminFormElementsRoute { path: "/admin/forms/form-elements", to: AdminFormElementsPage }
-page AdminFormElementsPage {
-  authRequired: true,
-  component: import AdminForms from "@src/client/admin/pages/Form/FormElements"
-}
-
-route AdminFormLayoutsRoute { path: "/admin/forms/form-layouts", to: AdminFormLayoutsPage }
-page AdminFormLayoutsPage {
-  authRequired: true,
-  component: import AdminForms from "@src/client/admin/pages/Form/FormLayout"
-}
-
-route AdminCalendarRoute { path: "/admin/calendar", to: AdminCalendarPage }
-page AdminCalendarPage {
-  authRequired: true,
-  component: import AdminCalendar from "@src/client/admin/pages/Calendar"
-}
-
-route AdminUIAlertsRoute { path: "/admin/ui/alerts", to: AdminUIAlertsPage }
-page AdminUIAlertsPage {
-  authRequired: true,
-  component: import AdminUI from "@src/client/admin/pages/UiElements/Alerts"
-}
-
-route AdminUIButtonsRoute { path: "/admin/ui/buttons", to: AdminUIButtonsPage }
-page AdminUIButtonsPage {
-  authRequired: true,
-  component: import AdminUI from "@src/client/admin/pages/UiElements/Buttons"
-}
-//#endregion
-
 action generateGptResponse {
   fn: import { generateGptResponse } from "@src/server/actions.js",
   entities: [User, Task, GptResponse]
@@ -287,11 +176,6 @@ query getAllTasksByUser {
   entities: [Task]
 }
 
-query getDailyStats {
-  fn: import { getDailyStats } from "@src/server/queries.js",
-  entities: [User, DailyStats]
-}
-
 job emailChecker {
   executor: PgBoss,
   perform: {
@@ -301,18 +185,6 @@ job emailChecker {
     cron: "0 7 * * 1" // at 7:00 am every Monday
   },
   entities: [User]
-}
-
-job dailyStatsJob {
-  executor: PgBoss,
-  perform: {
-    fn: import { calculateDailyStats } from "@src/server/workers/calculateDailyStats.js"
-  },
-  schedule: {
-    cron: "0 * * * *" // every hour. useful in production
-    // cron: "* * * * *" // every minute. useful for debugging
-  },
-  entities: [User, DailyStats, Logs, PageViewSource]
 }
 
 //#region User
@@ -419,5 +291,137 @@ entity File {=psl
   type                      String
   key                       String
   uploadUrl                 String
+psl=}
+//#endregion
+
+//#region Admin Dashboard
+//Admin Pages
+route AdminRoute { path: "/admin", to: AnalyticsDashboardPage }
+page AnalyticsDashboardPage {
+  authRequired: true,
+  component: import AnalyticsDashboardPage from "@src/admin/analytics/AnalyticsDashboardPage"
+}
+
+route AdminUsersRoute { path: "/admin/users", to: AdminUsersPage }
+page AdminUsersPage {
+  authRequired: true,
+  component: import AdminUsers from "@src/admin/users-dashboard/UsersDashboardPage"
+}
+
+route AdminSettingsRoute { path: "/admin/settings", to: AdminSettingsPage }
+page AdminSettingsPage {
+  authRequired: true,
+  component: import AdminSettings from "@src/admin/settings/SettingsPage"
+}
+
+route AdminChartsRoute { path: "/admin/chart", to: AdminChartsPage }
+page AdminChartsPage {
+  authRequired: true,
+  component: import AdminCharts from "@src/admin/charts/ChartsPage"
+}
+
+route AdminMessagesRoute { path: "/admin/messages", to: AdminMessagesPage }
+page AdminMessagesPage {
+  authRequired: true,
+  component: import AdminMessages from "@src/admin/messages/MessagesPage"
+}
+
+route AdminFormElementsRoute { path: "/admin/forms/form-elements", to: AdminFormElementsPage }
+page AdminFormElementsPage {
+  authRequired: true,
+  component: import AdminForms from "@src/admin/forms/FormElementsPage"
+}
+
+route AdminFormLayoutsRoute { path: "/admin/forms/form-layouts", to: AdminFormLayoutsPage }
+page AdminFormLayoutsPage {
+  authRequired: true,
+  component: import AdminForms from "@src/admin/forms/FormLayoutsPage"
+}
+
+route AdminCalendarRoute { path: "/admin/calendar", to: AdminCalendarPage }
+page AdminCalendarPage {
+  authRequired: true,
+  component: import AdminCalendar from "@src/admin/calendar/CalendarPage"
+}
+
+route AdminUIAlertsRoute { path: "/admin/ui/alerts", to: AdminUIAlertsPage }
+page AdminUIAlertsPage {
+  authRequired: true,
+  component: import AdminUI from "@src/admin/ui-elements/AlertsPage"
+}
+
+route AdminUIButtonsRoute { path: "/admin/ui/buttons", to: AdminUIButtonsPage }
+page AdminUIButtonsPage {
+  authRequired: true,
+  component: import AdminUI from "@src/admin/ui-elements/ButtonsPage"
+}
+
+// Admin Operations
+query getDailyStats {
+  fn: import { getDailyStats } from "@src/server/queries",
+  entities: [User, DailyStats]
+}
+
+// Admin Jobs
+job dailyStatsJob {
+  executor: PgBoss,
+  perform: {
+    fn: import { calculateDailyStats } from "@src/admin/analytics/stats"
+  },
+  schedule: {
+    // cron: "0 * * * *" // every hour. useful in production
+    cron: "* * * * *" // every minute. useful for debugging
+  },
+  entities: [User, DailyStats, Logs, PageViewSource]
+}
+
+// Admin Entities
+entity DailyStats {=psl
+  id                               Int             @id @default(autoincrement())
+  date                             DateTime        @default(now()) @unique
+
+  totalViews                       Int             @default(0)
+  prevDayViewsChangePercent        String          @default("0")
+  userCount                        Int             @default(0)
+  paidUserCount                    Int             @default(0)
+  userDelta                        Int             @default(0)
+  paidUserDelta                    Int             @default(0)
+  totalRevenue                     Float             @default(0)
+  totalProfit                      Float             @default(0)
+
+  sources                          PageViewSource[]
+psl=}
+
+entity PageViewSource {=psl
+  @@id([date, name])
+  name                     String
+  date                     DateTime        @default(now())
+
+  dailyStats               DailyStats?     @relation(fields: [dailyStatsId], references: [id])
+  dailyStatsId             Int?
+
+  visitors                 Int
+psl=}
+
+entity Logs {=psl
+  id                       Int             @id @default(autoincrement())
+  createdAt                DateTime        @default(now())
+
+  message                  String
+  level                    String
+psl=}
+
+// TODO: add functionality to allow users to send messages to admin
+// and make them accessible via the admin dashboard
+entity ContactFormMessage {=psl
+  id                        String          @id @default(uuid())
+  createdAt                 DateTime        @default(now())
+
+  user                      User            @relation(fields: [userId], references: [id])
+  userId                    String
+
+  content                   String
+  isRead                    Boolean         @default(false)
+  repliedAt                 DateTime?
 psl=}
 //#endregion
