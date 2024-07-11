@@ -72,7 +72,7 @@ In general, we determine if a user has paid for an initial subscription by check
 - When `deleted`, the user has reached the end of their subscription period after canceling and no longer has access to the app.
 
 - When `past_due`, the user's automatic subscription renewal payment was declined (e.g. their credit card expired). You can choose how to handle this status within your app. For example, you can send the user an email to update their payment information:
-```tsx title="src/server/webhooks/stripe.ts" 
+```tsx title="src/payment/stripe/webhook.ts" 
 import { emailSender } from "wasp/server/email";
 //...
 

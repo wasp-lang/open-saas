@@ -1,10 +1,10 @@
 import { useAuth } from 'wasp/client/auth';
 import { generateStripeCheckoutSession } from 'wasp/client/operations';
-import { PaymentPlanId, paymentPlans, prettyPaymentPlanName } from '../../payment/plans';
+import { PaymentPlanId, paymentPlans, prettyPaymentPlanName } from './plans';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { cn } from '../cn';
+import { cn } from '../client/cn';
 import { z } from 'zod';
 
 const bestDealPaymentPlanId: PaymentPlanId = PaymentPlanId.Pro;

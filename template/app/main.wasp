@@ -85,10 +85,6 @@ app OpenSaaS {
   },
 }
 
-/* 💽 Wasp defines DB entities via Prisma Database Models:
- * https://wasp-lang.dev/docs/data-model/entities
- */
-
 entity User {=psl
   id                        String          @id @default(uuid())
   createdAt                 DateTime        @default(now())
@@ -184,11 +180,6 @@ entity Logs {=psl
   level                    String
 psl=}
 
-/* 📡 These are the Wasp client Routes and Pages.
- * You can easily make them inaccessible to the unauthenticated user w/ 'authRequired: true'.
- * https://wasp-lang.dev/docs/tutorial/pages
- */
-
 route LandingPageRoute { path: "/", to: LandingPage }
 page LandingPage {
   component: import LandingPage from "@src/client/landing-page/LandingPage"
@@ -227,21 +218,10 @@ page DemoAppPage {
   component: import DemoAppPage from "@src/client/app/DemoAppPage"
 }
 
-route PricingPageRoute { path: "/pricing", to: PricingPage }
-page PricingPage {
-  component: import PricingPage from "@src/client/app/PricingPage"
-}
-
 route AccountRoute { path: "/account", to: AccountPage }
 page AccountPage {
   authRequired: true,
   component: import Account from "@src/client/app/AccountPage"
-}
-
-route CheckoutRoute { path: "/checkout", to: CheckoutPage }
-page CheckoutPage {
-  authRequired: true,
-  component: import Checkout from "@src/client/app/CheckoutPage"
 }
 
 //#region Admin Pages
@@ -306,13 +286,6 @@ page AdminUIButtonsPage {
 }
 //#endregion
 
-/* ⛑ These are the Wasp Operations: server code that you can easily call
- * from the client. Queries fetch stuff, Actions modify/do stuff.
- * https://wasp-lang.dev/docs/data-model/operations/overview
- */
-
-// 📝 Actions
-
 action generateGptResponse {
   fn: import { generateGptResponse } from "@src/server/actions.js",
   entities: [User, Task, GptResponse]
@@ -333,11 +306,6 @@ action updateTask {
   entities: [Task]
 }
 
-action generateStripeCheckoutSession {
-  fn: import { generateStripeCheckoutSession } from "@src/server/actions.js",
-  entities: [User]
-}
-
 action updateCurrentUser {
   fn: import { updateCurrentUser } from "@src/server/actions.js",
   entities: [User]
@@ -347,9 +315,6 @@ action updateUserById {
   fn: import { updateUserById } from "@src/server/actions.js",
   entities: [User]
 }
-
-
-// 📚 Queries
 
 query getGptResponses {
   fn: import { getGptResponses } from "@src/server/queries.js",
@@ -370,23 +335,6 @@ query getPaginatedUsers {
   fn: import { getPaginatedUsers } from "@src/server/queries.js",
   entities: [User]
 }
-
-/*
- * 📡 These are custom Wasp API Endpoints.
- * Use them for callbacks, webhooks, API for other services to consume, etc.
- * https://wasp-lang.dev/docs/advanced/apis
- */
-
-api stripeWebhook {
-  fn: import { stripeWebhook } from "@src/server/webhooks/stripe.js",
-  entities: [User],
-  middlewareConfigFn: import { stripeMiddlewareFn } from "@src/server/webhooks/stripe.js",
-  httpRoute: (POST, "/stripe-webhook")
-}
-
-/* 🕵️‍♂️ These are the Wasp Jobs. Use them to set up recurring tasks and/or queues.
- * https://wasp-lang.dev/docs/advanced/jobs
- */
 
 job emailChecker {
   executor: PgBoss,
@@ -410,6 +358,31 @@ job dailyStatsJob {
   },
   entities: [User, DailyStats, Logs, PageViewSource]
 }
+
+//#region Payment
+route PricingPageRoute { path: "/pricing", to: PricingPage }
+page PricingPage {
+  component: import PricingPage from "@src/payment/PricingPage"
+}
+
+route CheckoutRoute { path: "/checkout", to: CheckoutPage }
+page CheckoutPage {
+  authRequired: true,
+  component: import Checkout from "@src/payment/CheckoutPage"
+}
+
+action generateStripeCheckoutSession {
+  fn: import { generateStripeCheckoutSession } from "@src/payment/operations",
+  entities: [User]
+}
+
+api stripeWebhook {
+  fn: import { stripeWebhook } from "@src/payment/stripe/webhook",
+  entities: [User],
+  middlewareConfigFn: import { stripeMiddlewareFn } from "@src/payment/stripe/webhook",
+  httpRoute: (POST, "/stripe-webhook")
+}
+//#endregion
 
 
 //#region File Upload

@@ -1,5 +1,5 @@
-import type { SubscriptionStatus } from '../../payment/plans';
-import { PaymentPlanId } from '../../payment/plans';
+import type { SubscriptionStatus } from '../plans';
+import { PaymentPlanId } from '../plans';
 import { PrismaClient } from '@prisma/client';
 
 type UserStripePaymentDetails = {
