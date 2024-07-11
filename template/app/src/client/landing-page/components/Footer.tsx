@@ -1,4 +1,4 @@
-type NavigationItem = {
+interface NavigationItem {
 	name: string;
 	href: string;
 };

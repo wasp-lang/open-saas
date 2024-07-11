@@ -10,7 +10,7 @@ import { Dialog } from '@headlessui/react';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { UserMenuItems } from '../../components/UserMenuItems';
 
-type NavigationItem = {
+interface NavigationItem {
 	name: string;
 	href: string;
 };

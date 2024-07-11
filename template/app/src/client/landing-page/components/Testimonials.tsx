@@ -1,4 +1,4 @@
-type Testimonial = {
+interface Testimonial {
 	name: string;
 	role: string;
 	avatarSrc: string;

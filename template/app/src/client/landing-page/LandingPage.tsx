@@ -1,11 +1,11 @@
 import { features, navigation, faqs, footerNavigation, testimonials } from './contentSections';
-import Header from './_components/Header';
-import Hero from './_components/Hero';
-import Clients from './_components/Clients';
-import Features from './_components/Features';
-import Testimonials from './_components/Testimonials';
-import FAQ from './_components/FAQ';
-import Footer from './_components/Footer';
+import Header from './components/Header';
+import Hero from './components/Hero';
+import Clients from './components/Clients';
+import Features from './components/Features';
+import Testimonials from './components/Testimonials';
+import FAQ from './components/FAQ';
+import Footer from './components/Footer';
 
 export default function LandingPage() {
 
