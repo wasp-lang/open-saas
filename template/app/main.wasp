@@ -85,29 +85,6 @@ app OpenSaaS {
   },
 }
 
-entity User {=psl
-  id                        String          @id @default(uuid())
-  createdAt                 DateTime        @default(now())
-
-  email                     String?         @unique
-  username                  String?         @unique
-  lastActiveTimestamp       DateTime        @default(now())
-  isAdmin                   Boolean         @default(false)
-
-  stripeId                  String?         @unique
-  checkoutSessionId         String?
-  subscriptionStatus        String?         // 'active', 'canceled', 'past_due', 'deleted'
-  subscriptionPlan          String?         // 'hobby', 'pro'
-  sendEmail                 Boolean         @default(false)
-  datePaid                  DateTime?
-  credits                   Int             @default(3)
-
-  gptResponses              GptResponse[]
-  contactFormMessages       ContactFormMessage[]
-  tasks                     Task[]
-  files                     File[]
-psl=}
-
 entity GptResponse {=psl
   id                        String          @id @default(uuid())
   createdAt                 DateTime        @default(now())
@@ -218,12 +195,6 @@ page DemoAppPage {
   component: import DemoAppPage from "@src/client/app/DemoAppPage"
 }
 
-route AccountRoute { path: "/account", to: AccountPage }
-page AccountPage {
-  authRequired: true,
-  component: import Account from "@src/client/app/AccountPage"
-}
-
 //#region Admin Pages
 route AdminRoute { path: "/admin", to: DashboardPage }
 page DashboardPage {
@@ -306,16 +277,6 @@ action updateTask {
   entities: [Task]
 }
 
-action updateCurrentUser {
-  fn: import { updateCurrentUser } from "@src/server/actions.js",
-  entities: [User]
-}
-
-action updateUserById {
-  fn: import { updateUserById } from "@src/server/actions.js",
-  entities: [User]
-}
-
 query getGptResponses {
   fn: import { getGptResponses } from "@src/server/queries.js",
   entities: [User, GptResponse]
@@ -329,11 +290,6 @@ query getAllTasksByUser {
 query getDailyStats {
   fn: import { getDailyStats } from "@src/server/queries.js",
   entities: [User, DailyStats]
-}
-
-query getPaginatedUsers {
-  fn: import { getPaginatedUsers } from "@src/server/queries.js",
-  entities: [User]
 }
 
 job emailChecker {
@@ -359,6 +315,52 @@ job dailyStatsJob {
   entities: [User, DailyStats, Logs, PageViewSource]
 }
 
+//#region User
+entity User {=psl
+  id                        String          @id @default(uuid())
+  createdAt                 DateTime        @default(now())
+
+  email                     String?         @unique
+  username                  String?         @unique
+  lastActiveTimestamp       DateTime        @default(now())
+  isAdmin                   Boolean         @default(false)
+
+  stripeId                  String?         @unique
+  checkoutSessionId         String?
+  subscriptionStatus        String?         // 'active', 'canceled', 'past_due', 'deleted'
+  subscriptionPlan          String?         // 'hobby', 'pro'
+  sendEmail                 Boolean         @default(false)
+  datePaid                  DateTime?
+  credits                   Int             @default(3)
+
+  gptResponses              GptResponse[]
+  contactFormMessages       ContactFormMessage[]
+  tasks                     Task[]
+  files                     File[]
+psl=}
+
+route AccountRoute { path: "/account", to: AccountPage }
+page AccountPage {
+  authRequired: true,
+  component: import Account from "@src/user/AccountPage"
+}
+
+query getPaginatedUsers {
+  fn: import { getPaginatedUsers } from "@src/user/operations",
+  entities: [User]
+}
+
+action updateCurrentUser {
+  fn: import { updateCurrentUser } from "@src/user/operations",
+  entities: [User]
+}
+
+action updateUserById {
+  fn: import { updateUserById } from "@src/user/operations",
+  entities: [User]
+}
+//#endregion
+
 //#region Payment
 route PricingPageRoute { path: "/pricing", to: PricingPage }
 page PricingPage {
@@ -383,7 +385,6 @@ api stripeWebhook {
   httpRoute: (POST, "/stripe-webhook")
 }
 //#endregion
-
 
 //#region File Upload
 route FileUploadRoute { path: "/file-upload", to: FileUploadPage }
