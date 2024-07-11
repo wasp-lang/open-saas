@@ -1,38 +1,27 @@
 import { features, navigation, faqs, footerNavigation, testimonials } from './contentSections';
-import Header from './Header';
-import Hero from './Hero';
-import Clients from './Clients';
-import Feature from './Feature';
-import Testimonial from './Testimonial';
-import FAQ from './FAQ';
-import Footer from './Footer'
+import Header from './_components/Header';
+import Hero from './_components/Hero';
+import Clients from './_components/Clients';
+import Features from './_components/Features';
+import Testimonials from './_components/Testimonials';
+import FAQ from './_components/FAQ';
+import Footer from './_components/Footer'
 
 export default function LandingPage() {
 
-  return (
-    <div className='bg-white dark:text-white dark:bg-boxdark-2'>
-	  {/* Header */}	
-      <Header navigation={navigation}/>
+	return (
+		<div className='bg-white dark:text-white dark:bg-boxdark-2'>
+			<Header navigation={navigation} />
 
-      <main className='isolate dark:bg-boxdark-2'>
-        {/* Hero section */}
-        <Hero />
+			<main className='isolate dark:bg-boxdark-2'>
+				<Hero />
+				<Clients />
+				<Features features={features} />
+				<Testimonials testimonials={testimonials} />
+				<FAQ faqs={faqs} />
+			</main>
 
-        {/* Clients section */}
-        <Clients />
-
-        {/* Feature section */}
-        <Feature features={features}/>
-
-        {/* Testimonial section */}
-        <Testimonial testimonials={testimonials}/>
-
-        {/* FAQ */}
-        <FAQ faqs={faqs}/>
-      </main>
-
-      {/* Footer */}
-      <Footer footerNavigation={footerNavigation}/>
-    </div>
-  );
+			<Footer footerNavigation={footerNavigation} />
+		</div>
+	);
 }
