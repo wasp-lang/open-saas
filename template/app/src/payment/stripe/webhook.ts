@@ -3,12 +3,12 @@ import { type StripeWebhook } from 'wasp/server/api';
 import { type PrismaClient } from '@prisma/client';
 import express from 'express';
 import { Stripe } from 'stripe';
-import { stripe } from '../stripe/stripeClient';
-import { paymentPlans, PaymentPlanId, SubscriptionStatus } from '../../payment/plans';
-import { updateUserStripePaymentDetails } from './stripePaymentDetails';
+import { stripe } from './stripeClient';
+import { paymentPlans, PaymentPlanId, SubscriptionStatus } from '../plans';
+import { updateUserStripePaymentDetails } from './paymentDetails';
 import { emailSender } from 'wasp/server/email';
 import { assertUnreachable } from '../../utils';
-import { requireNodeEnvVar } from '../utils';
+import { requireNodeEnvVar } from '../../server/utils';
 import { z } from 'zod';
 
 export const stripeWebhook: StripeWebhook = async (request, response, context) => {
