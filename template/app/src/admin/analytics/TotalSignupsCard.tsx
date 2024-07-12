@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { UpArrow } from '../images/icon/icons-arrows';
+import { UpArrow } from '../../client/icons/icons-arrows';
 import type { DailyStatsProps } from './stats';
 import { cn } from '../../client/cn';
 

@@ -320,12 +320,6 @@ page AdminChartsPage {
   component: import AdminCharts from "@src/admin/charts/ChartsPage"
 }
 
-route AdminMessagesRoute { path: "/admin/messages", to: AdminMessagesPage }
-page AdminMessagesPage {
-  authRequired: true,
-  component: import AdminMessages from "@src/admin/messages/MessagesPage"
-}
-
 route AdminFormElementsRoute { path: "/admin/forms/form-elements", to: AdminFormElementsPage }
 page AdminFormElementsPage {
   authRequired: true,
@@ -356,13 +350,11 @@ page AdminUIButtonsPage {
   component: import AdminUI from "@src/admin/ui-elements/ButtonsPage"
 }
 
-// Admin Operations
 query getDailyStats {
   fn: import { getDailyStats } from "@src/server/queries",
   entities: [User, DailyStats]
 }
 
-// Admin Jobs
 job dailyStatsJob {
   executor: PgBoss,
   perform: {
@@ -375,7 +367,6 @@ job dailyStatsJob {
   entities: [User, DailyStats, Logs, PageViewSource]
 }
 
-// Admin Entities
 entity DailyStats {=psl
   id                               Int             @id @default(autoincrement())
   date                             DateTime        @default(now()) @unique
@@ -411,8 +402,18 @@ entity Logs {=psl
   level                    String
 psl=}
 
-// TODO: add functionality to allow users to send messages to admin
+//#endregion
+
+//#region Contact Form Messages
+// TODO: 
+// add functionality to allow users to send messages to admin
 // and make them accessible via the admin dashboard
+route AdminMessagesRoute { path: "/admin/messages", to: AdminMessagesPage }
+page AdminMessagesPage {
+  authRequired: true,
+  component: import AdminMessages from "@src/messages/MessagesPage"
+}
+
 entity ContactFormMessage {=psl
   id                        String          @id @default(uuid())
   createdAt                 DateTime        @default(now())
@@ -424,4 +425,3 @@ entity ContactFormMessage {=psl
   isRead                    Boolean         @default(false)
   repliedAt                 DateTime?
 psl=}
-//#endregion

@@ -1,5 +1,5 @@
 import { type AuthUser } from 'wasp/auth/types';
-import MessageButton from '../messages/MessageButton';
+import MessageButton from '../../messages/MessageButton';
 import DropdownUser from '../../user/DropdownUser';
 import { cn } from '../../client/cn';
 import DarkModeSwitcher from '../../client/components/DarkModeSwitcher';

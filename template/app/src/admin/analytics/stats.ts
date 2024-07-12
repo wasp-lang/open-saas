@@ -1,9 +1,9 @@
 import { type DailyStats } from 'wasp/entities';
 import { type DailyStatsJob } from 'wasp/server/jobs';
 import Stripe from 'stripe';
-import { stripe } from '../../payment/stripe/stripeClient.js';
-import { getDailyPageViews, getSources } from './providers/plausibleAnalyticsUtils.js';
-// import { getDailyPageViews, getSources } from './providers/googleAnalyticsUtils.js';
+import { stripe } from '../../payment/stripe/stripeClient'
+import { getDailyPageViews, getSources } from './providers/plausibleAnalyticsUtils';
+// import { getDailyPageViews, getSources } from './providers/googleAnalyticsUtils;
 
 export type DailyStatsProps = { dailyStats?: DailyStats; weeklyStats?: DailyStats[]; isLoading?: boolean };
 
