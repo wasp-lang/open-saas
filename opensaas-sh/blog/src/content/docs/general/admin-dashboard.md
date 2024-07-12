@@ -67,7 +67,7 @@ The Admin analytics dashboard is a single place for you to view your most import
 
 These metrics are aggregated within the background job `dailyStatsJob`, which by default is run every hour. You can change the frequency of this job by modifying its `cron` field:
 
-```ts title="main.wasp" {6,7}
+```ts title="main.wasp" {8,7}
 job dailyStatsJob {
   executor: PgBoss,
   perform: {

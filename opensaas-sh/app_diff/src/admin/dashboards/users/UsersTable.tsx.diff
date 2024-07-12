@@ -1,19 +1,21 @@
---- template/app/src/client/admin/components/UsersTable.tsx
-+++ opensaas-sh/app/src/client/admin/components/UsersTable.tsx
-@@ -11,6 +11,7 @@
+--- template/app/src/admin/dashboards/users/UsersTable.tsx
++++ opensaas-sh/app/src/admin/dashboards/users/UsersTable.tsx
+@@ -9,8 +9,10 @@
+   const [skip, setskip] = useState(0);
+   const [page, setPage] = useState(1);
    const [email, setEmail] = useState<string | undefined>(undefined);
++  
    const [isAdminFilter, setIsAdminFilter] = useState<boolean | undefined>(undefined);
    const [statusOptions, setStatusOptions] = useState<SubscriptionStatus[]>([]);
 +  const [isDemoInfoVisible, setIsDemoInfoVisible] = useState(false);
    const { data, isLoading, error } = useQuery(getPaginatedUsers, {
      skip,
      emailContains: email,
-@@ -26,8 +27,43 @@
+@@ -26,8 +28,42 @@
      setskip((page - 1) * 10);
    }, [page]);
  
-+
-+  useEffect(() => {
++    useEffect(() => {
 +    try {
 +      if (localStorage.getItem('isDemoInfoVisible') === 'false') {
 +        // do nothing
@@ -25,14 +27,14 @@
 +    }
 +  }, []);
 +
-+    const handleDemoInfoClose = () => {
-+      try {
-+        localStorage.setItem('isDemoInfoVisible', 'false');
-+        setIsDemoInfoVisible(false);
-+      } catch (error) {
-+        console.error(error);
-+      }
-+    };
++  const handleDemoInfoClose = () => {
++    try {
++      localStorage.setItem('isDemoInfoVisible', 'false');
++      setIsDemoInfoVisible(false);
++    } catch (error) {
++      console.error(error);
++    }
++  };
 +
    return (
      <div className='flex flex-col gap-4'>

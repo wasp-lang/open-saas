@@ -1,27 +1,23 @@
---- template/app/src/client/admin/pages/DashboardPage.tsx
-+++ opensaas-sh/app/src/client/admin/pages/DashboardPage.tsx
-@@ -1,5 +1,7 @@
+--- template/app/src/admin/dashboards/analytics/AnalyticsDashboardPage.tsx
++++ opensaas-sh/app/src/admin/dashboards/analytics/AnalyticsDashboardPage.tsx
+@@ -1,4 +1,5 @@
  import { type User } from 'wasp/entities';
- import { useQuery, getDailyStats } from 'wasp/client/operations';
-+import { Link } from "wasp/client/router";
 +import { useState, useEffect } from 'react';
- import TotalSignupsCard from '../components/TotalSignupsCard';
- import TotalPageViewsCard from '../components/TotalPaidViewsCard';
- import TotalPayingUsersCard from '../components/TotalPayingUsersCard';
-@@ -10,6 +12,8 @@
+ import { useQuery, getDailyStats } from 'wasp/client/operations';
+ import TotalSignupsCard from './TotalSignupsCard';
+ import TotalPageViewsCard from './TotalPageViewsCard';
+@@ -10,6 +11,7 @@
  import { useHistory } from 'react-router-dom';
  
  const Dashboard = ({ user }: { user: User }) => {
 +  const [isDemoInfoVisible, setIsDemoInfoVisible] = useState(false);
-+
    const history = useHistory();
    if (!user.isAdmin) {
      history.push('/');
-@@ -17,8 +21,41 @@
+@@ -17,8 +19,40 @@
  
    const { data: stats, isLoading, error } = useQuery(getDailyStats);
  
-+
 +  useEffect(() => {
 +    try {
 +      if (localStorage.getItem('isStripeDemoInfoVisible') === 'false') {
