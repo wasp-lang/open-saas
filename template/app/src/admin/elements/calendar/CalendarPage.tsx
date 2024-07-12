@@ -1,5 +1,5 @@
-import Breadcrumb from '../layout/Breadcrumb';
-import DefaultLayout from '../layout/DefaultLayout';
+import Breadcrumb from '../../layout/Breadcrumb';
+import DefaultLayout from '../../layout/DefaultLayout';
 
 const Calendar = () => {
   return (

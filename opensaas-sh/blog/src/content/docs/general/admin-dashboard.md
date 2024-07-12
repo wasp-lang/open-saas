@@ -20,8 +20,7 @@ entity User {=psl
   //...
 ```
 
-To give yourself administrator priveledges, make sure you add your email addresses to the `ADMIN_EMAILS` environment variable in `.env.server` file before registering/logging in with that email address.
-
+To give yourself administrator priveledges, make sure you add your email addresses to the `ADMIN_EMAILS` environment variable in `.env.server` file before registering/logging in with that email address:
 ```sh title=".env.server"
 ADMIN_EMAILS=me@example.com
 
@@ -30,12 +29,11 @@ ADMIN_EMAILS=me@example.com
 ADMIN_EMAILS=me@example.com,you@example.com,them@example.com
 ```
 
-if you've already logged in with an email address that you want to give admin priveledges to, you can run the following command in a separate terminal window to update the user's `isAdmin` field:
+Or if you've already logged in with an email address that you want to give admin priveledges to, you can run the following command in a separate terminal window to update the user's `isAdmin` field manually:
 
 ```sh
 wasp db studio
 ```
-
 
 ![db studio](/stripe/db-studio.png)
 
@@ -49,8 +47,8 @@ If you're finding this template and its guides useful, consider giving us [a sta
 
 ## Admin Dashboard Pages
 
-### Dashboard
-The Admin dashboard is a single place for you to view your most important metrics and perform some admin tasks. At the moment, it pulls data from:
+### Analytics Dashboard
+The Admin analytics dashboard is a single place for you to view your most important metrics and perform some admin tasks. At the moment, it pulls data from:
 
 <!-- TODO: add photo -->
 
@@ -67,7 +65,23 @@ The Admin dashboard is a single place for you to view your most important metric
   - total number of paying users
   - daily change in number of paying users
 
-For a guide on how to integrate these services, check out the [Stripe](/guides/stripe-integration) and [Analytics guide](/guides/analytics) of the docs.
+These metrics are aggregated within the background job `dailyStatsJob`, which by default is run every hour. You can change the frequency of this job by modifying its `cron` field:
+
+```ts title="main.wasp" {6,7}
+job dailyStatsJob {
+  executor: PgBoss,
+  perform: {
+    fn: import { calculateDailyStats } from "@src/analytics/stats"
+  },
+  schedule: {
+    cron: "0 * * * *" // every hour. useful in production
+    // cron: "* * * * *" // every minute. useful for debugging
+  },
+  entities: [User, DailyStats, Logs, PageViewSource]
+}
+```
+
+For a guide on how to integrate these services so that you can view your analytics via the dashboard, check out the [Stripe](/guides/stripe-integration) and [Analytics guide](/guides/analytics) of the docs.
 
 :::note[Help us improve]
 We're always looking to improve the Admin dashboard. If you feel something is missing or could be improved, consider [opening an issue](https://github.com/wasp-lang/open-saas/issues) or [submitting a pull request](https://github.com/wasp-lang/open-saas/pulls)
@@ -77,4 +91,4 @@ We're always looking to improve the Admin dashboard. If you feel something is mi
 The Users page is where you can view all your users and their most important details. You can also search and filter users by:
 - email address
 - subscription/payment status
-
+- admin status

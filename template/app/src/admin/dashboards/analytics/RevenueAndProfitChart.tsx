@@ -1,7 +1,7 @@
 import { ApexOptions } from 'apexcharts';
 import React, { useState, useMemo, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
-import { DailyStatsProps } from './stats';
+import { type DailyStatsProps } from '../../../analytics/stats';
 
 const options: ApexOptions = {
   legend: {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { cn } from '../../client/cn';
+import { cn } from '../../../client/cn';
 
 const CheckboxTwo = () => {
   const [enabled, setEnabled] = useState<boolean>(false);

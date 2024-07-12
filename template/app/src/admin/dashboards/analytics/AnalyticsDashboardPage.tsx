@@ -6,7 +6,7 @@ import TotalPayingUsersCard from './TotalPayingUsersCard';
 import TotalRevenueCard from './TotalRevenueCard';
 import RevenueAndProfitChart from './RevenueAndProfitChart';
 import SourcesTable from './PageViewSourcesTable';
-import DefaultLayout from '../layout/DefaultLayout';
+import DefaultLayout from '../../layout/DefaultLayout';
 import { useHistory } from 'react-router-dom';
 
 const Dashboard = ({ user }: { user: User }) => {

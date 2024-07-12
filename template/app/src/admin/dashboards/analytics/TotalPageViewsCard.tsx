@@ -1,5 +1,5 @@
-import { cn } from '../../client/cn';
-import { UpArrow, DownArrow } from '../../client/icons/icons-arrows';
+import { cn } from '../../../client/cn';
+import { UpArrow, DownArrow } from '../../../client/icons/icons-arrows';
 
 type PageViewsStats = {
   totalPageViews: number | undefined;

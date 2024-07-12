@@ -294,75 +294,20 @@ entity File {=psl
 psl=}
 //#endregion
 
-//#region Admin Dashboard
-//Admin Pages
-route AdminRoute { path: "/admin", to: AnalyticsDashboardPage }
-page AnalyticsDashboardPage {
-  authRequired: true,
-  component: import AnalyticsDashboardPage from "@src/admin/analytics/AnalyticsDashboardPage"
-}
-
-route AdminUsersRoute { path: "/admin/users", to: AdminUsersPage }
-page AdminUsersPage {
-  authRequired: true,
-  component: import AdminUsers from "@src/admin/users-dashboard/UsersDashboardPage"
-}
-
-route AdminSettingsRoute { path: "/admin/settings", to: AdminSettingsPage }
-page AdminSettingsPage {
-  authRequired: true,
-  component: import AdminSettings from "@src/admin/settings/SettingsPage"
-}
-
-route AdminChartsRoute { path: "/admin/chart", to: AdminChartsPage }
-page AdminChartsPage {
-  authRequired: true,
-  component: import AdminCharts from "@src/admin/charts/ChartsPage"
-}
-
-route AdminFormElementsRoute { path: "/admin/forms/form-elements", to: AdminFormElementsPage }
-page AdminFormElementsPage {
-  authRequired: true,
-  component: import AdminForms from "@src/admin/forms/FormElementsPage"
-}
-
-route AdminFormLayoutsRoute { path: "/admin/forms/form-layouts", to: AdminFormLayoutsPage }
-page AdminFormLayoutsPage {
-  authRequired: true,
-  component: import AdminForms from "@src/admin/forms/FormLayoutsPage"
-}
-
-route AdminCalendarRoute { path: "/admin/calendar", to: AdminCalendarPage }
-page AdminCalendarPage {
-  authRequired: true,
-  component: import AdminCalendar from "@src/admin/calendar/CalendarPage"
-}
-
-route AdminUIAlertsRoute { path: "/admin/ui/alerts", to: AdminUIAlertsPage }
-page AdminUIAlertsPage {
-  authRequired: true,
-  component: import AdminUI from "@src/admin/ui-elements/AlertsPage"
-}
-
-route AdminUIButtonsRoute { path: "/admin/ui/buttons", to: AdminUIButtonsPage }
-page AdminUIButtonsPage {
-  authRequired: true,
-  component: import AdminUI from "@src/admin/ui-elements/ButtonsPage"
-}
-
+//#region Analytics
 query getDailyStats {
-  fn: import { getDailyStats } from "@src/server/queries",
+  fn: import { getDailyStats } from "@src/analytics/operations",
   entities: [User, DailyStats]
 }
 
 job dailyStatsJob {
   executor: PgBoss,
   perform: {
-    fn: import { calculateDailyStats } from "@src/admin/analytics/stats"
+    fn: import { calculateDailyStats } from "@src/analytics/stats"
   },
   schedule: {
-    // cron: "0 * * * *" // every hour. useful in production
-    cron: "* * * * *" // every minute. useful for debugging
+    cron: "0 * * * *" // every hour. useful in production
+    // cron: "* * * * *" // every minute. useful for debugging
   },
   entities: [User, DailyStats, Logs, PageViewSource]
 }
@@ -377,8 +322,8 @@ entity DailyStats {=psl
   paidUserCount                    Int             @default(0)
   userDelta                        Int             @default(0)
   paidUserDelta                    Int             @default(0)
-  totalRevenue                     Float             @default(0)
-  totalProfit                      Float             @default(0)
+  totalRevenue                     Float           @default(0)
+  totalProfit                      Float           @default(0)
 
   sources                          PageViewSource[]
 psl=}
@@ -401,7 +346,62 @@ entity Logs {=psl
   message                  String
   level                    String
 psl=}
+//#endregion
 
+//#region Admin Dashboard
+route AdminRoute { path: "/admin", to: AnalyticsDashboardPage }
+page AnalyticsDashboardPage {
+  authRequired: true,
+  component: import AnalyticsDashboardPage from "@src/admin/dashboards/analytics/AnalyticsDashboardPage"
+}
+
+route AdminUsersRoute { path: "/admin/users", to: AdminUsersPage }
+page AdminUsersPage {
+  authRequired: true,
+  component: import AdminUsers from "@src/admin/dashboards/users/UsersDashboardPage"
+}
+
+route AdminSettingsRoute { path: "/admin/settings", to: AdminSettingsPage }
+page AdminSettingsPage {
+  authRequired: true,
+  component: import AdminSettings from "@src/admin/elements/settings/SettingsPage"
+}
+
+route AdminChartsRoute { path: "/admin/chart", to: AdminChartsPage }
+page AdminChartsPage {
+  authRequired: true,
+  component: import AdminCharts from "@src/admin/elements/charts/ChartsPage"
+}
+
+route AdminFormElementsRoute { path: "/admin/forms/form-elements", to: AdminFormElementsPage }
+page AdminFormElementsPage {
+  authRequired: true,
+  component: import AdminForms from "@src/admin/elements/forms/FormElementsPage"
+}
+
+route AdminFormLayoutsRoute { path: "/admin/forms/form-layouts", to: AdminFormLayoutsPage }
+page AdminFormLayoutsPage {
+  authRequired: true,
+  component: import AdminForms from "@src/admin/elements/forms/FormLayoutsPage"
+}
+
+route AdminCalendarRoute { path: "/admin/calendar", to: AdminCalendarPage }
+page AdminCalendarPage {
+  authRequired: true,
+  component: import AdminCalendar from "@src/admin/elements/calendar/CalendarPage"
+}
+
+route AdminUIAlertsRoute { path: "/admin/ui/alerts", to: AdminUIAlertsPage }
+page AdminUIAlertsPage {
+  authRequired: true,
+  component: import AdminUI from "@src/admin/elements/ui-elements/AlertsPage"
+}
+
+route AdminUIButtonsRoute { path: "/admin/ui/buttons", to: AdminUIButtonsPage }
+page AdminUIButtonsPage {
+  authRequired: true,
+  component: import AdminUI from "@src/admin/elements/ui-elements/ButtonsPage"
+}
 //#endregion
 
 //#region Contact Form Messages
@@ -425,3 +425,4 @@ entity ContactFormMessage {=psl
   isRead                    Boolean         @default(false)
   repliedAt                 DateTime?
 psl=}
+//#endregion

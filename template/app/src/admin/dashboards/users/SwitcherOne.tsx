@@ -1,6 +1,6 @@
 import { type User } from 'wasp/entities';
 import { useState } from 'react';
-import { cn } from '../../client/cn';
+import { cn } from '../../../client/cn';
 
 const SwitcherOne = ({ user, updateUserById }: { user?: Partial<User>; updateUserById?: any }) => {
   const [enabled, setEnabled] = useState<boolean>(user?.isAdmin || false);

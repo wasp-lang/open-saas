@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { cn } from '../../client/cn';
+import { cn } from '../../../client/cn';
 
 const SwitcherTwo = () => {
   const [enabled, setEnabled] = useState(false);

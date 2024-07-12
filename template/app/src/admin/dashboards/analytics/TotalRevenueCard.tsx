@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { UpArrow, DownArrow } from '../../client/icons/icons-arrows';
-import type { DailyStatsProps } from './stats';
+import { UpArrow, DownArrow } from '../../../client/icons/icons-arrows';
+import { type DailyStatsProps } from '../../../analytics/stats';
 
 const TotalRevenueCard = ({dailyStats, weeklyStats, isLoading}: DailyStatsProps) => {
   const isDeltaPositive = useMemo(() => {

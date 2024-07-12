@@ -1,7 +1,7 @@
 import { FormEvent } from 'react';
-import Breadcrumb from '../layout/Breadcrumb';
 import toast from 'react-hot-toast';
-import DefaultLayout from '../layout/DefaultLayout';
+import Breadcrumb from '../../layout/Breadcrumb';
+import DefaultLayout from '../../layout/DefaultLayout';
 
 const SettingsPage = () => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
