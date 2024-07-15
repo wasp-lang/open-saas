@@ -1,15 +1,15 @@
-import { useAuth } from 'wasp/client/auth';
+import { type AuthUser } from 'wasp/auth';
 import { useState, ReactNode, FC } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 
 interface Props {
+  user: AuthUser;
   children?: ReactNode;
 }
 
-const DefaultLayout: FC<Props> = ({ children }) => {
+const DefaultLayout: FC<Props> = ({ children, user }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { data: user } = useAuth();
 
   return (
     <div className='dark:bg-boxdark-2 dark:text-bodydark'>

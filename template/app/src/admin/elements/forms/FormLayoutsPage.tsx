@@ -1,9 +1,13 @@
+import { type AuthUser } from 'wasp/auth';
 import Breadcrumb from '../../layout/Breadcrumb';
 import DefaultLayout from '../../layout/DefaultLayout';
+import { useIsUserAdmin } from '../../useIsUserAdmin';
 
-const FormLayout = () => {
+const FormLayout = ({ user }: { user: AuthUser }) => {
+  useIsUserAdmin({ user });
+
   return (
-    <DefaultLayout>
+    <DefaultLayout user={user}>
       <Breadcrumb pageName='FormLayout' />
 
       <div className='grid grid-cols-1 gap-9 sm:grid-cols-2'>

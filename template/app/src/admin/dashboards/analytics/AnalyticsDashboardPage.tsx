@@ -1,4 +1,4 @@
-import { type User } from 'wasp/entities';
+import { type AuthUser } from 'wasp/auth';
 import { useQuery, getDailyStats } from 'wasp/client/operations';
 import TotalSignupsCard from './TotalSignupsCard';
 import TotalPageViewsCard from './TotalPageViewsCard';
@@ -7,18 +7,15 @@ import TotalRevenueCard from './TotalRevenueCard';
 import RevenueAndProfitChart from './RevenueAndProfitChart';
 import SourcesTable from './PageViewSourcesTable';
 import DefaultLayout from '../../layout/DefaultLayout';
-import { useHistory } from 'react-router-dom';
+import { useIsUserAdmin } from '../../useIsUserAdmin'
 
-const Dashboard = ({ user }: { user: User }) => {
-  const history = useHistory();
-  if (!user.isAdmin) {
-    history.push('/');
-  }
+const Dashboard = ({ user }: { user: AuthUser }) => {
+  useIsUserAdmin({ user })
 
   const { data: stats, isLoading, error } = useQuery(getDailyStats);
 
   return (
-    <DefaultLayout>
+    <DefaultLayout user={user}>
       <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5'>
         <TotalPageViewsCard
           totalPageViews={stats?.dailyStats.totalViews}
