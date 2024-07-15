@@ -1,11 +1,11 @@
 --- template/app/src/client/landing-page/contentSections.ts
 +++ opensaas-sh/app/src/client/landing-page/contentSections.ts
 @@ -1,74 +1,126 @@
--import { DocsUrl, BlogUrl } from '../../common';
+-import { DocsUrl, BlogUrl } from '../../shared/common';
 -import daBoiAvatar from '../static/da-boi.png';
 -import avatarPlaceholder from '../static/avatar-placeholder.png';
 -import { routes } from 'wasp/client/router';
-+import { DocsUrl, BlogUrl, GithubUrl } from '../../common';
++import { DocsUrl, BlogUrl, GithubUrl } from '../../shared/common';
  
  export const navigation = [
    { name: 'Features', href: '#features' },

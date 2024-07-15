@@ -1,12 +1,7 @@
-import { type User, type Task } from 'wasp/entities';
+import type { Task, GptResponse } from 'wasp/entities';
+import type { GenerateGptResponse, CreateTask, DeleteTask, UpdateTask, GetGptResponses, GetAllTasksByUser } from 'wasp/server/operations';
 import { HttpError } from 'wasp/server';
-import {
-  type GenerateGptResponse,
-  type CreateTask,
-  type DeleteTask,
-  type UpdateTask,
-} from 'wasp/server/operations';
-import { GeneratedSchedule } from '../gpt/schedule';
+import { GeneratedSchedule } from './schedule';
 import OpenAI from 'openai';
 
 const openai = setupOpenAI();
@@ -17,6 +12,7 @@ function setupOpenAI() {
   return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 }
 
+//#region Actions
 type GptPayload = {
   hours: string;
 };
@@ -45,7 +41,12 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, GeneratedSched
       throw openai;
     }
 
-    if (!context.user.credits && (!context.user.subscriptionStatus || context.user.subscriptionStatus === 'deleted' || context.user.subscriptionStatus === 'past_due')) {
+    if (
+      !context.user.credits &&
+      (!context.user.subscriptionStatus ||
+        context.user.subscriptionStatus === 'deleted' ||
+        context.user.subscriptionStatus === 'past_due')
+    ) {
       throw new HttpError(402, 'User has not paid or is out of credits');
     } else if (context.user.credits && !context.user.subscriptionStatus) {
       console.log('decrementing credits');
@@ -217,3 +218,35 @@ export const deleteTask: DeleteTask<Pick<Task, 'id'>, Task> = async ({ id }, con
 
   return task;
 };
+//#endregion
+
+//#region Queries
+export const getGptResponses: GetGptResponses<void, GptResponse[]> = async (_args, context) => {
+  if (!context.user) {
+    throw new HttpError(401);
+  }
+  return context.entities.GptResponse.findMany({
+    where: {
+      user: {
+        id: context.user.id,
+      },
+    },
+  });
+};
+
+export const getAllTasksByUser: GetAllTasksByUser<void, Task[]> = async (_args, context) => {
+  if (!context.user) {
+    throw new HttpError(401);
+  }
+  return context.entities.Task.findMany({
+    where: {
+      user: {
+        id: context.user.id,
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+};
+//#endregion
