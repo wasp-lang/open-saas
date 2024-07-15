@@ -158,7 +158,7 @@ This template comes with a fully functional auth flow out of the box. It takes a
 By defining the auth structure in your `main.wasp` file, Wasp manages all the necessary code for you, including:
 - Email verified login with reset password
 - Social login with Google and/or GitHub
-- Auth-related databse entities for user credentials, sessions, and social logins 
+- Auth-related database entities for user credentials, sessions, and social logins 
 - Custom-generated AuthUI components for login, signup, and reset password
 - Auth hooks for fetching user data
 

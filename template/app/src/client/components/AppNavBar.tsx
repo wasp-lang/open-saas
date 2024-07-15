@@ -9,7 +9,7 @@ import logo from '../static/logo.png';
 import DropdownUser from '../../user/DropdownUser';
 import { UserMenuItems } from '../../user/UserMenuItems';
 import { DocsUrl, BlogUrl } from '../../common';
-import DarkModeSwitcher from '../admin/components/DarkModeSwitcher';
+import DarkModeSwitcher from './DarkModeSwitcher';
 
 const navigation = [
   { name: 'AI Scheduler (Demo App)', href: routes.DemoAppRoute.build() },
