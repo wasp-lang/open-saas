@@ -22,8 +22,8 @@
 +} from './contentSections';
  import DropdownUser from '../../user/DropdownUser';
  import { UserMenuItems } from '../../user/UserMenuItems';
--import { DocsUrl } from '../../common';
-+import { DocsUrl, GithubUrl } from '../../common';
+-import { DocsUrl } from '../../shared/common';
++import { DocsUrl, GithubUrl } from '../../shared/common';
  import DarkModeSwitcher from '../components/DarkModeSwitcher';
  
  export default function LandingPage() {

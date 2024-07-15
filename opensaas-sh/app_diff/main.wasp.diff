@@ -84,3 +84,15 @@
      },
    },
  }
+@@ -125,7 +123,10 @@
+   email                     String?         @unique
+   username                  String?         @unique
+   lastActiveTimestamp       DateTime        @default(now())
+-  isAdmin                   Boolean         @default(false)
++  isAdmin                   Boolean         @default(true)
++  // isMockUser is an extra property for the demo app ensuring that all users can access
++  // the admin dashboard but won't be able to see the other users' data, only mock user data.
++  isMockUser                Boolean         @default(false)
+ 
+   stripeId                  String?         @unique
+   checkoutSessionId         String?

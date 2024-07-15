@@ -12,8 +12,8 @@ import {
 import { useState, useMemo } from 'react';
 import { CgSpinner } from 'react-icons/cg';
 import { TiDelete } from 'react-icons/ti';
-import type { GeneratedSchedule, MainTask, SubTask } from '../../gpt/schedule';
-import { cn } from '../cn';
+import type { GeneratedSchedule, MainTask, SubTask } from './schedule';
+import { cn } from '../client/cn';
 
 export default function DemoAppPage() {
   return (

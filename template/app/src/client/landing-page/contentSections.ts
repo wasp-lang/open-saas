@@ -1,4 +1,4 @@
-import { DocsUrl, BlogUrl } from '../../common';
+import { DocsUrl, BlogUrl } from '../../shared/common';
 import daBoiAvatar from '../static/da-boi.png';
 import avatarPlaceholder from '../static/avatar-placeholder.png';
 import { routes } from 'wasp/client/router';

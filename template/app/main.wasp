@@ -116,53 +116,6 @@ page EmailVerificationPage {
 }
 //#endregion
 
-route DemoAppRoute { path: "/demo-app", to: DemoAppPage }
-page DemoAppPage {
-  authRequired: true,
-  component: import DemoAppPage from "@src/client/app/DemoAppPage"
-}
-
-action generateGptResponse {
-  fn: import { generateGptResponse } from "@src/server/actions.js",
-  entities: [User, Task, GptResponse]
-}
-
-action createTask {
-  fn: import { createTask } from "@src/server/actions.js",
-  entities: [Task]
-}
-
-action deleteTask {
-  fn: import { deleteTask } from "@src/server/actions.js",
-  entities: [Task]
-}
-
-action updateTask {
-  fn: import { updateTask } from "@src/server/actions.js",
-  entities: [Task]
-}
-
-query getGptResponses {
-  fn: import { getGptResponses } from "@src/server/queries.js",
-  entities: [User, GptResponse]
-}
-
-query getAllTasksByUser {
-  fn: import { getAllTasksByUser } from "@src/server/queries.js",
-  entities: [Task]
-}
-
-job emailChecker {
-  executor: PgBoss,
-  perform: {
-    fn: import { checkAndQueueEmails } from "@src/server/workers/checkAndQueueEmails.js"
-  },
-  schedule: {
-    cron: "0 7 * * 1" // at 7:00 am every Monday
-  },
-  entities: [User]
-}
-
 //#region User
 route AccountRoute { path: "/account", to: AccountPage }
 page AccountPage {
@@ -183,6 +136,44 @@ action updateCurrentUser {
 action updateUserById {
   fn: import { updateUserById } from "@src/user/operations",
   entities: [User]
+}
+//#endregion
+
+//#region Demo AI App
+route DemoAppRoute { path: "/demo-app", to: DemoAppPage }
+page DemoAppPage {
+  authRequired: true,
+  component: import DemoAppPage from "@src/demo-ai-app/DemoAppPage"
+}
+
+action generateGptResponse {
+  fn: import { generateGptResponse } from "@src/demo-ai-app/operations",
+  entities: [User, Task, GptResponse]
+}
+
+action createTask {
+  fn: import { createTask } from "@src/demo-ai-app/operations",
+  entities: [Task]
+}
+
+action deleteTask {
+  fn: import { deleteTask } from "@src/demo-ai-app/operations",
+  entities: [Task]
+}
+
+action updateTask {
+  fn: import { updateTask } from "@src/demo-ai-app/operations",
+  entities: [Task]
+}
+
+query getGptResponses {
+  fn: import { getGptResponses } from "@src/demo-ai-app/operations",
+  entities: [User, GptResponse]
+}
+
+query getAllTasksByUser {
+  fn: import { getAllTasksByUser } from "@src/demo-ai-app/operations",
+  entities: [Task]
 }
 //#endregion
 
@@ -317,5 +308,18 @@ route AdminMessagesRoute { path: "/admin/messages", to: AdminMessagesPage }
 page AdminMessagesPage {
   authRequired: true,
   component: import AdminMessages from "@src/messages/MessagesPage"
+}
+//#endregion
+
+//#region Newsletter
+job sendNewsletter {
+  executor: PgBoss,
+  perform: {
+    fn: import { checkAndQueueNewsletterEmails } from "@src/newsletter/sendNewsletter"
+  },
+  schedule: {
+    cron: "0 7 * * 1" // at 7:00 am every Monday
+  },
+  entities: [User]
 }
 //#endregion
