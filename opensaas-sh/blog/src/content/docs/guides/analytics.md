@@ -63,7 +63,7 @@ After you sign up for [Google analytics](https://analytics.google.com/), go to y
 
 Once you've completed the steps to create a new Property, some Installation Instructions will pop up. Select `install manually` where you should see a string that looks like this:
 
-```sh "<your-google-analytics-id>"
+```sh title="<your-google-analytics-id>"
  https://www.googletagmanager.com/gtag/js?id=<your-google-analytics-id>
 ```
 and copy and paste the Google Analytics ID into your `.env.client` file to get it working with the [Cookie Consent Modal](./cookie-consent.md) provided with this template:

@@ -73,7 +73,7 @@
 @@ -76,11 +74,11 @@
      // NOTE: "Dummy" provider is just for local development purposes.
      //   Make sure to check the server logs for the email confirmation url (it will not be sent to an address)!
-     //   Once you are ready for production, switch to e.g. "SendGrid" or "MailGun" providers. Check out https://docs.opensaas.sh/guides/email-sending/ .
+     //   Once you are ready for production, switch to e.g. "SendGrid" or "Mailgun" providers. Check out https://docs.opensaas.sh/guides/email-sending/ .
 -    provider: Dummy,
 +    provider: SendGrid,
      defaultFrom: {
@@ -84,7 +84,7 @@
      },
    },
  }
-@@ -345,7 +343,10 @@
+@@ -195,7 +193,10 @@
    email                     String?         @unique
    username                  String?         @unique
    lastActiveTimestamp       DateTime        @default(now())

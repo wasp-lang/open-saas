@@ -11,7 +11,7 @@ import { features, navigation, faqs, footerNavigation, testimonials } from './co
 import DropdownUser from '../../user/DropdownUser';
 import { UserMenuItems } from '../../user/UserMenuItems';
 import { DocsUrl } from '../../common';
-import DarkModeSwitcher from '../admin/components/DarkModeSwitcher';
+import DarkModeSwitcher from '../components/DarkModeSwitcher';
 
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
