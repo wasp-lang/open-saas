@@ -47,10 +47,14 @@ At the root of our project, you will see three folders:
 
 `e2e-tests` contains the end-to-end tests using Playwright, which you can run to test your app's functionality.
 
+### App File Structure
+
+We've structured this full-stack app template according to feature. That means that most directories within `app/src` contain both the React client code and NodeJS server code necessary for implementing its logic. 
+
 Let's check out what's in the `app` folder in more detail:
 
-:::caution[v0.11 and below]
-If you are using a version of the OpenSaaS template with Wasp `v0.11.x` or below, you may see a slightly different file structure. But don't worry, the vast majority of the code and features are the same! 😅
+:::caution[v0.13 and below]
+If you are using an older version of the OpenSaaS template with Wasp `v0.13.x` or below, you may see a slightly different file structure. But don't worry, the vast majority of the code and features are the same! 😅
 :::
 
 ```sh
@@ -66,8 +70,10 @@ If you are using a version of the OpenSaaS template with Wasp `v0.11.x` or below
 │   ├── demo-ai-app/       # Logic for the example AI-powered demo app.
 │   ├── file-upload/       # Logic for uploading files to S3.
 │   ├── messages           # Logic for app user messages.
+│   ├── newsletter/        # Logic for scheduled recurring newsletter sending.
 │   ├── payment/           # Logic for handling Stripe payments and webhooks.
 │   ├── server/            # Scripts, shared server utils, and other server-specific code (NodeJS).
+│   ├── shared/            # Shared constants and util functions.
 │   └── user/              # Logic related to users and their accounts.
 ├── .env.server            # Dev environment variables for your server code.
 ├── .env.client            # Dev environment variables for your client code.
@@ -75,13 +81,8 @@ If you are using a version of the OpenSaaS template with Wasp `v0.11.x` or below
 ├── tailwind.config.js     # TailwindCSS configuration.
 ├── package.json
 ├── package-lock.json
-
 └── .wasproot
 ```
-
-:::tip[File Structure]
-Note that since Wasp v0.12, the `src` folder does not need to be organized  between `client` and `server` code. You can organize your code however you like, e.g. by feature, but we've chosen to keep the traditional structure for this template. 
-:::
 
 ### The Wasp Config file
 
@@ -105,38 +106,6 @@ Wasp abstracts away some things that you would normally be used to doing during 
 :::note
 It's possible to learn Wasp's feature set simply through using this template, but if you find yourself unsure how to implement a Wasp-specific feature and/or just want to learn more, a great starting point is the intro tutorial in the [Wasp docs](https://wasp-lang.dev/docs) which takes ~20 minutes.
 :::
-
-### Client
-
-The `src/client` folder contains the code that runs in the browser. It's a standard React app, with a few Wasp-specific things sprinkled in.
-
-```sh
-.
-└── client
-    ├── components         # Your shared React components.
-    ├── fonts              # Extra fonts
-    ├── hooks              # Your shared React hooks.
-    ├── icons              # Your shared SVG icons.
-    ├── landing-page       # Landing page related code
-    ├── static             # Assets that you need access to in your code, e.g. import logo from 'static/logo.png'
-    ├── App.tsx            # Main app component to wrap all child components. Useful for global state, navbars, etc.
-    ├── cn.ts              # Helper function for dynamic and conditional Tailwind CSS classes.
-    └── Main.css
-
-```
-
-### Server
-
-The `src/server` folder contains the code that runs on the server. Wasp compiles everything into a NodeJS server for you. 
-
-All you have to do is define your server-side functions in the `main.wasp` file, write the logic in a function within `src/server` and Wasp will generate the boilerplate code for you.
-
-```sh
-└── server
-    ├── scripts            # Scripts to run via Wasp, e.g. database seeding.
-    ├── workers            # Functions that run in the background as Wasp Jobs, e.g. daily stats calculation.
-    └── utils.ts
-```
 
 ## Main Features
 
@@ -260,7 +229,7 @@ To do that, we've leveraged Wasp's [Jobs feature](https://wasp-lang.dev/docs/adv
 job dailyStatsJob {
   executor: PgBoss,
   perform: {
-    fn: import { calculateDailyStats } from "@src/analytics/stats.ts"
+    fn: import { calculateDailyStats } from "@src/analytics/stats"
   },
   schedule: {
     cron: "0 * * * *" // runs every hour
