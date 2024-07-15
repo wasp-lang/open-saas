@@ -59,11 +59,15 @@ If you are using a version of the OpenSaaS template with Wasp `v0.11.x` or below
 ├── .wasp/                 # Output dir for Wasp. DON'T MODIFY THESE FILES!
 ├── public/                # Public assets dir, e.g. www.yourdomain.com/banner.png
 ├── src/                   # Your code goes here.
-│   ├── client/            # Your client code (React) goes here.
-│   ├── server/            # Your server code (NodeJS) goes here.
+│   ├── admin/             # Admin dashboard related pages and components.
+│   ├── analytics/         # Logic and background jobs for processing analytics.
 │   ├── auth/              # All auth-related pages/components and logic.
+│   ├── client/            # Shared components, hooks, landing page, and other client code (React).
+│   ├── demo-ai-app/       # Logic for the example AI-powered demo app.
 │   ├── file-upload/       # Logic for uploading files to S3.
+│   ├── messages           # Logic for app user messages.
 │   ├── payment/           # Logic for handling Stripe payments and webhooks.
+│   ├── server/            # Scripts, shared server utils, and other server-specific code (NodeJS).
 │   └── user/              # Logic related to users and their accounts.
 ├── .env.server            # Dev environment variables for your server code.
 ├── .env.client            # Dev environment variables for your client code.
@@ -109,13 +113,14 @@ The `src/client` folder contains the code that runs in the browser. It's a stand
 ```sh
 .
 └── client
-    ├── admin              # Admin dashboard pages and components
-    ├── app                # Your user-facing app that sits behind the paywall/login.
     ├── components         # Your shared React components.
+    ├── fonts              # Extra fonts
     ├── hooks              # Your shared React hooks.
+    ├── icons              # Your shared SVG icons.
     ├── landing-page       # Landing page related code
     ├── static             # Assets that you need access to in your code, e.g. import logo from 'static/logo.png'
     ├── App.tsx            # Main app component to wrap all child components. Useful for global state, navbars, etc.
+    ├── cn.ts              # Helper function for dynamic and conditional Tailwind CSS classes.
     └── Main.css
 
 ```
@@ -130,8 +135,6 @@ All you have to do is define your server-side functions in the `main.wasp` file,
 └── server
     ├── scripts            # Scripts to run via Wasp, e.g. database seeding.
     ├── workers            # Functions that run in the background as Wasp Jobs, e.g. daily stats calculation.
-    ├── actions.ts         # Your server-side write/mutation functions.
-    ├── queries.ts         # Your server-side read functions.
     └── utils.ts
 ```
 
@@ -257,7 +260,7 @@ To do that, we've leveraged Wasp's [Jobs feature](https://wasp-lang.dev/docs/adv
 job dailyStatsJob {
   executor: PgBoss,
   perform: {
-    fn: import { calculateDailyStats } from "@src/server/workers/calculateDailyStats.js"
+    fn: import { calculateDailyStats } from "@src/analytics/stats.ts"
   },
   schedule: {
     cron: "0 * * * *" // runs every hour
