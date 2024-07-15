@@ -4,10 +4,10 @@ import DefaultLayout from '../../layout/DefaultLayout';
 import CheckboxOne from './CheckboxOne';
 import SwitcherOne from '../../dashboards/users/SwitcherOne';
 import SwitcherTwo from './SwitcherTwo';
-import { useIsUserAdmin } from '../../useIsUserAdmin';
+import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin';
 
 const FormElements = ({ user }: { user: AuthUser }) => {
-  useIsUserAdmin({ user });
+  useRedirectHomeUnlessUserIsAdmin({ user });
 
   return (
     <DefaultLayout user={user}>

@@ -1,9 +1,9 @@
 // TODO: Add messages page
 import { AuthUser } from "wasp/auth"
-import { useIsUserAdmin } from "../admin/useIsUserAdmin"
+import { useRedirectHomeUnlessUserIsAdmin } from "../admin/useRedirectHomeUnlessUserIsAdmin"
 
 function AdminMessages({user} : {user: AuthUser}) {
-  useIsUserAdmin({user})
+  useRedirectHomeUnlessUserIsAdmin({user})
 
   return (
     <div>Hello world!</div>

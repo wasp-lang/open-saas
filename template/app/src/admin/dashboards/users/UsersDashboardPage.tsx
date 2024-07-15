@@ -2,10 +2,10 @@ import { type AuthUser } from 'wasp/auth';
 import UsersTable from './UsersTable';
 import Breadcrumb from '../../layout/Breadcrumb';
 import DefaultLayout from '../../layout/DefaultLayout';
-import { useIsUserAdmin } from '../../useIsUserAdmin';
+import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin';
 
 const Users = ({ user }: { user: AuthUser }) => {
-  useIsUserAdmin({user})
+  useRedirectHomeUnlessUserIsAdmin({user})
 
   return (
     <DefaultLayout user={user}>

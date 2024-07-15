@@ -4,10 +4,10 @@ import DefaultLayout from '../../layout/DefaultLayout';
 import BarChart from './BarChart';
 import PieChart from './PieChart';
 import DataStats from './DataStatsChart';
-import { useIsUserAdmin } from '../../useIsUserAdmin';
+import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin';
 
 const Chart = ({ user }: { user: AuthUser }) => {
-  useIsUserAdmin({ user });
+  useRedirectHomeUnlessUserIsAdmin({ user });
 
   return (
     <DefaultLayout user={user}>

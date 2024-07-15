@@ -3,10 +3,10 @@ import { FormEvent } from 'react';
 import toast from 'react-hot-toast';
 import Breadcrumb from '../../layout/Breadcrumb';
 import DefaultLayout from '../../layout/DefaultLayout';
-import { useIsUserAdmin } from '../../useIsUserAdmin';
+import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin';
 
 const SettingsPage = ({ user }: { user: AuthUser }) => {
-  useIsUserAdmin({ user });
+  useRedirectHomeUnlessUserIsAdmin({ user });
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     // TODO add toast provider / wrapper

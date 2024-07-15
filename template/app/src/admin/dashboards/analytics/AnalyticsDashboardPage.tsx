@@ -7,10 +7,10 @@ import TotalRevenueCard from './TotalRevenueCard';
 import RevenueAndProfitChart from './RevenueAndProfitChart';
 import SourcesTable from './PageViewSourcesTable';
 import DefaultLayout from '../../layout/DefaultLayout';
-import { useIsUserAdmin } from '../../useIsUserAdmin'
+import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin'
 
 const Dashboard = ({ user }: { user: AuthUser }) => {
-  useIsUserAdmin({ user })
+  useRedirectHomeUnlessUserIsAdmin({ user })
 
   const { data: stats, isLoading, error } = useQuery(getDailyStats);
 
