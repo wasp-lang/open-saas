@@ -1,4 +1,4 @@
-import { type EmailChecker } from 'wasp/server/jobs';
+import { type SendNewsletter } from 'wasp/server/jobs';
 
 import { type User } from 'wasp/entities';
 import { emailSender } from 'wasp/server/email';
@@ -22,7 +22,7 @@ const emailToSend: Email = {
 };
 
 //  you could use this function to send newsletters, expiration notices, etc.
-export const checkAndQueueEmails: EmailChecker<never, void> = async (_args, context) => {
+export const checkAndQueueNewsletterEmails: SendNewsletter<never, void> = async (_args, context) => {
   // e.g. you could send an offer email 2 weeks before their subscription expires
   const currentDate = new Date();
   const twoWeeksFromNow = new Date(currentDate.getTime() + 14 * 24 * 60 * 60 * 1000);
@@ -32,7 +32,7 @@ export const checkAndQueueEmails: EmailChecker<never, void> = async (_args, cont
       datePaid: {
         equals: twoWeeksFromNow,
       },
-      sendEmail: true,
+      sendNewsletter: true,
     },
   })) as User[];
 
