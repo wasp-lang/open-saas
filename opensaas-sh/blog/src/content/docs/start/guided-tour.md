@@ -150,6 +150,7 @@ This template comes with a fully functional auth flow out of the box. It takes a
       },
       google: {},
       github: {},
+      discord: {}
     },
     onAuthFailedRedirectTo: "/",
   },

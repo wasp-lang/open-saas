@@ -13,7 +13,8 @@ Setting up your app's authentication is easy with Wasp. In fact, it's already se
     methods: {
       email: {}, 
       google: {},
-      gitHub: {}
+      gitHub: {},
+      discord: {}
     },
     onAuthFailedRedirectTo: "/",
   },
