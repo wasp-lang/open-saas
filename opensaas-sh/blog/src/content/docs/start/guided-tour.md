@@ -49,7 +49,7 @@ At the root of our project, you will see three folders:
 
 ### App File Structure
 
-We've structured this full-stack app template according to feature. That means that most directories within `app/src` contain both the React client code and NodeJS server code necessary for implementing its logic. 
+We've structured this full-stack app template vertically (by feature). That means that most directories within `app/src` contain both the React client code and NodeJS server code necessary for implementing its logic. 
 
 Let's check out what's in the `app` folder in more detail:
 
@@ -106,6 +106,35 @@ Wasp abstracts away some things that you would normally be used to doing during 
 :::note
 It's possible to learn Wasp's feature set simply through using this template, but if you find yourself unsure how to implement a Wasp-specific feature and/or just want to learn more, a great starting point is the intro tutorial in the [Wasp docs](https://wasp-lang.dev/docs) which takes ~20 minutes.
 :::
+
+### Client
+
+The `src/client` folder contains any additional client-side code that doesn't belong to a feature:
+
+```sh
+.
+└── client
+    ├── components         # Your shared React components.
+    ├── fonts              # Extra fonts
+    ├── hooks              # Your shared React hooks.
+    ├── icons              # Your shared SVG icons.
+    ├── landing-page       # Landing page related code
+    ├── static             # Assets that you need access to in your code, e.g. import logo from 'static/logo.png'
+    ├── App.tsx            # Main app component to wrap all child components. Useful for global state, navbars, etc.
+    ├── cn.ts              # Helper function for dynamic and conditional Tailwind CSS classes.
+    └── Main.css
+
+```
+
+### Server
+
+The `src/server` folder contains any additional server-side code that does not belong to a specific feature: 
+
+```sh
+└── server
+    ├── scripts            # Scripts to run via Wasp, e.g. database seeding.
+    └── utils.ts
+```
 
 ## Main Features
 
