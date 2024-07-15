@@ -20,7 +20,7 @@ model User {
   checkoutSessionId         String?
   subscriptionStatus        String?         // 'active', 'canceled', 'past_due', 'deleted'
   subscriptionPlan          String?         // 'hobby', 'pro'
-  sendEmail                 Boolean         @default(false)
+  sendNewsletter            Boolean         @default(false)
   datePaid                  DateTime?
   credits                   Int             @default(3)
 
