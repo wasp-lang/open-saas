@@ -7,7 +7,7 @@ import { stripe } from './stripeClient';
 import { paymentPlans, PaymentPlanId, SubscriptionStatus } from '../plans';
 import { updateUserStripePaymentDetails } from './paymentDetails';
 import { emailSender } from 'wasp/server/email';
-import { assertUnreachable } from '../../utils';
+import { assertUnreachable } from '../../shared/utils';
 import { requireNodeEnvVar } from '../../server/utils';
 import { z } from 'zod';
 

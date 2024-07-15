@@ -131,7 +131,7 @@ entity User {=psl
   checkoutSessionId         String?
   subscriptionStatus        String?         // 'active', 'canceled', 'past_due', 'deleted'
   subscriptionPlan          String?         // 'hobby', 'pro'
-  sendEmail                 Boolean         @default(false)
+  sendNewsletter            Boolean         @default(false)
   datePaid                  DateTime?
   credits                   Int             @default(3)
 
@@ -418,13 +418,15 @@ entity ContactFormMessage {=psl
 psl=}
 //#endregion
 
-job emailChecker {
+//#region Newsletter
+job sendNewsletter {
   executor: PgBoss,
   perform: {
-    fn: import { checkAndQueueEmails } from "@src/server/workers/checkAndQueueEmails.js"
+    fn: import { checkAndQueueNewsletterEmails } from "@src/newsletter/sendNewsletter"
   },
   schedule: {
     cron: "0 7 * * 1" // at 7:00 am every Monday
   },
   entities: [User]
 }
+//#endregion

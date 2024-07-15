@@ -10,7 +10,7 @@ import openSaasBanner from '../static/open-saas-banner.png';
 import { features, navigation, faqs, footerNavigation, testimonials } from './contentSections';
 import DropdownUser from '../../user/DropdownUser';
 import { UserMenuItems } from '../../user/UserMenuItems';
-import { DocsUrl } from '../../common';
+import { DocsUrl } from '../../shared/common';
 import DarkModeSwitcher from '../components/DarkModeSwitcher';
 
 export default function LandingPage() {
