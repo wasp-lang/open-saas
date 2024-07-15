@@ -84,7 +84,7 @@
      },
    },
  }
-@@ -323,7 +321,10 @@
+@@ -195,7 +193,10 @@
    email                     String?         @unique
    username                  String?         @unique
    lastActiveTimestamp       DateTime        @default(now())
