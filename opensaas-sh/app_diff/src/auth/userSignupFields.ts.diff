@@ -12,29 +12,25 @@
    email: (data: any) => data.email,
  });
  
-@@ -28,11 +25,7 @@
-   username: (data) => {
+@@ -29,10 +26,6 @@
      const githubData = githubDataSchema.parse(data);
      return githubData.profile.login;
--  },
+   },
 -  isAdmin: (data) => {
 -    const githubData = githubDataSchema.parse(data);
 -    return adminEmails.includes(githubData.profile.emails[0].email);
 -  },
-+  }
  });
  
  // NOTE: if we don't want to access users' emails, we can use scope ["user:read"]
-@@ -57,11 +50,7 @@
-   username: (data) => {
+@@ -58,10 +51,6 @@
      const googleData = googleDataSchema.parse(data);
      return googleData.profile.email;
--  },
+   },
 -  isAdmin: (data) => {
 -    const googleData = googleDataSchema.parse(data);
 -    return adminEmails.includes(googleData.profile.email);
 -  },
-+  }
  });
  
  export function getGoogleAuthConfig() {

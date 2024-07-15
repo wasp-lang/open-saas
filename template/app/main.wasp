@@ -54,7 +54,13 @@ app OpenSaaS {
       //   userSignupFields: import { getGitHubUserFields } from "@src/auth/userSignupFields",
       //   configFn: import { getGitHubAuthConfig } from "@src/auth/userSignupFields",
       // },
+      // Uncomment to enable Discord Auth (check https://wasp-lang.dev/docs/auth/social-auth/discord for setup instructions):
+      // discord: {
+      //   userSignupFields: import { getDiscordUserFields } from "@src/auth/userSignupFields",
+      //   configFn: import { getDiscordAuthConfig } from "@src/auth/userSignupFields"
+      // }
     },
+    onAfterSignup: import { onAfterSignup } from "@src/auth/hooks",
     onAuthFailedRedirectTo: "/login",
     onAuthSucceededRedirectTo: "/demo-app",
   },

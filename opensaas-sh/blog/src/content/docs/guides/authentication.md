@@ -80,12 +80,14 @@ And that's it. Wasp will take care of the rest and update your AuthUI components
 
 Check out the  [Wasp Auth docs](https://wasp-lang.dev/docs/auth/overview) for more info.
 
-## Google & GitHub Auth
+## Google, GitHub, & Discord Auth
 
 We've also customized and pre-built the Google and GitHub auth flow for you. To start using them, you just need to uncomment out the methods you want in your `main.wasp` file and obtain the proper API keys to add to your `.env.server` file. 
 
 To create a Google OAuth app and get your Google API keys, follow the instructions in [Wasp's Google Auth docs](https://wasp-lang.dev/docs/auth/social-auth/google#3-creating-a-google-oauth-app).
 
 To create a GitHub OAuth app and get your GitHub API keys, follow the instructions in [Wasp's GitHub Auth docs](https://wasp-lang.dev/docs/auth/social-auth/github#3-creating-a-github-oauth-app).
+
+To create a Discord OAuth app and get your Discord API keys, follow the instructions in [Wasp's Discord Auth docs](docs/auth/social-auth/google#3-creating-a-google-oauth-app)
 
 Again, Wasp will take care of the rest and update your AuthUI components accordingly.

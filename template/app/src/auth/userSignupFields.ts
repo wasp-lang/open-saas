@@ -69,3 +69,35 @@ export function getGoogleAuthConfig() {
     scopes: ['profile', 'email'], // must include at least 'profile' for Google
   };
 }
+
+const discordDataSchema = z.object({
+  profile: z.object({
+    username: z.string(),
+    email: z.string().email().nullable(),
+  }),
+});
+
+export const getDiscordUserFields = defineUserSignupFields({
+  email: (data) => {
+    const discordData = discordDataSchema.parse(data);
+    return discordData.profile.email;
+  },
+  username: (data) => {
+    const discordData = discordDataSchema.parse(data);
+    return discordData.profile.username;
+  },
+  isAdmin: (data) => {
+    const discordData = discordDataSchema.parse(data);
+    if (discordData.profile.email) {
+      return adminEmails.includes(discordData.profile.email);
+    } else {
+      return false;
+    }
+  },
+});
+
+export function getDiscordAuthConfig() {
+  return {
+    scopes: ['identify', 'email'],
+  };
+}
