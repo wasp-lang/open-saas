@@ -1,20 +1,17 @@
 --- template/app/src/admin/dashboards/analytics/AnalyticsDashboardPage.tsx
 +++ opensaas-sh/app/src/admin/dashboards/analytics/AnalyticsDashboardPage.tsx
 @@ -1,4 +1,5 @@
- import { type User } from 'wasp/entities';
+ import { type AuthUser } from 'wasp/auth';
 +import { useState, useEffect } from 'react';
  import { useQuery, getDailyStats } from 'wasp/client/operations';
  import TotalSignupsCard from './TotalSignupsCard';
  import TotalPageViewsCard from './TotalPageViewsCard';
-@@ -10,6 +11,7 @@
- import { useHistory } from 'react-router-dom';
+@@ -10,12 +11,45 @@
+ import { useIsUserAdmin } from '../../useIsUserAdmin'
  
- const Dashboard = ({ user }: { user: User }) => {
+ const Dashboard = ({ user }: { user: AuthUser }) => {
 +  const [isDemoInfoVisible, setIsDemoInfoVisible] = useState(false);
-   const history = useHistory();
-   if (!user.isAdmin) {
-     history.push('/');
-@@ -17,8 +19,40 @@
+   useIsUserAdmin({ user })
  
    const { data: stats, isLoading, error } = useQuery(getDailyStats);
  
@@ -40,7 +37,7 @@
 +  };
 +
    return (
-     <DefaultLayout>
+     <DefaultLayout user={user}>
 +      {/* Floating Demo Announcement */}
 +      {isDemoInfoVisible && (
 +        <div className='fixed z-999 bottom-0 mb-2 left-1/2 -translate-x-1/2 lg:mb-4 bg-gray-700 rounded-full px-3.5 py-2 text-sm text-white duration-300 ease-in-out hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-600'>
