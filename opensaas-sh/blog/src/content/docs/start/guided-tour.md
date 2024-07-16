@@ -2,8 +2,7 @@
 title: Guided Tour
 banner:
   content: |
-    ⚠️ Open SaaS is now running on <a href='https://wasp-lang.dev'>Wasp v0.13</a>! If you're running an older version of Open SaaS, please follow the 
-    <a href="https://wasp-lang.dev/docs/migrate-from-0-12-to-0-13">migration instructions here</a> ⚠️ 
+    Open SaaS is now running on <a href='https://wasp-lang.dev'>Wasp v0.14</a>! <br/>🐝🚀<br/>If you're running an older version, please follow the <a href="https://wasp-lang.dev/docs/migrate-from-0-13-to-0-14">migration instructions.</a>
 ---
 
 Awesome, you now have your very own SaaS app up and running! But, first, here are some important things you need to know about your app in its current state:
@@ -69,6 +68,7 @@ If you are using an older version of the OpenSaaS template with Wasp `v0.13.x` o
 │   ├── client/            # Shared components, hooks, landing page, and other client code (React).
 │   ├── demo-ai-app/       # Logic for the example AI-powered demo app.
 │   ├── file-upload/       # Logic for uploading files to S3.
+│   ├── landing-page       # Landing page related code
 │   ├── messages           # Logic for app user messages.
 │   ├── newsletter/        # Logic for scheduled recurring newsletter sending.
 │   ├── payment/           # Logic for handling Stripe payments and webhooks.
@@ -118,7 +118,6 @@ The `src/client` folder contains any additional client-side code that doesn't be
     ├── fonts              # Extra fonts
     ├── hooks              # Your shared React hooks.
     ├── icons              # Your shared SVG icons.
-    ├── landing-page       # Landing page related code
     ├── static             # Assets that you need access to in your code, e.g. import logo from 'static/logo.png'
     ├── App.tsx            # Main app component to wrap all child components. Useful for global state, navbars, etc.
     ├── cn.ts              # Helper function for dynamic and conditional Tailwind CSS classes.
@@ -151,6 +150,7 @@ This template comes with a fully functional auth flow out of the box. It takes a
       },
       google: {},
       github: {},
+      discord: {}
     },
     onAuthFailedRedirectTo: "/",
   },
