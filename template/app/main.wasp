@@ -92,7 +92,7 @@ app OpenSaaS {
 
 route LandingPageRoute { path: "/", to: LandingPage }
 page LandingPage {
-  component: import LandingPage from "@src/client/landing-page/LandingPage"
+  component: import LandingPage from "@src/landing-page/LandingPage"
 }
 
 //#region Auth Pages

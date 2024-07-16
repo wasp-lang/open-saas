@@ -1,5 +1,5 @@
---- template/app/src/client/landing-page/LandingPage.tsx
-+++ opensaas-sh/app/src/client/landing-page/LandingPage.tsx
+--- template/app/src/landing-page/LandingPage.tsx
++++ opensaas-sh/app/src/landing-page/LandingPage.tsx
 @@ -1,24 +1,45 @@
  import { Link } from 'wasp/client/router';
  import { useAuth } from 'wasp/client/auth';
@@ -10,9 +10,13 @@
 +import { AiFillCloseCircle, AiFillGithub } from 'react-icons/ai';
  import { HiBars3 } from 'react-icons/hi2';
  import { BiLogIn } from 'react-icons/bi';
- import logo from '../static/logo.png';
--import openSaasBanner from '../static/open-saas-banner.png';
+ import logo from '../client/static/logo.png';
+-import openSaasBanner from '../client/static/open-saas-banner.png';
 -import { features, navigation, faqs, footerNavigation, testimonials } from './contentSections';
+-import DropdownUser from '../client/../user/DropdownUser';
+-import { UserMenuItems } from '../client/../user/UserMenuItems';
+-import { DocsUrl } from '../client/../shared/common';
+ import DarkModeSwitcher from '../client/components/DarkModeSwitcher';
 +import {
 +  features,
 +  navigation,
@@ -20,11 +24,9 @@
 +  footerNavigation,
 +  testimonials,
 +} from './contentSections';
- import DropdownUser from '../../user/DropdownUser';
- import { UserMenuItems } from '../../user/UserMenuItems';
--import { DocsUrl } from '../../shared/common';
-+import { DocsUrl, GithubUrl } from '../../shared/common';
- import DarkModeSwitcher from '../components/DarkModeSwitcher';
++import DropdownUser from '../user/DropdownUser';
++import { UserMenuItems } from '../user/UserMenuItems';
++import { DocsUrl, GithubUrl } from '../shared/common';
  
  export default function LandingPage() {
    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -119,7 +121,7 @@
                }}
              />
            </div>
-@@ -152,30 +179,54 @@
+@@ -152,30 +179,47 @@
            <div className='py-24 sm:py-32'>
              <div className='mx-auto max-w-8xl px-6 lg:px-8'>
                <div className='lg:mb-18 mx-auto max-w-3xl text-center'>
@@ -163,15 +165,13 @@
                <div className='mt-14 flow-root sm:mt-14 '>
 -                <div className='-m-2 rounded-xl  lg:-m-4 lg:rounded-2xl lg:p-4'>
 -                  <img
-+                <div className='-m-2 mx-auto rounded-xl lg:-m-4 lg:rounded-2xl lg:p-4'>
-+                  {/* <img
-                     src={openSaasBanner}
-                     alt='App screenshot'
-                     width={2432}
-                     height={1442}
-                     className='rounded-md shadow-2xl ring-1 ring-gray-900/10'
+-                    src={openSaasBanner}
+-                    alt='App screenshot'
+-                    width={2432}
+-                    height={1442}
+-                    className='rounded-md shadow-2xl ring-1 ring-gray-900/10'
 -                  />
-+                  /> */}
++                <div className='-m-2 mx-auto rounded-xl lg:-m-4 lg:rounded-2xl lg:p-4'>
 +                  <iframe
 +                    className=' mx-auto w-full md:w-[85%] aspect-[4/3] shadow-2xl'
 +                    src='https://cards.producthunt.com/cards/posts/436467?v=1'
@@ -182,7 +182,7 @@
                  </div>
                </div>
              </div>
-@@ -184,38 +235,36 @@
+@@ -184,38 +228,36 @@
  
          {/* Clients section */}
          <div className='mt-12 mx-auto max-w-7xl px-6 lg:px-8 flex flex-col items-between gap-y-6'>
@@ -248,7 +248,7 @@
                  <path
                    className='dark:fill-white'
                    fill='#545454'
-@@ -223,7 +272,19 @@
+@@ -223,7 +265,19 @@
                  />
                </svg>
              </div>
@@ -269,7 +269,7 @@
                <svg viewBox='0 0 256 370' xmlns='http://www.w3.org/2000/svg'>
                  <path
                    className='dark:fill-white'
-@@ -253,25 +314,27 @@
+@@ -253,25 +307,27 @@
          <div id='features' className='mx-auto mt-48 max-w-7xl px-6 lg:px-8'>
            <div className='mx-auto max-w-2xl text-center'>
              <p className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white'>
@@ -310,7 +310,7 @@
                ))}
              </dl>
            </div>
-@@ -291,10 +354,18 @@
+@@ -291,10 +347,18 @@
                        <p>{testimonial.quote}</p>
                      </blockquote>
                      <figcaption className='mt-6 text-base text-white'>
@@ -332,7 +332,7 @@
                            <div className='mt-1'>{testimonial.role}</div>
                          </div>
                        </a>
-@@ -307,20 +378,28 @@
+@@ -307,20 +371,28 @@
          </div>
  
          {/* FAQ */}
@@ -368,7 +368,7 @@
                        Learn more →
                      </a>
                    )}
-@@ -335,7 +414,7 @@
+@@ -335,7 +407,7 @@
        <div className='mx-auto mt-6 max-w-7xl px-6 lg:px-8 dark:bg-boxdark-2'>
          <footer
            aria-labelledby='footer-heading'

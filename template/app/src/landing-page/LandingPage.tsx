@@ -5,13 +5,13 @@ import { Dialog } from '@headlessui/react';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { HiBars3 } from 'react-icons/hi2';
 import { BiLogIn } from 'react-icons/bi';
-import logo from '../static/logo.png';
-import openSaasBanner from '../static/open-saas-banner.png';
+import logo from '../client/static/logo.png';
+import openSaasBanner from '../client/static/open-saas-banner.png';
 import { features, navigation, faqs, footerNavigation, testimonials } from './contentSections';
-import DropdownUser from '../../user/DropdownUser';
-import { UserMenuItems } from '../../user/UserMenuItems';
-import { DocsUrl } from '../../shared/common';
-import DarkModeSwitcher from '../components/DarkModeSwitcher';
+import DropdownUser from '../client/../user/DropdownUser';
+import { UserMenuItems } from '../client/../user/UserMenuItems';
+import { DocsUrl } from '../client/../shared/common';
+import DarkModeSwitcher from '../client/components/DarkModeSwitcher';
 
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

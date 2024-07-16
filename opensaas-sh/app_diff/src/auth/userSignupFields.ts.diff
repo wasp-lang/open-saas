@@ -34,3 +34,14 @@
  });
  
  export function getGoogleAuthConfig() {
+@@ -86,10 +75,6 @@
+     const discordData = discordDataSchema.parse(data);
+     return discordData.profile.username;
+   },
+-  isAdmin: (data) => {
+-    const email = discordDataSchema.parse(data).profile.email;
+-    return !!email && adminEmails.includes(email);
+-  },
+ });
+ 
+ export function getDiscordAuthConfig() {

@@ -87,7 +87,7 @@ export const getDiscordUserFields = defineUserSignupFields({
     return discordData.profile.username;
   },
   isAdmin: (data) => {
-    const email = discordDataSchema.parse(data).email;
+    const email = discordDataSchema.parse(data).profile.email;
     return !!email && adminEmails.includes(email);
   },
 });

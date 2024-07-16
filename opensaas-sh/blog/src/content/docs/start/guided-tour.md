@@ -68,6 +68,7 @@ If you are using an older version of the OpenSaaS template with Wasp `v0.13.x` o
 │   ├── client/            # Shared components, hooks, landing page, and other client code (React).
 │   ├── demo-ai-app/       # Logic for the example AI-powered demo app.
 │   ├── file-upload/       # Logic for uploading files to S3.
+│   ├── landing-page       # Landing page related code
 │   ├── messages           # Logic for app user messages.
 │   ├── newsletter/        # Logic for scheduled recurring newsletter sending.
 │   ├── payment/           # Logic for handling Stripe payments and webhooks.
@@ -117,7 +118,6 @@ The `src/client` folder contains any additional client-side code that doesn't be
     ├── fonts              # Extra fonts
     ├── hooks              # Your shared React hooks.
     ├── icons              # Your shared SVG icons.
-    ├── landing-page       # Landing page related code
     ├── static             # Assets that you need access to in your code, e.g. import logo from 'static/logo.png'
     ├── App.tsx            # Main app component to wrap all child components. Useful for global state, navbars, etc.
     ├── cn.ts              # Helper function for dynamic and conditional Tailwind CSS classes.

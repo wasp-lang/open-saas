@@ -1,11 +1,11 @@
---- template/app/src/client/landing-page/contentSections.ts
-+++ opensaas-sh/app/src/client/landing-page/contentSections.ts
-@@ -1,74 +1,126 @@
--import { DocsUrl, BlogUrl } from '../../shared/common';
--import daBoiAvatar from '../static/da-boi.png';
--import avatarPlaceholder from '../static/avatar-placeholder.png';
+--- template/app/src/landing-page/contentSections.ts
++++ opensaas-sh/app/src/landing-page/contentSections.ts
+@@ -1,74 +1,131 @@
+-import { DocsUrl, BlogUrl } from '../shared/common';
+-import daBoiAvatar from '../client/static/da-boi.png';
+-import avatarPlaceholder from '../client/static/avatar-placeholder.png';
 -import { routes } from 'wasp/client/router';
-+import { DocsUrl, BlogUrl, GithubUrl } from '../../shared/common';
++import { DocsUrl, BlogUrl, GithubUrl } from '../shared/common';
  
  export const navigation = [
    { name: 'Features', href: '#features' },
@@ -45,8 +45,7 @@
 -    name: 'Cool Feature #4',
 -    description: 'Describe your cool feature here.',
 +    name: 'Stripe Integration',
-+    description:
-+      "No SaaS is complete without payments. That's why payments and the necessary webhooks are built-in.",
++    description: "No SaaS is complete without payments. That's why payments and the necessary webhooks are built-in.",
      icon: '💸',
 +    href: DocsUrl + '/guides/stripe-integration/',
 +  },
@@ -76,6 +75,13 @@
 +    href: DocsUrl + '/guides/file-uploading/',
 +  },
 +  {
++    name: 'Blog w/ Astro',
++    description:
++      'Built-in blog with the Astro framework. Write your posts in Markdown, and watch your SEO performance take off.',
++    icon: '📝',
++    href: DocsUrl + '/start/guided-tour/',
++  },
++  {
 +    name: 'Deploy Anywhere. Easily.',
 +    description:
 +      'No vendor lock-in because you own all your code. Deploy yourself, or let Wasp deploy it for you with a single command.',
@@ -83,11 +89,10 @@
 +    href: DocsUrl + '/guides/deploying/',
 +  },
 +  {
-+    name: 'Blog w/ Astro',
-+    description:
-+      'Built-in blog with the Astro framework. Write your posts in Markdown, and watch your SEO performance take off.',
-+    icon: '📝',
-+    href: DocsUrl + '/start/guided-tour/',
++    name: 'E2E Tests w/ Playwright',
++    description: 'Move fast without breaking too much. Tests and a CI pipeline w/ GitHub Actions are set up for you.',
++    icon: '🧪',
++    href: DocsUrl,
 +  },
 +  {
 +    name: 'Complete Documentation & Support',
