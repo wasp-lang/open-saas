@@ -1,8 +1,10 @@
 --- template/app/src/landing-page/components/Hero.tsx
 +++ opensaas-sh/app/src/landing-page/components/Hero.tsx
-@@ -1,7 +1,23 @@
+@@ -1,7 +1,25 @@
 -import openSaasBanner from '../../client/static/open-saas-banner.png';
 -import { DocsUrl } from '../../shared/common';
++import { useState, useEffect } from 'react';
++import { AiFillGithub } from 'react-icons/ai';
 +import { DocsUrl, GithubUrl } from '../../shared/common';
  
  export default function Hero() {
@@ -26,7 +28,7 @@
    return (
      <div className='relative pt-14 w-full '>
        <div
-@@ -29,30 +45,47 @@
+@@ -29,30 +47,47 @@
        <div className='py-24 sm:py-32'>
          <div className='mx-auto max-w-8xl px-6 lg:px-8'>
            <div className='lg:mb-18 mx-auto max-w-3xl text-center'>

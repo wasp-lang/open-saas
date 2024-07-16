@@ -1,15 +1,11 @@
 --- template/app/src/landing-page/components/Header.tsx
 +++ opensaas-sh/app/src/landing-page/components/Header.tsx
-@@ -1,7 +1,7 @@
+@@ -1,4 +1,4 @@
 -import { useState } from 'react';
 +import { useState, useEffect } from 'react';
  import { HiBars3 } from 'react-icons/hi2';
  import { BiLogIn } from 'react-icons/bi';
--import { AiFillCloseCircle } from 'react-icons/ai';
-+import { AiFillCloseCircle, AiFillGithub } from 'react-icons/ai';
- import { Dialog } from '@headlessui/react';
- import { Link } from 'wasp/client/router';
- import { useAuth } from 'wasp/client/auth';
+ import { AiFillCloseCircle } from 'react-icons/ai';
 @@ -20,7 +20,7 @@
  
    const { data: user, isLoading: isUserLoading } = useAuth();
