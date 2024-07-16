@@ -1,5 +1,3 @@
 public/public-banner.png
-src/client/landing-page/LandingPage.tsx
-src/client/landing-page/contentSections.ts
 src/client/static/avatar-placeholder.png
 src/client/static/open-saas-banner.png
