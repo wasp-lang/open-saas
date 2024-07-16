@@ -30,7 +30,7 @@ app SaaSTemplate {
 
 Change the above highlighted meta tags to match your app. Wasp will inject these tags into the HTML of your `index.html` file, which is the Landing Page (`app/src/client/landing-page/LandingPage.tsx`), in this case.
 
-This means you **do not** need to rely on a seperate app or framework to serve your landing page for SEO purposes.
+This means you **do not** need to rely on a separate app or framework to serve your landing page for SEO purposes.
 
 :::tip[Star our Repo on GitHub! 🌟]
 We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
