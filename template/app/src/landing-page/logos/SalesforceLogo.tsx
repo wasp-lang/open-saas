@@ -4,7 +4,7 @@ export default function SalesforceLogo() {
       <defs>
         <path id='a' d='M.06.5h272v190H.06z' />
       </defs>
-      <g fill-rule='evenodd'>
+      <g fillRule='evenodd'>
         <path
           className='dark:fill-white'
           fill='#545454'
