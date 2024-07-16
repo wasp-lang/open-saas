@@ -1,9 +1,13 @@
+import { type AuthUser } from 'wasp/auth';
 import Breadcrumb from '../../layout/Breadcrumb';
 import DefaultLayout from '../../layout/DefaultLayout';
+import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin';
 
-const Alerts = () => {
+const Alerts = ({ user }: { user: AuthUser }) => {
+  useRedirectHomeUnlessUserIsAdmin({ user });
+
   return (
-    <DefaultLayout>
+    <DefaultLayout user={user}>
       <Breadcrumb pageName='Alerts' />
 
       <div className='rounded-sm border border-stroke bg-white p-4 shadow-default dark:border-strokedark dark:bg-boxdark md:p-6 xl:p-9'>

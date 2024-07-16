@@ -1,12 +1,16 @@
+import { type AuthUser } from 'wasp/auth';
 import Breadcrumb from '../../layout/Breadcrumb';
 import DefaultLayout from '../../layout/DefaultLayout';
 import CheckboxOne from './CheckboxOne';
 import SwitcherOne from '../../dashboards/users/SwitcherOne';
 import SwitcherTwo from './SwitcherTwo';
+import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin';
 
-const FormElements = () => {
+const FormElements = ({ user }: { user: AuthUser }) => {
+  useRedirectHomeUnlessUserIsAdmin({ user });
+
   return (
-    <DefaultLayout>
+    <DefaultLayout user={user}>
       <Breadcrumb pageName='FormElements' />
 
       <div className='grid grid-cols-1 gap-9 sm:grid-cols-2'>

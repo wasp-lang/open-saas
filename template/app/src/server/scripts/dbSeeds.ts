@@ -35,7 +35,7 @@ function generateMockUserData(): MockUserData {
     createdAt,
     lastActiveTimestamp,
     isAdmin: false,
-    sendEmail: false,
+    sendNewsletter: false,
     credits,
     subscriptionStatus,
     stripeId: hasUserPaidOnStripe ? `cus_test_${faker.string.uuid()}` : null,

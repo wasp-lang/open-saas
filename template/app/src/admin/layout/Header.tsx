@@ -1,4 +1,4 @@
-import { type AuthUser } from 'wasp/auth/types';
+import { type AuthUser } from 'wasp/auth';
 import MessageButton from '../../messages/MessageButton';
 import DropdownUser from '../../user/DropdownUser';
 import { cn } from '../../client/cn';
@@ -7,7 +7,7 @@ import DarkModeSwitcher from '../../client/components/DarkModeSwitcher';
 const Header = (props: {
   sidebarOpen: string | boolean | undefined;
   setSidebarOpen: (arg0: boolean) => void;
-  user?: AuthUser | null;
+  user: AuthUser;
 }) => {
   return (
     <header className='sticky top-0 z-999 flex w-full bg-white dark:bg-boxdark dark:drop-shadow-none'>
@@ -86,7 +86,7 @@ const Header = (props: {
 
         <div className='flex items-center gap-3 2xsm:gap-7'>
           {/* <!-- User Area --> */}
-          {!!props.user && <DropdownUser user={props.user} />}
+          <DropdownUser user={props.user} />
           {/* <!-- User Area --> */}
         </div>
       </div>

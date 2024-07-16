@@ -2,8 +2,7 @@
 title: SEO
 banner:
   content: |
-    ⚠️ Open SaaS is now running on <a href='https://wasp-lang.dev'>Wasp v0.13</a>! If you're running an older version of Open SaaS, please follow the 
-    <a href="https://wasp-lang.dev/docs/migrate-from-0-12-to-0-13">migration instructions here</a> ⚠️ 
+    Open SaaS is now running on <a href='https://wasp-lang.dev'>Wasp v0.14</a>! <br/>🐝🚀<br/>If you're running an older version, please follow the <a href="https://wasp-lang.dev/docs/migrate-from-0-13-to-0-14">migration instructions.</a>
 ---
 
 This guides explains how to improve SEO for of your app
@@ -31,7 +30,7 @@ app SaaSTemplate {
 
 Change the above highlighted meta tags to match your app. Wasp will inject these tags into the HTML of your `index.html` file, which is the Landing Page (`app/src/client/landing-page/LandingPage.tsx`), in this case.
 
-This means you **do not** need to rely on a seperate app or framework to serve your landing page for SEO purposes.
+This means you **do not** need to rely on a separate app or framework to serve your landing page for SEO purposes.
 
 :::tip[Star our Repo on GitHub! 🌟]
 We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!

@@ -2,8 +2,7 @@
 title: Guided Tour
 banner:
   content: |
-    ⚠️ Open SaaS is now running on <a href='https://wasp-lang.dev'>Wasp v0.13</a>! If you're running an older version of Open SaaS, please follow the 
-    <a href="https://wasp-lang.dev/docs/migrate-from-0-12-to-0-13">migration instructions here</a> ⚠️ 
+    Open SaaS is now running on <a href='https://wasp-lang.dev'>Wasp v0.14</a>! <br/>🐝🚀<br/>If you're running an older version, please follow the <a href="https://wasp-lang.dev/docs/migrate-from-0-13-to-0-14">migration instructions.</a>
 ---
 
 Awesome, you now have your very own SaaS app up and running! But, first, here are some important things you need to know about your app in its current state:
@@ -47,10 +46,14 @@ At the root of our project, you will see three folders:
 
 `e2e-tests` contains the end-to-end tests using Playwright, which you can run to test your app's functionality.
 
+### App File Structure
+
+We've structured this full-stack app template vertically (by feature). That means that most directories within `app/src` contain both the React client code and NodeJS server code necessary for implementing its logic. 
+
 Let's check out what's in the `app` folder in more detail:
 
-:::caution[v0.11 and below]
-If you are using a version of the OpenSaaS template with Wasp `v0.11.x` or below, you may see a slightly different file structure. But don't worry, the vast majority of the code and features are the same! 😅
+:::caution[v0.13 and below]
+If you are using an older version of the OpenSaaS template with Wasp `v0.13.x` or below, you may see a slightly different file structure. But don't worry, the vast majority of the code and features are the same! 😅
 :::
 
 ```sh
@@ -59,11 +62,18 @@ If you are using a version of the OpenSaaS template with Wasp `v0.11.x` or below
 ├── .wasp/                 # Output dir for Wasp. DON'T MODIFY THESE FILES!
 ├── public/                # Public assets dir, e.g. www.yourdomain.com/banner.png
 ├── src/                   # Your code goes here.
-│   ├── client/            # Your client code (React) goes here.
-│   ├── server/            # Your server code (NodeJS) goes here.
+│   ├── admin/             # Admin dashboard related pages and components.
+│   ├── analytics/         # Logic and background jobs for processing analytics.
 │   ├── auth/              # All auth-related pages/components and logic.
+│   ├── client/            # Shared components, hooks, landing page, and other client code (React).
+│   ├── demo-ai-app/       # Logic for the example AI-powered demo app.
 │   ├── file-upload/       # Logic for uploading files to S3.
+│   ├── landing-page       # Landing page related code
+│   ├── messages           # Logic for app user messages.
+│   ├── newsletter/        # Logic for scheduled recurring newsletter sending.
 │   ├── payment/           # Logic for handling Stripe payments and webhooks.
+│   ├── server/            # Scripts, shared server utils, and other server-specific code (NodeJS).
+│   ├── shared/            # Shared constants and util functions.
 │   └── user/              # Logic related to users and their accounts.
 ├── .env.server            # Dev environment variables for your server code.
 ├── .env.client            # Dev environment variables for your client code.
@@ -71,13 +81,8 @@ If you are using a version of the OpenSaaS template with Wasp `v0.11.x` or below
 ├── tailwind.config.js     # TailwindCSS configuration.
 ├── package.json
 ├── package-lock.json
-
 └── .wasproot
 ```
-
-:::tip[File Structure]
-Note that since Wasp v0.12, the `src` folder does not need to be organized  between `client` and `server` code. You can organize your code however you like, e.g. by feature, but we've chosen to keep the traditional structure for this template. 
-:::
 
 ### The Wasp Config file
 
@@ -104,35 +109,30 @@ It's possible to learn Wasp's feature set simply through using this template, bu
 
 ### Client
 
-The `src/client` folder contains the code that runs in the browser. It's a standard React app, with a few Wasp-specific things sprinkled in.
+The `src/client` folder contains any additional client-side code that doesn't belong to a feature:
 
 ```sh
 .
 └── client
-    ├── admin              # Admin dashboard pages and components
-    ├── app                # Your user-facing app that sits behind the paywall/login.
-    ├── components         # Your shared React components.
-    ├── hooks              # Your shared React hooks.
-    ├── landing-page       # Landing page related code
-    ├── static             # Assets that you need access to in your code, e.g. import logo from 'static/logo.png'
-    ├── App.tsx            # Main app component to wrap all child components. Useful for global state, navbars, etc.
-    └── Main.css
+    ├── components         # Your shared React components.
+    ├── fonts              # Extra fonts
+    ├── hooks              # Your shared React hooks.
+    ├── icons              # Your shared SVG icons.
+    ├── static             # Assets that you need access to in your code, e.g. import logo from 'static/logo.png'
+    ├── App.tsx            # Main app component to wrap all child components. Useful for global state, navbars, etc.
+    ├── cn.ts              # Helper function for dynamic and conditional Tailwind CSS classes.
+    └── Main.css
 
 ```
 
 ### Server
 
-The `src/server` folder contains the code that runs on the server. Wasp compiles everything into a NodeJS server for you. 
-
-All you have to do is define your server-side functions in the `main.wasp` file, write the logic in a function within `src/server` and Wasp will generate the boilerplate code for you.
+The `src/server` folder contains any additional server-side code that does not belong to a specific feature: 
 
 ```sh
 └── server
-    ├── scripts            # Scripts to run via Wasp, e.g. database seeding.
-    ├── workers            # Functions that run in the background as Wasp Jobs, e.g. daily stats calculation.
-    ├── actions.ts         # Your server-side write/mutation functions.
-    ├── queries.ts         # Your server-side read functions.
-    └── utils.ts
+    ├── scripts            # Scripts to run via Wasp, e.g. database seeding.
+    └── utils.ts
 ```
 
 ## Main Features
@@ -150,6 +150,7 @@ This template comes with a fully functional auth flow out of the box. It takes a
       },
       google: {},
       github: {},
+      discord: {}
     },
     onAuthFailedRedirectTo: "/",
   },
@@ -257,7 +258,7 @@ To do that, we've leveraged Wasp's [Jobs feature](https://wasp-lang.dev/docs/adv
 job dailyStatsJob {
   executor: PgBoss,
   perform: {
-    fn: import { calculateDailyStats } from "@src/server/workers/calculateDailyStats.js"
+    fn: import { calculateDailyStats } from "@src/analytics/stats"
   },
   schedule: {
     cron: "0 * * * *" // runs every hour

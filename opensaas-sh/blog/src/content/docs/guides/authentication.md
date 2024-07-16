@@ -2,8 +2,7 @@
 title: Authentication
 banner:
   content: |
-    ⚠️ Open SaaS is now running on <a href='https://wasp-lang.dev'>Wasp v0.13</a>! If you're running an older version of Open SaaS, please follow the 
-    <a href="https://wasp-lang.dev/docs/migrate-from-0-12-to-0-13">migration instructions here</a> ⚠️ 
+    Open SaaS is now running on <a href='https://wasp-lang.dev'>Wasp v0.14</a>! <br/>🐝🚀<br/>If you're running an older version, please follow the <a href="https://wasp-lang.dev/docs/migrate-from-0-13-to-0-14">migration instructions.</a>
 ---
 
 Setting up your app's authentication is easy with Wasp. In fact, it's already set up for you in the `main.wasp` file: 
@@ -14,7 +13,8 @@ Setting up your app's authentication is easy with Wasp. In fact, it's already se
     methods: {
       email: {}, 
       google: {},
-      gitHub: {}
+      gitHub: {},
+      discord: {}
     },
     onAuthFailedRedirectTo: "/",
   },
@@ -81,12 +81,14 @@ And that's it. Wasp will take care of the rest and update your AuthUI components
 
 Check out the  [Wasp Auth docs](https://wasp-lang.dev/docs/auth/overview) for more info.
 
-## Google & GitHub Auth
+## Google, GitHub, & Discord Auth
 
 We've also customized and pre-built the Google and GitHub auth flow for you. To start using them, you just need to uncomment out the methods you want in your `main.wasp` file and obtain the proper API keys to add to your `.env.server` file. 
 
 To create a Google OAuth app and get your Google API keys, follow the instructions in [Wasp's Google Auth docs](https://wasp-lang.dev/docs/auth/social-auth/google#3-creating-a-google-oauth-app).
 
 To create a GitHub OAuth app and get your GitHub API keys, follow the instructions in [Wasp's GitHub Auth docs](https://wasp-lang.dev/docs/auth/social-auth/github#3-creating-a-github-oauth-app).
+
+To create a Discord OAuth app and get your Discord API keys, follow the instructions in [Wasp's Discord Auth docs](docs/auth/social-auth/google#3-creating-a-google-oauth-app)
 
 Again, Wasp will take care of the rest and update your AuthUI components accordingly.

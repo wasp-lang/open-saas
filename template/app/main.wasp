@@ -1,6 +1,6 @@
 app OpenSaaS {
   wasp: {
-    version: "^0.13.2"
+    version: "^0.14.0"
   },
 
   title: "My Open SaaS App",
@@ -54,13 +54,18 @@ app OpenSaaS {
       //   userSignupFields: import { getGitHubUserFields } from "@src/auth/userSignupFields",
       //   configFn: import { getGitHubAuthConfig } from "@src/auth/userSignupFields",
       // },
+      // Uncomment to enable Discord Auth (check https://wasp-lang.dev/docs/auth/social-auth/discord for setup instructions):
+      // discord: {
+      //   userSignupFields: import { getDiscordUserFields } from "@src/auth/userSignupFields",
+      //   configFn: import { getDiscordAuthConfig } from "@src/auth/userSignupFields"
+      // }
     },
+    onAfterSignup: import { onAfterSignup } from "@src/auth/hooks",
     onAuthFailedRedirectTo: "/login",
     onAuthSucceededRedirectTo: "/demo-app",
   },
 
   db: {
-    system: PostgreSQL,
     // Run `wasp db seed` to seed the database with the seed functions below:
     seeds: [
       // Populates the database with a bunch of fake users to work with during development.
@@ -85,32 +90,9 @@ app OpenSaaS {
   },
 }
 
-entity GptResponse {=psl
-  id                        String          @id @default(uuid())
-  createdAt                 DateTime        @default(now())
-  updatedAt                 DateTime        @updatedAt
-
-  user                      User            @relation(fields: [userId], references: [id])
-  userId                    String
-
-  content                   String
-psl=}
-
-entity Task {=psl
-  id                        String          @id @default(uuid())
-  createdAt                 DateTime        @default(now())
-
-  user                      User            @relation(fields: [userId], references: [id])
-  userId                    String
-
-  description               String
-  time                      String          @default("1")
-  isDone                    Boolean         @default(false)
-psl=}
-
 route LandingPageRoute { path: "/", to: LandingPage }
 page LandingPage {
-  component: import LandingPage from "@src/client/landing-page/LandingPage"
+  component: import LandingPage from "@src/landing-page/LandingPage"
 }
 
 //#region Auth Pages
@@ -140,77 +122,7 @@ page EmailVerificationPage {
 }
 //#endregion
 
-route DemoAppRoute { path: "/demo-app", to: DemoAppPage }
-page DemoAppPage {
-  authRequired: true,
-  component: import DemoAppPage from "@src/client/app/DemoAppPage"
-}
-
-action generateGptResponse {
-  fn: import { generateGptResponse } from "@src/server/actions.js",
-  entities: [User, Task, GptResponse]
-}
-
-action createTask {
-  fn: import { createTask } from "@src/server/actions.js",
-  entities: [Task]
-}
-
-action deleteTask {
-  fn: import { deleteTask } from "@src/server/actions.js",
-  entities: [Task]
-}
-
-action updateTask {
-  fn: import { updateTask } from "@src/server/actions.js",
-  entities: [Task]
-}
-
-query getGptResponses {
-  fn: import { getGptResponses } from "@src/server/queries.js",
-  entities: [User, GptResponse]
-}
-
-query getAllTasksByUser {
-  fn: import { getAllTasksByUser } from "@src/server/queries.js",
-  entities: [Task]
-}
-
-job emailChecker {
-  executor: PgBoss,
-  perform: {
-    fn: import { checkAndQueueEmails } from "@src/server/workers/checkAndQueueEmails.js"
-  },
-  schedule: {
-    cron: "0 7 * * 1" // at 7:00 am every Monday
-  },
-  entities: [User]
-}
-
 //#region User
-entity User {=psl
-  id                        String          @id @default(uuid())
-  createdAt                 DateTime        @default(now())
-
-  email                     String?         @unique
-  username                  String?         @unique
-  lastActiveTimestamp       DateTime        @default(now())
-  isAdmin                   Boolean         @default(false)
-
-  stripeId                  String?         @unique
-  checkoutSessionId         String?
-  subscriptionStatus        String?         // 'active', 'canceled', 'past_due', 'deleted'
-  subscriptionPlan          String?         // 'hobby', 'pro'
-  sendEmail                 Boolean         @default(false)
-  datePaid                  DateTime?
-  credits                   Int             @default(3)
-
-  gptResponses              GptResponse[]
-  contactFormMessages       ContactFormMessage[]
-  tasks                     Task[]
-  files                     File[]
-psl=}
-
 route AccountRoute { path: "/account", to: AccountPage }
 page AccountPage {
   authRequired: true,
@@ -230,6 +142,44 @@ action updateCurrentUser {
 action updateUserById {
   fn: import { updateUserById } from "@src/user/operations",
   entities: [User]
+}
+//#endregion
+
+//#region Demo AI App
+route DemoAppRoute { path: "/demo-app", to: DemoAppPage }
+page DemoAppPage {
+  authRequired: true,
+  component: import DemoAppPage from "@src/demo-ai-app/DemoAppPage"
+}
+
+action generateGptResponse {
+  fn: import { generateGptResponse } from "@src/demo-ai-app/operations",
+  entities: [User, Task, GptResponse]
+}
+
+action createTask {
+  fn: import { createTask } from "@src/demo-ai-app/operations",
+  entities: [Task]
+}
+
+action deleteTask {
+  fn: import { deleteTask } from "@src/demo-ai-app/operations",
+  entities: [Task]
+}
+
+action updateTask {
+  fn: import { updateTask } from "@src/demo-ai-app/operations",
+  entities: [Task]
+}
+
+query getGptResponses {
+  fn: import { getGptResponses } from "@src/demo-ai-app/operations",
+  entities: [User, GptResponse]
+}
+
+query getAllTasksByUser {
+  fn: import { getAllTasksByUser } from "@src/demo-ai-app/operations",
+  entities: [Task]
 }
 //#endregion
 
@@ -279,19 +229,6 @@ query getDownloadFileSignedURL {
   fn: import { getDownloadFileSignedURL } from "@src/file-upload/operations",
   entities: [User, File]
 }
-
-entity File {=psl
-  id                        String          @id @default(uuid())
-  createdAt                 DateTime        @default(now())
-
-  user                      User            @relation(fields: [userId], references: [id])
-  userId                    String
-
-  name                      String
-  type                      String
-  key                       String
-  uploadUrl                 String
-psl=}
 //#endregion
 
 //#region Analytics
@@ -311,41 +248,6 @@ job dailyStatsJob {
   },
   entities: [User, DailyStats, Logs, PageViewSource]
 }
-
-entity DailyStats {=psl
-  id                               Int             @id @default(autoincrement())
-  date                             DateTime        @default(now()) @unique
-
-  totalViews                       Int             @default(0)
-  prevDayViewsChangePercent        String          @default("0")
-  userCount                        Int             @default(0)
-  paidUserCount                    Int             @default(0)
-  userDelta                        Int             @default(0)
-  paidUserDelta                    Int             @default(0)
-  totalRevenue                     Float           @default(0)
-  totalProfit                      Float           @default(0)
-
-  sources                          PageViewSource[]
-psl=}
-
-entity PageViewSource {=psl
-  @@id([date, name])
-  name                     String
-  date                     DateTime        @default(now())
-
-  dailyStats               DailyStats?     @relation(fields: [dailyStatsId], references: [id])
-  dailyStatsId             Int?
-
-  visitors                 Int
-psl=}
-
-entity Logs {=psl
-  id                       Int             @id @default(autoincrement())
-  createdAt                DateTime        @default(now())
-
-  message                  String
-  level                    String
-psl=}
 //#endregion
 
 //#region Admin Dashboard
@@ -413,16 +315,17 @@ page AdminMessagesPage {
   authRequired: true,
   component: import AdminMessages from "@src/messages/MessagesPage"
 }
+//#endregion
 
-entity ContactFormMessage {=psl
-  id                        String          @id @default(uuid())
-  createdAt                 DateTime        @default(now())
-
-  user                      User            @relation(fields: [userId], references: [id])
-  userId                    String
-
-  content                   String
-  isRead                    Boolean         @default(false)
-  repliedAt                 DateTime?
-psl=}
+//#region Newsletter
+job sendNewsletter {
+  executor: PgBoss,
+  perform: {
+    fn: import { checkAndQueueNewsletterEmails } from "@src/newsletter/sendNewsletter"
+  },
+  schedule: {
+    cron: "0 7 * * 1" // at 7:00 am every Monday
+  },
+  entities: [User]
+}
 //#endregion
