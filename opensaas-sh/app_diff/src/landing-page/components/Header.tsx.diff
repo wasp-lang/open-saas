@@ -1,0 +1,59 @@
+--- template/app/src/landing-page/components/Header.tsx
++++ opensaas-sh/app/src/landing-page/components/Header.tsx
+@@ -1,4 +1,4 @@
+-import { useState } from 'react';
++import { useState, useEffect } from 'react';
+ import { HiBars3 } from 'react-icons/hi2';
+ import { BiLogIn } from 'react-icons/bi';
+ import { AiFillCloseCircle } from 'react-icons/ai';
+@@ -20,7 +20,7 @@
+ 
+   const { data: user, isLoading: isUserLoading } = useAuth();
+ 
+-  const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Your SaaS App' />;
++  const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Open SaaS App' />;
+ 
+   return (
+     <header className='absolute inset-x-0 top-0 z-50 dark:bg-boxdark-2'>
+@@ -28,10 +28,10 @@
+         <div className='flex items-center lg:flex-1'>
+           <a
+             href='/'
+-            className='flex items-center -m-1.5 p-1.5 text-gray-900 duration-300 ease-in-out hover:text-yellow-500'
++            className='flex items-center -m-1.5 p-1.5 text-gray-900 duration-300 ease-in-out hover:text-yellow-500 dark:text-white'
+           >
+             <NavLogo />
+-            <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Your Saas</span>
++            <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Open Saas</span>
+           </a>
+         </div>
+         <div className='flex lg:hidden'>
+@@ -57,14 +57,14 @@
+         </div>
+         <div className='hidden lg:flex lg:flex-1 lg:justify-end lg:align-end'>
+           {/* <!-- Dark Mode Toggler --> */}
+-          <div className='flex items-center gap-3 2xsm:gap-7'>
++          <div className='flex items-center gap-3 2xsm:gap-7 text-sm font-semibold leading-6'>
+             <ul className='flex justify-center items-center gap-2 2xsm:gap-4'>
+               <DarkModeSwitcher />
+             </ul>
+             {isUserLoading ? null : !user ? (
+               <Link to='/login'>
+-                <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500 dark:text-white'>
+-                  Log in <BiLogIn size='1.1rem' className='ml-1' />
++                <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500 dark:text-white test-sm'>
++                  Try the demo App <BiLogIn size='1.1rem' className='ml-1' />
+                 </div>
+               </Link>
+             ) : (
+@@ -107,8 +107,8 @@
+               <div className='py-6'>
+                 {isUserLoading ? null : !user ? (
+                   <Link to='/login'>
+-                    <div className='flex justify-start items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500 dark:text-white'>
+-                      Log in <BiLogIn size='1.1rem' className='ml-1' />
++                    <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500 dark:text-white'>
++                      Try the Demo App{' '} <BiLogIn size='1.1rem' className='ml-1' />
+                     </div>
+                   </Link>
+                 ) : (

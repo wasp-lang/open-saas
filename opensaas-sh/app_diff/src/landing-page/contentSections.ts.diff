@@ -131,7 +131,7 @@
 +  {
 +    name: 'Tim Skaggs',
 +    role: 'Founder @ Antler US',
-+    avatarSrc: 'https://pbs.twimg.com/profile_images/1486119226771480577/VptdEo6A_400x400.png',
++    avatarSrc: 'https://pbs.twimg.com/profile_images/1802196804236091392/ZG0OE_fO_400x400.jpg',
 +    socialUrl: 'https://twitter.com/tskaggs',
 +    quote: 'Nearly done with a MVP in 3 days of part-time work... and deployed on Fly.io in 10 minutes.',
 +  },
