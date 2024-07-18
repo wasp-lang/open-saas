@@ -92,7 +92,7 @@
 +    name: 'E2E Tests w/ Playwright',
 +    description: 'Move fast without breaking too much. Tests and a CI pipeline w/ GitHub Actions are set up for you.',
 +    icon: '🧪',
-+    href: DocsUrl,
++    href: DocsUrl + '/guides/tests/',
 +  },
 +  {
 +    name: 'Complete Documentation & Support',
