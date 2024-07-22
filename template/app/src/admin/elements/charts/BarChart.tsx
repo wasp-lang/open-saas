@@ -90,14 +90,12 @@ const BarChart: React.FC = () => {
       position: 'top',
       horizontalAlign: 'left',
       fontFamily: 'inter',
-
-      markers: {
-        radius: 99,
-      },
     },
-    // yaxis: {
-    //   title: false,
-    // },
+    yaxis: {
+      title: {
+        text: 'Visitors',
+      }
+    },
     grid: {
       yaxis: {
         lines: {
@@ -108,16 +106,10 @@ const BarChart: React.FC = () => {
     fill: {
       opacity: 1,
     },
-
     tooltip: {
       x: {
         show: false,
       },
-      // y: {
-      //   formatter: function (val) {
-      //     return val;
-      //   },
-      // },
     },
   };
 
