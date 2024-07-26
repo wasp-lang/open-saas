@@ -58,9 +58,21 @@ As a completely free, open-source project, we appreciate any help 🙏
 
 ## Google Analytics
 
-After you sign up for [Google analytics](https://analytics.google.com/), go to your `Admin` panel in the bottom of the left sidebar and then create a "Property" for your app.
+First off, head over to `src/analytics/stats.ts` and switch out the Plausible Provider for Google Analytics so that your [background (cron) job](https://wasp-lang.dev/docs/advanced/jobs) fetches the data from Google Analytics for your [Admin Dashboard](/general/admin-dashboard/):
 
-Once you've completed the steps to create a new Property, some Installation Instructions will pop up. Select `install manually` where you should see a string that looks like this:
+```ts ins={3} del={2} title="stats.ts"
+//...
+import { getDailyPageViews, getSources } from './providers/plausibleAnalyticsUtils';
+import { getDailyPageViews, getSources } from './providers/googleAnalyticsUtils';
+
+export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, context) => { 
+  //...
+}
+```
+
+Next, make sure you sign up for [Google analytics](https://analytics.google.com/), then go to your `Admin` panel in the bottom of the left sidebar and then create a "Property" for your app.
+
+Once you've created a new Property, some Installation Instructions will pop up. Select `install manually` where you should see a string that looks like this:
 
 ```sh title="<your-google-analytics-id>"
  https://www.googletagmanager.com/gtag/js?id=<your-google-analytics-id>

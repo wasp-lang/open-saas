@@ -79,6 +79,7 @@ job dailyStatsJob {
   entities: [User, DailyStats, Logs, PageViewSource]
 }
 ```
+For more info on Wasp's recurring background jobs, check out the [Wasp Jobs docs](https://wasp-lang.dev/docs/advanced/jobs).
 
 For a guide on how to integrate these services so that you can view your analytics via the dashboard, check out the [Stripe](/guides/stripe-integration) and [Analytics guide](/guides/analytics) of the docs.
 
