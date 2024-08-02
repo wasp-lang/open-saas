@@ -1,5 +1,5 @@
 import { useAuth } from 'wasp/client/auth';
-import { generateStripeCheckoutSession } from 'wasp/client/operations';
+import { generateStripeCheckoutSession, generateLemonSqueezyCheckoutSession } from 'wasp/client/operations';
 import { PaymentPlanId, paymentPlans, prettyPaymentPlanName } from './plans';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { useState } from 'react';
@@ -14,7 +14,7 @@ interface PaymentPlanCard {
   price: string;
   description: string;
   features: string[];
-};
+}
 
 export const paymentPlanCards: Record<PaymentPlanId, PaymentPlanCard> = {
   [PaymentPlanId.Hobby]: {
@@ -34,11 +34,11 @@ export const paymentPlanCards: Record<PaymentPlanId, PaymentPlanCard> = {
     price: '$9.99',
     description: 'One-time purchase of 10 credits for your account',
     features: ['Use credits for e.g. OpenAI API calls', 'No expiration date'],
-  }
+  },
 };
 
 const PricingPage = () => {
-  const [isStripePaymentLoading, setIsStripePaymentLoading] = useState<boolean | string>(false);
+  const [isPaymentLoading, setIsPaymentLoading] = useState<boolean | string>(false);
 
   const { data: user, isLoading: isUserLoading } = useAuth();
 
@@ -50,16 +50,16 @@ const PricingPage = () => {
       return;
     }
     try {
-      setIsStripePaymentLoading(paymentPlanId);
-      let stripeResults = await generateStripeCheckoutSession(paymentPlanId);
-
-      if (stripeResults?.sessionUrl) {
-        window.open(stripeResults.sessionUrl, '_self');
+      setIsPaymentLoading(paymentPlanId);
+      // const checkoutResults = await generateStripeCheckoutSession(paymentPlanId);
+      const checkoutResults = await generateLemonSqueezyCheckoutSession(paymentPlanId);
+      if (checkoutResults?.sessionUrl) {
+        window.open(checkoutResults.sessionUrl, '_blank');
       }
     } catch (error: any) {
       console.error(error?.message ?? 'Something went wrong.');
     } finally {
-      setIsStripePaymentLoading(false);
+      setIsPaymentLoading(false);
     }
   }
 
@@ -70,7 +70,8 @@ const PricingPage = () => {
     }
     try {
       const schema = z.string().url();
-      const customerPortalUrl = schema.parse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
+      // const customerPortalUrl = schema.parse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
+      const customerPortalUrl = schema.parse(user.lemonSqueezyCustomerPortalUrl)
       window.open(customerPortalUrl, '_blank');
     } catch (err) {
       console.error(err);
@@ -86,21 +87,17 @@ const PricingPage = () => {
           </h2>
         </div>
         <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600 dark:text-white'>
-          Stripe subscriptions and secure webhooks are built-in. Just add your Stripe Product IDs! Try it out below with
-          test credit card number{' '}
-          <span className='px-2 py-1 bg-gray-100 rounded-md text-gray-500'>4242 4242 4242 4242 4242</span>
+          Choose between Stripe and LemonSqueezy as your payment provider. Just add your Product IDs! Try it out below with test credit card number{' '}
+          <br/><span className='px-2 py-1 bg-gray-100 rounded-md text-gray-500'>4242 4242 4242 4242 4242</span>
         </p>
         <div className='isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 lg:gap-x-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3'>
           {Object.values(PaymentPlanId).map((planId) => (
             <div
               key={planId}
-              className={cn(
-                'relative flex flex-col grow justify-between rounded-3xl ring-gray-900/10 dark:ring-gray-100/10 overflow-hidden p-8 xl:p-10',
-                {
-                  'ring-2': planId === bestDealPaymentPlanId,
-                  'ring-1 lg:mt-8': planId !== bestDealPaymentPlanId,
-                }
-              )}
+              className={cn('relative flex flex-col grow justify-between rounded-3xl ring-gray-900/10 dark:ring-gray-100/10 overflow-hidden p-8 xl:p-10', {
+                'ring-2': planId === bestDealPaymentPlanId,
+                'ring-1 lg:mt-8': planId !== bestDealPaymentPlanId,
+              })}
             >
               {planId === bestDealPaymentPlanId && (
                 <div className='absolute top-0 right-0 -z-10 w-full h-full transform-gpu blur-3xl' aria-hidden='true'>
@@ -118,16 +115,10 @@ const PricingPage = () => {
                     {paymentPlanCards[planId].name}
                   </h3>
                 </div>
-                <p className='mt-4 text-sm leading-6 text-gray-600 dark:text-white'>
-                  {paymentPlanCards[planId].description}
-                </p>
+                <p className='mt-4 text-sm leading-6 text-gray-600 dark:text-white'>{paymentPlanCards[planId].description}</p>
                 <p className='mt-6 flex items-baseline gap-x-1 dark:text-white'>
-                  <span className='text-4xl font-bold tracking-tight text-gray-900 dark:text-white'>
-                    {paymentPlanCards[planId].price}
-                  </span>
-                  <span className='text-sm font-semibold leading-6 text-gray-600 dark:text-white'>
-                    {paymentPlans[planId].effect.kind === 'subscription' && '/month'}
-                  </span>
+                  <span className='text-4xl font-bold tracking-tight text-gray-900 dark:text-white'>{paymentPlanCards[planId].price}</span>
+                  <span className='text-sm font-semibold leading-6 text-gray-600 dark:text-white'>{paymentPlans[planId].effect.kind === 'subscription' && '/month'}</span>
                 </p>
                 <ul role='list' className='mt-8 space-y-3 text-sm leading-6 text-gray-600 dark:text-white'>
                   {paymentPlanCards[planId].features.map((feature) => (
@@ -142,15 +133,10 @@ const PricingPage = () => {
                 <button
                   onClick={handleCustomerPortalClick}
                   aria-describedby='manage-subscription'
-                  className={cn(
-                    'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400',
-                    {
-                      'bg-yellow-500 text-white hover:text-white shadow-sm hover:bg-yellow-400':
-                        planId === bestDealPaymentPlanId,
-                      'text-gray-600 ring-1 ring-inset ring-purple-200 hover:ring-purple-400':
-                        planId !== bestDealPaymentPlanId,
-                    }
-                  )}
+                  className={cn('mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400', {
+                    'bg-yellow-500 text-white hover:text-white shadow-sm hover:bg-yellow-400': planId === bestDealPaymentPlanId,
+                    'text-gray-600 ring-1 ring-inset ring-purple-200 hover:ring-purple-400': planId !== bestDealPaymentPlanId,
+                  })}
                 >
                   Manage Subscription
                 </button>
@@ -160,13 +146,11 @@ const PricingPage = () => {
                   aria-describedby={planId}
                   className={cn(
                     {
-                      'bg-yellow-500 text-white hover:text-white shadow-sm hover:bg-yellow-400':
-                        planId === bestDealPaymentPlanId,
-                      'text-gray-600  ring-1 ring-inset ring-purple-200 hover:ring-purple-400':
-                        planId !== bestDealPaymentPlanId,
+                      'bg-yellow-500 text-white hover:text-white shadow-sm hover:bg-yellow-400': planId === bestDealPaymentPlanId,
+                      'text-gray-600  ring-1 ring-inset ring-purple-200 hover:ring-purple-400': planId !== bestDealPaymentPlanId,
                     },
                     {
-                      'opacity-50 cursor-wait cursor-not-allowed': isStripePaymentLoading === planId,
+                      'opacity-50 cursor-wait cursor-not-allowed': isPaymentLoading === planId,
                     },
                     'mt-8 block rounded-md py-2 px-3 text-center text-sm dark:text-white font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400'
                   )}
