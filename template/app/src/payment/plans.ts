@@ -10,6 +10,7 @@ export enum PaymentPlanId {
 
 export interface PaymentPlan {
   getStripePriceId: () => string;
+  getLemonSqueezyVariantId: () => string;
   effect: PaymentPlanEffect;
 }
 
@@ -18,14 +19,17 @@ export type PaymentPlanEffect = { kind: 'subscription' } | { kind: 'credits'; am
 export const paymentPlans: Record<PaymentPlanId, PaymentPlan> = {
   [PaymentPlanId.Hobby]: {
     getStripePriceId: () => requireNodeEnvVar('STRIPE_HOBBY_SUBSCRIPTION_PRICE_ID'),
+    getLemonSqueezyVariantId: () => requireNodeEnvVar('LEMONSQUEEZY_HOBBY_SUBSCRIPTION_VARIANT_ID'),
     effect: { kind: 'subscription' },
   },
   [PaymentPlanId.Pro]: {
     getStripePriceId: () => requireNodeEnvVar('STRIPE_PRO_SUBSCRIPTION_PRICE_ID'),
+    getLemonSqueezyVariantId: () => requireNodeEnvVar('LEMONSQUEEZY_PRO_SUBSCRIPTION_VARIANT_ID'),
     effect: { kind: 'subscription' },
   },
   [PaymentPlanId.Credits10]: {
     getStripePriceId: () => requireNodeEnvVar('STRIPE_CREDITS_PRICE_ID'),
+    getLemonSqueezyVariantId: () => requireNodeEnvVar('LEMONSQUEEZY_CREDITS_VARIANT_ID'),
     effect: { kind: 'credits', amount: 10 },
   },
 };

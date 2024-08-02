@@ -17,6 +17,8 @@ model User {
   isAdmin                   Boolean         @default(false)
 
   stripeId                  String?         @unique
+  lemonSqueezyId            String?         @unique
+  lemonSqueezyCustomerPortalUrl String?
   checkoutSessionId         String?
   subscriptionStatus        String?         // 'active', 'canceled', 'past_due', 'deleted'
   subscriptionPlan          String?         // 'hobby', 'pro'

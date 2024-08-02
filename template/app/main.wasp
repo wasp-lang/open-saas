@@ -200,11 +200,23 @@ action generateStripeCheckoutSession {
   entities: [User]
 }
 
+action generateLemonSqueezyCheckoutSession {
+  fn: import { generateLemonSqueezyCheckoutSession } from "@src/payment/operations",
+  entities: [User]
+}
+
 api stripeWebhook {
   fn: import { stripeWebhook } from "@src/payment/stripe/webhook",
   entities: [User],
   middlewareConfigFn: import { stripeMiddlewareFn } from "@src/payment/stripe/webhook",
   httpRoute: (POST, "/stripe-webhook")
+}
+
+api lemonSqueezyWebhook {
+  fn: import { lemonSqueezyWebhook } from "@src/payment/lemonSqueezy/webhook",
+  entities: [User],
+  middlewareConfigFn: import { lemonSqueezyMiddlewareFn } from "@src/payment/lemonSqueezy/webhook",
+  httpRoute: (POST, "/lemonsqueezy-webhook")
 }
 //#endregion
 

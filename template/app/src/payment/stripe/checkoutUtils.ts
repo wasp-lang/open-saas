@@ -28,15 +28,7 @@ export async function fetchStripeCustomer(customerEmail: string) {
 
 export type StripeMode = 'subscription' | 'payment';
 
-export async function createStripeCheckoutSession({
-  priceId,
-  customerId,
-  mode,
-}: {
-  priceId: string;
-  customerId: string;
-  mode: StripeMode;
-}) {
+export async function createStripeCheckoutSession({ priceId, customerId, mode }: { priceId: string; customerId: string; mode: StripeMode }) {
   try {
     return await stripe.checkout.sessions.create({
       line_items: [
