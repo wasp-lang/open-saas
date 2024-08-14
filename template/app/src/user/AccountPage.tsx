@@ -27,7 +27,13 @@ export default function AccountPage({ user }: { user: User }) {
             )}
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
               <dt className='text-sm font-medium text-gray-500 dark:text-white'>Your Plan</dt>
-              <UserCurrentPaymentPlan subscriptionStatus={user.subscriptionStatus as SubscriptionStatus} subscriptionPlan={user.subscriptionPlan} datePaid={user.datePaid} credits={user.credits} lemonSqueezyCustomerPortalUrl={user.lemonSqueezyCustomerPortalUrl} />
+              <UserCurrentPaymentPlan
+                subscriptionStatus={user.subscriptionStatus as SubscriptionStatus}
+                subscriptionPlan={user.subscriptionPlan}
+                datePaid={user.datePaid}
+                credits={user.credits}
+                lemonSqueezyCustomerPortalUrl={user.lemonSqueezyCustomerPortalUrl}
+              />
             </div>
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
               <dt className='text-sm font-medium text-gray-500 dark:text-white'>About</dt>
@@ -112,14 +118,14 @@ function BuyMoreButton() {
 
 function CustomerPortalButton({ lemonSqueezyCustomerPortalUrl }: { lemonSqueezyCustomerPortalUrl?: string | null }) {
   const handleClick = () => {
-      const schema = z.string().url();
-      // const customerPortalUrl = schema.safeParse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
-      const customerPortalUrl = schema.safeParse(lemonSqueezyCustomerPortalUrl);
-      if (customerPortalUrl.success) {
-        window.open(customerPortalUrl.data, '_blank');
-      } else {
-        console.error('Invalid customer portal URL');
-      }
+    const schema = z.string().url();
+    // const customerPortalUrl = schema.safeParse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
+    const customerPortalUrl = schema.safeParse(lemonSqueezyCustomerPortalUrl);
+    if (customerPortalUrl.success) {
+      window.open(customerPortalUrl.data, '_blank');
+    } else {
+      console.error('Invalid customer portal URL');
+    }
   };
 
   return (
