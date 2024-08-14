@@ -1,11 +1,10 @@
 import './Main.css';
-import { type AuthUser } from 'wasp/auth';
 import { useAuth } from 'wasp/client/auth';
-import { updateCurrentUser } from 'wasp/client/operations';
 import AppNavBar from './components/AppNavBar';
-import CookieConsentBanner from './components/cookie-consent/Banner';
-import { useMemo, useEffect, ReactNode, useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useMemo, useEffect, ReactNode } from 'react';
+import { updateCurrentUser } from 'wasp/client/operations';
+import CookieConsentBanner from './components/cookie-consent/Banner';
 
 /**
  * use this component to wrap all child components
@@ -16,14 +15,16 @@ export default function App({ children }: { children: ReactNode }) {
   const { data: user } = useAuth();
 
   useEffect(() => {
-    if (user) {
-      const now = Date.now();
-      console.log('now: ', now);
-      const lastActiveTime = user.lastActiveTimestamp.getTime();
-      if (now - lastActiveTime > 5 * 60 * 1000) {
-        updateCurrentUser({ lastActiveTimestamp: new Date(now) });
+    const updateUserActivity = async () => {
+      if (user) {
+        const now = Date.now();
+        const lastActiveTime = user.lastActiveTimestamp.getTime();
+        if (now - lastActiveTime > 5 * 60 * 1000) {
+          await updateCurrentUser({ lastActiveTimestamp: new Date(now) });
+        }
       }
-    }
+    };
+    updateUserActivity();
   }, [user]);
 
   const shouldDisplayAppNavBar = useMemo(() => {
