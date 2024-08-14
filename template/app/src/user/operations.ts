@@ -30,7 +30,6 @@ export const updateUserById: UpdateUserById<{ id: string; data: Partial<User> },
 };
 
 export const updateCurrentUser: UpdateCurrentUser<Partial<User>, User> = async (user, context) => {
-  console.log('starting updateCurrentUser');
   if (!context.user) {
     throw new HttpError(401);
   }
