@@ -38,7 +38,7 @@ export const paymentPlanCards: Record<PaymentPlanId, PaymentPlanCard> = {
 };
 
 const PricingPage = () => {
-  const [isPaymentLoading, setIsPaymentLoading] = useState<boolean | string>(false);
+  const [isPaymentLoading, setIsPaymentLoading] = useState<boolean>(false);
 
   const { data: user, isLoading: isUserLoading } = useAuth();
 
@@ -50,17 +50,18 @@ const PricingPage = () => {
       return;
     }
     try {
-      setIsPaymentLoading(paymentPlanId);
+      setIsPaymentLoading(true);
       // const checkoutResults = await generateStripeCheckoutSession(paymentPlanId);
       const checkoutResults = await generateLemonSqueezyCheckoutSession(paymentPlanId);
       if (checkoutResults?.sessionUrl) {
-        window.open(checkoutResults.sessionUrl, '_blank');
+        window.open(checkoutResults.sessionUrl, '_self');
+      } else {
+        throw new Error('Error generating checkout session URL');
       }
-    } catch (error: any) {
-      console.error(error?.message ?? 'Something went wrong.');
-    } finally {
+    } catch (error) {
+      console.error(error);
       setIsPaymentLoading(false);
-    }
+    } 
   }
 
   const handleCustomerPortalClick = () => {
@@ -68,13 +69,13 @@ const PricingPage = () => {
       history.push('/login');
       return;
     }
-    try {
-      const schema = z.string().url();
-      // const customerPortalUrl = schema.parse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
-      const customerPortalUrl = schema.parse(user.lemonSqueezyCustomerPortalUrl)
-      window.open(customerPortalUrl, '_blank');
-    } catch (err) {
-      console.error(err);
+    const schema = z.string().url();
+    // const customerPortalUrl = schema.safeParse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
+    const customerPortalUrl = schema.safeParse(user.lemonSqueezyCustomerPortalUrl);
+    if (customerPortalUrl.success) {
+      window.open(customerPortalUrl.data, '_self');
+    } else {
+      console.error('Invalid customer portal URL');
     }
   };
 
@@ -87,8 +88,8 @@ const PricingPage = () => {
           </h2>
         </div>
         <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600 dark:text-white'>
-          Choose between Stripe and LemonSqueezy as your payment provider. Just add your Product IDs! Try it out below with test credit card number{' '}
-          <br/><span className='px-2 py-1 bg-gray-100 rounded-md text-gray-500'>4242 4242 4242 4242 4242</span>
+          Choose between Stripe and LemonSqueezy as your payment provider. Just add your Product IDs! Try it out below with test credit card number <br />
+          <span className='px-2 py-1 bg-gray-100 rounded-md text-gray-500'>4242 4242 4242 4242 4242</span>
         </p>
         <div className='isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 lg:gap-x-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3'>
           {Object.values(PaymentPlanId).map((planId) => (
@@ -150,10 +151,11 @@ const PricingPage = () => {
                       'text-gray-600  ring-1 ring-inset ring-purple-200 hover:ring-purple-400': planId !== bestDealPaymentPlanId,
                     },
                     {
-                      'opacity-50 cursor-wait cursor-not-allowed': isPaymentLoading === planId,
+                      'opacity-50 cursor-wait': isPaymentLoading,
                     },
-                    'mt-8 block rounded-md py-2 px-3 text-center text-sm dark:text-white font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400'
+                    'mt-8 block rounded-md py-2 px-3 text-center text-sm dark:text-white font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400',
                   )}
+                  disabled={isPaymentLoading}
                 >
                   {!!user ? 'Buy plan' : 'Log in to buy plan'}
                 </button>
