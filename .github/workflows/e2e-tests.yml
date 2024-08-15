@@ -113,6 +113,7 @@ jobs:
           STRIPE_CREDITS_PRICE_ID: ${{ secrets.STRIPE_CREDITS_PRICE_ID }}
           SKIP_EMAIL_VERIFICATION_IN_DEV: true
           # Client-side env vars
+          REACT_APP_STRIPE_CUSTOMER_PORTAL: https://billing.stripe.com/p/login/test_8wM8x17JN7DT4zC000
           REACT_APP_GOOGLE_ANALYTICS_ID: G-H3LSJCK95H
         working-directory: ./template
         run: |
