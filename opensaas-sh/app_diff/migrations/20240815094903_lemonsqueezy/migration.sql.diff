@@ -1,0 +1,15 @@
+--- template/app/migrations/20240815094903_lemonsqueezy/migration.sql
++++ opensaas-sh/app/migrations/20240815094903_lemonsqueezy/migration.sql
+@@ -0,0 +1,12 @@
++/*
++  Warnings:
++
++  - A unique constraint covering the columns `[lemonSqueezyId]` on the table `User` will be added. If there are existing duplicate values, this will fail.
++
++*/
++-- AlterTable
++ALTER TABLE "User" ADD COLUMN     "lemonSqueezyCustomerPortalUrl" TEXT,
++ADD COLUMN     "lemonSqueezyId" TEXT;
++
++-- CreateIndex
++CREATE UNIQUE INDEX "User_lemonSqueezyId_key" ON "User"("lemonSqueezyId");

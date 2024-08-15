@@ -11,4 +11,4 @@
 +  isMockUser                Boolean         @default(false)
  
    stripeId                  String?         @unique
-   checkoutSessionId         String?
+   lemonSqueezyId            String?         @unique

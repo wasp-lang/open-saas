@@ -1,6 +1,6 @@
 --- template/app/src/server/scripts/dbSeeds.ts
 +++ opensaas-sh/app/src/server/scripts/dbSeeds.ts
-@@ -42,5 +42,8 @@
+@@ -44,5 +44,8 @@
      datePaid: hasUserPaidOnStripe ? faker.date.between({ from: createdAt, to: lastActiveTimestamp }) : null,
      checkoutSessionId: hasUserPaidOnStripe ? `cs_test_${faker.string.uuid()}` : null,
      subscriptionPlan: subscriptionStatus ? faker.helpers.arrayElement(getSubscriptionPaymentPlanIds()) : null,
