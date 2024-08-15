@@ -8,12 +8,15 @@
  
    const { data: user, isLoading: isUserLoading } = useAuth();
  
-@@ -51,8 +52,12 @@
+@@ -51,11 +52,12 @@
      }
      try {
        setIsPaymentLoading(true);
--      // const checkoutResults = await generateStripeCheckoutSession(paymentPlanId);
--      const checkoutResults = await generateLemonSqueezyCheckoutSession(paymentPlanId);
+-
+-      // PAYMENTS PROCESSOR:
+-      const checkoutResults = await generateStripeCheckoutSession(paymentPlanId);
+-      // const checkoutResults = await generateLemonSqueezyCheckoutSession(paymentPlanId);
+-      
 +      let checkoutResults;
 +      if (isStripe) {
 +        checkoutResults = await generateStripeCheckoutSession(paymentPlanId);
@@ -23,7 +26,7 @@
        if (checkoutResults?.sessionUrl) {
          window.open(checkoutResults.sessionUrl, '_self');
        } else {
-@@ -61,7 +66,7 @@
+@@ -64,7 +66,7 @@
      } catch (error) {
        console.error(error);
        setIsPaymentLoading(false);
@@ -32,17 +35,20 @@
    }
  
    const handleCustomerPortalClick = () => {
-@@ -70,8 +75,7 @@
+@@ -73,11 +75,7 @@
        return;
      }
      const schema = z.string().url();
--    // const customerPortalUrl = schema.safeParse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
--    const customerPortalUrl = schema.safeParse(user.lemonSqueezyCustomerPortalUrl);
+-
+-    // PAYMENTS PROCESSOR:
+-    const customerPortalUrl = schema.safeParse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
+-    // const customerPortalUrl = schema.safeParse(user.lemonSqueezyCustomerPortalUrl);
+-    
 +    const customerPortalUrl = schema.safeParse(isStripe ? import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL : user.lemonSqueezyCustomerPortalUrl);
      if (customerPortalUrl.success) {
        window.open(customerPortalUrl.data, '_self');
      } else {
-@@ -87,10 +91,15 @@
+@@ -93,10 +91,15 @@
              Pick your <span className='text-yellow-500'>pricing</span>
            </h2>
          </div>
@@ -62,7 +68,7 @@
          <div className='isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 lg:gap-x-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3'>
            {Object.values(PaymentPlanId).map((planId) => (
              <div
-@@ -153,11 +162,11 @@
+@@ -159,11 +162,11 @@
                      {
                        'opacity-50 cursor-wait': isPaymentLoading,
                      },
@@ -76,7 +82,7 @@
                  </button>
                )}
              </div>
-@@ -168,4 +177,32 @@
+@@ -174,4 +177,32 @@
    );
  };
  

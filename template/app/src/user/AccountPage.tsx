@@ -119,8 +119,11 @@ function BuyMoreButton() {
 function CustomerPortalButton({ lemonSqueezyCustomerPortalUrl }: { lemonSqueezyCustomerPortalUrl?: string | null }) {
   const handleClick = () => {
     const schema = z.string().url();
-    // const customerPortalUrl = schema.safeParse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
-    const customerPortalUrl = schema.safeParse(lemonSqueezyCustomerPortalUrl);
+
+    // PAYMENTS PROCESSOR:
+    const customerPortalUrl = schema.safeParse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
+    // const customerPortalUrl = schema.safeParse(lemonSqueezyCustomerPortalUrl);
+    
     if (customerPortalUrl.success) {
       window.open(customerPortalUrl.data, '_blank');
     } else {

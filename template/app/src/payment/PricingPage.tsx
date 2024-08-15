@@ -51,8 +51,11 @@ const PricingPage = () => {
     }
     try {
       setIsPaymentLoading(true);
-      // const checkoutResults = await generateStripeCheckoutSession(paymentPlanId);
-      const checkoutResults = await generateLemonSqueezyCheckoutSession(paymentPlanId);
+
+      // PAYMENTS PROCESSOR:
+      const checkoutResults = await generateStripeCheckoutSession(paymentPlanId);
+      // const checkoutResults = await generateLemonSqueezyCheckoutSession(paymentPlanId);
+      
       if (checkoutResults?.sessionUrl) {
         window.open(checkoutResults.sessionUrl, '_self');
       } else {
@@ -70,8 +73,11 @@ const PricingPage = () => {
       return;
     }
     const schema = z.string().url();
-    // const customerPortalUrl = schema.safeParse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
-    const customerPortalUrl = schema.safeParse(user.lemonSqueezyCustomerPortalUrl);
+
+    // PAYMENTS PROCESSOR:
+    const customerPortalUrl = schema.safeParse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
+    // const customerPortalUrl = schema.safeParse(user.lemonSqueezyCustomerPortalUrl);
+    
     if (customerPortalUrl.success) {
       window.open(customerPortalUrl.data, '_self');
     } else {
