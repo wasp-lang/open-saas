@@ -79,7 +79,7 @@ const PricingPage = () => {
     // const customerPortalUrl = schema.safeParse(user.lemonSqueezyCustomerPortalUrl);
     
     if (customerPortalUrl.success) {
-      window.open(customerPortalUrl.data, '_self');
+      window.open(customerPortalUrl.data, '_blank');
     } else {
       console.error('Invalid customer portal URL');
     }
