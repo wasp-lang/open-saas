@@ -195,13 +195,8 @@ page CheckoutPage {
   component: import Checkout from "@src/payment/CheckoutPage"
 }
 
-action generateStripeCheckoutSession {
-  fn: import { generateStripeCheckoutSession } from "@src/payment/operations",
-  entities: [User]
-}
-
-action generateLemonSqueezyCheckoutSession {
-  fn: import { generateLemonSqueezyCheckoutSession } from "@src/payment/operations",
+action generateCheckoutSession {
+  fn: import { generateCheckoutSession } from "@src/payment/operations",
   entities: [User]
 }
 

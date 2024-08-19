@@ -73,7 +73,7 @@ async function handleOrderCreated(data: Order, userId: string, prismaUserDelegat
   const lemonSqueezyId = customer_id.toString();
   const variantId = first_order_item.variant_id.toString();
 
-  const planId = Object.values(PaymentPlanId).find((planId) => paymentPlans[planId].getLemonSqueezyVariantId() === variantId);
+  const planId = Object.values(PaymentPlanId).find((planId) => paymentPlans[planId].getProductId() === variantId);
   if (!planId) {
     throw new Error(`No plan with lemonsqueezy variant id ${variantId}`);
   }
@@ -100,7 +100,7 @@ async function handleSubscriptionCreated(data: Subscription, userId: string, pri
   const { customer_id, status, variant_id } = data.data.attributes;
   const lemonSqueezyId = customer_id.toString();
 
-  const planId = Object.values(PaymentPlanId).find((planId) => paymentPlans[planId].getLemonSqueezyVariantId() === variant_id.toString());
+  const planId = Object.values(PaymentPlanId).find((planId) => paymentPlans[planId].getProductId() === variant_id.toString());
 
   if (!planId) {
     throw new Error(`No plan with LemonSqueezy variant id ${variant_id}`);
@@ -130,7 +130,7 @@ async function handleSubscriptionUpdated(data: Subscription, userId: string, pri
   const { customer_id, status, variant_id } = data.data.attributes;
   const lemonSqueezyId = customer_id.toString();
 
-  const planId = Object.values(PaymentPlanId).find((planId) => paymentPlans[planId].getLemonSqueezyVariantId() === variant_id.toString());
+  const planId = Object.values(PaymentPlanId).find((planId) => paymentPlans[planId].getProductId() === variant_id.toString());
 
   if (!planId) {
     throw new Error(`No plan with LemonSqueezy variant id ${variant_id}`);

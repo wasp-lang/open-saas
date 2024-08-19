@@ -16,7 +16,7 @@ export const updateUserStripePaymentDetails = (
 ) => {
   return userDelegate.update({
     where: {
-      stripeId: userStripeId,
+      paymentProcessorId: userStripeId,
     },
     data: {
       subscriptionPlan,

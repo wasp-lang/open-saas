@@ -86,7 +86,7 @@ export async function handleCheckoutSessionCompleted(
   const lineItemPriceId =  result.data.data[0].price.id;
 
   const planId = Object.values(PaymentPlanId).find(
-    (planId) => paymentPlans[planId].getStripePriceId() === lineItemPriceId
+    (planId) => paymentPlans[planId].getProductId() === lineItemPriceId
   );
   if (!planId) {
     throw new Error(`No plan with stripe price id ${lineItemPriceId}`);

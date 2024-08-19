@@ -1,5 +1,5 @@
 import { useAuth } from 'wasp/client/auth';
-import { generateStripeCheckoutSession, generateLemonSqueezyCheckoutSession } from 'wasp/client/operations';
+import { generateCheckoutSession } from 'wasp/client/operations';
 import { PaymentPlanId, paymentPlans, prettyPaymentPlanName } from './plans';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { useState } from 'react';
@@ -53,7 +53,7 @@ const PricingPage = () => {
       setIsPaymentLoading(true);
 
       // PAYMENTS PROCESSOR:
-      const checkoutResults = await generateStripeCheckoutSession(paymentPlanId);
+      const checkoutResults = await generateCheckoutSession(paymentPlanId);
       // const checkoutResults = await generateLemonSqueezyCheckoutSession(paymentPlanId);
       
       if (checkoutResults?.sessionUrl) {

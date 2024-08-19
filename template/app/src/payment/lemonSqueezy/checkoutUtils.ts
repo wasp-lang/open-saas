@@ -10,13 +10,8 @@ type LemonSqueezyCheckoutSessionParams = {
   userId: string;
 };
 
-type LemonSqueezyCheckoutSession = {
-  sessionUrl: string;
-  sessionId: string;
-};
-
-export async function createLemonSqueezyCheckoutSession({ storeId, variantId, userEmail, userId }: LemonSqueezyCheckoutSessionParams): Promise<LemonSqueezyCheckoutSession> {
-  const { data: checkout, error } = await createCheckout(storeId, variantId, {
+export async function createLemonSqueezyCheckoutSession({ storeId, variantId, userEmail, userId }: LemonSqueezyCheckoutSessionParams) {
+  const { data: session, error } = await createCheckout(storeId, variantId, {
     checkoutData: {
       email: userEmail,
       custom: {
@@ -27,11 +22,11 @@ export async function createLemonSqueezyCheckoutSession({ storeId, variantId, us
   if (error) {
     throw error;
   }
-  if (!checkout) {
+  if (!session) {
     throw new Error('Checkout not found');
   }
   return {
-    sessionUrl: checkout.data.attributes.url,
-    sessionId: checkout.data.id,
+    url: session.data.attributes.url,
+    id: session.data.id,
   };
 }

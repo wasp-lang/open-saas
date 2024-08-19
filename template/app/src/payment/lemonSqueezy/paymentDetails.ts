@@ -21,7 +21,7 @@ export const updateUserLemonSqueezyPaymentDetails = async (
       id: userId,
     },
     data: {
-      lemonSqueezyId,
+      paymentProcessorId: lemonSqueezyId,
       lemonSqueezyCustomerPortalUrl,
       subscriptionPlan,
       subscriptionStatus,
