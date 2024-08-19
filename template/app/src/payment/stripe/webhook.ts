@@ -12,7 +12,7 @@ import { requireNodeEnvVar } from '../../server/utils';
 import { z } from 'zod';
 
 export const stripeWebhook: StripeWebhook = async (request, response, context) => {
-  const secret = requireNodeEnvVar('STRIPE_WEBHOOK_SECRET');
+  const secret = requireNodeEnvVar('PAYMENTS_WEBHOOK_SECRET');
   const sig = request.headers['stripe-signature'];
   if (!sig) {
     throw new HttpError(400, 'Stripe Webhook Signature Not Provided');
@@ -86,7 +86,7 @@ export async function handleCheckoutSessionCompleted(
   const lineItemPriceId =  result.data.data[0].price.id;
 
   const planId = Object.values(PaymentPlanId).find(
-    (planId) => paymentPlans[planId].getProductId() === lineItemPriceId
+    (planId) => paymentPlans[planId].getPriceId() === lineItemPriceId
   );
   if (!planId) {
     throw new Error(`No plan with stripe price id ${lineItemPriceId}`);

@@ -8,6 +8,7 @@ import { type Order, type Subscription, getCustomer } from '@lemonsqueezy/lemons
 import crypto from 'crypto';
 import { requireNodeEnvVar } from '../../server/utils';
 
+
 export const lemonSqueezyWebhook: LemonSqueezyWebhook = async (request, response, context) => {
   try {
     const rawBody = request.body.toString('utf8');
@@ -16,7 +17,7 @@ export const lemonSqueezyWebhook: LemonSqueezyWebhook = async (request, response
       throw new HttpError(400, 'Lemon Squeezy Webhook Signature Not Provided');
     }
 
-    const secret = requireNodeEnvVar('LEMONSQUEEZY_WEBHOOK_SECRET');
+    const secret = requireNodeEnvVar('PAYMENTS_WEBHOOK_SECRET');
     const hmac = crypto.createHmac('sha256', secret);
     const digest = Buffer.from(hmac.update(rawBody).digest('hex'), 'utf8');
 
@@ -73,7 +74,7 @@ async function handleOrderCreated(data: Order, userId: string, prismaUserDelegat
   const lemonSqueezyId = customer_id.toString();
   const variantId = first_order_item.variant_id.toString();
 
-  const planId = Object.values(PaymentPlanId).find((planId) => paymentPlans[planId].getProductId() === variantId);
+  const planId = Object.values(PaymentPlanId).find((planId) => paymentPlans[planId].getPriceId() === variantId);
   if (!planId) {
     throw new Error(`No plan with lemonsqueezy variant id ${variantId}`);
   }
@@ -100,7 +101,7 @@ async function handleSubscriptionCreated(data: Subscription, userId: string, pri
   const { customer_id, status, variant_id } = data.data.attributes;
   const lemonSqueezyId = customer_id.toString();
 
-  const planId = Object.values(PaymentPlanId).find((planId) => paymentPlans[planId].getProductId() === variant_id.toString());
+  const planId = Object.values(PaymentPlanId).find((planId) => paymentPlans[planId].getPriceId() === variant_id.toString());
 
   if (!planId) {
     throw new Error(`No plan with LemonSqueezy variant id ${variant_id}`);
@@ -130,7 +131,7 @@ async function handleSubscriptionUpdated(data: Subscription, userId: string, pri
   const { customer_id, status, variant_id } = data.data.attributes;
   const lemonSqueezyId = customer_id.toString();
 
-  const planId = Object.values(PaymentPlanId).find((planId) => paymentPlans[planId].getProductId() === variant_id.toString());
+  const planId = Object.values(PaymentPlanId).find((planId) => paymentPlans[planId].getPriceId() === variant_id.toString());
 
   if (!planId) {
     throw new Error(`No plan with LemonSqueezy variant id ${variant_id}`);

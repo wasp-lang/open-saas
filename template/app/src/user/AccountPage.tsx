@@ -1,5 +1,6 @@
 import type { User } from 'wasp/entities';
 import { type SubscriptionStatus, prettyPaymentPlanName, parsePaymentPlanId } from '../payment/plans';
+import { getCustomerPortalUrl, useQuery } from 'wasp/client/operations';
 import { Link } from 'wasp/client/router';
 import { logout } from 'wasp/client/auth';
 import { z } from 'zod';
@@ -67,7 +68,7 @@ function UserCurrentPaymentPlan({ subscriptionPlan, subscriptionStatus, datePaid
     return (
       <>
         <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>{getUserSubscriptionStatusDescription({ subscriptionPlan, subscriptionStatus, datePaid })}</dd>
-        {subscriptionStatus !== 'deleted' ? <CustomerPortalButton lemonSqueezyCustomerPortalUrl={lemonSqueezyCustomerPortalUrl} /> : <BuyMoreButton />}
+        {subscriptionStatus !== 'deleted' ? <CustomerPortalButton /> : <BuyMoreButton />}
       </>
     );
   }
@@ -116,24 +117,22 @@ function BuyMoreButton() {
   );
 }
 
-function CustomerPortalButton({ lemonSqueezyCustomerPortalUrl }: { lemonSqueezyCustomerPortalUrl?: string | null }) {
-  const handleClick = () => {
-    const schema = z.string().url();
+function CustomerPortalButton() {
+  const { data: customerPortalUrl, isLoading: isCustomerPortalUrlLoading, error: customerPortalUrlError } = useQuery(getCustomerPortalUrl);
 
-    // PAYMENTS PROCESSOR:
-    const customerPortalUrl = schema.safeParse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
-    // const customerPortalUrl = schema.safeParse(lemonSqueezyCustomerPortalUrl);
-    
-    if (customerPortalUrl.success) {
-      window.open(customerPortalUrl.data, '_blank');
-    } else {
-      console.error('Invalid customer portal URL');
+  const handleClick = () => {
+    if (customerPortalUrlError) {
+      console.error('Error fetching customer portal url');
+    }
+
+    if (customerPortalUrl) {
+      window.open(customerPortalUrl, '_blank');
     }
   };
 
   return (
     <div className='ml-4 flex-shrink-0 sm:col-span-1 sm:mt-0'>
-      <button onClick={handleClick} className='font-medium text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300'>
+      <button onClick={handleClick} disabled={isCustomerPortalUrlLoading} className='font-medium text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300'>
         Manage Subscription
       </button>
     </div>

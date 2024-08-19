@@ -1,4 +1,5 @@
-import type { GenerateCheckoutSession } from 'wasp/server/operations';
+import type { GenerateCheckoutSession, GetCustomerPortalUrl } from 'wasp/server/operations';
+import type { FetchCustomerPortalUrlArgs } from './paymentProcessor';
 import { PaymentPlanId, paymentPlans } from '../payment/plans';
 import { paymentProcessor } from './paymentProcessor'
 import { HttpError } from 'wasp/server';
@@ -36,3 +37,13 @@ export const generateCheckoutSession: GenerateCheckoutSession<PaymentPlanId, Che
     sessionId: session.id,
   };
 };
+
+export const getCustomerPortalUrl: GetCustomerPortalUrl<void, string> =  async (_args, context) => {
+    if (!context.user) {
+      throw new HttpError(401);
+    }
+  return paymentProcessor.fetchCustomerPortalUrl({ 
+    userId: context.user.id,
+    prismaUserDelegate: context.entities.User
+  })
+}

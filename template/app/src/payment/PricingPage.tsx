@@ -1,11 +1,10 @@
 import { useAuth } from 'wasp/client/auth';
-import { generateCheckoutSession } from 'wasp/client/operations';
+import { generateCheckoutSession, getCustomerPortalUrl, useQuery } from 'wasp/client/operations';
 import { PaymentPlanId, paymentPlans, prettyPaymentPlanName } from './plans';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { cn } from '../client/cn';
-import { z } from 'zod';
 
 const bestDealPaymentPlanId: PaymentPlanId = PaymentPlanId.Pro;
 
@@ -42,6 +41,8 @@ const PricingPage = () => {
 
   const { data: user, isLoading: isUserLoading } = useAuth();
 
+  const { data: customerPortalUrl, isLoading: isCustomerPortalUrlLoading, error: customerPortalUrlError } = useQuery(getCustomerPortalUrl)
+
   const history = useHistory();
 
   async function handleBuyNowClick(paymentPlanId: PaymentPlanId) {
@@ -52,9 +53,7 @@ const PricingPage = () => {
     try {
       setIsPaymentLoading(true);
 
-      // PAYMENTS PROCESSOR:
       const checkoutResults = await generateCheckoutSession(paymentPlanId);
-      // const checkoutResults = await generateLemonSqueezyCheckoutSession(paymentPlanId);
       
       if (checkoutResults?.sessionUrl) {
         window.open(checkoutResults.sessionUrl, '_self');
@@ -72,17 +71,14 @@ const PricingPage = () => {
       history.push('/login');
       return;
     }
-    const schema = z.string().url();
 
-    // PAYMENTS PROCESSOR:
-    const customerPortalUrl = schema.safeParse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
-    // const customerPortalUrl = schema.safeParse(user.lemonSqueezyCustomerPortalUrl);
-    
-    if (customerPortalUrl.success) {
-      window.open(customerPortalUrl.data, '_blank');
-    } else {
-      console.error('Invalid customer portal URL');
+    if (customerPortalUrlError) {
+      console.error('Error fetching customer portal url')
     }
+    
+    if (customerPortalUrl) {
+      window.open(customerPortalUrl, '_blank');
+    } 
   };
 
   return (
@@ -139,6 +135,7 @@ const PricingPage = () => {
               {!!user && !!user.subscriptionStatus ? (
                 <button
                   onClick={handleCustomerPortalClick}
+                  disabled={isCustomerPortalUrlLoading}
                   aria-describedby='manage-subscription'
                   className={cn('mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400', {
                     'bg-yellow-500 text-white hover:text-white shadow-sm hover:bg-yellow-400': planId === bestDealPaymentPlanId,

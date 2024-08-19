@@ -162,7 +162,7 @@ async function fetchTotalLemonSqueezyRevenue() {
     while (hasNextPage) {
       const { data: response } = await listOrders({
         filter: {
-          storeId: process.env.LEMON_SQUEEZY_STORE_ID,
+          storeId: process.env.PAYMENTS_LEMONSQUEEZY_STORE_ID,
         },
         page: {
           number: currentPage,

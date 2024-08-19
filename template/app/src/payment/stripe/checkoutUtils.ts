@@ -1,4 +1,4 @@
-import type { StripeMode } from './stripePaymentProcessor';
+import type { StripeMode } from './paymentProcessor';
 import Stripe from 'stripe';
 import { stripe } from './stripeClient';
 

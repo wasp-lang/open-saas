@@ -9,7 +9,7 @@ export enum PaymentPlanId {
 }
 
 export interface PaymentPlan {
-  getProductId: () => string;
+  getPriceId: () => string;
   effect: PaymentPlanEffect;
 }
 
@@ -17,15 +17,15 @@ export type PaymentPlanEffect = { kind: 'subscription' } | { kind: 'credits'; am
 
 export const paymentPlans: Record<PaymentPlanId, PaymentPlan> = {
   [PaymentPlanId.Hobby]: {
-    getProductId: () => requireNodeEnvVar('HOBBY_SUBSCRIPTION_PRODUCT_ID'),
+    getPriceId: () => requireNodeEnvVar('PAYMENTS_HOBBY_SUBSCRIPTION_PRICE_ID'),
     effect: { kind: 'subscription' },
   },
   [PaymentPlanId.Pro]: {
-    getProductId: () => requireNodeEnvVar('PRO_SUBSCRIPTION_PRODUCT_ID'),
+    getPriceId: () => requireNodeEnvVar('PAYMENTS_PRO_SUBSCRIPTION_PRICE_ID'),
     effect: { kind: 'subscription' },
   },
   [PaymentPlanId.Credits10]: {
-    getProductId: () => requireNodeEnvVar('CREDITS_10_PRODUCT_ID'),
+    getPriceId: () => requireNodeEnvVar('PAYMENTS_CREDITS_10_PRICE_ID'),
     effect: { kind: 'credits', amount: 10 },
   },
 };

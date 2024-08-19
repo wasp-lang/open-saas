@@ -1,24 +1,26 @@
+import type { PaymentPlanEffect } from '../plans';
+import type { CreateCheckoutSessionArgs, FetchCustomerPortalUrlArgs } from '../paymentProcessor'
 import { fetchStripeCustomer, createStripeCheckoutSession } from './checkoutUtils';
-import type { PaymentPlan, PaymentPlanEffect } from '../plans';
+import { requireNodeEnvVar } from '../../server/utils';
 
 export type StripeMode = 'subscription' | 'payment';
 
 export const stripePaymentProcessor = {
-  createCheckoutSession: async ({ userEmail, paymentPlan }: { userEmail: string; paymentPlan: PaymentPlan }) => {
+  createCheckoutSession: async ({ userEmail, paymentPlan }: CreateCheckoutSessionArgs) => {
     const customer = await fetchStripeCustomer(userEmail);
-    if (!customer.id) throw new Error('Error fetching Stripe Customer for Checkout Session');
     const stripeSession = await createStripeCheckoutSession({
-      priceId: paymentPlan.getProductId(),
+      priceId: paymentPlan.getPriceId(),
       customerId: customer.id,
       mode: paymentPlanEffectToStripeMode(paymentPlan.effect),
     });
-    if (!stripeSession.url || !stripeSession.id) throw new Error('Error creating Stripe Checkout Session');
+    if (!stripeSession.url) throw new Error('Error creating Stripe Checkout Session');
     const session = {
       url: stripeSession.url,
       id: stripeSession.id,
     };
     return { session, customer };
   },
+  fetchCustomerPortalUrl: async (_args?: FetchCustomerPortalUrlArgs) => requireNodeEnvVar('PAYMENTS_STRIPE_CUSTOMER_PORTAL_URL'),
 };
 
 function paymentPlanEffectToStripeMode(planEffect: PaymentPlanEffect): StripeMode {

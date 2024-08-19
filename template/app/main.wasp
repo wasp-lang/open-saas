@@ -195,6 +195,11 @@ page CheckoutPage {
   component: import Checkout from "@src/payment/CheckoutPage"
 }
 
+query getCustomerPortalUrl {
+  fn: import { getCustomerPortalUrl } from  "@src/payment/operations",
+  entities: [User]
+}
+
 action generateCheckoutSession {
   fn: import { generateCheckoutSession } from "@src/payment/operations",
   entities: [User]
