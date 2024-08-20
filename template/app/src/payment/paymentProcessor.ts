@@ -11,4 +11,4 @@ interface PaymentProcessor {
   fetchCustomerPortalUrl: (args?: FetchCustomerPortalUrlArgs) => Promise<string>;
 }
 
-export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
+export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
