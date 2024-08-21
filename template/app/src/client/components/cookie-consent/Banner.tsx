@@ -125,4 +125,96 @@ const ImmersiveCookieConsentBanner = () => {
   );
 };
 
-export default MovingCookieConsentBanner;
+const BouncingBallConsentBanner = () => {
+  const [isVisible, setIsVisible] = useState(true);
+  const [ballPosition, setBallPosition] = useState({ x: 0, y: 0 });
+  const [velocity, setVelocity] = useState({ x: 5, y: 5 });
+
+  // const acceptButton = useRef(null);
+
+  const updateBallPosition = () => {
+    let newX = ballPosition.x + velocity.x;
+    let newY = ballPosition.y + velocity.y;
+
+    if (newX < 0 || newX > window.innerWidth) {
+      setVelocity({ x: -velocity.x, y: velocity.y });
+    }
+
+    if (newY < 0 || newY > window.innerHeight) {
+      setVelocity({ x: velocity.x, y: -velocity.y });
+    }
+
+    setBallPosition({ x: newX, y: newY });
+  };
+
+  useEffect(() => {
+    const interval = setInterval(updateBallPosition, 20);
+    return () => clearInterval(interval);
+  }, [ballPosition, velocity]);
+
+  const handleKeyPress = (event: KeyboardEvent) => {
+    if (event.code === 'Enter') {
+      const acceptButton = document.getElementById('acceptButton');
+      const ball = document.getElementById('ball');
+
+      if (acceptButton && ball) {
+        const acceptButtonRect = acceptButton.getBoundingClientRect();
+        const ballRect = ball.getBoundingClientRect();
+
+        const isOverlap =
+          ballRect.right > acceptButtonRect.left &&
+          ballRect.left < acceptButtonRect.right &&
+          ballRect.bottom > acceptButtonRect.top &&
+          ballRect.top < acceptButtonRect.bottom;
+
+        if (isOverlap) {
+          alert('got it!');
+          setIsVisible(false);
+        } else {
+          alert('whoops. try again!');
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [ballPosition]);
+
+  return (
+    <>
+      <div
+        id='ball'
+        className={cn('absolute bg-red-500 rounded-full z-50 w-12 h-12', { hidden: !isVisible })}
+        style={{
+          top: ballPosition.y,
+          left: ballPosition.x,
+        }}
+      ></div>
+      <div
+        className={cn(
+          'fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 text-white flex justify-center items-center flex-col z-48',
+          { hidden: !isVisible }
+        )}
+      >
+        <div className='p-10 justify-center items-center flex flex-col bg-black bg-opacity-40 z-49'>
+          <h2>This website uses cookies</h2>
+          <p>We use cookies to ensure you get the best experience on our website.</p>
+          <button
+            id='acceptButton'
+            className='mt-2 bg-white text-black px-4 py-2 rounded'
+            onClick={() =>
+              alert('press the ENTER key at the exact moment the ball is over the Accept button to consent to cookies.')
+            }
+          >
+            Accept
+          </button>
+        </div>
+      </div>
+    </>
+  );
+};
+
+// Replace the original component export with the new one
+export default BouncingBallConsentBanner;
