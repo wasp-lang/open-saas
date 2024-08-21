@@ -129,7 +129,7 @@ const BouncingBallConsentBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [ballPosition, setBallPosition] = useState({ x: 0, y: 0 });
   const [velocity, setVelocity] = useState({ x: 5, y: 5 });
-  const [speed, setSpeed] = useState(4);
+  const [speed, setSpeed] = useState(8);
 
   const updateBallPosition = () => {
     let newX = ballPosition.x + velocity.x;
@@ -152,6 +152,11 @@ const BouncingBallConsentBanner = () => {
   }, []);
 
   useEffect(() => {
+    const interval = setInterval(() => setSpeed(Math.floor(Math.random() * 15)), 200);
+    return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
     const interval = setInterval(updateBallPosition, speed);
     return () => clearInterval(interval);
   }, [ballPosition]);
@@ -160,7 +165,7 @@ const BouncingBallConsentBanner = () => {
     if (event.code === 'Enter') {
       setSpeed((num) => {
         if (num > 0) {
-          return num - 1;
+          return num / 2;
         }
         return num;
       });
