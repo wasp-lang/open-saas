@@ -129,8 +129,7 @@ const BouncingBallConsentBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [ballPosition, setBallPosition] = useState({ x: 0, y: 0 });
   const [velocity, setVelocity] = useState({ x: 5, y: 5 });
-
-  // const acceptButton = useRef(null);
+  const [speed, setSpeed] = useState(4);
 
   const updateBallPosition = () => {
     let newX = ballPosition.x + velocity.x;
@@ -148,12 +147,23 @@ const BouncingBallConsentBanner = () => {
   };
 
   useEffect(() => {
-    const interval = setInterval(updateBallPosition, 20);
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(updateBallPosition, speed);
     return () => clearInterval(interval);
-  }, [ballPosition, velocity]);
+  }, [ballPosition]);
 
   const handleKeyPress = (event: KeyboardEvent) => {
     if (event.code === 'Enter') {
+      setSpeed((num) => {
+        if (num > 0) {
+          return num - 1;
+        }
+        return num;
+      });
       const acceptButton = document.getElementById('acceptButton');
       const ball = document.getElementById('ball');
 
@@ -176,11 +186,6 @@ const BouncingBallConsentBanner = () => {
       }
     }
   };
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [ballPosition]);
 
   return (
     <>
