@@ -151,10 +151,10 @@ const BouncingBallConsentBanner = () => {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => setSpeed(Math.floor(Math.random() * 15)), 200);
-    return () => clearInterval(interval)
-  }, [])
+  // useEffect(() => {
+  //   const interval = setInterval(() => setSpeed(Math.floor(Math.random() * 15)), 200);
+  //   return () => clearInterval(interval)
+  // }, [])
 
   useEffect(() => {
     const interval = setInterval(updateBallPosition, speed);
