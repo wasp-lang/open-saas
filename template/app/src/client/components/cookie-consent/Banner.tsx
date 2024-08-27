@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import 'vanilla-cookieconsent/dist/cookieconsent.css';
 import { cn } from '../../cn';
+import { Wheel } from 'react-custom-roulette';
 
 /**
  * NOTE: if you do not want to use the cookie consent banner, you should
@@ -151,11 +152,6 @@ const BouncingBallConsentBanner = () => {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, []);
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => setSpeed(Math.floor(Math.random() * 15)), 200);
-  //   return () => clearInterval(interval)
-  // }, [])
-
   useEffect(() => {
     const interval = setInterval(updateBallPosition, speed);
     return () => clearInterval(interval);
@@ -164,7 +160,7 @@ const BouncingBallConsentBanner = () => {
   const handleKeyPress = (event: KeyboardEvent) => {
     if (event.code === 'Enter') {
       setSpeed((num) => {
-        if (num > 0) {
+        if (num >= 0) {
           return num / 2;
         }
         return num;
@@ -226,5 +222,73 @@ const BouncingBallConsentBanner = () => {
   );
 };
 
-// Replace the original component export with the new one
-export default BouncingBallConsentBanner;
+const WheelSpinnerConsentBanner = () => {
+  const [isVisible, setIsVisible] = useState(true);
+  const [winningOption, setWinningOption] = useState(0);
+  const [isSpinning, setIsSpinning] = useState(false);
+
+  const data = [
+    { option: 'Accept ✅' },
+    { option: 'Decline 👎' },
+    { option: 'I\'m thinking 🤔' },
+    { option: 'Mmm 🍪' },
+    { option: 'Weeee! 🤗' },
+    { option: 'This is fun! 🥳' },
+  ];
+
+  useEffect(() => {
+    setWinningOption(Math.floor(Math.random() * data.length));
+  }, []);
+
+  const handleOnStopSpinning = () => {
+    setIsSpinning(false);
+    if (winningOption === 0) {
+      alert('Congrats! You can continue');
+      setIsVisible(false);
+    } else {
+      alert('Uh oh. Try again.');
+    }
+    setWinningOption(Math.floor(Math.random() * data.length));
+  };
+
+  return (
+    <>
+      <div
+        className={cn(
+          'fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 text-white flex justify-center items-center flex-col z-48',
+          { hidden: !isVisible }
+        )}
+      >
+        <div className='p-10 justify-center items-center flex flex-col bg-black bg-opacity-40 z-49'>
+          <h2>This website uses cookies</h2>
+          <p>We use cookies to ensure you get the best experience on our website.</p>
+          <button
+            className='mt-2 bg-white text-black px-4 py-2 rounded'
+            onClick={() => setIsSpinning(true)}
+            disabled={isSpinning}
+          >
+            Spin the wheel to consent to cookies
+          </button>
+          <Wheel
+            innerBorderColor='white'
+            radiusLineColor='white'
+            innerBorderWidth={10}
+            outerBorderColor='white'
+            fontSize={22}
+            textDistance={56}
+            mustStartSpinning={isSpinning}
+            onStopSpinning={handleOnStopSpinning}
+            prizeNumber={winningOption}
+            data={data}
+            backgroundColors={['#3e3e3e', '#df3428', '#1f8a70', '#bedb39', '#b3a125', '#4b0082']}
+            textColors={['#ffffff']}
+          />
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default WheelSpinnerConsentBanner;
+
+// export default BouncingBallConsentBanner;
