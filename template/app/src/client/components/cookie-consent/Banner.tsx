@@ -255,11 +255,11 @@ const WheelSpinnerConsentBanner = () => {
     <>
       <div
         className={cn(
-          'fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 text-white flex justify-center items-center flex-col z-48',
+          'fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 text-white flex justify-center items-center flex-col z-50',
           { hidden: !isVisible }
         )}
       >
-        <div className='p-10 justify-center items-center flex flex-col bg-black bg-opacity-40 z-49'>
+        <div className='p-10 justify-center items-center flex flex-col bg-black bg-opacity-40'>
           <h2>This website uses cookies</h2>
           <p>We use cookies to ensure you get the best experience on our website.</p>
           <button
