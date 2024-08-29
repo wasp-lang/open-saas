@@ -1,13 +1,24 @@
 import { useEffect, useState, useRef } from 'react';
-import 'vanilla-cookieconsent/dist/cookieconsent.css';
 import { cn } from '../../cn';
+import getConfig from './Config';
+import 'vanilla-cookieconsent/dist/cookieconsent.css';
+import * as CookieConsent from 'vanilla-cookieconsent';
 import { Wheel } from 'react-custom-roulette';
 
 /**
- * NOTE: if you do not want to use the cookie consent banner, you should
- * run `npm uninstall vanilla-cookieconsent`, and delete this component, its config file,
- * as well as its import in src/client/App.tsx .
+ * NOTE: This is the ACTUAL cookie consent banner that ships with Open SaaS
+ * You may use this one with a wrapper as part of your contest submission
+ * or you may create a dummy cookie consent banner as seen in the `WheelSpinner` example
+ * below.
  */
+const CookieConsentBanner = () => {
+  useEffect(() => {
+    CookieConsent.run(getConfig());
+  }, []);
+
+  return <div id='cookieconsent'></div>;
+};
+
 const MovingCookieConsentBanner = () => {
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const [isVisible, setIsVisible] = useState(true);
@@ -222,6 +233,7 @@ const BouncingBallConsentBanner = () => {
   );
 };
 
+// Dummy example for the Annoying Cookie Consent Banner contest
 const WheelSpinnerConsentBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [winningOption, setWinningOption] = useState(0);
@@ -230,7 +242,7 @@ const WheelSpinnerConsentBanner = () => {
   const data = [
     { option: 'Accept ✅' },
     { option: 'Decline 👎' },
-    { option: 'I\'m thinking 🤔' },
+    { option: "I'm thinking 🤔" },
     { option: 'Mmm 🍪' },
     { option: 'Weeee! 🤗' },
     { option: 'This is fun! 🥳' },
