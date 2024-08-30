@@ -285,10 +285,14 @@ const WheelSpinnerConsentBanner = ({
             &times;
           </button>
           <p>
-            Wasp's THE MOST ANNOYING COOKIE CONSENT BANNER CONTEST 2024. <br />Make something like this, and win cool prizes
-            🏅{' '}
+            Wasp's THE MOST ANNOYING COOKIE CONSENT BANNER CONTEST 2024. <br />
+            Make something like this, and win cool prizes 🏅{' '}
           </p>
-          <a href='/' className='underline'>
+          <a
+            href='https://wasp-lang.notion.site/The-MOST-ANNOYING-COOKIE-CONSENT-BANNER-Contest-e43b1345ac36453d8dfc6f271cb70ae8?pvs=4'
+            className='underline'
+            target='_blank'
+          >
             Learn more!
           </a>
 

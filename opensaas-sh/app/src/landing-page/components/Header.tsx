@@ -127,7 +127,8 @@ export default function Header({ navigation, setShowCookieBanner }: { navigation
   )
 }
 
-const ContestURL = ''
+const ContestURL =
+  'https://wasp-lang.notion.site/The-MOST-ANNOYING-COOKIE-CONSENT-BANNER-Contest-e43b1345ac36453d8dfc6f271cb70ae8?pvs=4';
 
 function Announcement({ setShowCookieBanner }: { setShowCookieBanner: any }) {
   return (
