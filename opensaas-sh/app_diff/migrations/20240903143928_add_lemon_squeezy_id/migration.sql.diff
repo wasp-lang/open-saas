@@ -1,0 +1,24 @@
+--- template/app/migrations/20240903143928_add_lemon_squeezy_id/migration.sql
++++ opensaas-sh/app/migrations/20240903143928_add_lemon_squeezy_id/migration.sql
+@@ -0,0 +1,21 @@
++/*
++  Warnings:
++
++  - You are about to drop the column `paymentProcessorUserId` on the `User` table. All the data in the column will be lost.
++  - A unique constraint covering the columns `[stripeId]` on the table `User` will be added. If there are existing duplicate values, this will fail.
++  - A unique constraint covering the columns `[lemonSqueezyId]` on the table `User` will be added. If there are existing duplicate values, this will fail.
++
++*/
++-- DropIndex
++DROP INDEX "User_paymentProcessorUserId_key";
++
++-- AlterTable
++ALTER TABLE "User" DROP COLUMN "paymentProcessorUserId",
++ADD COLUMN     "lemonSqueezyId" TEXT,
++ADD COLUMN     "stripeId" TEXT;
++
++-- CreateIndex
++CREATE UNIQUE INDEX "User_stripeId_key" ON "User"("stripeId");
++
++-- CreateIndex
++CREATE UNIQUE INDEX "User_lemonSqueezyId_key" ON "User"("lemonSqueezyId");

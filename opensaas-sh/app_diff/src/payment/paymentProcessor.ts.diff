@@ -1,0 +1,36 @@
+--- template/app/src/payment/paymentProcessor.ts
++++ opensaas-sh/app/src/payment/paymentProcessor.ts
+@@ -1,5 +1,5 @@
+ import type { PaymentPlan } from './plans';
+-import type { PaymentsWebhook } from 'wasp/server/api';
++import type { StripeWebhook, LemonSqueezyWebhook } from 'wasp/server/api';
+ import type { MiddlewareConfigFn } from 'wasp/server';
+ import { PrismaClient } from '@prisma/client';
+ import { stripePaymentProcessor } from './stripe/paymentProcessor';
+@@ -16,17 +16,18 @@
+   prismaUserDelegate: PrismaClient['user']; 
+ };
+ 
++
++export type PaymentProcessorId = 'stripe' | 'lemonsqueezy';
++
+ export interface PaymentProcessor {
+-  id: 'stripe' | 'lemonsqueezy';
++  id: PaymentProcessorId;
+   createCheckoutSession: ({ userId, userEmail, paymentPlan, prismaUserDelegate }: CreateCheckoutSessionArgs) => Promise<{ session: { id: string; url: string }; }>; 
+   fetchCustomerPortalUrl: ({ userId, prismaUserDelegate }: FetchCustomerPortalUrlArgs) => Promise<string | undefined>;
+-  webhook: PaymentsWebhook;
++  webhook: StripeWebhook | LemonSqueezyWebhook;
+   webhookMiddlewareConfigFn: MiddlewareConfigFn;
+ }
+ 
+-/**
+- * Choose which payment processor you'd like to use, then delete the 
+- * other payment processor code that you're not using  from `/src/payment`
+- */
+-// export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
+-export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
++export const paymentProcessors: Record<PaymentProcessorId, PaymentProcessor> = {
++  stripe: stripePaymentProcessor,
++  lemonsqueezy: lemonSqueezyPaymentProcessor
++}

@@ -1,0 +1,31 @@
+--- template/app/src/analytics/stats.ts
++++ opensaas-sh/app/src/analytics/stats.ts
+@@ -5,7 +5,7 @@
+ import { listOrders } from '@lemonsqueezy/lemonsqueezy.js';
+ import { getDailyPageViews, getSources } from './providers/plausibleAnalyticsUtils';
+ // import { getDailyPageViews, getSources } from './providers/googleAnalyticsUtils;
+-import { paymentProcessor } from '../payment/paymentProcessor';
++import { paymentProcessors } from '../payment/paymentProcessor';
+ 
+ export type DailyStatsProps = { dailyStats?: DailyStats; weeklyStats?: DailyStats[]; isLoading?: boolean };
+ 
+@@ -41,17 +41,8 @@
+       paidUserDelta -= yesterdaysStats.paidUserCount;
+     }
+ 
+-    let totalRevenue;
+-    switch (paymentProcessor.id) {
+-      case 'stripe':
+-        totalRevenue = await fetchTotalStripeRevenue();
+-        break;
+-      case 'lemonsqueezy':
+-        totalRevenue = await fetchTotalLemonSqueezyRevenue();
+-        break;
+-      default:
+-        throw new Error(`Unsupported payment processor: ${paymentProcessor.id}`);
+-    }
++    let totalRevenue = await fetchTotalStripeRevenue();
++    totalRevenue += await fetchTotalLemonSqueezyRevenue();
+ 
+     const { totalViews, prevDayViewsChangePercent } = await getDailyPageViews();
+ 

@@ -2,3 +2,4 @@ public/public-banner.png
 src/client/static/avatar-placeholder.png
 src/client/static/open-saas-banner.png
 src/landing-page/logos/SalesforceLogo.tsx
+src/payment/webhook.ts

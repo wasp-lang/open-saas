@@ -1,0 +1,64 @@
+--- template/app/src/payment/operations.ts
++++ opensaas-sh/app/src/payment/operations.ts
+@@ -1,7 +1,6 @@
+ import type { GenerateCheckoutSession, GetCustomerPortalUrl } from 'wasp/server/operations';
+-import type { FetchCustomerPortalUrlArgs } from './paymentProcessor';
+ import { PaymentPlanId, paymentPlans } from '../payment/plans';
+-import { paymentProcessor } from './paymentProcessor';
++import { paymentProcessors, type PaymentProcessorId } from './paymentProcessor';
+ import { HttpError } from 'wasp/server';
+ 
+ export type CheckoutSession = {
+@@ -9,8 +8,13 @@
+   sessionId: string;
+ };
+ 
+-export const generateCheckoutSession: GenerateCheckoutSession<PaymentPlanId, CheckoutSession> = async (
+-  paymentPlanId,
++type GenerateCheckoutSessionArgs = {
++  paymentPlanId: PaymentPlanId,
++  paymentProcessorId: PaymentProcessorId
++}
++
++export const generateCheckoutSession: GenerateCheckoutSession<GenerateCheckoutSessionArgs, CheckoutSession> = async (
++  {paymentPlanId, paymentProcessorId},
+   context
+ ) => {
+   if (!context.user) {
+@@ -26,11 +30,12 @@
+   }
+ 
+   const paymentPlan = paymentPlans[paymentPlanId];
++  const paymentProcessor = paymentProcessors[paymentProcessorId]
+   const { session } = await paymentProcessor.createCheckoutSession({
+     userId,
+     userEmail,
+     paymentPlan,
+-    prismaUserDelegate: context.entities.User
++    prismaUserDelegate: context.entities.User,
+   });
+ 
+   return {
+@@ -39,12 +44,20 @@
+   };
+ };
+ 
+-export const getCustomerPortalUrl: GetCustomerPortalUrl<void, string | undefined> = async (_args, context) => {
++export const getCustomerPortalUrl: GetCustomerPortalUrl<PaymentProcessorId, string | undefined> = async (
++  paymentProcessorId,
++  context
++) => {
+   if (!context.user) {
+     throw new HttpError(401);
+   }
++  const paymentProcessor = paymentProcessors[paymentProcessorId];
+   return paymentProcessor.fetchCustomerPortalUrl({
+     userId: context.user.id,
+     prismaUserDelegate: context.entities.User,
+   });
+ };
++
++// export const setPaymentProcessor: SetPaymentProcessor<string, void> = async (paymentProcessorId, context) {
++
++// }
+\ No newline at end of file

@@ -209,7 +209,7 @@ api paymentsWebhook {
   fn: import { paymentsWebhook } from "@src/payment/webhook",
   entities: [User],
   middlewareConfigFn: import { paymentsMiddlewareConfigFn } from "@src/payment/webhook",
-  httpRoute: (POST, "/payments-webhook") // TODO: use both webhooks for opensaas-sh
+  httpRoute: (POST, "/payments-webhook")
 }
 //#endregion
 

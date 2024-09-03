@@ -1,0 +1,11 @@
+--- template/app/src/payment/lemonSqueezy/paymentDetails.ts
++++ opensaas-sh/app/src/payment/lemonSqueezy/paymentDetails.ts
+@@ -21,7 +21,7 @@
+       id: userId,
+     },
+     data: {
+-      paymentProcessorUserId: lemonSqueezyId,
++      lemonSqueezyId,
+       lemonSqueezyCustomerPortalUrl,
+       subscriptionPlan,
+       subscriptionStatus,

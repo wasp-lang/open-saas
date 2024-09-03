@@ -1,6 +1,12 @@
 --- template/app/src/server/scripts/dbSeeds.ts
 +++ opensaas-sh/app/src/server/scripts/dbSeeds.ts
-@@ -44,5 +44,8 @@
+@@ -39,9 +39,13 @@
+     credits,
+     subscriptionStatus,
+     lemonSqueezyCustomerPortalUrl: null,
+-    paymentProcessorUserId: hasUserPaidOnStripe ? `cus_test_${faker.string.uuid()}` : null,
++    stripeId: hasUserPaidOnStripe ? `cus_test_${faker.string.uuid()}` : null,
++    lemonSqueezyId: null,
      datePaid: hasUserPaidOnStripe ? faker.date.between({ from: createdAt, to: lastActiveTimestamp }) : null,
      checkoutSessionId: hasUserPaidOnStripe ? `cs_test_${faker.string.uuid()}` : null,
      subscriptionPlan: subscriptionStatus ? faker.helpers.arrayElement(getSubscriptionPaymentPlanIds()) : null,
