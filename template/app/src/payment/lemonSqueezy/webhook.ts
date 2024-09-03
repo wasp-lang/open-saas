@@ -1,5 +1,5 @@
 import { type MiddlewareConfigFn, HttpError } from 'wasp/server';
-import { type LemonSqueezyWebhook } from 'wasp/server/api';
+import { type PaymentsWebhook } from 'wasp/server/api';
 import { type PrismaClient } from '@prisma/client';
 import express from 'express';
 import { paymentPlans, PaymentPlanId } from '../plans';
@@ -9,7 +9,7 @@ import crypto from 'crypto';
 import { requireNodeEnvVar } from '../../server/utils';
 
 
-export const lemonSqueezyWebhook: LemonSqueezyWebhook = async (request, response, context) => {
+export const lemonSqueezyWebhook: PaymentsWebhook = async (request, response, context) => {
   try {
     const rawBody = request.body.toString('utf8');
     const signature = request.get('X-Signature');
@@ -17,7 +17,7 @@ export const lemonSqueezyWebhook: LemonSqueezyWebhook = async (request, response
       throw new HttpError(400, 'Lemon Squeezy Webhook Signature Not Provided');
     }
 
-    const secret = requireNodeEnvVar('PAYMENTS_WEBHOOK_SECRET');
+    const secret = requireNodeEnvVar('LEMONSQUEEZY_WEBHOOK_SECRET');
     const hmac = crypto.createHmac('sha256', secret);
     const digest = Buffer.from(hmac.update(rawBody).digest('hex'), 'utf8');
 
@@ -27,7 +27,6 @@ export const lemonSqueezyWebhook: LemonSqueezyWebhook = async (request, response
 
     const event = JSON.parse(rawBody);
     const userId = event.meta.custom_data.user_id;
-    console.log('event data', event);
     const prismaUserDelegate = context.entities.User;
     switch (event.meta.event_name) {
       case 'order_created':
@@ -60,7 +59,7 @@ export const lemonSqueezyWebhook: LemonSqueezyWebhook = async (request, response
   }
 };
 
-export const lemonSqueezyMiddlewareFn: MiddlewareConfigFn = (middlewareConfig) => {
+export const lemonSqueezyMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig) => {
   middlewareConfig.delete('express.json');
   middlewareConfig.set('express.raw', express.raw({ type: 'application/json' }));
   return middlewareConfig;
@@ -74,7 +73,7 @@ async function handleOrderCreated(data: Order, userId: string, prismaUserDelegat
   const lemonSqueezyId = customer_id.toString();
   const variantId = first_order_item.variant_id.toString();
 
-  const planId = Object.values(PaymentPlanId).find((planId) => paymentPlans[planId].getPriceId() === variantId);
+  const planId = Object.values(PaymentPlanId).find((planId) => paymentPlans[planId].getPaymentProcessorPlanId() === variantId);
   if (!planId) {
     throw new Error(`No plan with lemonsqueezy variant id ${variantId}`);
   }
@@ -101,7 +100,7 @@ async function handleSubscriptionCreated(data: Subscription, userId: string, pri
   const { customer_id, status, variant_id } = data.data.attributes;
   const lemonSqueezyId = customer_id.toString();
 
-  const planId = Object.values(PaymentPlanId).find((planId) => paymentPlans[planId].getPriceId() === variant_id.toString());
+  const planId = Object.values(PaymentPlanId).find((planId) => paymentPlans[planId].getPaymentProcessorPlanId() === variant_id.toString());
 
   if (!planId) {
     throw new Error(`No plan with LemonSqueezy variant id ${variant_id}`);
@@ -131,7 +130,7 @@ async function handleSubscriptionUpdated(data: Subscription, userId: string, pri
   const { customer_id, status, variant_id } = data.data.attributes;
   const lemonSqueezyId = customer_id.toString();
 
-  const planId = Object.values(PaymentPlanId).find((planId) => paymentPlans[planId].getPriceId() === variant_id.toString());
+  const planId = Object.values(PaymentPlanId).find((planId) => paymentPlans[planId].getPaymentProcessorPlanId() === variant_id.toString());
 
   if (!planId) {
     throw new Error(`No plan with LemonSqueezy variant id ${variant_id}`);

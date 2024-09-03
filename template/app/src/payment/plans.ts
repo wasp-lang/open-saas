@@ -9,7 +9,7 @@ export enum PaymentPlanId {
 }
 
 export interface PaymentPlan {
-  getPriceId: () => string;
+  getPaymentProcessorPlanId: () => string; // ID of the product/plan you've created via your payment processor. 
   effect: PaymentPlanEffect;
 }
 
@@ -17,15 +17,15 @@ export type PaymentPlanEffect = { kind: 'subscription' } | { kind: 'credits'; am
 
 export const paymentPlans: Record<PaymentPlanId, PaymentPlan> = {
   [PaymentPlanId.Hobby]: {
-    getPriceId: () => requireNodeEnvVar('PAYMENTS_HOBBY_SUBSCRIPTION_PRICE_ID'),
+    getPaymentProcessorPlanId: () => requireNodeEnvVar('PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID'),
     effect: { kind: 'subscription' },
   },
   [PaymentPlanId.Pro]: {
-    getPriceId: () => requireNodeEnvVar('PAYMENTS_PRO_SUBSCRIPTION_PRICE_ID'),
+    getPaymentProcessorPlanId: () => requireNodeEnvVar('PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID'),
     effect: { kind: 'subscription' },
   },
   [PaymentPlanId.Credits10]: {
-    getPriceId: () => requireNodeEnvVar('PAYMENTS_CREDITS_10_PRICE_ID'),
+    getPaymentProcessorPlanId: () => requireNodeEnvVar('PAYMENTS_CREDITS_10_PLAN_ID'),
     effect: { kind: 'credits', amount: 10 },
   },
 };

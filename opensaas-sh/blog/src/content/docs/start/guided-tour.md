@@ -187,7 +187,8 @@ For development purposes, Wasp provides a `Dummy` email sender which Open SaaS c
 
 We will explain more about these auth methods, and how to properly integrate them into your app, in the [Authentication Guide](/guides/authentication).
 
-### Subscription Payments with Stripe
+### Subscription Payments with Stripe 
+<!-- TODO: change this section -->
 
 No SaaS is complete without payments, specifically subscription payments. That's why this template comes with a fully functional Stripe integration. 
 
@@ -230,7 +231,7 @@ The webhook handler is defined in the `src/payment/stripe/webhook.ts` file. Unli
 ```js title="main.wasp"
 api stripeWebhook {
   fn: import { stripeWebhook } from "@src/payment/stripe/webhook",
-  httpRoute: (POST, "/stripe-webhook")
+  httpRoute: (POST, "/stripe-webhook") 
   entities: [User],
 }
 ```

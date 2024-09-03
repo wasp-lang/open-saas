@@ -1,20 +1,21 @@
-import type { CreateCheckoutSessionArgs, FetchCustomerPortalUrlArgs } from '../paymentProcessor';
+import type { CreateCheckoutSessionArgs, FetchCustomerPortalUrlArgs, PaymentProcessor } from '../paymentProcessor';
 import { requireNodeEnvVar } from '../../server/utils';
 import { createLemonSqueezyCheckoutSession } from './checkoutUtils';
+import { lemonSqueezyWebhook, lemonSqueezyMiddlewareConfigFn } from './webhook';
 
-export const lemonSqueezyPaymentProcessor = {
+export const lemonSqueezyPaymentProcessor: PaymentProcessor = {
+  id: 'lemonsqueezy',
   createCheckoutSession: async ({ userId, userEmail, paymentPlan }: CreateCheckoutSessionArgs) => {
     if (!userId) throw new Error('User ID needed to create Lemon Squeezy Checkout Session');
     const session = await createLemonSqueezyCheckoutSession({
-      storeId: requireNodeEnvVar('PAYMENTS_LEMONSQUEEZY_STORE_ID'),
-      variantId: paymentPlan.getPriceId(),
+      storeId: requireNodeEnvVar('LEMONSQUEEZY_STORE_ID'),
+      variantId: paymentPlan.getPaymentProcessorPlanId(),
       userEmail,
       userId,
     });
     return { session };
   },
-  fetchCustomerPortalUrl: async (args?: FetchCustomerPortalUrlArgs ) => {
-    if (!args?.userId || !args?.prismaUserDelegate) throw new Error('Missing args from fetchCustomerPortalUrl')
+  fetchCustomerPortalUrl: async (args: FetchCustomerPortalUrlArgs) => {
     const user = await args.prismaUserDelegate.findUniqueOrThrow({
       where: {
         id: args.userId,
@@ -24,8 +25,11 @@ export const lemonSqueezyPaymentProcessor = {
       },
     });
     if (!user.lemonSqueezyCustomerPortalUrl) {
-      throw new Error(`User with ID ${args.userId} does not have a LemonSqueezy customer portal URL`);
+      console.log(`User with ID ${args.userId} does not have a LemonSqueezy customer portal URL`);
+    } else {
+      return user.lemonSqueezyCustomerPortalUrl;
     }
-    return user.lemonSqueezyCustomerPortalUrl;
   },
+  webhook: lemonSqueezyWebhook,
+  webhookMiddlewareConfigFn: lemonSqueezyMiddlewareConfigFn,
 };

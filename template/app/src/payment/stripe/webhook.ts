@@ -1,5 +1,5 @@
 import { type MiddlewareConfigFn, HttpError } from 'wasp/server';
-import { type StripeWebhook } from 'wasp/server/api';
+import { type PaymentsWebhook } from 'wasp/server/api';
 import { type PrismaClient } from '@prisma/client';
 import express from 'express';
 import { Stripe } from 'stripe';
@@ -11,8 +11,8 @@ import { assertUnreachable } from '../../shared/utils';
 import { requireNodeEnvVar } from '../../server/utils';
 import { z } from 'zod';
 
-export const stripeWebhook: StripeWebhook = async (request, response, context) => {
-  const secret = requireNodeEnvVar('PAYMENTS_WEBHOOK_SECRET');
+export const stripeWebhook: PaymentsWebhook = async (request, response, context) => {
+  const secret = requireNodeEnvVar('STRIPE_WEBHOOK_SECRET');
   const sig = request.headers['stripe-signature'];
   if (!sig) {
     throw new HttpError(400, 'Stripe Webhook Signature Not Provided');
@@ -52,7 +52,7 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
 };
 
 // This allows us to override Wasp's defaults and parse the raw body of the request from Stripe to verify the signature
-export const stripeMiddlewareFn: MiddlewareConfigFn = (middlewareConfig) => {
+export const stripeMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig) => {
   middlewareConfig.delete('express.json');
   middlewareConfig.set('express.raw', express.raw({ type: 'application/json' }));
   return middlewareConfig;
@@ -83,10 +83,10 @@ export async function handleCheckoutSessionCompleted(
   if (result.data.data.length > 1) {
     throw new HttpError(400, 'More than one line item in session');
   }
-  const lineItemPriceId =  result.data.data[0].price.id;
+  const lineItemPriceId = result.data.data[0].price.id;
 
   const planId = Object.values(PaymentPlanId).find(
-    (planId) => paymentPlans[planId].getPriceId() === lineItemPriceId
+    (planId) => paymentPlans[planId].getPaymentProcessorPlanId() === lineItemPriceId
   );
   if (!planId) {
     throw new Error(`No plan with stripe price id ${lineItemPriceId}`);

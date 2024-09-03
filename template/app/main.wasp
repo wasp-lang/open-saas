@@ -205,18 +205,11 @@ action generateCheckoutSession {
   entities: [User]
 }
 
-api stripeWebhook {
-  fn: import { stripeWebhook } from "@src/payment/stripe/webhook",
+api paymentsWebhook {
+  fn: import { paymentsWebhook } from "@src/payment/webhook",
   entities: [User],
-  middlewareConfigFn: import { stripeMiddlewareFn } from "@src/payment/stripe/webhook",
-  httpRoute: (POST, "/stripe-webhook")
-}
-
-api lemonSqueezyWebhook {
-  fn: import { lemonSqueezyWebhook } from "@src/payment/lemonSqueezy/webhook",
-  entities: [User],
-  middlewareConfigFn: import { lemonSqueezyMiddlewareFn } from "@src/payment/lemonSqueezy/webhook",
-  httpRoute: (POST, "/lemonsqueezy-webhook")
+  middlewareConfigFn: import { paymentsMiddlewareConfigFn } from "@src/payment/webhook",
+  httpRoute: (POST, "/payments-webhook") // TODO: use both webhooks for opensaas-sh
 }
 //#endregion
 

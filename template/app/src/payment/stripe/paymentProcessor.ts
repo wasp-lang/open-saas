@@ -1,26 +1,40 @@
 import type { PaymentPlanEffect } from '../plans';
-import type { CreateCheckoutSessionArgs, FetchCustomerPortalUrlArgs } from '../paymentProcessor'
+import type { CreateCheckoutSessionArgs, FetchCustomerPortalUrlArgs, PaymentProcessor } from '../paymentProcessor'
 import { fetchStripeCustomer, createStripeCheckoutSession } from './checkoutUtils';
 import { requireNodeEnvVar } from '../../server/utils';
+import { stripeWebhook, stripeMiddlewareConfigFn } from './webhook';
 
 export type StripeMode = 'subscription' | 'payment';
 
-export const stripePaymentProcessor = {
-  createCheckoutSession: async ({ userEmail, paymentPlan }: CreateCheckoutSessionArgs) => {
+export const stripePaymentProcessor: PaymentProcessor = {
+  id: 'stripe',
+  createCheckoutSession: async ({ userId, userEmail, paymentPlan, prismaUserDelegate }: CreateCheckoutSessionArgs) => {
     const customer = await fetchStripeCustomer(userEmail);
     const stripeSession = await createStripeCheckoutSession({
-      priceId: paymentPlan.getPriceId(),
+      userId,
+      priceId: paymentPlan.getPaymentProcessorPlanId(),
       customerId: customer.id,
       mode: paymentPlanEffectToStripeMode(paymentPlan.effect),
     });
+    await prismaUserDelegate.update({
+      where: {
+        id: userId
+      },
+      data: {
+        paymentProcessorUserId: customer.id
+      }
+    })
     if (!stripeSession.url) throw new Error('Error creating Stripe Checkout Session');
     const session = {
       url: stripeSession.url,
       id: stripeSession.id,
     };
-    return { session, customer };
+    return { session };
   },
-  fetchCustomerPortalUrl: async (_args?: FetchCustomerPortalUrlArgs) => requireNodeEnvVar('PAYMENTS_STRIPE_CUSTOMER_PORTAL_URL'),
+  fetchCustomerPortalUrl: async (_args: FetchCustomerPortalUrlArgs) =>
+    requireNodeEnvVar('STRIPE_CUSTOMER_PORTAL_URL'),
+  webhook: stripeWebhook,
+  webhookMiddlewareConfigFn: stripeMiddlewareConfigFn,
 };
 
 function paymentPlanEffectToStripeMode(planEffect: PaymentPlanEffect): StripeMode {

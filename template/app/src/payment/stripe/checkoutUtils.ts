@@ -27,7 +27,7 @@ export async function fetchStripeCustomer(customerEmail: string) {
   }
 }
 
-export async function createStripeCheckoutSession({ priceId, customerId, mode }: { priceId: string; customerId: string; mode: StripeMode }) {
+export async function createStripeCheckoutSession({ userId, priceId, customerId, mode }: { userId: string, priceId: string; customerId: string; mode: StripeMode }) {
   try {
     return await stripe.checkout.sessions.create({
       line_items: [
@@ -44,6 +44,9 @@ export async function createStripeCheckoutSession({ priceId, customerId, mode }:
         address: 'auto',
       },
       customer: customerId,
+      metadata: {
+        user_id: userId
+      }
     });
   } catch (error) {
     console.error(error);

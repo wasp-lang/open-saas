@@ -61,9 +61,7 @@ export default defineConfig({
           items: [
             { label: 'Authentication', link: '/guides/authentication/' },
             { label: 'Authorization', link: '/guides/authorization/' },
-            { label: 'Stripe Integration', link: '/guides/stripe-integration/' },
-            { label: 'Stripe Testing', link: '/guides/stripe-testing/' },
-            { label: 'Lemon Squeezy Integration', link: '/guides/lemon-squeezy-integration/' },
+            { label: 'Payments Integration', link: '/guides/payments-integration/' },
             { label: 'Analytics', link: '/guides/analytics/' },
             { label: 'SEO', link: '/guides/seo/' },
             { label: 'Email Sending', link: '/guides/email-sending/' },

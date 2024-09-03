@@ -2,7 +2,7 @@ import type { SubscriptionStatus } from '../plans';
 import { PaymentPlanId } from '../plans';
 import { PrismaClient } from '@prisma/client';
 
-type UserStripePaymentDetails = {
+interface UserStripePaymentDetails {
   userStripeId: string;
   subscriptionPlan?: PaymentPlanId;
   subscriptionStatus?: SubscriptionStatus;
@@ -16,9 +16,10 @@ export const updateUserStripePaymentDetails = (
 ) => {
   return userDelegate.update({
     where: {
-      paymentProcessorId: userStripeId,
+      paymentProcessorUserId: userStripeId
     },
     data: {
+      paymentProcessorUserId: userStripeId,
       subscriptionPlan,
       subscriptionStatus,
       datePaid,

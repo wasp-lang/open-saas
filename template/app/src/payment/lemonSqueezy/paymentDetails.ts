@@ -2,7 +2,7 @@ import type { SubscriptionStatus } from '../plans';
 import { PaymentPlanId } from '../plans';
 import { PrismaClient } from '@prisma/client';
 
-type UserLemonSqueezyPaymentDetails = {
+interface UserLemonSqueezyPaymentDetails {
   lemonSqueezyId: string;
   userId: string;
   subscriptionPlan?: PaymentPlanId;
@@ -21,7 +21,7 @@ export const updateUserLemonSqueezyPaymentDetails = async (
       id: userId,
     },
     data: {
-      paymentProcessorId: lemonSqueezyId,
+      paymentProcessorUserId: lemonSqueezyId,
       lemonSqueezyCustomerPortalUrl,
       subscriptionPlan,
       subscriptionStatus,

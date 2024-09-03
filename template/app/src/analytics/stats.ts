@@ -5,6 +5,7 @@ import { stripe } from '../payment/stripe/stripeClient'
 import { listOrders } from '@lemonsqueezy/lemonsqueezy.js';
 import { getDailyPageViews, getSources } from './providers/plausibleAnalyticsUtils';
 // import { getDailyPageViews, getSources } from './providers/googleAnalyticsUtils;
+import { paymentProcessor } from '../payment/paymentProcessor';
 
 export type DailyStatsProps = { dailyStats?: DailyStats; weeklyStats?: DailyStats[]; isLoading?: boolean };
 
@@ -40,8 +41,17 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, con
       paidUserDelta -= yesterdaysStats.paidUserCount;
     }
 
-    // const totalRevenue = await fetchTotalStripeRevenue();
-    const totalRevenue = await fetchTotalLemonSqueezyRevenue(); // Switch to this line when using Lemon Squeezy
+    let totalRevenue;
+    switch (paymentProcessor.id) {
+      case 'stripe':
+        totalRevenue = await fetchTotalStripeRevenue();
+        break;
+      case 'lemonsqueezy':
+        totalRevenue = await fetchTotalLemonSqueezyRevenue();
+        break;
+      default:
+        throw new Error(`Unsupported payment processor: ${paymentProcessor.id}`);
+    }
 
     const { totalViews, prevDayViewsChangePercent } = await getDailyPageViews();
 
@@ -162,7 +172,7 @@ async function fetchTotalLemonSqueezyRevenue() {
     while (hasNextPage) {
       const { data: response } = await listOrders({
         filter: {
-          storeId: process.env.PAYMENTS_LEMONSQUEEZY_STORE_ID,
+          storeId: process.env.LEMONSQUEEZY_STORE_ID,
         },
         page: {
           number: currentPage,

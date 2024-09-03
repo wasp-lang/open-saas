@@ -99,14 +99,14 @@ jobs:
         env:
           STRIPE_DEVICE_NAME: ${{ secrets.STRIPE_DEVICE_NAME }}
         run: |
-          stripe listen --api-key ${{ secrets.STRIPE_KEY }} --forward-to localhost:3001/stripe-webhook &
+          stripe listen --api-key ${{ secrets.STRIPE_KEY }} --forward-to localhost:3001/payments-webhook &
 
       - name: "[e2e-tests] Run Playwright tests"
         env:
           # The e2e tests are testing parts of the app that need certain env vars, so we need to access them here.
           # These secretes can be set in your GitHub repo settings, e.g. https://github.com/<account>/<repo>/settings/secrets/actions
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          STRIPE_KEY: ${{ secrets.STRIPE_KEY }}
+          STRIPE_API_KEY: ${{ secrets.STRIPE_KEY }}
           STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
           STRIPE_HOBBY_SUBSCRIPTION_PRICE_ID: ${{ secrets.STRIPE_HOBBY_SUBSCRIPTION_PRICE_ID }}
           STRIPE_PRO_SUBSCRIPTION_PRICE_ID: ${{ secrets.STRIPE_PRO_SUBSCRIPTION_PRICE_ID }}

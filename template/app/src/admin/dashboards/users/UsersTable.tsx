@@ -66,7 +66,13 @@ const UsersTable = () => {
                           }}
                           className='z-30 cursor-pointer pl-2 hover:text-danger'
                         >
-                          <svg width='14' height='14' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                          <svg
+                            width='14'
+                            height='14'
+                            viewBox='0 0 12 12'
+                            fill='none'
+                            xmlns='http://www.w3.org/2000/svg'
+                          >
                             <path
                               fillRule='evenodd'
                               clipRule='evenodd'
@@ -108,7 +114,13 @@ const UsersTable = () => {
                   })}
                 </select>
                 <span className='absolute top-1/2 right-4 z-10 -translate-y-1/2'>
-                  <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                  <svg
+                    width='24'
+                    height='24'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
                     <g opacity='0.8'>
                       <path
                         fillRule='evenodd'
@@ -188,7 +200,10 @@ const UsersTable = () => {
         {!!data?.users &&
           data?.users?.length > 0 &&
           data.users.map((user) => (
-            <div key={user.id} className='grid grid-cols-12 gap-4 border-t border-stroke py-4.5 px-4 dark:border-strokedark  md:px-6 '>
+            <div
+              key={user.id}
+              className='grid grid-cols-12 gap-4 border-t border-stroke py-4.5 px-4 dark:border-strokedark  md:px-6 '
+            >
               <div className='col-span-3 flex items-center'>
                 <div className='flex flex-col gap-1 '>
                   <p className='text-sm text-black dark:text-white'>{user.email}</p>
@@ -197,13 +212,17 @@ const UsersTable = () => {
               </div>
 
               <div className='col-span-3 hidden items-center sm:flex'>
-                <p className='text-sm text-black dark:text-white'>{user.lastActiveTimestamp.toLocaleDateString() + ' ' + user.lastActiveTimestamp.toLocaleTimeString()}</p>
+                <p className='text-sm text-black dark:text-white'>
+                  {user.lastActiveTimestamp.toLocaleDateString() +
+                    ' ' +
+                    user.lastActiveTimestamp.toLocaleTimeString()}
+                </p>
               </div>
               <div className='col-span-2 flex items-center'>
                 <p className='text-sm text-black dark:text-white'>{user.subscriptionStatus}</p>
               </div>
               <div className='col-span-2 flex items-center'>
-                <p className='text-sm text-meta-3'>{user.paymentProcessorId}</p>
+                <p className='text-sm text-meta-3'>{user.paymentProcessorUserId}</p>
               </div>
               <div className='col-span-1 flex items-center'>
                 <div className='text-sm text-black dark:text-white'>
