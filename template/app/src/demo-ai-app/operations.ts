@@ -1,5 +1,12 @@
 import type { Task, GptResponse } from 'wasp/entities';
-import type { GenerateGptResponse, CreateTask, DeleteTask, UpdateTask, GetGptResponses, GetAllTasksByUser } from 'wasp/server/operations';
+import type {
+  GenerateGptResponse,
+  CreateTask,
+  DeleteTask,
+  UpdateTask,
+  GetGptResponses,
+  GetAllTasksByUser,
+} from 'wasp/server/operations';
 import { HttpError } from 'wasp/server';
 import { GeneratedSchedule } from './schedule';
 import OpenAI from 'openai';
@@ -41,14 +48,16 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, GeneratedSched
       throw openai;
     }
 
-    if (
-      !context.user.credits &&
-      (!context.user.subscriptionStatus ||
-        context.user.subscriptionStatus === 'deleted' ||
-        context.user.subscriptionStatus === 'past_due')
-    ) {
+    const hasCredits = context.user.credits > 0;
+    const hasValidSubscription =
+      !!context.user.subscriptionStatus &&
+      context.user.subscriptionStatus !== 'deleted' &&
+      context.user.subscriptionStatus !== 'past_due';
+    const canUserContinue = hasCredits || hasValidSubscription;
+
+    if (!canUserContinue) {
       throw new HttpError(402, 'User has not paid or is out of credits');
-    } else if (context.user.credits && !context.user.subscriptionStatus) {
+    } else {
       console.log('decrementing credits');
       await context.entities.User.update({
         where: { id: context.user.id },
