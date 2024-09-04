@@ -1,6 +1,6 @@
 --- template/app/src/payment/lemonSqueezy/paymentProcessor.ts
 +++ opensaas-sh/app/src/payment/lemonSqueezy/paymentProcessor.ts
-@@ -9,7 +9,7 @@
+@@ -14,7 +14,7 @@
      if (!userId) throw new Error('User ID needed to create Lemon Squeezy Checkout Session');
      const session = await createLemonSqueezyCheckoutSession({
        storeId: requireNodeEnvVar('LEMONSQUEEZY_STORE_ID'),

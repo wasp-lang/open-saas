@@ -22,7 +22,7 @@ First, go to `/src/payment/paymentProcessor.ts` and make sure you're using the S
 export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
 ```
 
-At this point, you can delete the unused payment processor code within the `/src/payment` directory, as well as any unused environment variables from `.env.server`.
+At this point, you can delete the unused payment processor code within the `/src/payment` directory, as well as any unused environment variables from `.env.server`. Make sure to also uninstall the unsused dependencies with `npm uninstall <dependency-name>`.
 
 Next, you'll need to create a Stripe account. You can do that [here](https://dashboard.stripe.com/register).
 
@@ -188,7 +188,7 @@ First, go to `/src/payment/paymentProcessor.ts` and make sure you're using the L
 export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
 ```
 
-At this point, you can delete the unused payment processor code within the `/src/payment` directory, as well as any unused environment variables from `.env.server`.
+At this point, you can delete the unused payment processor code within the `/src/payment` directory, as well as any unused environment variables from `.env.server`. Make sure to also uninstall the unsused dependencies with `npm uninstall <dependency-name>`.
 
 Next, you'll need to create a Lemon Squeezy account in test mode. You can do that [here](https://lemonsqueezy.com).
 
@@ -228,18 +228,18 @@ To create a test product, go to the test products url [https://app.lemonsqueezy.
 
 ## Create and Use the Lemon Squeezy Webhook in Local Development
 
-For your app to start consuming Webhooks from Lemon Squeezy in local development, when need to create a tunnel to the locally running server. To do this, first make sure you have installed [ngrok](https://ngrok.com/docs/getting-started/).
+Lemon Squeezy sends messages/updates to your Wasp app via its webhook, e.g. when a payment is successful. For that to work during development, we need to expose our locally running (via `wasp start`) Wasp app and make it available online, specifically the server part of it. Since the Wasp server runs on port 3001, you should run ngrok on port 3001, which will provide you with a public URL that you can use to configure Lemon Squeezy with.
+
+To do this, first make sure you have installed [ngrok](https://ngrok.com/docs/getting-started/).
 
 Once installed, and with your wasp app running, run:
 ```sh
 ngrok http 3001
 ```
 
-The Wasp server will be running on port 3001, so this creates an accessbile tunnel to your server.
-
 ![ngrok](/lemon-squeezy/ngrok.png)
 
-Ngrok will output a forwarding address for you. Copy and paste this address and add `/payments-webhook` to the end (this URL path has been configured for you already in `main.wasp` under the `api paymentsWebhook` definiton). It should look something like this: 
+Ngrok will output a forwarding address for you. Copy and paste this address and add `/payments-webhook` to the end (this URL path has been configured for you already in `main.wasp` under the `api paymentsWebhook` definition). It should look something like this: 
 
 ```sh title="Callback URL"
 https://89e5-2003-c7-153c-72a5-f837.ngrok-free.app/payments-webhook

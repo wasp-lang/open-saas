@@ -1,9 +1,6 @@
 import { createCheckout } from '@lemonsqueezy/lemonsqueezy.js';
-import { initLemonSqueezy } from './initLemonSqueezySetup';
 
-initLemonSqueezy();
-
-type LemonSqueezyCheckoutSessionParams = {
+interface LemonSqueezyCheckoutSessionParams {
   storeId: string;
   variantId: string;
   userEmail: string;

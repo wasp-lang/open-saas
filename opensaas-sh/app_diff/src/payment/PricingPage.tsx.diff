@@ -69,36 +69,60 @@
                  </button>
                )}
              </div>
-@@ -198,3 +205,42 @@
+@@ -198,3 +205,66 @@
  };
  
  export default PricingPage;
 +
++type Provider = {
++  id: PaymentProcessorId;
++  label: string;
++  color: 'purple' | 'yellow';
++};
++
 +function PaymentProviderSelector({ paymentProcessorId, setPaymentProcessorId }: { paymentProcessorId: string; setPaymentProcessorId: Dispatch<SetStateAction<PaymentProcessorId>> }) {
++  const providers: Provider[] = [
++    { id: 'stripe', label: 'Stripe', color: 'purple' },
++    { id: 'lemonsqueezy', label: 'Lemon Squeezy', color: 'yellow' },
++  ];
++
 +  return (
 +    <div className='flex items-center justify-center space-x-2'>
-+      <label className='relative inline-flex items-center cursor-pointer'>
-+        <input
-+          type='checkbox'
-+          value=''
-+          className='ml-1 form-checkbox bg-gray-100 checked:bg-purple-400 rounded border-purple-400 duration-200 ease-in-out hover:bg-purple-400 hover:checked:bg-purple-600 focus:ring focus:ring-purple-300 focus:checked:bg-purple-400 focus:ring-opacity-50'
-+          checked={paymentProcessorId === 'stripe'}
-+          onChange={() => setPaymentProcessorId('stripe')}
-+        />
-+        <span className={cn('ml-2 text-purple-400', { 'drop-shadow-md': paymentProcessorId === 'stripe' })}>Stripe</span>
-+      </label>
-+      <p>or</p>
-+      <label className='relative inline-flex items-center cursor-pointer'>
-+        <input
-+          type='checkbox'
-+          value=''
-+          className='ml-1 form-checkbox bg-gray-100 checked:bg-yellow-400 rounded border-yellow-400 duration-200 ease-in-out hover:bg-yellow-400 hover:checked:bg-yellow-600 focus:ring focus:ring-yellow-300 focus:checked:bg-yellow-400 focus:ring-opacity-50'
-+          checked={paymentProcessorId === 'lemonsqueezy'}
-+          onChange={() => setPaymentProcessorId('lemonsqueezy')}
-+        />
-+        <span className={cn('ml-2 text-yellow-500 ', { 'drop-shadow-md': paymentProcessorId === 'lemonsqueezy' })}>Lemon Squeezy</span>
-+      </label>
++      {providers.map((provider, index) => (
++        <>
++          {index > 0 && <p>or</p>}
++          <PaymentProviderOption
++            key={provider.id}
++            provider={provider}
++            isSelected={paymentProcessorId === provider.id}
++            onChange={() => setPaymentProcessorId(provider.id)}
++          />
++        </>
++      ))}
 +    </div>
++  );
++}
++
++function PaymentProviderOption({ provider, isSelected, onChange }: { provider: Provider; isSelected: boolean; onChange: () => void }) {
++  const { label, color } = provider;
++  
++  const baseClasses = 'ml-1 form-checkbox bg-gray-100 rounded duration-200 ease-in-out focus:ring focus:ring-opacity-50';
++  const getColorClasses = (color: string) => {
++    return `checked:bg-${color}-400 border-${color}-400 hover:bg-${color}-400 hover:checked:bg-${color}-600 focus:ring-${color}-300 focus:checked:bg-${color}-400`;
++  };
++
++  return (
++    <label className='relative inline-flex items-center cursor-pointer'>
++      <input
++        type='checkbox'
++        className={`${baseClasses} ${getColorClasses(color)}`}
++        checked={isSelected}
++        onChange={onChange}
++      />
++      <span className={cn(`ml-2 text-${color}-400`, { 'drop-shadow-md': isSelected })}>
++        {label}
++      </span>
++    </label>
 +  );
 +}
 +
