@@ -3,7 +3,7 @@ import { generateStripeCheckoutSession } from 'wasp/client/operations';
 import { PaymentPlanId, paymentPlans, prettyPaymentPlanName } from './plans';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '../client/cn';
 import { z } from 'zod';
 
@@ -14,7 +14,7 @@ interface PaymentPlanCard {
   price: string;
   description: string;
   features: string[];
-};
+}
 
 export const paymentPlanCards: Record<PaymentPlanId, PaymentPlanCard> = {
   [PaymentPlanId.Hobby]: {
@@ -34,7 +34,7 @@ export const paymentPlanCards: Record<PaymentPlanId, PaymentPlanCard> = {
     price: '$9.99',
     description: 'One-time purchase of 10 credits for your account',
     features: ['Use credits for e.g. OpenAI API calls', 'No expiration date'],
-  }
+  },
 };
 
 const PricingPage = () => {
@@ -42,11 +42,11 @@ const PricingPage = () => {
 
   const { data: user, isLoading: isUserLoading } = useAuth();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   async function handleBuyNowClick(paymentPlanId: PaymentPlanId) {
     if (!user) {
-      history.push('/login');
+      navigate('/login');
       return;
     }
     try {
@@ -65,7 +65,7 @@ const PricingPage = () => {
 
   const handleCustomerPortalClick = () => {
     if (!user) {
-      history.push('/login');
+      navigate('/login');
       return;
     }
     try {
