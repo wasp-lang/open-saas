@@ -1,6 +1,6 @@
 --- template/app/src/payment/stripe/paymentDetails.ts
 +++ opensaas-sh/app/src/payment/stripe/paymentDetails.ts
-@@ -16,10 +16,10 @@
+@@ -14,10 +14,10 @@
  ) => {
    return userDelegate.update({
      where: {

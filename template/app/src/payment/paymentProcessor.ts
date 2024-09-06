@@ -18,8 +18,8 @@ export interface FetchCustomerPortalUrlArgs {
 
 export interface PaymentProcessor {
   id: 'stripe' | 'lemonsqueezy';
-  createCheckoutSession: ({ userId, userEmail, paymentPlan, prismaUserDelegate }: CreateCheckoutSessionArgs) => Promise<{ session: { id: string; url: string }; }>; 
-  fetchCustomerPortalUrl: ({ userId, prismaUserDelegate }: FetchCustomerPortalUrlArgs) => Promise<string | undefined>;
+  createCheckoutSession: (args: CreateCheckoutSessionArgs) => Promise<{ session: { id: string; url: string }; }>; 
+  fetchCustomerPortalUrl: (args: FetchCustomerPortalUrlArgs) => Promise<string | undefined>;
   webhook: PaymentsWebhook;
   webhookMiddlewareConfigFn: MiddlewareConfigFn;
 }

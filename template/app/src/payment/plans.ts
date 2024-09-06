@@ -9,7 +9,9 @@ export enum PaymentPlanId {
 }
 
 export interface PaymentPlan {
-  getPaymentProcessorPlanId: () => string; // ID of the product/plan you've created via your payment processor. 
+  // Returns the id under which this payment plan is identified on your payment processor. 
+  // E.g. this might be price id on Stripe, or variant id on LemonSqueezy.
+  getPaymentProcessorPlanId: () => string;
   effect: PaymentPlanEffect;
 }
 

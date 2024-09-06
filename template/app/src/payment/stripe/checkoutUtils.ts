@@ -44,9 +44,6 @@ export async function createStripeCheckoutSession({ userId, priceId, customerId,
         address: 'auto',
       },
       customer: customerId,
-      metadata: {
-        user_id: userId
-      }
     });
   } catch (error) {
     console.error(error);

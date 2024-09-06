@@ -60,6 +60,8 @@ export const lemonSqueezyWebhook: PaymentsWebhook = async (request, response, co
 };
 
 export const lemonSqueezyMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig) => {
+  // We need to delete the default 'express.json' middleware and replace it with 'express.raw' middleware
+  // because webhook data in the body of the request as raw JSON, not as JSON in the body of the request.
   middlewareConfig.delete('express.json');
   middlewareConfig.set('express.raw', express.raw({ type: 'application/json' }));
   return middlewareConfig;
@@ -71,12 +73,8 @@ export const lemonSqueezyMiddlewareConfigFn: MiddlewareConfigFn = (middlewareCon
 async function handleOrderCreated(data: Order, userId: string, prismaUserDelegate: PrismaClient['user']) {
   const { customer_id, status, first_order_item, order_number } = data.data.attributes;
   const lemonSqueezyId = customer_id.toString();
-  const variantId = first_order_item.variant_id.toString();
 
-  const planId = Object.values(PaymentPlanId).find((planId) => paymentPlans[planId].getPaymentProcessorPlanId() === variantId);
-  if (!planId) {
-    throw new Error(`No plan with lemonsqueezy variant id ${variantId}`);
-  }
+  const planId = getPlanIdByVariantId(first_order_item.variant_id.toString());
   const plan = paymentPlans[planId];
 
   const lemonSqueezyCustomerPortalUrl = await fetchUserCustomerPortalUrl({ lemonSqueezyId });
@@ -100,11 +98,7 @@ async function handleSubscriptionCreated(data: Subscription, userId: string, pri
   const { customer_id, status, variant_id } = data.data.attributes;
   const lemonSqueezyId = customer_id.toString();
 
-  const planId = Object.values(PaymentPlanId).find((planId) => paymentPlans[planId].getPaymentProcessorPlanId() === variant_id.toString());
-
-  if (!planId) {
-    throw new Error(`No plan with LemonSqueezy variant id ${variant_id}`);
-  }
+  const planId = getPlanIdByVariantId(variant_id.toString());
 
   if (status === 'active') {
     await updateUserLemonSqueezyPaymentDetails(
@@ -125,16 +119,12 @@ async function handleSubscriptionCreated(data: Subscription, userId: string, pri
 }
 
 
-// NOTE: LemonSqueezy's 'subscription_updated' event is sent is a catch-all and fires even after 'subscription_created' & 'order_created'
+// NOTE: LemonSqueezy's 'subscription_updated' event is sent as a catch-all and fires even after 'subscription_created' & 'order_created'.
 async function handleSubscriptionUpdated(data: Subscription, userId: string, prismaUserDelegate: PrismaClient['user']) {
   const { customer_id, status, variant_id } = data.data.attributes;
   const lemonSqueezyId = customer_id.toString();
 
-  const planId = Object.values(PaymentPlanId).find((planId) => paymentPlans[planId].getPaymentProcessorPlanId() === variant_id.toString());
-
-  if (!planId) {
-    throw new Error(`No plan with LemonSqueezy variant id ${variant_id}`);
-  }
+  const planId = getPlanIdByVariantId(variant_id.toString());
 
   // We ignore other statuses like 'paused' and 'unpaid' for now, because we block user usage if their status is NOT active.
   // Note that a status changes to 'past_due' on a failed payment retry, then after 4 unsuccesful payment retries status
@@ -148,7 +138,7 @@ async function handleSubscriptionUpdated(data: Subscription, userId: string, pri
         userId,
         subscriptionPlan: planId,
         subscriptionStatus: status,
-        datePaid: new Date(),
+        datePaid: status === 'past_due' ? undefined : new Date(),
       },
       prismaUserDelegate
     );
@@ -198,4 +188,14 @@ async function fetchUserCustomerPortalUrl({ lemonSqueezyId }: { lemonSqueezyId: 
     throw new Error(`No customer portal URL found for user lemonsqueezy id ${lemonSqueezyId}`);
   }
   return customerPortalUrl;
+}
+
+function getPlanIdByVariantId(variantId: string): PaymentPlanId {
+  const planId = Object.values(PaymentPlanId).find(
+    (planId) => paymentPlans[planId].getPaymentProcessorPlanId() === variantId
+  );
+  if (!planId) {
+    throw new Error(`No plan with LemonSqueezy variant id ${variantId}`);
+  }
+  return planId;
 }

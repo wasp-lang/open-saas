@@ -22,8 +22,8 @@ Awesome, you now have your very own SaaS app up and running! But, first, here ar
 [ Server ] <a href="http://localhost:3000/email-verification?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZpbm55QHdhc3Auc2giLCJleHAiOjE3MTg5NjUyNTB9.PkRGrmuDPuYFXkTprf7QpAye0e_O9a70xbER6LfxGJw">Verify email</a> 
 [ Server ] ════════════════════════
 ```
-2. Your app is still missing some key configurations (e.g. API keys for Stripe, OpenAI, AWS S3, Auth, Analytics). These services won't work at the moment, but don't fear, because **we've provided detailed guides in these docs to help you set up all the services in this template**.
-3. If you want to get a feel for what your SaaS could look like when finished, **check out [OpenSaaS.sh](https://opensaas.sh) in your browser. It was built using this template!** So make sure to log in, play around with the demo app, make a test Stripe payment, and check out the admin dashboard.
+2. Your app is still missing some key configurations (e.g. API keys for Payment Processors, OpenAI, AWS S3, Auth, Analytics). These services won't work at the moment, but don't fear, because **we've provided detailed guides in these docs to help you set up all the services in this template**.
+3. If you want to get a feel for what your SaaS could look like when finished, **check out [OpenSaaS.sh](https://opensaas.sh) in your browser. It was built using this template!** So make sure to log in, play around with the demo app, make a test payment, and check out the admin dashboard.
 
 In the sections below, we will take a short guide through the codebase and the app's main features. Then at the end of this tour, we also prepared a checklist of likely changes you will want to make to the app to make it your own. 
 
@@ -71,7 +71,7 @@ If you are using an older version of the OpenSaaS template with Wasp `v0.13.x` o
 │   ├── landing-page       # Landing page related code
 │   ├── messages           # Logic for app user messages.
 │   ├── newsletter/        # Logic for scheduled recurring newsletter sending.
-│   ├── payment/           # Logic for handling Stripe payments and webhooks.
+│   ├── payment/           # Logic for handling payments and webhooks.
 │   ├── server/            # Scripts, shared server utils, and other server-specific code (NodeJS).
 │   ├── shared/            # Shared constants and util functions.
 │   └── user/              # Logic related to users and their accounts.
@@ -187,58 +187,59 @@ For development purposes, Wasp provides a `Dummy` email sender which Open SaaS c
 
 We will explain more about these auth methods, and how to properly integrate them into your app, in the [Authentication Guide](/guides/authentication).
 
-### Subscription Payments with Stripe 
-<!-- TODO: change this section -->
+### Subscription Payments with Stripe or Lemon Squeezy
 
-No SaaS is complete without payments, specifically subscription payments. That's why this template comes with a fully functional Stripe integration. 
+No SaaS is complete without payments, specifically subscription payments. That's why this template comes with a fully functional Stripe or Lemon Squeezy integration. 
 
 Let's take a quick look at how payments are handled in this template.
 
-1. a user clicks the `BUY` button and a **Stripe Checkout session** is created on the server
-2. the user is redirected to the Stripe Checkout page where they enter their payment info
-3. the user is redirected back to the app and the Stripe Checkout session is completed
-4. Stripe sends a webhook event to the server with the payment info
+1. a user clicks the `BUY` button and a **Checkout session** is created on the server
+2. the user is redirected to the Checkout page where they enter their payment info
+3. the user is redirected back to the app and the Checkout session is completed
+4. Stripe / Lemon Squeezy sends a webhook event to the server with the payment info
 5. The app server's **webhook handler** handles the event and updates the user's subscription status
 
-The logic for creating the Stripe Checkout session is defined in the `src/payment/operation.ts` file. [Actions](https://wasp-lang.dev/docs/data-model/operations/actions) are a type of Wasp Operation, specifically your server-side functions that are used to **write** or **update** data to the database. Once they're defined in the `main.wasp` file, you can easily call them on the client-side:
+The payment processor you choose (Stripe or Lemon Squeezy) and its related functions can be found at `src/payment/paymentProcessor.ts`. The `Payment Processor` object holds the logic for creating checkout sessions, webhooks, etc.
+
+The logic for creating the Checkout session is defined in the `src/payment/operation.ts` file. [Actions](https://wasp-lang.dev/docs/data-model/operations/actions) are a type of Wasp Operation, specifically your server-side functions that are used to **write** or **update** data to the database. Once they're defined in the `main.wasp` file, you can easily call them on the client-side:
 
 a) define the action in the `main.wasp` file
 ```js title="main.wasp"
-action generateStripeCheckoutSession {
-  fn: import { generateStripeCheckoutSession } from "@src/payment/operations",
+action generateCheckoutSession {
+  fn: import { generateCheckoutSession } from "@src/payment/operations",
   entities: [User]
 }
 ```
 
 b) implement the action in the `src/payment/operations` file
 ```js title="src/server/actions.ts"
-export const generateStripeCheckoutSession = async (paymentPlanId, context) => { 
+export const generateCheckoutSession = async (paymentPlanId, context) => { 
   //...
  }
 ```
 
 c) call the action on the client-side
 ```js title="src/client/app/SubscriptionPage.tsx"
-import { generateStripeCheckoutSession } from "wasp/client/operations";
+import { generateCheckoutSession } from "wasp/client/operations";
 
 const handleBuyClick = async (paymentPlanId) => {
-  const stripeCheckoutSession = await generateStripeCheckoutSession(paymentPlanId);
+  const checkoutSession = await generateCheckoutSession(paymentPlanId);
 };
 ```
 
-The webhook handler is defined in the `src/payment/stripe/webhook.ts` file. Unlike Actions and Queries in Wasp which are only to be used internally, we define the webhook handler in the `main.wasp` file as an API endpoint in order to expose it externally to Stripe
+The webhook handler is defined in the `src/payment/webhook.ts` file. Unlike Actions and Queries in Wasp which are only to be used internally, we define the webhook handler in the `main.wasp` file as an API endpoint in order to expose it externally to Stripe
 
 ```js title="main.wasp"
-api stripeWebhook {
-  fn: import { stripeWebhook } from "@src/payment/stripe/webhook",
-  httpRoute: (POST, "/stripe-webhook") 
+api paymentsWebhook {
+  fn: import { paymentsWebhook } from "@src/payment/webhook",
+  httpRoute: (POST, "/payments-webhook") 
   entities: [User],
 }
 ```
 
-Within the webhook handler, we look for specific events that Stripe sends us to let us know which payment was completed and for which user. Then we update the user's subscription status in the database.
+Within the webhook handler, we look for specific events that the Payment Processor sends us to let us know which payment was completed and for which user. Then we update the user's subscription status in the database.
 
-To learn more about configuring the app to handle your products and payments, check out the [Stripe Integration guide](/guides/stripe-integration).
+To learn more about configuring the app to handle your products and payments, check out the [Payments Integration guide](/guides/payments-integration).
 
 :::tip[Star our Repo on GitHub! 🌟]
 We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
@@ -249,7 +250,7 @@ If you're finding this template and its guides useful, consider giving us [a sta
 
 ### Analytics and Admin Dashboard
 
-Keeping an eye on your metrics is crucial for any SaaS. That's why we've built an administrator's dashboard where you can view your app's stats, user data, and Stripe revenue all in one place.
+Keeping an eye on your metrics is crucial for any SaaS. That's why we've built an administrator's dashboard where you can view your app's stats, user data, and revenue all in one place.
 
 <!-- TODO: add pic of admin dash -->
 
@@ -277,7 +278,7 @@ For more info on integrating Plausible or Google Analytics, check out the [Analy
 When you first start your Open SaaS app straight from the template, it will run, but many of the services won't work because they lack your own API keys. Here are list of services that need your API keys to work properly:
 
 - Auth Methods (Google, GitHub)
-- Stripe 
+- Stripe or Lemon Squeezy
 - OpenAI (Chat GPT API)
 - Email Sending (Sendgrid) -- you must set this up if you're using the `email` Auth method 
 - Analytics (Plausible or Google Analytics)
@@ -346,4 +347,4 @@ But before you start setting up the main features, let's walk through the custom
 
 ## What's next?
 
-In the following `Guides` sections, we'll walk you through getting those API keys and setting up the finer points of features such as Stripe Payments & Webhooks, Auth, Email Sending, Analytics, and more.
+In the following `Guides` sections, we'll walk you through getting those API keys and setting up the finer points of features such as Payments & Webhooks, Auth, Email Sending, Analytics, and more.

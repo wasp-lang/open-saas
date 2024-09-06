@@ -93,26 +93,15 @@
      },
    },
  }
-@@ -205,11 +202,18 @@
-   entities: [User]
+@@ -206,9 +203,9 @@
  }
  
--api paymentsWebhook {
+ api paymentsWebhook {
 -  fn: import { paymentsWebhook } from "@src/payment/webhook",
-+api stripeWebhook {
 +  fn: import { stripeWebhook } from "@src/payment/stripe/webhook",
-+  entities: [User],
-+  middlewareConfigFn: import { stripeMiddlewareConfigFn } from "@src/payment/stripe/webhook",
-+  httpRoute: (POST, "/stripe-webhook")
-+}
-+
-+api lemonSqueezyWebhook {
-+  fn: import { lemonSqueezyWebhook } from "@src/payment/lemonSqueezy/webhook",
    entities: [User],
 -  middlewareConfigFn: import { paymentsMiddlewareConfigFn } from "@src/payment/webhook",
--  httpRoute: (POST, "/payments-webhook")
-+  middlewareConfigFn: import { lemonSqueezyMiddlewareConfigFn } from "@src/payment/lemonSqueezy/webhook",
-+  httpRoute: (POST, "/lemonsqueezy-webhook")
++  middlewareConfigFn: import { stripeMiddlewareConfigFn } from "@src/payment/stripe/webhook",
+   httpRoute: (POST, "/payments-webhook")
  }
  //#endregion
- 

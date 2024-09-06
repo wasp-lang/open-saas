@@ -1,14 +1,5 @@
 --- template/app/src/payment/stripe/paymentProcessor.ts
 +++ opensaas-sh/app/src/payment/stripe/paymentProcessor.ts
-@@ -12,7 +12,7 @@
-     const customer = await fetchStripeCustomer(userEmail);
-     const stripeSession = await createStripeCheckoutSession({
-       userId,
--      priceId: paymentPlan.getPaymentProcessorPlanId(),
-+      priceId: paymentPlan.getPaymentProcessorPlanId('stripe'),
-       customerId: customer.id,
-       mode: paymentPlanEffectToStripeMode(paymentPlan.effect),
-     });
 @@ -21,7 +21,7 @@
          id: userId
        },

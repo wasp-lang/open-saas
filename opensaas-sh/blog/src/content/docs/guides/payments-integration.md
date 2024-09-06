@@ -14,17 +14,36 @@ Stripe is the industry standard, is more configurable, and has cheaper fees.
 Lemon Squeezy acts a [Merchant of Record](https://www.lemonsqueezy.com/reporting/merchant-of-record). This means they take care of paying taxes in multiple countries for you, but charge higher fees per transaction. 
 :::
 
-# Stripe
+# Important First Steps
 
-First, go to `/src/payment/paymentProcessor.ts` and make sure you're using the Stripe payment processor object:
+First, go to `/src/payment/paymentProcessor.ts` and choose which payment processor you'd like to use, e.g. Stripe or Lemon Squeezy:
 
-```ts
+```ts title="src/payment/paymentProcessor.ts" ins={5, 7}
+import { stripePaymentProcessor } from './stripe/paymentProcessor';
+import { lemonSqueezyPaymentProcessor } from './lemonSqueezy/paymentProcessor';
+//...
+
 export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
+// or... 
+export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
 ```
 
-At this point, you can delete the unused payment processor code within the `/src/payment` directory, as well as any unused environment variables from `.env.server`. Make sure to also uninstall the unsused dependencies with `npm uninstall <dependency-name>`.
+At this point, you can delete:
+- the unused payment processor code within the `/src/payment/<unused-provider>` directory, 
+- any unused environment variables from `.env.server` (they will be prefixed with the name of the provider your are not using):
+  - e.g. `STRIPE_API_KEY`, `STRIPE_CUSTOMER_PORTAL_URL`, `LEMONSQUEEZY_API_KEY`, `LEMONSQUEEZY_WEBHOOK_SECRET`
+- Make sure to also uninstall the unused dependencies:
+  - `npm uninstall @lemonsqueezy/lemonsqueezy.js`
+  - or
+  - `npm uninstall stripe`
+- Remove any unused fields from the `User` model in the `schema.prisma` file if they exist:
+  - e.g. `lemonSqueezyCustomerPortalUrl`
 
-Next, you'll need to create a Stripe account. You can do that [here](https://dashboard.stripe.com/register).
+Now your code is ready to go with your preferred payment processor and it's time to configure your payment processor's API keys, products, and other settings.
+
+# Stripe
+
+First, you'll need to create a Stripe account. You can do that [here](https://dashboard.stripe.com/register).
 
 :::tip[Star our Repo on GitHub! 🌟]
 We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
@@ -182,13 +201,7 @@ If you want to learn more about how a user's payment status, subscription status
 
 # Lemon Squeezy
 
-First, go to `/src/payment/paymentProcessor.ts` and make sure you're using the Lemon Squeezy payment processor object:
-
-```ts
-export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
-```
-
-At this point, you can delete the unused payment processor code within the `/src/payment` directory, as well as any unused environment variables from `.env.server`. Make sure to also uninstall the unsused dependencies with `npm uninstall <dependency-name>`.
+First, make sure you've defined your payment processor in `src/payment/paymentProcessor.ts`, as described in the [important first steps](#important-first-steps).
 
 Next, you'll need to create a Lemon Squeezy account in test mode. You can do that [here](https://lemonsqueezy.com).
 

@@ -41,11 +41,13 @@ const PricingPage = () => {
 
   const { data: user, isLoading: isUserLoading } = useAuth();
 
+  const shouldFetchCustomerPortalUrl = !!user && !!user.subscriptionStatus;
+
   const {
     data: customerPortalUrl,
     isLoading: isCustomerPortalUrlLoading,
     error: customerPortalUrlError,
-  } = useQuery(getCustomerPortalUrl);
+  } = useQuery(getCustomerPortalUrl, { enabled: shouldFetchCustomerPortalUrl });
 
   const history = useHistory();
 

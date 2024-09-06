@@ -51,8 +51,9 @@ export const stripeWebhook: PaymentsWebhook = async (request, response, context)
   response.json({ received: true }); // Stripe expects a 200 response to acknowledge receipt of the webhook
 };
 
-// This allows us to override Wasp's defaults and parse the raw body of the request from Stripe to verify the signature
 export const stripeMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig) => {
+  // We need to delete the default 'express.json' middleware and replace it with 'express.raw' middleware
+  // because webhook data in the body of the request as raw JSON, not as JSON in the body of the request.
   middlewareConfig.delete('express.json');
   middlewareConfig.set('express.raw', express.raw({ type: 'application/json' }));
   return middlewareConfig;
