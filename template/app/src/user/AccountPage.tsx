@@ -3,7 +3,6 @@ import { type SubscriptionStatus, prettyPaymentPlanName, parsePaymentPlanId } fr
 import { getCustomerPortalUrl, useQuery } from 'wasp/client/operations';
 import { Link } from 'wasp/client/router';
 import { logout } from 'wasp/client/auth';
-import { z } from 'zod';
 
 export default function AccountPage({ user }: { user: User }) {
   return (
@@ -33,7 +32,6 @@ export default function AccountPage({ user }: { user: User }) {
                 subscriptionPlan={user.subscriptionPlan}
                 datePaid={user.datePaid}
                 credits={user.credits}
-                lemonSqueezyCustomerPortalUrl={user.lemonSqueezyCustomerPortalUrl}
               />
             </div>
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
@@ -60,10 +58,9 @@ type UserCurrentPaymentPlanProps = {
   subscriptionStatus: SubscriptionStatus | null;
   datePaid: Date | null;
   credits: number;
-  lemonSqueezyCustomerPortalUrl: string | null;
 };
 
-function UserCurrentPaymentPlan({ subscriptionPlan, subscriptionStatus, datePaid, credits, lemonSqueezyCustomerPortalUrl }: UserCurrentPaymentPlanProps) {
+function UserCurrentPaymentPlan({ subscriptionPlan, subscriptionStatus, datePaid, credits }: UserCurrentPaymentPlanProps) {
   if (subscriptionStatus && subscriptionPlan && datePaid) {
     return (
       <>
