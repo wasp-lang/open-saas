@@ -93,3 +93,15 @@
      },
    },
  }
+@@ -206,9 +203,9 @@
+ }
+ 
+ api paymentsWebhook {
+-  fn: import { paymentsWebhook } from "@src/payment/webhook",
++  fn: import { stripeWebhook } from "@src/payment/stripe/webhook",
+   entities: [User],
+-  middlewareConfigFn: import { paymentsMiddlewareConfigFn } from "@src/payment/webhook",
++  middlewareConfigFn: import { stripeMiddlewareConfigFn } from "@src/payment/stripe/webhook",
+   httpRoute: (POST, "/payments-webhook")
+ }
+ //#endregion

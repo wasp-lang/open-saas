@@ -1,9 +1,6 @@
 import type { User } from 'wasp/entities';
-import {
-  type SubscriptionStatus,
-  prettyPaymentPlanName,
-  parsePaymentPlanId
-} from '../payment/plans';
+import { type SubscriptionStatus, prettyPaymentPlanName, parsePaymentPlanId } from '../payment/plans';
+import { getCustomerPortalUrl, useQuery } from 'wasp/client/operations';
 import { Link } from 'wasp/client/router';
 import { logout } from 'wasp/client/auth';
 import { z } from 'zod';
@@ -31,18 +28,17 @@ export default function AccountPage({ user }: { user: User }) {
             )}
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
               <dt className='text-sm font-medium text-gray-500 dark:text-white'>Your Plan</dt>
-              <UserCurrentPaymentPlan  
-                subscriptionStatus={ user.subscriptionStatus as SubscriptionStatus} 
-                subscriptionPlan={ user.subscriptionPlan } 
-                datePaid={ user.datePaid }
-                credits={ user.credits }
-                 />
+              <UserCurrentPaymentPlan
+                subscriptionStatus={user.subscriptionStatus as SubscriptionStatus}
+                subscriptionPlan={user.subscriptionPlan}
+                datePaid={user.datePaid}
+                credits={user.credits}
+                lemonSqueezyCustomerPortalUrl={user.lemonSqueezyCustomerPortalUrl}
+              />
             </div>
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
               <dt className='text-sm font-medium text-gray-500 dark:text-white'>About</dt>
-              <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-2 sm:mt-0'>
-                I'm a cool customer.
-              </dd>
+              <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-2 sm:mt-0'>I'm a cool customer.</dd>
             </div>
           </dl>
         </div>
@@ -60,19 +56,18 @@ export default function AccountPage({ user }: { user: User }) {
 }
 
 type UserCurrentPaymentPlanProps = {
-  subscriptionPlan: string | null
-  subscriptionStatus: SubscriptionStatus | null
-  datePaid: Date | null
-  credits: number
-}
+  subscriptionPlan: string | null;
+  subscriptionStatus: SubscriptionStatus | null;
+  datePaid: Date | null;
+  credits: number;
+  lemonSqueezyCustomerPortalUrl: string | null;
+};
 
-function UserCurrentPaymentPlan({ subscriptionPlan, subscriptionStatus, datePaid, credits }: UserCurrentPaymentPlanProps) { 
+function UserCurrentPaymentPlan({ subscriptionPlan, subscriptionStatus, datePaid, credits, lemonSqueezyCustomerPortalUrl }: UserCurrentPaymentPlanProps) {
   if (subscriptionStatus && subscriptionPlan && datePaid) {
     return (
       <>
-        <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
-          {getUserSubscriptionStatusDescription({ subscriptionPlan, subscriptionStatus, datePaid })}
-        </dd>
+        <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>{getUserSubscriptionStatusDescription({ subscriptionPlan, subscriptionStatus, datePaid })}</dd>
         {subscriptionStatus !== 'deleted' ? <CustomerPortalButton /> : <BuyMoreButton />}
       </>
     );
@@ -80,23 +75,13 @@ function UserCurrentPaymentPlan({ subscriptionPlan, subscriptionStatus, datePaid
 
   return (
     <>
-      <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
-        Credits remaining: {credits}
-      </dd>
+      <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>Credits remaining: {credits}</dd>
       <BuyMoreButton />
     </>
   );
 }
 
-function getUserSubscriptionStatusDescription({
-  subscriptionPlan,
-  subscriptionStatus,
-  datePaid,
-}: {
-  subscriptionPlan: string
-  subscriptionStatus: SubscriptionStatus
-  datePaid: Date;
-}) {
+function getUserSubscriptionStatusDescription({ subscriptionPlan, subscriptionStatus, datePaid }: { subscriptionPlan: string; subscriptionStatus: SubscriptionStatus; datePaid: Date }) {
   const planName = prettyPaymentPlanName(parsePaymentPlanId(subscriptionPlan));
   const endOfBillingPeriod = prettyPrintEndOfBillingPeriod(datePaid);
   return prettyPrintStatus(planName, subscriptionStatus, endOfBillingPeriod);
@@ -133,22 +118,21 @@ function BuyMoreButton() {
 }
 
 function CustomerPortalButton() {
+  const { data: customerPortalUrl, isLoading: isCustomerPortalUrlLoading, error: customerPortalUrlError } = useQuery(getCustomerPortalUrl);
+
   const handleClick = () => {
-    try {
-      const schema = z.string().url();
-      const customerPortalUrl = schema.parse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
+    if (customerPortalUrlError) {
+      console.error('Error fetching customer portal url');
+    }
+
+    if (customerPortalUrl) {
       window.open(customerPortalUrl, '_blank');
-    } catch (err) {
-      console.error(err);
     }
   };
 
   return (
     <div className='ml-4 flex-shrink-0 sm:col-span-1 sm:mt-0'>
-      <button
-        onClick={handleClick}
-        className='font-medium text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300'
-      >
+      <button onClick={handleClick} disabled={isCustomerPortalUrlLoading} className='font-medium text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300'>
         Manage Subscription
       </button>
     </div>

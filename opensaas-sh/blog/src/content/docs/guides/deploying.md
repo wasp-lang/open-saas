@@ -20,12 +20,8 @@ If you're looking to deploy your Astro Blog, you can follow the [Deploying your 
 Make sure you've got all your API keys and environment variables set up before you deploy. 
 
 #### Env Vars
-##### Stripe Vars
-In the [Stripe integration guide](/guides/stripe-integration), you set up your Stripe API keys using test keys and product ids. You'll need to get the live/production versions of those keys at [https://dashboard.stripe.com](https://dashboard.stripe.com). To get these, repeat the instructions in the [Stripe Integration Guide](/guides/stripe-integration) without being in test mode.
-- [ ] `STRIPE_KEY` 
-- [ ] `STRIPE_WEBHOOK_SECRET`
-- [ ] all `STRIPE_..._PRICE_ID` variables
-- [ ] `REACT_APP_STRIPE_CUSTOMER_PORTAL` (for the client-side)
+##### Payment Processor Vars
+In the [Payments Processor integration guide](/guides/payments-integration), you set up your API keys using test keys and test product ids. You'll need to get the live/production versions of those keys. To get these, repeat the instructions in the [Integration Guide](/guides/payments-integration) without being in test mode. Add the new keys to your deployed environment secrets.
 
 ##### Other Vars
 Many of your other environment variables will probably be the same as in development, but you should double-check that they are set correctly for production.
@@ -119,8 +115,8 @@ When you create your Stripe account, Stripe will automatically assign you to the
 Because this template was built with a specific version of the Stripe API in mind, it could be that your Stripe account is set to a different API version. 
 
 :::note
-```ts title="stripeClient.ts"
-export const stripe = new Stripe(process.env.STRIPE_KEY!, {
+```ts title="stripeClient.ts" 
+export const stripe = new Stripe(process.env.STRIPE_API_KEY!, {
   apiVersion: 'YYYY-MM-DD', // e.g. 2023-08-16
 });
 ```
@@ -132,7 +128,7 @@ This is why it's important to make sure your Stripe client version also matches 
 To make sure your app is consistent with your Stripe account, here are some steps you can follow:
 
 1. You can find your `default` API version in the Stripe dashboard under the [Developers](https://dashboard.stripe.com/developers) section.
-2. Check that the API version in your `stripe/stripeClient.ts` file matches the default API version in your dashboard:
+2. Check that the API version in your `/src/payment/stripe/stripeClient.ts` file matches the default API version in your dashboard:
 ```ts title="stripeClient.ts" {2}
 export const stripe = new Stripe(process.env.STRIPE_KEY!, {
   apiVersion: 'YYYY-MM-DD', // e.g. 2023-08-16
@@ -154,7 +150,7 @@ export const stripe = new Stripe(process.env.STRIPE_KEY!, {
 #### Creating Your Production Webhook
 1. go to [https://dashboard.stripe.com/webhooks](https://dashboard.stripe.com/webhooks)
 2. click on `+ add endpoint`
-3. enter your endpoint url, which will be the url of your deployed server + `/stripe-webhook`, e.g. `https://open-saas-wasp-sh-server.fly.dev/stripe-webhook`
+3. enter your endpoint url, which will be the url of your deployed server + `/payments-webhook`, e.g. `https://open-saas-wasp-sh-server.fly.dev/payments-webhook`
 ![listen-events](/stripe/listen-to-stripe-events.png)
 4. select the events you want to listen to. These should be the same events you're consuming in your webhook. For example, if you haven't added any additional events to the webhook and are using the defaults that came with this template, then you'll need to add:
   <br/>- `account.updated`

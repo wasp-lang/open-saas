@@ -44,10 +44,10 @@
    {
 -    name: 'Cool Feature #4',
 -    description: 'Describe your cool feature here.',
-+    name: 'Stripe Integration',
-+    description: "No SaaS is complete without payments. That's why payments and the necessary webhooks are built-in.",
++    name: 'Stripe / Lemon Squeezy Integration',
++    description: "No SaaS is complete without payments. We've pre-configured checkout and webhooks. Just choose a provider and start cashing out.",
      icon: '💸',
-+    href: DocsUrl + '/guides/stripe-integration/',
++    href: DocsUrl + '/guides/payments-integration/',
 +  },
 +  {
 +    name: 'Admin Dashboard',

@@ -1,6 +1,6 @@
 --- template/app/package.json
 +++ opensaas-sh/app/package.json
-@@ -1,5 +1,10 @@
+@@ -1,12 +1,16 @@
  {
    "name": "opensaas",
 +  "scripts": {
@@ -11,3 +11,10 @@
    "dependencies": {
      "@aws-sdk/client-s3": "^3.523.0",
      "@aws-sdk/s3-request-presigner": "^3.523.0",
+     "@faker-js/faker": "8.3.1",
+     "@google-analytics/data": "4.1.0",
+     "@headlessui/react": "1.7.13",
+-    "@lemonsqueezy/lemonsqueezy.js": "^3.2.0",
+     "@tailwindcss/forms": "^0.5.3",
+     "@tailwindcss/typography": "^0.5.7",
+     "apexcharts": "^3.41.0",
