@@ -8,7 +8,7 @@
  
  interface PaymentPlanCard {
    name: string;
-@@ -83,7 +84,7 @@
+@@ -82,7 +83,7 @@
      }
  
      if (!customerPortalUrl) {
@@ -17,7 +17,7 @@
      }
  
      window.open(customerPortalUrl, '_blank');
-@@ -97,11 +98,18 @@
+@@ -96,11 +97,18 @@
              Pick your <span className='text-yellow-500'>pricing</span>
            </h2>
          </div>
@@ -41,7 +41,7 @@
          <div className='isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 lg:gap-x-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3'>
            {Object.values(PaymentPlanId).map((planId) => (
              <div
-@@ -188,7 +196,7 @@
+@@ -187,7 +195,7 @@
                    )}
                    disabled={isPaymentLoading}
                  >

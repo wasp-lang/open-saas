@@ -14,7 +14,7 @@ Stripe is the industry standard, is more configurable, and has cheaper fees.
 Lemon Squeezy acts a [Merchant of Record](https://www.lemonsqueezy.com/reporting/merchant-of-record). This means they take care of paying taxes in multiple countries for you, but charge higher fees per transaction. 
 :::
 
-# Important First Steps
+## Important First Steps
 
 First, go to `/src/payment/paymentProcessor.ts` and choose which payment processor you'd like to use, e.g. Stripe or Lemon Squeezy:
 
@@ -41,7 +41,7 @@ At this point, you can delete:
 
 Now your code is ready to go with your preferred payment processor and it's time to configure your payment processor's API keys, products, and other settings.
 
-# Stripe
+## Stripe
 
 First, you'll need to create a Stripe account. You can do that [here](https://dashboard.stripe.com/register).
 
@@ -51,7 +51,7 @@ We've packed in a ton of features and love into this SaaS starter, and offer it 
 If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
 :::
 
-## Get your test Stripe API Keys
+### Get your test Stripe API Keys
 
 Once you've created your account, you'll need to get your test API keys. You can do that by navigating to [https://dashboard.stripe.com/test/apikeys](https://dashboard.stripe.com/test/apikeys) or by going to the [Stripe Dashboard](https://dashboard.stripe.com/test/dashboard) and clicking on the `Developers`.
 
@@ -60,7 +60,7 @@ Once you've created your account, you'll need to get your test API keys. You can
 - Click on the `Reveal test key token` button and copy the `Secret key`.
 - Paste it in your `.env.server` file under `STRIPE_API_KEY=`
 
-## Create Test Products
+### Create Test Products
 
 To create a test product, go to the test products url [https://dashboard.stripe.com/test/products](https://dashboard.stripe.com/test/products), or after navigating to your dashboard, click the `test mode` toggle.
 
@@ -80,7 +80,7 @@ To create a test product, go to the test products url [https://dashboard.stripe.
   - As well as a one-time payment product/credits-based environment variable, `PAYMENTS_CREDITS_10_PLAN_ID=`.
 - Note that if you change the names of the price IDs, you'll need to update your server code to match these names as well
 
-## Create a Test Customer
+### Create a Test Customer
 
 To create a test customer, go to the test customers url [https://dashboard.stripe.com/test/customers](https://dashboard.stripe.com/test/customers).
 
@@ -89,7 +89,7 @@ To create a test customer, go to the test customers url [https://dashboard.strip
  When filling in the test customer email address, use an address you have access to and will use when logging into your SaaS app. This is important because the email address is used to identify the customer when creating a subscription and allows you to manage your test user's payments/subscriptions via the test customer portal
 :::
 
-## Get your Customer Portal Link
+### Get your Customer Portal Link
 
 Go to https://dashboard.stripe.com/test/settings/billing/portal in the Stripe Dashboard and activate and copy the `Customer portal link`. Paste it in your `.env.server` file:
 
@@ -97,7 +97,7 @@ Go to https://dashboard.stripe.com/test/settings/billing/portal in the Stripe Da
 STRIPE_CUSTOMER_PORTAL_URL=<your-test-customer-portal-link>
 ```
 
-## Install the Stripe CLI
+### Install the Stripe CLI
 
 To install the Stripe CLI with homebrew, run the following command in your terminal:
 
@@ -131,7 +131,7 @@ You should see a message like this:
 
 copy this secret to your `.env.server` file under `STRIPE_WEBHOOK_SECRET=`.
 
-## Testing Webhooks via the Stripe CLI
+### Testing Webhooks via the Stripe CLI
 
 - In a new terminal window, run the following command:
 
@@ -173,7 +173,7 @@ We've packed in a ton of features and love into this SaaS starter, and offer it 
 If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
 :::
 
-## Testing Checkout and Payments via the Client
+### Testing Checkout and Payments via the Client
 
 Make sure the **Stripe CLI is running** by following the steps above.
 You can then test the payment flow via the client by doing the following:
@@ -199,7 +199,7 @@ wasp db studio
 If you want to learn more about how a user's payment status, subscription status, and subscription tier affect a user's priveledges within the app, check out the [User Overview](/general/user-overview) reference.
 :::
 
-# Lemon Squeezy
+## Lemon Squeezy
 
 First, make sure you've defined your payment processor in `src/payment/paymentProcessor.ts`, as described in the [important first steps](#important-first-steps).
 
@@ -211,7 +211,7 @@ We've packed in a ton of features and love into this SaaS starter, and offer it 
 If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
 :::
 
-## Get your test Lemon Squeezy API Keys
+### Get your test Lemon Squeezy API Keys
 
 Once you've created your account, you'll need to get your test API keys. You can do that by navigating to [https://app.lemonsqueezy.com/settings/api](https://app.lemonsqueezy.com/settings/api) and creating a new API key.
 
@@ -219,7 +219,7 @@ Once you've created your account, you'll need to get your test API keys. You can
 - Give your API key a name
 - Copy and paste it in your `.env.server` file under `LEMONSQUEEZY_API_KEY=`
 
-## Create Test Products
+### Create Test Products
 
 To create a test product, go to the test products url [https://app.lemonsqueezy.com/products](https://app.lemonsqueezy.com/products).
 
@@ -239,7 +239,7 @@ To create a test product, go to the test products url [https://app.lemonsqueezy.
   - As well as a one-time payment product/credits-based environment variable, `PAYMENTS_CREDITS__10_PLAN_ID=`.
 - Note that if you change the names of the these environment variables, you'll need to update your app code to match these names as well.
 
-## Create and Use the Lemon Squeezy Webhook in Local Development
+### Create and Use the Lemon Squeezy Webhook in Local Development
 
 Lemon Squeezy sends messages/updates to your Wasp app via its webhook, e.g. when a payment is successful. For that to work during development, we need to expose our locally running (via `wasp start`) Wasp app and make it available online, specifically the server part of it. Since the Wasp server runs on port 3001, you should run ngrok on port 3001, which will provide you with a public URL that you can use to configure Lemon Squeezy with.
 
@@ -272,6 +272,6 @@ Now go to your [Lemon Squeezy Webhooks Dashboard](https://app.lemonsqueezy.com/s
 
 You're now ready to start consuming Lemon Squeezy webhook events in local development.
 
-# Deploying
+## Deploying
 
 Once you deploy your app, you can follow the same steps, just make sure that you are no longer in test mode within the Stripe or Lemon Squeezy Dashboards. After you've repeated the steps in live mode, add the new API keys and price/variant IDs to your environment variables in your deployed environment.

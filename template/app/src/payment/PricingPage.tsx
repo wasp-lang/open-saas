@@ -38,16 +38,15 @@ export const paymentPlanCards: Record<PaymentPlanId, PaymentPlanCard> = {
 
 const PricingPage = () => {
   const [isPaymentLoading, setIsPaymentLoading] = useState<boolean>(false);
-
-  const { data: user, isLoading: isUserLoading } = useAuth();
-
-  const shouldFetchCustomerPortalUrl = !!user && !!user.subscriptionStatus;
+  
+  const { data: user } = useAuth();
+  const isUserSubscribed = !!user && !!user.subscriptionStatus && user.subscriptionStatus !== 'deleted';
 
   const {
     data: customerPortalUrl,
     isLoading: isCustomerPortalUrlLoading,
     error: customerPortalUrlError,
-  } = useQuery(getCustomerPortalUrl, { enabled: shouldFetchCustomerPortalUrl });
+  } = useQuery(getCustomerPortalUrl, { enabled: isUserSubscribed });
 
   const history = useHistory();
 
@@ -153,7 +152,7 @@ const PricingPage = () => {
                   ))}
                 </ul>
               </div>
-              {!!user && !!user.subscriptionStatus ? (
+              {isUserSubscribed ? (
                 <button
                   onClick={handleCustomerPortalClick}
                   disabled={isCustomerPortalUrlLoading}

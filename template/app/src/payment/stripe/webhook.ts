@@ -59,16 +59,6 @@ export const stripeMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig) =
   return middlewareConfig;
 };
 
-const LineItemsPriceSchema = z.object({
-  data: z.array(
-    z.object({
-      price: z.object({
-        id: z.string(),
-      }),
-    })
-  ),
-});
-
 export async function handleCheckoutSessionCompleted(
   session: Stripe.Checkout.Session,
   prismaUserDelegate: PrismaClient["user"]
@@ -77,21 +67,10 @@ export async function handleCheckoutSessionCompleted(
   const { line_items } = await stripe.checkout.sessions.retrieve(session.id, {
     expand: ['line_items'],
   });
-  const result = LineItemsPriceSchema.safeParse(line_items);
-  if (!result.success) {
-    throw new HttpError(400, 'No price id in line item');
-  }
-  if (result.data.data.length > 1) {
-    throw new HttpError(400, 'More than one line item in session');
-  }
-  const lineItemPriceId = result.data.data[0].price.id;
 
-  const planId = Object.values(PaymentPlanId).find(
-    (planId) => paymentPlans[planId].getPaymentProcessorPlanId() === lineItemPriceId
-  );
-  if (!planId) {
-    throw new Error(`No plan with stripe price id ${lineItemPriceId}`);
-  }
+  const lineItemPriceId = extractPriceId(line_items);
+
+  const planId = getPlanIdByPriceId(lineItemPriceId);
   const plan = paymentPlans[planId];
 
   let subscriptionPlan: PaymentPlanId | undefined;
@@ -126,6 +105,9 @@ export async function handleCustomerSubscriptionUpdated(
   const userStripeId = validateUserStripeIdOrThrow(subscription.customer);
   let subscriptionStatus: SubscriptionStatus | undefined;
 
+  const priceId = extractPriceId(subscription.items);
+  const subscriptionPlan = getPlanIdByPriceId(priceId);
+
   // There are other subscription statuses, such as `trialing` that we are not handling and simply ignore
   // If you'd like to handle more statuses, you can add more cases above. Make sure to update the `SubscriptionStatus` type in `payment/plans.ts` as well
   if (subscription.status === 'active') {
@@ -134,7 +116,7 @@ export async function handleCustomerSubscriptionUpdated(
     subscriptionStatus = 'past_due';
   } 
   if (subscriptionStatus) {
-    const user = await updateUserStripePaymentDetails({ userStripeId, subscriptionStatus }, prismaUserDelegate);
+    const user = await updateUserStripePaymentDetails({ userStripeId, subscriptionPlan, subscriptionStatus }, prismaUserDelegate);
     if (subscription.cancel_at_period_end) {
       if (user.email) {
         await emailSender.send({
@@ -161,4 +143,35 @@ function validateUserStripeIdOrThrow(userStripeId: Stripe.Checkout.Session['cust
   if (!userStripeId) throw new HttpError(400, 'No customer id');
   if (typeof userStripeId !== 'string') throw new HttpError(400, 'Customer id is not a string');
   return userStripeId;
+}
+
+const LineItemsPriceSchema = z.object({
+  data: z.array(
+    z.object({
+      price: z.object({
+        id: z.string(),
+      }),
+    })
+  ),
+});
+
+function extractPriceId(items: Stripe.Checkout.Session['line_items'] | Stripe.Subscription['items']) {
+  const result = LineItemsPriceSchema.safeParse(items);
+  if (!result.success) {
+    throw new HttpError(400, 'No price id in stripe event object');
+  }
+  if (result.data.data.length > 1) {
+    throw new HttpError(400, 'More than one item in stripe event object');
+  }
+  return result.data.data[0].price.id;
+}
+
+function getPlanIdByPriceId(priceId: string): PaymentPlanId {
+  const planId = Object.values(PaymentPlanId).find(
+    (planId) => paymentPlans[planId].getPaymentProcessorPlanId() === priceId
+  );
+  if (!planId) {
+    throw new Error(`No plan with Stripe price id ${priceId}`);
+  }
+  return planId;
 }
