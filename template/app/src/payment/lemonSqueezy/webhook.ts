@@ -138,7 +138,7 @@ async function handleSubscriptionUpdated(data: Subscription, userId: string, pri
         userId,
         subscriptionPlan: planId,
         subscriptionStatus: status,
-        datePaid: status === 'past_due' ? undefined : new Date(),
+        ...(status === 'active' && { datePaid: new Date() }),
       },
       prismaUserDelegate
     );
