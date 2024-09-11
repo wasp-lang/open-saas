@@ -50,10 +50,7 @@ type GetPaginatedUsersInput = {
   subscriptionStatus?: SubscriptionStatus[];
 };
 type GetPaginatedUsersOutput = {
-  users: Pick<
-    User,
-    'id' | 'email' | 'username' | 'lastActiveTimestamp' | 'subscriptionStatus' | 'stripeId'
-  >[];
+  users: Pick<User, 'id' | 'email' | 'username' | 'lastActiveTimestamp' | 'subscriptionStatus' | 'paymentProcessorUserId'>[];
   totalPages: number;
 };
 
@@ -104,7 +101,7 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
       isAdmin: true,
       lastActiveTimestamp: true,
       subscriptionStatus: true,
-      stripeId: true,
+      paymentProcessorUserId: true,
     },
     orderBy: {
       id: 'desc',

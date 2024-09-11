@@ -1,18 +1,62 @@
 --- template/app/src/user/operations.ts
 +++ opensaas-sh/app/src/user/operations.ts
-@@ -80,6 +80,7 @@
+@@ -1,8 +1,4 @@
+-import {
+-  type UpdateCurrentUser,
+-  type UpdateUserById,
+-  type GetPaginatedUsers,
+-} from 'wasp/server/operations';
++import { type UpdateCurrentUser, type UpdateUserById, type GetPaginatedUsers } from 'wasp/server/operations';
+ import { type User } from 'wasp/entities';
+ import { HttpError } from 'wasp/server';
+ import { type SubscriptionStatus } from '../payment/plans';
+@@ -50,7 +46,10 @@
+   subscriptionStatus?: SubscriptionStatus[];
+ };
+ type GetPaginatedUsersOutput = {
+-  users: Pick<User, 'id' | 'email' | 'username' | 'lastActiveTimestamp' | 'subscriptionStatus' | 'paymentProcessorUserId'>[];
++  users: Pick<
++    User,
++    'id' | 'email' | 'username' | 'lastActiveTimestamp' | 'subscriptionStatus' | 'stripeId'
++  >[];
+   totalPages: number;
+ };
+ 
+@@ -63,8 +62,10 @@
+   }
+ 
+   const allSubscriptionStatusOptions = args.subscriptionStatus as Array<string | null> | undefined;
+-  const hasNotSubscribed = allSubscriptionStatusOptions?.find((status) => status === null) 
+-  let subscriptionStatusStrings = allSubscriptionStatusOptions?.filter((status) => status !== null) as string[] | undefined
++  const hasNotSubscribed = allSubscriptionStatusOptions?.find((status) => status === null);
++  let subscriptionStatusStrings = allSubscriptionStatusOptions?.filter((status) => status !== null) as
++    | string[]
++    | undefined;
+ 
+   const queryResults = await context.entities.User.findMany({
+     skip: args.skip,
+@@ -77,6 +78,7 @@
              mode: 'insensitive',
            },
            isAdmin: args.isAdmin,
-+          isMockUser: true
++          isMockUser: true,
          },
          {
            OR: [
-@@ -120,6 +121,7 @@
+@@ -101,7 +103,7 @@
+       isAdmin: true,
+       lastActiveTimestamp: true,
+       subscriptionStatus: true,
+-      paymentProcessorUserId: true,
++      stripeId: true,
+     },
+     orderBy: {
+       id: 'desc',
+@@ -117,6 +119,7 @@
              mode: 'insensitive',
            },
            isAdmin: args.isAdmin,
-+          isMockUser: true
++          isMockUser: true,
          },
          {
            OR: [

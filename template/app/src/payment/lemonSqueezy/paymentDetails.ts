@@ -2,22 +2,25 @@ import type { SubscriptionStatus } from '../plans';
 import { PaymentPlanId } from '../plans';
 import { PrismaClient } from '@prisma/client';
 
-export const updateUserStripePaymentDetails = (
-  { userStripeId, subscriptionPlan, subscriptionStatus, datePaid, numOfCreditsPurchased }: {
-    userStripeId: string;
+export const updateUserLemonSqueezyPaymentDetails = async (
+  { lemonSqueezyId, userId, subscriptionPlan, subscriptionStatus, datePaid, numOfCreditsPurchased, lemonSqueezyCustomerPortalUrl }: {
+    lemonSqueezyId: string;
+    userId: string;
     subscriptionPlan?: PaymentPlanId;
     subscriptionStatus?: SubscriptionStatus;
     numOfCreditsPurchased?: number;
+    lemonSqueezyCustomerPortalUrl?: string;
     datePaid?: Date;
   },
-  userDelegate: PrismaClient['user']
+  prismaUserDelegate: PrismaClient['user']
 ) => {
-  return userDelegate.update({
+  return prismaUserDelegate.update({
     where: {
-      paymentProcessorUserId: userStripeId
+      id: userId,
     },
     data: {
-      paymentProcessorUserId: userStripeId,
+      paymentProcessorUserId: lemonSqueezyId,
+      lemonSqueezyCustomerPortalUrl,
       subscriptionPlan,
       subscriptionStatus,
       datePaid,

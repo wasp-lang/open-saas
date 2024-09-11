@@ -1,5 +1,5 @@
 import { type MiddlewareConfigFn, HttpError } from 'wasp/server';
-import { type StripeWebhook } from 'wasp/server/api';
+import { type PaymentsWebhook } from 'wasp/server/api';
 import { type PrismaClient } from '@prisma/client';
 import express from 'express';
 import { Stripe } from 'stripe';
@@ -11,7 +11,7 @@ import { assertUnreachable } from '../../shared/utils';
 import { requireNodeEnvVar } from '../../server/utils';
 import { z } from 'zod';
 
-export const stripeWebhook: StripeWebhook = async (request, response, context) => {
+export const stripeWebhook: PaymentsWebhook = async (request, response, context) => {
   const secret = requireNodeEnvVar('STRIPE_WEBHOOK_SECRET');
   const sig = request.headers['stripe-signature'];
   if (!sig) {
@@ -51,22 +51,13 @@ export const stripeWebhook: StripeWebhook = async (request, response, context) =
   response.json({ received: true }); // Stripe expects a 200 response to acknowledge receipt of the webhook
 };
 
-// This allows us to override Wasp's defaults and parse the raw body of the request from Stripe to verify the signature
-export const stripeMiddlewareFn: MiddlewareConfigFn = (middlewareConfig) => {
+export const stripeMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig) => {
+  // We need to delete the default 'express.json' middleware and replace it with 'express.raw' middleware
+  // because webhook data in the body of the request as raw JSON, not as JSON in the body of the request.
   middlewareConfig.delete('express.json');
   middlewareConfig.set('express.raw', express.raw({ type: 'application/json' }));
   return middlewareConfig;
 };
-
-const LineItemsPriceSchema = z.object({
-  data: z.array(
-    z.object({
-      price: z.object({
-        id: z.string(),
-      }),
-    })
-  ),
-});
 
 export async function handleCheckoutSessionCompleted(
   session: Stripe.Checkout.Session,
@@ -76,21 +67,10 @@ export async function handleCheckoutSessionCompleted(
   const { line_items } = await stripe.checkout.sessions.retrieve(session.id, {
     expand: ['line_items'],
   });
-  const result = LineItemsPriceSchema.safeParse(line_items);
-  if (!result.success) {
-    throw new HttpError(400, 'No price id in line item');
-  }
-  if (result.data.data.length > 1) {
-    throw new HttpError(400, 'More than one line item in session');
-  }
-  const lineItemPriceId =  result.data.data[0].price.id;
 
-  const planId = Object.values(PaymentPlanId).find(
-    (planId) => paymentPlans[planId].getStripePriceId() === lineItemPriceId
-  );
-  if (!planId) {
-    throw new Error(`No plan with stripe price id ${lineItemPriceId}`);
-  }
+  const lineItemPriceId = extractPriceId(line_items);
+
+  const planId = getPlanIdByPriceId(lineItemPriceId);
   const plan = paymentPlans[planId];
 
   let subscriptionPlan: PaymentPlanId | undefined;
@@ -125,6 +105,9 @@ export async function handleCustomerSubscriptionUpdated(
   const userStripeId = validateUserStripeIdOrThrow(subscription.customer);
   let subscriptionStatus: SubscriptionStatus | undefined;
 
+  const priceId = extractPriceId(subscription.items);
+  const subscriptionPlan = getPlanIdByPriceId(priceId);
+
   // There are other subscription statuses, such as `trialing` that we are not handling and simply ignore
   // If you'd like to handle more statuses, you can add more cases above. Make sure to update the `SubscriptionStatus` type in `payment/plans.ts` as well
   if (subscription.status === 'active') {
@@ -133,7 +116,7 @@ export async function handleCustomerSubscriptionUpdated(
     subscriptionStatus = 'past_due';
   } 
   if (subscriptionStatus) {
-    const user = await updateUserStripePaymentDetails({ userStripeId, subscriptionStatus }, prismaUserDelegate);
+    const user = await updateUserStripePaymentDetails({ userStripeId, subscriptionPlan, subscriptionStatus }, prismaUserDelegate);
     if (subscription.cancel_at_period_end) {
       if (user.email) {
         await emailSender.send({
@@ -160,4 +143,35 @@ function validateUserStripeIdOrThrow(userStripeId: Stripe.Checkout.Session['cust
   if (!userStripeId) throw new HttpError(400, 'No customer id');
   if (typeof userStripeId !== 'string') throw new HttpError(400, 'Customer id is not a string');
   return userStripeId;
+}
+
+const LineItemsPriceSchema = z.object({
+  data: z.array(
+    z.object({
+      price: z.object({
+        id: z.string(),
+      }),
+    })
+  ),
+});
+
+function extractPriceId(items: Stripe.Checkout.Session['line_items'] | Stripe.Subscription['items']) {
+  const result = LineItemsPriceSchema.safeParse(items);
+  if (!result.success) {
+    throw new HttpError(400, 'No price id in stripe event object');
+  }
+  if (result.data.data.length > 1) {
+    throw new HttpError(400, 'More than one item in stripe event object');
+  }
+  return result.data.data[0].price.id;
+}
+
+function getPlanIdByPriceId(priceId: string): PaymentPlanId {
+  const planId = Object.values(PaymentPlanId).find(
+    (planId) => paymentPlans[planId].getPaymentProcessorPlanId() === priceId
+  );
+  if (!planId) {
+    throw new Error(`No plan with Stripe price id ${priceId}`);
+  }
+  return planId;
 }
