@@ -25,25 +25,19 @@ const DarkModeSwitcher = () => {
             }
           )}
         >
-          <ModeIcon isInLightMode={isInLightMode} lightIcon={<SunIcon />} darkIcon={<MoonIcon />} />
+          <ModeIcon isInLightMode={isInLightMode} />
         </span>
       </label>
     </div>
   );
-};
+}; 
 
-interface ModeIconProps {
-  isInLightMode: boolean;
-  lightIcon: JSX.Element;
-  darkIcon: JSX.Element;
-}
-
-function ModeIcon({ isInLightMode, lightIcon, darkIcon }: ModeIconProps) {
+function ModeIcon({ isInLightMode }: { isInLightMode: boolean }) {
   const iconStyle = 'absolute inset-0 flex items-center justify-center transition-opacity ease-in-out duration-400';
   return (
     <>
-      <span className={cn(iconStyle, isInLightMode ? 'opacity-100' : 'opacity-0')}>{lightIcon}</span>
-      <span className={cn(iconStyle, !isInLightMode ? 'opacity-100' : 'opacity-0')}>{darkIcon}</span>
+      <span className={cn(iconStyle, isInLightMode ? 'opacity-100' : 'opacity-0')}><SunIcon /></span>
+      <span className={cn(iconStyle, !isInLightMode ? 'opacity-100' : 'opacity-0')}><MoonIcon /></span>
     </>
   );
 }
