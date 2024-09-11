@@ -123,6 +123,11 @@ See this [GitHuh issue](https://github.com/stripe/stripe-cli/issues/933) for mor
 stripe listen --forward-to localhost:3001/payments-webhook
 ```
 
+:::note[Webhook URL]
+In older versions of this template, the webhook URL was `http://localhost:3001/stripe-webhook`.
+If you're using an older version, make sure to use the url that matches the webhook url in your `main.wasp` file payemnts API definition.
+:::
+
 You should see a message like this:
 
 ```sh
