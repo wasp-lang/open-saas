@@ -1,0 +1,12 @@
+--- template/app/.prettierrc
++++ opensaas-sh/app/.prettierrc
+@@ -0,0 +1,9 @@
++{
++  "trailingComma": "es5",
++  "semi": true,
++  "singleQuote": true,
++  "endOfLine": "lf",
++  "tabWidth": 2,
++  "jsxSingleQuote": true,
++  "printWidth": 120
++}
