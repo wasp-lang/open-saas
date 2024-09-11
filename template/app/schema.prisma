@@ -16,7 +16,8 @@ model User {
   lastActiveTimestamp       DateTime        @default(now())
   isAdmin                   Boolean         @default(false)
 
-  stripeId                  String?         @unique
+  paymentProcessorUserId    String?         @unique
+  lemonSqueezyCustomerPortalUrl String?     // You can delete this if you're not using Lemon Squeezy as your payments processor.
   checkoutSessionId         String?
   subscriptionStatus        String?         // 'active', 'canceled', 'past_due', 'deleted'
   subscriptionPlan          String?         // 'hobby', 'pro'

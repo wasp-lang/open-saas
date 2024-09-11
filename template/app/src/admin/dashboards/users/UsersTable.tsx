@@ -114,7 +114,13 @@ const UsersTable = () => {
                   })}
                 </select>
                 <span className='absolute top-1/2 right-4 z-10 -translate-y-1/2'>
-                  <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                  <svg
+                    width='24'
+                    height='24'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
                     <g opacity='0.8'>
                       <path
                         fillRule='evenodd'
@@ -207,14 +213,16 @@ const UsersTable = () => {
 
               <div className='col-span-3 hidden items-center sm:flex'>
                 <p className='text-sm text-black dark:text-white'>
-                  {user.lastActiveTimestamp.toLocaleDateString() + ' ' + user.lastActiveTimestamp.toLocaleTimeString()}
+                  {user.lastActiveTimestamp.toLocaleDateString() +
+                    ' ' +
+                    user.lastActiveTimestamp.toLocaleTimeString()}
                 </p>
               </div>
               <div className='col-span-2 flex items-center'>
                 <p className='text-sm text-black dark:text-white'>{user.subscriptionStatus}</p>
               </div>
               <div className='col-span-2 flex items-center'>
-                <p className='text-sm text-meta-3'>{user.stripeId}</p>
+                <p className='text-sm text-meta-3'>{user.paymentProcessorUserId}</p>
               </div>
               <div className='col-span-1 flex items-center'>
                 <div className='text-sm text-black dark:text-white'>

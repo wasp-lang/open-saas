@@ -195,16 +195,21 @@ page CheckoutPage {
   component: import Checkout from "@src/payment/CheckoutPage"
 }
 
-action generateStripeCheckoutSession {
-  fn: import { generateStripeCheckoutSession } from "@src/payment/operations",
+query getCustomerPortalUrl {
+  fn: import { getCustomerPortalUrl } from  "@src/payment/operations",
   entities: [User]
 }
 
-api stripeWebhook {
-  fn: import { stripeWebhook } from "@src/payment/stripe/webhook",
+action generateCheckoutSession {
+  fn: import { generateCheckoutSession } from "@src/payment/operations",
+  entities: [User]
+}
+
+api paymentsWebhook {
+  fn: import { paymentsWebhook } from "@src/payment/webhook",
   entities: [User],
-  middlewareConfigFn: import { stripeMiddlewareFn } from "@src/payment/stripe/webhook",
-  httpRoute: (POST, "/stripe-webhook")
+  middlewareConfigFn: import { paymentsMiddlewareConfigFn } from "@src/payment/webhook",
+  httpRoute: (POST, "/payments-webhook")
 }
 //#endregion
 

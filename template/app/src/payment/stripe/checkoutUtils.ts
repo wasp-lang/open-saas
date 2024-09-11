@@ -1,3 +1,4 @@
+import type { StripeMode } from './paymentProcessor';
 import Stripe from 'stripe';
 import { stripe } from './stripeClient';
 
@@ -26,17 +27,7 @@ export async function fetchStripeCustomer(customerEmail: string) {
   }
 }
 
-export type StripeMode = 'subscription' | 'payment';
-
-export async function createStripeCheckoutSession({
-  priceId,
-  customerId,
-  mode,
-}: {
-  priceId: string;
-  customerId: string;
-  mode: StripeMode;
-}) {
+export async function createStripeCheckoutSession({ userId, priceId, customerId, mode }: { userId: string, priceId: string; customerId: string; mode: StripeMode }) {
   try {
     return await stripe.checkout.sessions.create({
       line_items: [
