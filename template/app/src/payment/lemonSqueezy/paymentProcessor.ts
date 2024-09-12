@@ -29,11 +29,9 @@ export const lemonSqueezyPaymentProcessor: PaymentProcessor = {
         lemonSqueezyCustomerPortalUrl: true,
       },
     });
-    if (!user.lemonSqueezyCustomerPortalUrl) {
-      console.log(`User with ID ${args.userId} does not have a LemonSqueezy customer portal URL`);
-    } else {
-      return user.lemonSqueezyCustomerPortalUrl;
-    }
+    // Note that Lemon Squeezy assigns a unique URL to each user after the first successful payment.
+    // This is handled in the Lemon Squeezy webhook.
+    return user.lemonSqueezyCustomerPortalUrl;
   },
   webhook: lemonSqueezyWebhook,
   webhookMiddlewareConfigFn: lemonSqueezyMiddlewareConfigFn,
