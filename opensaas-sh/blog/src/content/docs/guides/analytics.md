@@ -105,7 +105,7 @@ Then, set up the Google Analytics API access by following these steps:
 
 6. **Encode and add the Credentials:** Add the `client_email` and the `private_key` from your JSON Key file into your `.env.server` file. But be careful! Because Google uses a special PEM private key, you need to first convert the key to base64, otherwise you will run into errors parsing the key. To do this, in a terminal window, run the command below and paste the output into your `.env.server` file under the `GOOGLE_ANALYTICS_PRIVATE_KEY` variable:
     ```sh 
-    echo -n "PRIVATE_KEY" | base64
+    echo -n "-----BEGIN PRIVATE KEY-----\nMI...A++eK\n-----END PRIVATE KEY-----\n" | base64
     ```
     
 7. **Add your Google Analytics Property ID:** You will find the Property ID in your Google Analytics dashboard in the `Admin > Property > Property Settings > Property Details` section of your Google Analytics property (**not** your Google Cloud console). Add this 9-digit number to your `.env.server` file under the `GOOGLE_ANALYTICS_PROPERTY_ID` variable.
