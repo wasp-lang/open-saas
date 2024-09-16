@@ -6,7 +6,7 @@ banner:
 ---
 This guide will show you how to integrate analytics for your app. You can choose between [Google Analytics](#google-analytics) and [Plausible](#plausible).
 
-Google Analytics is free, but uses cookies, so you'll probably want/need to implement the [Cookie Consent Modal](./cookie-consent.md) when using it.
+Google Analytics is free, but uses cookies, so you'll probably want/need to implement the [Cookie Consent Modal](/guides/cookie-consent/) when using it.
 
 Plausible is an open-source, privacy-friendly alternative to Google Analytics. **You DO NOT have to use the cookie consent modal** with Plausible, as it does not use cookies. It's also easier to use than Google if you use their hosted service, but be aware it is a paid feature. It is completely free if you want to self-host it, although this comes with some additional setup steps.
 
@@ -40,7 +40,7 @@ app OpenSaaS {
 Go back to your Plausible dashboard, click on your username in the top right, and click on the `Settings` tab. Scroll down, find your API key and paste it into your `.env.server` file under the `PLAUSIBLE_API_KEY` variable.
 
 :::note[No Cookies]
-Plausible does not use cookies, so you don't need to add it to your [Cookie Consent Modal](./cookie-consent.md), hence the script can be added directly to `app.head` in your `main.wasp` file.
+Plausible does not use cookies, so you don't need to add it to your [Cookie Consent Modal](/guides/cookie-consent/), hence the script can be added directly to `app.head` in your `main.wasp` file.
 :::
 
 ### Self-hosted Plausible
@@ -77,7 +77,7 @@ Once you've created a new Property, some Installation Instructions will pop up. 
 ```sh title="<your-google-analytics-id>"
  https://www.googletagmanager.com/gtag/js?id=<your-google-analytics-id>
 ```
-and copy and paste the Google Analytics ID into your `.env.client` file to get it working with the [Cookie Consent Modal](./cookie-consent.md) provided with this template:
+and copy and paste the Google Analytics ID into your `.env.client` file to get it working with the [Cookie Consent Modal](/guides/cookie-consent/) provided with this template:
 
 ```sh title=".env.client"
 REACT_APP_GOOGLE_ANALYTICS_ID=<your-google-analytics-id> # e.g. G-1234567890
