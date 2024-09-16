@@ -70,7 +70,8 @@ To create a test product, go to the test products url [https://dashboard.stripe.
 - Make sure you select `Software as a service (SaaS)` as the product type.
 - For Subscription products, make sure you select `Recurring` as the billing type.
 - For One-time payment products, make sure you select `One-time` as the billing type.
-- If you want to add different price tiers for the same product, click the `Add another price` button at the buttom. 
+- If you intend to let your users switch between two subscription plans, e.g. upgrade from hobby to pro, you'll need to create two separate products and with their own price IDs. The ability for users to swich plans can then be configured later in the [Customer Portal](#set-up-the-customer-portal).
+- If you want to add different price tiers for the same product (e.g. monthly and yearly), click the `Add another price` button at the buttom. 
 
 ![price ids](/stripe/price-ids.png)
 
@@ -89,13 +90,21 @@ To create a test customer, go to the test customers url [https://dashboard.strip
  When filling in the test customer email address, use an address you have access to and will use when logging into your SaaS app. This is important because the email address is used to identify the customer when creating a subscription and allows you to manage your test user's payments/subscriptions via the test customer portal
 :::
 
-### Get your Customer Portal Link
+### Set up the Customer Portal
 
 Go to https://dashboard.stripe.com/test/settings/billing/portal in the Stripe Dashboard and activate and copy the `Customer portal link`. Paste it in your `.env.server` file:
 
 ```ts title=".env.server"
 STRIPE_CUSTOMER_PORTAL_URL=<your-test-customer-portal-link>
 ```
+
+If you'd like to give users the ability to switch between different plans, e.g. upgrade from a hobby to a pro subscription, go down to the `Subscriptions` dropdown and select `customers can switch plans`. 
+
+![switch plans](/stripe/switch-plans.png)
+
+Then select the products you'd like them to be able to switch between.
+
+Now, after your users have paid, they can click on `Manage Subscription` in the client and will be taken to the customer portal where they can update their current plan.
 
 ### Install the Stripe CLI
 

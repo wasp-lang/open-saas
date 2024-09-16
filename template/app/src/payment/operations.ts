@@ -1,5 +1,4 @@
 import type { GenerateCheckoutSession, GetCustomerPortalUrl } from 'wasp/server/operations';
-import type { FetchCustomerPortalUrlArgs } from './paymentProcessor';
 import { PaymentPlanId, paymentPlans } from '../payment/plans';
 import { paymentProcessor } from './paymentProcessor';
 import { HttpError } from 'wasp/server';
@@ -39,7 +38,7 @@ export const generateCheckoutSession: GenerateCheckoutSession<PaymentPlanId, Che
   };
 };
 
-export const getCustomerPortalUrl: GetCustomerPortalUrl<void, string | undefined> = async (_args, context) => {
+export const getCustomerPortalUrl: GetCustomerPortalUrl<void, string | null> = async (_args, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }

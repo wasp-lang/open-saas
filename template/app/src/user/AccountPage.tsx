@@ -124,6 +124,8 @@ function CustomerPortalButton() {
 
     if (customerPortalUrl) {
       window.open(customerPortalUrl, '_blank');
+    } else {
+      console.error('Customer portal URL is not available');
     }
   };
 
