@@ -1,20 +1,21 @@
-import { type GenerateStripeCheckoutSession } from 'wasp/server/operations';
+import type { GenerateCheckoutSession, GetCustomerPortalUrl } from 'wasp/server/operations';
+import { PaymentPlanId, paymentPlans } from '../payment/plans';
+import { paymentProcessor } from './paymentProcessor';
 import { HttpError } from 'wasp/server';
-import { PaymentPlanId, paymentPlans, type PaymentPlanEffect } from '../payment/plans';
-import { fetchStripeCustomer, createStripeCheckoutSession, type StripeMode } from './stripe/checkoutUtils';
 
-export type StripeCheckoutSession = {
+export type CheckoutSession = {
   sessionUrl: string | null;
   sessionId: string;
 };
 
-export const generateStripeCheckoutSession: GenerateStripeCheckoutSession<
-  PaymentPlanId,
-  StripeCheckoutSession
-> = async (paymentPlanId, context) => {
+export const generateCheckoutSession: GenerateCheckoutSession<PaymentPlanId, CheckoutSession> = async (
+  paymentPlanId,
+  context
+) => {
   if (!context.user) {
     throw new HttpError(401);
   }
+  const userId = context.user.id;
   const userEmail = context.user.email;
   if (!userEmail) {
     throw new HttpError(
@@ -24,21 +25,11 @@ export const generateStripeCheckoutSession: GenerateStripeCheckoutSession<
   }
 
   const paymentPlan = paymentPlans[paymentPlanId];
-  const customer = await fetchStripeCustomer(userEmail);
-  const session = await createStripeCheckoutSession({
-    priceId: paymentPlan.getStripePriceId(),
-    customerId: customer.id,
-    mode: paymentPlanEffectToStripeMode(paymentPlan.effect),
-  });
-
-  await context.entities.User.update({
-    where: {
-      id: context.user.id,
-    },
-    data: {
-      checkoutSessionId: session.id,
-      stripeId: customer.id,
-    },
+  const { session } = await paymentProcessor.createCheckoutSession({
+    userId,
+    userEmail,
+    paymentPlan,
+    prismaUserDelegate: context.entities.User
   });
 
   return {
@@ -47,10 +38,12 @@ export const generateStripeCheckoutSession: GenerateStripeCheckoutSession<
   };
 };
 
-function paymentPlanEffectToStripeMode(planEffect: PaymentPlanEffect): StripeMode {
-  const effectToMode: Record<PaymentPlanEffect['kind'], StripeMode> = {
-    subscription: 'subscription',
-    credits: 'payment',
-  };
-  return effectToMode[planEffect.kind];
-}
+export const getCustomerPortalUrl: GetCustomerPortalUrl<void, string | null> = async (_args, context) => {
+  if (!context.user) {
+    throw new HttpError(401);
+  }
+  return paymentProcessor.fetchCustomerPortalUrl({
+    userId: context.user.id,
+    prismaUserDelegate: context.entities.User,
+  });
+};

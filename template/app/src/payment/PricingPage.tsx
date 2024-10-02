@@ -1,11 +1,10 @@
 import { useAuth } from 'wasp/client/auth';
-import { generateStripeCheckoutSession } from 'wasp/client/operations';
+import { generateCheckoutSession, getCustomerPortalUrl, useQuery } from 'wasp/client/operations';
 import { PaymentPlanId, paymentPlans, prettyPaymentPlanName } from './plans';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../client/cn';
-import { z } from 'zod';
 
 const bestDealPaymentPlanId: PaymentPlanId = PaymentPlanId.Pro;
 
@@ -38,9 +37,16 @@ export const paymentPlanCards: Record<PaymentPlanId, PaymentPlanCard> = {
 };
 
 const PricingPage = () => {
-  const [isStripePaymentLoading, setIsStripePaymentLoading] = useState<boolean | string>(false);
+  const [isPaymentLoading, setIsPaymentLoading] = useState<boolean>(false);
+  
+  const { data: user } = useAuth();
+  const isUserSubscribed = !!user && !!user.subscriptionStatus && user.subscriptionStatus !== 'deleted';
 
-  const { data: user, isLoading: isUserLoading } = useAuth();
+  const {
+    data: customerPortalUrl,
+    isLoading: isCustomerPortalUrlLoading,
+    error: customerPortalUrlError,
+  } = useQuery(getCustomerPortalUrl, { enabled: isUserSubscribed });
 
   const navigate = useNavigate();
 
@@ -50,16 +56,18 @@ const PricingPage = () => {
       return;
     }
     try {
-      setIsStripePaymentLoading(paymentPlanId);
-      let stripeResults = await generateStripeCheckoutSession(paymentPlanId);
+      setIsPaymentLoading(true);
 
-      if (stripeResults?.sessionUrl) {
-        window.open(stripeResults.sessionUrl, '_self');
+      const checkoutResults = await generateCheckoutSession(paymentPlanId);
+
+      if (checkoutResults?.sessionUrl) {
+        window.open(checkoutResults.sessionUrl, '_self');
+      } else {
+        throw new Error('Error generating checkout session URL');
       }
-    } catch (error: any) {
-      console.error(error?.message ?? 'Something went wrong.');
-    } finally {
-      setIsStripePaymentLoading(false);
+    } catch (error) {
+      console.error(error);
+      setIsPaymentLoading(false); // We only set this to false here and not in the try block because we redirect to the checkout url within the same window
     }
   }
 
@@ -68,13 +76,16 @@ const PricingPage = () => {
       navigate('/login');
       return;
     }
-    try {
-      const schema = z.string().url();
-      const customerPortalUrl = schema.parse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
-      window.open(customerPortalUrl, '_blank');
-    } catch (err) {
-      console.error(err);
+
+    if (customerPortalUrlError) {
+      console.error('Error fetching customer portal url');
     }
+
+    if (!customerPortalUrl) {
+      throw new Error(`Customer Portal does not exist for user ${user.id}`)
+    }
+
+    window.open(customerPortalUrl, '_blank');
   };
 
   return (
@@ -86,8 +97,8 @@ const PricingPage = () => {
           </h2>
         </div>
         <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600 dark:text-white'>
-          Stripe subscriptions and secure webhooks are built-in. Just add your Stripe Product IDs! Try it out below with
-          test credit card number{' '}
+          Choose between Stripe and LemonSqueezy as your payment provider. Just add your Product IDs! Try it
+          out below with test credit card number <br />
           <span className='px-2 py-1 bg-gray-100 rounded-md text-gray-500'>4242 4242 4242 4242 4242</span>
         </p>
         <div className='isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 lg:gap-x-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3'>
@@ -103,7 +114,10 @@ const PricingPage = () => {
               )}
             >
               {planId === bestDealPaymentPlanId && (
-                <div className='absolute top-0 right-0 -z-10 w-full h-full transform-gpu blur-3xl' aria-hidden='true'>
+                <div
+                  className='absolute top-0 right-0 -z-10 w-full h-full transform-gpu blur-3xl'
+                  aria-hidden='true'
+                >
                   <div
                     className='absolute w-full h-full bg-gradient-to-br from-amber-400 to-purple-300 opacity-30 dark:opacity-50'
                     style={{
@@ -138,9 +152,10 @@ const PricingPage = () => {
                   ))}
                 </ul>
               </div>
-              {!!user && !!user.subscriptionStatus ? (
+              {isUserSubscribed ? (
                 <button
                   onClick={handleCustomerPortalClick}
+                  disabled={isCustomerPortalUrlLoading}
                   aria-describedby='manage-subscription'
                   className={cn(
                     'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400',
@@ -166,10 +181,11 @@ const PricingPage = () => {
                         planId !== bestDealPaymentPlanId,
                     },
                     {
-                      'opacity-50 cursor-wait cursor-not-allowed': isStripePaymentLoading === planId,
+                      'opacity-50 cursor-wait': isPaymentLoading,
                     },
                     'mt-8 block rounded-md py-2 px-3 text-center text-sm dark:text-white font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400'
                   )}
+                  disabled={isPaymentLoading}
                 >
                   {!!user ? 'Buy plan' : 'Log in to buy plan'}
                 </button>

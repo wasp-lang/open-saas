@@ -172,7 +172,7 @@ Next, copy the `.env.server.example` file to `.env.server`.
 cp .env.server.example .env.server
 ```
 
-`.env.server` is where API keys for services like Stripe, email sender, and similar go, and this is where you will want to put them in later.
+`.env.server` is where API keys for services like payments, email sender, and similar go, and this is where you will want to put them in later.
 For now, you can leave it as it is (dummy API keys), this will be enough to run the app.
 
 Then run:

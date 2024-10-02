@@ -7,7 +7,7 @@ banner:
 
 Setting up your app's authentication is easy with Wasp. In fact, it's already set up for you in the `main.wasp` file: 
 
-```tsx title="main.wasp" " 
+```tsx title="main.wasp"
   auth: {
     userEntity: User,
     methods: {
@@ -33,7 +33,7 @@ Since it needs to send emails to verify users and reset passwords, it requires a
 To make it easy for you to get started, Open SaaS initially comes with the `Dummy` "email sender" provider, which does not send any emails, but instead logs all email verification links/tokens to the server's console!
 You can then follow these links to verify the user and continue with the sign-up process.
 
-```tsx title="main.wasp" 
+```tsx title="main.wasp"
   emailSender: {
     provider: Dummy, // logs all email verification links/tokens to the server's console
     defaultFrom: {
