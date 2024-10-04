@@ -9,7 +9,7 @@ This hackathon is suppported by by [Open Saas](https://opensaas.sh) and [Wasp](h
 
 ## What kind of contest is this?
 
-The goal here is simple: Make **THE MOST ANNOYING COOKIE BANNER** you can think of.
+The goal here is simple. Make **THE MOST ANNOYING COOKIE BANNER** you can think of.
 
 Cookie consent banners annoy us all. So we thought, why not have some fun with them? Here are a couple examples of what that might look like:
 
