@@ -1,13 +1,22 @@
 ---
-title: 🍪 The MOST ANNOYING COOKIE CONSENT BANNER CONTEST 🤬
+title: 🍪 THE MOST ANNOYING COOKIE BANNER EVER HACKATHON 🤬
 date: 2024-10-10
-tags: ["indiehacker", "saas", "sideproject", "hackathon"] 
-image: "/cookie-consent/cookieconsent.webp"
+tags: ["cookie consent", "saas", "sideproject", "hackathon"] 
+image: "/cookie-consent/annoying-cookie-banners.jpg"
 ---
-![Cover image](/cookie-consent/cookieconsent.webp)
-This hackathon is suppported by by [Open Saas](https://opensaas.sh) and [Wasp](https://wasp.sh).
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe 
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+    src="https://www.youtube.com/embed/tLEEk8Q5jo4?si=U-nROtawDHrjJ4k0" 
+    title="YouTube video player" 
+    frameborder="0" 
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+    referrerpolicy="strict-origin-when-cross-origin" 
+    allowfullscreen>
+  </iframe>
+</div>
 
-## What kind of contest is this?
+## What kind of hackathon is this?
 
 The goal here is simple. Make **THE MOST ANNOYING COOKIE BANNER** you can think of.
 
