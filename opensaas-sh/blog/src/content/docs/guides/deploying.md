@@ -21,7 +21,7 @@ Make sure you've got all your API keys and environment variables set up before y
 
 #### Env Vars
 ##### Payment Processor Vars
-In the [Payments Processor integration guide](/guides/payments-integration), you set up your API keys using test keys and test product ids. You'll need to get the live/production versions of those keys. To get these, repeat the instructions in the [Integration Guide](/guides/payments-integration) without being in test mode. Add the new keys to your deployed environment secrets.
+In the [Payments Processor integration guide](/guides/payments-integration/), you set up your API keys using test keys and test product ids. You'll need to get the live/production versions of those keys. To get these, repeat the instructions in the [Integration Guide](/guides/payments-integration/) without being in test mode. Add the new keys to your deployed environment secrets.
 
 ##### Other Vars
 Many of your other environment variables will probably be the same as in development, but you should double-check that they are set correctly for production.

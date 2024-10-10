@@ -9,9 +9,9 @@ This guide will help you get started with authorization in your SaaS app.
 
 Authorization refers to what users can access in your app. This is useful for differentiating between users who have paid for different subscription tiers (e.g. "hobby" vs "pro"), or between users who have admin privileges and those who do not.
 
-Authorization differs from [authentication](/guides/authentication) in that authentication refers to the process of verifying that a user is who they say they are (e.g. logging in with a username and password).
+Authorization differs from [authentication](/guides/authentication/) in that authentication refers to the process of verifying that a user is who they say they are (e.g. logging in with a username and password).
 
-To learn more about the different types of user permissions built into this SaaS template, including Stripe subscription tiers and statuses, check out the [User Permissions Reference](/general/user-permissions).
+To learn more about the different types of user permissions built into this SaaS template, including Stripe subscription tiers and statuses, check out the [User Overview Reference](/general/user-overview/).
 
 Also, check out our [blog post](https://wasp-lang.dev/blog/2022/11/29/permissions-in-web-apps) to learn more about authorization (access control) in web apps.
 
@@ -48,7 +48,7 @@ export default function Example({ user }: { user: User }) {
   if (user.subscriptionStatus === 'past_due') {
     return (<span>Your subscription is past due. Please update your payment information.</span>)
   }
-  if (user.subscriptionStatus === 'canceled') {
+  if (user.subscriptionStatus === 'cancel_at_period_end') {
     return (<span>Your will susbscription end on 01.01.2024</span>)
   }
   if (user.subscriptionStatus === 'active') {

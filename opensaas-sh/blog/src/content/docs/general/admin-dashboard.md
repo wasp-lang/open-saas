@@ -51,10 +51,10 @@ The Admin analytics dashboard is a single place for you to view your most import
 
 <!-- TODO: add photo -->
 
-- [Stripe](/guides/stripe-integration):
+- [Payments Processor](/guides/payments-integration/):
   - total revenue
   - revenue for each day of the past week
-- [Google or Plausible](/guides/analytics): 
+- [Google or Plausible](/guides/analytics/): 
   - total number of page views (non-unique)
   - percentage change in page views from the previous day
   - top sources/referrers with unique visitor count (i.e. how many people came from that source to your app)
@@ -81,7 +81,7 @@ job dailyStatsJob {
 ```
 For more info on Wasp's recurring background jobs, check out the [Wasp Jobs docs](https://wasp-lang.dev/docs/advanced/jobs).
 
-For a guide on how to integrate these services so that you can view your analytics via the dashboard, check out the [Stripe](/guides/stripe-integration) and [Analytics guide](/guides/analytics) of the docs.
+For a guide on how to integrate these services so that you can view your analytics via the dashboard, check out the [Payments Integration](/guides/payments-integration/) and [Analytics guide](/guides/analytics/) of the docs.
 
 :::note[Help us improve]
 We're always looking to improve the Admin dashboard. If you feel something is missing or could be improved, consider [opening an issue](https://github.com/wasp-lang/open-saas/issues) or [submitting a pull request](https://github.com/wasp-lang/open-saas/pulls)

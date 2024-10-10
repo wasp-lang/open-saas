@@ -27,7 +27,7 @@ Below, we will guide you through the necessary steps to get the cookie consent m
 
 ### Google Analytics
 
-What's impotant to note for this template is that we are simply using the `onAccept` callbacks to dynamically add or remove our [Google Analytics](./analytics.md/#google-analytics) cookies from the page. In order for it to work correctly with your app, you need to add your [Google Analytics ID](./analytics.md/#google-analytics) to your `.env.client` file.
+What's impotant to note for this template is that we are simply using the `onAccept` callbacks to dynamically add or remove our [Google Analytics](/guides/analytics/#google-analytics) cookies from the page. In order for it to work correctly with your app, you need to add your [Google Analytics ID](/guides/analytics/#google-analytics) to your `.env.client` file.
 
 ```sh title=".env.client"
  REACT_APP_GOOGLE_ANALYTICS_ID=G-1234567890
@@ -45,7 +45,7 @@ cc_cookie # Cookie Consent cookie. The name of this cookie can be changed in the
 
 ### Plausible Analytics
 
-If you decide to go with [Plausible Analytics](./analytics.md/#plausible), you **DO NOT** need to ask users for their consent to use cookies because Plausible, as a privacy-first analytics provider, [does not use cookies](https://plausible.io/privacy-focused-web-analytics). Instead, It collects website usage data anonymously and in aggregate form only, without any personally identifiable information
+If you decide to go with [Plausible Analytics](/guides/analytics/#plausible), you **DO NOT** need to ask users for their consent to use cookies because Plausible, as a privacy-first analytics provider, [does not use cookies](https://plausible.io/privacy-focused-web-analytics). Instead, It collects website usage data anonymously and in aggregate form only, without any personally identifiable information
 
 **By avoiding cookies, Plausible Analytics avoids the need for cookie consent banners.**
 
