@@ -309,6 +309,11 @@ page AdminUIButtonsPage {
   authRequired: true,
   component: import AdminUI from "@src/admin/elements/ui-elements/ButtonsPage"
 }
+
+route NotFoundRoute { path: "*", to: NotFoundPage }
+page NotFoundPage {
+  component: import { NotFoundPage } from "@src/client/components/NotFoundPage"
+}
 //#endregion
 
 //#region Contact Form Messages
