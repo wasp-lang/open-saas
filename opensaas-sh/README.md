@@ -14,8 +14,8 @@ Since the demo app is just the open saas template with some small tweaks, and we
 
 So because we don't version the actual demo app (`app/`) but its diffs instead (`app_diff`), the typical workflow is as follows:
 1. Run `./tools/patch.sh` to generate `app/` from `../template/` and `app_diff/`.
-2. If there are any conflicts (normally due to updates to the template), modify `app_diff/` till you resolve them.
-3. Make any changes in the `app/` if you wish, and then generate new `app_diff/` by running `./tools/diff.sh`.
+2. If there are any conflicts (normally due to updates to the template), modify `app/` till you resolve them. Do any additional changes also if you wish.
+3. Generate new `app_diff/`, based on the current updated `app/`, by running `./tools/diff.sh`.
 
 > [!WARNING]  
 > If you're running the `patch.sh` or `diff.sh` scripts on Mac, you need to have `grealpath` (packaged within `coreutils`) and `gpatch` installed. You should also create aliases for `realpath` and `patch`:

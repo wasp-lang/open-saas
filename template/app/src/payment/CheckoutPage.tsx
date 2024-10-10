@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function CheckoutPage() {
   const [paymentStatus, setPaymentStatus] = useState('loading');
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     function delayedRedirect() {
       return setTimeout(() => {
-        history.push('/account');
+        navigate('/account');
       }, 4000);
     }
 
@@ -23,7 +23,7 @@ export default function CheckoutPage() {
     } else if (isSuccess) {
       setPaymentStatus('paid');
     } else {
-      history.push('/account');
+      navigate('/account');
     }
     delayedRedirect();
     return () => {

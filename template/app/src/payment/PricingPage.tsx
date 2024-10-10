@@ -3,7 +3,7 @@ import { generateCheckoutSession, getCustomerPortalUrl, useQuery } from 'wasp/cl
 import { PaymentPlanId, paymentPlans, prettyPaymentPlanName } from './plans';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '../client/cn';
 
 const bestDealPaymentPlanId: PaymentPlanId = PaymentPlanId.Pro;
@@ -48,11 +48,11 @@ const PricingPage = () => {
     error: customerPortalUrlError,
   } = useQuery(getCustomerPortalUrl, { enabled: isUserSubscribed });
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   async function handleBuyNowClick(paymentPlanId: PaymentPlanId) {
     if (!user) {
-      history.push('/login');
+      navigate('/login');
       return;
     }
     try {
@@ -73,7 +73,7 @@ const PricingPage = () => {
 
   const handleCustomerPortalClick = () => {
     if (!user) {
-      history.push('/login');
+      navigate('/login');
       return;
     }
 

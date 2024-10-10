@@ -3,7 +3,7 @@
 @@ -1,8 +1,14 @@
 -import { Link } from 'react-router-dom';
 -import { LoginForm } from 'wasp/client/auth';
-+import { Redirect, Link } from 'react-router-dom';
++import { Navigate, Link } from 'react-router-dom';
 +import { LoginForm, useAuth } from 'wasp/client/auth';
  import { AuthPageLayout } from './AuthPageLayout';
  
@@ -11,7 +11,7 @@
 +  const { data: user } = useAuth();
 +
 +  if (user) {
-+    return <Redirect to='/demo-app' />;
++    return <Navigate to='/demo-app' />;
 +  }
 +
    return (
