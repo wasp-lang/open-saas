@@ -1,6 +1,5 @@
 {
   "name": "e2e-tests",
-  "type": "module",
   "version": "1.0.0",
   "description": "e2e-tests for opensaas.sh",
   "main": "ci-start-app-and-db.js",
