@@ -21,6 +21,14 @@ export default defineConfig({
         {
           tag: 'script',
           attrs: {
+            defer: true,
+            'data-domain': 'docs.opensaas.sh',
+            src: 'https://plausible.apps.twoducks.dev/js/script.js',
+          },
+        },
+        {
+          tag: 'script',
+          attrs: {
             src: 'https://www.googletagmanager.com/gtag/js?id=G-8QGM76GR3Q',
           },
         },
