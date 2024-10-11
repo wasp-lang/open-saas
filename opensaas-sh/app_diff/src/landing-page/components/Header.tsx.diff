@@ -6,7 +6,7 @@
  import { HiBars3 } from 'react-icons/hi2';
  import { BiLogIn } from 'react-icons/bi';
  import { AiFillCloseCircle } from 'react-icons/ai';
-@@ -20,7 +20,7 @@
+@@ -20,18 +20,19 @@
  
    const { data: user, isLoading: isUserLoading } = useAuth();
  
@@ -15,7 +15,8 @@
  
    return (
      <header className='absolute inset-x-0 top-0 z-50 dark:bg-boxdark-2'>
-@@ -28,10 +28,10 @@
++      <Announcement />
+       <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
          <div className='flex items-center lg:flex-1'>
            <a
              href='/'
@@ -28,7 +29,7 @@
            </a>
          </div>
          <div className='flex lg:hidden'>
-@@ -57,14 +57,14 @@
+@@ -57,14 +58,14 @@
          </div>
          <div className='hidden lg:flex lg:flex-1 lg:justify-end lg:align-end'>
            {/* <!-- Dark Mode Toggler --> */}
@@ -46,7 +47,7 @@
                  </div>
                </Link>
              ) : (
-@@ -107,8 +107,8 @@
+@@ -107,8 +108,8 @@
                <div className='py-6'>
                  {isUserLoading ? null : !user ? (
                    <Link to='/login'>
@@ -57,3 +58,31 @@
                      </div>
                    </Link>
                  ) : (
+@@ -125,3 +126,27 @@
+     </header>
+   )
+ }
++
++const ContestURL =
++  'https://docs.opensaas.sh/blog/';
++
++function Announcement() {
++  return (
++    <div className='flex justify-center items-center gap-3 p-3 w-full bg-gradient-to-r from-[#d946ef] to-[#fc0] font-semibold text-white text-center z-49'>
++      <p onClick={() => window.open(ContestURL, '_blank')} className='hidden lg:block cursor-pointer hover:opacity-90 hover:drop-shadow'>🍪 THE MOST ANNOYING COOKIE BANNER EVER HACKATHON 🤬</p>
++      <div className='hidden lg:block self-stretch w-0.5 bg-white'></div>
++      <div
++        onClick={() => window.open(ContestURL, '_blank')}
++        className='hidden lg:block cursor-pointer rounded-full bg-neutral-700 px-2.5 py-1 text-xs hover:bg-neutral-600 tracking-wider'
++      >
++        Enter here and win prizes! →
++      </div>
++      <div
++        onClick={() => window.open(ContestURL, '_blank')}
++        className='lg:hidden cursor-pointer rounded-full bg-neutral-700 px-2.5 py-1 text-xs hover:bg-neutral-600 tracking-wider'
++      >
++        🍪 The Most Annoying Cookie Banner Contest! 🤬 →
++      </div>
++    </div>
++  );
++}
