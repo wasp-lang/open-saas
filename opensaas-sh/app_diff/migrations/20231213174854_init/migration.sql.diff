@@ -15,7 +15,6 @@
 +    "emailVerificationSentAt" TIMESTAMP(3),
 +    "passwordResetSentAt" TIMESTAMP(3),
 +    "stripeId" TEXT,
-+    "checkoutSessionId" TEXT,
 +    "hasPaid" BOOLEAN NOT NULL DEFAULT false,
 +    "subscriptionTier" TEXT,
 +    "subscriptionStatus" TEXT,

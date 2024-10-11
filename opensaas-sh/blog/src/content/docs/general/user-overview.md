@@ -21,7 +21,6 @@ entity User {=psl
   lastActiveTimestamp       DateTime        @default(now())
   isAdmin                   Boolean         @default(false)
   stripeId                  String? 
-  checkoutSessionId         String?
   subscriptionPlan          String?
   subscriptionStatus        String?
   sendEmail                 Boolean         @default(false)
@@ -45,7 +44,6 @@ entity User {=psl
   id                        Int             @id @default(autoincrement())
   //...
   stripeId                  String? 
-  checkoutSessionId         String?
   subscriptionPlan          String?
   subscriptionStatus        String?
   datePaid                  DateTime?
@@ -55,7 +53,6 @@ psl=}
 ```
 
 - `stripeId`: The Stripe customer ID. This is created by Stripe on checkout and used to identify the customer.
-- `checkoutSessionId`: The Stripe checkout session ID. This is created by Stripe on checkout and used to identify the checkout session.
 - `subscriptionPlan`: The subscription plan the user is on. This is set by the app and is used to determine what features the user has access to. By default, we have two plan: `hobby` and `pro`.
 - `subscriptionStatus`: The subscription status of the user. This is set by Stripe and is used to determine whether the user has access to the app or not. By default, we have four statuses: `active`, `past_due`, `canceled`, and `deleted`.
 - `credits` (optional): By default, a user is given 3 credits to trial your product before they have to pay. You can create a one-time purchase product in Stripe to allow users to purchase more credits if they run out.

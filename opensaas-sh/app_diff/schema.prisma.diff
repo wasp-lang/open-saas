@@ -13,6 +13,5 @@
 -  paymentProcessorUserId    String?         @unique
 -  lemonSqueezyCustomerPortalUrl String?     // You can delete this if you're not using Lemon Squeezy as your payments processor.
 +  stripeId                  String?         @unique
-   checkoutSessionId         String?
    subscriptionStatus        String?         // 'active', 'canceled', 'past_due', 'deleted'
    subscriptionPlan          String?         // 'hobby', 'pro'

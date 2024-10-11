@@ -8,7 +8,6 @@
 -    paymentProcessorUserId: hasUserPaidOnStripe ? `cus_test_${faker.string.uuid()}` : null,
 +    stripeId: hasUserPaidOnStripe ? `cus_test_${faker.string.uuid()}` : null,
      datePaid: hasUserPaidOnStripe ? faker.date.between({ from: createdAt, to: lastActiveTimestamp }) : null,
-     checkoutSessionId: hasUserPaidOnStripe ? `cs_test_${faker.string.uuid()}` : null,
      subscriptionPlan: subscriptionStatus ? faker.helpers.arrayElement(getSubscriptionPaymentPlanIds()) : null,
 +    // For the demo app, we want to default isMockUser to true so that our admin dash only shows mock users
 +    // and not real users signing up to test the app
