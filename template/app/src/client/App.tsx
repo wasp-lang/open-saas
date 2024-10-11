@@ -4,13 +4,13 @@ import './Main.css';
 import AppNavBar from './components/AppNavBar';
 import CookieConsentBanner from './components/cookie-consent/Banner';
 import { useMemo, useEffect, ReactNode } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
 /**
  * use this component to wrap all child components
  * this is useful for templates, themes, and context
  */
-export default function App({ children }: { children: ReactNode }) {
+export default function App() {
   const location = useLocation();
   const { data: user } = useAuth();
 
@@ -46,11 +46,13 @@ export default function App({ children }: { children: ReactNode }) {
     <>
       <div className='min-h-screen dark:text-white dark:bg-boxdark-2'>
         {isAdminDashboard ? (
-          <>{children}</>
+          <Outlet />
         ) : (
           <>
             {shouldDisplayAppNavBar && <AppNavBar />}
-            <div className='mx-auto max-w-7xl sm:px-6 lg:px-8'>{children}</div>
+            <div className='mx-auto max-w-7xl sm:px-6 lg:px-8'>
+              <Outlet />
+            </div>
           </>
         )}
       </div>

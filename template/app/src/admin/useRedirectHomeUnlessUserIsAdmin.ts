@@ -1,13 +1,13 @@
 import { type AuthUser } from 'wasp/auth';
 import { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export function useRedirectHomeUnlessUserIsAdmin({ user }: { user: AuthUser }) {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!user.isAdmin) {
-      history.push('/');
+      navigate('/');
     }
   }, [user, history]);
 }

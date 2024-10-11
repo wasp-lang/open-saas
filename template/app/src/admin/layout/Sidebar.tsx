@@ -103,8 +103,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Dashboard --> */}
               <NavLink
                 to='/admin'
-                isActive={(_match, location) => location.pathname === '/admin'}
-                className={(isActive) =>
+                end
+                className={({ isActive }) =>
                   cn(
                     'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-gray-700 dark:hover:bg-meta-4',
                     {
@@ -147,7 +147,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               <li>
                 <NavLink
                   to='/admin/users'
-                  className={(isActive) =>
+                  className={({ isActive }) =>
                     cn(
                       'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-gray-700 dark:hover:bg-meta-4',
                       {
@@ -185,7 +185,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               <li>
                 <NavLink
                   to='/admin/settings'
-                  className={(isActive) =>
+                  className={({ isActive }) =>
                     cn(
                       'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-gray-700 dark:hover:bg-meta-4',
                       {
@@ -234,7 +234,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               <li>
                 <NavLink
                   to='/admin/chart'
-                  className={(isActive) =>
+                  className={({ isActive }) =>
                     cn(
                       'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-gray-700 dark:hover:bg-meta-4',
                       {
@@ -279,15 +279,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     <React.Fragment>
                       <NavLink
                         to='#'
-                        isActive={(_match, location) => location.pathname.includes('forms')}
-                        className={(isActive) =>
-                          cn(
-                            'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-gray-700 dark:hover:bg-meta-4',
-                            {
-                              'bg-gray-700 dark:bg-meta-4': isActive,
-                            }
-                          )
-                        }
+                        className={cn(
+                          'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-gray-700 dark:hover:bg-meta-4',
+                          {
+                            'bg-gray-700 dark:bg-meta-4': pathname.includes('forms'),
+                          }
+                        )}
                         onClick={(e) => {
                           e.preventDefault();
                           sidebarExpanded ? handleClick() : setSidebarExpanded(true);
@@ -347,7 +344,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           <li>
                             <NavLink
                               to='/admin/forms/form-elements'
-                              className={(isActive) =>
+                              className={({ isActive }) =>
                                 cn(
                                   'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white',
                                   { '!text-white': isActive }
@@ -360,7 +357,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           <li>
                             <NavLink
                               to='/admin/forms/form-layouts'
-                              className={(isActive) =>
+                              className={({ isActive }) =>
                                 cn(
                                   'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white',
                                   { '!text-white': isActive }
@@ -383,7 +380,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               <li>
                 <NavLink
                   to='/admin/calendar'
-                  className={(isActive) =>
+                  className={({ isActive }) =>
                     cn(
                       'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-gray-700 dark:hover:bg-meta-4',
                       {
@@ -417,15 +414,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     <React.Fragment>
                       <NavLink
                         to='#'
-                        isActive={(_match, location) => location.pathname.includes('ui')}
-                        className={(isActive) =>
-                          cn(
-                            'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-gray-700 dark:hover:bg-meta-4',
-                            {
-                              'bg-gray-700 dark:bg-meta-4': isActive,
-                            }
-                          )
-                        }
+                        className={cn(
+                          'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-gray-700 dark:hover:bg-meta-4',
+                          {
+                            'bg-gray-700 dark:bg-meta-4': pathname.includes('ui'),
+                          }
+                        )}
                         onClick={(e) => {
                           e.preventDefault();
                           sidebarExpanded ? handleClick() : setSidebarExpanded(true);
@@ -484,7 +478,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           <li>
                             <NavLink
                               to='/admin/ui/alerts'
-                              className={(isActive) =>
+                              className={({ isActive }) =>
                                 cn(
                                   'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white',
                                   { '!text-white': isActive }
@@ -497,7 +491,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           <li>
                             <NavLink
                               to='/admin/ui/buttons'
-                              className={(isActive) =>
+                              className={({ isActive }) =>
                                 cn(
                                   'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white',
                                   { '!text-white': isActive }
