@@ -22,7 +22,6 @@ entity User {=psl
   isAdmin                   Boolean         @default(false)
   paymentProcessorUserId    String?         @unique
   lemonSqueezyCustomerPortalUrl String?     // You can delete this if you're not using Lemon Squeezy as your payments processor.
-  checkoutSessionId         String?
   subscriptionPlan          String?
   subscriptionStatus        String?
   sendEmail                 Boolean         @default(false)
@@ -46,7 +45,6 @@ entity User {=psl
   id                        Int             @id @default(autoincrement())
   //...
   paymentProcessorUserId    String?         @unique
-  checkoutSessionId         String?
   subscriptionPlan          String?
   subscriptionStatus        String?
   datePaid                  DateTime?
@@ -56,7 +54,6 @@ psl=}
 ```
 
 - `paymentProcessorUserId`: The payment processor customer ID. This is created on checkout and used to identify the customer.
-- `checkoutSessionId`: The payment processor checkout session ID. This is created by Stripe on checkout and used to identify the checkout session.
 - `subscriptionPlan`: The subscription plan the user is on. This is set by the app and is used to determine what features the user has access to. By default, we have three plans: `hobby` and `pro` subscription plans, as well as a `credits10` one-time purchase plan.
 - `subscriptionStatus`: The subscription status of the user. This is set by the payment processor and is used to determine whether the user has access to the app or not. By default, we have four statuses: `active`, `past_due`, `cancel_at_period_end`, and `deleted`.
 - `credits` (optional): By default, a user is given 3 credits to trial your product before they have to pay. You can create a one-time purchase product in Stripe to allow users to purchase more credits if they run out, e.g. the `credits10` plan in the template.
