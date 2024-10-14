@@ -18,7 +18,7 @@ model User {
 
   paymentProcessorUserId    String?         @unique
   lemonSqueezyCustomerPortalUrl String?     // You can delete this if you're not using Lemon Squeezy as your payments processor.
-  subscriptionStatus        String?         // 'active', 'canceled', 'past_due', 'deleted'
+  subscriptionStatus        String?         // 'active', 'cancel_at_period_end', 'past_due', 'deleted'
   subscriptionPlan          String?         // 'hobby', 'pro'
   sendNewsletter            Boolean         @default(false)
   datePaid                  DateTime?
