@@ -21,7 +21,17 @@
   }
 }
 
-
+/* Here is an example of how to add a custom font. 
+* Fonts are stored in the public/fonts folder.
+* They can then be used with tailwind as with the font-satoshi class,
+* as specified in the tailwind.config.js file.
+*/
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
 
 /* third-party libraries CSS */
 
@@ -153,11 +163,4 @@ span.flatpickr-weekday,
 
 [x-cloak] {
   display: none !important;
-}
-
-@font-face {
-  font-family: 'Satoshi';
-  src: url('/fonts/Satoshi-Regular.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
 }
