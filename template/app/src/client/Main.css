@@ -154,3 +154,10 @@ span.flatpickr-weekday,
 [x-cloak] {
   display: none !important;
 }
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
