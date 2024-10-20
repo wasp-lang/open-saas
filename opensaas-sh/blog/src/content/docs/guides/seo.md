@@ -30,7 +30,181 @@ app SaaSTemplate {
 
 Change the above highlighted meta tags to match your app. Wasp will inject these tags into the HTML of your `index.html` file, which is the Landing Page (`app/src/client/landing-page/LandingPage.tsx`), in this case.
 
-This means you **do not** need to rely on a separate app or framework to serve your landing page for SEO purposes.
+## Other Pages Meta Tags
+
+:::note[Important]
+By default, all pages will acquire the main Landing Page meta tags. You can set custom meta tags for each page using `react-helmet-async`.
+:::
+
+[React Helmet Async](https://github.com/staylor/react-helmet-async) is a thread-safe fork of React Helmet, serving as the React equivalent to [Next SEO](https://github.com/garmeeh/next-seo) for Next.js applications. If you're familiar with Next SEO, you'll find React Helmet Async follows similar patterns for managing meta tags in React applications.
+
+The first step is to install it:
+
+```bash
+# Using npm
+npm install react-helmet-async
+
+# Using yarn
+yarn add react-helmet-async
+
+# Using pnpm
+pnpm add react-helmet-async
+```
+
+Next, you need to wrap your main App component (`app/src/client/App.tsx`) with `HelmetProvider`:
+
+```jsx 
+//Add the react-helmet-async import
+import { Helmet, HelmetProvider } from 'react-helmet-async';
+
+//Wrap the main App component
+export default function App() {
+    return (
+    <HelmetProvider>
+      <>
+        <div className='min-h-screen dark:text-white dark:bg-boxdark-2'>
+          {isAdminDashboard ? (
+            <Outlet />
+          ) : (
+            <>
+              {shouldDisplayAppNavBar && <AppNavBar />}
+              <div className='mx-auto max-w-7xl sm:px-6 lg:px-8'>
+                <Outlet />
+              </div>
+            </>
+          )}
+        </div>
+        <CookieConsentBanner />
+      </>
+    </HelmetProvider>
+  );
+}
+```
+ 
+Now, you can set page-specific meta tags.
+
+```jsx {6-33)
+//...
+import { Helmet, HelmetProvider } from 'react-helmet-async';
+
+export function MyCustomPage() {
+  return (
+    <div>
+      <Helmet>
+        <title>My Custom Page Title</title>
+        <meta
+          name='description'
+          content='This is the meta description of my page.'
+        />
+        <link rel='canonical' href='https://example.com/my-custom-page' />
+
+        {/* Open Graph / Facebook */}
+        <meta property='og:type' content='website' />
+        <meta property='og:url' content='https://example.com/my-custom-page' />
+        <meta property='og:title' content='My Custom Page Title' />
+        <meta
+          property='og:description'
+          content='This is the Open Graph description of my page.'
+        />
+        <meta property='og:image' content='https://example.com/my-custom-page-og-image.jpg' />
+
+        {/* Twitter */}
+        <meta name='twitter:card' content='summary_large_image' />
+        <meta name='twitter:url' content='https://example.com/my-custom-page' />
+        <meta name='twitter:title' content='My Custom Page Title' />
+        <meta
+          name='twitter:description'
+          content='This is the Twitter description of my page.'
+        />
+        <meta name='twitter:image' content='https://example.com/my-custom-page-twitter-image.jpg' />
+      </Helmet>
+    </div>
+  );
+}
+
+```
+
+You can also handle tags like `noindex`/`nofollow`:
+```jsx {12}
+import { Helmet, HelmetProvider } from 'react-helmet-async';
+
+export function MyCustomPage() {
+  return (
+    <div>
+      <Helmet>
+        <title>My Custom Page Title</title>
+        <meta
+          name='description'
+          content='This is the meta description of my page.'/>
+        <link rel='canonical' href='https://example.com/my-custom-page' />
+        <meta name="robots" content="noindex, nofollow" />
+        //...
+
+      </Helmet>
+  //...
+  );
+}
+```
+
+:::tip[Good SEO practice]
+There are certain pages that it is good SEO practice not to index. They are divided into two groups:
+
+- Pages that do not add value (login, signup, password reset, ....).
+- Legal pages: Privacy Policy, Cookies Policy, Terms and Conditions.
+- Any other page that you consider should not be indexed (imagine that you create a page exclusively for ADS campaigns and for sure you don't want to receive organic traffic on it!).
+:::
+
+## Structured data and Schema markup
+
+:::note[Tip]
+Crawlers do all the work of analyzing and understanding the content of your pages, and they will thank you if you include structured data to help them understand what your content is about!🤗.
+:::
+
+You can add structured data for each page.
+
+```jsx {14-22}
+//...
+import { Helmet, HelmetProvider } from 'react-helmet-async';
+
+export function MyCustomPage() {
+  return (
+    <div>
+      <Helmet>
+        <title>My Custom Page Title</title>
+        <meta
+          name='description'
+          content='This is the meta description of my page.'/>
+        <link rel='canonical' href='https://example.com/my-custom-page' />
+        //...
+
+        <script type='application/ld+json'>{`
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "title",
+    "url": "https://yoururl.com",
+    "description": "Description",
+    }
+  }
+`}  </script>
+
+      </Helmet>
+      //...
+```
+
+
+These resources provide the information needed to get the most out of structured data:
+- [Introduction to structured data markup](https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data)
+- [General structured data guidelines](https://developers.google.com/search/docs/appearance/structured-data/sd-policies)
+
+After you have a small notion about them, you can go deeper by adding custom functions depending on your app (FAQs, Rating, Review, Software Application...):
+- [ALL structured data functions](https://developers.google.com/search/docs/appearance/structured-data/search-gallery)
+
+To ensure that they are valid:
+- [Google rich results test](https://search.google.com/test/rich-results)
+- [Schema validator](https://validator.schema.org/)
+
+This means you **do not** need to rely on a separate app or framework to serve your pages for SEO purposes.
 
 :::tip[Star our Repo on GitHub! 🌟]
 We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
