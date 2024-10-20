@@ -80,7 +80,7 @@ export default function App() {
   );
 }
 ```
- 
+
 Now, you can set page-specific meta tags.
 
 ```jsx {6-33)
