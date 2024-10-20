@@ -123,7 +123,7 @@ export function MyCustomPage() {
 }
 
 ```
-
+ 
 You can also handle tags like `noindex`/`nofollow`:
 ```jsx {12}
 import { Helmet, HelmetProvider } from 'react-helmet-async';
