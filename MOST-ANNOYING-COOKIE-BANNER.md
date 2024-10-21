@@ -1,1 +1,1 @@
-https://stackblitz.com/edit/vitejs-vite-annos1?embed=1&file=src%2Flanding-page%2Fcomponents%2FCookieConsentBanner.tsx&hideExplorer=1&view=preview
+canav1: https://stackblitz.com/edit/vitejs-vite-annos1?embed=1&file=src%2Flanding-page%2Fcomponents%2FCookieConsentBanner.tsx&hideExplorer=1&view=preview
