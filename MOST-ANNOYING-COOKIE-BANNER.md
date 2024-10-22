@@ -1,4 +1,6 @@
 
+reikon95: [your-stackblitz-embed-url](https://stackblitz.com/edit/vitejs-vite-voqgjo?file=src%2Flanding-page%2Fcomponents%2FCookieConsentBanner.tsx)
+
 pascalwilbrink: https://stackblitz.com/edit/vitejs-vite-d6rkv6?embed=1&file=src%2Flanding-page%2Fcomponents%2FPreferencesDialog.tsx
 
 wardbox: https://stackblitz.com/~/github.com/wardbox/vitejs-vite-u4mdna
