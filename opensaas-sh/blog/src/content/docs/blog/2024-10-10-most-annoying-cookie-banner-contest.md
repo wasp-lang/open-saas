@@ -57,10 +57,8 @@ The community will get a chance to vote in a battle royale style elimination tou
 ![image.png](/cookie-consent/image.png)
     
 - Next, [edit the `MOST-ANNOYING-COOKIE-BANNER.md` file](https://github.com/wasp-lang/open-saas/edit/main/MOST-ANNOYING-COOKIE-BANNER.md) on the Open SaaS repo.
-    - Enter your GitHub username followed by the embed link you copied from Stackblitz
-- When you create a PR, make sure you select the `ANNOYING COOKIE BANNER` label:
-    
-![image.png](/cookie-consent/image1.png)
+    - Enter your GitHub username followed by the embed link you copied from Stackblitz 
+    - Note: after you create a PR, the Wasp team will add the `ANNOYING COOKIE BANNER` label to it. 
     
 - Make sure you also ⭐️ [star the Open Saas repository](https://github.com/wasp-lang/open-saas) to be eligible to win!
 
