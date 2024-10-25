@@ -11,10 +11,10 @@ import { UserMenuItems } from '../../../user/UserMenuItems';
 import DarkModeSwitcher from '../DarkModeSwitcher';
 import { useIsLandingPage } from '../../hooks/useIsLandingPage';
 import { cn } from '../../cn';
+import { type Routes } from 'wasp/client/router';
 
 interface NavigationItem {
   name: string;
-  // to?: Routes['to']; // TODO: fix this
   to?: any; // TODO: fix this
   href?: string;
 }
@@ -29,7 +29,8 @@ export default function AppNavBar({ navigation }: { navigation: NavigationItem[]
   return (
     <header
       className={cn('absolute inset-x-0 top-0 z-50 dark:bg-boxdark-2', {
-        'shadow sticky bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter dark:border dark:border-gray-100/10': !isLandingPage,
+        'shadow sticky bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter dark:border dark:border-gray-100/10':
+          !isLandingPage,
       })}
     >
       <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
@@ -39,7 +40,9 @@ export default function AppNavBar({ navigation }: { navigation: NavigationItem[]
             className='flex items-center -m-1.5 p-1.5 text-gray-900 duration-300 ease-in-out hover:text-yellow-500'
           >
             <NavLogo />
-            {isLandingPage && <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Your Saas</span>}
+            {isLandingPage && (
+              <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Your Saas</span>
+            )}
           </Link>
         </div>
         <div className='flex lg:hidden'>
@@ -116,11 +119,10 @@ function renderNavigationItems(
   navigation: NavigationItem[],
   setMobileMenuOpen?: Dispatch<SetStateAction<boolean>>
 ) {
-  const mobileMenuStyles =
-    '-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-boxdark-2';
-  const desktopStyles =
-    'text-sm font-semibold leading-6 text-gray-900 duration-300 ease-in-out hover:text-yellow-500 dark:text-white';
-  const menuStyles = !!setMobileMenuOpen ? mobileMenuStyles : desktopStyles;
+  const menuStyles = cn({
+    '-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-boxdark-2': !!setMobileMenuOpen,
+    'text-sm font-semibold leading-6 text-gray-900 duration-300 ease-in-out hover:text-yellow-500 dark:text-white': !setMobileMenuOpen
+  });
 
   return navigation.map((item) => {
     if (item.to) {
