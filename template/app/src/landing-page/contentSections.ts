@@ -3,9 +3,9 @@ import daBoiAvatar from '../client/static/da-boi.png';
 import avatarPlaceholder from '../client/static/avatar-placeholder.png';
 import { routes } from 'wasp/client/router';
 
-export const navigation = [
+export const landingPageNavigationItems = [
   { name: 'Features', href: '#features' },
-  { name: 'Pricing', href: routes.PricingPageRoute.build() },
+  { name: 'Pricing', to: routes.PricingPageRoute.to },
   { name: 'Documentation', href: DocsUrl },
   { name: 'Blog', href: BlogUrl },
 ];
