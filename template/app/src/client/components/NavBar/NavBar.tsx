@@ -1,4 +1,4 @@
-import { Link } from 'wasp/client/router';
+import { Link } from 'react-router-dom';
 import { useAuth } from 'wasp/client/auth';
 import { useState, Dispatch, SetStateAction } from 'react';
 import { Dialog } from '@headlessui/react';
@@ -15,8 +15,7 @@ import { type Routes } from 'wasp/client/router';
 
 interface NavigationItem {
   name: string;
-  to?: any; // TODO: fix this
-  href?: string;
+  to: string; // TODO: fix this
 }
 
 const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Your SaaS App' />;
@@ -120,23 +119,22 @@ function renderNavigationItems(
   setMobileMenuOpen?: Dispatch<SetStateAction<boolean>>
 ) {
   const menuStyles = cn({
-    '-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-boxdark-2': !!setMobileMenuOpen,
-    'text-sm font-semibold leading-6 text-gray-900 duration-300 ease-in-out hover:text-yellow-500 dark:text-white': !setMobileMenuOpen
+    '-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-boxdark-2':
+      !!setMobileMenuOpen,
+    'text-sm font-semibold leading-6 text-gray-900 duration-300 ease-in-out hover:text-yellow-500 dark:text-white':
+      !setMobileMenuOpen,
   });
 
   return navigation.map((item) => {
-    if (item.to) {
-      return (
-        <Link to={item.to} className={menuStyles} key={item.name} onClick={() => setMobileMenuOpen?.(false)}>
-          {item.name}
-        </Link>
-      );
-    } else if (item.href) {
-      return (
-        <a href={item.href} className={menuStyles} key={item.name} onClick={() => setMobileMenuOpen?.(false)}>
-          {item.name}
-        </a>
-      );
-    }
+    return (
+      <Link
+        to={item.to}
+        className={menuStyles}
+        key={item.name}
+        onClick={() => setMobileMenuOpen?.(false)}
+      >
+        {item.name}
+      </Link>
+    );
   });
 }

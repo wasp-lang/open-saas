@@ -4,10 +4,10 @@ import avatarPlaceholder from '../client/static/avatar-placeholder.png';
 import { routes } from 'wasp/client/router';
 
 export const landingPageNavigationItems = [
-  { name: 'Features', href: '#features' },
+  { name: 'Features', to: '#features' },
   { name: 'Pricing', to: routes.PricingPageRoute.to },
-  { name: 'Documentation', href: DocsUrl },
-  { name: 'Blog', href: BlogUrl },
+  { name: 'Documentation', to: DocsUrl },
+  { name: 'Blog', to: BlogUrl },
 ];
 export const features = [
   {
