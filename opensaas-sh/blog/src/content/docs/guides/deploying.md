@@ -12,12 +12,12 @@ The simplest and quickest option is to take advantage of Wasp's one-command depl
 Or if you prefer to deploy to a different provider, or your frontend and backend separately, you can follow the Deploying Manually section below.
 
 ## Deploying your App
-### Steps for Deploying Properly
+### Steps for Deploying
 
-These are the steps necessary for you to deploy your app properly. We recommend you follow these steps in order
+These are the steps necessary for you to deploy your app. We recommend you follow these steps in order.
 
 - [ ] Get your [production API keys and environment variables](#prerequisites)
-- [ ] [Deploy your app](#deploying-to-flyio)
+- [ ] Deploy your app easily to [Fly.io](#deploying-to-flyio) or [manually](#deploying-manually--to-other-providers) to any provider.
 - [ ] Add the correct [redirect URL's to your social auth credentials](#adding-server-redirect-urls-to-social-auth)
 - [ ] Set up your [production webhooks for either [Stripe](#setting-up-your-production-stripe-webhook) or [Lemon Squeezy](#setting-up-your-production-lemon-squeezy-webhook)
 - [ ] Set your [production environment variables](#other-vars) on your deployed apps
