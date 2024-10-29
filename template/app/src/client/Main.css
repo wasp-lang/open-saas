@@ -23,8 +23,8 @@
 
 /* Here is an example of how to add a custom font. 
 * Fonts are stored in the public/fonts folder.
-* They can then be used with tailwind as with the font-satoshi class,
-* as specified in the tailwind.config.js file.
+* They are defined first here, then need to be referenced in the tailwind.config.js file
+* under `theme.extend.fontFamily`, and then can be used as a tailwind class, e.g. className='font-satoshi'.
 */
 @font-face {
   font-family: 'Satoshi';
