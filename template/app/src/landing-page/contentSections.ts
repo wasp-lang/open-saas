@@ -1,6 +1,6 @@
 import { DocsUrl, BlogUrl } from '../shared/common';
-import daBoiAvatar from '../client/static/da-boi.png';
-import avatarPlaceholder from '../client/static/avatar-placeholder.png';
+import daBoiAvatar from '../client/static/da-boi.webp';
+import avatarPlaceholder from '../client/static/avatar-placeholder.webp';
 import { routes } from 'wasp/client/router';
 
 export const navigation = [

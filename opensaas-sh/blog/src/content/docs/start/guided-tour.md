@@ -324,7 +324,7 @@ But before you start setting up the main features, let's walk through the custom
   - [ ] Update the URL for this banner at `og:image` and `twitter:image` in `app.head` of the `main.wasp` file.
 - [ ] Make changes to your landing page, `landingPage.tsx`.
   - [ ] Customize the `navBar`, `features`, `testimonials`, and `faqs` in the `contentSections.ts` file.
-  - [ ] Change/rename the `logo.png` and main banner (`open-saas-banner.png`) in the `static` folder.
+  - [ ] Change/rename the `logo.webp` and main banner (`open-saas-banner.png`) in the `static` folder.
 - [ ] If you want to make changes to the global styles of the app, you can do so in `tailwind.config.cjs`. **Be aware that the current custom global styles defined already are mostly used in the app's Admin Dashboard!**
 
 #### Customizing the Analytics & Admin Dashboard

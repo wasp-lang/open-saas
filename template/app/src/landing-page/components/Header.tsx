@@ -5,7 +5,7 @@ import { AiFillCloseCircle } from 'react-icons/ai';
 import { Dialog } from '@headlessui/react';
 import { Link } from 'wasp/client/router';
 import { useAuth } from 'wasp/client/auth';
-import logo from '../../client/static/logo.png';
+import logo from '../../client/static/logo.webp';
 import DarkModeSwitcher from '../../client/components/DarkModeSwitcher';
 import DropdownUser from '../../user/DropdownUser';
 import { UserMenuItems } from '../../user/UserMenuItems';

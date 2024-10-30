@@ -1,10 +1,4 @@
-import {
-  features,
-  navigation,
-  faqs,
-  footerNavigation,
-  testimonials
-} from './contentSections';
+import { features, navigation, faqs, footerNavigation, testimonials } from './contentSections';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Clients from './components/Clients';
