@@ -1,6 +1,10 @@
 public/public-banner.png
 src/client/static/avatar-placeholder.png
-src/client/static/open-saas-banner.png
+src/client/static/avatar-placeholder.webp
+src/client/static/da-boi.png
+src/client/static/da-boi.webp
+src/client/static/logo.png
+src/client/static/open-saas-banner.webp
 src/landing-page/logos/SalesforceLogo.tsx
 src/payment/lemonSqueezy/checkoutUtils.ts
 src/payment/lemonSqueezy/paymentDetails.ts
