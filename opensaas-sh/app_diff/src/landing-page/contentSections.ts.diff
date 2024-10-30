@@ -8,10 +8,10 @@
 +import { DocsUrl, BlogUrl, GithubUrl } from '../shared/common';
  
  export const landingPageNavigationItems = [
-   { name: 'Features', href: '#features' },
+   { name: 'Features', to: '#features' },
 -  { name: 'Pricing', to: routes.PricingPageRoute.to },
-   { name: 'Documentation', href: DocsUrl },
-   { name: 'Blog', href: BlogUrl },
+   { name: 'Documentation', to: DocsUrl },
+   { name: 'Blog', to: BlogUrl },
  ];
  export const features = [
    {

@@ -1,23 +1,25 @@
 --- template/app/src/client/components/NavBar/NavBar.tsx
 +++ opensaas-sh/app/src/client/components/NavBar/NavBar.tsx
-@@ -32,6 +32,7 @@
-         'shadow sticky bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter dark:border dark:border-gray-100/10': !isLandingPage,
+@@ -31,6 +31,7 @@
+           !isLandingPage,
        })}
      >
 +      {isLandingPage && <Announcement />}
        <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
          <div className='flex items-center lg:flex-1'>
            <Link
-@@ -39,7 +40,7 @@
+@@ -38,9 +39,7 @@
              className='flex items-center -m-1.5 p-1.5 text-gray-900 duration-300 ease-in-out hover:text-yellow-500'
            >
              <NavLogo />
--            {isLandingPage && <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Your Saas</span>}
+-            {isLandingPage && (
+-              <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Your Saas</span>
+-            )}
 +            {isLandingPage && <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Open Saas</span>}
            </Link>
          </div>
          <div className='flex lg:hidden'>
-@@ -59,9 +60,9 @@
+@@ -60,9 +59,9 @@
            </ul>
            {isUserLoading ? null : !user ? (
              <Link to='/login' className='text-sm font-semibold leading-6 ml-3'>
@@ -30,7 +32,7 @@
              </Link>
            ) : (
              <div className='ml-3'>
-@@ -94,7 +95,7 @@
+@@ -95,7 +94,7 @@
                  {isUserLoading ? null : !user ? (
                    <Link to='/login'>
                      <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500 dark:text-white'>
@@ -39,8 +41,8 @@
                      </div>
                    </Link>
                  ) : (
-@@ -138,3 +139,27 @@
-     }
+@@ -137,3 +136,27 @@
+     );
    });
  }
 +

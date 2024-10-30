@@ -11,11 +11,10 @@ import { UserMenuItems } from '../../../user/UserMenuItems';
 import DarkModeSwitcher from '../DarkModeSwitcher';
 import { useIsLandingPage } from '../../hooks/useIsLandingPage';
 import { cn } from '../../cn';
-import { type Routes } from 'wasp/client/router';
 
 interface NavigationItem {
   name: string;
-  to: string; // TODO: fix this
+  to: string;
 }
 
 const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Your SaaS App' />;
@@ -129,9 +128,9 @@ function renderNavigationItems(
     return (
       <Link
         to={item.to}
-        className={menuStyles}
         key={item.name}
-        onClick={() => setMobileMenuOpen?.(false)}
+        className={menuStyles}
+        onClick={setMobileMenuOpen && (() => setMobileMenuOpen(false))}
       >
         {item.name}
       </Link>
