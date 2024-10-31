@@ -1,6 +1,6 @@
 --- template/app/main.wasp
 +++ opensaas-sh/app/main.wasp
-@@ -3,24 +3,24 @@
+@@ -3,24 +3,30 @@
      version: "^0.15.0"
    },
  
@@ -8,6 +8,12 @@
 +  title: "Open SaaS",
  
    head: [
++        "<meta charset='utf-8' />",
++        "<meta name='description' content='Build and launch your SaaS application faster with our free, open-source starter kit. Features include auth, payments, AI example app, and admin dashboard.' />",
++        "<meta name='author' content='Open SaaS' />",
++        "<meta name='keywords' content='saas, starter, boilerplate, free, open source, authentication, payments' />",
++
++        "<meta property='og:site_name' content='Open SaaS' />",
          "<meta property='og:type' content='website' />",
 -        "<meta property='og:title' content='My Open SaaS App' />",
 +        "<meta property='og:title' content='Open SaaS' />",
@@ -36,7 +42,7 @@
    ],
  
    // 🔐 Auth out of the box! https://wasp-lang.dev/docs/auth/overview
-@@ -32,7 +32,7 @@
+@@ -32,7 +38,7 @@
        email: {
          fromField: {
            name: "Open SaaS App",
@@ -45,7 +51,7 @@
          },
          emailVerification: {
            clientRoute: EmailVerificationRoute,
-@@ -44,21 +44,18 @@
+@@ -44,21 +50,18 @@
          },
          userSignupFields: import { getEmailUserFields } from "@src/auth/userSignupFields",
        },
@@ -79,7 +85,7 @@
      },
      onAfterSignup: import { onAfterSignup } from "@src/auth/hooks",
      onAuthFailedRedirectTo: "/login",
-@@ -81,11 +78,11 @@
+@@ -81,11 +84,11 @@
      // NOTE: "Dummy" provider is just for local development purposes.
      //   Make sure to check the server logs for the email confirmation url (it will not be sent to an address)!
      //   Once you are ready for production, switch to e.g. "SendGrid" or "Mailgun" providers. Check out https://docs.opensaas.sh/guides/email-sending/ .
@@ -93,7 +99,7 @@
      },
    },
  }
-@@ -206,9 +203,9 @@
+@@ -206,9 +209,9 @@
  }
  
  api paymentsWebhook {

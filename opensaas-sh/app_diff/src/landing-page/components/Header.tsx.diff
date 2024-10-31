@@ -58,13 +58,12 @@
                      </div>
                    </Link>
                  ) : (
-@@ -125,3 +126,27 @@
+@@ -125,3 +126,26 @@
      </header>
    )
  }
 +
-+const ContestURL =
-+  'https://docs.opensaas.sh/blog/';
++const ContestURL = 'https://x.com/WaspLang';
 +
 +function Announcement() {
 +  return (
@@ -75,7 +74,7 @@
 +        onClick={() => window.open(ContestURL, '_blank')}
 +        className='hidden lg:block cursor-pointer rounded-full bg-neutral-700 px-2.5 py-1 text-xs hover:bg-neutral-600 tracking-wider'
 +      >
-+        Enter here and win prizes! →
++        Vote for the winner here! →
 +      </div>
 +      <div
 +        onClick={() => window.open(ContestURL, '_blank')}
