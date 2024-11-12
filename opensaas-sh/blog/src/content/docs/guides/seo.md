@@ -22,7 +22,7 @@ app SaaSTemplate {
         "<meta property='og:url' content='https://opensaas.sh' />",
         "<meta property='og:title' content='Open SaaS' />",
         "<meta property='og:description' content='Free, open-source SaaS boilerplate starter for React & NodeJS.' />",
-        "<meta property='og:image' content='https://opensaas.sh/public-banner.png' />",
+        "<meta property='og:image' content='https://opensaas.sh/public-banner.webp' />",
         //...
   ],
   //...

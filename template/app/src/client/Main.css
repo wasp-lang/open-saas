@@ -31,6 +31,7 @@
   src: url('/fonts/Satoshi-Regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 /* third-party libraries CSS */

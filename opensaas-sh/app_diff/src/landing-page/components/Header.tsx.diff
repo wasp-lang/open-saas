@@ -25,7 +25,7 @@
            >
              <NavLogo />
 -            <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Your Saas</span>
-+            <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Open Saas</span>
++            <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Open SaaS</span>
            </a>
          </div>
          <div className='flex lg:hidden'>
@@ -47,6 +47,15 @@
                  </div>
                </Link>
              ) : (
+@@ -78,7 +79,7 @@
+         <Dialog.Panel className='fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 dark:bg-boxdark dark:text-white'>
+           <div className='flex items-center justify-between'>
+             <a href='/' className='-m-1.5 p-1.5'>
+-              <span className='sr-only'>Your SaaS</span>
++              <span className='sr-only'>Open SaaS</span>
+               <NavLogo />
+             </a>
+             <button
 @@ -107,8 +108,8 @@
                <div className='py-6'>
                  {isUserLoading ? null : !user ? (
@@ -58,13 +67,12 @@
                      </div>
                    </Link>
                  ) : (
-@@ -125,3 +126,27 @@
+@@ -125,3 +126,26 @@
      </header>
    )
  }
 +
-+const ContestURL =
-+  'https://docs.opensaas.sh/blog/';
++const ContestURL = 'https://x.com/WaspLang';
 +
 +function Announcement() {
 +  return (
@@ -75,7 +83,7 @@
 +        onClick={() => window.open(ContestURL, '_blank')}
 +        className='hidden lg:block cursor-pointer rounded-full bg-neutral-700 px-2.5 py-1 text-xs hover:bg-neutral-600 tracking-wider'
 +      >
-+        Enter here and win prizes! →
++        Vote for the winner here! →
 +      </div>
 +      <div
 +        onClick={() => window.open(ContestURL, '_blank')}

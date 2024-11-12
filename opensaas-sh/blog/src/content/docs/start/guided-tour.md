@@ -60,7 +60,7 @@ If you are using an older version of the OpenSaaS template with Wasp `v0.13.x` o
 .
 ├── main.wasp              # Wasp Config file. You define your app structure here.
 ├── .wasp/                 # Output dir for Wasp. DON'T MODIFY THESE FILES!
-├── public/                # Public assets dir, e.g. www.yourdomain.com/banner.png
+├── public/                # Public assets dir, e.g. www.yourdomain.com/public-banner.webp
 ├── src/                   # Your code goes here.
 │   ├── admin/             # Admin dashboard related pages and components.
 │   ├── analytics/         # Logic and background jobs for processing analytics.
@@ -320,11 +320,11 @@ But before you start setting up the main features, let's walk through the custom
 
 #### Customizing the Look / Style of the App
 - [ ] Update your favicon at `public/favicon.ico`.
-- [ ] Update the banner image used when posting links to your site at `public/public-banner.png`.
+- [ ] Update the banner image used when posting links to your site at `public/public-banner.webp`.
   - [ ] Update the URL for this banner at `og:image` and `twitter:image` in `app.head` of the `main.wasp` file.
 - [ ] Make changes to your landing page, `landingPage.tsx`.
   - [ ] Customize the `navBar`, `features`, `testimonials`, and `faqs` in the `contentSections.ts` file.
-  - [ ] Change/rename the `logo.png` and main banner (`open-saas-banner.png`) in the `static` folder.
+  - [ ] Change/rename the `logo.webp` and main hero banner (`open-saas-banner.webp`) in the `static` folder.
 - [ ] If you want to make changes to the global styles of the app, you can do so in `tailwind.config.cjs`. **Be aware that the current custom global styles defined already are mostly used in the app's Admin Dashboard!**
 
 #### Customizing the Analytics & Admin Dashboard
