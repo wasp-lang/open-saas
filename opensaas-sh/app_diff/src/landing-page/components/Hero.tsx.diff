@@ -28,7 +28,7 @@
    return (
      <div className='relative pt-14 w-full'>
        <TopGradient />
-@@ -9,32 +27,47 @@
+@@ -9,31 +27,47 @@
        <div className='py-24 sm:py-32'>
          <div className='mx-auto max-w-8xl px-6 lg:px-8'>
            <div className='lg:mb-18 mx-auto max-w-3xl text-center'>
@@ -77,7 +77,6 @@
 -                width={1000}
 -                height={530}
 -                loading='lazy'
--                decoding='async'
 -                className='rounded-md shadow-2xl ring-1 ring-gray-900/10'
 -              />
 +          <div className='mt-14 flow-root sm:mt-14 '>

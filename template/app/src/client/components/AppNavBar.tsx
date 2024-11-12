@@ -19,7 +19,7 @@ const navigation = [
   { name: 'Blog', href: BlogUrl },
 ];
 
-const NavLogo = () => <img className='h-8 w-8' src={logo} decoding='async' alt='Your SaaS App' />;
+const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Your SaaS App' />;
 
 export default function AppNavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

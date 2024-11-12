@@ -32,7 +32,6 @@ export default function Hero() {
                 width={1000}
                 height={530}
                 loading='lazy'
-                decoding='async'
                 className='rounded-md shadow-2xl ring-1 ring-gray-900/10'
               />
             </div>
