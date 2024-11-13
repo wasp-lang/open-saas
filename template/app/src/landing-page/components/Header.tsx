@@ -31,7 +31,7 @@ export default function Header({ navigation }: { navigation: NavigationItem[] })
             className='flex items-center -m-1.5 p-1.5 text-gray-900 duration-300 ease-in-out hover:text-yellow-500'
           >
             <NavLogo />
-            <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Your Saas</span>
+            <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Your SaaS</span>
           </a>
         </div>
         <div className='flex lg:hidden'>
