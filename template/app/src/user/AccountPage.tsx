@@ -1,7 +1,7 @@
 import type { User } from 'wasp/entities';
 import { type SubscriptionStatus, prettyPaymentPlanName, parsePaymentPlanId } from '../payment/plans';
 import { getCustomerPortalUrl, useQuery } from 'wasp/client/operations';
-import { Link } from 'wasp/client/router';
+import { Link as WaspRouterLink, routes } from 'wasp/client/router';
 import { logout } from 'wasp/client/auth';
 
 export default function AccountPage({ user }: { user: User }) {
@@ -107,9 +107,9 @@ function prettyPrintEndOfBillingPeriod(date: Date) {
 function BuyMoreButton() {
   return (
     <div className='ml-4 flex-shrink-0 sm:col-span-1 sm:mt-0'>
-      <Link to='/pricing' className='font-medium text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-500'>
+      <WaspRouterLink to={routes.PricingPageRoute.to} className='font-medium text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-500'>
         Buy More/Upgrade
-      </Link>
+      </WaspRouterLink>
     </div>
   );
 }
