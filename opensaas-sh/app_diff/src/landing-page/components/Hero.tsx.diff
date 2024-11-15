@@ -1,7 +1,7 @@
 --- template/app/src/landing-page/components/Hero.tsx
 +++ opensaas-sh/app/src/landing-page/components/Hero.tsx
 @@ -1,7 +1,25 @@
--import openSaasBanner from '../../client/static/open-saas-banner.png';
+-import openSaasBannerWebp from '../../client/static/open-saas-banner.webp';
 -import { DocsUrl } from '../../shared/common';
 +import { useState, useEffect } from 'react';
 +import { AiFillGithub } from 'react-icons/ai';
@@ -26,9 +26,9 @@
 +  }, []);
 +
    return (
-     <div className='relative pt-14 w-full '>
-       <div
-@@ -29,30 +47,47 @@
+     <div className='relative pt-14 w-full'>
+       <TopGradient />
+@@ -9,31 +27,47 @@
        <div className='py-24 sm:py-32'>
          <div className='mx-auto max-w-8xl px-6 lg:px-8'>
            <div className='lg:mb-18 mx-auto max-w-3xl text-center'>
@@ -69,15 +69,17 @@
 +              </a>
              </div>
            </div>
-           <div className='mt-14 flow-root sm:mt-14 '>
--            <div className='-m-2 rounded-xl  lg:-m-4 lg:rounded-2xl lg:p-4'>
+-          <div className='mt-14 flow-root sm:mt-14'>
+-            <div className='-m-2  flex justify-center rounded-xl lg:-m-4 lg:rounded-2xl lg:p-4'>
 -              <img
--                src={openSaasBanner}
+-                src={openSaasBannerWebp}
 -                alt='App screenshot'
--                width={2432}
--                height={1442}
+-                width={1000}
+-                height={530}
+-                loading='lazy'
 -                className='rounded-md shadow-2xl ring-1 ring-gray-900/10'
 -              />
++          <div className='mt-14 flow-root sm:mt-14 '>
 +            <div className='-m-2 mx-auto rounded-xl lg:-m-4 lg:rounded-2xl lg:p-4'>
 +              <iframe
 +                className=' mx-auto w-full md:w-[85%] aspect-[4/3] shadow-2xl'

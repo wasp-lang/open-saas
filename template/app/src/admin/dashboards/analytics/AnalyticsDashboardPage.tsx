@@ -5,7 +5,7 @@ import TotalPageViewsCard from './TotalPageViewsCard';
 import TotalPayingUsersCard from './TotalPayingUsersCard';
 import TotalRevenueCard from './TotalRevenueCard';
 import RevenueAndProfitChart from './RevenueAndProfitChart';
-import SourcesTable from './PageViewSourcesTable';
+import SourcesTable from './SourcesTable';
 import DefaultLayout from '../../layout/DefaultLayout';
 import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin'
 

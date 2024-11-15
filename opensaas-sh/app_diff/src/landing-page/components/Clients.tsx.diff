@@ -1,7 +1,7 @@
 --- template/app/src/landing-page/components/Clients.tsx
 +++ opensaas-sh/app/src/landing-page/components/Clients.tsx
 @@ -1,23 +1,64 @@
-+import logo from '../../client/static/logo.png';
++import logo from '../../client/static/logo.webp';
  import AstroLogo from "../logos/AstroLogo";
 -import OpenAILogo from "../logos/OpenAILogo";
  import PrismaLogo from "../logos/PrismaLogo";
