@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link as WaspRouterLink, routes } from 'wasp/client/router';
 import { ResetPasswordForm } from 'wasp/client/auth';
 import { AuthPageLayout } from '../AuthPageLayout';
 
@@ -8,7 +8,7 @@ export function PasswordResetPage() {
       <ResetPasswordForm />
       <br />
       <span className='text-sm font-medium text-gray-900'>
-        If everything is okay, <Link to='/login'>go to login</Link>
+        If everything is okay, <WaspRouterLink to={routes.LoginRoute.to}>go to login</WaspRouterLink>
       </span>
     </AuthPageLayout>
   );

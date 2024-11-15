@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import { Link as ReactRouterLink } from 'react-router-dom';
+import { Link as WaspRouterLink, routes } from 'wasp/client/router';
 import { useAuth } from 'wasp/client/auth';
 import { useState, Dispatch, SetStateAction } from 'react';
 import { Dialog } from '@headlessui/react';
@@ -12,14 +13,14 @@ import DarkModeSwitcher from '../DarkModeSwitcher';
 import { useIsLandingPage } from '../../hooks/useIsLandingPage';
 import { cn } from '../../cn';
 
-interface NavigationItem {
+export interface NavigationItem {
   name: string;
   to: string;
 }
 
 const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Your SaaS App' />;
 
-export default function AppNavBar({ navigation }: { navigation: NavigationItem[] }) {
+export default function AppNavBar({ navigationItems }: { navigationItems: NavigationItem[] }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isLandingPage = useIsLandingPage();
 
@@ -33,15 +34,15 @@ export default function AppNavBar({ navigation }: { navigation: NavigationItem[]
     >
       <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
         <div className='flex items-center lg:flex-1'>
-          <Link
-            to='/'
+          <WaspRouterLink
+            to={routes.LandingPageRoute.to}
             className='flex items-center -m-1.5 p-1.5 text-gray-900 duration-300 ease-in-out hover:text-yellow-500'
           >
             <NavLogo />
             {isLandingPage && (
               <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Your Saas</span>
             )}
-          </Link>
+          </WaspRouterLink>
         </div>
         <div className='flex lg:hidden'>
           <button
@@ -53,17 +54,17 @@ export default function AppNavBar({ navigation }: { navigation: NavigationItem[]
             <HiBars3 className='h-6 w-6' aria-hidden='true' />
           </button>
         </div>
-        <div className='hidden lg:flex lg:gap-x-12'>{renderNavigationItems(navigation)}</div>
+        <div className='hidden lg:flex lg:gap-x-12'>{renderNavigationItems(navigationItems)}</div>
         <div className='hidden lg:flex lg:flex-1 gap-3 justify-end items-center'>
           <ul className='flex justify-center items-center gap-2 sm:gap-4'>
             <DarkModeSwitcher />
           </ul>
           {isUserLoading ? null : !user ? (
-            <Link to='/login' className='text-sm font-semibold leading-6 ml-3'>
+            <WaspRouterLink to={routes.LoginRoute.to} className='text-sm font-semibold leading-6 ml-3'>
               <div className='flex items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500 dark:text-white'>
                 Log in <BiLogIn size='1.1rem' className='ml-1 mt-[0.1rem]' />
               </div>
-            </Link>
+            </WaspRouterLink>
           ) : (
             <div className='ml-3'>
               <DropdownUser user={user} />
@@ -75,10 +76,10 @@ export default function AppNavBar({ navigation }: { navigation: NavigationItem[]
         <div className='fixed inset-0 z-50' />
         <Dialog.Panel className='fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white dark:text-white dark:bg-boxdark px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10'>
           <div className='flex items-center justify-between'>
-            <Link to='/' className='-m-1.5 p-1.5'>
+            <WaspRouterLink to={routes.LandingPageRoute.to} className='-m-1.5 p-1.5'>
               <span className='sr-only'>Your SaaS</span>
               <NavLogo />
-            </Link>
+            </WaspRouterLink>
             <button
               type='button'
               className='-m-2.5 rounded-md p-2.5 text-gray-700 dark:text-gray-50'
@@ -90,14 +91,14 @@ export default function AppNavBar({ navigation }: { navigation: NavigationItem[]
           </div>
           <div className='mt-6 flow-root'>
             <div className='-my-6 divide-y divide-gray-500/10'>
-              <div className='space-y-2 py-6'>{renderNavigationItems(navigation, setMobileMenuOpen)}</div>
+              <div className='space-y-2 py-6'>{renderNavigationItems(navigationItems, setMobileMenuOpen)}</div>
               <div className='py-6'>
                 {isUserLoading ? null : !user ? (
-                  <Link to='/login'>
+                  <WaspRouterLink to={routes.LoginRoute.to}>
                     <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500 dark:text-white'>
                       Log in <BiLogIn size='1.1rem' className='ml-1' />
                     </div>
-                  </Link>
+                  </WaspRouterLink>
                 ) : (
                   <UserMenuItems user={user} setMobileMenuOpen={setMobileMenuOpen} />
                 )}
@@ -114,7 +115,7 @@ export default function AppNavBar({ navigation }: { navigation: NavigationItem[]
 }
 
 function renderNavigationItems(
-  navigation: NavigationItem[],
+  navigationItems: NavigationItem[],
   setMobileMenuOpen?: Dispatch<SetStateAction<boolean>>
 ) {
   const menuStyles = cn({
@@ -124,16 +125,16 @@ function renderNavigationItems(
       !setMobileMenuOpen,
   });
 
-  return navigation.map((item) => {
+  return navigationItems.map((item) => {
     return (
-      <Link
+      <ReactRouterLink
         to={item.to}
         key={item.name}
         className={menuStyles}
         onClick={setMobileMenuOpen && (() => setMobileMenuOpen(false))}
       >
         {item.name}
-      </Link>
+      </ReactRouterLink>
     );
   });
 }
