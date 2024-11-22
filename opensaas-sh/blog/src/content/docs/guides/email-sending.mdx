@@ -86,9 +86,9 @@ To set up your email sender, you first need an account with one of the supported
   </TabItem>
   <TabItem label="Mailgun">
     - Go to [Mailgun](https://mailgun.com) and create an account.
-    - Go to [API Keys](https://app.mailgun.com/app/account/security/api_keys) and create a new API key.
+    - Go to [API Keys](https://app.mailgun.com/settings/api_security/api_keys?onboardingTask=api-key) and create a new API key.
     - Copy the API key and add it to your .env.server file under the `MAILGUN_API_KEY=` variable.
-    - Go to [Domains](https://app.mailgun.com/app/domains) and create a new domain.
+    - Go to [Domains](https://app.mailgun.com/mg/sending/new-domain?onboardingTask=add-verify-domain) and create a new domain.
     - Copy the domain and add it to your .env.server file as `MAILGUN_DOMAIN=`.
 
     Make sure to change the `defaultFrom` email address in the `main.wasp` file to use the same email address that you configured your account to send out emails with!

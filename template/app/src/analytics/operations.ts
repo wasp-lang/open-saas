@@ -15,7 +15,7 @@ export const getDailyStats: GetDailyStats<void, DailyStatsValues> = async (_args
   if (!context.user?.isAdmin) {
     throw new HttpError(401);
   }
-  const dailyStats = await context.entities.DailyStats.findFirstOrThrow({
+  const dailyStats = await context.entities.DailyStats.findFirst({
     orderBy: {
       date: 'desc',
     },
@@ -23,6 +23,9 @@ export const getDailyStats: GetDailyStats<void, DailyStatsValues> = async (_args
       sources: true,
     },
   });
+  if (!dailyStats) {
+    throw new HttpError(204, 'No daily stats generated yet.');
+  }
 
   const weeklyStats = await context.entities.DailyStats.findMany({
     orderBy: {

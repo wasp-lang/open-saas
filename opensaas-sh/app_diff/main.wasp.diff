@@ -1,6 +1,6 @@
 --- template/app/main.wasp
 +++ opensaas-sh/app/main.wasp
-@@ -3,24 +3,24 @@
+@@ -3,30 +3,29 @@
      version: "^0.15.0"
    },
  
@@ -8,35 +8,46 @@
 +  title: "Open SaaS",
  
    head: [
-         "<meta property='og:type' content='website' />",
--        "<meta property='og:title' content='My Open SaaS App' />",
-+        "<meta property='og:title' content='Open SaaS' />",
-         "<meta property='og:url' content='https://opensaas.sh' />",
--        "<meta property='og:description' content='I made a SaaS App. Buy my stuff.' />",
--        "<meta property='og:image' content='https://opensaas.sh/public-banner.png' />",
--        "<meta name='twitter:image' content='https://opensaas.sh/public-banner.png' />",
-+        "<meta property='og:description' content='Free, open-source SaaS boilerplate starter for React & NodeJS.' />",
-+        "<meta property='og:image' content='https://opensaas.sh/banner.png' />",
+     "<meta charset='utf-8' />",
+-    "<meta name='description' content='Your apps main description and features.' />",
+-    "<meta name='author' content='Your (App) Name' />",
+-    "<meta name='keywords' content='saas, solution, product, app, service' />",
+-    
++    "<meta name='description' content='Build and launch your SaaS application faster with our free, open-source starter kit. Features include auth, payments, AI example app, and admin dashboard.' />",
++    "<meta name='author' content='Open SaaS' />",
++    "<meta name='keywords' content='saas, starter, boilerplate, free, open source, authentication, payments' />",
 +
-+        "<meta name=\"twitter:title\" content=\"Open SaaS\" />",
-+        "<meta name=\"twitter:text:title\" content=\"Open SaaS\" />",
-+        "<meta name='twitter:image' content='https://opensaas.sh/banner.png' />",
-+        "<meta name=\"twitter:image:alt\" content=\"Open SaaS\" />",
-         "<meta name='twitter:image:width' content='800' />",
-         "<meta name='twitter:image:height' content='400' />",
-         "<meta name='twitter:card' content='summary_large_image' />",
--        // TODO: You can put your Plausible analytics scripts below (https://docs.opensaas.sh/guides/analytics/):
--        // NOTE: Plausible does not use Cookies, so you can simply add the scripts here.
--        // Google, on the other hand, does, so you must instead add the script dynamically
--        // via the Cookie Consent component after the user clicks the "Accept" cookies button.
--        "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.js'></script>",  // for production
--        "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.local.js'></script>",  // for development
-+        "<script defer data-domain='opensaas.sh' src='https://plausible.apps.twoducks.dev/js/script.js'></script>",
-+        "<script defer data-domain='opensaas.sh' src='https://plausible.apps.twoducks.dev/js/script.local.js'></script>",
++    "<meta property='og:site_name' content='Open SaaS' />",
+     "<meta property='og:type' content='website' />",
+-    "<meta property='og:title' content='Your Open SaaS App' />",
+-    "<meta property='og:site_name' content='Your Open SaaS App' />",
+-    "<meta property='og:url' content='https://your-saas-app.com' />",
+-    "<meta property='og:description' content='Your apps main description and features.' />",
+-    "<meta property='og:image' content='https://your-saas-app.com/public-banner.webp' />",
+-    "<meta name='twitter:image' content='https://your-saas-app.com/public-banner.webp' />",
++    "<meta property='og:title' content='Open SaaS' />",
++    "<meta property='og:url' content='https://opensaas.sh' />",
++    "<meta property='og:description' content='Free, open-source SaaS boilerplate starter for React & NodeJS.' />",
++    "<meta property='og:image' content='https://opensaas.sh/public-banner.webp' />",
++
++    "<meta name=\"twitter:title\" content=\"Open SaaS\" />",
++    "<meta name=\"twitter:text:title\" content=\"Open SaaS\" />",
++    "<meta name='twitter:image' content='https://opensaas.sh/public-banner.webp' />",
++    "<meta name=\"twitter:image:alt\" content=\"Open SaaS\" />",
+     "<meta name='twitter:image:width' content='800' />",
+     "<meta name='twitter:image:height' content='400' />",
+     "<meta name='twitter:card' content='summary_large_image' />",
+-    // TODO: You can put your Plausible analytics scripts below (https://docs.opensaas.sh/guides/analytics/):
+-    // NOTE: Plausible does not use Cookies, so you can simply add the scripts here.
+-    // Google, on the other hand, does, so you must instead add the script dynamically
+-    // via the Cookie Consent component after the user clicks the "Accept" cookies button.
+-    "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.js'></script>",  // for production
+-    "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.local.js'></script>",  // for development
++    "<script defer data-domain='opensaas.sh' data-api='/waspara/wasp/event' src='/waspara/wasp/script.js'></script>",
    ],
  
    // 🔐 Auth out of the box! https://wasp-lang.dev/docs/auth/overview
-@@ -32,7 +32,7 @@
+@@ -38,7 +37,7 @@
        email: {
          fromField: {
            name: "Open SaaS App",
@@ -45,7 +56,7 @@
          },
          emailVerification: {
            clientRoute: EmailVerificationRoute,
-@@ -44,21 +44,18 @@
+@@ -50,21 +49,18 @@
          },
          userSignupFields: import { getEmailUserFields } from "@src/auth/userSignupFields",
        },
@@ -79,7 +90,7 @@
      },
      onAfterSignup: import { onAfterSignup } from "@src/auth/hooks",
      onAuthFailedRedirectTo: "/login",
-@@ -81,11 +78,11 @@
+@@ -87,11 +83,11 @@
      // NOTE: "Dummy" provider is just for local development purposes.
      //   Make sure to check the server logs for the email confirmation url (it will not be sent to an address)!
      //   Once you are ready for production, switch to e.g. "SendGrid" or "Mailgun" providers. Check out https://docs.opensaas.sh/guides/email-sending/ .
@@ -93,7 +104,7 @@
      },
    },
  }
-@@ -206,9 +203,9 @@
+@@ -212,9 +208,9 @@
  }
  
  api paymentsWebhook {

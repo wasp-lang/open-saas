@@ -5,15 +5,25 @@ banner:
     🆕 Open SaaS is now running on <b><a href='https://wasp-lang.dev'>Wasp v0.15</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp-lang.dev/docs/migration-guides/migrate-from-0-14-to-0-15">migration instructions.</a>
 ---
 
-Because this SaaS app is a React/NodeJS/Postgres app built on top of [Wasp](https://wasp-lang.dev), we will direct you to the [Wasp Deployment Guide](https://wasp-lang.dev/docs/advanced/deployment/overview/) for more detailed instructions, except for where the instructions are specific to this template.
+Because this SaaS app is a React/NodeJS/Postgres app built on top of [Wasp](https://wasp-lang.dev), Open SaaS can take advantage of Wasp's easy, one-command deploy to Fly.io or manual deploy to any provider of your choice.
 
-The simplest and quickest option is to take advantage of Wasp's one-command deploy to [Fly.io](#deploying-to-flyio) (`wasp deploy`).
+The simplest and quickest option is to take advantage of Wasp's one-command deploy to Fly.io.
 
-Or if you prefer to deploy to a different provider, or your frontend and backend separately, you can follow the [Deploying Manually](#deploying-manually--to-other-providers) section below.
-
-If you're looking to deploy your Astro Blog, you can follow the [Deploying your Blog](#deploying-your-blog) section at the end of this guide.
+Or if you prefer to deploy to a different provider, or your frontend and backend separately, you can follow the Deploying Manually section below.
 
 ## Deploying your App
+### Steps for Deploying
+
+These are the steps necessary for you to deploy your app. We recommend you follow these steps in order.
+
+- [ ] Get your [production API keys and environment variables](#prerequisites)
+- [ ] Deploy your app easily to [Fly.io](#deploying-to-flyio) or [manually](#deploying-manually--to-other-providers) to any provider.
+- [ ] Add the correct [redirect URL's to your social auth credentials](#adding-server-redirect-urls-to-social-auth)
+- [ ] Set up your [production webhooks for either [Stripe](#setting-up-your-production-stripe-webhook) or [Lemon Squeezy](#setting-up-your-production-lemon-squeezy-webhook)
+- [ ] Set your [production environment variables](#other-vars) on your deployed apps
+- [ ] (Optional) [Deploy your blog](#deploying-your-blog)
+
+Each of these steps is covered in more detail below.
 
 ### Prerequisites
 
@@ -104,7 +114,7 @@ After deploying your server, you need to add the correct redirect URIs to the cr
 - [Google Auth](https://wasp-lang.dev/docs/auth/social-auth/google#3-creating-a-google-oauth-app:~:text=Under%20Authorized%20redirect%20URIs)
 - [Github Auth](https://wasp-lang.dev/docs/auth/social-auth/github#3-creating-a-github-oauth-app:~:text=Authorization%20callback%20URL)
 
-### Setting up your Stripe Webhook
+### Setting up your Production Stripe Webhook
 
 Now you need to set up your stripe webhook for production use. Below are some important steps and considerations you should take as you prepare to deploy your app to production.
 
@@ -164,6 +174,23 @@ export const stripe = new Stripe(process.env.STRIPE_KEY!, {
 ```sh
 wasp deploy fly cmd --context server secrets set STRIPE_WEBHOOK_SECRET=whsec_...
 ```
+
+### Setting up your Production Lemon Squeezy Webhook
+
+To set up your Lemon Squeezy webhook, you'll need the URL of you newly deployed server + `/payments-webhook`, e.g. `https://open-saas-wasp-sh-server.fly.dev/payments-webhook`. 
+
+With the webhook url ready, go to your [Lemon Squeezy Webhooks Dashboard](https://app.lemonsqueezy.com/settings/webhooks):
+- click the `+` button.
+- add the webhook forwarding url to the `Callback URL` section.
+- give your webhook a signing secret (a long, random string).
+- add this signing secret to your server's production environment variables under `LEMONSQUEEZY_WEBHOOK_SECRET=`
+- make sure to select at least the following updates to be sent:
+  - order_created
+  - subscription_created
+  - subscription_updated
+  - subscription_cancelled
+- click `save`
+
 
 ## Deploying your Blog
 
