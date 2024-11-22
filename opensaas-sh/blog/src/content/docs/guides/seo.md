@@ -32,46 +32,39 @@ Change the above highlighted meta tags to match your app. Wasp will inject these
 
 ## Other Pages Meta Tags
 
-:::note[Important]
-By default, all pages will acquire the main Landing Page meta tags. You can set custom meta tags for each page using `react-helmet-async`.
+React Helmet Async is a React library that allows you to modify `<head>` directly from your React component, in a dynamic fashion. Therefore, it can also be used to set meta tags.
+
+:::note
+Since Wasp is SPA, React Helmet Async updates `<head>` via client-side JS after initial serve, meaning that web crawlers that don't evaluate JS won't pick up the modifications to the `<head>` you did.
 :::
 
-[React Helmet Async](https://github.com/staylor/react-helmet-async) is a thread-safe fork of React Helmet, serving as the React equivalent to [Next SEO](https://github.com/garmeeh/next-seo) for Next.js applications. If you're familiar with Next SEO, you'll find React Helmet Async follows similar patterns for managing meta tags in React applications.
 
 The first step is to install it:
 
 ```bash
 # Using npm
 npm install react-helmet-async
-
-# Using yarn
-yarn add react-helmet-async
-
-# Using pnpm
-pnpm add react-helmet-async
 ```
 
 Next, you need to wrap your main App component (`app/src/client/App.tsx`) with `HelmetProvider`:
 
 ```jsx 
 //Add the react-helmet-async import
-import { Helmet, HelmetProvider } from 'react-helmet-async';
+import {HelmetProvider } from 'react-helmet-async';
 
 //Wrap the main App component
 export default function App() {
-    return (
+  return (
     <HelmetProvider>
       <>
         <div className='min-h-screen dark:text-white dark:bg-boxdark-2'>
           {isAdminDashboard ? (
             <Outlet />
           ) : (
-            <>
               {shouldDisplayAppNavBar && <AppNavBar />}
               <div className='mx-auto max-w-7xl sm:px-6 lg:px-8'>
                 <Outlet />
               </div>
-            </>
           )}
         </div>
         <CookieConsentBanner />
@@ -81,11 +74,11 @@ export default function App() {
 }
 ```
 
-Now, you can set page-specific meta tags.
+Now, you can set page-specific meta tags  in your React components.
 
 ```jsx {6-33)
 //...
-import { Helmet, HelmetProvider } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 
 export function MyCustomPage() {
   return (
@@ -97,6 +90,8 @@ export function MyCustomPage() {
           content='This is the meta description of my page.'
         />
         <link rel='canonical' href='https://example.com/my-custom-page' />
+        <meta name="robots" content="noindex, nofollow" />
+
 
         {/* Open Graph / Facebook */}
         <meta property='og:type' content='website' />
@@ -123,35 +118,13 @@ export function MyCustomPage() {
 }
 
 ```
- 
-You can also handle tags like `noindex`/`nofollow`:
-```jsx {12}
-import { Helmet, HelmetProvider } from 'react-helmet-async';
-
-export function MyCustomPage() {
-  return (
-    <div>
-      <Helmet>
-        <title>My Custom Page Title</title>
-        <meta
-          name='description'
-          content='This is the meta description of my page.'/>
-        <link rel='canonical' href='https://example.com/my-custom-page' />
-        <meta name="robots" content="noindex, nofollow" />
-        //...
-
-      </Helmet>
-  //...
-  );
-}
-```
 
 :::tip[Good SEO practice]
-There are certain pages that it is good SEO practice not to index. They are divided into two groups:
+There are certain pages that it is good SEO practice not to index, for example:
 
 - Pages that do not add value (login, signup, password reset, ....).
 - Legal pages: Privacy Policy, Cookies Policy, Terms and Conditions.
-- Any other page that you consider should not be indexed (imagine that you create a page exclusively for ADS campaigns and for sure you don't want to receive organic traffic on it!).
+- Situational pages (e.g. page made for a specific campaign).
 :::
 
 ## Structured data and Schema markup
@@ -200,11 +173,6 @@ These resources provide the information needed to get the most out of structured
 After you have a small notion about them, you can go deeper by adding custom functions depending on your app (FAQs, Rating, Review, Software Application...):
 - [ALL structured data functions](https://developers.google.com/search/docs/appearance/structured-data/search-gallery)
 
-To ensure that they are valid:
-- [Google rich results test](https://search.google.com/test/rich-results)
-- [Schema validator](https://validator.schema.org/)
-
-This means you **do not** need to rely on a separate app or framework to serve your pages for SEO purposes.
 
 :::tip[Star our Repo on GitHub! 🌟]
 We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
