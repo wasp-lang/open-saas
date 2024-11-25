@@ -23,7 +23,8 @@ export default defineConfig({
           attrs: {
             defer: true,
             'data-domain': 'docs.opensaas.sh',
-            src: 'https://plausible.apps.twoducks.dev/js/script.js',
+            'data-api': 'https://opensaas.sh/wasparadocs/wasp/event',
+            src: 'https://opensaas.sh/wasparadocs/wasp/script.js',
           },
         },
         {
