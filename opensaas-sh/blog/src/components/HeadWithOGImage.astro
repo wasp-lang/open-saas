@@ -1,0 +1,19 @@
+---
+import type { Props } from '@astrojs/starlight/props'
+import Default from '@astrojs/starlight/components/Head.astro'
+
+// Get the URL of the generated image for the current page using its
+// ID and replace the file extension with `.png`.
+const ogImageUrl = new URL(
+  `/og-images/${Astro.props.id.replace(/blog\//, '').replace(/\.\w+$/, '.webp')}`,
+  'https://docs.opensaas.sh',
+)
+console.log(Astro.props)
+---
+
+<!-- Render the default <Head/> component. -->
+<Default {...Astro.props}><slot /></Default>
+
+<!-- Render the <meta/> tags for the Open Graph images. -->
+<meta property="og:image" content={ogImageUrl} />
+<meta name="twitter:image" content={ogImageUrl} />

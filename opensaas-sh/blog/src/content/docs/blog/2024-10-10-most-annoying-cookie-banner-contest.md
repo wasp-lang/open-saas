@@ -2,7 +2,9 @@
 title: 🍪 THE MOST ANNOYING COOKIE BANNER EVER HACKATHON 🤬
 date: 2024-10-10
 tags: ["cookie consent", "saas", "sideproject", "hackathon"] 
-image: "/cookie-consent/annoying-cookie-banners.jpg"
+cover:
+  alt: Annoying Cookie Banner Contest
+  image: "/cookie-consent/annoying-cookie-banners.jpg"
 ---
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
   <iframe 
