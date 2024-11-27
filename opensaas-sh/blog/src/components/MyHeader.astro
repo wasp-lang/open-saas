@@ -4,10 +4,9 @@ import config from 'virtual:starlight/user-config';
 import blogConfig from 'virtual:starlight-blog-config'
 import type { Props } from '@astrojs/starlight/props';
 
-const href = Astro.site;
 const { siteTitle } = Astro.props;
 ---
-<a {href} class="site-title sl-flex">
+<a href='https://opensaas.sh' class="site-title sl-flex">
 	{
 		config.logo && logos.dark && (
 			<>

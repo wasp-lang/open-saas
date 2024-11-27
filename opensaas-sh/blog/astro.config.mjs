@@ -6,7 +6,7 @@ import tailwind from '@astrojs/tailwind';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://opensaas.sh',
+  site: 'https://docs.opensaas.sh',
   trailingSlash: 'always',
   integrations: [
     starlight({
