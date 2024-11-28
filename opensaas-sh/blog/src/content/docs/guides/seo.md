@@ -74,7 +74,7 @@ export default function App() {
 }
 ```
 
-Now, you can set page-specific meta tags  in your React components.
+Now, you can set page-specific meta tags in your React components.
 
 ```jsx {6-33)
 //...
