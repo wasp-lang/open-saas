@@ -50,7 +50,7 @@ Next, you need to wrap your main App component (`app/src/client/App.tsx`) with `
 
 ```jsx 
 //Add the react-helmet-async import
-import {HelmetProvider } from 'react-helmet-async';
+import { HelmetProvider } from 'react-helmet-async';
 
 //Wrap the main App component
 export default function App() {
