@@ -2,9 +2,12 @@
 title: How I Built & Grew CoverLetterGPT to 5,000 Users and $200 MRR
 date: 2023-11-21
 tags: ["indiehacker", "saas", "sideproject"] 
-cover:
-  image: ../../../../public/og-images/2023-11-21-coverlettergpt.webp
-  alt: CoverLetterGPT
+subtitle: A guide to building a profitable, open-source side-project
+hideBannerImage: false # Banner images stored in public/banner-images/ are automatically used as cover images and social media preview images (og:image) for each blog post.
+authors:
+  - name: vince
+    title: Dev Rel @ Wasp
+    url: https://wasp-lang.dev
 ---
 ## Hey, I’m Vince…
 

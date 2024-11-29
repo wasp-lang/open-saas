@@ -2,8 +2,12 @@
 title: Deploying
 banner:
   content: |
-    🆕 Open SaaS is now running on <b><a href='https://wasp-lang.dev'>Wasp v0.15</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp-lang.dev/docs/migration-guides/migrate-from-0-14-to-0-15">migration instructions.</a>
+    Open SaaS is now running on <b><a href='https://wasp-lang.dev'>Wasp v0.15</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp-lang.dev/docs/migration-guides/migrate-from-0-14-to-0-15">migration instructions.</a>
 ---
+import { Image } from 'astro:assets';
+import npmVersion from '@assets/stripe/npm-version.png';
+import stripeListenEvents from '@assets/stripe/listen-to-stripe-events.png';
+import stripeSigningSecret from '@assets/stripe/stripe-webhook-signing-secret.png';
 
 Because this SaaS app is a React/NodeJS/Postgres app built on top of [Wasp](https://wasp-lang.dev), Open SaaS can take advantage of Wasp's easy, one-command deploy to Fly.io or manual deploy to any provider of your choice.
 
@@ -149,7 +153,7 @@ export const stripe = new Stripe(process.env.STRIPE_KEY!, {
   - If your default version on the Stripe dashboard is not the latest version, and you don't want to [upgrade to the latest version](https://docs.stripe.com/upgrades#how-can-i-upgrade-my-api), because e.g. you have other projects that depend on the current version, you can find and install the Stripe NPM package version that matches your default API version by following these steps:
     - Find and note the date of your default API version in the [developer dashboard](https://dashboard.stripe.com/developers).
     - Go to the [Stripe NPM package](https://www.npmjs.com/package/stripe) page and hover over `Published` date column until you find the package release that matches your version. For example, here we find the NPM version that matches the default API version of `2023-08-16` in our dashboard, which is `13.x.x`.
-    ![stripe-npm-versions](/stripe/npm-version.png)
+    <Image src={npmVersion} alt="npm version" loading="lazy" />
     - Install the correct version of the Stripe NPM package by running, :
     ```sh
       npm install stripe@x.x.x # e.g. npm install stripe@13.11.0
@@ -161,14 +165,14 @@ export const stripe = new Stripe(process.env.STRIPE_KEY!, {
 1. go to [https://dashboard.stripe.com/webhooks](https://dashboard.stripe.com/webhooks)
 2. click on `+ add endpoint`
 3. enter your endpoint url, which will be the url of your deployed server + `/payments-webhook`, e.g. `https://open-saas-wasp-sh-server.fly.dev/payments-webhook`
-![listen-events](/stripe/listen-to-stripe-events.png)
+<Image src={stripeListenEvents} alt="listen events" loading="lazy" />
 4. select the events you want to listen to. These should be the same events you're consuming in your webhook. For example, if you haven't added any additional events to the webhook and are using the defaults that came with this template, then you'll need to add:
   <br/>- `account.updated`
   <br/>- `checkout.session.completed`
   <br/>- `customer.subscription.deleted`
   <br/>- `customer.subscription.updated`
   <br/>- `invoice.paid`
-![signing-secret](/stripe/stripe-webhook-signing-secret.png)
+<Image src={stripeSigningSecret} alt="signing secret" loading="lazy" />
 5. after that, go to the webhook you just created and `reveal` the new signing secret.
 6. add this secret to your deployed server's `STRIPE_WEBHOOK_SECRET=` environment variable. <br/>If you've deployed to Fly.io, you can do that easily with the following command:
 ```sh

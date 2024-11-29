@@ -1,13 +1,23 @@
 ---
 import type { Props } from '@astrojs/starlight/props'
 import Default from '@astrojs/starlight/components/Head.astro'
+import { BANNER_PATH, DEFAULT_BANNER_IMAGE, getBannerImageFilename, checkBannerImageExists } from './imagePaths'
 
-// Get the URL of the generated image for the current page using its
-// ID and replace the file extension with `.png`.
-const ogImageUrl = new URL(
-  `/og-images/${Astro.props.id.replace(/blog\//, '').replace(/\.\w+$/, '.webp')}`,
+const bannerImageFileName = getBannerImageFilename({ path: Astro.props.id })
+const imageExists = checkBannerImageExists({ bannerImageFileName })
+
+// Get the URL of the social media preview image for the current post using its
+// slug ('Astro.props.id') and replace the path and file extension with `.webp`.
+let ogImageUrl = new URL(
+  `${BANNER_PATH}/${DEFAULT_BANNER_IMAGE}`,
   Astro.site,
-)
+);
+if (imageExists) {
+  ogImageUrl = new URL(
+    `${BANNER_PATH}/${bannerImageFileName}`,
+    Astro.site,
+  )
+}
 ---
 
 <Default {...Astro.props}><slot /></Default>

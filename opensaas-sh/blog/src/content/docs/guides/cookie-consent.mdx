@@ -2,10 +2,13 @@
 title: Cookie Consent Modal
 banner:
   content: |
-    🆕 Open SaaS is now running on <b><a href='https://wasp-lang.dev'>Wasp v0.15</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp-lang.dev/docs/migration-guides/migrate-from-0-14-to-0-15">migration instructions.</a>
+    Open SaaS is now running on <b><a href='https://wasp-lang.dev'>Wasp v0.15</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp-lang.dev/docs/migration-guides/migrate-from-0-14-to-0-15">migration instructions.</a>
 ---
+import { Image } from 'astro:assets';
+import cookieBanner from '@assets/cookie-consent/cookiebanner.png';
+import preferences from '@assets/cookie-consent/preferences.png';
 
-<img src="/cookie-consent/cookiebanner.png" alt="cookie banner" width="400px" />
+<Image src={cookieBanner} alt="cookie banner" width="400px" />
 
 Cookie consent banners are annoying, we know. But they are legally required in many countries, so we have to deal with them.
 
@@ -76,7 +79,7 @@ You should also add a link to your terms and privacy policy within `consentModal
 
 If you've added more than just Google Analytics cookies to your app, you can allow users to control which cookies they want to accept or reject. For example, if you've added marketing cookies, you can add a button to the modal that allows users to reject them, while accepting analytics cookies.
 
-![fine-grained cookie control](/cookie-consent/preferences.png)
+<Image src={preferences} alt="fine-grained cookie control" loading="lazy" />
 
 To do that, you can change the `preferencesModal.sections` property in `config.language`. Any section that you add to `preferencesModal.sections` must match a `linkedCategory` in the `config.categories` property. Make sure you also add a `showPreferencesBtn` property to `consentModal` (highlighted below). 
 

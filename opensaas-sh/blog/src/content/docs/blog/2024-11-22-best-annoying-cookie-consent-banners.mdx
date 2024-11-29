@@ -6,11 +6,16 @@ tags:
   - saas
   - sideproject
   - hackathon
-cover:
-  image: ../../../../public/og-images/2024-11-22-best-annoying-cookie-consent-banners.webp
-  alt: Annoying Cookie Banner Contest
+subtitle: and it was totally worth it
 ---
 import VideoPlayer from '../../../components/VideoPlayer.astro';
+import { Image } from 'astro:assets';
+import camblackwood from '@assets/cookie-banner-hackathon/295-camblackwood.mp4';
+import gangnam from '@assets/cookie-banner-hackathon/300-lezzz-sound.mp4';
+import wheredaway from '@assets/cookie-banner-hackathon/302-fecony-whereda.mp4';
+import henryboyd from '@assets/cookie-banner-hackathon/296-henryboyd.mp4';
+import wardbox from '@assets/cookie-banner-hackathon/286-wardbox.mp4';
+import gangnamwinner from '@assets/cookie-banner-hackathon/285-3umaGH-gangnam.mp4';
 
 ## The Most Annoying Cookie Consent Banner Ever Hackathon
 
@@ -28,7 +33,7 @@ This submission by [Cam Blackwood](https://www.tiktok.com/@cameronblackwoodcode/
 
 Thanks for the reality check, Cam.
 
-<VideoPlayer src="/cookie-banner-hackathon/295-camblackwood.mp4" />
+<VideoPlayer src={camblackwood} />
 
 ## Windows of Time
 
@@ -36,7 +41,7 @@ Do you ever feel like cookie consent banners are UX design pattern from the past
 
 Disturbing, yet oddly comforting.
 
-<VideoPlayer src="/cookie-banner-hackathon/300-lezzz-sound.mp4" />
+<VideoPlayer src={gangnam} />
 
 ## Find all the Cookies
 
@@ -46,7 +51,7 @@ This submission by [Fecony](https://github.com/fecony), Wasp community meme lord
 
 Well played, Fecony.
 
-<VideoPlayer src="/cookie-banner-hackathon/302-fecony-whereda.mp4" />
+<VideoPlayer src={wheredaway} />
 
 ## Fresh Batch of Cookies
 
@@ -54,7 +59,7 @@ Most of us probably just smash the "accept" or "reject" button without even read
 
 And that's a whole lot of cookies.
 
-<VideoPlayer src="/cookie-banner-hackathon/296-henryboyd.mp4" />
+<VideoPlayer src={henryboyd} />
 
 ## Cookie Management Application Process
 
@@ -62,7 +67,7 @@ What's more annoying than cookie consent banners? Probably job applications. Wel
 
 Now all we have to do is wait for the rejection email.
 
-<VideoPlayer src="/cookie-banner-hackathon/286-wardbox.mp4" />
+<VideoPlayer src={wardbox} />
 
 ## Grand Prize Winner: Gangnam Style Beat
 
@@ -72,7 +77,7 @@ Make sure you turn on the sound for this one!
 
 🎤 _Eeeeh, sexy cookie. Op! op-op-op!_ 🎵
 
-<VideoPlayer src="/cookie-banner-hackathon/285-3umaGH-gangnam.mp4" />
+<VideoPlayer src={gangnamwinner} />
 ## And there you have it!
 
 Thanks to everyone who participated! We had a lot of fun looking at all the submissions and we're glad to see that the community is as creative (and annoying) as ever.
@@ -83,7 +88,7 @@ At [Wasp](https://wasp.sh/) we're working hard to build a modern, open-source fu
 
 The easiest way to show your support is just to star the Wasp repo! 🐝 It helps us spread the word and motivates us to keep building.
 
-![https://dev-to-uploads.s3.amazonaws.com/uploads/articles/axqiv01tl1pha9ougp21.gif](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/axqiv01tl1pha9ougp21.gif)
+<Image src='https://dev-to-uploads.s3.amazonaws.com/uploads/articles/axqiv01tl1pha9ougp21.gif' alt='friendly handshake' width="500" height="500" loading='lazy' />
 
 <div className="cta">
   <a href="https://github.com/wasp-lang/wasp" target="_blank" rel="noopener noreferrer">

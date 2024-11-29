@@ -2,8 +2,19 @@
 title: Payments Integration
 banner:
   content: |
-    🆕 Open SaaS is now running on <b><a href='https://wasp-lang.dev'>Wasp v0.15</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp-lang.dev/docs/migration-guides/migrate-from-0-14-to-0-15">migration instructions.</a>
+    Open SaaS is now running on <b><a href='https://wasp-lang.dev'>Wasp v0.15</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp-lang.dev/docs/migration-guides/migrate-from-0-14-to-0-15">migration instructions.</a>
 ---
+import { Image } from 'astro:assets';
+import testApiKeys from '@assets/stripe/api-keys.png';
+import testProduct from '@assets/stripe/test-product.png';
+import priceIds from '@assets/stripe/price-ids.png';
+import switchPlans from '@assets/stripe/switch-plans.png';
+import dbStudio from '@assets/stripe/db-studio.png';
+import addProduct from '@assets/lemon-squeezy/add-product.png';
+import addVariant from '@assets/lemon-squeezy/add-variant.png';
+import variantId from '@assets/lemon-squeezy/variant-id.png';
+import subscriptionVariantIds from '@assets/lemon-squeezy/subscription-variant-ids.png';
+import ngrok from '@assets/lemon-squeezy/ngrok.png';
 
 This guide will show you how to set up Payments for testing and local development with the following payment processors:
 - Stripe
@@ -55,7 +66,7 @@ If you're finding this template and its guides useful, consider giving us [a sta
 
 Once you've created your account, you'll need to get your test API keys. You can do that by navigating to [https://dashboard.stripe.com/test/apikeys](https://dashboard.stripe.com/test/apikeys) or by going to the [Stripe Dashboard](https://dashboard.stripe.com/test/dashboard) and clicking on the `Developers`.
 
-![test api keys](/stripe/api-keys.png)
+<Image src={testApiKeys} alt="test api keys" loading="lazy" />
 
 - Click on the `Reveal test key token` button and copy the `Secret key`.
 - Paste it in your `.env.server` file under `STRIPE_API_KEY=`
@@ -64,7 +75,7 @@ Once you've created your account, you'll need to get your test API keys. You can
 
 To create a test product, go to the test products url [https://dashboard.stripe.com/test/products](https://dashboard.stripe.com/test/products), or after navigating to your dashboard, click the `test mode` toggle.
 
-![test product](/stripe/test-product.png)
+<Image src={testProduct} alt="test product" loading="lazy" />
 
 - Click on the `Add a product` button and fill in the relevant information for your product. 
 - Make sure you select `Software as a service (SaaS)` as the product type.
@@ -73,7 +84,7 @@ To create a test product, go to the test products url [https://dashboard.stripe.
 - If you intend to let your users switch between two subscription plans, e.g. upgrade from hobby to pro, you'll need to create two separate products and with their own price IDs. The ability for users to swich plans can then be configured later in the [Customer Portal](#set-up-the-customer-portal).
 - If you want to add different price tiers for the same product (e.g. monthly and yearly), click the `Add another price` button at the buttom. 
 
-![price ids](/stripe/price-ids.png)
+<Image src={priceIds} alt="price ids" loading="lazy" />
 
 - After you save the product, you'll be directed to the product page. 
 - Copy the price IDs and paste them in the `.env.server` file
@@ -100,7 +111,7 @@ STRIPE_CUSTOMER_PORTAL_URL=<your-test-customer-portal-link>
 
 If you'd like to give users the ability to switch between different plans, e.g. upgrade from a hobby to a pro subscription, go down to the `Subscriptions` dropdown and select `customers can switch plans`. 
 
-![switch plans](/stripe/switch-plans.png)
+<Image src={switchPlans} alt="switch plans" loading="lazy" />
 
 Then select the products you'd like them to be able to switch between.
 
@@ -205,7 +216,7 @@ You can then test the payment flow via the client by doing the following:
 wasp db studio
 ```
 
-![db studio](/stripe/db-studio.png)
+<Image src={dbStudio} alt="db studio" loading="lazy" />
 
 - Navigate to `localhost:5555` and click on the `users` table. You should see the `subscriptionStatus` is `active` for the user that just made the purchase.
 
@@ -240,14 +251,14 @@ To create a test product, go to the test products url [https://app.lemonsqueezy.
 - Click on the `+ New Product` button and fill in the relevant information for your product. 
 - Fill in the general information.
 - For pricing, select the type of product you'd like to create, e.g. `Subscription` for a recurring monthly payment product or  `Single Payment` for credits-based product.
-![test product](/lemon-squeezy/add-product.png)
+<Image src={addProduct} alt="add product" loading="lazy" />
 - Make sure you select `Software as a service (SaaS)` as the Tax category type.
 - If you want to add different price tiers for `Subscription` products, click on `add variant` under the `variants` tab. Here you can input the name of the variant (e.g. "Hobby", "Pro"), and that variant's price.
-![add variant](/lemon-squeezy/add-variant.png)
+<Image src={addVariant} alt="add variant" loading="lazy" />
 - For a product with no variants, on the product page, click the `...` menu button and select `Copy variant ID`
-![variant id](/lemon-squeezy/variant-id.png)
+<Image src={variantId} alt="variant id" loading="lazy" />
 - For a product with variants, on the product page, click on the product, go to the variants tab and select `Copy ID` for each variant.
-![variant ids](/lemon-squeezy/subscription-variant-ids.png)
+<Image src={subscriptionVariantIds} alt="subscription variant ids" loading="lazy" />
 - Paste these IDs in the `.env.server` file:
   - We've set you up with two example subscription product environment variables, `PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID=` and `PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID=`.
   - As well as a one-time payment product/credits-based environment variable, `PAYMENTS_CREDITS__10_PLAN_ID=`.
@@ -264,7 +275,7 @@ Once installed, and with your wasp app running, run:
 ngrok http 3001
 ```
 
-![ngrok](/lemon-squeezy/ngrok.png)
+<Image src={ngrok} alt="ngrok" loading="lazy" />
 
 Ngrok will output a forwarding address for you. Copy and paste this address and add `/payments-webhook` to the end (this URL path has been configured for you already in `main.wasp` under the `api paymentsWebhook` definition). It should look something like this: 
 

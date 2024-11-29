@@ -43,8 +43,8 @@ export default defineConfig({
         SiteTitle: './src/components/MyHeader.astro',
         ThemeSelect: './src/components/MyThemeSelect.astro',
         Head: './src/components/HeadWithOGImage.astro',
+        PageTitle: './src/components/TitleWithBannerImage.astro',
       },
-
       social: {
         github: 'https://github.com/wasp-lang/open-saas',
         twitter: 'https://twitter.com/wasp_lang',
@@ -75,7 +75,7 @@ export default defineConfig({
           title: 'Blog',
           customCss: ['./src/styles/tailwind.css'],
           authors: {
-            dev: {
+            Dev: {
               name: 'Dev',
               title: 'Dev @ Your SaaS',
               picture: '/CRAIG_ROCK.png', // Images in the `public` directory are supported.
