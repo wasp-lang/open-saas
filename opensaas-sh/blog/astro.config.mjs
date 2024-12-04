@@ -101,6 +101,12 @@ export default defineConfig({
               picture: '/CRAIG_ROCK.png', // Images in the `public` directory are supported.
               url: 'https://wasp-lang.dev',
             },
+            matija: {
+              name: 'Matija',
+              title: 'CEO @ Wasp',
+              picture: '/matija.jpeg', // Images in the `public` directory are supported.
+              url: 'https://wasp-lang.dev',
+            },
           },
         }),
       ],
