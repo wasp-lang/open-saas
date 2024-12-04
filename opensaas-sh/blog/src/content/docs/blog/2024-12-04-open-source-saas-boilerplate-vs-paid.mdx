@@ -5,14 +5,22 @@ tags:
   - webdev
   - saas
   - sideproject
-author: matija
+authors: matija
 ---
-import VideoPlayer from '../../../components/VideoPlayer.astro';
 import { Image } from 'astro:assets';
+import marc1 from '../../../assets/boilerplate-starters/marc1.png';
+import opensaas from '../../../assets/boilerplate-starters/opensaas.png';
+import marc2 from '../../../assets/boilerplate-starters/marc2.png';
+import daveShipfast from '../../../assets/boilerplate-starters/dave-shipfast-tweet.png';
+import osGhStats from '../../../assets/boilerplate-starters/os-gh-stats.png';
+import osCommits from '../../../assets/boilerplate-starters/os-commits.png';
+import freeUpdates from '../../../assets/boilerplate-starters/free-updates-vs-not.png';
+import communityContributions from '../../../assets/boilerplate-starters/community-contributions.png';
+// import boilerplateLicenses from '../../../assets/boilerplate-starters/boilerplate-licenses.png';
 
 SaaS boilerplate starters became a very popular thing in the web dev community, and also a pathway to a luxury lifestyle for those behind them, sometimes making north of five figure amounts per month.
 
-![Twitter screenshot](boilerplate-starters/marc1.png)
+<Image src={marc1} alt="Twitter screenshot" loading="lazy" />
 
 On the other hand, there's also been a rise of the open-source SaaS boilerplate starters, that cover various stacks and offer similar features as their paid counterparts, but completely for free and with an active community alongside.
 
@@ -26,7 +34,7 @@ The goal of this article is to break these further down and give you an objectiv
 
 We have all been building web apps and SaaS-es for decades, you may rightfully observe, so why this became a thing just now? It seems like everybody is making their own starter today and getting a ton of excitement (and money) from the community.
 
-**The answer is that the complexity of building a SaaS (or in another words, a web app) in the last ten years increased tenfold**. Partly it is due to the evolution of the underlying architecture (we switched from monolithic, server-based approach to “rich client <> backend”) which introduced more moving parts into the equation, and partly due to the explosion of options for each part of the stack.
+**The answer is that the complexity of building a SaaS (or in another words, a web app) in the last ten years increased tenfold.** Partly it is due to the evolution of the underlying architecture (we switched from monolithic, server-based approach to “rich client ↔ backend”) which introduced more moving parts into the equation, and partly due to the explosion of options for each part of the stack.
 
 If you were about to build a SaaS fifteen years ago, you pretty much knew you'd go with either Ruby on Rails, Laravel, or Django, depending on which language and community you preferred. These would come as a batteries-included solution, give you their best defaults and you'd be up and running in a matter of hour(s). You got a single, well-tested path to follow and not much decisions to make.
 
@@ -54,7 +62,7 @@ Although it's not likely you will go through every line of code beforehand and t
 
 You can also see the repository's activity stats - number of open and closed issues, features in progress, commit frequency and how fast are things being resolved and new features added.
 
-![Open SaaS screenshot](boilerplate-starters/opensaas.png)
+<Image src={opensaas} alt="Open SaaS screenshot" loading="lazy" />
 
 Paid, closed-source starters, again by definition, offer at best a fraction of these benefits. You can see the value proposition as the author designed it - some hand-picked testimonials, a demo and potentially have a peek at the docs.
 
@@ -62,7 +70,7 @@ Paid, closed-source starters, again by definition, offer at best a fraction of t
 
 The most popular paid boilerplates today often come from well-known developers, or “indie makers,” who've already built successful products. Buying their boilerplate feels a bit like joining an exclusive club—it's as if you're tapping into their expertise and using the same tools they once used to succeed.
 
-![Marc promo banner](boilerplate-starters/marc2.png)
+<Image src={marc2} alt="Marc promo banner" loading="lazy" />
 
 It's like wearing a jersey signed by a famous athlete or a perfume co-created by a pop star. It won't guarantee instant success, but it gives you a sense of connection and inspiration. You're reminded that someone else turned these same tools into something great—and that you could do it too!
 
@@ -72,7 +80,7 @@ In the long run, this mindset might matter even more than the tools themselves. 
 
 Paid boilerplate starters are mostly an effort of a single person. It is the type of project that, past the initial development phase, doesn't require a full-time attention and is more of a seasonal nature (e.g. updating libraries to the latest versions). That makes it a perfect workload for a single person and also makes it much more profitable rather than splitting the margin with the team. If there was a whole team behind, it probably wouldn't cost $500, but rather $2000.
 
-![dave shipfast tweet](boilerplate-starters/dave-shipfast-tweet.png)
+<Image src={daveShipfast} alt="Dave Shipfast tweet" loading="lazy" />
 
 Recently, there was a security incident with one of the popular paid starters that allowed external parties to send unauthorized web hook requests, which caused a lot of ripples in the online community of builders.
 
@@ -84,7 +92,7 @@ A paid SaaS starter typically depends on a single maintainer. Since the code is 
 
 **On the other hand, [an open-source boilerplate starter](https://opensaas.sh/) like Open SaaS is a living organism, with a number of contributors behind it.** As with any open-source project, there will typically be a smaller core team which does the bulk of the work and steers the project (and that might as well be a single person in the start), but anybody can join at any point, and they will. As the project grows and becomes more used, more and more people will start adding fixes and features they need themselves and take ownership of the specific parts.
 
-![open source stats from opensaas](boilerplate-starters/os-gh-stats.png)
+<Image src={osGhStats} alt="Open source stats from opensaas" loading="lazy" />
 
 Another thing to account for is it takes a long time for SaaS starter business to become more than a side income, and only a fraction of builders will ever come to that point. That means most of boilerplate creators will still have a full-time job or other engagements going on. Which means they will have a limited time for customer support and adding new features.
 
@@ -92,17 +100,17 @@ Another thing to account for is it takes a long time for SaaS starter business t
 
 An another direct benefit of the SaaS starter code being open-source is that you will have an immediate access to all the updates, as soon as they get released. That includes both security patches, version bumps and completely new features.
 
-![commits to open saas](boilerplate-starters/os-commits.png)
+<Image src={osCommits} alt="Commits to open saas" loading="lazy" />
 
 With closed source, it varies a lot from one starter to another. Some offer updates as an upsell (e.g. basic and pro tier), some offer a limited time updates (e.g. 1-year), and some promise a lifetime of updates. 
 
-![free updates vs pay for everything](boilerplate-starters/free-updates-vs-not.png)
+<Image src={freeUpdates} alt="Free updates vs pay for everything" loading="lazy" />
 
 ## With a paid SaaS starter, you might need to buy a “license” for every new app
 
 Another thing to be aware of is that, with paid starters, there often might be a limit to the number of apps you are allowed to start with a single starter purchase. It is typically phrased in terms of “licenses”, and if you exceed a limit you're legally required to buy a new one, although you already own the starter code.
 
-![boilerplate licenses](boilerplate-starters/boilerplate-licenses.png)
+{/* <Image src={boilerplateLicenses} alt="Boilerplate licenses" loading="lazy" /> */}
 
 Again, this is not the case with all paid starters (some offer unlimited projects with a single purchase), but it is a common pattern worth checking before buying.
 
@@ -112,7 +120,7 @@ With an open-source starter, there naturally isn't any such limit - the full sou
 
 One of the most exciting benefits of the open-source approach is that anybody can contribute! If there is a feature you're missing or want to improve, you can simply do it yourself it and create a pull request. Then, the core maintainers will review it, give advice and point you in the right direction if needed. Once it gets merged, it is available for everyone to use!
 
-![community contributions](boilerplate-starters/community-contributions.png)
+<Image src={communityContributions} alt="Community contributions" loading="lazy" />
 
 ## Summary
 
