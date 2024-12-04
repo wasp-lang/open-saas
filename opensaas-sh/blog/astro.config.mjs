@@ -6,7 +6,7 @@ import tailwind from '@astrojs/tailwind';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://opensaas.sh',
+  site: 'https://docs.opensaas.sh',
   trailingSlash: 'always',
   integrations: [
     starlight({
@@ -51,6 +51,7 @@ export default defineConfig({
         SiteTitle: './src/components/MyHeader.astro',
         ThemeSelect: './src/components/MyThemeSelect.astro',
         Head: './src/components/HeadWithOGImage.astro',
+        PageTitle: './src/components/TitleWithBannerImage.astro',
       },
       social: {
         github: 'https://github.com/wasp-lang/open-saas',

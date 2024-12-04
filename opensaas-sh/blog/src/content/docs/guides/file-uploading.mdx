@@ -2,8 +2,17 @@
 title: File Uploading
 banner:
   content: |
-    🆕 Open SaaS is now running on <b><a href='https://wasp-lang.dev'>Wasp v0.15</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp-lang.dev/docs/migration-guides/migrate-from-0-14-to-0-15">migration instructions.</a>
+    Open SaaS is now running on <b><a href='https://wasp-lang.dev'>Wasp v0.15</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp-lang.dev/docs/migration-guides/migrate-from-0-14-to-0-15">migration instructions.</a>
 ---
+import { Image } from 'astro:assets';
+import findS3 from '@assets/file-uploads/find-s3.png';
+import createBucket from '@assets/file-uploads/create-bucket.png';
+import defaultSettings from '@assets/file-uploads/default-settings.png';
+import newBucket from '@assets/file-uploads/new-bucket.png';
+import permissions from '@assets/file-uploads/permissions.png';
+import cors from '@assets/file-uploads/cors.png';
+import username from '@assets/file-uploads/username.png';
+import keys from '@assets/file-uploads/keys.png';
 
 This guide will show you how to set up file uploading in your SaaS app.
 
@@ -52,23 +61,23 @@ To do so, follow the steps in this external guide: [Creating IAM users and S3 bu
 Once you are logged in with your IAM user, you'll need to create an S3 bucket to store your files.
 
 1. Navigate to the S3 service in the AWS console
-![find s3](/file-uploads/find-s3.png)
+<Image src={findS3} alt="find s3" loading="lazy" />
 2. Click on the `Create bucket` button
-![create bucket](/file-uploads/create-bucket.png)
+<Image src={createBucket} alt="create bucket" loading="lazy" />
 3. Fill in the bucket name and region
 4. **Leave all the settings as default** and click `Create bucket`
-![bucket settings](/file-uploads/default-settings.png)
+<Image src={defaultSettings} alt="bucket settings" loading="lazy" />
 
 ### Change the CORS settings
 
 Now we need to change some permissions on the bucket to allow for file uploads from your app.
 
 1. Click on the bucket you just created
-![new bucket](/file-uploads/new-bucket.png)
+<Image src={newBucket} alt="new bucket" loading="lazy" />
 2. Click on the `Permissions` tab
-![permissions](/file-uploads/permissions.png)
+<Image src={permissions} alt="permissions" loading="lazy" />
 3. Scroll down to the `Cross-origin resource sharing (CORS)` section and click `Edit`
-![cors](/file-uploads/cors.png)
+<Image src={cors} alt="cors" loading="lazy" />
 5. Paste the following CORS configuration and click `Save changes`:
 ```json
 [
@@ -93,11 +102,11 @@ Now we need to change some permissions on the bucket to allow for file uploads f
 Now that you have your S3 bucket set up, you'll need to get your S3 credentials to use in your app.
 
 1. Click on your username in the top right corner of the AWS console and select `Security Credentials`
-![security credentials](/file-uploads/username.png)
+<Image src={username} alt="username" loading="lazy" />
 2. Scroll down to the `Access keys` section
 3. Click on `Create Access Key`
 4. Select the `Application running on an AWS service` option and create the access key
-![access key](/file-uploads/keys.png)
+<Image src={keys} alt="keys" loading="lazy" />
 5. Copy the `Access key ID` and `Secret access key` and paste them in your `src/app/.env.server` file: 
 ```sh
   AWS_S3_IAM_ACCESS_KEY=ACK...

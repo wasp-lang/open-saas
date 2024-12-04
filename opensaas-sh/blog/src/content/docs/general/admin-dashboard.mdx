@@ -2,9 +2,15 @@
 title: Admin Dashboard
 banner:
   content: |
-    🆕 Open SaaS is now running on <b><a href='https://wasp-lang.dev'>Wasp v0.15</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp-lang.dev/docs/migration-guides/migrate-from-0-14-to-0-15">migration instructions.</a>
+    Open SaaS is now running on <b><a href='https://wasp-lang.dev'>Wasp v0.15</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp-lang.dev/docs/migration-guides/migrate-from-0-14-to-0-15">migration instructions.</a>
 ---
-This is a reference on how the Admin dashboard is set up and works.
+import { Image } from 'astro:assets';
+import dbStudio from '@assets/stripe/db-studio.png';
+import adminDashboard from '@assets/admin/admin-dashboard.png';
+
+This is a reference on how the Admin dashboard, available at `/admin`, is set up.
+
+<Image src={adminDashboard} alt="admin dashboard" loading="eager" />
 
 ## Permissions
 
@@ -34,7 +40,7 @@ Or if you've already logged in with an email address that you want to give admin
 wasp db studio
 ```
 
-![db studio](/stripe/db-studio.png)
+<Image src={dbStudio} alt="db studio" loading="lazy" />
 
 ---
 
@@ -48,8 +54,6 @@ If you're finding this template and its guides useful, consider giving us [a sta
 
 ### Analytics Dashboard
 The Admin analytics dashboard is a single place for you to view your most important metrics and perform some admin tasks. At the moment, it pulls data from:
-
-<!-- TODO: add photo -->
 
 - [Payments Processor](/guides/payments-integration/):
   - total revenue

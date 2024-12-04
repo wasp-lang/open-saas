@@ -2,8 +2,10 @@
 title: SEO
 banner:
   content: |
-    🆕 Open SaaS is now running on <b><a href='https://wasp-lang.dev'>Wasp v0.15</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp-lang.dev/docs/migration-guides/migrate-from-0-14-to-0-15">migration instructions.</a>
+    Open SaaS is now running on <b><a href='https://wasp-lang.dev'>Wasp v0.15</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp-lang.dev/docs/migration-guides/migrate-from-0-14-to-0-15">migration instructions.</a>
 ---
+import { Image } from 'astro:assets';
+import openSaaSGoogle from '@assets/seo/open-saas-google.png';
 
 This guides explains how to improve SEO for of your app
 
@@ -64,4 +66,4 @@ Open SaaS and Wasp do not currently have a SSR option (although it is coming soo
 That's because the meta tags for the landing page (described above), plus the Astro docs/blog provided with Open SaaS are more than enough! Not to mention, Google is also able to crawl websites with JavaScript activated, making SSR unnecessary. 
 
 For example, try searching "Open SaaS" on Google and you'll see this App, which was built with this template, as the first result! 
-![open-saas-google-search](/seo/open-saas-google.png)
+<Image src={openSaaSGoogle} alt="open-saas-google" loading="lazy" />

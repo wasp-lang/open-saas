@@ -1,19 +1,20 @@
 ---
 title: How I Built & Grew CoverLetterGPT to 5,000 Users and $200 MRR
 date: 2023-11-21
-tags: ["indiehacker", "saas", "sideproject"] 
+tags: ["indiehacker", "saas", "sideproject"]
 ---
+import { Image } from 'astro:assets';
+
 ## Hey, I’m Vince…
 
-![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/az8xf61b2qxx1msfo4t5.png)
+<Image src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/az8xf61b2qxx1msfo4t5.png" alt="Vince Headshot" loading="lazy" width={700} height={700} />
 
 I’m a self-taught developer that changed careers during the Covid Pandemic. I did it because I wanted a better career, enjoyed programming, and at the same time, had a keen interest in IndieHacking.
-<!--truncate-->
+
 If you’re not aware, IndieHacking is the movement of developers who build potentially profitable side-projects in their spare time. And there are some very successful examples of IndieHackers and “solopreneurs” out there inspiring others, such as [levels.io](http://levels.io) and [Marc Lou](https://twitter.com/marc_louvion). 
 
 This thought of being able to build my own side-project that could generate profit while I slept was always attractive to me.
-
-![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/e1r07ajn3gysdscjdkns.png)
+<Image src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/e1r07ajn3gysdscjdkns.png" alt="CoverLetterGPT" loading="lazy" width={700} height={700} />
 
 So I’m happy to report that I’ve finally done it with my first software-as-a-service (SaaS) app, [CoverLetterGPT.xyz](http://CoverLetterGPT.xyz), which I launched in March 2023!
 
@@ -22,19 +23,28 @@ I’ll be the first to admit that the results aren’t spectacular, but they’r
 - over 5,000 registered users
 - $203 monthly recurring revenue (MRR)
 
-Below, I’m going to share with you how I built it (yes, it’s [open-source](https://github.com/vincanger/coverlettergpt)!), how I marketed and monetized it, along with a bunch of helpful resources to help you build your own profitable side-project.
+Below, I’m going to share with you how I built it (yes, it’s [open-source](https://github.com/vincanger/coverlettergpt)), how I marketed and monetized it, along with a bunch of helpful resources to help you build your own profitable side-project.
+
 
 ## What the heck is CoverLetterGPT?
 
 [CoverLetterGPT.xyz](http://CoverLetterGPT.xyz) was an idea I got after the OpenAI API was released. It’s an app that allows you to upload a PDF of your CV/resumé, along with the job description you’re applying to, and it will generate and edit unique cover letters for you based on this information.
 
-{% embed https://youtu.be/ZhcFRD9cVrI %}
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe 
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+    src="https://www.youtube.com/embed/ZhcFRD9cVrI" 
+    frameborder="0" 
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+    allowfullscreen
+  ></iframe>
+</div>
 
 It also lets you save and manage your cover letters per each job, making it easy to make and apply to multiple jobs without having to keep copy and pasting all your important info into ChatGPT! 
 
 ## What’s the Tech Stack?
 
-![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/xpb97bgrx98bwxemrg0o.png)
+<Image src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/xpb97bgrx98bwxemrg0o.png" alt="Tech Stack" loading="lazy" width={700} height={700} />
 
 CoverLetterGPT is entirely open-source, so you can [check out the code](https://github.com/vincanger/coverlettergpt), fork it, learn from it, make your own, submit a PR (I’d love you forever if you did 🙂)… whatever!
 
@@ -48,9 +58,9 @@ All you have to focus on is writing the client and server-side logic, and Wasp w
 
 BTW, [Wasp](https://wasp-lang.dev) is open-source and free and you can help the project out a ton by starring the repo on GitHub: [https://www.github.com/wasp-lang/wasp](https://www.github.com/wasp-lang/wasp) 🙏
 
-![https://media1.giphy.com/media/ZfK4cXKJTTay1Ava29/giphy.gif?cid=7941fdc6pmqo30ll0e4rzdiisbtagx97sx5t0znx4lk0auju&ep=v1_gifs_search&rid=giphy.gif&ct=g](https://media1.giphy.com/media/ZfK4cXKJTTay1Ava29/giphy.gif?cid=7941fdc6pmqo30ll0e4rzdiisbtagx97sx5t0znx4lk0auju&ep=v1_gifs_search&rid=giphy.gif&ct=g)
+<Image src='https://media1.giphy.com/media/ZfK4cXKJTTay1Ava29/giphy.gif?cid=7941fdc6pmqo30ll0e4rzdiisbtagx97sx5t0znx4lk0auju&ep=v1_gifs_search&rid=giphy.gif&ct=g' loading="lazy" alt="star wasp" width={500} height={500} />
 
-{% cta [https://www.github.com/wasp-lang/wasp](https://www.github.com/wasp-lang/wasp) %} ⭐️ Thanks For Your Support 🙏  {% endcta %}
+[⭐️ Star Wasp on GitHub 🙏](https://www.github.com/wasp-lang/wasp)
 
 For the UI, I used [Chakra UI](https://chakra-ui.com/), as I always do. I like that it’s a component-based UI library. This helps me build UI’s a lot faster than I would with Tailwind or vanilla CSS.
 
@@ -58,9 +68,7 @@ For payments, I used [Stripe](https://www.notion.so/How-I-Built-and-Open-Sourced
 
 The Server and Postgres Database are hosted on [https://railway.app](https://railway.app/), with the client on [Netlify.com](http://Netlify.com)’s free tier.
 
-![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/09ca1yaqodkb7b2vnwr9.png)
-
-By the way, If you’re interested in building your own SaaS with almost the same stack as above, I also built a [free SaaS template](https://github.com/wasp-lang/SaaS-Template-GPT) you can use that will save you days of work!  
+By the way, If you’re interested in building your own SaaS with almost the same stack as above, I also built a [free SaaS template](https://github.com/wasp-lang/open-saas) you can use that will save you days of work!  
 
 ## How I Marketed It
 
@@ -74,13 +82,13 @@ First of all, the number of people who will realistically spend the time and ene
 
 Secondly, and most importantly, the fact that it’s open-source makes people a lot more receptive to you talking about it. 
 
-![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/q79djej6doj2yq10l2og.png)
+<Image src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/q79djej6doj2yq10l2og.png" alt="reddit" loading="lazy" width={700} height={700} />
 
 When you present something you’ve built and give people the opportunity to learn from it, they’re much more welcoming! As a result, they’re more likely to upvote it, share it, use it, and recommend it to others.
 
 This is exactly what happened with CoverLetterGPT! As a result of me sharing the open-source code, it get featured on the [IndieHackers.com](https://www.indiehackers.com/post/whats-new-don-t-build-things-no-one-wants-833ee752ba?utm_source=indie-hackers-emails&utm_campaign=ih-newsletter&utm_medium=email) newsletter (>100k subscribers), shared on blogs, and talked about on social media platforms.
 
-![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/44rlv65u97qhufbhqt0k.png)
+<Image src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/44rlv65u97qhufbhqt0k.png" alt="product hunt" loading="lazy" width={700} height={700} />
 
 And even though it’s a small, simple product, I tried launching it on [Product Hunt](http://producthunt.com), where it also performed considerably well.
 
@@ -101,7 +109,7 @@ My initial payment options were:
 - $4.95 for a 3 months access
 - $2.95 for 10 cover letter generations
 
-![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/golo3tnh3o0sy5sujrer.png)
+<Image src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/golo3tnh3o0sy5sujrer.png" alt="pricing page" loading="lazy" width={700} height={700} />
 
 That went reasonably well until I implemented the ability for users to use GPT to make finer edits to their generated cover letters. That’s when I changed my pricing and that’s when better profits started to come in:
 
@@ -146,6 +154,6 @@ Here are also the most important links from this article along with some further
 
 Oh, and if you found these resources useful, don't forget to support Wasp by [starring the repo on GitHub](https://github.com/wasp-lang/wasp)! 
 
-![https://res.cloudinary.com/practicaldev/image/fetch/s--OCpry2p9--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_800/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/bky8z46ii7ayejprrqw3.gif](https://res.cloudinary.com/practicaldev/image/fetch/s--OCpry2p9--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_800/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/bky8z46ii7ayejprrqw3.gif)
+<Image src="https://res.cloudinary.com/practicaldev/image/fetch/s--OCpry2p9--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_800/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/bky8z46ii7ayejprrqw3.gif" alt="star wasp" loading="lazy" width={500} height={500} />
 
-{% cta [https://www.github.com/wasp-lang/wasp](https://www.github.com/wasp-lang/wasp) %} ⭐️ Thanks For Your Support 🙏  {% endcta %}
+[⭐️ Thanks For Your Support 🙏 ](https://www.github.com/wasp-lang/wasp)

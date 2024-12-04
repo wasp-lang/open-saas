@@ -2,7 +2,7 @@
 title: Getting Started
 banner:
   content: |
-    🆕 Open SaaS is now running on <b><a href='https://wasp-lang.dev'>Wasp v0.15</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp-lang.dev/docs/migration-guides/migrate-from-0-14-to-0-15">migration instructions.</a>
+    Open SaaS is now running on <b><a href='https://wasp-lang.dev'>Wasp v0.15</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp-lang.dev/docs/migration-guides/migrate-from-0-14-to-0-15">migration instructions.</a>
 ---
 
 This guide will help you get your new SaaS app up and running.
@@ -17,8 +17,8 @@ Your version of Node.js must be >= 18.
 To switch easily between Node.js versions, we recommend using [nvm](https://github.com/nvm-sh/nvm).
 
 :::note[Installing and using nvm]
-<details>
-  <summary>
+<details aria-label="Installing and using nvm">
+  <summary aria-label="Need help with nvm?">
     Need help with nvm?
   </summary>
   <div>
@@ -47,7 +47,7 @@ node -v
 
 to check the version of Node.js currently being used in this shell session.
 
-Check NVM repo for more details: https://github.com/nvm-sh/nvm.
+Check NVM repo for more details: [https://github.com/nvm-sh/nvm](https://github.com/nvm-sh/nvm).
 
   </div>
 </details>
@@ -63,11 +63,11 @@ curl -sSL https://get.wasp-lang.dev/installer.sh | sh
 ```
 
 :::caution[Bad CPU type in executable]
-<details>
-  <summary>
+<details aria-label="Bad CPU type in executable">
+  <summary aria-label="Are you getting this error on a Mac (Apple Silicon)?">
     Are you getting this error on a Mac (Apple Silicon)?
   </summary>
-Given that the wasp binary is built for x86 and not for arm64 (Apple Silicon), you'll need to install <a href='https://support.apple.com/en-us/HT211861'>Rosetta on your Mac</a> if you are using a Mac with Mx (M1, M2, ...). Rosetta is a translation process that enables users to run applications designed for x86 on arm64 (Apple Silicon). To install Rosetta, run the following command in your terminal
+Given that the wasp binary is built for x86 and not for arm64 (Apple Silicon), you'll need to install <a href='https://support.apple.com/en-us/HT211861' alt='Rosetta on your Mac'>Rosetta on your Mac</a> if you are using a Mac with Mx (M1, M2, ...). Rosetta is a translation process that enables users to run applications designed for x86 on arm64 (Apple Silicon). To install Rosetta, run the following command in your terminal
 
 ```bash
 softwareupdate --install-rosetta
@@ -89,8 +89,8 @@ curl -sSL https://get.wasp-lang.dev/installer.sh | sh
 ```
 
 :::caution[WSL2 and file system issues]
-<details>
-  <summary>
+<details aria-label="Are you getting file system issues using WSL2?">
+  <summary aria-label="Are you getting file system issues using WSL2?">
     Are you getting file system issues using WSL2?
   </summary>
 If you are using WSL2, make sure that your Wasp project is not on the Windows file system, <b>but instead on the Linux file system</b>. Otherwise, Wasp won't be able to detect file changes, due to this <a href='https://github.com/microsoft/WSL/issues/4739'>issue in WSL2</a>.
