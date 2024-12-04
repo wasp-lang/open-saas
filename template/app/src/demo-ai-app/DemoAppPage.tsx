@@ -152,10 +152,14 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
               }
             }}
           />
-          <button
+         <button
             type='button'
             onClick={handleSubmit}
-            className='min-w-[7rem] font-medium text-gray-800/90 bg-yellow-50 shadow-md ring-1 ring-inset ring-slate-200 py-2 px-4 rounded-md hover:bg-yellow-100 duration-200 ease-in-out focus:outline-none focus:shadow-none hover:shadow-none'
+            disabled={!description}
+            className={cn(
+              'min-w-[7rem] font-medium text-gray-800/90 bg-yellow-50 shadow-md ring-1 ring-inset ring-slate-200 py-2 px-4 rounded-md duration-200 ease-in-out focus:outline-none focus:shadow-none',
+              description && 'hover:bg-yellow-100 hover:shadow-none'
+            )}
           >
             Add Task
           </button>
