@@ -21,7 +21,7 @@
     "react-apexcharts": "1.4.1",
     "react-hot-toast": "^2.4.1",
     "react-icons": "4.11.0",
-    "stripe": "11.15.0",
+    "stripe": "17.2.0",
     "tailwind-merge": "^2.2.1",
     "vanilla-cookieconsent": "^3.0.1",
     "wasp": "file:.wasp/out/sdk/wasp",
