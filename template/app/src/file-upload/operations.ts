@@ -6,10 +6,7 @@ import {
   type GetDownloadFileSignedURL,
 } from 'wasp/server/operations';
 
-import {
-  getUploadFileSignedURLFromS3,
-  getDownloadFileSignedURLFromS3
-} from './s3Utils';
+import { getUploadFileSignedURLFromS3, getDownloadFileSignedURLFromS3 } from './s3Utils';
 
 type FileDescription = {
   fileType: string;
