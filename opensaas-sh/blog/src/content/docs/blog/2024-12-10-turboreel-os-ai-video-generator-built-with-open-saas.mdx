@@ -20,15 +20,13 @@ Peter is the creator of [**TurboReel**](https://turboreelgpt.tech/), an open-sou
 
 But like any SaaS founder, Peter faced the challenge of turning his vision into reality without getting bogged down in repetitive technical setup. That’s where [**Wasp’s Open SaaS boilerplate**](https://opensaas.sh/) came in.
 
-In this post, we'll cover three main things: what gave Peter the idea, how he chose the tech stack to build on, and finally, how he made his first $100. Let's dive in!
+In this post, we'll cover three main things: what gave Peter an idea, how he chose the tech stack to build on, and finally, how he made his first $100. Let's dive in!
 
 ## The Starting Point: Open SaaS Boilerplate
 
-Peter’s journey to Open SaaS began with a simple Google search for SaaS boilerplates. 
+Peter’s journey to Open SaaS began with a simple Google search for SaaS boilerplates. "I was looking for something that could save me time," Peter recalls. "I came across a few options—some were free but basic, and [others were paid but didn’t feel worth it](https://docs.opensaas.sh/blog/2024-12-04-open-source-saas-boilerplate-vs-paid/). Then I found Wasp’s Open SaaS boilerplate."
 
-> *"I was looking for something that could save me time,"* Peter recalls. *"I came across a few options—some were free but basic, and [others were paid but didn’t feel worth it](https://docs.opensaas.sh/blog/2024-12-04-open-source-saas-boilerplate-vs-paid/). Then I found Wasp’s Open SaaS boilerplate."*
-
-What stood out to Peter wasn’t just that it was free, but that it was **open source**. *"I liked the idea of building on something maintained by a community, not locked behind a paywall,"* he says. Intrigued, Peter explored [Wasp](https://wasp-lang.dev/) further and discovered an engaging community that offered exactly what he needed to start building TurboReel.
+What stood out to Peter wasn’t just that it was free, but that it was **open source**. *"I liked the idea of building on something maintained by a community, not locked behind a paywall*", he says. Intrigued, Peter explored [Wasp](https://wasp-lang.dev/) further and discovered an engaging community that offered exactly what he needed to start building TurboReel.
 
 Here’s a video presenting Open SaaS, generated with TurboReel 🐝
 
@@ -36,59 +34,62 @@ Here’s a video presenting Open SaaS, generated with TurboReel 🐝
 
 ## TurboReel’s Tech Stack
 
-TurboReel lets users generate short explainer videos with minimal effort. Starting with a single text prompt describing the video’s purpose (e.g., “Create a video on building your SaaS with OpenSaaS”), users can produce professional-grade TikTok and YT shorts without needing any video editing skills.
+TurboReel lets users generate short explainer videos with minimal effort. Starting with a single text prompt describing the video’s purpose (e.g. “Create a video on building your SaaS with OpenSaaS”), you can produce professional grade TikTok and YT shorts without needing any video editing skills.
 
 <VideoPlayer src={interface} />
 
-The platform’s **open-source foundation** unlocks development potential, while the **paid SaaS layer** helps with funding.
+The platform’s **open-source foundation** unlocks development potential, while the **paid SaaS layer** helps with funding. 
 
-Here’s a closer look at the tech stack behind TurboReel:
+The tech behind TurboReel looks like this:
 
 - **Open SaaS - a free, open-source React & Node.js SaaS starter**
-  - Powered by [Wasp](https://wasp-lang.dev/), a full-stack web framework for JavaScript.
-  - Combines **React** for the frontend and **Node.js** for backend.
-  - [Prisma](https://www.prisma.io/) handles the database.
+    - powered by Wasp, a full stack web framework for JS.
+    - Combines **React** for the frontend and **Node.js** for backend.
+    - [Prisma](https://www.prisma.io/) handles the database.
 - **OpenAI**
-  - Used for generating scripts and scenes in the videos.
+    - Used for generating scripts and scenes in the videos.
 - [**Pollinations**](https://pollinations.ai/)
-  - Open-source platform for image and text generation.
-  - Provides creative assets to enhance video quality.
+    - Open-source platform for image and text generation.
+    - Provides creative assets to enhance video quality.
 - [**Revideo**](https://re.video/)
-  - Library for programmatic video creation, replacing the previously used **MoviePy**.
+    - Library for programmatic video creation.
+    - Replaces the previously used **MoviePy**.
 
-## Building Faster With Open SaaS Boilerplate
+### Building faster with Open SaaS boilerplate
 
-*"The first thing that impressed me with Open SaaS was how much time it saved,"* Peter says. *"I could start with `wasp new saas` and immediately have a functioning boilerplate. It gave me the foundation I needed to focus on my product, not the setup."*
+> "The first thing that impressed me with Open SaaS was how much time it saved, I could start with `wasp new saas` and immediately have a functioning boilerplate. It gave me the foundation I needed to focus on my product, not the setup."
 
 The boilerplate included everything he needed:
 
-- **Authentication via email, GitHub, and Google**
+- **Authentication via email, GitHub and Google**
 - **Running background jobs via pg-boss**
 - **Database management**
 - **Frontend-backend communication via a type-safe RPC layer**
 - **Deployment of the app with a single CLI command**
 
-One feature that particularly stood out was **Wasp’s deployment commands**. 
+One feature that particularly stood out was **Wasp’s deployment commands**. "Usually, deployment takes time to set up properly," Peter explains. "But with Wasp, it was as simple as running `wasp deploy fly deploy`. "
 
-> "Usually, deployment takes time to set up properly," Peter explains. "But with Wasp, it was as simple as running `wasp deploy fly deploy`."
+Here's what Wasp's config file looks like, through which you can define full-stack auth in a Wasp app.
 
-Here’s what Wasp's config file looks like, showcasing full-stack auth in a Wasp app:
-
-```wasp
+```bash
 app myApp {
   wasp: {
     version: "^0.15.0"
   },
   title: "My App",
   auth: {
+    // 1. Specify the User entity
     userEntity: User,
     methods: {
+      // 2. Enable Github Auth
       gitHub: {},
       email: {
+        // 3. Specify the email from field
         fromField: {
           name: "My App Postman",
           email: "hello@itsme.com"
         },
+        // 4. Specify the email verification and password reset options
         emailVerification: {
           clientRoute: EmailVerificationRoute
         },
@@ -102,24 +103,24 @@ app myApp {
 }
 ```
 
-## Out-of-the-box Stripe Integration
+### Out-of-the-box Stripe integration
 
-Another significant advantage for Peter was how Open SaaS handled third-party integrations. Setting up services like [**Stripe for payments**](https://docs.opensaas.sh/guides/payments-integration/) often requires a lot of effort, but Wasp’s Open SaaS streamlined the process—just add your API key and you're good to go.
+Another significant advantage for Peter was how Open SaaS handled third-party integrations. Setting up services like [**Stripe for payments**](https://docs.opensaas.sh/guides/payments-integration/) often requires a lot of effort, but Wasp’s OpenSaaS streamlined the process - you just need to add your API key and you're good to go.
 
-> *"Payments are usually a huge headache,"* Peter says. *"But Open SaaS made it so smooth. I didn’t have to spend weeks integrating Stripe—it just worked. That gave me more time to focus on TurboReel’s core functionality."*
+> *"Payments are usually a huge headache"* Peter says. "*But Open SaaS made it so smooth. I didn’t have to spend weeks integrating Stripe—it just worked. That gave me more time to focus on TurboReel’s core functionality.*"
 
-## The Power of Open Source
+### The power of open source
 
-Both TurboReel and Wasp share a commitment to open source.
+Both TurboReel and Wasp share a commitment to open source. 
 
-> *"The video generation space is complex,"* Peter explains. *"There aren’t many established solutions for what I’m trying to do. [By making TurboReel open source](https://github.com/TurboReel), I’m inviting smart people to collaborate and help push the project forward."*
+"The video generation space is complex," Peter explains. "There aren’t many established solutions for what I’m trying to do. [By making TurboReel open source](https://github.com/TurboReel), I’m inviting smart people to collaborate and help push the project forward."
 
-## Getting First Users
+## Getting first users
 
-Peter found interesting subreddits on Reddit and shared his product with users. He enabled everyone to sign up and create a few videos to get feedback early. Many in the creator community loved it, and based on their feedback, he iterated, improving the UI and workflow. 
+Peter found interesting subreddits on Reddit and shared his product with users. He enabled everyone to sign up and create a few videos, to get feedback quite early. Lots of people in the creator community loved it, and based off of their feedback, he iterated furthermore improving the UI and the workflow. 
 
-Within days, he secured his first paying customers, validating that his MVP was heading in the right direction. Plans for the future? The sky is the limit!
+Within a few days, he was able to get first paying customers, which proved that his MVP was going in the right direction. Plans for the future? The sky is the limit!
 
-## Ready to Build Your SaaS?
+### Ready to Build Your SaaS?
 
 Get started with [Wasp](https://wasp-lang.dev/) today, or explore the [Open SaaS boilerplate](https://opensaas.sh/) to see how it can work for you.
