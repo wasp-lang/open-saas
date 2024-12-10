@@ -1,30 +1,31 @@
 import { cn } from '../client/cn';
 import { useState, useEffect, FormEvent } from 'react';
+import type { File } from 'wasp/entities';
 import { useQuery, getAllFilesByUser, getDownloadFileSignedURL } from 'wasp/client/operations';
 import { type FileUploadError, uploadFileWithProgress, validateFile, ALLOWED_FILE_TYPES } from './fileUploading';
 
 export default function FileUploadPage() {
-  const [fileToDownload, setFileToDownload] = useState<string>('');
-  const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const [fileKeyForS3, setFileKeyForS3] = useState<File['key']>('');
+  const [uploadProgressPercent, setUploadProgressPercent] = useState<number>(0);
   const [uploadError, setUploadError] = useState<FileUploadError | null>(null);
 
-  const { data: files, error: filesError, isLoading: isFilesLoading, refetch: refetchFiles } = useQuery(getAllFilesByUser, undefined, {
+  const allUserFiles = useQuery(getAllFilesByUser, undefined, {
     // We disable automatic refetching because otherwise files would be refetched after `createFile` is called and the S3 URL is returned, 
     // which happens before the file is actually fully uploaded. Instead, we manually (re)fetch on mount and after the upload is complete.
     enabled: false,
   });
   const { isLoading: isDownloadUrlLoading, refetch: refetchDownloadUrl } = useQuery(
     getDownloadFileSignedURL,
-    { key: fileToDownload },
+    { key: fileKeyForS3 },
     { enabled: false }
   );
 
   useEffect(() => {
-    refetchFiles();
+    allUserFiles.refetch();
   }, []);
 
   useEffect(() => {
-    if (fileToDownload.length > 0) {
+    if (fileKeyForS3.length > 0) {
       refetchDownloadUrl()
         .then((urlQuery) => {
           switch (urlQuery.status) {
@@ -38,10 +39,10 @@ export default function FileUploadPage() {
           }
         })
         .finally(() => {
-          setFileToDownload('');
+          setFileKeyForS3('');
         });
     }
-  }, [fileToDownload]);
+  }, [fileKeyForS3]);
 
   const handleUpload = async (e: FormEvent<HTMLFormElement>) => {
     try {
@@ -69,9 +70,9 @@ export default function FileUploadPage() {
         return;
       }
 
-      await uploadFileWithProgress({ file, setUploadProgress });
+      await uploadFileWithProgress({ file, setUploadProgressPercent });
       formElement.reset();
-      refetchFiles();
+      allUserFiles.refetch();
     } catch (error) {
       console.error('Error uploading file:', error);
       setUploadError({
@@ -80,7 +81,7 @@ export default function FileUploadPage() {
         code: 'UPLOAD_FAILED',
       });
     } finally {
-      setUploadProgress(0);
+      setUploadProgressPercent(0);
     }
   };
 
@@ -109,16 +110,17 @@ export default function FileUploadPage() {
               />
               <button
                 type='submit'
-                disabled={uploadProgress > 0}
+                disabled={uploadProgressPercent > 0}
                 className='min-w-[7rem] relative font-medium text-gray-800/90 bg-yellow-50 shadow-md ring-1 ring-inset ring-slate-200 py-2 px-4 rounded-md hover:bg-yellow-100 duration-200 ease-in-out focus:outline-none focus:shadow-none hover:shadow-none disabled:cursor-progress'
               >
-                {uploadProgress > 0 ? (
+                {uploadProgressPercent > 0 ? (
                   <>
-                    <span>Uploading {uploadProgress}%</span>
-                    <div
-                      className='absolute bottom-0 left-0 h-1 bg-yellow-500 transition-all duration-300 ease-in-out rounded-b-md'
-                      style={{ width: `${uploadProgress}%` }}
-                    ></div>
+                    <span>Uploading {uploadProgressPercent}%</span>
+                    <progress
+                      value={uploadProgressPercent}
+                      max='100'
+                      className='absolute bottom-0 left-0 h-1 w-full rounded-b-md [&::-webkit-progress-bar]{background-color:transparent} [&::-webkit-progress-value]{background-color:#eab308;transition-property:all;transition-duration:300ms;transition-timing-function:ease-in-out;border-radius:0.375rem}'
+                    />
                   </>
                 ) : (
                   'Upload'
@@ -129,26 +131,26 @@ export default function FileUploadPage() {
             <div className='border-b-2 border-gray-200 dark:border-gray-100/10'></div>
             <div className='space-y-4 col-span-full'>
               <h2 className='text-xl font-bold'>Uploaded Files</h2>
-              {isFilesLoading && <p>Loading...</p>}
-              {filesError && <p>Error: {filesError.message}</p>}
-              {!!files && files.length > 0 && !isFilesLoading ? (
-                files.map((file: any) => (
+              {allUserFiles.isLoading && <p>Loading...</p>}
+              {allUserFiles.error && <p>Error: {allUserFiles.error.message}</p>}
+              {!!allUserFiles.data && allUserFiles.data.length > 0 && !allUserFiles.isLoading ? (
+                allUserFiles.data.map((file: File) => (
                   <div
                     key={file.key}
                     className={cn(
                       'flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3',
                       {
-                        'opacity-70': file.key === fileToDownload && isDownloadUrlLoading,
+                        'opacity-70': file.key === fileKeyForS3 && isDownloadUrlLoading,
                       }
                     )}
                   >
                     <p>{file.name}</p>
                     <button
-                      onClick={() => setFileToDownload(file.key)}
-                      disabled={file.key === fileToDownload && isDownloadUrlLoading}
+                      onClick={() => setFileKeyForS3(file.key)}
+                      disabled={file.key === fileKeyForS3 && isDownloadUrlLoading}
                       className='min-w-[7rem] text-sm text-gray-800/90 bg-purple-50 shadow-md ring-1 ring-inset ring-slate-200 py-1 px-2 rounded-md hover:bg-purple-100 duration-200 ease-in-out focus:outline-none focus:shadow-none hover:shadow-none disabled:cursor-not-allowed'
                     >
-                      {file.key === fileToDownload && isDownloadUrlLoading ? 'Loading...' : 'Download'}
+                      {file.key === fileKeyForS3 && isDownloadUrlLoading ? 'Loading...' : 'Download'}
                     </button>
                   </div>
                 ))

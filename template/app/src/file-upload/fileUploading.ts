@@ -2,9 +2,9 @@ import { Dispatch, SetStateAction } from 'react';
 import { createFile } from 'wasp/client/operations';
 import axios from 'axios';
 
-interface UploadFileProgress {
+interface FileUploadProgress {
   file: File;
-  setUploadProgress: Dispatch<SetStateAction<number>>;
+  setUploadProgressPercent: Dispatch<SetStateAction<number>>;
 }
 
 export interface FileUploadError {
@@ -12,7 +12,7 @@ export interface FileUploadError {
   code: 'NO_FILE' | 'INVALID_FILE_TYPE' | 'FILE_TOO_LARGE' | 'UPLOAD_FAILED';
 }
 
-export const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB limit
+export const MAX_FILE_SIZE = 5 * 1024 * 1024; // Set this to the max file size you want to allow (currently 5MB).
 export const ALLOWED_FILE_TYPES = [
   'image/jpeg',
   'image/png',
@@ -22,20 +22,16 @@ export const ALLOWED_FILE_TYPES = [
   'video/mp4',
 ];
 
-export async function uploadFileWithProgress({ file, setUploadProgress }: UploadFileProgress) {
-  const fileType = file.type;
-  const name = file.name;
-
-  const { uploadUrl } = await createFile({ fileType, name });
-
+export async function uploadFileWithProgress({ file, setUploadProgressPercent }: FileUploadProgress) {
+  const { uploadUrl } = await createFile({ fileType: file.type, name: file.name });
   return await axios.put(uploadUrl, file, {
     headers: {
-      'Content-Type': fileType,
+      'Content-Type': file.type,
     },
     onUploadProgress: (progressEvent) => {
       if (progressEvent.total) {
         const percentage = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-        setUploadProgress(percentage);
+        setUploadProgressPercent(percentage);
       }
     },
   });
