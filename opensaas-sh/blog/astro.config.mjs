@@ -107,6 +107,12 @@ export default defineConfig({
               picture: '/matija.jpeg', // Images in the `public` directory are supported.
               url: 'https://wasp-lang.dev',
             },
+            milica: {
+              name: 'Milica',
+              title: 'Growth @ Wasp',
+              picture: '/milica.jpg', // Images in the `public` directory are supported.
+              url: 'https://wasp-lang.dev',
+            },
           },
         }),
       ],
