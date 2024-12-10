@@ -116,11 +116,14 @@ export default function FileUploadPage() {
                 {uploadProgressPercent > 0 ? (
                   <>
                     <span>Uploading {uploadProgressPercent}%</span>
-                    <progress
-                      value={uploadProgressPercent}
-                      max='100'
-                      className='absolute bottom-0 left-0 h-1 w-full rounded-b-md [&::-webkit-progress-bar]{background-color:transparent} [&::-webkit-progress-value]{background-color:#eab308;transition-property:all;transition-duration:300ms;transition-timing-function:ease-in-out;border-radius:0.375rem}'
-                    />
+                    <div
+                      role="progressbar"
+                      aria-valuenow={uploadProgressPercent}
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      className="absolute bottom-0 left-0 h-1 bg-yellow-500 transition-all duration-300 ease-in-out rounded-b-md"
+                      style={{ width: `${uploadProgressPercent}%` }}
+                    ></div>
                   </>
                 ) : (
                   'Upload'
