@@ -6,7 +6,7 @@ import tailwind from '@astrojs/tailwind';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://opensaas.sh',
+  site: 'https://docs.opensaas.sh',
   trailingSlash: 'always',
   integrations: [
     starlight({
@@ -23,7 +23,8 @@ export default defineConfig({
           attrs: {
             defer: true,
             'data-domain': 'docs.opensaas.sh',
-            src: 'https://plausible.apps.twoducks.dev/js/script.js',
+            'data-api': 'https://opensaas.sh/wasparadocs/wasp/event',
+            src: 'https://opensaas.sh/wasparadocs/wasp/script.js',
           },
         },
         {
@@ -49,6 +50,8 @@ export default defineConfig({
       components: {
         SiteTitle: './src/components/MyHeader.astro',
         ThemeSelect: './src/components/MyThemeSelect.astro',
+        Head: './src/components/HeadWithOGImage.astro',
+        PageTitle: './src/components/TitleWithBannerImage.astro',
       },
       social: {
         github: 'https://github.com/wasp-lang/open-saas',
@@ -96,6 +99,12 @@ export default defineConfig({
               name: 'Vince',
               title: 'Dev Rel @ Wasp',
               picture: '/CRAIG_ROCK.png', // Images in the `public` directory are supported.
+              url: 'https://wasp-lang.dev',
+            },
+            matija: {
+              name: 'Matija',
+              title: 'CEO @ Wasp',
+              picture: '/matija.jpeg', // Images in the `public` directory are supported.
               url: 'https://wasp-lang.dev',
             },
           },

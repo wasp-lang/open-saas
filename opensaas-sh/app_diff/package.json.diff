@@ -18,4 +18,4 @@
 -    "@lemonsqueezy/lemonsqueezy.js": "^3.2.0",
      "@tailwindcss/forms": "^0.5.3",
      "@tailwindcss/typography": "^0.5.7",
-     "apexcharts": "^3.41.0",
+     "apexcharts": "3.41.0",

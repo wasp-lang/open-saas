@@ -1,13 +1,14 @@
+import type { NavigationItem } from '../client/components/NavBar/NavBar';
+import { routes } from 'wasp/client/router';
 import { DocsUrl, BlogUrl } from '../shared/common';
 import daBoiAvatar from '../client/static/da-boi.webp';
 import avatarPlaceholder from '../client/static/avatar-placeholder.webp';
-import { routes } from 'wasp/client/router';
 
-export const navigation = [
-  { name: 'Features', href: '#features' },
-  { name: 'Pricing', href: routes.PricingPageRoute.build() },
-  { name: 'Documentation', href: DocsUrl },
-  { name: 'Blog', href: BlogUrl },
+export const landingPageNavigationItems: NavigationItem[] = [
+  { name: 'Features', to: '#features' },
+  { name: 'Pricing', to: routes.PricingPageRoute.to },
+  { name: 'Documentation', to: DocsUrl },
+  { name: 'Blog', to: BlogUrl },
 ];
 export const features = [
   {

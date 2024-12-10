@@ -1,0 +1,27 @@
+---
+interface Props {
+  src: string;
+}
+
+const { src } = Astro.props;
+---
+
+<video
+  src={src}
+  preload="true"
+  autoplay
+  muted
+  controls
+  loop
+>
+  <track kind="captions">
+</video>
+
+<style>
+  .video-player {
+    width: 100%;
+    max-width: 800px;
+    margin: 2rem auto;
+    border-radius: 8px;
+  }
+</style>

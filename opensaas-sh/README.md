@@ -13,20 +13,30 @@ Inception :)!
 Since the demo app is just the open saas template with some small tweaks, and we want to be able to easily keep it up to date as the template changes, we don't version (in git) the actual demo app code, instead we version the diffs between it and the template: `app_diff/`.
 
 So because we don't version the actual demo app (`app/`) but its diffs instead (`app_diff`), the typical workflow is as follows:
+
 1. Run `./tools/patch.sh` to generate `app/` from `../template/` and `app_diff/`.
 2. If there are any conflicts (normally due to updates to the template), modify `app/` till you resolve them. Do any additional changes also if you wish.
 3. Generate new `app_diff/`, based on the current updated `app/`, by running `./tools/diff.sh`.
 
-> [!WARNING]  
-> If you're running the `patch.sh` or `diff.sh` scripts on Mac, you need to have `grealpath` (packaged within `coreutils`) and `gpatch` installed. You should also create aliases for `realpath` and `patch`:
-> ```sh
-> brew install coreutils # contains grealpath
-> brew install gpatch
->
-> echo 'alias realpath="grealpath"' >> ~/.zshrc
-> echo 'alias patch="gpatch"' >> ~/.zshrc
-> source ~/.zshrc
-> ```
+**Running on MacOS**
+
+If you're running the `patch.sh` or `diff.sh` scripts on Mac, you need to install:
+
+- `grealpath` (packaged within `coreutils`),
+- `gpatch`,
+- and `diffutils`.
+
+You should also create aliases for `realpath` and `patch`:
+
+```sh
+brew install coreutils # contains grealpath
+brew install gpatch
+brew install diffutils
+
+echo 'alias realpath="grealpath"' >> ~/.zshrc
+echo 'alias patch="gpatch"' >> ~/.zshrc
+source ~/.zshrc
+```
 
 Make sure not to commit `app/` to git. It is currently (until we resolve this) not added to .gitignore because that messes up diffing for us.
 

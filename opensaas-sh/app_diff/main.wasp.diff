@@ -1,6 +1,6 @@
 --- template/app/main.wasp
 +++ opensaas-sh/app/main.wasp
-@@ -3,30 +3,30 @@
+@@ -3,30 +3,29 @@
      version: "^0.15.0"
    },
  
@@ -43,12 +43,11 @@
 -    // via the Cookie Consent component after the user clicks the "Accept" cookies button.
 -    "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.js'></script>",  // for production
 -    "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.local.js'></script>",  // for development
-+    "<script defer data-domain='opensaas.sh' src='https://plausible.apps.twoducks.dev/js/script.js'></script>",
-+    "<script defer data-domain='opensaas.sh' src='https://plausible.apps.twoducks.dev/js/script.local.js'></script>",
++    "<script defer data-domain='opensaas.sh' data-api='/waspara/wasp/event' src='/waspara/wasp/script.js'></script>",
    ],
  
    // 🔐 Auth out of the box! https://wasp-lang.dev/docs/auth/overview
-@@ -38,7 +38,7 @@
+@@ -38,7 +37,7 @@
        email: {
          fromField: {
            name: "Open SaaS App",
@@ -57,7 +56,7 @@
          },
          emailVerification: {
            clientRoute: EmailVerificationRoute,
-@@ -50,21 +50,18 @@
+@@ -50,21 +49,18 @@
          },
          userSignupFields: import { getEmailUserFields } from "@src/auth/userSignupFields",
        },
@@ -91,7 +90,7 @@
      },
      onAfterSignup: import { onAfterSignup } from "@src/auth/hooks",
      onAuthFailedRedirectTo: "/login",
-@@ -87,11 +84,11 @@
+@@ -87,11 +83,11 @@
      // NOTE: "Dummy" provider is just for local development purposes.
      //   Make sure to check the server logs for the email confirmation url (it will not be sent to an address)!
      //   Once you are ready for production, switch to e.g. "SendGrid" or "Mailgun" providers. Check out https://docs.opensaas.sh/guides/email-sending/ .
@@ -105,7 +104,7 @@
      },
    },
  }
-@@ -212,9 +209,9 @@
+@@ -212,9 +208,9 @@
  }
  
  api paymentsWebhook {
