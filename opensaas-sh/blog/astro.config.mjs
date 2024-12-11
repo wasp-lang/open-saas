@@ -69,25 +69,11 @@ export default defineConfig({
         },
         {
           label: 'Guides',
-          items: [
-            { label: 'Authentication', link: '/guides/authentication/' },
-            { label: 'Authorization', link: '/guides/authorization/' },
-            { label: 'Payments Integration', link: '/guides/payments-integration/' },
-            { label: 'Analytics', link: '/guides/analytics/' },
-            { label: 'SEO', link: '/guides/seo/' },
-            { label: 'Email Sending', link: '/guides/email-sending/' },
-            { label: 'File Uploading', link: '/guides/file-uploading/' },
-            { label: 'Cookie Consent', link: '/guides/cookie-consent/' },
-            { label: 'Tests', link: '/guides/tests/' },
-            { label: 'Deploying', link: '/guides/deploying/' },
-          ],
+          autogenerate: { directory: '/guides/' },
         },
         {
           label: 'General',
-          items: [
-            { label: 'Admin Dashboard', link: '/general/admin-dashboard/' },
-            { label: 'User Overview', link: '/general/user-overview/' },
-          ],
+          autogenerate: { directory: '/general/' },
         },
       ],
       plugins: [

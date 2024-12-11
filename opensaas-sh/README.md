@@ -44,6 +44,8 @@ Make sure not to commit `app/` to git. It is currently (until we resolve this) n
 
 Blog (and docs in it) is currently tracked in whole, as it has quite some content, so updating it to the latest version of Open Saas is done manually, but it might be interesting to also move it to the `diff` approach, as we use for the demo app, if it turns out to be a good match.
 
+For more info on authoring content for the docs and blog, including information on custom components, see the [blog/README.md](blog/README.md).
+
 ## Deployment
 
 App: check its README.md (after you generate it with `.tools/patch.sh`) .
