@@ -6,11 +6,36 @@ on:
       - main
     paths:
       - 'opensaas-sh/blog/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'opensaas-sh/blog/**'
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      working-directory: ./opensaas-sh/blog
+      run: npm install
+
+    - name: Build site
+      working-directory: ./opensaas-sh/blog
+      run: npm run build
+
   deploy:
     runs-on: ubuntu-latest
-
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
