@@ -1,9 +1,11 @@
 ---
 interface Props {
   src: string;
+  lgWidth?: string;
+  smWidth?: string;
 }
 
-const { src } = Astro.props;
+const { src, lgWidth = '55%', smWidth = '100%' } = Astro.props;
 ---
 
 <video
@@ -13,15 +15,21 @@ const { src } = Astro.props;
   muted
   controls
   loop
+  class="video-player"
 >
   <track kind="captions">
 </video>
 
-<style>
+<style define:vars={{ lgWidth, smWidth }}>
   .video-player {
-    width: 100%;
-    max-width: 800px;
+    width: var(--lgWidth);
     margin: 2rem auto;
     border-radius: 8px;
+  }
+
+  @media (max-width: 425px) {
+    .video-player {
+      width: var(--smWidth);
+    }
   }
 </style>
