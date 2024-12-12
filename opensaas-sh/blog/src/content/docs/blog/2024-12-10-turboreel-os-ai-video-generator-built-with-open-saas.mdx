@@ -13,14 +13,16 @@ import { Image } from 'astro:assets';
 import landing from '../../../assets/turboreel/landing.webp';
 import studioInterface from '../../../assets/turboreel/studio-interface.mp4';
 import opensaas from '../../../assets/turboreel/opensaas.mp4';
-
-<Image src={landing} alt="Landing page" loading="lazy" />
+import reddit100Users from '../../../assets/turboreel/reddit-100-users.webp'
+import reddit200Upvotes from '../../../assets/turboreel/reddit-200-upvotes.webp'
 
 Peter is the creator of [**TurboReel**](https://turboreelgpt.tech/), an open-source platform with a paid SaaS layer, that transforms how creators generate short-form video content. With just a prompt, users can produce polished TikToks and YouTube Shorts in moments.
 
 But like any SaaS founder, Peter faced the challenge of turning his vision into reality without getting bogged down in repetitive technical setup. That’s where [**Wasp’s Open SaaS boilerplate**](https://opensaas.sh/) came in.
 
 In this post, we'll cover three main things: what gave Peter an idea, how he chose the tech stack to build on, and finally, how he made his first $100. Let's dive in!
+
+<Image src={reddit100Users} alt="Reddit screenshot, 100 users" loading="lazy" />
 
 ## The Starting Point: Open SaaS Boilerplate
 
@@ -30,13 +32,13 @@ What stood out to Peter wasn’t just that it was free, but that it was **open s
 
 Here’s a video presenting Open SaaS, generated with TurboReel 🐝
 
-<VideoPlayer src={opensaas} />
+<VideoPlayer src={opensaas} lgWidth="45%" />
 
 ## TurboReel’s Tech Stack
 
 TurboReel lets users generate short explainer videos with minimal effort. Starting with a single text prompt describing the video’s purpose (e.g. “Create a video on building your SaaS with OpenSaaS”), you can produce professional grade TikTok and YT shorts without needing any video editing skills.
 
-<VideoPlayer src={studioInterface} />
+<VideoPlayer src={studioInterface} lgWidth="100%" />
 
 The platform’s **open-source foundation** unlocks development potential, while the **paid SaaS layer** helps with funding. 
 
@@ -58,6 +60,8 @@ The tech behind TurboReel looks like this:
 ### Building faster with Open SaaS boilerplate
 
 > "The first thing that impressed me with Open SaaS was how much time it saved, I could start with `wasp new saas` and immediately have a functioning boilerplate. It gave me the foundation I needed to focus on my product, not the setup."
+>
+>**Peter, author of TurboReel**
 
 The boilerplate included everything he needed:
 
@@ -107,7 +111,9 @@ app myApp {
 
 Another significant advantage for Peter was how Open SaaS handled third-party integrations. Setting up services like [**Stripe for payments**](https://docs.opensaas.sh/guides/payments-integration/) often requires a lot of effort, but Wasp’s OpenSaaS streamlined the process - you just need to add your API key and you're good to go.
 
-> *"Payments are usually a huge headache"* Peter says. "*But Open SaaS made it so smooth. I didn’t have to spend weeks integrating Stripe—it just worked. That gave me more time to focus on TurboReel’s core functionality.*"
+> *"Payments are usually a huge headache, but Open SaaS made it so smooth. I didn’t have to spend weeks integrating Stripe—it just worked. That gave me more time to focus on TurboReel’s core functionality.*"
+>
+>**Peter, author of TurboReel**
 
 ### The power of open source
 
@@ -116,6 +122,8 @@ Both TurboReel and Wasp share a commitment to open source.
 "The video generation space is complex," Peter explains. "There aren’t many established solutions for what I’m trying to do. [By making TurboReel open source](https://github.com/TurboReel), I’m inviting smart people to collaborate and help push the project forward."
 
 ## Getting first users
+
+<Image src={reddit200Upvotes} alt="Reddit screenshot, 200 upvotes" loading="lazy" />
 
 Peter found interesting subreddits on Reddit and shared his product with users. He enabled everyone to sign up and create a few videos, to get feedback quite early. Lots of people in the creator community loved it, and based off of their feedback, he iterated furthermore improving the UI and the workflow. 
 
