@@ -14,7 +14,7 @@ Wasp gives you the ability to add meta tags to your landing page HTML via the `m
 ```js {8-11}
 app SaaSTemplate {
   wasp: {
-    version: "^0.13.0"
+    version: "^0.15.0"
   },
   title: "Open SaaS",
   head: [
@@ -56,7 +56,6 @@ import { HelmetProvider } from 'react-helmet-async';
 export default function App() {
   return (
     <HelmetProvider>
-      <>
         <div className='min-h-screen dark:text-white dark:bg-boxdark-2'>
           {isAdminDashboard ? (
             <Outlet />
@@ -68,7 +67,6 @@ export default function App() {
           )}
         </div>
         <CookieConsentBanner />
-      </>
     </HelmetProvider>
   );
 }
@@ -89,8 +87,11 @@ export function MyCustomPage() {
           name='description'
           content='This is the meta description of my page.'
         />
+        
         <link rel='canonical' href='https://example.com/my-custom-page' />
-        <meta name="robots" content="noindex, nofollow" />
+
+        {/* Robots */}
+        <meta name="robots" content="index, nollow" />
 
 
         {/* Open Graph / Facebook */}
@@ -130,48 +131,17 @@ There are certain pages that it is good SEO practice not to index, for example:
 ## Structured data and Schema markup
 
 :::note[Tip]
-Crawlers do all the work of analyzing and understanding the content of your pages, and they will thank you if you include structured data to help them understand what your content is about!🤗.
+Crawlers analyze your page content, and including structured data helps them better understand your content.
 :::
 
-You can add structured data for each page.
+Structured data is a standardized way to provide information about your page. You can learn more about it here:
 
-```jsx {14-22}
-//...
-import { Helmet, HelmetProvider } from 'react-helmet-async';
+- [Full schema hierarchy](https://schema.org/docs/full.html)
 
-export function MyCustomPage() {
-  return (
-    <div>
-      <Helmet>
-        <title>My Custom Page Title</title>
-        <meta
-          name='description'
-          content='This is the meta description of my page.'/>
-        <link rel='canonical' href='https://example.com/my-custom-page' />
-        //...
+To validate your structured data, you can use the following tool:
 
-        <script type='application/ld+json'>{`
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "title",
-    "url": "https://yoururl.com",
-    "description": "Description",
-    }
-  }
-`}  </script>
+- [Schema Validator](https://validator.schema.org/)
 
-      </Helmet>
-      //...
-```
-
-
-These resources provide the information needed to get the most out of structured data:
-- [Introduction to structured data markup](https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data)
-- [General structured data guidelines](https://developers.google.com/search/docs/appearance/structured-data/sd-policies)
-
-After you have a small notion about them, you can go deeper by adding custom functions depending on your app (FAQs, Rating, Review, Software Application...):
-- [ALL structured data functions](https://developers.google.com/search/docs/appearance/structured-data/search-gallery)
 
 
 :::tip[Star our Repo on GitHub! 🌟]
