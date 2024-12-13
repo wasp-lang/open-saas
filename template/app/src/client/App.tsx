@@ -1,8 +1,9 @@
 import './Main.css';
+import '../i18n';
 import NavBar from './components/NavBar/NavBar';
 import CookieConsentBanner from './components/cookie-consent/Banner';
-import { appNavigationItems } from './components/NavBar/contentSections';
-import { landingPageNavigationItems } from '../landing-page/contentSections';
+import { useAppNavigationItems } from './components/NavBar/contentSections';
+import { useLandingPageNavigationItems } from '../landing-page/contentSections';
 import { useMemo, useEffect } from 'react';
 import { routes } from 'wasp/client/router';
 import { Outlet, useLocation } from 'react-router-dom';
@@ -18,7 +19,11 @@ export default function App() {
   const location = useLocation();
   const { data: user } = useAuth();
   const isLandingPage = useIsLandingPage();
-  const navigationItems = isLandingPage ? landingPageNavigationItems : appNavigationItems;
+  
+  // Use the new hook instead of direct array
+  const appNavItems = useAppNavigationItems();
+  const landingPageNavItems = useLandingPageNavigationItems();
+  const navigationItems = isLandingPage ? landingPageNavItems : appNavItems;
 
   const shouldDisplayAppNavBar = useMemo(() => {
     return location.pathname !== routes.LoginRoute.build() && location.pathname !== routes.SignupRoute.build();
