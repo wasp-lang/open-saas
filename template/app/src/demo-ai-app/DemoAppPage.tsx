@@ -30,13 +30,11 @@ export default function DemoAppPage() {
         <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600 dark:text-white'>
           {t('aiScheduler.description')}
         </p>
-        {/* begin AI-powered Todo List */}
         <div className='my-8 border rounded-3xl border-gray-900/10 dark:border-gray-100/10'>
           <div className='sm:w-[90%] md:w-[70%] lg:w-[50%] py-10 px-6 mx-auto my-8 space-y-10'>
             <NewTaskForm handleCreateTask={createTask} />
           </div>
         </div>
-        {/* end AI-powered Todo List */}
       </div>
     </div>
   );
@@ -49,63 +47,63 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
   const [response, setResponse] = useState<GeneratedSchedule | null>({
     mainTasks: [
       {
-        name: 'Respond to emails',
+        name: t('aiScheduler.defaultTasks.email.name'),
         priority: 'high',
       },
       {
-        name: 'Learn WASP',
+        name: t('aiScheduler.defaultTasks.wasp.name'),
         priority: 'low',
       },
       {
-        name: 'Read a book',
+        name: t('aiScheduler.defaultTasks.book.name'),
         priority: 'medium',
       },
     ],
     subtasks: [
       {
-        description: 'Read introduction and chapter 1',
+        description: t('aiScheduler.defaultTasks.book.subtasks.intro.description'),
         time: 0.5,
-        mainTaskName: 'Read a book',
+        mainTaskName: t('aiScheduler.defaultTasks.book.name'),
       },
       {
-        description: 'Read chapter 2 and take notes',
+        description: t('aiScheduler.defaultTasks.book.subtasks.chapter2.description'),
         time: 0.3,
-        mainTaskName: 'Read a book',
+        mainTaskName: t('aiScheduler.defaultTasks.book.name'),
       },
       {
-        description: 'Read chapter 3 and summarize key points',
+        description: t('aiScheduler.defaultTasks.book.subtasks.chapter3.description'),
         time: 0.2,
-        mainTaskName: 'Read a book',
+        mainTaskName: t('aiScheduler.defaultTasks.book.name'),
       },
       {
-        description: 'Check and respond to important emails',
+        description: t('aiScheduler.defaultTasks.email.subtasks.check.description'),
         time: 1,
-        mainTaskName: 'Respond to emails',
+        mainTaskName: t('aiScheduler.defaultTasks.email.name'),
       },
       {
-        description: 'Organize and prioritize remaining emails',
+        description: t('aiScheduler.defaultTasks.email.subtasks.organize.description'),
         time: 0.5,
-        mainTaskName: 'Respond to emails',
+        mainTaskName: t('aiScheduler.defaultTasks.email.name'),
       },
       {
-        description: 'Draft responses to urgent emails',
+        description: t('aiScheduler.defaultTasks.email.subtasks.draft.description'),
         time: 0.5,
-        mainTaskName: 'Respond to emails',
+        mainTaskName: t('aiScheduler.defaultTasks.email.name'),
       },
       {
-        description: 'Watch tutorial video on WASP',
+        description: t('aiScheduler.defaultTasks.wasp.subtasks.watch.description'),
         time: 0.5,
-        mainTaskName: 'Learn WASP',
+        mainTaskName: t('aiScheduler.defaultTasks.wasp.name'),
       },
       {
-        description: 'Complete online quiz on the basics of WASP',
+        description: t('aiScheduler.defaultTasks.wasp.subtasks.quiz.description'),
         time: 1.5,
-        mainTaskName: 'Learn WASP',
+        mainTaskName: t('aiScheduler.defaultTasks.wasp.name'),
       },
       {
-        description: 'Review quiz answers and clarify doubts',
+        description: t('aiScheduler.defaultTasks.wasp.subtasks.review.description'),
         time: 1,
-        mainTaskName: 'Learn WASP',
+        mainTaskName: t('aiScheduler.defaultTasks.wasp.name'),
       },
     ],
   });
@@ -132,7 +130,7 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
         setResponse(response);
       }
     } catch (err: any) {
-      window.alert('Error: ' + (err.message || 'Something went wrong'));
+      window.alert(t('aiScheduler.form.errors.generic') + ': ' + (err.message || t('aiScheduler.form.errors.generic')));
     } finally {
       setIsPlanGenerating(false);
     }
@@ -155,7 +153,7 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
               }
             }}
           />
-         <button
+          <button
             type='button'
             onClick={handleSubmit}
             disabled={!description}
@@ -324,15 +322,6 @@ function TaskTable({ schedule }: { schedule: GeneratedSchedule }) {
 
 function MainTaskTable({ mainTask, subtasks }: { mainTask: MainTask; subtasks: SubTask[] }) {
   const { t } = useTranslation();
-  
-  const getMainTaskTranslationKey = (taskName: string) => {
-    const taskKeys: { [key: string]: string } = {
-      'Respond to emails': 'email.name',
-      'Read a book': 'book.name',
-      'Learn WASP': 'wasp.name'
-    };
-    return `aiScheduler.defaultTasks.${taskKeys[taskName] || taskName}`;
-  };
 
   return (
     <>
@@ -346,7 +335,7 @@ function MainTaskTable({ mainTask, subtasks }: { mainTask: MainTask; subtasks: S
               'bg-yellow-100': mainTask.priority === 'medium',
             }
           )}>
-            <span>{t(getMainTaskTranslationKey(mainTask.name))}</span>
+            <span>{mainTask.name}</span>
             <span className='opacity-70 text-xs font-medium italic'>
               {t(`aiScheduler.taskTable.priority.${mainTask.priority}`)}
             </span>
@@ -385,22 +374,6 @@ function SubtaskTable({ description, time }: { description: string; time: number
   const { t } = useTranslation();
   const [isDone, setIsDone] = useState<boolean>(false);
 
-  const getTaskTranslationKey = (description: string) => {
-    const taskKeys: { [key: string]: string } = {
-      'Check and respond to important emails': 'email.subtasks.check.description',
-      'Organize and prioritize remaining emails': 'email.subtasks.organize.description',
-      'Draft responses to urgent emails': 'email.subtasks.draft.description',
-      'Read introduction and chapter 1': 'book.subtasks.intro.description',
-      'Read chapter 2 and take notes': 'book.subtasks.chapter2.description',
-      'Read chapter 3 and summarize key points': 'book.subtasks.chapter3.description',
-      'Watch tutorial video on WASP': 'wasp.subtasks.watch.description',
-      'Complete online quiz on the basics of WASP': 'wasp.subtasks.quiz.description',
-      'Review quiz answers and clarify doubts': 'wasp.subtasks.review.description'
-    };
-
-    return `aiScheduler.defaultTasks.${taskKeys[description] || description}`;
-  };
-
   const convertHrsToMinutes = (time: number) => {
     if (time === 0) return 0;
     const hours = Math.floor(time);
@@ -429,7 +402,7 @@ function SubtaskTable({ description, time }: { description: string; time: number
       <span className={cn('leading-tight justify-self-start w-full text-slate-600', {
         'line-through text-slate-500 opacity-50': isDone,
       })}>
-        {t(getTaskTranslationKey(description))}
+        {description}
       </span>
       <span className={cn('text-slate-600 text-right', {
         'line-through text-slate-500 opacity-50': isDone,
