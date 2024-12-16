@@ -19,7 +19,13 @@
            </WaspRouterLink>
          </div>
          <div className='flex lg:hidden'>
-@@ -61,8 +60,8 @@
+@@ -56,13 +55,13 @@
+         </div>
+         <div className='hidden lg:flex lg:gap-x-12'>{renderNavigationItems(navigationItems)}</div>
+         <div className='hidden lg:flex lg:flex-1 gap-3 justify-end items-center'>
+-          <ul className='flex justify-center items-center gap-2 sm:gap-4'>
++          <ul className='ml-4 flex justify-center items-center gap-2 sm:gap-4'>
+             <DarkModeSwitcher />
            </ul>
            {isUserLoading ? null : !user ? (
              <WaspRouterLink to={routes.LoginRoute.to} className='text-sm font-semibold leading-6 ml-3'>
