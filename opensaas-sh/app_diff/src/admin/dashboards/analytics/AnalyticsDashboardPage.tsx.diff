@@ -7,17 +7,12 @@
  import { useQuery, getDailyStats } from 'wasp/client/operations';
  import TotalSignupsCard from './TotalSignupsCard';
  import TotalPageViewsCard from './TotalPageViewsCard';
-@@ -7,21 +9,68 @@
- import RevenueAndProfitChart from './RevenueAndProfitChart';
- import SourcesTable from './SourcesTable';
- import DefaultLayout from '../../layout/DefaultLayout';
--import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin'
-+import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin';
+@@ -10,12 +12,54 @@
+ import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin';
  
  const Dashboard = ({ user }: { user: AuthUser }) => {
--  useRedirectHomeUnlessUserIsAdmin({ user })
 +  const [isDemoInfoVisible, setIsDemoInfoVisible] = useState(false);
-+  useRedirectHomeUnlessUserIsAdmin({ user });
+   useRedirectHomeUnlessUserIsAdmin({ user });
  
    const { data: stats, isLoading, error } = useQuery(getDailyStats);
  
@@ -48,7 +43,6 @@
 +
    return (
      <DefaultLayout user={user}>
-+      {/* Floating Demo Announcement */}
 +      {isDemoInfoVisible && (
 +        <div className='fixed z-999 bottom-0 mb-2 left-1/2 -translate-x-1/2 lg:mb-4 bg-gray-700 rounded-full px-3.5 py-2 text-sm text-white duration-300 ease-in-out hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-600'>
 +          <div className='px-4 flex flex-row gap-2 items-center my-1'>
@@ -65,26 +59,15 @@
 +          </div>
 +        </div>
 +      )}
-       <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5'>
-         <TotalPageViewsCard
-           totalPageViews={stats?.dailyStats.totalViews}
-           prevDayViewsChangePercent={stats?.dailyStats.prevDayViewsChangePercent}
-         />
--        <TotalRevenueCard dailyStats={stats?.dailyStats} weeklyStats={stats?.weeklyStats} isLoading={isLoading} />
-+        <TotalRevenueCard
-+          dailyStats={stats?.dailyStats}
-+          weeklyStats={stats?.weeklyStats}
-+          isLoading={isLoading}
-+        />
-         <TotalPayingUsersCard dailyStats={stats?.dailyStats} isLoading={isLoading} />
-         <TotalSignupsCard dailyStats={stats?.dailyStats} isLoading={isLoading} />
-       </div>
-@@ -30,7 +79,7 @@
-         <RevenueAndProfitChart weeklyStats={stats?.weeklyStats} isLoading={isLoading} />
+       <div className='relative'>
+         <div className={`${!stats ? 'opacity-25' : ''}`}>
+           <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5'>
+@@ -36,7 +80,7 @@
+             <RevenueAndProfitChart weeklyStats={stats?.weeklyStats} isLoading={isLoading} />
  
-         <div className='col-span-12 xl:col-span-8'>
--          <SourcesTable sources={stats?.dailyStats?.sources} />
-+          <SourcesTable sources={sortedSources} />
+             <div className='col-span-12 xl:col-span-8'>
+-              <SourcesTable sources={stats?.dailyStats?.sources} />
++              <SourcesTable sources={sortedSources} />
+             </div>
+           </div>
          </div>
-       </div>
-     </DefaultLayout>
