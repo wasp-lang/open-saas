@@ -8,6 +8,7 @@ import RevenueAndProfitChart from './RevenueAndProfitChart';
 import SourcesTable from './SourcesTable';
 import DefaultLayout from '../../layout/DefaultLayout';
 import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin';
+import { cn } from '../../../client/cn';
 
 const Dashboard = ({ user }: { user: AuthUser }) => {
   useRedirectHomeUnlessUserIsAdmin({ user });
@@ -17,7 +18,9 @@ const Dashboard = ({ user }: { user: AuthUser }) => {
   return (
     <DefaultLayout user={user}>
       <div className='relative'>
-        <div className={`${!stats ? 'opacity-25' : ''}`}>
+        <div className={cn({
+          'opacity-25': !stats,
+        })}>
           <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5'>
             <TotalPageViewsCard
               totalPageViews={stats?.dailyStats.totalViews}
