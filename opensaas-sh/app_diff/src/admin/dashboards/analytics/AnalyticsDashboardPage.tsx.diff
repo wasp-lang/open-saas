@@ -7,8 +7,8 @@
  import { useQuery, getDailyStats } from 'wasp/client/operations';
  import TotalSignupsCard from './TotalSignupsCard';
  import TotalPageViewsCard from './TotalPageViewsCard';
-@@ -10,12 +12,54 @@
- import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin';
+@@ -11,16 +13,58 @@
+ import { cn } from '../../../client/cn';
  
  const Dashboard = ({ user }: { user: AuthUser }) => {
 +  const [isDemoInfoVisible, setIsDemoInfoVisible] = useState(false);
@@ -16,21 +16,19 @@
  
    const { data: stats, isLoading, error } = useQuery(getDailyStats);
  
++  const didUserCloseDemoInfo = localStorage.getItem('didUserCloseDemoInfo') === 'true';
++
 +  useEffect(() => {
-+    try {
-+      if (localStorage.getItem('isStripeDemoInfoVisible') === 'false') {
-+        // do nothing
-+      } else {
-+        setIsDemoInfoVisible(true);
-+      }
-+    } catch (error) {
-+      console.error(error);
++    if (didUserCloseDemoInfo || !stats) {
++      setIsDemoInfoVisible(false);
++    } else if (!didUserCloseDemoInfo && stats) {
++      setIsDemoInfoVisible(true);
 +    }
-+  }, []);
++  }, [stats]);
 +
 +  const handleDemoInfoClose = () => {
 +    try {
-+      localStorage.setItem('isStripeDemoInfoVisible', 'false');
++      localStorage.setItem('didUserCloseDemoInfo', 'true');
 +      setIsDemoInfoVisible(false);
 +    } catch (error) {
 +      console.error(error);
@@ -60,9 +58,18 @@
 +        </div>
 +      )}
        <div className='relative'>
-         <div className={`${!stats ? 'opacity-25' : ''}`}>
+-        <div className={cn({
+-          'opacity-25': !stats,
+-        })}>
++        <div
++          className={cn({
++            'opacity-25': !stats,
++          })}
++        >
            <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5'>
-@@ -36,7 +80,7 @@
+             <TotalPageViewsCard
+               totalPageViews={stats?.dailyStats.totalViews}
+@@ -39,7 +83,7 @@
              <RevenueAndProfitChart weeklyStats={stats?.weeklyStats} isLoading={isLoading} />
  
              <div className='col-span-12 xl:col-span-8'>
@@ -71,3 +78,14 @@
              </div>
            </div>
          </div>
+@@ -47,9 +91,7 @@
+         {!stats && (
+           <div className='absolute inset-0 flex items-start justify-center bg-white/50 dark:bg-boxdark-2/50'>
+             <div className='rounded-lg bg-white p-8 shadow-lg dark:bg-boxdark'>
+-              <p className='text-2xl font-bold text-boxdark dark:text-white'>
+-                No daily stats generated yet
+-              </p>
++              <p className='text-2xl font-bold text-boxdark dark:text-white'>No daily stats generated yet</p>
+               <p className='mt-2 text-sm text-bodydark2'>
+                 Stats will appear here once the daily stats job has run
+               </p>
