@@ -10,26 +10,35 @@ authors: vince
 ---
 
 import { Image } from 'astro:assets';
-import landingPage from '../../../assets/cover-letter-gpt/landing-page.png';
+import Tweet from '../../../components/Tweet.astro';
+import landingPage from '../../../assets/cover-letter-gpt/coverlettergpt.webp';
+import mrrGraph from '../../../assets/cover-letter-gpt/mrr-graph.webp';
+import StarOpenSaaSCTA from '../../../components/StarOpenSaaSCTA.astro';
+import redditPost from '../../../assets/cover-letter-gpt/coverlettergpt-reddit.png';
 
 Hey builders,
 
 I wanted to share my journey building a micro-SaaS, [CoverLetterGPT](https://coverlettergpt.xyz/), which now earns **$550/month in recurring revenue (MRR)**—all while requiring **minimal effort and maintenance**. Here's how I did it and why I believe small, simple SaaS apps are an underrated way to start as an indie maker.
+<Tweet id="1863553258586820976" />
 
 ### Quick Stats:
 
-- **Built in 1 week** using Wasp
+- **Built in 1 week** 
+  - using [Wasp](https://wasp-lang.dev/), a React, NodeJS, & Prisma framework
+  - and [Chakra UI](https://chakra-ui.com/) for the design system.
 - **Runs on autopilot**
-- **$550 MRR** after one year
+- **~$550 MRR** after one year
 - Minimal customer support—only **3 Stripe disputes** to date
 - Costs **~$15/month** to operate (hosting + OpenAI API fees)
-- Framework: [Wasp](https://wasp-lang.dev/)
 - Deployed on [Railway](https://railway.app/) & [Netlify](https://netlify.com/)
-- UI: [Chakra UI](https://chakra-ui.com/)
 
-<div style="background-color: #FFD700; padding: 1rem; text-align: center; font-size: 1.2rem; font-weight: bold; border-radius: 8px; color: black;">
-  ⭐️ Star <a href="https://github.com/wasp-lang/open-saas" style="color: #0000FF; text-decoration: underline;">Open SaaS repo</a> and support tools that help you build fast!
-</div>
+---
+
+BTW, I built [Open SaaS](https://opensaas.sh), the free, open-source SaaS template based on what I learned from building and launching CoverLetterGPT. 
+
+Because Open SaaS is a community-driven project, it also benefits from community feedback and contributions, so it boasts a clean codebase and a ton of useful features. Check it out and give us a star! We're always improving it.
+
+<StarOpenSaaSCTA />
 
 ### Small Wins Are Worth It
 
@@ -40,14 +49,18 @@ Many developers think a SaaS has to be big, flashy, or wildly profitable to be w
 - I can balance it easily alongside my full-time job.
 - It's fun and doesn't consume my free time.
 
+<Image src={mrrGraph} alt="CoverLetterGPT MRR Graph" />
+
 Here's why I think you should aim for small, achievable SaaS projects instead of trying to “hit it big” from the start.
 
 ### Build & Launch Fast
 
+<Image src={redditPost} alt="CoverLetterGPT Reddit Post" />
+
 The most important lesson I've learned: **speed is everything.** The faster you launch, the faster you'll know if your idea works. Here's what worked for me:
 
 1. **Avoid long, drawn-out failures:** Build small, execute early.
-2. **Use the fastest tools available:** I used [Wasp](https://wasp-lang.dev/) to cut down dev time.
+2. **Use the fastest tools available:** I used [Wasp](https://wasp-lang.dev/) because it gives me all the building blocks already set up (auth, database, cron jobs, email sending), letting me focus on the business logic of the app. Paired with [Chakra UI](https://chakra-ui.com/), I was able to build the app in about 1 week.
 3. **Forget perfection:** I didn't worry about making it pretty or perfect—it just had to work.
 
 ### Keep It Simple
@@ -60,13 +73,7 @@ The beauty of micro-SaaS is in its simplicity. Here's why:
 
 <Image src={landingPage} alt="CoverLetterGPT landing page" />
 
-### Minimal Effort = Maximum Reward
-
-One of the biggest perks of micro-SaaS is how low-maintenance it can be. With CoverLetterGPT:
-
-- I rarely handle customer service (thanks to filtering out problematic users).
-- It requires little to no ongoing development.
-- The app practically runs on **autopilot.**
+One of the biggest perks of micro-SaaS is how low-maintenance it can be. With CoverLetterGPT, I rarely handle customer service thanks to its simplicity.
 
 This means I spend my time on **new ideas** rather than maintaining old ones.
 
@@ -101,8 +108,8 @@ For me, **$550 MRR** isn't just “enough”—it's amazing. It's proof that sma
 
 ## Let's stay in touch!
 
-Thanks for reading! If you found this helpful, let me know on [Twitter](https://x.com/hot_town/status/1863553258586820976) or share your own side-project experiences.
+If you found this helpful, check me out on [Twitter](https://x.com/hot_town/status/1863553258586820976) where I like to build in public and share what I'm learning and building.
 
-<div style="background-color: #FFD700; padding: 1rem; text-align: center; font-size: 1.2rem; font-weight: bold; border-radius: 8px; color: black;">
-  ⭐️ Star <a href="https://github.com/wasp-lang/open-saas" style="color: #0000FF; text-decoration: underline;">Open SaaS repo</a> and support tools that help you build fast!
-</div>
+---
+
+<StarOpenSaaSCTA trailingText="and support tools that help you build fast!" />
