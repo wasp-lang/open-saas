@@ -55,7 +55,7 @@ export default defineConfig({
       },
       social: {
         github: 'https://github.com/wasp-lang/open-saas',
-        twitter: 'https://twitter.com/wasp_lang',
+        twitter: 'https://twitter.com/wasplang',
         discord: 'https://discord.gg/aCamt5wCpS',
       },
       sidebar: [
