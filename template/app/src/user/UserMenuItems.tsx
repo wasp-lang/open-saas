@@ -4,8 +4,10 @@ import { logout } from 'wasp/client/auth';
 import { MdOutlineSpaceDashboard } from 'react-icons/md';
 import { TfiDashboard } from 'react-icons/tfi';
 import { cn } from '../client/cn';
+import { useTranslation } from 'react-i18next';
 
 export const UserMenuItems = ({ user, setMobileMenuOpen }: { user?: Partial<User>; setMobileMenuOpen?: any }) => {
+  const { t } = useTranslation();
   const path = window.location.pathname;
   const landingPagePath = routes.LandingPageRoute.to;
   const adminDashboardPath = routes.AdminRoute.to;
@@ -29,7 +31,7 @@ export const UserMenuItems = ({ user, setMobileMenuOpen }: { user?: Partial<User
               className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-yellow-500'
             >
               <MdOutlineSpaceDashboard size='1.1rem' />
-              AI Scheduler (Demo App)
+              {t('userMenu.aiScheduler')}
             </WaspRouterLink>
           </li>
         ) : null}
@@ -56,7 +58,7 @@ export const UserMenuItems = ({ user, setMobileMenuOpen }: { user?: Partial<User
                 fill=''
               />
             </svg>
-            Account Settings
+            {t('userMenu.accountSettings')}
           </WaspRouterLink>
         </li>
       </ul>
@@ -74,7 +76,7 @@ export const UserMenuItems = ({ user, setMobileMenuOpen }: { user?: Partial<User
               className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-yellow-500'
             >
               <TfiDashboard size='1.1rem' />
-              Admin Dashboard
+              {t('userMenu.adminDashboard')}
             </WaspRouterLink>
           </li>
         </ul>
@@ -106,7 +108,7 @@ export const UserMenuItems = ({ user, setMobileMenuOpen }: { user?: Partial<User
             fill=''
           />
         </svg>
-        Log Out
+        {t('userMenu.logout')}
       </button>
     </>
   );

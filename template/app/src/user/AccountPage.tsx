@@ -3,30 +3,33 @@ import { type SubscriptionStatus, prettyPaymentPlanName, parsePaymentPlanId } fr
 import { getCustomerPortalUrl, useQuery } from 'wasp/client/operations';
 import { Link as WaspRouterLink, routes } from 'wasp/client/router';
 import { logout } from 'wasp/client/auth';
+import { useTranslation } from 'react-i18next';
 
 export default function AccountPage({ user }: { user: User }) {
+  const { t } = useTranslation();
+  
   return (
     <div className='mt-10 px-6'>
       <div className='overflow-hidden border border-gray-900/10 shadow-lg sm:rounded-lg mb-4 lg:m-8 dark:border-gray-100/10'>
         <div className='px-4 py-5 sm:px-6 lg:px-8'>
-          <h3 className='text-base font-semibold leading-6 text-gray-900 dark:text-white'>Account Information</h3>
+          <h3 className='text-base font-semibold leading-6 text-gray-900 dark:text-white'>{t('account.title')}</h3>
         </div>
         <div className='border-t border-gray-900/10 dark:border-gray-100/10 px-4 py-5 sm:p-0'>
           <dl className='sm:divide-y sm:divide-gray-900/10 sm:dark:divide-gray-100/10'>
             {!!user.email && (
               <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
-                <dt className='text-sm font-medium text-gray-500 dark:text-white'>Email address</dt>
+                <dt className='text-sm font-medium text-gray-500 dark:text-white'>{t('account.email')}</dt>
                 <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-2 sm:mt-0'>{user.email}</dd>
               </div>
             )}
             {!!user.username && (
               <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
-                <dt className='text-sm font-medium text-gray-500 dark:text-white'>Username</dt>
+                <dt className='text-sm font-medium text-gray-500 dark:text-white'>{t('account.username')}</dt>
                 <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-2 sm:mt-0'>{user.username}</dd>
               </div>
             )}
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
-              <dt className='text-sm font-medium text-gray-500 dark:text-white'>Your Plan</dt>
+              <dt className='text-sm font-medium text-gray-500 dark:text-white'>{t('account.plan')}</dt>
               <UserCurrentPaymentPlan
                 subscriptionStatus={user.subscriptionStatus as SubscriptionStatus}
                 subscriptionPlan={user.subscriptionPlan}
@@ -35,8 +38,8 @@ export default function AccountPage({ user }: { user: User }) {
               />
             </div>
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
-              <dt className='text-sm font-medium text-gray-500 dark:text-white'>About</dt>
-              <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-2 sm:mt-0'>I'm a cool customer.</dd>
+              <dt className='text-sm font-medium text-gray-500 dark:text-white'>{t('account.about')}</dt>
+              <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-2 sm:mt-0'>{t('account.aboutText')}</dd>
             </div>
           </dl>
         </div>
@@ -46,7 +49,7 @@ export default function AccountPage({ user }: { user: User }) {
           onClick={logout}
           className='inline-flex justify-center mx-8 py-2 px-4 border border-transparent shadow-md text-sm font-medium rounded-md text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
         >
-          logout
+          {t('account.logout')}
         </button>
       </div>
     </div>
@@ -61,10 +64,14 @@ type UserCurrentPaymentPlanProps = {
 };
 
 function UserCurrentPaymentPlan({ subscriptionPlan, subscriptionStatus, datePaid, credits }: UserCurrentPaymentPlanProps) {
+  const { t } = useTranslation();
+  
   if (subscriptionStatus && subscriptionPlan && datePaid) {
     return (
       <>
-        <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>{getUserSubscriptionStatusDescription({ subscriptionPlan, subscriptionStatus, datePaid })}</dd>
+        <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
+          {getUserSubscriptionStatusDescription({ subscriptionPlan, subscriptionStatus, datePaid })}
+        </dd>
         {subscriptionStatus !== 'deleted' ? <CustomerPortalButton /> : <BuyMoreButton />}
       </>
     );
@@ -72,16 +79,23 @@ function UserCurrentPaymentPlan({ subscriptionPlan, subscriptionStatus, datePaid
 
   return (
     <>
-      <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>Credits remaining: {credits}</dd>
+      <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0'>
+        {t('account.subscription.credits', { credits })}
+      </dd>
       <BuyMoreButton />
     </>
   );
 }
 
 function getUserSubscriptionStatusDescription({ subscriptionPlan, subscriptionStatus, datePaid }: { subscriptionPlan: string; subscriptionStatus: SubscriptionStatus; datePaid: Date }) {
+  const { t } = useTranslation();
   const planName = prettyPaymentPlanName(parsePaymentPlanId(subscriptionPlan));
   const endOfBillingPeriod = prettyPrintEndOfBillingPeriod(datePaid);
-  return prettyPrintStatus(planName, subscriptionStatus, endOfBillingPeriod);
+  
+  return t(`account.subscription.status.${subscriptionStatus}`, {
+    planName,
+    date: endOfBillingPeriod
+  });
 }
 
 function prettyPrintStatus(planName: string, subscriptionStatus: SubscriptionStatus, endOfBillingPeriod: string): string {
@@ -105,34 +119,40 @@ function prettyPrintEndOfBillingPeriod(date: Date) {
 }
 
 function BuyMoreButton() {
+  const { t } = useTranslation();
   return (
     <div className='ml-4 flex-shrink-0 sm:col-span-1 sm:mt-0'>
       <WaspRouterLink to={routes.PricingPageRoute.to} className='font-medium text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-500'>
-        Buy More/Upgrade
+        {t('account.subscription.buyMore')}
       </WaspRouterLink>
     </div>
   );
 }
 
 function CustomerPortalButton() {
+  const { t } = useTranslation();
   const { data: customerPortalUrl, isLoading: isCustomerPortalUrlLoading, error: customerPortalUrlError } = useQuery(getCustomerPortalUrl);
 
   const handleClick = () => {
     if (customerPortalUrlError) {
-      console.error('Error fetching customer portal url');
+      console.error(t('account.subscription.errors.portalUrl'));
     }
 
     if (customerPortalUrl) {
       window.open(customerPortalUrl, '_blank');
     } else {
-      console.error('Customer portal URL is not available');
+      console.error(t('account.subscription.errors.portalNotAvailable'));
     }
   };
 
   return (
     <div className='ml-4 flex-shrink-0 sm:col-span-1 sm:mt-0'>
-      <button onClick={handleClick} disabled={isCustomerPortalUrlLoading} className='font-medium text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300'>
-        Manage Subscription
+      <button 
+        onClick={handleClick} 
+        disabled={isCustomerPortalUrlLoading} 
+        className='font-medium text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300'
+      >
+        {t('account.subscription.manageSubscription')}
       </button>
     </div>
   );

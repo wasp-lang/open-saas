@@ -14,95 +14,96 @@ import { CgSpinner } from 'react-icons/cg';
 import { TiDelete } from 'react-icons/ti';
 import type { GeneratedSchedule, MainTask, SubTask } from './schedule';
 import { cn } from '../client/cn';
+import { useTranslation } from 'react-i18next';
 
 export default function DemoAppPage() {
+  const { t } = useTranslation();
+  
   return (
     <div className='py-10 lg:mt-10'>
       <div className='mx-auto max-w-7xl px-6 lg:px-8'>
         <div className='mx-auto max-w-4xl text-center'>
           <h2 className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white'>
-            <span className='text-yellow-500'>AI</span> Day Scheduler
+            <span className='text-yellow-500'>AI</span> {t('aiScheduler.title')}
           </h2>
         </div>
         <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600 dark:text-white'>
-          This example app uses OpenAI's chat completions with function calling to return a structured JSON object. Try
-          it out, enter your day's tasks, and let AI do the rest!
+          {t('aiScheduler.description')}
         </p>
-        {/* begin AI-powered Todo List */}
         <div className='my-8 border rounded-3xl border-gray-900/10 dark:border-gray-100/10'>
           <div className='sm:w-[90%] md:w-[70%] lg:w-[50%] py-10 px-6 mx-auto my-8 space-y-10'>
             <NewTaskForm handleCreateTask={createTask} />
           </div>
         </div>
-        {/* end AI-powered Todo List */}
       </div>
     </div>
   );
 }
 
 function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask }) {
+  const { t } = useTranslation();
   const [description, setDescription] = useState<string>('');
   const [todaysHours, setTodaysHours] = useState<string>('8');
   const [response, setResponse] = useState<GeneratedSchedule | null>({
     mainTasks: [
       {
-        name: 'Respond to emails',
+        name: t('aiScheduler.defaultTasks.email.name'),
         priority: 'high',
       },
       {
-        name: 'Learn WASP',
+        name: t('aiScheduler.defaultTasks.wasp.name'),
         priority: 'low',
       },
       {
-        name: 'Read a book',
+        name: t('aiScheduler.defaultTasks.book.name'),
         priority: 'medium',
       },
     ],
     subtasks: [
       {
-        description: 'Read introduction and chapter 1',
+        description: t('aiScheduler.defaultTasks.book.subtasks.intro.description'),
         time: 0.5,
-        mainTaskName: 'Read a book',
+        mainTaskName: t('aiScheduler.defaultTasks.book.name'),
       },
       {
-        description: 'Read chapter 2 and take notes',
+        description: t('aiScheduler.defaultTasks.book.subtasks.chapter2.description'),
         time: 0.3,
-        mainTaskName: 'Read a book',
+        mainTaskName: t('aiScheduler.defaultTasks.book.name'),
       },
       {
-        description: 'Read chapter 3 and summarize key points',
+        description: t('aiScheduler.defaultTasks.book.subtasks.chapter3.description'),
         time: 0.2,
-        mainTaskName: 'Read a book',
+        mainTaskName: t('aiScheduler.defaultTasks.book.name'),
       },
       {
-        description: 'Check and respond to important emails',
+        description: t('aiScheduler.defaultTasks.email.subtasks.check.description'),
         time: 1,
-        mainTaskName: 'Respond to emails',
+        mainTaskName: t('aiScheduler.defaultTasks.email.name'),
       },
       {
-        description: 'Organize and prioritize remaining emails',
+        description: t('aiScheduler.defaultTasks.email.subtasks.organize.description'),
         time: 0.5,
-        mainTaskName: 'Respond to emails',
+        mainTaskName: t('aiScheduler.defaultTasks.email.name'),
       },
       {
-        description: 'Draft responses to urgent emails',
+        description: t('aiScheduler.defaultTasks.email.subtasks.draft.description'),
         time: 0.5,
-        mainTaskName: 'Respond to emails',
+        mainTaskName: t('aiScheduler.defaultTasks.email.name'),
       },
       {
-        description: 'Watch tutorial video on WASP',
+        description: t('aiScheduler.defaultTasks.wasp.subtasks.watch.description'),
         time: 0.5,
-        mainTaskName: 'Learn WASP',
+        mainTaskName: t('aiScheduler.defaultTasks.wasp.name'),
       },
       {
-        description: 'Complete online quiz on the basics of WASP',
+        description: t('aiScheduler.defaultTasks.wasp.subtasks.quiz.description'),
         time: 1.5,
-        mainTaskName: 'Learn WASP',
+        mainTaskName: t('aiScheduler.defaultTasks.wasp.name'),
       },
       {
-        description: 'Review quiz answers and clarify doubts',
+        description: t('aiScheduler.defaultTasks.wasp.subtasks.review.description'),
         time: 1,
-        mainTaskName: 'Learn WASP',
+        mainTaskName: t('aiScheduler.defaultTasks.wasp.name'),
       },
     ],
   });
@@ -115,7 +116,7 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
       await handleCreateTask({ description });
       setDescription('');
     } catch (err: any) {
-      window.alert('Error: ' + (err.message || 'Something went wrong'));
+      window.alert(t('aiScheduler.form.errors.createTask') + ': ' + (err.message || t('aiScheduler.form.errors.generic')));
     }
   };
 
@@ -129,7 +130,7 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
         setResponse(response);
       }
     } catch (err: any) {
-      window.alert('Error: ' + (err.message || 'Something went wrong'));
+      window.alert(t('aiScheduler.form.errors.generic') + ': ' + (err.message || t('aiScheduler.form.errors.generic')));
     } finally {
       setIsPlanGenerating(false);
     }
@@ -143,7 +144,7 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
             type='text'
             id='description'
             className='text-sm text-gray-600 w-full rounded-md border border-gray-200 bg-[#f5f0ff] shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
-            placeholder='Enter task description'
+            placeholder={t('aiScheduler.form.taskPlaceholder')}
             value={description}
             onChange={(e) => setDescription(e.currentTarget.value)}
             onKeyDown={(e) => {
@@ -152,7 +153,7 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
               }
             }}
           />
-         <button
+          <button
             type='button'
             onClick={handleSubmit}
             disabled={!description}
@@ -161,14 +162,14 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
               description && 'hover:bg-yellow-100 hover:shadow-none'
             )}
           >
-            Add Task
+            {t('aiScheduler.form.addTaskButton')}
           </button>
         </div>
       </div>
 
       <div className='space-y-10 col-span-full'>
-        {isTasksLoading && <div>Loading...</div>}
-        {tasks!! && tasks.length > 0 ? (
+        {isTasksLoading && <div>{t('aiScheduler.form.loading')}</div>}
+        {tasks && tasks.length > 0 ? (
           <div className='space-y-4'>
             {tasks.map((task: Task) => (
               <Todo key={task.id} id={task.id} isDone={task.isDone} description={task.description} time={task.time} />
@@ -176,7 +177,7 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
             <div className='flex flex-col gap-3'>
               <div className='flex items-center justify-between gap-3'>
                 <label htmlFor='time' className='text-sm text-gray-600 dark:text-gray-300 text-nowrap font-semibold'>
-                  How many hours will you work today?
+                  {t('aiScheduler.form.hoursLabel')}
                 </label>
                 <input
                   type='number'
@@ -192,7 +193,7 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
             </div>
           </div>
         ) : (
-          <div className='text-gray-600 text-center'>Add tasks to begin</div>
+          <div className='text-gray-600 text-center'>{t('aiScheduler.form.noTasks')}</div>
         )}
       </div>
 
@@ -205,17 +206,18 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
         {isPlanGenerating ? (
           <>
             <CgSpinner className='inline-block mr-2 animate-spin' />
-            Generating...
+            {t('aiScheduler.form.generatingButton')}
           </>
         ) : (
-          'Generate Schedule'
+          t('aiScheduler.form.generateButton')
         )}
       </button>
 
       {!!response && (
         <div className='flex flex-col'>
-          <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>Today's Schedule</h3>
-
+          <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
+            {t('aiScheduler.form.scheduleTitle')}
+          </h3>
           <TaskTable schedule={response} />
         </div>
       )}
@@ -226,6 +228,8 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
 type TodoProps = Pick<Task, 'id' | 'isDone' | 'description' | 'time'>;
 
 function Todo({ id, isDone, description, time }: TodoProps) {
+  const { t } = useTranslation();
+  
   const handleCheckboxChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     await updateTask({
       id,
@@ -253,12 +257,9 @@ function Todo({ id, isDone, description, time }: TodoProps) {
             className='ml-1 form-checkbox bg-purple-300 checked:bg-purple-300 rounded border-purple-400 duration-200 ease-in-out hover:bg-purple-400 hover:checked:bg-purple-600 focus:ring focus:ring-purple-300 focus:checked:bg-purple-400 focus:ring-opacity-50 text-black'
             checked={isDone}
             onChange={handleCheckboxChange}
+            aria-label={t('aiScheduler.todo.checkbox.ariaLabel')}
           />
-          <span
-            className={cn('text-slate-600', {
-              'line-through text-slate-500': isDone,
-            })}
-          >
+          <span className={cn('text-slate-600', { 'line-through text-slate-500': isDone })}>
             {description}
           </span>
         </div>
@@ -270,24 +271,22 @@ function Todo({ id, isDone, description, time }: TodoProps) {
             step={0.5}
             className={cn(
               'w-18 h-8 text-center text-slate-600 text-xs rounded border border-gray-200 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-300 focus:ring-opacity-50',
-              {
-                'pointer-events-none opacity-50': isDone,
-              }
+              { 'pointer-events-none opacity-50': isDone }
             )}
             value={time}
             onChange={handleTimeChange}
           />
-          <span
-            className={cn('italic text-slate-600 text-xs', {
-              'text-slate-500': isDone,
-            })}
-          >
-            hrs
+          <span className={cn('italic text-slate-600 text-xs', { 'text-slate-500': isDone })}>
+            {t('aiScheduler.todo.time.hours')}
           </span>
         </div>
       </div>
       <div className='flex items-center justify-end w-15'>
-        <button className='p-1' onClick={handleDeleteClick} title='Remove task'>
+        <button 
+          className='p-1' 
+          onClick={handleDeleteClick} 
+          title={t('aiScheduler.todo.removeTaskTitle')}
+        >
           <TiDelete size='20' className='text-red-600 hover:text-red-700' />
         </button>
       </div>
@@ -296,49 +295,50 @@ function Todo({ id, isDone, description, time }: TodoProps) {
 }
 
 function TaskTable({ schedule }: { schedule: GeneratedSchedule }) {
+  const { t } = useTranslation();
+  
   return (
     <div className='flex flex-col gap-6 py-6'>
       <table className='table-auto w-full border-separate border border-spacing-2 rounded-md border-slate-200 shadow-sm'>
         {!!schedule.mainTasks ? (
           schedule.mainTasks
-            .map((mainTask) => <MainTaskTable key={mainTask.name} mainTask={mainTask} subtasks={schedule.subtasks} />)
+            .map((mainTask) => (
+              <MainTaskTable key={mainTask.name} mainTask={mainTask} subtasks={schedule.subtasks} />
+            ))
             .sort((a, b) => {
               const priorityOrder = ['low', 'medium', 'high'];
               if (a.props.mainTask.priority && b.props.mainTask.priority) {
-                return (
-                  priorityOrder.indexOf(b.props.mainTask.priority) - priorityOrder.indexOf(a.props.mainTask.priority)
-                );
-              } else {
-                return 0;
+                return priorityOrder.indexOf(b.props.mainTask.priority) - priorityOrder.indexOf(a.props.mainTask.priority);
               }
+              return 0;
             })
         ) : (
-          <div className='text-slate-600 text-center'>OpenAI didn't return any Main Tasks. Try again.</div>
+          <div className='text-slate-600 text-center'>{t('aiScheduler.taskTable.noMainTasks')}</div>
         )}
       </table>
-
-      {/* ))} */}
     </div>
   );
 }
 
 function MainTaskTable({ mainTask, subtasks }: { mainTask: MainTask; subtasks: SubTask[] }) {
+  const { t } = useTranslation();
+
   return (
     <>
       <thead>
         <tr>
-          <th
-            className={cn(
-              'flex items-center justify-between gap-5 py-4 px-3 text-slate-800 border rounded-md border-slate-200 bg-opacity-70',
-              {
-                'bg-red-100': mainTask.priority === 'high',
-                'bg-green-100': mainTask.priority === 'low',
-                'bg-yellow-100': mainTask.priority === 'medium',
-              }
-            )}
-          >
+          <th className={cn(
+            'flex items-center justify-between gap-5 py-4 px-3 text-slate-800 border rounded-md border-slate-200 bg-opacity-70',
+            {
+              'bg-red-100': mainTask.priority === 'high',
+              'bg-green-100': mainTask.priority === 'low',
+              'bg-yellow-100': mainTask.priority === 'medium',
+            }
+          )}>
             <span>{mainTask.name}</span>
-            <span className='opacity-70 text-xs font-medium italic'> {mainTask.priority} priority</span>
+            <span className='opacity-70 text-xs font-medium italic'>
+              {t(`aiScheduler.taskTable.priority.${mainTask.priority}`)}
+            </span>
           </th>
         </tr>
       </thead>
@@ -348,16 +348,14 @@ function MainTaskTable({ mainTask, subtasks }: { mainTask: MainTask; subtasks: S
             return (
               <tbody key={subtask.description}>
                 <tr>
-                  <td
-                    className={cn(
-                      'flex items-center justify-between gap-4 py-2 px-3 text-slate-600 border rounded-md border-purple-100 bg-opacity-60',
-                      {
-                        'bg-red-50': mainTask.priority === 'high',
-                        'bg-green-50': mainTask.priority === 'low',
-                        'bg-yellow-50': mainTask.priority === 'medium',
-                      }
-                    )}
-                  >
+                  <td className={cn(
+                    'flex items-center justify-between gap-4 py-2 px-3 text-slate-600 border rounded-md border-purple-100 bg-opacity-60',
+                    {
+                      'bg-red-50': mainTask.priority === 'high',
+                      'bg-green-50': mainTask.priority === 'low',
+                      'bg-yellow-50': mainTask.priority === 'medium',
+                    }
+                  )}>
                     <SubtaskTable description={subtask.description} time={subtask.time} />
                   </td>
                 </tr>
@@ -366,23 +364,31 @@ function MainTaskTable({ mainTask, subtasks }: { mainTask: MainTask; subtasks: S
           }
         })
       ) : (
-        <div className='text-slate-600 text-center'>OpenAI didn't return any Subtasks. Try again.</div>
+        <div className='text-slate-600 text-center'>{t('aiScheduler.taskTable.noSubtasks')}</div>
       )}
     </>
   );
 }
 
 function SubtaskTable({ description, time }: { description: string; time: number }) {
+  const { t } = useTranslation();
   const [isDone, setIsDone] = useState<boolean>(false);
 
   const convertHrsToMinutes = (time: number) => {
     if (time === 0) return 0;
     const hours = Math.floor(time);
     const minutes = Math.round((time - hours) * 60);
-    return `${hours > 0 ? hours + 'hr' : ''} ${minutes > 0 ? minutes + 'min' : ''}`;
+    
+    if (hours > 0 && minutes > 0) {
+      return t('aiScheduler.timeFormat.timeDisplay', { hours, minutes });
+    } else if (hours > 0) {
+      return t('aiScheduler.timeFormat.hourOnly', { hours });
+    } else {
+      return t('aiScheduler.timeFormat.minuteOnly', { minutes });
+    }
   };
 
-  const minutes = useMemo(() => convertHrsToMinutes(time), [time]);
+  const minutes = useMemo(() => convertHrsToMinutes(time), [time, t]);
 
   return (
     <>
@@ -391,19 +397,16 @@ function SubtaskTable({ description, time }: { description: string; time: number
         className='ml-1 form-checkbox bg-purple-500 checked:bg-purple-300 rounded border-purple-600 duration-200 ease-in-out hover:bg-purple-600 hover:checked:bg-purple-600 focus:ring focus:ring-purple-300 focus:checked:bg-purple-400 focus:ring-opacity-50'
         checked={isDone}
         onChange={(e) => setIsDone(e.currentTarget.checked)}
+        aria-label={t('aiScheduler.todo.checkbox.ariaLabel')}
       />
-      <span
-        className={cn('leading-tight justify-self-start w-full text-slate-600', {
-          'line-through text-slate-500 opacity-50': isDone,
-        })}
-      >
+      <span className={cn('leading-tight justify-self-start w-full text-slate-600', {
+        'line-through text-slate-500 opacity-50': isDone,
+      })}>
         {description}
       </span>
-      <span
-        className={cn('text-slate-600 text-right', {
-          'line-through text-slate-500 opacity-50': isDone,
-        })}
-      >
+      <span className={cn('text-slate-600 text-right', {
+        'line-through text-slate-500 opacity-50': isDone,
+      })}>
         {minutes}
       </span>
     </>
