@@ -11,7 +11,14 @@ interface LanguageSelectorProps {
 export default function LanguageSelector({ isLandingPage, className }: LanguageSelectorProps) {
   const { i18n } = useTranslation();
 
+  // Initialize language from localStorage or default to 'en'
+  React.useEffect(() => {
+    const savedLanguage = localStorage.getItem('language') || 'en';
+    i18n.changeLanguage(savedLanguage);
+  }, [i18n]);
+
   const changeLanguage = (lng: string) => {
+    localStorage.setItem('language', lng);
     i18n.changeLanguage(lng);
   };
 
