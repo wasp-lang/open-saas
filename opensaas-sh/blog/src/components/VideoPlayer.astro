@@ -6,19 +6,40 @@ interface Props {
 }
 
 const { src, lgWidth = '55%', smWidth = '100%' } = Astro.props;
+
+// Function to check if the URL is a YouTube URL and extract the video ID
+function getYouTubeId(url: string): string | null {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return match && match[2].length === 11 ? match[2] : null;
+}
+
+const youtubeId = getYouTubeId(src);
+const isYouTube = !!youtubeId;
 ---
 
-<video
-  src={src}
-  preload="true"
-  autoplay
-  muted
-  controls
-  loop
-  class="video-player"
->
-  <track kind="captions">
-</video>
+{isYouTube ? (
+  <iframe
+    src={`https://www.youtube.com/embed/${youtubeId}`}
+    title="YouTube video player"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen
+    style="aspect-ratio: 16 / 9; width: 100%;"
+  >
+  </iframe>
+) : (
+  <video
+    src={src}
+    preload="true"
+    autoplay
+    muted
+    controls
+    loop
+    class="video-player"
+  >
+    <track kind="captions">
+  </video>
+)}
 
 <style define:vars={{ lgWidth, smWidth }}>
   .video-player {
