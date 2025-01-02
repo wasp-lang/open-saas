@@ -5,6 +5,7 @@ import { AiFillCheckCircle } from 'react-icons/ai';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../client/cn';
+import { useTranslation } from 'react-i18next';
 
 const bestDealPaymentPlanId: PaymentPlanId = PaymentPlanId.Pro;
 
@@ -14,27 +15,6 @@ interface PaymentPlanCard {
   description: string;
   features: string[];
 }
-
-export const paymentPlanCards: Record<PaymentPlanId, PaymentPlanCard> = {
-  [PaymentPlanId.Hobby]: {
-    name: prettyPaymentPlanName(PaymentPlanId.Hobby),
-    price: '$9.99',
-    description: 'All you need to get started',
-    features: ['Limited monthly usage', 'Basic support'],
-  },
-  [PaymentPlanId.Pro]: {
-    name: prettyPaymentPlanName(PaymentPlanId.Pro),
-    price: '$19.99',
-    description: 'Our most popular plan',
-    features: ['Unlimited monthly usage', 'Priority customer support'],
-  },
-  [PaymentPlanId.Credits10]: {
-    name: prettyPaymentPlanName(PaymentPlanId.Credits10),
-    price: '$9.99',
-    description: 'One-time purchase of 10 credits for your account',
-    features: ['Use credits for e.g. OpenAI API calls', 'No expiration date'],
-  },
-};
 
 const PricingPage = () => {
   const [isPaymentLoading, setIsPaymentLoading] = useState<boolean>(false);
@@ -49,6 +29,29 @@ const PricingPage = () => {
   } = useQuery(getCustomerPortalUrl, { enabled: isUserSubscribed });
 
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
+
+  const paymentPlanCards: Record<PaymentPlanId, PaymentPlanCard> = {
+    [PaymentPlanId.Hobby]: {
+      name: prettyPaymentPlanName(PaymentPlanId.Hobby),
+      price: t('pricing.plans.hobby.price'),
+      description: t('pricing.plans.hobby.description'),
+      features: t('pricing.plans.hobby.features', { returnObjects: true }) as string[],
+    },
+    [PaymentPlanId.Pro]: {
+      name: prettyPaymentPlanName(PaymentPlanId.Pro),
+      price: t('pricing.plans.pro.price'),
+      description: t('pricing.plans.pro.description'),
+      features: t('pricing.plans.pro.features', { returnObjects: true }) as string[],
+    },
+    [PaymentPlanId.Credits10]: {
+      name: prettyPaymentPlanName(PaymentPlanId.Credits10),
+      price: t('pricing.plans.credits10.price'),
+      description: t('pricing.plans.credits10.description'),
+      features: t('pricing.plans.credits10.features', { returnObjects: true }) as string[],
+    },
+  };
 
   async function handleBuyNowClick(paymentPlanId: PaymentPlanId) {
     if (!user) {
@@ -93,13 +96,12 @@ const PricingPage = () => {
       <div className='mx-auto max-w-7xl px-6 lg:px-8'>
         <div id='pricing' className='mx-auto max-w-4xl text-center'>
           <h2 className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white'>
-            Pick your <span className='text-yellow-500'>pricing</span>
+            {t('pricing.title')}
           </h2>
         </div>
         <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600 dark:text-white'>
-          Choose between Stripe and LemonSqueezy as your payment provider. Just add your Product IDs! Try it
-          out below with test credit card number <br />
-          <span className='px-2 py-1 bg-gray-100 rounded-md text-gray-500'>4242 4242 4242 4242 4242</span>
+          {t('pricing.subtitle')} <br />
+          <span className='px-2 py-1 bg-gray-100 rounded-md text-gray-500'>{t('pricing.testCard')}</span>
         </p>
         <div className='isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 lg:gap-x-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3'>
           {Object.values(PaymentPlanId).map((planId) => (
@@ -140,7 +142,7 @@ const PricingPage = () => {
                     {paymentPlanCards[planId].price}
                   </span>
                   <span className='text-sm font-semibold leading-6 text-gray-600 dark:text-white'>
-                    {paymentPlans[planId].effect.kind === 'subscription' && '/month'}
+                    {paymentPlans[planId].effect.kind === 'subscription' && t('pricing.perMonth')}
                   </span>
                 </p>
                 <ul role='list' className='mt-8 space-y-3 text-sm leading-6 text-gray-600 dark:text-white'>
@@ -167,7 +169,7 @@ const PricingPage = () => {
                     }
                   )}
                 >
-                  Manage Subscription
+                  {t('pricing.buttons.manageSubscription')}
                 </button>
               ) : (
                 <button
@@ -187,7 +189,7 @@ const PricingPage = () => {
                   )}
                   disabled={isPaymentLoading}
                 >
-                  {!!user ? 'Buy plan' : 'Log in to buy plan'}
+                  {!!user ? t('pricing.buttons.buyPlan') : t('pricing.buttons.loginToBuy')}
                 </button>
               )}
             </div>
