@@ -15,6 +15,7 @@ import addVariant from '@assets/lemon-squeezy/add-variant.png';
 import variantId from '@assets/lemon-squeezy/variant-id.png';
 import subscriptionVariantIds from '@assets/lemon-squeezy/subscription-variant-ids.png';
 import ngrok from '@assets/lemon-squeezy/ngrok.png';
+import storeId from '@assets/lemon-squeezy/store-id.png';
 
 This guide will show you how to set up Payments for testing and local development with the following payment processors:
 - Stripe
@@ -243,6 +244,14 @@ Once you've created your account, you'll need to get your test API keys. You can
 - Click on the `+` button
 - Give your API key a name
 - Copy and paste it in your `.env.server` file under `LEMONSQUEEZY_API_KEY=`
+
+### Get your Lemon Squeezy Store ID
+
+<Image src={storeId} alt="store id" loading="lazy" />
+
+To get your store ID, go to the [Lemon Squeezy Dashboard](https://app.lemonsqueezy.com/settings/stores) and copy the `Store ID` from the top right corner.
+
+Copy and paste this number in your `.env.server` file under `LEMONSQUEEZY_STORE_ID=`
 
 ### Create Test Products
 
