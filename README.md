@@ -21,9 +21,9 @@ The template itself is built on top of some very powerful tools and frameworks, 
 
 - 🐝 [Wasp](https://wasp-lang.dev) - a full-stack React, NodeJS, Prisma framework with superpowers
 - 🚀 [Astro](https://starlight.astro.build/) - Astro's lightweight "Starlight" template for documentation and blog
-- 💸 [Stripe](https://stripe.com) - for products and payments
+- 💸 [Stripe](https://stripe.com) or [Lemon Squeezy](https://lemonsqueezy.com/) - for products and payments
 - 📈 [Plausible](https://plausible.io) or [Google](https://analytics.google.com/) Analytics
-- 🤖 [OpenAI](https://openai.com) - OpenAI API integrated into the app or [Replicate](https://replicate.com/) (coming soon 👀)
+- 🤖 [OpenAI](https://openai.com) - OpenAI API w/ function calling example
 - 📦 [AWS S3](https://aws.amazon.com/s3/) - for file uploads
 - 📧 [SendGrid](https://sendgrid.com), [MailGun](https://mailgun.com), or SMTP - for email sending
 - 💅 [TailwindCSS](https://tailwindcss.com) - for styling
