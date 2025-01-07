@@ -4,8 +4,13 @@ banner:
   content: |
     Open SaaS is now running on <b><a href='https://wasp-lang.dev'>Wasp v0.15</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp-lang.dev/docs/migration-guides/migrate-from-0-14-to-0-15">migration instructions.</a>
 ---
+import VideoPlayer from '../../../components/VideoPlayer.astro';
 
 This guide will help you get your new SaaS app up and running.
+
+If you prefer video tutorials, you can watch this walkthrough below which will guide you through most of the setup (installation, authentication, payments, etc.). If you get stuck at any point, you can refer back to these docs for more information.
+
+<VideoPlayer src="https://youtu.be/lFGtwbwt66k" lgWidth="100%" />
 
 ## Install Wasp
 
@@ -22,37 +27,34 @@ To switch easily between Node.js versions, we recommend using [nvm](https://gith
     Need help with nvm?
   </summary>
   <div>
+    Install nvm via your OS package manager (`apt`, `pacman`, `homebrew`, ...) or via the [nvm](https://github.com/nvm-sh/nvm#install--update-script) install script.
 
-Install nvm via your OS package manager (`apt`, `pacman`, `homebrew`, ...) or via the [nvm](https://github.com/nvm-sh/nvm#install--update-script) install script.
+    Then, install a version of Node.js that you need:
 
-Then, install a version of Node.js that you need:
+    ```shell
+    nvm install 20
+    ```
 
-```shell
-nvm install 20
-```
+    Finally, whenever you need to ensure a specific version of Node.js is used, run:
 
-Finally, whenever you need to ensure a specific version of Node.js is used, run:
+    ```shell
+    nvm use 20
+    ```
 
-```shell
-nvm use 20
-```
+    to set the Node.js version for the current shell session.
 
-to set the Node.js version for the current shell session.
+    You can run
 
-You can run
+    ```shell
+    node -v
+    ```
 
-```shell
-node -v
-```
+    to check the version of Node.js currently being used in this shell session.
 
-to check the version of Node.js currently being used in this shell session.
-
-Check NVM repo for more details: [https://github.com/nvm-sh/nvm](https://github.com/nvm-sh/nvm).
-
+    Check NVM repo for more details: [https://github.com/nvm-sh/nvm](https://github.com/nvm-sh/nvm).
   </div>
 </details>
 :::
-
 
 ### Linux and macOS
 
@@ -73,9 +75,9 @@ Given that the wasp binary is built for x86 and not for arm64 (Apple Silicon), y
 softwareupdate --install-rosetta
 ```
 Once Rosetta is installed, you should be able to run Wasp without any issues.
-:::
 
 </details>
+:::
 
 ### Windows
 
