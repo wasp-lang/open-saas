@@ -49,7 +49,7 @@ export default function Example({ user }: { user: User }) {
     return (<span>Your subscription is past due. Please update your payment information.</span>)
   }
   if (user.subscriptionStatus === 'cancel_at_period_end') {
-    return (<span>Your will susbscription end on 01.01.2024</span>)
+    return (<span>Your susbscription will end on 01.01.2024</span>)
   }
   if (user.subscriptionStatus === 'active') {
     return (<span>Thanks so much for your support!</span>)
