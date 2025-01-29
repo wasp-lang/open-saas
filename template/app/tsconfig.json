@@ -5,6 +5,8 @@
 // compiler. Proper TS compiler configuration in Wasp is coming soon :)
 {
   "compilerOptions": {
+    "composite": true,
+    "outDir": ".wasp/out/user",
     "module": "esnext",
     "target": "esnext",
     // We're bundling all code in the end so this is the most appropriate option,
@@ -32,10 +34,5 @@
       // Source 2: https://github.com/testing-library/jest-dom/issues/546#issuecomment-1889884843
       "node_modules/@types"
     ],
-    // Since this TS config is used only for IDE support and not for
-    // compilation, the following directory doesn't exist. We need to specify
-    // it to prevent this error:
-    // https://stackoverflow.com/questions/42609768/typescript-error-cannot-write-file-because-it-would-overwrite-input-file
-    "outDir": ".wasp/phantom"
   }
 }

@@ -1,7 +1,7 @@
 --- template/app/main.wasp
 +++ opensaas-sh/app/main.wasp
 @@ -3,30 +3,29 @@
-     version: "^0.15.0"
+     version: "^0.16.0"
    },
  
 -  title: "My Open SaaS App",
