@@ -85,6 +85,36 @@ In order to use Wasp on Windows, you need to install WSL2 (Windows Subsystem for
 
 **You can refer to this [article](https://wasp-lang.dev/blog/2023/11/21/guide-windows-development-wasp-wsl) for a step by step guide to using Wasp in the WSL environment.** If you need further help, reach out to us on [Discord](https://discord.gg/rzdnErX).
 
+:::caution[WSL2 Docker post installation steps]
+
+<details>
+  <summary>
+      Complete those steps to ensure that PostgreSQL and Docker work correctly with Wasp in WSL2.
+  </summary>
+It is recommended to complete those post-install steps in WSL, based on the official <a href="https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user">Docker</a> guide. These work if you are experiencing an error similar to <a href="https://github.com/wasp-lang/open-saas/issues/347">this</a> one.
+
+First, run
+
+```bash
+sudo groupadd docker
+```
+
+command to create the `docker` group in case it doesn't exist. If it exists, don't worry, just continue with next steps. After that, add your current user to docker group by running
+
+```bash
+sudo usermod -aG docker $USER
+```
+
+where $USER is your username. After that, log out and log back in to apply the changes. Finally, run
+
+```bash
+su -s $USER
+```
+
+</details>
+:::
+
+
 Once in WSL2, run the following command in your **WSL2 environment**:
 ```sh
 curl -sSL https://get.wasp-lang.dev/installer.sh | sh
