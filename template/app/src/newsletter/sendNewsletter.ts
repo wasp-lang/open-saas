@@ -1,6 +1,5 @@
 import { type SendNewsletter } from 'wasp/server/jobs';
 
-import { type User } from 'wasp/entities';
 import { emailSender } from 'wasp/server/email';
 import { type Email } from 'wasp/server/email/core/types'; // TODO fix after it gets fixed in wasp :)
 
@@ -27,14 +26,14 @@ export const checkAndQueueNewsletterEmails: SendNewsletter<never, void> = async 
   const currentDate = new Date();
   const twoWeeksFromNow = new Date(currentDate.getTime() + 14 * 24 * 60 * 60 * 1000);
 
-  const users = (await context.entities.User.findMany({
+  const users = await context.entities.User.findMany({
     where: {
       datePaid: {
         equals: twoWeeksFromNow,
       },
       sendNewsletter: true,
     },
-  })) as User[];
+  });
 
   if (users.length === 0) {
     return;
