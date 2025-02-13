@@ -290,7 +290,7 @@ export const updateHasPaidByUserId: UpdateHasPaidByUserId<{ id: number; data: Pi
       id,
     },
     data: {
-      isAdmin: data.hasPaid,
+      hasPaid: data.hasPaid,
     },
   });
 
