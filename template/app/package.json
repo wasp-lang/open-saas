@@ -9,7 +9,7 @@
     "@lemonsqueezy/lemonsqueezy.js": "^3.2.0",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.7",
-    "apexcharts": "^3.41.0",
+    "apexcharts": "3.41.0",
     "clsx": "^2.1.0",
     "headlessui": "^0.0.0",
     "node-fetch": "3.3.0",
@@ -17,14 +17,17 @@
     "prettier": "3.1.1",
     "prettier-plugin-tailwindcss": "0.5.11",
     "react": "^18.2.0",
-    "react-apexcharts": "^1.4.1",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^5.3.3",
+    "react-apexcharts": "1.4.1",
     "react-hot-toast": "^2.4.1",
     "react-icons": "4.11.0",
     "stripe": "11.15.0",
     "tailwind-merge": "^2.2.1",
     "vanilla-cookieconsent": "^3.0.1",
     "wasp": "file:.wasp/out/sdk/wasp",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "tailwindcss": "^3.2.7"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
