@@ -1,6 +1,6 @@
 # <YOUR_APP_NAME>
 
-Built with [Wasp](https://wasp-lang.dev), based on the [Open Saas](https://opensaas.sh) template.
+Built with [Wasp](https://wasp.sh), based on the [Open Saas](https://opensaas.sh) template.
 
 ## Development
 

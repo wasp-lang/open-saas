@@ -74,7 +74,7 @@ export const footerNavigation = {
     { name: 'Blog', href: BlogUrl },
   ],
   company: [
-    { name: 'About', href: 'https://wasp-lang.dev' },
+    { name: 'About', href: 'https://wasp.sh' },
     { name: 'Privacy', href: '#' },
     { name: 'Terms of Service', href: '#' },
   ],

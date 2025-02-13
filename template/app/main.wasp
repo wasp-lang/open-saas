@@ -29,7 +29,7 @@ app OpenSaaS {
     "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.local.js'></script>",  // for development
   ],
 
-  // 🔐 Auth out of the box! https://wasp-lang.dev/docs/auth/overview
+  // 🔐 Auth out of the box! https://wasp.sh/docs/auth/overview
   auth: {
     userEntity: User,
     methods: {
@@ -50,17 +50,17 @@ app OpenSaaS {
         },
         userSignupFields: import { getEmailUserFields } from "@src/auth/userSignupFields",
       },
-      // Uncomment to enable Google Auth (check https://wasp-lang.dev/docs/auth/social-auth/google for setup instructions):
+      // Uncomment to enable Google Auth (check https://wasp.sh/docs/auth/social-auth/google for setup instructions):
       // google: { // Guide for setting up Auth via Google
       //   userSignupFields: import { getGoogleUserFields } from "@src/auth/userSignupFields",
       //   configFn: import { getGoogleAuthConfig } from "@src/auth/userSignupFields",
       // },
-      // Uncomment to enable GitHub Auth (check https://wasp-lang.dev/docs/auth/social-auth/github for setup instructions):
+      // Uncomment to enable GitHub Auth (check https://wasp.sh/docs/auth/social-auth/github for setup instructions):
       // gitHub: {
       //   userSignupFields: import { getGitHubUserFields } from "@src/auth/userSignupFields",
       //   configFn: import { getGitHubAuthConfig } from "@src/auth/userSignupFields",
       // },
-      // Uncomment to enable Discord Auth (check https://wasp-lang.dev/docs/auth/social-auth/discord for setup instructions):
+      // Uncomment to enable Discord Auth (check https://wasp.sh/docs/auth/social-auth/discord for setup instructions):
       // discord: {
       //   userSignupFields: import { getDiscordUserFields } from "@src/auth/userSignupFields",
       //   configFn: import { getDiscordAuthConfig } from "@src/auth/userSignupFields"

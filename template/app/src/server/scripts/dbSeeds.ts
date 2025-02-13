@@ -8,7 +8,7 @@ type MockUserData = Omit<User, 'id'>;
 /**
  * This function, which we've imported in `app.db.seeds` in the `main.wasp` file,
  * seeds the database with mock users via the `wasp db seed` command.
- * For more info see: https://wasp-lang.dev/docs/data-model/backends#seeding-the-database
+ * For more info see: https://wasp.sh/docs/data-model/backends#seeding-the-database
  */
 export async function seedMockUsers(prismaClient: PrismaClient) {
   await Promise.all(generateMockUsersData(50).map((data) => 

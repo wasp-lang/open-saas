@@ -29,7 +29,7 @@ export const updateUserById: UpdateUserById<{ id: string; data: Partial<User> },
   return updatedUser;
 };
 
-export const updateCurrentUser: UpdateCurrentUser<Partial<User>, User> = async (user, context) => {
+export const updateCurrentUser: UpdateCurrentUser<Pick<User, 'lastActiveTimestamp'>, User> = async ({ lastActiveTimestamp }, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
@@ -38,7 +38,7 @@ export const updateCurrentUser: UpdateCurrentUser<Partial<User>, User> = async (
     where: {
       id: context.user.id,
     },
-    data: user,
+    data: {lastActiveTimestamp},
   });
 };
 

@@ -2,7 +2,7 @@
 title: Authorization
 banner:
   content: |
-    Open SaaS is now running on <b><a href='https://wasp-lang.dev'>Wasp v0.16</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp-lang.dev/docs/migration-guides/migrate-from-0-15-to-0-16">migration instructions.</a>
+    Open SaaS is now running on <b><a href='https://wasp.sh'>Wasp v0.16</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp.sh/docs/migration-guides/migrate-from-0-15-to-0-16">migration instructions.</a>
 ---
 
 This guide will help you get started with authorization in your SaaS app. 
@@ -13,7 +13,7 @@ Authorization differs from [authentication](/guides/authentication/) in that aut
 
 To learn more about the different types of user permissions built into this SaaS template, including Stripe subscription tiers and statuses, check out the [User Overview Reference](/general/user-overview/).
 
-Also, check out our [blog post](https://wasp-lang.dev/blog/2022/11/29/permissions-in-web-apps) to learn more about authorization (access control) in web apps.
+Also, check out our [blog post](https://wasp.sh/blog/2022/11/29/permissions-in-web-apps) to learn more about authorization (access control) in web apps.
 
 ### Client-side Authorization
 
