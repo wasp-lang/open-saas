@@ -1,13 +1,13 @@
 import {
   type UpdateCurrentUserLastActiveTimestamp,
-  type UpdateUserById,
+  type UpdateIsUserAdminById,
   type GetPaginatedUsers,
 } from 'wasp/server/operations';
 import { type User } from 'wasp/entities';
 import { HttpError } from 'wasp/server';
 import { type SubscriptionStatus } from '../payment/plans';
 
-export const updateUserById: UpdateUserById<{ id: string; data: Partial<User> }, User> = async (
+export const updateIsUserAdminById: UpdateIsUserAdminById<{ id: string; data: Pick<User, 'isAdmin'> }, User> = async (
   { id, data },
   context
 ) => {
@@ -23,7 +23,9 @@ export const updateUserById: UpdateUserById<{ id: string; data: Partial<User> },
     where: {
       id,
     },
-    data,
+    data: {
+      isAdmin: data.isAdmin,
+    },
   });
 
   return updatedUser;

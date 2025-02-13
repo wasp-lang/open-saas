@@ -145,8 +145,8 @@ action updateCurrentUserLastActiveTimestamp {
   entities: [User]
 }
 
-action updateUserById {
-  fn: import { updateUserById } from "@src/user/operations",
+action updateIsUserAdminById {
+  fn: import { updateIsUserAdminById } from "@src/user/operations",
   entities: [User]
 }
 //#endregion
