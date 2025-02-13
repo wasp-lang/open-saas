@@ -330,8 +330,8 @@ action updateCurrentUserLastActiveTimestamp {
   entities: [User]
 }
 
-action updateIsUserAdminById {
-  fn: import { updateIsUserAdminById } from "@src/server/actions.js",
+action updateHasPaidByUserId {
+  fn: import { updateHasPaidByUserId } from "@src/server/actions.js",
   entities: [User]
 }
 

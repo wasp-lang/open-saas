@@ -1,4 +1,4 @@
-import { updateIsUserAdminById, useQuery, getPaginatedUsers } from 'wasp/client/operations';
+import { updateHasPaidByUserId, useQuery, getPaginatedUsers } from 'wasp/client/operations';
 import { useState, useEffect } from 'react';
 import SwitcherOne from './SwitcherOne';
 import Loader from '../common/Loader';
@@ -218,7 +218,7 @@ const UsersTable = () => {
               </div>
               <div className='col-span-1 flex items-center'>
                 <div className='text-sm text-black dark:text-white'>
-                  <SwitcherOne user={user} updateUserById={updateIsUserAdminById} />
+                  <SwitcherOne user={user} updateUserById={updateHasPaidByUserId} />
                 </div>
               </div>
               <div className='col-span-1 flex items-center'>

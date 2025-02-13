@@ -4,7 +4,7 @@ import {
   type GenerateGptResponse,
   type StripePayment,
   type UpdateCurrentUserLastActiveTimestamp,
-  type UpdateIsUserAdminById,
+  type UpdateHasPaidByUserId,
   type CreateTask,
   type DeleteTask,
   type UpdateTask,
@@ -275,7 +275,7 @@ export const deleteTask: DeleteTask<Pick<Task, 'id'>, Task> = async ({ id }, con
   return task;
 };
 
-export const updateIsUserAdminById: UpdateIsUserAdminById<{ id: number; data: Pick<User, 'isAdmin'> }, User> = async (
+export const updateHasPaidByUserId: UpdateHasPaidByUserId<{ id: number; data: Pick<User, 'hasPaid'> }, User> = async (
   { id, data },
   context
 ) => {
@@ -290,7 +290,7 @@ export const updateIsUserAdminById: UpdateIsUserAdminById<{ id: number; data: Pi
       id,
     },
     data: {
-      isAdmin: data.isAdmin,
+      isAdmin: data.hasPaid,
     },
   });
 
