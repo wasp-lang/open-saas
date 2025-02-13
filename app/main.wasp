@@ -325,13 +325,13 @@ action stripePayment {
   entities: [User]
 }
 
-action updateCurrentUser {
-  fn: import { updateCurrentUser } from "@src/server/actions.js",
+action updateCurrentUserLastActiveTimestamp {
+  fn: import { updateCurrentUserLastActiveTimestamp } from "@src/server/actions.js",
   entities: [User]
 }
 
-action updateUserById {
-  fn: import { updateUserById } from "@src/server/actions.js",
+action updateIsUserAdminById {
+  fn: import { updateIsUserAdminById } from "@src/server/actions.js",
   entities: [User]
 }
 
