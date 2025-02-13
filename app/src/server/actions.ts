@@ -3,8 +3,8 @@ import { HttpError } from 'wasp/server';
 import {
   type GenerateGptResponse,
   type StripePayment,
-  type UpdateCurrentUser,
-  type UpdateUserById,
+  type UpdateCurrentUserLastActiveTimestamp,
+  type UpdateIsUserAdminById,
   type CreateTask,
   type DeleteTask,
   type UpdateTask,
@@ -286,23 +286,23 @@ export const deleteTask: DeleteTask<Pick<Task, 'id'>, Task> = async ({ id }, con
   return task;
 };
 
-export const updateUserById: UpdateUserById<{ id: number; data: Partial<User> }, User> = async (
+export const updateIsUserAdminById: UpdateIsUserAdminById<{ id: number; data: Pick<User, 'isAdmin'> }, User> = async (
   { id, data },
   context
 ) => {
   if (!context.user) {
     throw new HttpError(401);
   }
-
   if (!context.user.isAdmin) {
     throw new HttpError(403);
   }
-
   const updatedUser = await context.entities.User.update({
     where: {
       id,
     },
-    data,
+    data: {
+      isAdmin: data.isAdmin,
+    },
   });
 
   return updatedUser;
@@ -333,15 +333,15 @@ export const createFile: CreateFile<fileArgs, File> = async ({ fileType, name },
   });
 };
 
-export const updateCurrentUser: UpdateCurrentUser<Partial<User>, User> = async (user, context) => {
-  if (!context.user) {
-    throw new HttpError(401);
-  }
-
-  return context.entities.User.update({
-    where: {
-      id: context.user.id,
-    },
-    data: user,
-  });
-};
+export const updateCurrentUserLastActiveTimestamp: UpdateCurrentUserLastActiveTimestamp<Pick<User, 'lastActiveTimestamp'>, User> =
+  async ({ lastActiveTimestamp }, context) => {
+    if (!context.user) {
+      throw new HttpError(401);
+    }
+    return context.entities.User.update({
+      where: {
+        id: context.user.id,
+      },
+      data: { lastActiveTimestamp },
+    });
+  };
