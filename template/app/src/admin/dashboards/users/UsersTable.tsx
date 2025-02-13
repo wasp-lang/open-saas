@@ -1,5 +1,5 @@
 import { type SubscriptionStatus } from '../../../payment/plans';
-import { updateUserById, useQuery, getPaginatedUsers } from 'wasp/client/operations';
+import { updateIsUserAdminById, useQuery, getPaginatedUsers } from 'wasp/client/operations';
 import { useState, useEffect } from 'react';
 import SwitcherOne from './SwitcherOne';
 import LoadingSpinner from '../../layout/LoadingSpinner';
@@ -226,7 +226,7 @@ const UsersTable = () => {
               </div>
               <div className='col-span-1 flex items-center'>
                 <div className='text-sm text-black dark:text-white'>
-                  <SwitcherOne user={user} updateUserById={updateUserById} />
+                  <SwitcherOne user={user} updateIsUserAdminById={updateIsUserAdminById} />
                 </div>
               </div>
               <div className='col-span-1 flex items-center'>

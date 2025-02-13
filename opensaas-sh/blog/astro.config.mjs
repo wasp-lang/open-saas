@@ -85,19 +85,19 @@ export default defineConfig({
               name: 'Vince',
               title: 'Dev Rel @ Wasp',
               picture: '/CRAIG_ROCK.png', // Images in the `public` directory are supported.
-              url: 'https://wasp-lang.dev',
+              url: 'https://wasp.sh',
             },
             matija: {
               name: 'Matija',
               title: 'CEO @ Wasp',
               picture: '/matija.jpeg', // Images in the `public` directory are supported.
-              url: 'https://wasp-lang.dev',
+              url: 'https://wasp.sh',
             },
             milica: {
               name: 'Milica',
               title: 'Growth @ Wasp',
               picture: '/milica.jpg', // Images in the `public` directory are supported.
-              url: 'https://wasp-lang.dev',
+              url: 'https://wasp.sh',
             },
           },
         }),

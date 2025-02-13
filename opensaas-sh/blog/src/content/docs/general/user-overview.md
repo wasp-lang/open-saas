@@ -2,7 +2,7 @@
 title: User Overview
 banner:
   content: |
-    Open SaaS is now running on <b><a href='https://wasp-lang.dev'>Wasp v0.16</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp-lang.dev/docs/migration-guides/migrate-from-0-15-to-0-16">migration instructions.</a>
+    Open SaaS is now running on <b><a href='https://wasp.sh'>Wasp v0.16</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp.sh/docs/migration-guides/migrate-from-0-15-to-0-16">migration instructions.</a>
 ---
 
 This reference will help you understand how the User entity works in this template.
@@ -34,7 +34,7 @@ entity User {=psl
 psl=}
 ```
 
-We store all pertinent information to the user, including identification, subscription, and payment processor information. Meanwhile, Wasp abstracts away all the Auth related entities dealing with `passwords`, `sessions`, and `socialLogins`, so you don't have to worry about these at all in your Prisma schema (if you want to learn more about this process, check out the [Wasp Auth Docs](https://wasp-lang.dev/docs/auth/overview)).
+We store all pertinent information to the user, including identification, subscription, and payment processor information. Meanwhile, Wasp abstracts away all the Auth related entities dealing with `passwords`, `sessions`, and `socialLogins`, so you don't have to worry about these at all in your Prisma schema (if you want to learn more about this process, check out the [Wasp Auth Docs](https://wasp.sh/docs/auth/overview)).
 
 ## Stripe and Subscriptions
 

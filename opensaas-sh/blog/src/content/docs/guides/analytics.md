@@ -2,7 +2,7 @@
 title: Analytics
 banner:
   content: |
-    Open SaaS is now running on <b><a href='https://wasp-lang.dev'>Wasp v0.16</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp-lang.dev/docs/migration-guides/migrate-from-0-15-to-0-16">migration instructions.</a>
+    Open SaaS is now running on <b><a href='https://wasp.sh'>Wasp v0.16</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp.sh/docs/migration-guides/migrate-from-0-15-to-0-16">migration instructions.</a>
 ---
 This guide will show you how to integrate analytics for your app. You can choose between [Google Analytics](#google-analytics) and [Plausible](#plausible).
 
@@ -58,7 +58,7 @@ As a completely free, open-source project, we appreciate any help 🙏
 
 ## Google Analytics
 
-First off, head over to `src/analytics/stats.ts` and switch out the Plausible Provider for Google Analytics so that your [background (cron) job](https://wasp-lang.dev/docs/advanced/jobs) fetches the data from Google Analytics for your [Admin Dashboard](/general/admin-dashboard/):
+First off, head over to `src/analytics/stats.ts` and switch out the Plausible Provider for Google Analytics so that your [background (cron) job](https://wasp.sh/docs/advanced/jobs) fetches the data from Google Analytics for your [Admin Dashboard](/general/admin-dashboard/):
 
 ```ts ins={3} del={2} title="stats.ts"
 //...

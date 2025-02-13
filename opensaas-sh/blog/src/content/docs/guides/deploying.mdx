@@ -2,14 +2,14 @@
 title: Deploying
 banner:
   content: |
-    Open SaaS is now running on <b><a href='https://wasp-lang.dev'>Wasp v0.16</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp-lang.dev/docs/migration-guides/migrate-from-0-15-to-0-16">migration instructions.</a>
+    Open SaaS is now running on <b><a href='https://wasp.sh'>Wasp v0.16</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp.sh/docs/migration-guides/migrate-from-0-15-to-0-16">migration instructions.</a>
 ---
 import { Image } from 'astro:assets';
 import npmVersion from '@assets/stripe/npm-version.png';
 import stripeListenEvents from '@assets/stripe/listen-to-stripe-events.png';
 import stripeSigningSecret from '@assets/stripe/stripe-webhook-signing-secret.png';
 
-Because this SaaS app is a React/NodeJS/Postgres app built on top of [Wasp](https://wasp-lang.dev), Open SaaS can take advantage of Wasp's easy, one-command deploy to Fly.io or manual deploy to any provider of your choice.
+Because this SaaS app is a React/NodeJS/Postgres app built on top of [Wasp](https://wasp.sh), Open SaaS can take advantage of Wasp's easy, one-command deploy to Fly.io or manual deploy to any provider of your choice.
 
 The simplest and quickest option is to take advantage of Wasp's one-command deploy to Fly.io.
 
@@ -82,7 +82,7 @@ Here are a list of all of them (some of which you may not be using, e.g. Analyti
 
 **Wasp provides the handy `wasp deploy` command to deploy your entire full-stack app (DB, server, and client) in one command.**
 
-To learn how, please follow the detailed guide for [deploying to Fly via the Wasp CLI](https://wasp-lang.dev/docs/advanced/deployment/cli) from the Wasp documentation. We suggest you follow this guide carefully to get your app deployed.
+To learn how, please follow the detailed guide for [deploying to Fly via the Wasp CLI](https://wasp.sh/docs/deployment/deployment-methods/cli) from the Wasp documentation. We suggest you follow this guide carefully to get your app deployed.
 
 :::caution[Setting Environment Variables]
 Remember, because we've set certain client-side env variables, make sure to pass them to the `wasp deploy` commands so that they can be included in the build: 
@@ -97,12 +97,12 @@ The `wasp deploy` command will also take care of setting the following server-si
 - `WASP_WEB_CLIENT_URL`
 - `WASP_SERVER_URL`
 
-For setting the remaining server-side environment variables, please refer to the [Deploying with the Wasp CLI Guide](https://wasp-lang.dev/docs/advanced/deployment/cli#launch).
+For setting the remaining server-side environment variables, please refer to the [Deploying with the Wasp CLI Guide](https://wasp.sh/docs/deployment/deployment-methods/cli#launch).
 :::
 
 ### Deploying Manually / to Other Providers
 
-If you prefer to deploy manually, your frontend and backend separately, or just prefer using your favorite provider you can follow [Wasp's Manual Deployment Guide](https://wasp-lang.dev/docs/advanced/deployment/manually).
+If you prefer to deploy manually, your frontend and backend separately, or just prefer using your favorite provider you can follow [Wasp's Manual Deployment Guide](https://wasp.sh/docs/deployment/deployment-methods/paas).
 
 :::caution[Client-side Environment Variables]
 Remember to always set additional client-side environment variables, such as `REACT_APP_STRIPE_CUSTOMER_PORTAL` by appending them to the build command, e.g. 
@@ -115,8 +115,8 @@ REACT_APP_CLIENT_ENV_VAR_1=<...> npm run build
 
 After deploying your server, you need to add the correct redirect URIs to the credential settings. For this, refer to the following guides from the Wasp Docs:
 
-- [Google Auth](https://wasp-lang.dev/docs/auth/social-auth/google#3-creating-a-google-oauth-app:~:text=Under%20Authorized%20redirect%20URIs)
-- [Github Auth](https://wasp-lang.dev/docs/auth/social-auth/github#3-creating-a-github-oauth-app:~:text=Authorization%20callback%20URL)
+- [Google Auth](https://wasp.sh/docs/auth/social-auth/google#3-creating-a-google-oauth-app:~:text=Under%20Authorized%20redirect%20URIs)
+- [Github Auth](https://wasp.sh/docs/auth/social-auth/github#3-creating-a-github-oauth-app:~:text=Authorization%20callback%20URL)
 
 ### Setting up your Production Stripe Webhook
 
