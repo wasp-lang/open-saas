@@ -12,6 +12,7 @@ import { UserMenuItems } from '../../../user/UserMenuItems';
 import DarkModeSwitcher from '../DarkModeSwitcher';
 import { useIsLandingPage } from '../../hooks/useIsLandingPage';
 import { cn } from '../../cn';
+import LanguageSelector from '../LanguageSelector';
 
 export interface NavigationItem {
   name: string;
@@ -58,6 +59,7 @@ export default function AppNavBar({ navigationItems }: { navigationItems: Naviga
         <div className='hidden lg:flex lg:flex-1 gap-3 justify-end items-center'>
           <ul className='flex justify-center items-center gap-2 sm:gap-4'>
             <DarkModeSwitcher />
+            <LanguageSelector isLandingPage={isLandingPage} />
           </ul>
           {isUserLoading ? null : !user ? (
             <WaspRouterLink to={routes.LoginRoute.to} className='text-sm font-semibold leading-6 ml-3'>
@@ -105,6 +107,9 @@ export default function AppNavBar({ navigationItems }: { navigationItems: Naviga
               </div>
               <div className='py-6'>
                 <DarkModeSwitcher />
+                <div className='mt-2'>
+                  <LanguageSelector isLandingPage={isLandingPage} />
+                </div>
               </div>
             </div>
           </div>
