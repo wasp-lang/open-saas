@@ -1,5 +1,4 @@
 import {
-  type UpdateCurrentUserLastActiveTimestamp,
   type UpdateIsUserAdminById,
   type GetPaginatedUsers,
 } from 'wasp/server/operations';
@@ -29,25 +28,6 @@ export const updateIsUserAdminById: UpdateIsUserAdminById<{ id: string; data: Pi
   });
 
   return updatedUser;
-};
-
-export const updateCurrentUserLastActiveTimestamp: UpdateCurrentUserLastActiveTimestamp<void, Pick<User, 'id' | 'lastActiveTimestamp'>> = async (_args, context) => {
-  if (!context.user) {
-    throw new HttpError(401);
-  }
-
-  return context.entities.User.update({
-    where: {
-      id: context.user.id,
-    },
-    data: {
-      lastActiveTimestamp: new Date(),
-    },
-    select: {
-      id: true,
-      lastActiveTimestamp: true,
-    },
-  });
 };
 
 type GetPaginatedUsersInput = {
@@ -107,7 +87,6 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
       email: true,
       username: true,
       isAdmin: true,
-      lastActiveTimestamp: true,
       subscriptionStatus: true,
       paymentProcessorUserId: true,
     },
