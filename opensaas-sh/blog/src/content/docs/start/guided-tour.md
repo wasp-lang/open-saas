@@ -2,7 +2,7 @@
 title: Guided Tour
 banner:
   content: |
-    Open SaaS is now running on <b><a href='https://wasp.sh'>Wasp v0.16</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp.sh/docs/migration-guides/migrate-from-0-15-to-0-16">migration instructions.</a>
+    Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
 ---
 
 Awesome, you now have your very own SaaS app up and running! But, first, here are some important things you need to know about your app in its current state:
