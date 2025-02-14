@@ -31,7 +31,7 @@ export const updateIsUserAdminById: UpdateIsUserAdminById<{ id: string; data: Pi
   return updatedUser;
 };
 
-export const updateCurrentUserLastActiveTimestamp: UpdateCurrentUserLastActiveTimestamp<Pick<User, 'lastActiveTimestamp'>, User> = async ({ lastActiveTimestamp }, context) => {
+export const updateCurrentUserLastActiveTimestamp: UpdateCurrentUserLastActiveTimestamp<void, Pick<User, 'id' | 'lastActiveTimestamp'>> = async (_args, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
@@ -40,7 +40,13 @@ export const updateCurrentUserLastActiveTimestamp: UpdateCurrentUserLastActiveTi
     where: {
       id: context.user.id,
     },
-    data: {lastActiveTimestamp},
+    data: {
+      lastActiveTimestamp: new Date(),
+    },
+    select: {
+      id: true,
+      lastActiveTimestamp: true,
+    },
   });
 };
 

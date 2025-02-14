@@ -79,7 +79,7 @@ Authorization on the server-side is the core of your access control logic, and d
 You can authorize access to server-side operations by adding a check for a logged-in user on the `context.user` object which is passed to all operations in Wasp:
 
 ```tsx title="src/server/actions.ts" 
-export const updateCurrentUser: UpdateCurrentUser<...> = async (args, context) => {
+export const someServerAction: SomeServerAction<...> = async (args, context) => {
   if (!context.user) {
     throw new HttpError(401); // throw an error if user is not logged in
   }
