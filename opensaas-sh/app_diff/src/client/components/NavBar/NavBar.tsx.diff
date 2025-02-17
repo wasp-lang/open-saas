@@ -1,0 +1,85 @@
+--- template/app/src/client/components/NavBar/NavBar.tsx
++++ opensaas-sh/app/src/client/components/NavBar/NavBar.tsx
+@@ -32,6 +32,7 @@
+           !isLandingPage,
+       })}
+     >
++      {/* {isLandingPage && <Announcement />} */}
+       <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
+         <div className='flex items-center lg:flex-1'>
+           <WaspRouterLink
+@@ -39,9 +40,7 @@
+             className='flex items-center -m-1.5 p-1.5 text-gray-900 duration-300 ease-in-out hover:text-yellow-500'
+           >
+             <NavLogo />
+-            {isLandingPage && (
+-              <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Your Saas</span>
+-            )}
++            {isLandingPage && <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Open Saas</span>}
+           </WaspRouterLink>
+         </div>
+         <div className='flex lg:hidden'>
+@@ -56,13 +55,13 @@
+         </div>
+         <div className='hidden lg:flex lg:gap-x-12'>{renderNavigationItems(navigationItems)}</div>
+         <div className='hidden lg:flex lg:flex-1 gap-3 justify-end items-center'>
+-          <ul className='flex justify-center items-center gap-2 sm:gap-4'>
++          <ul className='ml-4 flex justify-center items-center gap-2 sm:gap-4'>
+             <DarkModeSwitcher />
+           </ul>
+           {isUserLoading ? null : !user ? (
+             <WaspRouterLink to={routes.LoginRoute.to} className='text-sm font-semibold leading-6 ml-3'>
+-              <div className='flex items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500 dark:text-white'>
+-                Log in <BiLogIn size='1.1rem' className='ml-1 mt-[0.1rem]' />
++                <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500 dark:text-white test-sm'>
++                  Try the demo App <BiLogIn size='1.1rem' className='ml-1' />
+               </div>
+             </WaspRouterLink>
+           ) : (
+@@ -77,7 +76,7 @@
+         <Dialog.Panel className='fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white dark:text-white dark:bg-boxdark px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10'>
+           <div className='flex items-center justify-between'>
+             <WaspRouterLink to={routes.LandingPageRoute.to} className='-m-1.5 p-1.5'>
+-              <span className='sr-only'>Your SaaS</span>
++              <span className='sr-only'>Open SaaS</span>
+               <NavLogo />
+             </WaspRouterLink>
+             <button
+@@ -96,7 +95,7 @@
+                 {isUserLoading ? null : !user ? (
+                   <WaspRouterLink to={routes.LoginRoute.to}>
+                     <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500 dark:text-white'>
+-                      Log in <BiLogIn size='1.1rem' className='ml-1' />
++                      Try the Demo App{' '} <BiLogIn size='1.1rem' className='ml-1' />
+                     </div>
+                   </WaspRouterLink>
+                 ) : (
+@@ -138,3 +137,27 @@
+     );
+   });
+ }
++
++const ContestURL =
++  'https://docs.opensaas.sh/blog/';
++
++function Announcement() {
++  return (
++    <div className='flex justify-center items-center gap-3 p-3 w-full bg-gradient-to-r from-[#d946ef] to-[#fc0] font-semibold text-white text-center z-49'>
++      <p onClick={() => window.open(ContestURL, '_blank')} className='hidden lg:block cursor-pointer hover:opacity-90 hover:drop-shadow'>🍪 THE MOST ANNOYING COOKIE BANNER EVER HACKATHON 🤬</p>
++      <div className='hidden lg:block self-stretch w-0.5 bg-white'></div>
++      <div
++        onClick={() => window.open(ContestURL, '_blank')}
++        className='hidden lg:block cursor-pointer rounded-full bg-neutral-700 px-2.5 py-1 text-xs hover:bg-neutral-600 tracking-wider'
++      >
++        Enter here and win prizes! →
++      </div>
++      <div
++        onClick={() => window.open(ContestURL, '_blank')}
++        className='lg:hidden cursor-pointer rounded-full bg-neutral-700 px-2.5 py-1 text-xs hover:bg-neutral-600 tracking-wider'
++      >
++        🍪 The Most Annoying Cookie Banner Contest! 🤬 →
++      </div>
++    </div>
++  );
++}
+\ No newline at end of file
