@@ -1,0 +1,22 @@
+{
+  "name": "blog",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/starlight": "^0.29.2",
+    "@astrojs/starlight-tailwind": "^2.0.3",
+    "@astrojs/tailwind": "^5.1.2",
+    "astro": "^4.16.15",
+    "sharp": "^0.32.5",
+    "starlight-blog": "^0.15.0",
+    "typescript": "^5.4.5"
+  }
+}
