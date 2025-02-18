@@ -8,7 +8,7 @@ import { paymentPlans, PaymentPlanId, SubscriptionStatus } from '../plans';
 import { updateUserStripePaymentDetails } from './paymentDetails';
 import { emailSender } from 'wasp/server/email';
 import { assertUnreachable } from '../../shared/utils';
-import { requireNodeEnvVar } from '../../server/utils';
+import { requireNodeEnvVar } from '../../server/envUtils';
 import { z } from 'zod';
 
 export const stripeWebhook: PaymentsWebhook = async (request, response, context) => {

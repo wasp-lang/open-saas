@@ -1,4 +1,4 @@
-import { requireNodeEnvVar } from '../server/utils';
+import { requireNodeEnvVar } from '../server/envUtils';
 
 export type SubscriptionStatus = 'past_due' | 'cancel_at_period_end' | 'active' | 'deleted';
 

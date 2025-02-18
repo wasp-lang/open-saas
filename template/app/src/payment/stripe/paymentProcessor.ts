@@ -1,7 +1,7 @@
 import type { PaymentPlanEffect } from '../plans';
 import type { CreateCheckoutSessionArgs, FetchCustomerPortalUrlArgs, PaymentProcessor } from '../paymentProcessor'
 import { fetchStripeCustomer, createStripeCheckoutSession } from './checkoutUtils';
-import { requireNodeEnvVar } from '../../server/utils';
+import { requireNodeEnvVar } from '../../server/envUtils';
 import { stripeWebhook, stripeMiddlewareConfigFn } from './webhook';
 
 export type StripeMode = 'subscription' | 'payment';
