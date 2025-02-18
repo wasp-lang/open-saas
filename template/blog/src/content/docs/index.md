@@ -1,5 +1,0 @@
----
-title: Introduction
----
-
-Hello World! 👋
