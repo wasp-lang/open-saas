@@ -139,7 +139,7 @@ authors: {
     name: 'Vince',
     title: 'Dev Rel @ Wasp',
     picture: '/CRAIG_ROCK.png', // Put author images in the `public` directory.
-    url: 'https://wasp-lang.dev',
+    url: 'https://wasp.sh',
   },
 },
 ```

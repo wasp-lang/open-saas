@@ -2,7 +2,7 @@
 title: Authentication
 banner:
   content: |
-    Open SaaS is now running on <b><a href='https://wasp-lang.dev'>Wasp v0.16</a></b>! <br/>⚙️<br/>If you're running an older version and would like to upgrade, please follow the <a href="https://wasp-lang.dev/docs/migration-guides/migrate-from-0-15-to-0-16">migration instructions.</a>
+    Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
 ---
 
 Setting up your app's authentication is easy with Wasp. In fact, it's already set up for you in the `main.wasp` file: 
@@ -26,7 +26,7 @@ The great part is, by defining your auth config in the `main.wasp` file, Wasp ma
 
 `email` method is the default auth method in Open Saas.
 
-Since it needs to send emails to verify users and reset passwords, it requires an [email sender](https://wasp-lang.dev/docs/advanced/email) provider: a service it can use to send emails.
+Since it needs to send emails to verify users and reset passwords, it requires an [email sender](https://wasp.sh/docs/advanced/email) provider: a service it can use to send emails.
 "email sender" provider is configured via `app.emailSender` field in the `main.wasp` file.
 
 :::caution[Dummy Email Provider]
@@ -79,15 +79,15 @@ In order to use the `email` auth method in production, you'll need to switch fro
 
 And that's it. Wasp will take care of the rest and update your AuthUI components accordingly.
 
-Check out the  [Wasp Auth docs](https://wasp-lang.dev/docs/auth/overview) for more info.
+Check out the  [Wasp Auth docs](https://wasp.sh/docs/auth/overview) for more info.
 
 ## Google, GitHub, & Discord Auth
 
 We've also customized and pre-built the Google and GitHub auth flow for you. To start using them, you just need to uncomment out the methods you want in your `main.wasp` file and obtain the proper API keys to add to your `.env.server` file. 
 
-To create a Google OAuth app and get your Google API keys, follow the instructions in [Wasp's Google Auth docs](https://wasp-lang.dev/docs/auth/social-auth/google#3-creating-a-google-oauth-app).
+To create a Google OAuth app and get your Google API keys, follow the instructions in [Wasp's Google Auth docs](https://wasp.sh/docs/auth/social-auth/google#3-creating-a-google-oauth-app).
 
-To create a GitHub OAuth app and get your GitHub API keys, follow the instructions in [Wasp's GitHub Auth docs](https://wasp-lang.dev/docs/auth/social-auth/github#3-creating-a-github-oauth-app).
+To create a GitHub OAuth app and get your GitHub API keys, follow the instructions in [Wasp's GitHub Auth docs](https://wasp.sh/docs/auth/social-auth/github#3-creating-a-github-oauth-app).
 
 To create a Discord OAuth app and get your Discord API keys, follow the instructions in [Wasp's Discord Auth docs](docs/auth/social-auth/google#3-creating-a-google-oauth-app)
 

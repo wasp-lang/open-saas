@@ -1,13 +1,13 @@
 import {
-  type UpdateCurrentUser,
-  type UpdateUserById,
+  type UpdateCurrentUserLastActiveTimestamp,
+  type UpdateIsUserAdminById,
   type GetPaginatedUsers,
 } from 'wasp/server/operations';
 import { type User } from 'wasp/entities';
 import { HttpError } from 'wasp/server';
 import { type SubscriptionStatus } from '../payment/plans';
 
-export const updateUserById: UpdateUserById<{ id: string; data: Partial<User> }, User> = async (
+export const updateIsUserAdminById: UpdateIsUserAdminById<{ id: string; data: Pick<User, 'isAdmin'> }, User> = async (
   { id, data },
   context
 ) => {
@@ -23,13 +23,15 @@ export const updateUserById: UpdateUserById<{ id: string; data: Partial<User> },
     where: {
       id,
     },
-    data,
+    data: {
+      isAdmin: data.isAdmin,
+    },
   });
 
   return updatedUser;
 };
 
-export const updateCurrentUser: UpdateCurrentUser<Partial<User>, User> = async (user, context) => {
+export const updateCurrentUserLastActiveTimestamp: UpdateCurrentUserLastActiveTimestamp<Pick<User, 'lastActiveTimestamp'>, User> = async ({ lastActiveTimestamp }, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
@@ -38,7 +40,7 @@ export const updateCurrentUser: UpdateCurrentUser<Partial<User>, User> = async (
     where: {
       id: context.user.id,
     },
-    data: user,
+    data: {lastActiveTimestamp},
   });
 };
 
