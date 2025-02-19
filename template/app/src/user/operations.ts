@@ -7,31 +7,28 @@ import { type User } from 'wasp/entities';
 import { HttpError } from 'wasp/server';
 import { type SubscriptionStatus } from '../payment/plans';
 
-export const updateIsUserAdminById: UpdateIsUserAdminById<{ id: string; data: Pick<User, 'isAdmin'> }, User> = async (
-  { id, data },
+export const updateIsUserAdminById: UpdateIsUserAdminById<Pick<User, 'id' | 'isAdmin'>, User> = async (
+  { id, isAdmin },
   context
 ) => {
   if (!context.user) {
-    throw new HttpError(401);
+    throw new HttpError(401, 'Only authenticated users are allowed to perform this operation');
   }
 
   if (!context.user.isAdmin) {
-    throw new HttpError(403);
+    throw new HttpError(403, 'Only admins are allowed to perform this operation');
   }
 
-  const updatedUser = await context.entities.User.update({
-    where: {
-      id,
-    },
-    data: {
-      isAdmin: data.isAdmin,
-    },
+  return context.entities.User.update({
+    where: { id },
+    data: { isAdmin },
   });
-
-  return updatedUser;
 };
 
-export const updateCurrentUserLastActiveTimestamp: UpdateCurrentUserLastActiveTimestamp<Pick<User, 'lastActiveTimestamp'>, User> = async ({ lastActiveTimestamp }, context) => {
+export const updateCurrentUserLastActiveTimestamp: UpdateCurrentUserLastActiveTimestamp<
+  Pick<User, 'lastActiveTimestamp'>,
+  User
+> = async ({ lastActiveTimestamp }, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
@@ -40,7 +37,7 @@ export const updateCurrentUserLastActiveTimestamp: UpdateCurrentUserLastActiveTi
     where: {
       id: context.user.id,
     },
-    data: {lastActiveTimestamp},
+    data: { lastActiveTimestamp },
   });
 };
 
@@ -52,7 +49,28 @@ type GetPaginatedUsersInput = {
   subscriptionStatus?: SubscriptionStatus[];
 };
 type GetPaginatedUsersOutput = {
-  users: Pick<User, 'id' | 'email' | 'username' | 'lastActiveTimestamp' | 'subscriptionStatus' | 'paymentProcessorUserId'>[];
+  users: Pick<
+    User,
+    | 'id'
+    | 'email'
+    | 'username'
+    | 'lastActiveTimestamp'
+    | 'subscriptionStatus'
+    | 'paymentProcessorUserId'
+    | 'isAdmin'
+  >[];
+  totalPages: number;
+};
+
+type GetPaginatedUsersOutput2 = {
+  users: Array<{
+    id: User['id'];
+    email: User['email'];
+    username: User['username'];
+    lastActiveTimestamp: User['lastActiveTimestamp'];
+    subscriptionStatus: User['subscriptionStatus'];
+    paymentProcessorUserId: User['paymentProcessorUserId'];
+  }>;
   totalPages: number;
 };
 
@@ -65,8 +83,10 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
   }
 
   const allSubscriptionStatusOptions = args.subscriptionStatus as Array<string | null> | undefined;
-  const hasNotSubscribed = allSubscriptionStatusOptions?.find((status) => status === null) 
-  let subscriptionStatusStrings = allSubscriptionStatusOptions?.filter((status) => status !== null) as string[] | undefined
+  const hasNotSubscribed = allSubscriptionStatusOptions?.find((status) => status === null);
+  const subscriptionStatusStrings = allSubscriptionStatusOptions?.filter((status) => status !== null) as
+    | string[]
+    | undefined;
 
   const queryResults = await context.entities.User.findMany({
     skip: args.skip,

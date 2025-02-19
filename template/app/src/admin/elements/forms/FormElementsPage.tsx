@@ -2,9 +2,10 @@ import { type AuthUser } from 'wasp/auth';
 import Breadcrumb from '../../layout/Breadcrumb';
 import DefaultLayout from '../../layout/DefaultLayout';
 import CheckboxOne from './CheckboxOne';
-import SwitcherOne from '../../dashboards/users/SwitcherOne';
 import SwitcherTwo from './SwitcherTwo';
+import SwitcherOne from './SwitcherOne';
 import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin';
+import { useState } from 'react';
 
 const FormElements = ({ user }: { user: AuthUser }) => {
   useRedirectHomeUnlessUserIsAdmin({ user });
@@ -56,10 +57,7 @@ const FormElements = ({ user }: { user: AuthUser }) => {
             <div className='border-b border-stroke py-4 px-6.5 dark:border-strokedark'>
               <h3 className='font-medium text-black dark:text-white'>Toggle switch input</h3>
             </div>
-            <div className='flex flex-col gap-5.5 p-6.5'>
-              <SwitcherOne />
-              <SwitcherTwo />
-            </div>
+            <SwitchExamples />
           </div>
 
           {/* <!-- Time and date --> */}
@@ -172,7 +170,13 @@ const FormElements = ({ user }: { user: AuthUser }) => {
                 <label className='mb-3 block text-black dark:text-white'>Select Country</label>
                 <div className='relative z-20 bg-white dark:bg-form-input'>
                   <span className='absolute top-1/2 left-4 z-30 -translate-y-1/2'>
-                    <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                    <svg
+                      width='20'
+                      height='20'
+                      viewBox='0 0 20 20'
+                      fill='none'
+                      xmlns='http://www.w3.org/2000/svg'
+                    >
                       <g opacity='0.8'>
                         <path
                           fillRule='evenodd'
@@ -201,7 +205,13 @@ const FormElements = ({ user }: { user: AuthUser }) => {
                     <option value=''>Canada</option>
                   </select>
                   <span className='absolute top-1/2 right-4 z-10 -translate-y-1/2'>
-                    <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                    <svg
+                      width='24'
+                      height='24'
+                      viewBox='0 0 24 24'
+                      fill='none'
+                      xmlns='http://www.w3.org/2000/svg'
+                    >
                       <g opacity='0.8'>
                         <path
                           fillRule='evenodd'
@@ -222,7 +232,13 @@ const FormElements = ({ user }: { user: AuthUser }) => {
                     <span className='m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke bg-gray py-1.5 px-2.5 text-sm font-medium dark:border-strokedark dark:bg-white/30'>
                       Design
                       <span className='cursor-pointer pl-2 hover:text-danger'>
-                        <svg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                        <svg
+                          width='12'
+                          height='12'
+                          viewBox='0 0 12 12'
+                          fill='none'
+                          xmlns='http://www.w3.org/2000/svg'
+                        >
                           <path
                             fillRule='evenodd'
                             clipRule='evenodd'
@@ -235,7 +251,13 @@ const FormElements = ({ user }: { user: AuthUser }) => {
                     <span className='m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke bg-gray py-1.5 px-2.5 text-sm font-medium dark:border-strokedark dark:bg-white/30'>
                       Development
                       <span className='cursor-pointer pl-2 hover:text-danger'>
-                        <svg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                        <svg
+                          width='12'
+                          height='12'
+                          viewBox='0 0 12 12'
+                          fill='none'
+                          xmlns='http://www.w3.org/2000/svg'
+                        >
                           <path
                             fillRule='evenodd'
                             clipRule='evenodd'
@@ -246,12 +268,22 @@ const FormElements = ({ user }: { user: AuthUser }) => {
                       </span>
                     </span>
                   </div>
-                  <select name='' id='' className='absolute top-0 left-0 z-20 h-full w-full bg-transparent opacity-0'>
+                  <select
+                    name=''
+                    id=''
+                    className='absolute top-0 left-0 z-20 h-full w-full bg-transparent opacity-0'
+                  >
                     <option value=''>Option</option>
                     <option value=''>Option</option>
                   </select>
                   <span className='absolute top-1/2 right-4 z-10 -translate-y-1/2'>
-                    <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                    <svg
+                      width='24'
+                      height='24'
+                      viewBox='0 0 24 24'
+                      fill='none'
+                      xmlns='http://www.w3.org/2000/svg'
+                    >
                       <g opacity='0.8'>
                         <path
                           fillRule='evenodd'
@@ -271,5 +303,16 @@ const FormElements = ({ user }: { user: AuthUser }) => {
     </DefaultLayout>
   );
 };
+
+function SwitchExamples() {
+  const [isFirstOn, setIsFirstOn] = useState<boolean>(false);
+  const [isSecondOn, setIsSecondOn] = useState<boolean>(false);
+  return (
+    <div className='flex flex-col gap-5.5 p-6.5'>
+      <SwitcherOne isOn={isFirstOn} onChange={() => setIsFirstOn(!isFirstOn)} />
+      <SwitcherTwo isOn={isSecondOn} onChange={() => setIsSecondOn(!isSecondOn)} />
+    </div>
+  );
+}
 
 export default FormElements;
