@@ -1,9 +1,9 @@
 --- template/app/schema.prisma
 +++ opensaas-sh/app/schema.prisma
-@@ -14,10 +14,12 @@
+@@ -13,10 +13,12 @@
+ 
    email                     String?         @unique
    username                  String?         @unique
-   lastActiveTimestamp       DateTime        @default(now())
 -  isAdmin                   Boolean         @default(false)
 +  isAdmin                   Boolean         @default(true)
 +  // isMockUser is an extra property for the demo app ensuring that all users can access

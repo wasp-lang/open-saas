@@ -26,21 +26,20 @@ function generateMockUserData(): MockUserData {
   const subscriptionStatus = faker.helpers.arrayElement<SubscriptionStatus | null>(['active', 'cancel_at_period_end', 'past_due', 'deleted', null]);
   const now = new Date();
   const createdAt = faker.date.past({ refDate: now });
-  const lastActiveTimestamp = faker.date.between({ from: createdAt, to: now });
+  const timePaid = faker.date.between({ from: createdAt, to: now });
   const credits = subscriptionStatus ? 0 : faker.number.int({ min: 0, max: 10 });
   const hasUserPaidOnStripe = !!subscriptionStatus || credits > 3 
   return {
     email: faker.internet.email({ firstName, lastName }),
     username: faker.internet.userName({ firstName, lastName }),
     createdAt,
-    lastActiveTimestamp,
     isAdmin: false,
     sendNewsletter: false,
     credits,
     subscriptionStatus,
     lemonSqueezyCustomerPortalUrl: null,
     paymentProcessorUserId: hasUserPaidOnStripe ? `cus_test_${faker.string.uuid()}` : null,
-    datePaid: hasUserPaidOnStripe ? faker.date.between({ from: createdAt, to: lastActiveTimestamp }) : null,
+    datePaid: hasUserPaidOnStripe ? faker.date.between({ from: createdAt, to: timePaid }) : null,
     subscriptionPlan: subscriptionStatus ? faker.helpers.arrayElement(getSubscriptionPaymentPlanIds()) : null,
   };
 }
