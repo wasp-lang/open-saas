@@ -89,9 +89,9 @@ test('AI schedule generation fails on 4th attempt', async () => {
   expect(tableTextContent.includes(task2.toLowerCase())).toBeFalsy();
 });
 
-test('Make test payment with Stripe', async () => {
-  const PLAN_NAME = 'Hobby';
-  await makeStripePayment({ test, page, planName: PLAN_NAME });
+test('Make test payment with Stripe for hobby plan', async () => {
+  const planId = 'hobby';
+  await makeStripePayment({ test, page, planId });
 });
 
 test('User should be able to generate another schedule after payment', async () => {

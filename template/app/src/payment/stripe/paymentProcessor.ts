@@ -11,7 +11,6 @@ export const stripePaymentProcessor: PaymentProcessor = {
   createCheckoutSession: async ({ userId, userEmail, paymentPlan, prismaUserDelegate }: CreateCheckoutSessionArgs) => {
     const customer = await fetchStripeCustomer(userEmail);
     const stripeSession = await createStripeCheckoutSession({
-      userId,
       priceId: paymentPlan.getPaymentProcessorPlanId(),
       customerId: customer.id,
       mode: paymentPlanEffectToStripeMode(paymentPlan.effect),

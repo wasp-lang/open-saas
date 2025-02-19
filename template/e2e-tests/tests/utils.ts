@@ -39,6 +39,20 @@ export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
 
 export const signUserUp = async ({ page, user }: { page: Page; user: User }) => {
   await page.goto('/');
+  
+  await page.evaluate(() => {
+    try {
+      const sessionId = localStorage.getItem('wasp:sessionId');
+      if (sessionId) {
+        localStorage.removeItem('wasp:sessionId');
+      }
+      window.location.reload();
+    } catch (e) {
+      console.error('Failed to clear localStorage:', e);
+    }
+  });
+
+  await page.waitForLoadState('domcontentloaded');
 
   await page.getByRole('link', { name: 'Log in' }).click();
 
@@ -62,13 +76,22 @@ export const createRandomUser = () => {
   return { email, password: DEFAULT_PASSWORD } as User;
 };
 
-export const makeStripePayment = async ({ test, page, planName }: { test: any; page: Page; planName: string }) => {
+export const makeStripePayment = async ({
+  test,
+  page,
+  planId,
+}: {
+  test: any;
+  page: Page;
+  planId: 'hobby' | 'pro' | 'credits10';
+}) => {
   test.slow(); // Stripe payments take a long time to confirm and can cause tests to fail so we use a longer timeout
 
   await page.click('text="Pricing"');
   await page.waitForURL('**/pricing');
 
-  const buyBtn = page.getByRole('button', { name: 'Buy plan' }).first(); // "Hobby Plan" is the first of three plans
+  const buyBtn = page.locator(`button[aria-describedby="${planId}"]`);
+
   await expect(buyBtn).toBeVisible();
   await expect(buyBtn).toBeEnabled();
   await buyBtn.click();
@@ -92,5 +115,14 @@ export const makeStripePayment = async ({ test, page, planName }: { test: any; p
 
   await page.waitForURL('**/checkout?success=true');
   await page.waitForURL('**/account');
-  await expect(page.getByText(planName)).toBeVisible();
+  if (planId === 'credits10') {
+    await expect(page.getByText('Credits remaining: 13')).toBeVisible();
+  } else {
+    await expect(page.getByText(planId)).toBeVisible();
+  }
+};
+
+export const acceptAllCookies = async (page: Page) => {
+  await page.waitForSelector('button:has-text("Accept all")');
+  await page.click('button:has-text("Accept all")');
 };

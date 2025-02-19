@@ -1,10 +1,10 @@
 import { test, expect, type Page } from '@playwright/test';
-import { signUserUp, logUserIn, createRandomUser, makeStripePayment, type User } from './utils';
+import { signUserUp, logUserIn, createRandomUser, makeStripePayment, type User, acceptAllCookies } from './utils';
 
 let page: Page;
 let testUser: User;
 
-async function logNewUserIn() {
+async function createAndLogInNewUser() {
   testUser = createRandomUser();
   await signUserUp({ page: page, user: testUser });
   await logUserIn({ page: page, user: testUser });
@@ -33,9 +33,9 @@ test('User should see Log In to Buy Plan button', async () => {
 });
 
 test('User should see the Buy Plan button before payment', async () => {
-  // We only need to log the user in once since the tests are running sequentially 
+  // We only need to log the user in once since the tests are running sequentially
   // and the same page is being shared between all the tests.
-  await logNewUserIn();
+  await createAndLogInNewUser();
   await page.goto('/pricing');
   // There are three tiers on the page, so we want to retrieve the first of the three buttons
   const manageSubscriptionButton = page.getByRole('button', { name: 'Buy plan' }).first();
@@ -43,10 +43,10 @@ test('User should see the Buy Plan button before payment', async () => {
   await expect(manageSubscriptionButton).toBeEnabled();
 });
 
-test('Make test payment with Stripe', async () => {
-  const PLAN_NAME = 'Hobby';
+test('Make test payment with Stripe for hobby plan', async () => {
+  const planId = 'hobby';
   await page.goto('/');
-  await makeStripePayment({ test, page, planName: PLAN_NAME });
+  await makeStripePayment({ test, page, planId });
 });
 
 test('User should see the Manage Subscription button after payment', async () => {
@@ -61,4 +61,12 @@ test('User should see the Manage Subscription button after payment', async () =>
   const newTab = await newTabPromise;
   await newTab.waitForLoadState();
   await expect(newTab).toHaveURL(/^https:\/\/billing\.stripe\.com\//);
+});
+
+test('Make test payment with Stripe for 10 credits', async () => {
+  await createAndLogInNewUser();
+  await acceptAllCookies(page); // Clear the cookie consent modal so it doesn't interfere with the payment
+  const planId = 'credits10';
+  await page.goto('/');
+  await makeStripePayment({ test, page, planId });
 });

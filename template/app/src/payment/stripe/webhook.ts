@@ -4,7 +4,7 @@ import { type PrismaClient } from '@prisma/client';
 import express from 'express';
 import { Stripe } from 'stripe';
 import { stripe } from './stripeClient';
-import { paymentPlans, PaymentPlanId, SubscriptionStatus } from '../plans';
+import { paymentPlans, PaymentPlanId, SubscriptionStatus, PaymentPlanEffect, PaymentPlan } from '../plans';
 import { updateUserStripePaymentDetails } from './paymentDetails';
 import { emailSender } from 'wasp/server/email';
 import { assertUnreachable } from '../../shared/utils';
@@ -33,6 +33,10 @@ export const stripeWebhook: PaymentsWebhook = async (request, response, context)
       const invoice = event.data.object as Stripe.Invoice;
       await handleInvoicePaid(invoice, prismaUserDelegate);
       break;
+    case 'payment_intent.succeeded':
+      const paymentIntent = event.data.object as Stripe.PaymentIntent;
+      await handlePaymentIntentSucceeded(paymentIntent, prismaUserDelegate);
+      break;
     case 'customer.subscription.updated':
       const updatedSubscription = event.data.object as Stripe.Subscription;
       await handleCustomerSubscriptionUpdated(updatedSubscription, prismaUserDelegate);
@@ -59,6 +63,9 @@ export const stripeMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig) =
   return middlewareConfig;
 };
 
+// Because a checkout session completed could potentially result in a failed payment,
+// we can update the user's payment details here, but confirm credits or a subscription
+// if the payment succeeds in other, more specific, webhooks.
 export async function handleCheckoutSessionCompleted(
   session: Stripe.Checkout.Session,
   prismaUserDelegate: PrismaClient["user"]
@@ -67,35 +74,61 @@ export async function handleCheckoutSessionCompleted(
   const { line_items } = await stripe.checkout.sessions.retrieve(session.id, {
     expand: ['line_items'],
   });
-
   const lineItemPriceId = extractPriceId(line_items);
-
   const planId = getPlanIdByPriceId(lineItemPriceId);
   const plan = paymentPlans[planId];
-
-  let subscriptionPlan: PaymentPlanId | undefined;
-  let numOfCreditsPurchased: number | undefined;
-  switch (plan.effect.kind) {
-    case 'subscription':
-      subscriptionPlan = planId;
-      break;
-    case 'credits':
-      numOfCreditsPurchased = plan.effect.amount;
-      break;
-    default:
-      assertUnreachable(plan.effect);
+  if (plan.effect.kind === 'credits') {
+    return;
   }
+  const { subscriptionPlan } = getPlanEffectPaymentDetails({ planId, planEffect: plan.effect });
 
   return updateUserStripePaymentDetails(
-    { userStripeId, subscriptionPlan, numOfCreditsPurchased, datePaid: new Date() },
+    { userStripeId, subscriptionPlan },
     prismaUserDelegate
   );
 }
 
+// This is called when a subscription is purchased or renewed and payment succeeds. 
+// Invoices are not created for one-time payments, so we handle them in the payment_intent.succeeded webhook.
 export async function handleInvoicePaid(invoice: Stripe.Invoice, prismaUserDelegate: PrismaClient["user"]) {
   const userStripeId = validateUserStripeIdOrThrow(invoice.customer);
   const datePaid = new Date(invoice.period_start * 1000);
   return updateUserStripePaymentDetails({ userStripeId, datePaid }, prismaUserDelegate);
+}
+
+export async function handlePaymentIntentSucceeded(
+  paymentIntent: Stripe.PaymentIntent,
+  prismaUserDelegate: PrismaClient['user']
+) {
+  // We handle invoices in the invoice.paid webhook. Invoices exist for subscription payments, 
+  // but not for one-time payment/credits products which use the Stripe `payment` mode on checkout sessions.
+  if (paymentIntent.invoice) {
+    return;
+  }
+
+  const userStripeId = validateUserStripeIdOrThrow(paymentIntent.customer);
+  const datePaid = new Date(paymentIntent.created * 1000);
+
+  // We capture the price id from the payment intent metadata
+  // that we passed in when creating the checkout session in checkoutUtils.ts.
+  const { metadata } = paymentIntent;
+
+  if (!metadata.priceId) {
+    throw new HttpError(400, 'No price id found in payment intent');
+  }
+
+  const planId = getPlanIdByPriceId(metadata.priceId);
+  const plan = paymentPlans[planId];
+  if (plan.effect.kind === 'subscription') {
+    return;
+  }
+
+  const { numOfCreditsPurchased } = getPlanEffectPaymentDetails({ planId, planEffect: plan.effect });
+
+  return updateUserStripePaymentDetails(
+    { userStripeId, numOfCreditsPurchased, datePaid },
+    prismaUserDelegate
+  );
 }
 
 export async function handleCustomerSubscriptionUpdated(
@@ -174,4 +207,18 @@ function getPlanIdByPriceId(priceId: string): PaymentPlanId {
     throw new Error(`No plan with Stripe price id ${priceId}`);
   }
   return planId;
+}
+
+function getPlanEffectPaymentDetails({ planId, planEffect }: { planId: PaymentPlanId, planEffect: PaymentPlanEffect}): {
+  subscriptionPlan: PaymentPlanId | undefined;
+  numOfCreditsPurchased: number | undefined;
+} {
+  switch (planEffect.kind) {
+    case 'subscription':
+      return { subscriptionPlan: planId, numOfCreditsPurchased: undefined };
+    case 'credits':
+      return { subscriptionPlan: undefined, numOfCreditsPurchased: planEffect.amount };
+    default:
+      assertUnreachable(planEffect);
+  }
 }

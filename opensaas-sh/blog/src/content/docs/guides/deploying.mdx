@@ -178,6 +178,7 @@ export const stripe = new Stripe(process.env.STRIPE_KEY!, {
   <br/>- `customer.subscription.deleted`
   <br/>- `customer.subscription.updated`
   <br/>- `invoice.paid`
+  <br/>- `payment_intent.succeeded`
 <Image src={stripeSigningSecret} alt="signing secret" loading="lazy" />
 5. after that, go to the webhook you just created and `reveal` the new signing secret.
 6. add this secret to your deployed server's `STRIPE_WEBHOOK_SECRET=` environment variable. <br/>If you've deployed to Fly.io, you can do that easily with the following command:
