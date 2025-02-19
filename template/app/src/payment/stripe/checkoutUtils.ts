@@ -1,6 +1,8 @@
 import type { StripeMode } from './paymentProcessor';
+
 import Stripe from 'stripe';
 import { stripe } from './stripeClient';
+import { assertUnreachable } from '../../shared/utils';
 
 // WASP_WEB_CLIENT_URL will be set up by Wasp when deploying to production: https://wasp.sh/docs/deploying
 const DOMAIN = process.env.WASP_WEB_CLIENT_URL || 'http://localhost:3000';
@@ -27,8 +29,16 @@ export async function fetchStripeCustomer(customerEmail: string) {
   }
 }
 
-export async function createStripeCheckoutSession({ userId, priceId, customerId, mode }: { userId: string, priceId: string; customerId: string; mode: StripeMode }) {
+interface CreateStripeCheckoutSessionParams {
+  priceId: string;
+  customerId: string;
+  mode: StripeMode;
+}
+
+export async function createStripeCheckoutSession({ priceId, customerId, mode }: CreateStripeCheckoutSessionParams) {
   try {
+    const metadata = returnMetadataByMode({ mode, priceId });
+    
     return await stripe.checkout.sessions.create({
       line_items: [
         {
@@ -44,9 +54,34 @@ export async function createStripeCheckoutSession({ userId, priceId, customerId,
         address: 'auto',
       },
       customer: customerId,
+      // Stripe only allows us to pass payment intent metadata for one-time payments, not subscriptions.
+      // We do this so that we can capture priceId in the payment_intent.succeeded webhook
+      // and easily confirm the user's payment based on the price id. For subscriptions, we can get the price id
+      // in the customer.subscription.updated webhook via the line_items field.
+      ...metadata
     });
   } catch (error) {
     console.error(error);
     throw error;
+  }
+}
+
+interface ReturnMetadataByModeParams {
+  mode: StripeMode;
+  priceId: string;
+}
+
+interface ReturnMetadataByModeResult {
+  payment_intent_data: Stripe.Checkout.SessionCreateParams.PaymentIntentData;
+}
+
+function returnMetadataByMode({ mode, priceId }: ReturnMetadataByModeParams): ReturnMetadataByModeResult | undefined {
+  switch (mode) {
+    case 'subscription':
+      return undefined;
+    case 'payment':
+      return { payment_intent_data: { metadata: { priceId } } };
+    default:
+      assertUnreachable(mode);
   }
 }
