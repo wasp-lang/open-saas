@@ -1,17 +1,23 @@
+import * as z from 'zod';
 import type { GenerateCheckoutSession, GetCustomerPortalUrl } from 'wasp/server/operations';
 import { PaymentPlanId, paymentPlans } from '../payment/plans';
 import { paymentProcessor } from './paymentProcessor';
 import { HttpError } from 'wasp/server';
+import { ensureValidArgsOrThrowHttpError } from '../server/schema';
 
 export type CheckoutSession = {
   sessionUrl: string | null;
   sessionId: string;
 };
 
-export const generateCheckoutSession: GenerateCheckoutSession<PaymentPlanId, CheckoutSession> = async (
-  paymentPlanId,
-  context
-) => {
+const generateCheckoutSessionArgsSchema = z.nativeEnum(PaymentPlanId, {
+  message: 'Invalid payment plan ID provided.',
+});
+
+export const generateCheckoutSession: GenerateCheckoutSession<
+  z.infer<typeof generateCheckoutSessionArgsSchema>,
+  CheckoutSession
+> = async (rawArgs: unknown, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
@@ -24,12 +30,13 @@ export const generateCheckoutSession: GenerateCheckoutSession<PaymentPlanId, Che
     );
   }
 
-  const paymentPlan = paymentPlans[paymentPlanId];
+  const args = ensureValidArgsOrThrowHttpError(rawArgs, generateCheckoutSessionArgsSchema);
+  const paymentPlan = paymentPlans[args];
   const { session } = await paymentProcessor.createCheckoutSession({
     userId,
     userEmail,
     paymentPlan,
-    prismaUserDelegate: context.entities.User
+    prismaUserDelegate: context.entities.User,
   });
 
   return {
