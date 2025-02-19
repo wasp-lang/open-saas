@@ -35,10 +35,14 @@ interface CreateStripeCheckoutSessionParams {
   mode: StripeMode;
 }
 
-export async function createStripeCheckoutSession({ priceId, customerId, mode }: CreateStripeCheckoutSessionParams) {
+export async function createStripeCheckoutSession({
+  priceId,
+  customerId,
+  mode,
+}: CreateStripeCheckoutSessionParams) {
   try {
-    const metadata = returnMetadataByMode({ mode, priceId });
-    
+    const paymentIntentData = getPaymentIntentData({ mode, priceId });
+
     return await stripe.checkout.sessions.create({
       line_items: [
         {
@@ -58,7 +62,7 @@ export async function createStripeCheckoutSession({ priceId, customerId, mode }:
       // We do this so that we can capture priceId in the payment_intent.succeeded webhook
       // and easily confirm the user's payment based on the price id. For subscriptions, we can get the price id
       // in the customer.subscription.updated webhook via the line_items field.
-      ...metadata
+      payment_intent_data: paymentIntentData,
     });
   } catch (error) {
     console.error(error);
@@ -66,21 +70,16 @@ export async function createStripeCheckoutSession({ priceId, customerId, mode }:
   }
 }
 
-interface ReturnMetadataByModeParams {
-  mode: StripeMode;
-  priceId: string;
-}
-
-interface ReturnMetadataByModeResult {
-  payment_intent_data: Stripe.Checkout.SessionCreateParams.PaymentIntentData;
-}
-
-function returnMetadataByMode({ mode, priceId }: ReturnMetadataByModeParams): ReturnMetadataByModeResult | undefined {
+function getPaymentIntentData({ mode, priceId }: { mode: StripeMode; priceId: string }):
+  | {
+      metadata: { priceId: string };
+    }
+  | undefined {
   switch (mode) {
     case 'subscription':
       return undefined;
     case 'payment':
-      return { payment_intent_data: { metadata: { priceId } } };
+      return { metadata: { priceId } };
     default:
       assertUnreachable(mode);
   }

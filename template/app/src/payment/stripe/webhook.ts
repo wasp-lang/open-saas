@@ -4,7 +4,7 @@ import { type PrismaClient } from '@prisma/client';
 import express from 'express';
 import { Stripe } from 'stripe';
 import { stripe } from './stripeClient';
-import { paymentPlans, PaymentPlanId, SubscriptionStatus } from '../plans';
+import { paymentPlans, PaymentPlanId, SubscriptionStatus, PaymentPlanEffect, PaymentPlan } from '../plans';
 import { updateUserStripePaymentDetails } from './paymentDetails';
 import { emailSender } from 'wasp/server/email';
 import { assertUnreachable } from '../../shared/utils';
@@ -35,7 +35,6 @@ export const stripeWebhook: PaymentsWebhook = async (request, response, context)
       break;
     case 'payment_intent.succeeded':
       const paymentIntent = event.data.object as Stripe.PaymentIntent;
-      if (paymentIntent.invoice) return; // We handle invoices in the invoice.paid webhook.
       await handlePaymentIntentSucceeded(paymentIntent, prismaUserDelegate);
       break;
     case 'customer.subscription.updated':
@@ -77,7 +76,11 @@ export async function handleCheckoutSessionCompleted(
   });
   const lineItemPriceId = extractPriceId(line_items);
   const planId = getPlanIdByPriceId(lineItemPriceId);
-  const { subscriptionPlan } = getPlanEffectDetailsById(planId);
+  const plan = paymentPlans[planId];
+  if (plan.effect.kind === 'credits') {
+    return;
+  }
+  const { subscriptionPlan } = getPlanEffectPaymentDetails({ planId, planEffect: plan.effect });
 
   return updateUserStripePaymentDetails(
     { userStripeId, subscriptionPlan },
@@ -97,6 +100,12 @@ export async function handlePaymentIntentSucceeded(
   paymentIntent: Stripe.PaymentIntent,
   prismaUserDelegate: PrismaClient['user']
 ) {
+  // We handle invoices in the invoice.paid webhook. Invoices exist for subscription payments, 
+  // but not for one-time payment/credits products which use the Stripe `payment` mode on checkout sessions.
+  if (paymentIntent.invoice) {
+    return;
+  }
+
   const userStripeId = validateUserStripeIdOrThrow(paymentIntent.customer);
   const datePaid = new Date(paymentIntent.created * 1000);
 
@@ -109,10 +118,15 @@ export async function handlePaymentIntentSucceeded(
   }
 
   const planId = getPlanIdByPriceId(metadata.priceId);
-  const { subscriptionPlan, numOfCreditsPurchased } = getPlanEffectDetailsById(planId);
+  const plan = paymentPlans[planId];
+  if (plan.effect.kind === 'subscription') {
+    return;
+  }
+
+  const { numOfCreditsPurchased } = getPlanEffectPaymentDetails({ planId, planEffect: plan.effect });
 
   return updateUserStripePaymentDetails(
-    { userStripeId, subscriptionPlan, numOfCreditsPurchased, datePaid },
+    { userStripeId, numOfCreditsPurchased, datePaid },
     prismaUserDelegate
   );
 }
@@ -195,21 +209,16 @@ function getPlanIdByPriceId(priceId: string): PaymentPlanId {
   return planId;
 }
 
-function getPlanEffectDetailsById(planId: PaymentPlanId) {
-  const plan = paymentPlans[planId];
-  let subscriptionPlan: PaymentPlanId | undefined;
-  let numOfCreditsPurchased: number | undefined;
-
-  switch (plan.effect.kind) {
+function getPlanEffectPaymentDetails({ planId, planEffect }: { planId: PaymentPlanId, planEffect: PaymentPlanEffect}): {
+  subscriptionPlan: PaymentPlanId | undefined;
+  numOfCreditsPurchased: number | undefined;
+} {
+  switch (planEffect.kind) {
     case 'subscription':
-      subscriptionPlan = planId;
-      break;
+      return { subscriptionPlan: planId, numOfCreditsPurchased: undefined };
     case 'credits':
-      numOfCreditsPurchased = plan.effect.amount;
-      break;
+      return { subscriptionPlan: undefined, numOfCreditsPurchased: planEffect.amount };
     default:
-      assertUnreachable(plan.effect);
+      assertUnreachable(planEffect);
   }
-
-  return { subscriptionPlan, numOfCreditsPurchased };
 }
