@@ -22,6 +22,11 @@
 +[http_service.http_options.response]
 +  pristine = true
 +
++[http_service.http_options.redirects]
++  [[http_service.http_options.redirects.rules]]
++    source = "https://saas-template-gpt-client.fly.dev/"
++    destination = "https://opensaas.sh"
++
 +[[vm]]
 +  cpu_kind = "shared"
 +  cpus = 1
