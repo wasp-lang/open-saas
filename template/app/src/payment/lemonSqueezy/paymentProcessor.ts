@@ -1,5 +1,5 @@
 import type { CreateCheckoutSessionArgs, FetchCustomerPortalUrlArgs, PaymentProcessor } from '../paymentProcessor';
-import { requireNodeEnvVar } from '../../server/utils';
+import { requireNodeEnvVar } from '../../server/envUtils';
 import { createLemonSqueezyCheckoutSession } from './checkoutUtils';
 import { lemonSqueezyWebhook, lemonSqueezyMiddlewareConfigFn } from './webhook';
 import { lemonSqueezySetup } from '@lemonsqueezy/lemonsqueezy.js';

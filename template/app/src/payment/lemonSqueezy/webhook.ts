@@ -6,7 +6,7 @@ import { paymentPlans, PaymentPlanId } from '../plans';
 import { updateUserLemonSqueezyPaymentDetails } from './paymentDetails';
 import { type Order, type Subscription, getCustomer } from '@lemonsqueezy/lemonsqueezy.js';
 import crypto from 'crypto';
-import { requireNodeEnvVar } from '../../server/utils';
+import { requireNodeEnvVar } from '../../server/envUtils';
 
 
 export const lemonSqueezyWebhook: PaymentsWebhook = async (request, response, context) => {

@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import { requireNodeEnvVar } from '../../server/utils';
+import { requireNodeEnvVar } from '../../server/envUtils';
 
 export const stripe = new Stripe(requireNodeEnvVar('STRIPE_API_KEY'), {
   // NOTE:
