@@ -50,7 +50,7 @@ const orderDataSchema = z.object({
     first_order_item: z.object({
       variant_id: z.number(),
     }),
-    order_number: z.string(),
+    order_number: z.number(),
   }),
 });
 
