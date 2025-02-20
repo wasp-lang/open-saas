@@ -66,7 +66,7 @@ export const stripeWebhook: PaymentsWebhook = async (request, response, context)
     if (err instanceof HttpError) {
       return response.status(err.statusCode).json({ error: err.message });
     } else {
-      return response.status(400).json({ error: 'Error Processing Lemon Squeezy Webhook Event' });
+      return response.status(400).json({ error: 'Error Processing Stripe Webhook Event' });
     }
   }
 };
