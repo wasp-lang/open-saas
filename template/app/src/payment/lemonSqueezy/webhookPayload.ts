@@ -48,7 +48,7 @@ const orderDataSchema = z.object({
     customer_id: z.number(),
     status: z.string(),
     first_order_item: z.object({
-      variant_id: z.string(),
+      variant_id: z.number(),
     }),
     order_number: z.string(),
   }),
@@ -58,6 +58,6 @@ const subscriptionDataSchema = z.object({
   attributes: z.object({
     customer_id: z.number(),
     status: z.string(),
-    variant_id: z.string(),
+    variant_id: z.number(),
   }),
 });
