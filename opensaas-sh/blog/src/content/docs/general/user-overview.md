@@ -18,7 +18,6 @@ entity User {=psl
   email                     String?         @unique
   username                  String?         
   createdAt                 DateTime        @default(now())
-  lastActiveTimestamp       DateTime        @default(now())
   isAdmin                   Boolean         @default(false)
   paymentProcessorUserId    String?         @unique
   lemonSqueezyCustomerPortalUrl String?     // You can delete this if you're not using Lemon Squeezy as your payments processor.
@@ -116,7 +115,6 @@ entity User {=psl
   email                     String?         @unique
   username                  String?
   createdAt                 DateTime        @default(now())
-  lastActiveTimestamp       DateTime        @default(now())
   isAdmin                   Boolean         @default(false)
 //...
 psl=}
