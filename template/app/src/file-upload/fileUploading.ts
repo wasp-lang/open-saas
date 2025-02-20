@@ -3,6 +3,8 @@ import { createFile } from 'wasp/client/operations';
 import axios from 'axios';
 import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE } from './validation';
 
+type AllowedFileType = (typeof ALLOWED_FILE_TYPES)[number];
+type FileWithValidType = Omit<File, 'type'> & { type: AllowedFileType };
 interface FileUploadProgress {
   file: FileWithValidType;
   setUploadProgressPercent: Dispatch<SetStateAction<number>>;
@@ -27,9 +29,6 @@ export interface FileUploadError {
   message: string;
   code: 'NO_FILE' | 'INVALID_FILE_TYPE' | 'FILE_TOO_LARGE' | 'UPLOAD_FAILED';
 }
-
-type AllowedFileType = (typeof ALLOWED_FILE_TYPES)[number];
-type FileWithValidType = Omit<File, 'type'> & { type: AllowedFileType };
 
 type FileParseResult =
   | { kind: 'success'; file: FileWithValidType }
