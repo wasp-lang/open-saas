@@ -1,3 +1,4 @@
+import * as path from 'path';
 import { randomUUID } from 'crypto';
 import { S3Client } from '@aws-sdk/client-s3';
 import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
@@ -13,27 +14,30 @@ const s3Client = new S3Client({
 
 type S3Upload = {
   fileType: string;
-  userInfo: string;
-}
+  fileName: string;
+  userId: string;
+};
 
-export const getUploadFileSignedURLFromS3 = async ({fileType, userInfo}: S3Upload) => {
-  const ex = fileType.split('/')[1];
-  const Key = `${userInfo}/${randomUUID()}.${ex}`;
-  const s3Params = {
-    Bucket: process.env.AWS_S3_FILES_BUCKET,
-    Key,
-    ContentType: `${fileType}`,
-  };
-  const command = new PutObjectCommand(s3Params);
-  const uploadUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600,});
-  return { uploadUrl, key: Key };
-}
-
-export const getDownloadFileSignedURLFromS3 = async ({ key }: { key: string }) => {
-  const s3Params = {
+export const getUploadFileSignedURLFromS3 = async ({ fileName, fileType, userId }: S3Upload) => {
+  const key = getS3Key(fileName, userId);
+  const command = new PutObjectCommand({
     Bucket: process.env.AWS_S3_FILES_BUCKET,
     Key: key,
-  };
-  const command = new GetObjectCommand(s3Params);
+    ContentType: fileType,
+  });
+  const uploadUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+  return { uploadUrl, key };
+};
+
+export const getDownloadFileSignedURLFromS3 = async ({ key }: { key: string }) => {
+  const command = new GetObjectCommand({
+    Bucket: process.env.AWS_S3_FILES_BUCKET,
+    Key: key,
+  });
   return await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+};
+
+function getS3Key(fileName: string, userId: string) {
+  const ext = path.extname(fileName).slice(1);
+  return `${userId}/${randomUUID()}.${ext}`;
 }

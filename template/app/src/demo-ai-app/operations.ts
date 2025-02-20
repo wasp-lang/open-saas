@@ -1,3 +1,4 @@
+import * as z from 'zod';
 import type { Task, GptResponse } from 'wasp/entities';
 import type {
   GenerateGptResponse,
@@ -10,6 +11,7 @@ import type {
 import { HttpError } from 'wasp/server';
 import { GeneratedSchedule } from './schedule';
 import OpenAI from 'openai';
+import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
 
 const openai = setupOpenAI();
 function setupOpenAI() {
@@ -20,14 +22,22 @@ function setupOpenAI() {
 }
 
 //#region Actions
-type GptPayload = {
-  hours: string;
-};
 
-export const generateGptResponse: GenerateGptResponse<GptPayload, GeneratedSchedule> = async ({ hours }, context) => {
+const generateGptResponseInputSchema = z.object({
+  hours: z.string().regex(/^\d+(\.\d+)?$/, 'Hours must be a number'),
+});
+
+type GenerateGptResponseInput = z.infer<typeof generateGptResponseInputSchema>;
+
+export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, GeneratedSchedule> = async (
+  rawArgs: unknown,
+  context
+) => {
   if (!context.user) {
     throw new HttpError(401);
   }
+
+  const args = ensureArgsSchemaOrThrowHttpError(generateGptResponseInputSchema, rawArgs);
 
   const tasks = await context.entities.Task.findMany({
     where: {
@@ -79,7 +89,9 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, GeneratedSched
         },
         {
           role: 'user',
-          content: `I will work ${hours} hours today. Here are the tasks I have to complete: ${JSON.stringify(
+          content: `I will work ${
+            args.hours
+          } hours today. Here are the tasks I have to complete: ${JSON.stringify(
             parsedTasks
           )}. Please help me plan my day by breaking the tasks down into actionable subtasks with time and priority status.`,
         },
@@ -181,14 +193,22 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, GeneratedSched
   }
 };
 
-export const createTask: CreateTask<Pick<Task, 'description'>, Task> = async ({ description }, context) => {
+const createTaskInputSchema = z.object({
+  description: z.string().nonempty(),
+});
+
+type CreateTaskInput = z.infer<typeof createTaskInputSchema>;
+
+export const createTask: CreateTask<CreateTaskInput, Task> = async (rawArgs: unknown, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
 
+  const args = ensureArgsSchemaOrThrowHttpError(createTaskInputSchema, rawArgs);
+
   const task = await context.entities.Task.create({
     data: {
-      description,
+      description: args.description,
       user: { connect: { id: context.user.id } },
     },
   });
@@ -196,32 +216,50 @@ export const createTask: CreateTask<Pick<Task, 'description'>, Task> = async ({ 
   return task;
 };
 
-export const updateTask: UpdateTask<Partial<Task>, Task> = async ({ id, isDone, time }, context) => {
+const updateTaskInputSchema = z.object({
+  id: z.string().nonempty(),
+  isDone: z.boolean().optional(),
+  time: z.string().optional(),
+});
+
+type UpdateTaskInput = z.infer<typeof updateTaskInputSchema>;
+
+export const updateTask: UpdateTask<UpdateTaskInput, Task> = async (rawArgs: unknown, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
 
+  const args = ensureArgsSchemaOrThrowHttpError(updateTaskInputSchema, rawArgs);
+
   const task = await context.entities.Task.update({
     where: {
-      id,
+      id: args.id,
     },
     data: {
-      isDone,
-      time,
+      isDone: args.isDone,
+      time: args.time,
     },
   });
 
   return task;
 };
 
-export const deleteTask: DeleteTask<Pick<Task, 'id'>, Task> = async ({ id }, context) => {
+const deleteTaskInputSchema = z.object({
+  id: z.string().nonempty(),
+});
+
+type DeleteTaskInput = z.infer<typeof deleteTaskInputSchema>;
+
+export const deleteTask: DeleteTask<DeleteTaskInput, Task> = async (rawArgs: unknown, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
 
+  const args = ensureArgsSchemaOrThrowHttpError(deleteTaskInputSchema, rawArgs);
+
   const task = await context.entities.Task.delete({
     where: {
-      id,
+      id: args.id,
     },
   });
 
