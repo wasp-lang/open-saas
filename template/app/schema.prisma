@@ -13,7 +13,6 @@ model User {
 
   email                     String?         @unique
   username                  String?         @unique
-  lastActiveTimestamp       DateTime        @default(now())
   isAdmin                   Boolean         @default(false)
 
   paymentProcessorUserId    String?         @unique
