@@ -2,21 +2,21 @@ import { type MiddlewareConfigFn, HttpError } from 'wasp/server';
 import { type PaymentsWebhook } from 'wasp/server/api';
 import { type PrismaClient } from '@prisma/client';
 import express from 'express';
-import { Stripe } from 'stripe';
+import type { Stripe } from 'stripe';
 import { stripe } from './stripeClient';
-import { paymentPlans, PaymentPlanId, SubscriptionStatus, PaymentPlanEffect, PaymentPlan } from '../plans';
+import { paymentPlans, PaymentPlanId, type SubscriptionStatus, type PaymentPlanEffect } from '../plans';
 import { updateUserStripePaymentDetails } from './paymentDetails';
 import { emailSender } from 'wasp/server/email';
 import { assertUnreachable } from '../../shared/utils';
 import { requireNodeEnvVar } from '../../server/utils';
 import { z } from 'zod';
 import {
-  InvoicePaidData,
   parseWebhookPayload,
-  PaymentIntentSucceededData,
-  SessionCompletedData,
-  SubscriptionDeletedData,
-  SubscriptionUpdatedData,
+  type InvoicePaidData,
+  type PaymentIntentSucceededData,
+  type SessionCompletedData,
+  type SubscriptionDeletedData,
+  type SubscriptionUpdatedData,
 } from './webhookPayload';
 import { UnhandledWebhookEventError } from '../errors';
 
