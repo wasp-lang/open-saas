@@ -20,6 +20,14 @@ export async function parseWebhookPayload(rawStripeEvent: Stripe.Event) {
         throw new Error('Error parsing Stripe event object');
       });
       return { eventName: event.type, data: invoice };
+    case 'payment_intent.succeeded':
+      const paymentIntent = await paymentIntentSucceededDataSchema
+        .parseAsync(event.data.object)
+        .catch((e) => {
+          console.error(e);
+          throw new Error('Error parsing Stripe event object');
+        });
+      return { eventName: event.type, data: paymentIntent };
     case 'customer.subscription.updated':
       const updatedSubscription = await subscriptionUpdatedDataSchema
         .parseAsync(event.data.object)
@@ -61,6 +69,16 @@ const invoicePaidDataSchema = z.object({
   period_start: z.number(),
 });
 
+// This is a subtype of Stripe.PaymentIntent from "stripe"
+const paymentIntentSucceededDataSchema = z.object({
+  invoice: z.unknown().optional(),
+  created: z.number(),
+  metadata: z.object({
+    priceId: z.string(),
+  }),
+  customer: z.string(),
+});
+
 // This is a subtype of Stripe.Subscription from "stripe"
 const subscriptionUpdatedDataSchema = z.object({
   customer: z.string(),
@@ -85,6 +103,8 @@ const subscriptionDeletedDataSchema = z.object({
 export type SessionCompletedData = z.infer<typeof sessionCompletedDataSchema>;
 
 export type InvoicePaidData = z.infer<typeof invoicePaidDataSchema>;
+
+export type PaymentIntentSucceededData = z.infer<typeof paymentIntentSucceededDataSchema>;
 
 export type SubscriptionUpdatedData = z.infer<typeof subscriptionUpdatedDataSchema>;
 
