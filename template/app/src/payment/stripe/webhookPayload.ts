@@ -49,16 +49,19 @@ const genericStripeEventSchema = z.object({
   }),
 });
 
+// This is a subtype of Stripe.Checkout.Session from "stripe"
 const sessionCompletedDataSchema = z.object({
   id: z.string(),
   customer: z.string(),
 });
 
+// This is a subtype of Stripe.Invoice from "stripe"
 const invoicePaidDataSchema = z.object({
   customer: z.string(),
   period_start: z.number(),
 });
 
+// This is a subtype of Stripe.Subscription from "stripe"
 const subscriptionUpdatedDataSchema = z.object({
   customer: z.string(),
   status: z.string(),
@@ -74,6 +77,7 @@ const subscriptionUpdatedDataSchema = z.object({
   }),
 });
 
+// This is a subtype of Stripe.Subscription from "stripe"
 const subscriptionDeletedDataSchema = z.object({
   customer: z.string(),
 });

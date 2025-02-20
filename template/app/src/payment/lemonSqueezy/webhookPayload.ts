@@ -43,6 +43,8 @@ const genericEventSchema = z.object({
   data: z.unknown(),
 });
 
+// This is a subtype of Order type from "@lemonsqueezy/lemonsqueezy.js"
+// specifically Order['data']
 const orderDataSchema = z.object({
   attributes: z.object({
     customer_id: z.number(),
@@ -54,6 +56,8 @@ const orderDataSchema = z.object({
   }),
 });
 
+// This is a subtype of Subscription type from "@lemonsqueezy/lemonsqueezy.js"
+// specifically Subscription['data']
 const subscriptionDataSchema = z.object({
   attributes: z.object({
     customer_id: z.number(),
