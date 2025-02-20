@@ -8,9 +8,7 @@ import { updateIsUserAdminById } from 'wasp/client/operations';
 import { type User } from 'wasp/entities';
 
 const AdminSwitch = ({ id, isAdmin }: Pick<User, 'id' | 'isAdmin'>) => {
-  return (
-    <SwitcherOne isOn={isAdmin} onChange={() => updateIsUserAdminById({ id: id, isAdmin: !isAdmin })} />
-  );
+  return <SwitcherOne isOn={isAdmin} onChange={() => updateIsUserAdminById({ id: id, isAdmin: !isAdmin })} />;
 };
 
 const UsersTable = () => {
@@ -184,12 +182,9 @@ const UsersTable = () => {
           </div>
         </div>
 
-        <div className='grid grid-cols-12 border-t-4  border-stroke py-4.5 px-4 dark:border-strokedark md:px-6 '>
+        <div className='grid grid-cols-9 border-t-4  border-stroke py-4.5 px-4 dark:border-strokedark md:px-6 '>
           <div className='col-span-3 flex items-center'>
             <p className='font-medium'>Email / Username</p>
-          </div>
-          <div className='col-span-3 hidden items-center sm:flex'>
-            <p className='font-medium'>Last Active</p>
           </div>
           <div className='col-span-2 flex items-center'>
             <p className='font-medium'>Subscription Status</p>
@@ -214,21 +209,13 @@ const UsersTable = () => {
           data.users.map((user) => (
             <div
               key={user.id}
-              className='grid grid-cols-12 gap-4 border-t border-stroke py-4.5 px-4 dark:border-strokedark  md:px-6 '
+              className='grid grid-cols-9 gap-4 border-t border-stroke py-4.5 px-4 dark:border-strokedark  md:px-6 '
             >
               <div className='col-span-3 flex items-center'>
                 <div className='flex flex-col gap-1 '>
                   <p className='text-sm text-black dark:text-white'>{user.email}</p>
                   <p className='text-sm text-black dark:text-white'>{user.username}</p>
                 </div>
-              </div>
-
-              <div className='col-span-3 hidden items-center sm:flex'>
-                <p className='text-sm text-black dark:text-white'>
-                  {user.lastActiveTimestamp.toLocaleDateString() +
-                    ' ' +
-                    user.lastActiveTimestamp.toLocaleTimeString()}
-                </p>
               </div>
               <div className='col-span-2 flex items-center'>
                 <p className='text-sm text-black dark:text-white'>{user.subscriptionStatus}</p>

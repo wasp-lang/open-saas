@@ -8,7 +8,7 @@
    const [isAdminFilter, setIsAdminFilter] = useState<boolean | undefined>(undefined);
    const [statusOptions, setStatusOptions] = useState<SubscriptionStatus[]>([]);
    const { data, isLoading, error } = useQuery(getPaginatedUsers, {
-@@ -222,7 +223,7 @@
+@@ -211,7 +212,7 @@
                  <p className='text-sm text-black dark:text-white'>{user.subscriptionStatus}</p>
                </div>
                <div className='col-span-2 flex items-center'>

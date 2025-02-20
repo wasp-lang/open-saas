@@ -1,8 +1,4 @@
-import {
-  type UpdateCurrentUserLastActiveTimestamp,
-  type UpdateIsUserAdminById,
-  type GetPaginatedUsers,
-} from 'wasp/server/operations';
+import { type UpdateIsUserAdminById, type GetPaginatedUsers } from 'wasp/server/operations';
 import { type User } from 'wasp/entities';
 import { HttpError } from 'wasp/server';
 import { type SubscriptionStatus } from '../payment/plans';
@@ -25,22 +21,6 @@ export const updateIsUserAdminById: UpdateIsUserAdminById<Pick<User, 'id' | 'isA
   });
 };
 
-export const updateCurrentUserLastActiveTimestamp: UpdateCurrentUserLastActiveTimestamp<
-  Pick<User, 'lastActiveTimestamp'>,
-  User
-> = async ({ lastActiveTimestamp }, context) => {
-  if (!context.user) {
-    throw new HttpError(401);
-  }
-
-  return context.entities.User.update({
-    where: {
-      id: context.user.id,
-    },
-    data: { lastActiveTimestamp },
-  });
-};
-
 type GetPaginatedUsersInput = {
   skip: number;
   cursor?: number | undefined;
@@ -48,29 +28,12 @@ type GetPaginatedUsersInput = {
   isAdmin?: boolean;
   subscriptionStatus?: SubscriptionStatus[];
 };
+
 type GetPaginatedUsersOutput = {
   users: Pick<
     User,
-    | 'id'
-    | 'email'
-    | 'username'
-    | 'lastActiveTimestamp'
-    | 'subscriptionStatus'
-    | 'paymentProcessorUserId'
-    | 'isAdmin'
+    'id' | 'email' | 'username' | 'subscriptionStatus' | 'paymentProcessorUserId' | 'isAdmin'
   >[];
-  totalPages: number;
-};
-
-type GetPaginatedUsersOutput2 = {
-  users: Array<{
-    id: User['id'];
-    email: User['email'];
-    username: User['username'];
-    lastActiveTimestamp: User['lastActiveTimestamp'];
-    subscriptionStatus: User['subscriptionStatus'];
-    paymentProcessorUserId: User['paymentProcessorUserId'];
-  }>;
   totalPages: number;
 };
 
@@ -121,7 +84,6 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
       email: true,
       username: true,
       isAdmin: true,
-      lastActiveTimestamp: true,
       subscriptionStatus: true,
       paymentProcessorUserId: true,
     },
