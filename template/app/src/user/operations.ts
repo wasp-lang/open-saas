@@ -1,15 +1,25 @@
-import {
-  type UpdateIsUserAdminById,
-  type GetPaginatedUsers,
-} from 'wasp/server/operations';
+import * as z from 'zod';
+import { type UpdateIsUserAdminById, type GetPaginatedUsers } from 'wasp/server/operations';
 import { type User } from 'wasp/entities';
 import { HttpError } from 'wasp/server';
-import { type SubscriptionStatus } from '../payment/plans';
+import { subscriptionStatusSchema, type SubscriptionStatus } from '../payment/plans';
+import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
 
-export const updateIsUserAdminById: UpdateIsUserAdminById<{ id: string; data: Pick<User, 'isAdmin'> }, User> = async (
-  { id, data },
+const updateUserAdminByIdInputSchema = z.object({
+  id: z.string().nonempty(),
+  data: z.object({
+    isAdmin: z.boolean(),
+  }),
+});
+
+type UpdateUserAdminByIdInput = z.infer<typeof updateUserAdminByIdInputSchema>;
+
+export const updateIsUserAdminById: UpdateIsUserAdminById<UpdateUserAdminByIdInput, User> = async (
+  rawArgs: unknown,
   context
 ) => {
+  const args = ensureArgsSchemaOrThrowHttpError(updateUserAdminByIdInputSchema, rawArgs);
+
   if (!context.user) {
     throw new HttpError(401);
   }
@@ -20,39 +30,46 @@ export const updateIsUserAdminById: UpdateIsUserAdminById<{ id: string; data: Pi
 
   const updatedUser = await context.entities.User.update({
     where: {
-      id,
+      id: args.id,
     },
     data: {
-      isAdmin: data.isAdmin,
+      isAdmin: args.data.isAdmin,
     },
   });
 
   return updatedUser;
 };
 
-type GetPaginatedUsersInput = {
-  skip: number;
-  cursor?: number | undefined;
-  emailContains?: string;
-  isAdmin?: boolean;
-  subscriptionStatus?: SubscriptionStatus[];
-};
 type GetPaginatedUsersOutput = {
   users: Pick<User, 'id' | 'email' | 'username' | 'subscriptionStatus' | 'paymentProcessorUserId'>[];
   totalPages: number;
 };
 
+const getPaginatorArgsSchema = z.object({
+  skip: z.number(),
+  cursor: z.number().optional(),
+  emailContains: z.string().nonempty().optional(),
+  isAdmin: z.boolean().optional(),
+  subscriptionStatus: z.array(subscriptionStatusSchema).optional(),
+});
+
+type GetPaginatedUsersInput = z.infer<typeof getPaginatorArgsSchema>;
+
 export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPaginatedUsersOutput> = async (
-  args,
+  rawArgs: unknown,
   context
 ) => {
+  const args = ensureArgsSchemaOrThrowHttpError(getPaginatorArgsSchema, rawArgs);
+
   if (!context.user?.isAdmin) {
     throw new HttpError(401);
   }
 
-  const allSubscriptionStatusOptions = args.subscriptionStatus as Array<string | null> | undefined;
-  const hasNotSubscribed = allSubscriptionStatusOptions?.find((status) => status === null) 
-  let subscriptionStatusStrings = allSubscriptionStatusOptions?.filter((status) => status !== null) as string[] | undefined
+  const allSubscriptionStatusOptions = args.subscriptionStatus;
+  const hasNotSubscribed = allSubscriptionStatusOptions?.find((status) => status === null);
+  let subscriptionStatusStrings = allSubscriptionStatusOptions?.filter((status) => status !== null) as
+    | string[]
+    | undefined;
 
   const queryResults = await context.entities.User.findMany({
     skip: args.skip,

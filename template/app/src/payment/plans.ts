@@ -1,6 +1,13 @@
+import * as z from 'zod';
 import { requireNodeEnvVar } from '../server/utils';
 
-export type SubscriptionStatus = 'past_due' | 'cancel_at_period_end' | 'active' | 'deleted';
+export const subscriptionStatusSchema = z
+  .literal('past_due')
+  .or(z.literal('cancel_at_period_end'))
+  .or(z.literal('active'))
+  .or(z.literal('deleted'));
+
+export type SubscriptionStatus = z.infer<typeof subscriptionStatusSchema>;
 
 export enum PaymentPlanId {
   Hobby = 'hobby',
@@ -9,7 +16,7 @@ export enum PaymentPlanId {
 }
 
 export interface PaymentPlan {
-  // Returns the id under which this payment plan is identified on your payment processor. 
+  // Returns the id under which this payment plan is identified on your payment processor.
   // E.g. this might be price id on Stripe, or variant id on LemonSqueezy.
   getPaymentProcessorPlanId: () => string;
   effect: PaymentPlanEffect;

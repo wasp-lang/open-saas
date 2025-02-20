@@ -1,30 +1,16 @@
 import { Dispatch, SetStateAction } from 'react';
 import { createFile } from 'wasp/client/operations';
 import axios from 'axios';
+import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE } from './validation';
 
 interface FileUploadProgress {
-  file: File;
+  file: FileWithValidType;
   setUploadProgressPercent: Dispatch<SetStateAction<number>>;
 }
 
-export interface FileUploadError {
-  message: string;
-  code: 'NO_FILE' | 'INVALID_FILE_TYPE' | 'FILE_TOO_LARGE' | 'UPLOAD_FAILED';
-}
-
-export const MAX_FILE_SIZE = 5 * 1024 * 1024; // Set this to the max file size you want to allow (currently 5MB).
-export const ALLOWED_FILE_TYPES = [
-  'image/jpeg',
-  'image/png',
-  'application/pdf',
-  'text/*',
-  'video/quicktime',
-  'video/mp4',
-];
-
 export async function uploadFileWithProgress({ file, setUploadProgressPercent }: FileUploadProgress) {
-  const { uploadUrl } = await createFile({ fileType: file.type, name: file.name });
-  return await axios.put(uploadUrl, file, {
+  const { uploadUrl } = await createFile({ fileType: file.type, fileName: file.name });
+  return axios.put(uploadUrl, file, {
     headers: {
       'Content-Type': file.type,
     },
@@ -37,18 +23,48 @@ export async function uploadFileWithProgress({ file, setUploadProgressPercent }:
   });
 }
 
-export function validateFile(file: File): FileUploadError | null {
+export interface FileUploadError {
+  message: string;
+  code: 'NO_FILE' | 'INVALID_FILE_TYPE' | 'FILE_TOO_LARGE' | 'UPLOAD_FAILED';
+}
+
+type AllowedFileType = (typeof ALLOWED_FILE_TYPES)[number];
+type FileWithValidType = Omit<File, 'type'> & { type: AllowedFileType };
+
+type FileParseResult =
+  | { kind: 'success'; file: FileWithValidType }
+  | {
+      kind: 'error';
+      error: { message: string; code: 'INVALID_FILE_TYPE' | 'FILE_TOO_LARGE' };
+    };
+
+export function parseValidFile(file: File): FileParseResult {
   if (file.size > MAX_FILE_SIZE) {
     return {
-      message: `File size exceeds ${MAX_FILE_SIZE / 1024 / 1024}MB limit.`,
-      code: 'FILE_TOO_LARGE',
+      kind: 'error',
+      error: {
+        message: `File size exceeds ${MAX_FILE_SIZE / 1024 / 1024}MB limit.`,
+        code: 'FILE_TOO_LARGE',
+      },
     };
   }
-  if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+
+  if (!isAllowedFileType(file.type)) {
     return {
-      message: `File type '${file.type}' is not supported.`,
-      code: 'INVALID_FILE_TYPE',
+      kind: 'error',
+      error: {
+        message: `File type '${file.type}' is not supported.`,
+        code: 'INVALID_FILE_TYPE',
+      },
     };
   }
-  return null;
+
+  return {
+    kind: 'success',
+    file: file as FileWithValidType,
+  };
+}
+
+function isAllowedFileType(fileType: string): fileType is AllowedFileType {
+  return (ALLOWED_FILE_TYPES as readonly string[]).includes(fileType);
 }
