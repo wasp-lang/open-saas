@@ -4,10 +4,12 @@ import { type PrismaClient } from '@prisma/client';
 import express from 'express';
 import { paymentPlans, PaymentPlanId } from '../plans';
 import { updateUserLemonSqueezyPaymentDetails } from './paymentDetails';
-import { type Order, type Subscription, getCustomer } from '@lemonsqueezy/lemonsqueezy.js';
+import { getCustomer } from '@lemonsqueezy/lemonsqueezy.js';
 import crypto from 'crypto';
 import { requireNodeEnvVar } from '../../server/utils';
-
+import { parseWebhookPayload, type OrderData, type SubscriptionData } from './webhookPayload';
+import { assertUnreachable } from '../../shared/utils';
+import { UnhandledWebhookEventError } from '../errors';
 
 export const lemonSqueezyWebhook: PaymentsWebhook = async (request, response, context) => {
   try {
@@ -25,36 +27,49 @@ export const lemonSqueezyWebhook: PaymentsWebhook = async (request, response, co
       throw new HttpError(400, 'Invalid signature');
     }
 
-    const event = JSON.parse(rawBody);
-    const userId = event.meta.custom_data.user_id;
+    const payload = await parseWebhookPayload(rawBody).catch((e) => {
+      if (e instanceof UnhandledWebhookEventError) {
+        throw e;
+      } else {
+        console.error('Error parsing webhook payload', e);
+        throw new HttpError(400, e.message);
+      }
+    });
+    const userId = payload.meta.custom_data.user_id;
     const prismaUserDelegate = context.entities.User;
-    switch (event.meta.event_name) {
+
+    switch (payload.eventName) {
       case 'order_created':
-        await handleOrderCreated(event as Order, userId, prismaUserDelegate);
+        await handleOrderCreated(payload.data, userId, prismaUserDelegate);
         break;
       case 'subscription_created':
-        await handleSubscriptionCreated(event as Subscription, userId, prismaUserDelegate);
+        await handleSubscriptionCreated(payload.data, userId, prismaUserDelegate);
         break;
       case 'subscription_updated':
-        await handleSubscriptionUpdated(event as Subscription, userId, prismaUserDelegate);
+        await handleSubscriptionUpdated(payload.data, userId, prismaUserDelegate);
         break;
       case 'subscription_cancelled':
-        await handleSubscriptionCancelled(event as Subscription, userId, prismaUserDelegate);
+        await handleSubscriptionCancelled(payload.data, userId, prismaUserDelegate);
         break;
       case 'subscription_expired':
-        await handleSubscriptionExpired(event as Subscription, userId, prismaUserDelegate);
+        await handleSubscriptionExpired(payload.data, userId, prismaUserDelegate);
         break;
       default:
-        console.error('Unhandled event type: ', event.meta.event_name);
+        // If you'd like to handle more events, you can add more cases above.
+        assertUnreachable(payload);
     }
 
-    response.status(200).json({ received: true });
+    return response.status(200).json({ received: true });
   } catch (err) {
+    if (err instanceof UnhandledWebhookEventError) {
+      return response.status(200).json({ received: true });
+    }
+
     console.error('Webhook error:', err);
     if (err instanceof HttpError) {
-      response.status(err.statusCode).json({ error: err.message });
+      return response.status(err.statusCode).json({ error: err.message });
     } else {
-      response.status(400).json({ error: 'Error Processing Lemon Squeezy Webhook Event' });
+      return response.status(400).json({ error: 'Error Processing Lemon Squeezy Webhook Event' });
     }
   }
 };
@@ -70,8 +85,8 @@ export const lemonSqueezyMiddlewareConfigFn: MiddlewareConfigFn = (middlewareCon
 // This will fire for one-time payment orders AND subscriptions. But subscriptions will ALSO send a follow-up
 // event of 'subscription_created'. So we use this handler mainly to process one-time, credit-based orders,
 // as well as to save the customer portal URL and customer id for the user.
-async function handleOrderCreated(data: Order, userId: string, prismaUserDelegate: PrismaClient['user']) {
-  const { customer_id, status, first_order_item, order_number } = data.data.attributes;
+async function handleOrderCreated(data: OrderData, userId: string, prismaUserDelegate: PrismaClient['user']) {
+  const { customer_id, status, first_order_item, order_number } = data.attributes;
   const lemonSqueezyId = customer_id.toString();
 
   const planId = getPlanIdByVariantId(first_order_item.variant_id.toString());
@@ -94,8 +109,12 @@ async function handleOrderCreated(data: Order, userId: string, prismaUserDelegat
   console.log(`Order ${order_number} created for user ${lemonSqueezyId}`);
 }
 
-async function handleSubscriptionCreated(data: Subscription, userId: string, prismaUserDelegate: PrismaClient['user']) {
-  const { customer_id, status, variant_id } = data.data.attributes;
+async function handleSubscriptionCreated(
+  data: SubscriptionData,
+  userId: string,
+  prismaUserDelegate: PrismaClient['user']
+) {
+  const { customer_id, status, variant_id } = data.attributes;
   const lemonSqueezyId = customer_id.toString();
 
   const planId = getPlanIdByVariantId(variant_id.toString());
@@ -118,18 +137,21 @@ async function handleSubscriptionCreated(data: Subscription, userId: string, pri
   console.log(`Subscription created for user ${lemonSqueezyId}`);
 }
 
-
 // NOTE: LemonSqueezy's 'subscription_updated' event is sent as a catch-all and fires even after 'subscription_created' & 'order_created'.
-async function handleSubscriptionUpdated(data: Subscription, userId: string, prismaUserDelegate: PrismaClient['user']) {
-  const { customer_id, status, variant_id } = data.data.attributes;
+async function handleSubscriptionUpdated(
+  data: SubscriptionData,
+  userId: string,
+  prismaUserDelegate: PrismaClient['user']
+) {
+  const { customer_id, status, variant_id } = data.attributes;
   const lemonSqueezyId = customer_id.toString();
 
   const planId = getPlanIdByVariantId(variant_id.toString());
 
   // We ignore other statuses like 'paused' and 'unpaid' for now, because we block user usage if their status is NOT active.
   // Note that a status changes to 'past_due' on a failed payment retry, then after 4 unsuccesful payment retries status
-  // becomes 'unpaid' and finally 'expired' (i.e. 'deleted'). 
-  // NOTE: ability to pause or trial a subscription is something that has to be additionally configured in the lemon squeezy dashboard. 
+  // becomes 'unpaid' and finally 'expired' (i.e. 'deleted').
+  // NOTE: ability to pause or trial a subscription is something that has to be additionally configured in the lemon squeezy dashboard.
   // If you do enable these features, make sure to handle these statuses here.
   if (status === 'past_due' || status === 'active') {
     await updateUserLemonSqueezyPaymentDetails(
@@ -146,8 +168,12 @@ async function handleSubscriptionUpdated(data: Subscription, userId: string, pri
   }
 }
 
-async function handleSubscriptionCancelled(data: Subscription, userId: string, prismaUserDelegate: PrismaClient['user']) {
-  const { customer_id } = data.data.attributes;
+async function handleSubscriptionCancelled(
+  data: SubscriptionData,
+  userId: string,
+  prismaUserDelegate: PrismaClient['user']
+) {
+  const { customer_id } = data.attributes;
   const lemonSqueezyId = customer_id.toString();
 
   await updateUserLemonSqueezyPaymentDetails(
@@ -162,8 +188,12 @@ async function handleSubscriptionCancelled(data: Subscription, userId: string, p
   console.log(`Subscription cancelled for user ${lemonSqueezyId}`);
 }
 
-async function handleSubscriptionExpired(data: Subscription, userId: string, prismaUserDelegate: PrismaClient['user']) {
-  const { customer_id } = data.data.attributes;
+async function handleSubscriptionExpired(
+  data: SubscriptionData,
+  userId: string,
+  prismaUserDelegate: PrismaClient['user']
+) {
+  const { customer_id } = data.attributes;
   const lemonSqueezyId = customer_id.toString();
 
   await updateUserLemonSqueezyPaymentDetails(
@@ -181,7 +211,9 @@ async function handleSubscriptionExpired(data: Subscription, userId: string, pri
 async function fetchUserCustomerPortalUrl({ lemonSqueezyId }: { lemonSqueezyId: string }): Promise<string> {
   const { data: lemonSqueezyCustomer, error } = await getCustomer(lemonSqueezyId);
   if (error) {
-    throw new Error(`Error fetching customer portal URL for user lemonsqueezy id ${lemonSqueezyId}: ${error}`);
+    throw new Error(
+      `Error fetching customer portal URL for user lemonsqueezy id ${lemonSqueezyId}: ${error}`
+    );
   }
   const customerPortalUrl = lemonSqueezyCustomer.data.attributes.urls.customer_portal;
   if (!customerPortalUrl) {
