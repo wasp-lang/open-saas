@@ -118,7 +118,7 @@ export async function handleCheckoutSessionCompleted(
 // This is called when a subscription is purchased or renewed and payment succeeds.
 // Invoices are not created for one-time payments, so we handle them in the payment_intent.succeeded webhook.
 export async function handleInvoicePaid(invoice: InvoicePaidData, prismaUserDelegate: PrismaClient['user']) {
-  const userStripeId = validateUserStripeIdOrThrow(invoice.customer);
+  const userStripeId = invoice.customer;
   const datePaid = new Date(invoice.period_start * 1000);
   return updateUserStripePaymentDetails({ userStripeId, datePaid }, prismaUserDelegate);
 }
@@ -133,7 +133,7 @@ export async function handlePaymentIntentSucceeded(
     return;
   }
 
-  const userStripeId = validateUserStripeIdOrThrow(paymentIntent.customer);
+  const userStripeId = paymentIntent.customer;
   const datePaid = new Date(paymentIntent.created * 1000);
 
   // We capture the price id from the payment intent metadata
@@ -162,7 +162,7 @@ export async function handleCustomerSubscriptionUpdated(
   subscription: SubscriptionUpdatedData,
   prismaUserDelegate: PrismaClient['user']
 ) {
-  const userStripeId = validateUserStripeIdOrThrow(subscription.customer);
+  const userStripeId = subscription.customer;
   let subscriptionStatus: SubscriptionStatus | undefined;
 
   const priceId = extractPriceId(subscription.items);
@@ -198,14 +198,8 @@ export async function handleCustomerSubscriptionDeleted(
   subscription: SubscriptionDeletedData,
   prismaUserDelegate: PrismaClient['user']
 ) {
-  const userStripeId = validateUserStripeIdOrThrow(subscription.customer);
+  const userStripeId = subscription.customer;
   return updateUserStripePaymentDetails({ userStripeId, subscriptionStatus: 'deleted' }, prismaUserDelegate);
-}
-
-function validateUserStripeIdOrThrow(userStripeId: Stripe.Checkout.Session['customer']): string {
-  if (!userStripeId) throw new HttpError(400, 'No customer id');
-  if (typeof userStripeId !== 'string') throw new HttpError(400, 'Customer id is not a string');
-  return userStripeId;
 }
 
 type SubscsriptionItems = z.infer<typeof subscriptionItemsSchema>;
