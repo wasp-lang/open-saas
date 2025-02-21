@@ -206,7 +206,7 @@ export const createTask: CreateTask<CreateTaskInput, Task> = async (rawArgs, con
 
   const task = await context.entities.Task.create({
     data: {
-      description: description,
+      description,
       user: { connect: { id: context.user.id } },
     },
   });
@@ -231,11 +231,11 @@ export const updateTask: UpdateTask<UpdateTaskInput, Task> = async (rawArgs, con
 
   const task = await context.entities.Task.update({
     where: {
-      id: id,
+      id,
     },
     data: {
-      isDone: isDone,
-      time: time,
+      isDone,
+      time,
     },
   });
 

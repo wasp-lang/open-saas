@@ -30,7 +30,7 @@ export const updateIsUserAdminById: UpdateIsUserAdminById<UpdateUserAdminByIdInp
 
   const updatedUser = await context.entities.User.update({
     where: {
-      id: id,
+      id,
     },
     data: {
       isAdmin: data.isAdmin,
