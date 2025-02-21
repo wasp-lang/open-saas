@@ -1,7 +1,8 @@
 import { type UpdateIsUserAdminById, type GetPaginatedUsers } from 'wasp/server/operations';
 import { type User } from 'wasp/entities';
-import { HttpError } from 'wasp/server';
+import { HttpError, prisma } from 'wasp/server';
 import { type SubscriptionStatus } from '../payment/plans';
+import { type Prisma } from '@prisma/client';
 
 export const updateIsUserAdminById: UpdateIsUserAdminById<Pick<User, 'id' | 'isAdmin'>, User> = async (
   { id, isAdmin },
@@ -22,11 +23,12 @@ export const updateIsUserAdminById: UpdateIsUserAdminById<Pick<User, 'id' | 'isA
 };
 
 type GetPaginatedUsersInput = {
-  skip: number;
-  cursor?: number | undefined;
-  emailContains?: string;
-  isAdmin?: boolean;
-  subscriptionStatus?: SubscriptionStatus[];
+  skipPages: number;
+  filter: {
+    emailContains?: string;
+    isAdmin?: boolean;
+    subscriptionStatusIn?: SubscriptionStatus[];
+  };
 };
 
 type GetPaginatedUsersOutput = {
@@ -41,39 +43,44 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
   args,
   context
 ) => {
-  if (!context.user?.isAdmin) {
-    throw new HttpError(401);
+  if (!context.user) {
+    throw new HttpError(401, 'Only authenticated users are allowed to perform this operation');
   }
 
-  const allSubscriptionStatusOptions = args.subscriptionStatus as Array<string | null> | undefined;
-  const hasNotSubscribed = allSubscriptionStatusOptions?.find((status) => status === null);
-  const subscriptionStatusStrings = allSubscriptionStatusOptions?.filter((status) => status !== null) as
-    | string[]
-    | undefined;
+  if (!context.user.isAdmin) {
+    throw new HttpError(403, 'Only admins are allowed to perform this operation');
+  }
 
-  const queryResults = await context.entities.User.findMany({
-    skip: args.skip,
-    take: 10,
+  const {
+    skipPages,
+    filter: { subscriptionStatusIn: subscriptionStatus, emailContains, isAdmin },
+  } = args;
+  const includeUnsubscribedUsers = !!subscriptionStatus?.some((status) => status === null);
+  const desiredSubscriptionStatuses = subscriptionStatus?.filter((status) => status !== null);
+
+  const pageSize = 10;
+
+  const userPageQuery: Prisma.UserFindManyArgs = {
+    skip: skipPages * pageSize,
+    take: pageSize,
     where: {
       AND: [
         {
           email: {
-            contains: args.emailContains || undefined,
+            contains: emailContains,
             mode: 'insensitive',
           },
-          isAdmin: args.isAdmin,
+          isAdmin,
         },
         {
           OR: [
             {
               subscriptionStatus: {
-                in: subscriptionStatusStrings,
+                in: desiredSubscriptionStatuses,
               },
             },
             {
-              subscriptionStatus: {
-                equals: hasNotSubscribed,
-              },
+              subscriptionStatus: includeUnsubscribedUsers ? null : undefined,
             },
           ],
         },
@@ -88,41 +95,18 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
       paymentProcessorUserId: true,
     },
     orderBy: {
-      id: 'desc',
+      username: 'asc',
     },
-  });
+  };
 
-  const totalUserCount = await context.entities.User.count({
-    where: {
-      AND: [
-        {
-          email: {
-            contains: args.emailContains || undefined,
-            mode: 'insensitive',
-          },
-          isAdmin: args.isAdmin,
-        },
-        {
-          OR: [
-            {
-              subscriptionStatus: {
-                in: subscriptionStatusStrings,
-              },
-            },
-            {
-              subscriptionStatus: {
-                equals: hasNotSubscribed,
-              },
-            },
-          ],
-        },
-      ],
-    },
-  });
-  const totalPages = Math.ceil(totalUserCount / 10);
+  const [pageOfUsers, totalUsers] = await prisma.$transaction([
+    context.entities.User.findMany(userPageQuery),
+    context.entities.User.count({ where: userPageQuery.where }),
+  ]);
+  const totalPages = Math.ceil(totalUsers / pageSize);
 
   return {
-    users: queryResults,
+    users: pageOfUsers,
     totalPages,
   };
 };
