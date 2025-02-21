@@ -15,7 +15,9 @@ const UsersTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [emailFilter, setEmailFilter] = useState<string>('');
   const [isAdminFilter, setIsAdminFilter] = useState<boolean | undefined>(undefined);
-  const [subscriptionStatusFilter, setSubcriptionStatusFilter] = useState<SubscriptionStatus[]>([]);
+  const [subscriptionStatusFilter, setSubcriptionStatusFilter] = useState<Array<SubscriptionStatus | null>>(
+    []
+  );
 
   const skipPages = currentPage - 1;
 
@@ -87,34 +89,33 @@ const UsersTable = () => {
                 </div>
                 <select
                   onChange={(e) => {
-                    const targetValue = e.target.value === '' ? null : e.target.value;
-                    setSubcriptionStatusFilter((prevValue) => {
-                      if (prevValue?.includes(targetValue as SubscriptionStatus)) {
-                        return prevValue?.filter((val) => val !== targetValue);
-                      } else if (!!prevValue) {
-                        return [...prevValue, targetValue as SubscriptionStatus];
-                      } else {
-                        return prevValue;
-                      }
-                    });
+                    const selectedValue = e.target.value == '' ? null : e.target.value;
+
+                    if (selectedValue === 'clear-all') {
+                      setSubcriptionStatusFilter([]);
+                    } else {
+                      setSubcriptionStatusFilter((prevValue) => {
+                        if (prevValue.includes(selectedValue as SubscriptionStatus)) {
+                          return prevValue.filter((val) => val !== selectedValue);
+                        } else {
+                          return [...prevValue, selectedValue as SubscriptionStatus];
+                        }
+                      });
+                    }
                   }}
                   name='status-filter'
                   id='status-filter'
                   className='absolute top-0 left-0 z-20 h-full w-full bg-white opacity-0'
                 >
-                  <option value=''>Select filters</option>
+                  <option value='clear-all'>Clear all</option>
                   <option key='has-not-subscribed' value=''>
                     has not subscribed
                   </option>
-                  {[...Object.values(SubscriptionStatus)].map((status) => {
-                    if (!subscriptionStatusFilter.includes(status)) {
-                      return (
-                        <option key={status} value={status}>
-                          {status}
-                        </option>
-                      );
-                    }
-                  })}
+                  {[...Object.values(SubscriptionStatus)].map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
                 </select>
                 <span className='absolute top-1/2 right-4 z-10 -translate-y-1/2'>
                   <ChevronDownIcon />
