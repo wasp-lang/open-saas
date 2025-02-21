@@ -1,18 +1,16 @@
-import { ChangeEventHandler } from 'react';
 import { cn } from '../../../client/cn';
 
-const SwitcherTwo = ({
-  isOn,
-  onChange,
-}: {
-  isOn: boolean;
-  onChange: ChangeEventHandler<HTMLInputElement>;
-}) => {
+const SwitcherTwo = ({ isOn, onChange }: { isOn: boolean; onChange: (value: boolean) => void }) => {
   return (
     <div>
       <label className='flex cursor-pointer select-none items-center'>
         <div className='relative'>
-          <input type='checkbox' id='toggle3' className='sr-only' onChange={onChange} />
+          <input
+            type='checkbox'
+            id='toggle3'
+            className='sr-only'
+            onChange={(e) => onChange(e.target.checked)}
+          />
           <div className='block h-8 w-14 rounded-full bg-meta-9 dark:bg-[#5A616B]'></div>
           <div
             className={cn(

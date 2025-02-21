@@ -309,8 +309,8 @@ function SwitchExamples() {
   const [isSecondOn, setIsSecondOn] = useState<boolean>(false);
   return (
     <div className='flex flex-col gap-5.5 p-6.5'>
-      <SwitcherOne isOn={isFirstOn} onChange={() => setIsFirstOn(!isFirstOn)} />
-      <SwitcherTwo isOn={isSecondOn} onChange={() => setIsSecondOn(!isSecondOn)} />
+      <SwitcherOne isOn={isFirstOn} onChange={setIsFirstOn} />
+      <SwitcherTwo isOn={isSecondOn} onChange={setIsSecondOn} />
     </div>
   );
 }
