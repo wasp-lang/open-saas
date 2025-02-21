@@ -1,6 +1,11 @@
 import { requireNodeEnvVar } from '../server/utils';
 
-export type SubscriptionStatus = 'past_due' | 'cancel_at_period_end' | 'active' | 'deleted';
+export enum SubscriptionStatus {
+  PastDue = 'past_due',
+  CancelAtPeriodEnd = 'cancel_at_period_end',
+  Active = 'active',
+  Deleted = 'deleted',
+}
 
 export enum PaymentPlanId {
   Hobby = 'hobby',
@@ -9,7 +14,7 @@ export enum PaymentPlanId {
 }
 
 export interface PaymentPlan {
-  // Returns the id under which this payment plan is identified on your payment processor. 
+  // Returns the id under which this payment plan is identified on your payment processor.
   // E.g. this might be price id on Stripe, or variant id on LemonSqueezy.
   getPaymentProcessorPlanId: () => string;
   effect: PaymentPlanEffect;

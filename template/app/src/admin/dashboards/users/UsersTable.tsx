@@ -1,4 +1,4 @@
-import { type SubscriptionStatus } from '../../../payment/plans';
+import { SubscriptionStatus } from '../../../payment/plans';
 import { useQuery, getPaginatedUsers } from 'wasp/client/operations';
 import { useState, useEffect } from 'react';
 import SwitcherOne from '../../elements/forms/SwitcherOne';
@@ -103,11 +103,14 @@ const UsersTable = () => {
                   className='absolute top-0 left-0 z-20 h-full w-full bg-white opacity-0'
                 >
                   <option value=''>Select filters</option>
-                  {['past_due', 'cancel_at_period_end', 'active', 'deleted', null].map((status) => {
-                    if (!subscriptionStatusFilter.includes(status as SubscriptionStatus)) {
+                  <option key='has-not-subscribed' value=''>
+                    has not subscribed
+                  </option>
+                  {[...Object.values(SubscriptionStatus)].map((status) => {
+                    if (!subscriptionStatusFilter.includes(status)) {
                       return (
-                        <option key={status} value={status || ''}>
-                          {status ? status : 'has not subscribed'}
+                        <option key={status} value={status}>
+                          {status}
                         </option>
                       );
                     }
