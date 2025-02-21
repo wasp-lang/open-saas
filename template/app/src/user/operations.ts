@@ -27,7 +27,7 @@ type GetPaginatedUsersInput = {
   filter: {
     emailContains?: string;
     isAdmin?: boolean;
-    subscriptionStatusIn?: SubscriptionStatus[];
+    subscriptionStatusIn?: Array<SubscriptionStatus | null>;
   };
 };
 

@@ -2,12 +2,11 @@ import { type MiddlewareConfigFn, HttpError } from 'wasp/server';
 import { type PaymentsWebhook } from 'wasp/server/api';
 import { type PrismaClient } from '@prisma/client';
 import express from 'express';
-import { paymentPlans, PaymentPlanId } from '../plans';
+import { paymentPlans, PaymentPlanId, SubscriptionStatus } from '../plans';
 import { updateUserLemonSqueezyPaymentDetails } from './paymentDetails';
 import { type Order, type Subscription, getCustomer } from '@lemonsqueezy/lemonsqueezy.js';
 import crypto from 'crypto';
 import { requireNodeEnvVar } from '../../server/utils';
-
 
 export const lemonSqueezyWebhook: PaymentsWebhook = async (request, response, context) => {
   try {
@@ -94,7 +93,11 @@ async function handleOrderCreated(data: Order, userId: string, prismaUserDelegat
   console.log(`Order ${order_number} created for user ${lemonSqueezyId}`);
 }
 
-async function handleSubscriptionCreated(data: Subscription, userId: string, prismaUserDelegate: PrismaClient['user']) {
+async function handleSubscriptionCreated(
+  data: Subscription,
+  userId: string,
+  prismaUserDelegate: PrismaClient['user']
+) {
   const { customer_id, status, variant_id } = data.data.attributes;
   const lemonSqueezyId = customer_id.toString();
 
@@ -106,7 +109,7 @@ async function handleSubscriptionCreated(data: Subscription, userId: string, pri
         lemonSqueezyId,
         userId,
         subscriptionPlan: planId,
-        subscriptionStatus: status,
+        subscriptionStatus: status as SubscriptionStatus,
         datePaid: new Date(),
       },
       prismaUserDelegate
@@ -118,9 +121,12 @@ async function handleSubscriptionCreated(data: Subscription, userId: string, pri
   console.log(`Subscription created for user ${lemonSqueezyId}`);
 }
 
-
 // NOTE: LemonSqueezy's 'subscription_updated' event is sent as a catch-all and fires even after 'subscription_created' & 'order_created'.
-async function handleSubscriptionUpdated(data: Subscription, userId: string, prismaUserDelegate: PrismaClient['user']) {
+async function handleSubscriptionUpdated(
+  data: Subscription,
+  userId: string,
+  prismaUserDelegate: PrismaClient['user']
+) {
   const { customer_id, status, variant_id } = data.data.attributes;
   const lemonSqueezyId = customer_id.toString();
 
@@ -128,8 +134,8 @@ async function handleSubscriptionUpdated(data: Subscription, userId: string, pri
 
   // We ignore other statuses like 'paused' and 'unpaid' for now, because we block user usage if their status is NOT active.
   // Note that a status changes to 'past_due' on a failed payment retry, then after 4 unsuccesful payment retries status
-  // becomes 'unpaid' and finally 'expired' (i.e. 'deleted'). 
-  // NOTE: ability to pause or trial a subscription is something that has to be additionally configured in the lemon squeezy dashboard. 
+  // becomes 'unpaid' and finally 'expired' (i.e. 'deleted').
+  // NOTE: ability to pause or trial a subscription is something that has to be additionally configured in the lemon squeezy dashboard.
   // If you do enable these features, make sure to handle these statuses here.
   if (status === 'past_due' || status === 'active') {
     await updateUserLemonSqueezyPaymentDetails(
@@ -137,7 +143,7 @@ async function handleSubscriptionUpdated(data: Subscription, userId: string, pri
         lemonSqueezyId,
         userId,
         subscriptionPlan: planId,
-        subscriptionStatus: status,
+        subscriptionStatus: status as SubscriptionStatus,
         ...(status === 'active' && { datePaid: new Date() }),
       },
       prismaUserDelegate
@@ -146,7 +152,11 @@ async function handleSubscriptionUpdated(data: Subscription, userId: string, pri
   }
 }
 
-async function handleSubscriptionCancelled(data: Subscription, userId: string, prismaUserDelegate: PrismaClient['user']) {
+async function handleSubscriptionCancelled(
+  data: Subscription,
+  userId: string,
+  prismaUserDelegate: PrismaClient['user']
+) {
   const { customer_id } = data.data.attributes;
   const lemonSqueezyId = customer_id.toString();
 
@@ -154,7 +164,8 @@ async function handleSubscriptionCancelled(data: Subscription, userId: string, p
     {
       lemonSqueezyId,
       userId,
-      subscriptionStatus: 'cancel_at_period_end', // cancel_at_period_end is the Stripe equivalent of LemonSqueezy's cancelled
+      // cancel_at_period_end is the Stripe equivalent of LemonSqueezy's cancelled
+      subscriptionStatus: 'cancel_at_period_end' as SubscriptionStatus,
     },
     prismaUserDelegate
   );
@@ -162,7 +173,11 @@ async function handleSubscriptionCancelled(data: Subscription, userId: string, p
   console.log(`Subscription cancelled for user ${lemonSqueezyId}`);
 }
 
-async function handleSubscriptionExpired(data: Subscription, userId: string, prismaUserDelegate: PrismaClient['user']) {
+async function handleSubscriptionExpired(
+  data: Subscription,
+  userId: string,
+  prismaUserDelegate: PrismaClient['user']
+) {
   const { customer_id } = data.data.attributes;
   const lemonSqueezyId = customer_id.toString();
 
@@ -170,7 +185,8 @@ async function handleSubscriptionExpired(data: Subscription, userId: string, pri
     {
       lemonSqueezyId,
       userId,
-      subscriptionStatus: 'deleted', // deleted is the Stripe equivalent of LemonSqueezy's expired
+      // deleted is the Stripe equivalent of LemonSqueezy's expired
+      subscriptionStatus: SubscriptionStatus.Deleted,
     },
     prismaUserDelegate
   );
@@ -181,7 +197,9 @@ async function handleSubscriptionExpired(data: Subscription, userId: string, pri
 async function fetchUserCustomerPortalUrl({ lemonSqueezyId }: { lemonSqueezyId: string }): Promise<string> {
   const { data: lemonSqueezyCustomer, error } = await getCustomer(lemonSqueezyId);
   if (error) {
-    throw new Error(`Error fetching customer portal URL for user lemonsqueezy id ${lemonSqueezyId}: ${error}`);
+    throw new Error(
+      `Error fetching customer portal URL for user lemonsqueezy id ${lemonSqueezyId}: ${error}`
+    );
   }
   const customerPortalUrl = lemonSqueezyCustomer.data.attributes.urls.customer_portal;
   if (!customerPortalUrl) {
@@ -199,3 +217,4 @@ function getPlanIdByVariantId(variantId: string): PaymentPlanId {
   }
   return planId;
 }
+

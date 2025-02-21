@@ -48,7 +48,7 @@ export const stripeWebhook: PaymentsWebhook = async (request, response, context)
     default:
       // If you'd like to handle more events, you can add more cases above.
       // When deploying your app, you configure your webhook in the Stripe dashboard to only send the events that you're
-      // handling above and that are necessary for the functioning of your app. See: https://docs.opensaas.sh/guides/deploying/#setting-up-your-stripe-webhook 
+      // handling above and that are necessary for the functioning of your app. See: https://docs.opensaas.sh/guides/deploying/#setting-up-your-stripe-webhook
       // In development, it is likely that you will receive other events that you are not handling, and that's fine. These can be ignored without any issues.
       console.error('Unhandled event type: ', event.type);
   }
@@ -68,7 +68,7 @@ export const stripeMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig) =
 // if the payment succeeds in other, more specific, webhooks.
 export async function handleCheckoutSessionCompleted(
   session: Stripe.Checkout.Session,
-  prismaUserDelegate: PrismaClient["user"]
+  prismaUserDelegate: PrismaClient['user']
 ) {
   const userStripeId = validateUserStripeIdOrThrow(session.customer);
   const { line_items } = await stripe.checkout.sessions.retrieve(session.id, {
@@ -82,15 +82,12 @@ export async function handleCheckoutSessionCompleted(
   }
   const { subscriptionPlan } = getPlanEffectPaymentDetails({ planId, planEffect: plan.effect });
 
-  return updateUserStripePaymentDetails(
-    { userStripeId, subscriptionPlan },
-    prismaUserDelegate
-  );
+  return updateUserStripePaymentDetails({ userStripeId, subscriptionPlan }, prismaUserDelegate);
 }
 
-// This is called when a subscription is purchased or renewed and payment succeeds. 
+// This is called when a subscription is purchased or renewed and payment succeeds.
 // Invoices are not created for one-time payments, so we handle them in the payment_intent.succeeded webhook.
-export async function handleInvoicePaid(invoice: Stripe.Invoice, prismaUserDelegate: PrismaClient["user"]) {
+export async function handleInvoicePaid(invoice: Stripe.Invoice, prismaUserDelegate: PrismaClient['user']) {
   const userStripeId = validateUserStripeIdOrThrow(invoice.customer);
   const datePaid = new Date(invoice.period_start * 1000);
   return updateUserStripePaymentDetails({ userStripeId, datePaid }, prismaUserDelegate);
@@ -100,7 +97,7 @@ export async function handlePaymentIntentSucceeded(
   paymentIntent: Stripe.PaymentIntent,
   prismaUserDelegate: PrismaClient['user']
 ) {
-  // We handle invoices in the invoice.paid webhook. Invoices exist for subscription payments, 
+  // We handle invoices in the invoice.paid webhook. Invoices exist for subscription payments,
   // but not for one-time payment/credits products which use the Stripe `payment` mode on checkout sessions.
   if (paymentIntent.invoice) {
     return;
@@ -133,7 +130,7 @@ export async function handlePaymentIntentSucceeded(
 
 export async function handleCustomerSubscriptionUpdated(
   subscription: Stripe.Subscription,
-  prismaUserDelegate: PrismaClient["user"]
+  prismaUserDelegate: PrismaClient['user']
 ) {
   const userStripeId = validateUserStripeIdOrThrow(subscription.customer);
   let subscriptionStatus: SubscriptionStatus | undefined;
@@ -143,13 +140,18 @@ export async function handleCustomerSubscriptionUpdated(
 
   // There are other subscription statuses, such as `trialing` that we are not handling and simply ignore
   // If you'd like to handle more statuses, you can add more cases above. Make sure to update the `SubscriptionStatus` type in `payment/plans.ts` as well
-  if (subscription.status === 'active') {
-    subscriptionStatus = subscription.cancel_at_period_end ? 'cancel_at_period_end' : 'active';
-  } else if (subscription.status === 'past_due') {
-    subscriptionStatus = 'past_due';
-  } 
+  if (subscription.status === SubscriptionStatus.Active) {
+    subscriptionStatus = subscription.cancel_at_period_end
+      ? SubscriptionStatus.CancelAtPeriodEnd
+      : SubscriptionStatus.Active;
+  } else if (subscription.status === SubscriptionStatus.PastDue) {
+    subscriptionStatus = SubscriptionStatus.PastDue;
+  }
   if (subscriptionStatus) {
-    const user = await updateUserStripePaymentDetails({ userStripeId, subscriptionPlan, subscriptionStatus }, prismaUserDelegate);
+    const user = await updateUserStripePaymentDetails(
+      { userStripeId, subscriptionPlan, subscriptionStatus },
+      prismaUserDelegate
+    );
     if (subscription.cancel_at_period_end) {
       if (user.email) {
         await emailSender.send({
@@ -166,10 +168,13 @@ export async function handleCustomerSubscriptionUpdated(
 
 export async function handleCustomerSubscriptionDeleted(
   subscription: Stripe.Subscription,
-  prismaUserDelegate: PrismaClient["user"]
+  prismaUserDelegate: PrismaClient['user']
 ) {
   const userStripeId = validateUserStripeIdOrThrow(subscription.customer);
-  return updateUserStripePaymentDetails({ userStripeId, subscriptionStatus: 'deleted' }, prismaUserDelegate);
+  return updateUserStripePaymentDetails(
+    { userStripeId, subscriptionStatus: SubscriptionStatus.Deleted },
+    prismaUserDelegate
+  );
 }
 
 function validateUserStripeIdOrThrow(userStripeId: Stripe.Checkout.Session['customer']): string {
@@ -209,7 +214,13 @@ function getPlanIdByPriceId(priceId: string): PaymentPlanId {
   return planId;
 }
 
-function getPlanEffectPaymentDetails({ planId, planEffect }: { planId: PaymentPlanId, planEffect: PaymentPlanEffect}): {
+function getPlanEffectPaymentDetails({
+  planId,
+  planEffect,
+}: {
+  planId: PaymentPlanId;
+  planEffect: PaymentPlanEffect;
+}): {
   subscriptionPlan: PaymentPlanId | undefined;
   numOfCreditsPurchased: number | undefined;
 } {
