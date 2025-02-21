@@ -132,7 +132,6 @@ const UsersTable = () => {
                   }}
                   className='relative z-20 w-full appearance-none rounded border border-stroke bg-white p-2 pl-4 pr-8  outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input'
                 >
-                  {/*Why no svg here*/}
                   <option value='both'>both</option>
                   <option value='true'>true</option>
                   <option value='false'>false</option>
