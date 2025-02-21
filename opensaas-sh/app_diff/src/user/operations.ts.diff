@@ -1,8 +1,8 @@
 --- template/app/src/user/operations.ts
 +++ opensaas-sh/app/src/user/operations.ts
-@@ -38,7 +38,10 @@
-   subscriptionStatus?: SubscriptionStatus[];
+@@ -41,7 +41,10 @@
  };
+ 
  type GetPaginatedUsersOutput = {
 -  users: Pick<User, 'id' | 'email' | 'username' | 'subscriptionStatus' | 'paymentProcessorUserId'>[];
 +  users: Pick<
@@ -12,28 +12,15 @@
    totalPages: number;
  };
  
-@@ -51,8 +54,10 @@
-   }
- 
-   const allSubscriptionStatusOptions = args.subscriptionStatus as Array<string | null> | undefined;
--  const hasNotSubscribed = allSubscriptionStatusOptions?.find((status) => status === null) 
--  let subscriptionStatusStrings = allSubscriptionStatusOptions?.filter((status) => status !== null) as string[] | undefined
-+  const hasNotSubscribed = allSubscriptionStatusOptions?.find((status) => status === null);
-+  let subscriptionStatusStrings = allSubscriptionStatusOptions?.filter((status) => status !== null) as
-+    | string[]
-+    | undefined;
- 
-   const queryResults = await context.entities.User.findMany({
-     skip: args.skip,
-@@ -65,6 +70,7 @@
+@@ -85,6 +88,7 @@
              mode: 'insensitive',
            },
-           isAdmin: args.isAdmin,
+           isAdmin,
 +          isMockUser: true,
          },
          {
            OR: [
-@@ -88,7 +94,7 @@
+@@ -108,7 +112,7 @@
        username: true,
        isAdmin: true,
        subscriptionStatus: true,
@@ -42,10 +29,10 @@
      },
      orderBy: {
        id: 'desc',
-@@ -104,6 +110,7 @@
+@@ -124,6 +128,7 @@
              mode: 'insensitive',
            },
-           isAdmin: args.isAdmin,
+           isAdmin,
 +          isMockUser: true,
          },
          {

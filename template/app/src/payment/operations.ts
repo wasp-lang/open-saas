@@ -1,20 +1,27 @@
+import * as z from 'zod';
 import type { GenerateCheckoutSession, GetCustomerPortalUrl } from 'wasp/server/operations';
 import { PaymentPlanId, paymentPlans } from '../payment/plans';
 import { paymentProcessor } from './paymentProcessor';
 import { HttpError } from 'wasp/server';
+import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
 
 export type CheckoutSession = {
   sessionUrl: string | null;
   sessionId: string;
 };
 
-export const generateCheckoutSession: GenerateCheckoutSession<PaymentPlanId, CheckoutSession> = async (
-  paymentPlanId,
-  context
-) => {
+const generateCheckoutSessionSchema = z.nativeEnum(PaymentPlanId);
+
+type GenerateCheckoutSessionInput = z.infer<typeof generateCheckoutSessionSchema>;
+
+export const generateCheckoutSession: GenerateCheckoutSession<
+  GenerateCheckoutSessionInput,
+  CheckoutSession
+> = async (rawPaymentPlanId, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
+  const paymentPlanId = ensureArgsSchemaOrThrowHttpError(generateCheckoutSessionSchema, rawPaymentPlanId);
   const userId = context.user.id;
   const userEmail = context.user.email;
   if (!userEmail) {
@@ -29,7 +36,7 @@ export const generateCheckoutSession: GenerateCheckoutSession<PaymentPlanId, Che
     userId,
     userEmail,
     paymentPlan,
-    prismaUserDelegate: context.entities.User
+    prismaUserDelegate: context.entities.User,
   });
 
   return {
