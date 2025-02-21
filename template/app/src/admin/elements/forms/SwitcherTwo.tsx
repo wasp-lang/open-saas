@@ -1,7 +1,7 @@
 import { useId } from 'react';
 import { cn } from '../../../client/cn';
 
-const SwitcherTwo = ({ isOn, onChange }: { isOn: boolean; onChange: (value: boolean) => void }) => {
+function SwitcherTwo({ isOn, onChange }: { isOn: boolean; onChange: (value: boolean) => void }) {
   const id = useId();
 
   return (
@@ -29,7 +29,7 @@ const SwitcherTwo = ({ isOn, onChange }: { isOn: boolean; onChange: (value: bool
       </label>
     </div>
   );
-};
+}
 
 const XIcon = () => {
   return (

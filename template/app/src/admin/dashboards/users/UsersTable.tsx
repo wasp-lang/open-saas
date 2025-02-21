@@ -7,13 +7,13 @@ import DropdownEditDelete from './DropdownEditDelete';
 import { updateIsUserAdminById } from 'wasp/client/operations';
 import { type User } from 'wasp/entities';
 
-const AdminSwitch = ({ id, isAdmin }: Pick<User, 'id' | 'isAdmin'>) => {
+function AdminSwitch({ id, isAdmin }: Pick<User, 'id' | 'isAdmin'>) {
   return (
     <SwitcherOne isOn={isAdmin} onChange={(value) => updateIsUserAdminById({ id: id, isAdmin: value })} />
   );
-};
+}
 
-const UsersTable = () => {
+function UsersTable() {
   const [skip, setskip] = useState(0);
   const [page, setPage] = useState(1);
   const [email, setEmail] = useState<string | undefined>(undefined);
@@ -238,6 +238,6 @@ const UsersTable = () => {
       </div>
     </div>
   );
-};
+}
 
 export default UsersTable;

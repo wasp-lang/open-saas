@@ -1,7 +1,7 @@
 import { useId } from 'react';
 import { cn } from '../../../client/cn';
 
-const SwitcherOne = ({ isOn, onChange }: { isOn: boolean; onChange: (value: boolean) => void }) => {
+function SwitcherOne({ isOn, onChange }: { isOn: boolean; onChange: (value: boolean) => void }) {
   const id = useId();
 
   return (
@@ -19,6 +19,6 @@ const SwitcherOne = ({ isOn, onChange }: { isOn: boolean; onChange: (value: bool
       </label>
     </div>
   );
-};
+}
 
 export default SwitcherOne;
