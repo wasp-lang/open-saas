@@ -12,15 +12,15 @@
    totalPages: number;
  };
  
-@@ -82,6 +85,7 @@
+@@ -85,6 +88,7 @@
              mode: 'insensitive',
            },
-           isAdmin: args.isAdmin,
+           isAdmin,
 +          isMockUser: true,
          },
          {
            OR: [
-@@ -105,7 +109,7 @@
+@@ -108,7 +112,7 @@
        username: true,
        isAdmin: true,
        subscriptionStatus: true,
@@ -29,10 +29,10 @@
      },
      orderBy: {
        id: 'desc',
-@@ -121,6 +125,7 @@
+@@ -124,6 +128,7 @@
              mode: 'insensitive',
            },
-           isAdmin: args.isAdmin,
+           isAdmin,
 +          isMockUser: true,
          },
          {

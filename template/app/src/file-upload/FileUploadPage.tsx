@@ -2,7 +2,12 @@ import { cn } from '../client/cn';
 import { useState, useEffect, FormEvent } from 'react';
 import type { File } from 'wasp/entities';
 import { useQuery, getAllFilesByUser, getDownloadFileSignedURL } from 'wasp/client/operations';
-import { type FileUploadError, parseValidFile, uploadFileWithProgress } from './fileUploading';
+import {
+  type FileWithValidType,
+  type FileUploadError,
+  validateFile,
+  uploadFileWithProgress,
+} from './fileUploading';
 import { ALLOWED_FILE_TYPES } from './validation';
 
 export default function FileUploadPage() {
@@ -65,12 +70,13 @@ export default function FileUploadPage() {
         return;
       }
 
-      const validFileResult = parseValidFile(file);
-      if (validFileResult.kind === 'error') {
-        setUploadError(validFileResult.error);
+      const fileValidationError = validateFile(file);
+      if (fileValidationError !== null) {
+        setUploadError(fileValidationError);
         return;
       }
-      await uploadFileWithProgress({ file: validFileResult.file, setUploadProgressPercent });
+
+      await uploadFileWithProgress({ file: file as FileWithValidType, setUploadProgressPercent });
       formElement.reset();
       allUserFiles.refetch();
     } catch (error) {

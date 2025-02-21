@@ -15,10 +15,10 @@ const updateUserAdminByIdInputSchema = z.object({
 type UpdateUserAdminByIdInput = z.infer<typeof updateUserAdminByIdInputSchema>;
 
 export const updateIsUserAdminById: UpdateIsUserAdminById<UpdateUserAdminByIdInput, User> = async (
-  rawArgs: unknown,
+  rawArgs,
   context
 ) => {
-  const args = ensureArgsSchemaOrThrowHttpError(updateUserAdminByIdInputSchema, rawArgs);
+  const { id, data } = ensureArgsSchemaOrThrowHttpError(updateUserAdminByIdInputSchema, rawArgs);
 
   if (!context.user) {
     throw new HttpError(401);
@@ -30,10 +30,10 @@ export const updateIsUserAdminById: UpdateIsUserAdminById<UpdateUserAdminByIdInp
 
   const updatedUser = await context.entities.User.update({
     where: {
-      id: args.id,
+      id: id,
     },
     data: {
-      isAdmin: args.data.isAdmin,
+      isAdmin: data.isAdmin,
     },
   });
 
@@ -56,32 +56,35 @@ const getPaginatorArgsSchema = z.object({
 type GetPaginatedUsersInput = z.infer<typeof getPaginatorArgsSchema>;
 
 export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPaginatedUsersOutput> = async (
-  rawArgs: unknown,
+  rawArgs,
   context
 ) => {
-  const args = ensureArgsSchemaOrThrowHttpError(getPaginatorArgsSchema, rawArgs);
+  const { skip, cursor, emailContains, isAdmin, subscriptionStatus } = ensureArgsSchemaOrThrowHttpError(
+    getPaginatorArgsSchema,
+    rawArgs
+  );
 
   if (!context.user?.isAdmin) {
     throw new HttpError(401);
   }
 
-  const allSubscriptionStatusOptions = args.subscriptionStatus;
+  const allSubscriptionStatusOptions = subscriptionStatus;
   const hasNotSubscribed = allSubscriptionStatusOptions?.find((status) => status === null);
   let subscriptionStatusStrings = allSubscriptionStatusOptions?.filter((status) => status !== null) as
     | string[]
     | undefined;
 
   const queryResults = await context.entities.User.findMany({
-    skip: args.skip,
+    skip,
     take: 10,
     where: {
       AND: [
         {
           email: {
-            contains: args.emailContains || undefined,
+            contains: emailContains || undefined,
             mode: 'insensitive',
           },
-          isAdmin: args.isAdmin,
+          isAdmin,
         },
         {
           OR: [
@@ -117,10 +120,10 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
       AND: [
         {
           email: {
-            contains: args.emailContains || undefined,
+            contains: emailContains || undefined,
             mode: 'insensitive',
           },
-          isAdmin: args.isAdmin,
+          isAdmin,
         },
         {
           OR: [

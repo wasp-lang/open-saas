@@ -18,25 +18,25 @@ const createFileInputSchema = z.object({
 
 type CreateFileInput = z.infer<typeof createFileInputSchema>;
 
-export const createFile: CreateFile<CreateFileInput, File> = async (rawArgs: unknown, context) => {
+export const createFile: CreateFile<CreateFileInput, File> = async (rawArgs, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
 
-  const args = ensureArgsSchemaOrThrowHttpError(createFileInputSchema, rawArgs);
+  const { fileType, fileName } = ensureArgsSchemaOrThrowHttpError(createFileInputSchema, rawArgs);
 
   const { uploadUrl, key } = await getUploadFileSignedURLFromS3({
-    fileType: args.fileType,
-    fileName: args.fileName,
+    fileType,
+    fileName,
     userId: context.user.id,
   });
 
   return await context.entities.File.create({
     data: {
-      name: args.fileName,
+      name: fileName,
       key,
       uploadUrl,
-      type: args.fileType,
+      type: fileType,
       user: { connect: { id: context.user.id } },
     },
   });
@@ -65,7 +65,7 @@ type GetDownloadFileSignedURLInput = z.infer<typeof getDownloadFileSignedURLInpu
 export const getDownloadFileSignedURL: GetDownloadFileSignedURL<
   GetDownloadFileSignedURLInput,
   string
-> = async (rawArgs: unknown, _context) => {
-  const args = ensureArgsSchemaOrThrowHttpError(getDownloadFileSignedURLInputSchema, rawArgs);
-  return await getDownloadFileSignedURLFromS3({ key: args.key });
+> = async (rawArgs, _context) => {
+  const { key } = ensureArgsSchemaOrThrowHttpError(getDownloadFileSignedURLInputSchema, rawArgs);
+  return await getDownloadFileSignedURLFromS3({ key });
 };

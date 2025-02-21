@@ -2,7 +2,7 @@
 +++ opensaas-sh/app/src/file-upload/operations.ts
 @@ -25,6 +25,18 @@
  
-   const args = ensureArgsSchemaOrThrowHttpError(createFileInputSchema, rawArgs);
+   const { fileType, fileName } = ensureArgsSchemaOrThrowHttpError(createFileInputSchema, rawArgs);
  
 +  const numberOfFilesByUser = await context.entities.File.count({
 +    where: {
@@ -17,5 +17,5 @@
 +  }
 +
    const { uploadUrl, key } = await getUploadFileSignedURLFromS3({
-     fileType: args.fileType,
-     fileName: args.fileName,
+     fileType,
+     fileName,

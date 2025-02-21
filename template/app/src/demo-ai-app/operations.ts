@@ -30,14 +30,14 @@ const generateGptResponseInputSchema = z.object({
 type GenerateGptResponseInput = z.infer<typeof generateGptResponseInputSchema>;
 
 export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, GeneratedSchedule> = async (
-  rawArgs: unknown,
+  rawArgs,
   context
 ) => {
   if (!context.user) {
     throw new HttpError(401);
   }
 
-  const args = ensureArgsSchemaOrThrowHttpError(generateGptResponseInputSchema, rawArgs);
+  const { hours } = ensureArgsSchemaOrThrowHttpError(generateGptResponseInputSchema, rawArgs);
 
   const tasks = await context.entities.Task.findMany({
     where: {
@@ -89,9 +89,7 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
         },
         {
           role: 'user',
-          content: `I will work ${
-            args.hours
-          } hours today. Here are the tasks I have to complete: ${JSON.stringify(
+          content: `I will work ${hours} hours today. Here are the tasks I have to complete: ${JSON.stringify(
             parsedTasks
           )}. Please help me plan my day by breaking the tasks down into actionable subtasks with time and priority status.`,
         },
@@ -199,16 +197,16 @@ const createTaskInputSchema = z.object({
 
 type CreateTaskInput = z.infer<typeof createTaskInputSchema>;
 
-export const createTask: CreateTask<CreateTaskInput, Task> = async (rawArgs: unknown, context) => {
+export const createTask: CreateTask<CreateTaskInput, Task> = async (rawArgs, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
 
-  const args = ensureArgsSchemaOrThrowHttpError(createTaskInputSchema, rawArgs);
+  const { description } = ensureArgsSchemaOrThrowHttpError(createTaskInputSchema, rawArgs);
 
   const task = await context.entities.Task.create({
     data: {
-      description: args.description,
+      description: description,
       user: { connect: { id: context.user.id } },
     },
   });
@@ -224,20 +222,20 @@ const updateTaskInputSchema = z.object({
 
 type UpdateTaskInput = z.infer<typeof updateTaskInputSchema>;
 
-export const updateTask: UpdateTask<UpdateTaskInput, Task> = async (rawArgs: unknown, context) => {
+export const updateTask: UpdateTask<UpdateTaskInput, Task> = async (rawArgs, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
 
-  const args = ensureArgsSchemaOrThrowHttpError(updateTaskInputSchema, rawArgs);
+  const { id, isDone, time } = ensureArgsSchemaOrThrowHttpError(updateTaskInputSchema, rawArgs);
 
   const task = await context.entities.Task.update({
     where: {
-      id: args.id,
+      id: id,
     },
     data: {
-      isDone: args.isDone,
-      time: args.time,
+      isDone: isDone,
+      time: time,
     },
   });
 
@@ -250,16 +248,16 @@ const deleteTaskInputSchema = z.object({
 
 type DeleteTaskInput = z.infer<typeof deleteTaskInputSchema>;
 
-export const deleteTask: DeleteTask<DeleteTaskInput, Task> = async (rawArgs: unknown, context) => {
+export const deleteTask: DeleteTask<DeleteTaskInput, Task> = async (rawArgs, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
 
-  const args = ensureArgsSchemaOrThrowHttpError(deleteTaskInputSchema, rawArgs);
+  const { id } = ensureArgsSchemaOrThrowHttpError(deleteTaskInputSchema, rawArgs);
 
   const task = await context.entities.Task.delete({
     where: {
-      id: args.id,
+      id,
     },
   });
 

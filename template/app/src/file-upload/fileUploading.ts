@@ -3,8 +3,8 @@ import { createFile } from 'wasp/client/operations';
 import axios from 'axios';
 import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE } from './validation';
 
+export type FileWithValidType = Omit<File, 'type'> & { type: AllowedFileType };
 type AllowedFileType = (typeof ALLOWED_FILE_TYPES)[number];
-type FileWithValidType = Omit<File, 'type'> & { type: AllowedFileType };
 interface FileUploadProgress {
   file: FileWithValidType;
   setUploadProgressPercent: Dispatch<SetStateAction<number>>;
@@ -30,38 +30,22 @@ export interface FileUploadError {
   code: 'NO_FILE' | 'INVALID_FILE_TYPE' | 'FILE_TOO_LARGE' | 'UPLOAD_FAILED';
 }
 
-type FileParseResult =
-  | { kind: 'success'; file: FileWithValidType }
-  | {
-      kind: 'error';
-      error: { message: string; code: 'INVALID_FILE_TYPE' | 'FILE_TOO_LARGE' };
-    };
-
-export function parseValidFile(file: File): FileParseResult {
+export function validateFile(file: File) {
   if (file.size > MAX_FILE_SIZE) {
     return {
-      kind: 'error',
-      error: {
-        message: `File size exceeds ${MAX_FILE_SIZE / 1024 / 1024}MB limit.`,
-        code: 'FILE_TOO_LARGE',
-      },
+      message: `File size exceeds ${MAX_FILE_SIZE / 1024 / 1024}MB limit.`,
+      code: 'FILE_TOO_LARGE' as const,
     };
   }
 
   if (!isAllowedFileType(file.type)) {
     return {
-      kind: 'error',
-      error: {
-        message: `File type '${file.type}' is not supported.`,
-        code: 'INVALID_FILE_TYPE',
-      },
+      message: `File type '${file.type}' is not supported.`,
+      code: 'INVALID_FILE_TYPE' as const,
     };
   }
 
-  return {
-    kind: 'success',
-    file: file as FileWithValidType,
-  };
+  return null;
 }
 
 function isAllowedFileType(fileType: string): fileType is AllowedFileType {
