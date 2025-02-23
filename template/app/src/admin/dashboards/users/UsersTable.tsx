@@ -91,8 +91,9 @@ const UsersTable = () => {
                 </div>
                 <select
                   onChange={(e) => {
-                    const selectedValue = e.target.value == '' ? null : e.target.value;
+                    const selectedValue = e.target.value == 'has_not_subscribed' ? null : e.target.value;
 
+                    console.log(selectedValue);
                     if (selectedValue === 'clear-all') {
                       setSubcriptionStatusFilter([]);
                     } else {
@@ -109,15 +110,15 @@ const UsersTable = () => {
                   id='status-filter'
                   className='absolute top-0 left-0 z-20 h-full w-full bg-white opacity-0'
                 >
-                  <option value='clear-all'>Clear all</option>
-                  <option key='has-not-subscribed' value=''>
-                    has not subscribed
-                  </option>
-                  {[...Object.values(SubscriptionStatus)].map((status) => (
-                    <option key={status} value={status}>
-                      {status}
-                    </option>
-                  ))}
+                  <option value='select-filters'>Select filters</option>
+                  {[...Object.values(SubscriptionStatus), null]
+                    .filter((status) => !subscriptionStatusFilter.includes(status))
+                    .map((status) => {
+                      const extendedStatus = status ?? 'has_not_subscribed'
+                      return <option key={extendedStatus} value={extendedStatus}>
+                        {extendedStatus}
+                      </option>
+                    })}
                 </select>
                 <span className='absolute top-1/2 right-4 z-10 -translate-y-1/2'>
                   <ChevronDownIcon />
@@ -220,7 +221,7 @@ const UsersTable = () => {
       </div>
     </div>
   );
-}
+};
 
 function ChevronDownIcon() {
   return (
