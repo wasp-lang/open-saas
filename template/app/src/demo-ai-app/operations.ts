@@ -1,3 +1,4 @@
+import * as z from 'zod';
 import type { Task, GptResponse } from 'wasp/entities';
 import type {
   GenerateGptResponse,
@@ -11,6 +12,7 @@ import { HttpError } from 'wasp/server';
 import { GeneratedSchedule } from './schedule';
 import OpenAI from 'openai';
 import { SubscriptionStatus } from '../payment/plans';
+import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
 
 const openai = setupOpenAI();
 function setupOpenAI() {
@@ -21,14 +23,22 @@ function setupOpenAI() {
 }
 
 //#region Actions
-type GptPayload = {
-  hours: string;
-};
 
-export const generateGptResponse: GenerateGptResponse<GptPayload, GeneratedSchedule> = async ({ hours }, context) => {
+const generateGptResponseInputSchema = z.object({
+  hours: z.string().regex(/^\d+(\.\d+)?$/, 'Hours must be a number'),
+});
+
+type GenerateGptResponseInput = z.infer<typeof generateGptResponseInputSchema>;
+
+export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, GeneratedSchedule> = async (
+  rawArgs,
+  context
+) => {
   if (!context.user) {
     throw new HttpError(401);
   }
+
+  const { hours } = ensureArgsSchemaOrThrowHttpError(generateGptResponseInputSchema, rawArgs);
 
   const tasks = await context.entities.Task.findMany({
     where: {
@@ -182,10 +192,18 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, GeneratedSched
   }
 };
 
-export const createTask: CreateTask<Pick<Task, 'description'>, Task> = async ({ description }, context) => {
+const createTaskInputSchema = z.object({
+  description: z.string().nonempty(),
+});
+
+type CreateTaskInput = z.infer<typeof createTaskInputSchema>;
+
+export const createTask: CreateTask<CreateTaskInput, Task> = async (rawArgs, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
+
+  const { description } = ensureArgsSchemaOrThrowHttpError(createTaskInputSchema, rawArgs);
 
   const task = await context.entities.Task.create({
     data: {
@@ -197,10 +215,20 @@ export const createTask: CreateTask<Pick<Task, 'description'>, Task> = async ({ 
   return task;
 };
 
-export const updateTask: UpdateTask<Partial<Task>, Task> = async ({ id, isDone, time }, context) => {
+const updateTaskInputSchema = z.object({
+  id: z.string().nonempty(),
+  isDone: z.boolean().optional(),
+  time: z.string().optional(),
+});
+
+type UpdateTaskInput = z.infer<typeof updateTaskInputSchema>;
+
+export const updateTask: UpdateTask<UpdateTaskInput, Task> = async (rawArgs, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
+
+  const { id, isDone, time } = ensureArgsSchemaOrThrowHttpError(updateTaskInputSchema, rawArgs);
 
   const task = await context.entities.Task.update({
     where: {
@@ -215,10 +243,18 @@ export const updateTask: UpdateTask<Partial<Task>, Task> = async ({ id, isDone, 
   return task;
 };
 
-export const deleteTask: DeleteTask<Pick<Task, 'id'>, Task> = async ({ id }, context) => {
+const deleteTaskInputSchema = z.object({
+  id: z.string().nonempty(),
+});
+
+type DeleteTaskInput = z.infer<typeof deleteTaskInputSchema>;
+
+export const deleteTask: DeleteTask<DeleteTaskInput, Task> = async (rawArgs, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
+
+  const { id } = ensureArgsSchemaOrThrowHttpError(deleteTaskInputSchema, rawArgs);
 
   const task = await context.entities.Task.delete({
     where: {
