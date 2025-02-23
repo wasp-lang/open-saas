@@ -15,7 +15,7 @@ function AdminSwitch({ id, isAdmin }: Pick<User, 'id' | 'isAdmin'>) {
 
 const UsersTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [emailFilter, setEmailFilter] = useState<string>('');
+  const [emailFilter, setEmailFilter] = useState<string | undefined>('');
   const [isAdminFilter, setIsAdminFilter] = useState<boolean | undefined>(undefined);
   const [subscriptionStatusFilter, setSubcriptionStatusFilter] = useState<SubscriptionStatus[]>([]);
 
@@ -26,7 +26,7 @@ const UsersTable = () => {
     filter: {
       ...(emailFilter && { emailContains: emailFilter }),
       ...(isAdminFilter !== undefined && { isAdmin: isAdminFilter }),
-      ...(subscriptionStatusFilter?.length > 0 && { subscriptionStatusIn: subscriptionStatusFilter }),
+      ...(subscriptionStatusFilter.length > 0 && { subscriptionStatusIn: subscriptionStatusFilter }),
     },
   });
 
@@ -52,7 +52,8 @@ const UsersTable = () => {
                 id='email-filter'
                 placeholder='dude@example.com'
                 onChange={(e) => {
-                  setEmailFilter(e.currentTarget.value);
+                  const value = e.currentTarget.value;
+                  setEmailFilter(value === '' ? undefined : value);
                 }}
                 className='rounded border border-stroke py-2 px-5 bg-white outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary'
               />
@@ -61,7 +62,7 @@ const UsersTable = () => {
               </label>
               <div className='flex-grow relative z-20 rounded border border-stroke pr-8 outline-none bg-white transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input'>
                 <div className='flex items-center'>
-                  {!!subscriptionStatusFilter && subscriptionStatusFilter.length > 0 ? (
+                  {subscriptionStatusFilter.length > 0 ? (
                     subscriptionStatusFilter.map((opt) => (
                       <span
                         key={opt}
@@ -216,7 +217,7 @@ const UsersTable = () => {
       </div>
     </div>
   );
-}
+};
 
 function ChevronDownIcon() {
   return (
