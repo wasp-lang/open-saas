@@ -7,9 +7,11 @@ import DropdownEditDelete from './DropdownEditDelete';
 import { updateIsUserAdminById } from 'wasp/client/operations';
 import { type User } from 'wasp/entities';
 
-const AdminSwitch = ({ id, isAdmin }: Pick<User, 'id' | 'isAdmin'>) => {
-  return <SwitcherOne isOn={isAdmin} onChange={() => updateIsUserAdminById({ id: id, isAdmin: !isAdmin })} />;
-};
+function AdminSwitch({ id, isAdmin }: Pick<User, 'id' | 'isAdmin'>) {
+  return (
+    <SwitcherOne isOn={isAdmin} onChange={(value) => updateIsUserAdminById({ id: id, isAdmin: value })} />
+  );
+}
 
 const UsersTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -214,7 +216,7 @@ const UsersTable = () => {
       </div>
     </div>
   );
-};
+}
 
 function ChevronDownIcon() {
   return (
