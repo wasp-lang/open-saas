@@ -2,7 +2,7 @@ import * as z from 'zod';
 import { type UpdateIsUserAdminById, type GetPaginatedUsers } from 'wasp/server/operations';
 import { type User } from 'wasp/entities';
 import { HttpError, prisma } from 'wasp/server';
-import { subscriptionStatusSchema, type SubscriptionStatus } from '../payment/plans';
+import { SubscriptionStatus } from '../payment/plans';
 import { type Prisma } from '@prisma/client';
 import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
 
@@ -46,7 +46,7 @@ const getPaginatorArgsSchema = z.object({
   filter: z.object({
     emailContains: z.string().nonempty().optional(),
     isAdmin: z.boolean().optional(),
-    subscriptionStatusIn: z.array(subscriptionStatusSchema.nullable()).optional(),
+    subscriptionStatusIn: z.array(z.nativeEnum(SubscriptionStatus).nullable()).optional(),
   }),
 });
 

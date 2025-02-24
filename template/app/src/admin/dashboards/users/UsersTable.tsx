@@ -1,4 +1,4 @@
-import { type SubscriptionStatus } from '../../../payment/plans';
+import { SubscriptionStatus } from '../../../payment/plans';
 import { useQuery, getPaginatedUsers } from 'wasp/client/operations';
 import { useState, useEffect } from 'react';
 import SwitcherOne from '../../elements/forms/SwitcherOne';
@@ -15,9 +15,11 @@ function AdminSwitch({ id, isAdmin }: Pick<User, 'id' | 'isAdmin'>) {
 
 const UsersTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [emailFilter, setEmailFilter] = useState<string | undefined>('');
+  const [emailFilter, setEmailFilter] = useState<string | undefined>(undefined);
   const [isAdminFilter, setIsAdminFilter] = useState<boolean | undefined>(undefined);
-  const [subscriptionStatusFilter, setSubcriptionStatusFilter] = useState<SubscriptionStatus[]>([]);
+  const [subscriptionStatusFilter, setSubcriptionStatusFilter] = useState<Array<SubscriptionStatus | null>>(
+    []
+  );
 
   const skipPages = currentPage - 1;
 
@@ -90,31 +92,34 @@ const UsersTable = () => {
                 </div>
                 <select
                   onChange={(e) => {
-                    const targetValue = e.target.value === '' ? null : e.target.value;
-                    setSubcriptionStatusFilter((prevValue) => {
-                      if (prevValue?.includes(targetValue as SubscriptionStatus)) {
-                        return prevValue?.filter((val) => val !== targetValue);
-                      } else if (!!prevValue) {
-                        return [...prevValue, targetValue as SubscriptionStatus];
-                      } else {
-                        return prevValue;
-                      }
-                    });
+                    const selectedValue = e.target.value == 'has_not_subscribed' ? null : e.target.value;
+
+                    console.log(selectedValue);
+                    if (selectedValue === 'clear-all') {
+                      setSubcriptionStatusFilter([]);
+                    } else {
+                      setSubcriptionStatusFilter((prevValue) => {
+                        if (prevValue.includes(selectedValue as SubscriptionStatus)) {
+                          return prevValue.filter((val) => val !== selectedValue);
+                        } else {
+                          return [...prevValue, selectedValue as SubscriptionStatus];
+                        }
+                      });
+                    }
                   }}
                   name='status-filter'
                   id='status-filter'
                   className='absolute top-0 left-0 z-20 h-full w-full bg-white opacity-0'
                 >
-                  <option value=''>Select filters</option>
-                  {['past_due', 'cancel_at_period_end', 'active', 'deleted', null].map((status) => {
-                    if (!subscriptionStatusFilter.includes(status as SubscriptionStatus)) {
-                      return (
-                        <option key={status} value={status || ''}>
-                          {status ? status : 'has not subscribed'}
-                        </option>
-                      );
-                    }
-                  })}
+                  <option value='select-filters'>Select filters</option>
+                  {[...Object.values(SubscriptionStatus), null]
+                    .filter((status) => !subscriptionStatusFilter.includes(status))
+                    .map((status) => {
+                      const extendedStatus = status ?? 'has_not_subscribed'
+                      return <option key={extendedStatus} value={extendedStatus}>
+                        {extendedStatus}
+                      </option>
+                    })}
                 </select>
                 <span className='absolute top-1/2 right-4 z-10 -translate-y-1/2'>
                   <ChevronDownIcon />

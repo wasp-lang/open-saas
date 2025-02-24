@@ -1,6 +1,6 @@
 --- template/app/src/server/scripts/dbSeeds.ts
 +++ opensaas-sh/app/src/server/scripts/dbSeeds.ts
-@@ -37,9 +37,11 @@
+@@ -38,9 +38,11 @@
      sendNewsletter: false,
      credits,
      subscriptionStatus,
