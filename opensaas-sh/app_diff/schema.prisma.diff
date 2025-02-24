@@ -15,4 +15,4 @@
 +  stripeId                  String?         @unique
    subscriptionStatus        String?         // 'active', 'cancel_at_period_end', 'past_due', 'deleted'
    subscriptionPlan          String?         // 'hobby', 'pro'
-   sendNewsletter            Boolean         @default(false)
+   datePaid                  DateTime?
