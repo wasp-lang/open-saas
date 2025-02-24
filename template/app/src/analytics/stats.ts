@@ -198,4 +198,3 @@ async function fetchTotalLemonSqueezyRevenue() {
     throw error;
   }
 }
-
