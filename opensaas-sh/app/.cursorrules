@@ -1,0 +1,52 @@
+// Wasp Import Rules
+- Path to Wasp functions within .ts files must come from 'wasp', not '@wasp'!
+  ✓ import { Task } from 'wasp/entities'
+  ✓ import type { GetTasks } from 'wasp/server/operations'
+  ✓ import { getTasks, useQuery } from 'wasp/client/operations'
+  ✗ import { getTasks, useQuery } from '@wasp/...' 
+  ✗ import { getTasks, useQuery } from '@src/feature/operations.ts'
+
+- Path to external imports within 'main.wasp' must start with "@src/"!
+  ✓ component: import { LoginPage } from "@src/client/pages/auth/LoginPage.tsx"
+  ✗ component: import { LoginPage } from "@client/pages/auth/LoginPage.tsx"
+- In the client's root component, use the Outlet component rather than children
+  ✓ import { Outlet } from 'react-router-dom';
+
+// Wasp DB Schema Rules
+- Add databse models to the 'schema.prisma' file, NOT to 'main.wasp' as "entities"
+- Do NOT add a db.system nor a db.prisma property to 'main.wasp'. This is taken care of in 'schema.prisma'
+- Keep the 'schema.prisma' within the root of the project
+
+// Wasp Operations
+- Types are generated automatically from the function definition in 'main.wasp',
+  ✓ import type { GetTimeLogs, CreateTimeLog, UpdateTimeLog } from 'wasp/server/operations'
+- Wasp also generates entity types based on the models in 'schema.prisma'
+  ✓ import type { Project, TimeLog } from 'wasp/entities'
+- Make sure that all Entities that should be included in the operations context are defined in its definition in 'main.wasp'
+  ✓ action createTimeLog { fn: import { createTimeLog } from "@src/server/timeLogs/operations.js", entities: [TimeLog, Project] }
+
+// Wasp Auth
+- When creating Auth pages, use the LoginForm and SignupForm components provided by Wasp
+  ✓ import { LoginForm } from 'wasp/client/auth'
+- Wasp takes care of creating the user's auth model id, username, and password for a user, so a user model DOES NOT need these properties
+   ✓ model User { id       Int       @id @default(autoincrement()) }
+
+// Wasp Dependencies
+- Do NOT add dependencies to 'main.wasp'
+- Install dependencies via 'npm install' instead
+
+// Wasp
+- Use the latest Wasp version, ^0.16.0
+- Always use typescript for Wasp code.
+- When creating Wasp operations (queries and actions) combine them into an operations.ts file within the feature directory rather than into separate queries.ts and actions.ts files
+
+// React
+- Use relative imports for other react components
+- If importing a function from an operations file, defer to the wasp import rules
+
+// CSS
+- Use Tailwind CSS for styling.
+- Do not use inline styles unless necessary
+
+// General
+- Use single quotes

@@ -15,7 +15,7 @@ function AdminSwitch({ id, isAdmin }: Pick<User, 'id' | 'isAdmin'>) {
 
 const UsersTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [emailFilter, setEmailFilter] = useState<string | undefined>(undefined);
+  const [emailFilter, setEmailFilter] = useState<string | undefined>('');
   const [isAdminFilter, setIsAdminFilter] = useState<boolean | undefined>(undefined);
   const [subscriptionStatusFilter, setSubcriptionStatusFilter] = useState<Array<SubscriptionStatus | null>>(
     []
@@ -207,7 +207,7 @@ const UsersTable = () => {
                 <p className='text-sm text-black dark:text-white'>{user.subscriptionStatus}</p>
               </div>
               <div className='col-span-2 flex items-center'>
-                <p className='text-sm text-meta-3'>{user.paymentProcessorUserId}</p>
+                <p className='text-sm text-meta-3'>{user.stripeId}</p>
               </div>
               <div className='col-span-1 flex items-center'>
                 <div className='text-sm text-black dark:text-white'>
