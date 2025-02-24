@@ -8,7 +8,13 @@ function SwitcherTwo({ isOn, onChange }: { isOn: boolean; onChange: (value: bool
     <div>
       <label htmlFor={id} className='flex cursor-pointer select-none items-center'>
         <div className='relative'>
-          <input type='checkbox' id={id} className='sr-only' onChange={(e) => onChange(e.target.checked)} />
+          <input
+            type='checkbox'
+            id={id}
+            className='sr-only'
+            checked={isOn}
+            onChange={(e) => onChange(e.target.checked)}
+          />
           <div className='block h-8 w-14 rounded-full bg-meta-9 dark:bg-[#5A616B]'></div>
           <div
             className={cn(
