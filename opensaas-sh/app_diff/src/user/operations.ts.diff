@@ -1,18 +1,27 @@
 --- template/app/src/user/operations.ts
 +++ opensaas-sh/app/src/user/operations.ts
-@@ -41,7 +41,10 @@
+@@ -2,7 +2,7 @@
+ import { type UpdateIsUserAdminById, type GetPaginatedUsers } from 'wasp/server/operations';
+ import { type User } from 'wasp/entities';
+ import { HttpError } from 'wasp/server';
+-import { subscriptionStatusSchema, type SubscriptionStatus } from '../payment/plans';
++import { subscriptionStatusSchema } from '../payment/plans';
+ import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
+ 
+ const updateUserAdminByIdInputSchema = z.object({
+@@ -33,10 +33,7 @@
  };
  
  type GetPaginatedUsersOutput = {
--  users: Pick<User, 'id' | 'email' | 'username' | 'subscriptionStatus' | 'paymentProcessorUserId'>[];
-+  users: Pick<
-+    User,
-+    'id' | 'email' | 'username' | 'subscriptionStatus' | 'stripeId'
-+  >[];
+-  users: Pick<
+-    User,
+-    'id' | 'email' | 'username' | 'subscriptionStatus' | 'paymentProcessorUserId' | 'isAdmin'
+-  >[];
++  users: Pick<User, 'id' | 'email' | 'username' | 'subscriptionStatus' | 'stripeId' | 'isAdmin'>[];
    totalPages: number;
  };
  
-@@ -85,6 +88,7 @@
+@@ -80,6 +77,7 @@
              mode: 'insensitive',
            },
            isAdmin,
@@ -20,7 +29,7 @@
          },
          {
            OR: [
-@@ -108,7 +112,7 @@
+@@ -103,7 +101,7 @@
        username: true,
        isAdmin: true,
        subscriptionStatus: true,
@@ -29,7 +38,7 @@
      },
      orderBy: {
        id: 'desc',
-@@ -124,6 +128,7 @@
+@@ -119,6 +117,7 @@
              mode: 'insensitive',
            },
            isAdmin,
