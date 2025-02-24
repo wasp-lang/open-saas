@@ -1,17 +1,25 @@
 import { type SubscriptionStatus } from '../../../payment/plans';
-import { updateIsUserAdminById, useQuery, getPaginatedUsers } from 'wasp/client/operations';
+import { useQuery, getPaginatedUsers } from 'wasp/client/operations';
 import { useState, useEffect } from 'react';
-import SwitcherOne from './SwitcherOne';
+import SwitcherOne from '../../elements/forms/SwitcherOne';
 import LoadingSpinner from '../../layout/LoadingSpinner';
 import DropdownEditDelete from './DropdownEditDelete';
+import { updateIsUserAdminById } from 'wasp/client/operations';
+import { type User } from 'wasp/entities';
 
-const UsersTable = () => {
+function AdminSwitch({ id, isAdmin }: Pick<User, 'id' | 'isAdmin'>) {
+  return (
+    <SwitcherOne isOn={isAdmin} onChange={(value) => updateIsUserAdminById({ id: id, isAdmin: value })} />
+  );
+}
+
+function UsersTable() {
   const [skip, setskip] = useState(0);
   const [page, setPage] = useState(1);
   const [email, setEmail] = useState<string | undefined>(undefined);
   const [isAdminFilter, setIsAdminFilter] = useState<boolean | undefined>(undefined);
   const [statusOptions, setStatusOptions] = useState<SubscriptionStatus[]>([]);
-  const { data, isLoading, error } = useQuery(getPaginatedUsers, {
+  const { data, isLoading } = useQuery(getPaginatedUsers, {
     skip,
     emailContains: email,
     isAdmin: isAdminFilter,
@@ -51,7 +59,7 @@ const UsersTable = () => {
               <div className='flex-grow relative z-20 rounded border border-stroke pr-8 outline-none bg-white transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input'>
                 <div className='flex items-center'>
                   {!!statusOptions && statusOptions.length > 0 ? (
-                    statusOptions.map((opt, idx) => (
+                    statusOptions.map((opt) => (
                       <span
                         key={opt}
                         className='z-30 flex items-center my-1 mx-2 py-1 px-2 outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary'
@@ -109,7 +117,11 @@ const UsersTable = () => {
                   <option value=''>Select filters</option>
                   {['past_due', 'canceled', 'active', 'deleted', null].map((status) => {
                     if (!statusOptions.includes(status as SubscriptionStatus)) {
-                      return <option value={status || ''}>{status ? status : 'has not subscribed'}</option>;
+                      return (
+                        <option key={status} value={status || ''}>
+                          {status ? status : 'has not subscribed'}
+                        </option>
+                      );
                     }
                   })}
                 </select>
@@ -215,7 +227,7 @@ const UsersTable = () => {
               </div>
               <div className='col-span-1 flex items-center'>
                 <div className='text-sm text-black dark:text-white'>
-                  <SwitcherOne user={user} updateIsUserAdminById={updateIsUserAdminById} />
+                  <AdminSwitch {...user} />
                 </div>
               </div>
               <div className='col-span-1 flex items-center'>
@@ -226,6 +238,6 @@ const UsersTable = () => {
       </div>
     </div>
   );
-};
+}
 
 export default UsersTable;

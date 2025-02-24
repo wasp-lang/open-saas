@@ -7,9 +7,7 @@ import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
 
 const updateUserAdminByIdInputSchema = z.object({
   id: z.string().nonempty(),
-  data: z.object({
-    isAdmin: z.boolean(),
-  }),
+  isAdmin: z.boolean(),
 });
 
 type UpdateUserAdminByIdInput = z.infer<typeof updateUserAdminByIdInputSchema>;
@@ -18,30 +16,27 @@ export const updateIsUserAdminById: UpdateIsUserAdminById<UpdateUserAdminByIdInp
   rawArgs,
   context
 ) => {
-  const { id, data } = ensureArgsSchemaOrThrowHttpError(updateUserAdminByIdInputSchema, rawArgs);
+  const { id, isAdmin } = ensureArgsSchemaOrThrowHttpError(updateUserAdminByIdInputSchema, rawArgs);
 
   if (!context.user) {
-    throw new HttpError(401);
+    throw new HttpError(401, 'Only authenticated users are allowed to perform this operation');
   }
 
   if (!context.user.isAdmin) {
-    throw new HttpError(403);
+    throw new HttpError(403, 'Only admins are allowed to perform this operation');
   }
 
-  const updatedUser = await context.entities.User.update({
-    where: {
-      id,
-    },
-    data: {
-      isAdmin: data.isAdmin,
-    },
+  return context.entities.User.update({
+    where: { id },
+    data: { isAdmin },
   });
-
-  return updatedUser;
 };
 
 type GetPaginatedUsersOutput = {
-  users: Pick<User, 'id' | 'email' | 'username' | 'subscriptionStatus' | 'paymentProcessorUserId'>[];
+  users: Pick<
+    User,
+    'id' | 'email' | 'username' | 'subscriptionStatus' | 'paymentProcessorUserId' | 'isAdmin'
+  >[];
   totalPages: number;
 };
 
@@ -59,7 +54,7 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
   rawArgs,
   context
 ) => {
-  const { skip, cursor, emailContains, isAdmin, subscriptionStatus } = ensureArgsSchemaOrThrowHttpError(
+  const { skip, emailContains, isAdmin, subscriptionStatus } = ensureArgsSchemaOrThrowHttpError(
     getPaginatorArgsSchema,
     rawArgs
   );
@@ -70,7 +65,7 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
 
   const allSubscriptionStatusOptions = subscriptionStatus;
   const hasNotSubscribed = allSubscriptionStatusOptions?.find((status) => status === null);
-  let subscriptionStatusStrings = allSubscriptionStatusOptions?.filter((status) => status !== null) as
+  const subscriptionStatusStrings = allSubscriptionStatusOptions?.filter((status) => status !== null) as
     | string[]
     | undefined;
 
