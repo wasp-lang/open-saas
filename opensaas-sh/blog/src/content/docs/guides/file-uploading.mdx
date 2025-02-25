@@ -81,28 +81,32 @@ Now we need to change some permissions on the bucket to allow for file uploads f
     <Image src={cors} alt="cors" loading="lazy" />
 5. Insert the correct CORS configuration and click `Save changes`. You can
    copy-paste most of the config below, but **you must edit the
-  `AllowedOrigins` field** to fit your app. Include `http://localhost:3000` for
-local development, and `https://<your domain>` for production.
-    ```json {11,12}
-    [
-        {
-            "AllowedHeaders": [
-                "*"
-            ],
-            "AllowedMethods": [
-                "PUT",
-                "GET"
-            ],
-            "AllowedOrigins": [
-                "http://localhost:3000",
-                "https://<your-domain>"
-            ],
-            "ExposeHeaders": []
-        }
-    ]
-    ```
-    As an example, here are the CORS permissions for this site - https://opensaas.sh:
-    <Image src={corsExample} alt="cors-example" loading="lazy" />
+   `AllowedOrigins` field** to fit your app. Include `http://localhost:3000` for
+   local development, and `https://<your domain>` for production.
+
+   If you don't yet have a domain name, just list `http://localhost:3000` for
+   now. We'll remind you to add your domain before deploying to production in
+   the [Deployment docs](/guides/deploying/#aws-s3-cors-configuration).
+   ```json {11,12}
+   [
+       {
+           "AllowedHeaders": [
+               "*"
+           ],
+           "AllowedMethods": [
+               "PUT",
+               "GET"
+           ],
+           "AllowedOrigins": [
+               "http://localhost:3000",
+               "https://<your-domain>"
+           ],
+           "ExposeHeaders": []
+       }
+   ]
+   ```
+   As an example, here are the CORS permissions for this site - https://opensaas.sh:
+   <Image src={corsExample} alt="cors-example" loading="lazy" />
 
 ### Get your AWS S3 credentials
 
