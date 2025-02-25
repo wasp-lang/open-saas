@@ -2,7 +2,7 @@ import { type MiddlewareConfigFn, HttpError } from 'wasp/server';
 import { type PaymentsWebhook } from 'wasp/server/api';
 import { type PrismaClient } from '@prisma/client';
 import express from 'express';
-import { paymentPlans, PaymentPlanId } from '../plans';
+import { paymentPlans, PaymentPlanId, SubscriptionStatus } from '../plans';
 import { updateUserLemonSqueezyPaymentDetails } from './paymentDetails';
 import { getCustomer } from '@lemonsqueezy/lemonsqueezy.js';
 import crypto from 'crypto';
@@ -125,7 +125,7 @@ async function handleSubscriptionCreated(
         lemonSqueezyId,
         userId,
         subscriptionPlan: planId,
-        subscriptionStatus: status,
+        subscriptionStatus: status as SubscriptionStatus,
         datePaid: new Date(),
       },
       prismaUserDelegate
@@ -159,7 +159,7 @@ async function handleSubscriptionUpdated(
         lemonSqueezyId,
         userId,
         subscriptionPlan: planId,
-        subscriptionStatus: status,
+        subscriptionStatus: status as SubscriptionStatus,
         ...(status === 'active' && { datePaid: new Date() }),
       },
       prismaUserDelegate
@@ -180,7 +180,8 @@ async function handleSubscriptionCancelled(
     {
       lemonSqueezyId,
       userId,
-      subscriptionStatus: 'cancel_at_period_end', // cancel_at_period_end is the Stripe equivalent of LemonSqueezy's cancelled
+      // cancel_at_period_end is the Stripe equivalent of LemonSqueezy's cancelled
+      subscriptionStatus: 'cancel_at_period_end' as SubscriptionStatus,
     },
     prismaUserDelegate
   );
@@ -200,7 +201,8 @@ async function handleSubscriptionExpired(
     {
       lemonSqueezyId,
       userId,
-      subscriptionStatus: 'deleted', // deleted is the Stripe equivalent of LemonSqueezy's expired
+      // deleted is the Stripe equivalent of LemonSqueezy's expired
+      subscriptionStatus: SubscriptionStatus.Deleted,
     },
     prismaUserDelegate
   );

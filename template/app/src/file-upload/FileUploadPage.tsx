@@ -2,7 +2,13 @@ import { cn } from '../client/cn';
 import { useState, useEffect, FormEvent } from 'react';
 import type { File } from 'wasp/entities';
 import { useQuery, getAllFilesByUser, getDownloadFileSignedURL } from 'wasp/client/operations';
-import { type FileUploadError, uploadFileWithProgress, validateFile, ALLOWED_FILE_TYPES } from './fileUploading';
+import {
+  type FileWithValidType,
+  type FileUploadError,
+  validateFile,
+  uploadFileWithProgress,
+} from './fileUploading';
+import { ALLOWED_FILE_TYPES } from './validation';
 
 export default function FileUploadPage() {
   const [fileKeyForS3, setFileKeyForS3] = useState<File['key']>('');
@@ -10,7 +16,7 @@ export default function FileUploadPage() {
   const [uploadError, setUploadError] = useState<FileUploadError | null>(null);
 
   const allUserFiles = useQuery(getAllFilesByUser, undefined, {
-    // We disable automatic refetching because otherwise files would be refetched after `createFile` is called and the S3 URL is returned, 
+    // We disable automatic refetching because otherwise files would be refetched after `createFile` is called and the S3 URL is returned,
     // which happens before the file is actually fully uploaded. Instead, we manually (re)fetch on mount and after the upload is complete.
     enabled: false,
   });
@@ -64,13 +70,13 @@ export default function FileUploadPage() {
         return;
       }
 
-      const validationError = validateFile(file);
-      if (validationError) {
-        setUploadError(validationError);
+      const fileValidationError = validateFile(file);
+      if (fileValidationError !== null) {
+        setUploadError(fileValidationError);
         return;
       }
 
-      await uploadFileWithProgress({ file, setUploadProgressPercent });
+      await uploadFileWithProgress({ file: file as FileWithValidType, setUploadProgressPercent });
       formElement.reset();
       allUserFiles.refetch();
     } catch (error) {
@@ -117,11 +123,11 @@ export default function FileUploadPage() {
                   <>
                     <span>Uploading {uploadProgressPercent}%</span>
                     <div
-                      role="progressbar"
+                      role='progressbar'
                       aria-valuenow={uploadProgressPercent}
                       aria-valuemin={0}
                       aria-valuemax={100}
-                      className="absolute bottom-0 left-0 h-1 bg-yellow-500 transition-all duration-300 ease-in-out rounded-b-md"
+                      className='absolute bottom-0 left-0 h-1 bg-yellow-500 transition-all duration-300 ease-in-out rounded-b-md'
                       style={{ width: `${uploadProgressPercent}%` }}
                     ></div>
                   </>

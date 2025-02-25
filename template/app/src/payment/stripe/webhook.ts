@@ -4,7 +4,7 @@ import { type PrismaClient } from '@prisma/client';
 import express from 'express';
 import type { Stripe } from 'stripe';
 import { stripe } from './stripeClient';
-import { paymentPlans, PaymentPlanId, type SubscriptionStatus, type PaymentPlanEffect } from '../plans';
+import { paymentPlans, PaymentPlanId, SubscriptionStatus, type PaymentPlanEffect } from '../plans';
 import { updateUserStripePaymentDetails } from './paymentDetails';
 import { emailSender } from 'wasp/server/email';
 import { assertUnreachable } from '../../shared/utils';
@@ -170,10 +170,12 @@ export async function handleCustomerSubscriptionUpdated(
 
   // There are other subscription statuses, such as `trialing` that we are not handling and simply ignore
   // If you'd like to handle more statuses, you can add more cases above. Make sure to update the `SubscriptionStatus` type in `payment/plans.ts` as well
-  if (subscription.status === 'active') {
-    subscriptionStatus = subscription.cancel_at_period_end ? 'cancel_at_period_end' : 'active';
-  } else if (subscription.status === 'past_due') {
-    subscriptionStatus = 'past_due';
+  if (subscription.status === SubscriptionStatus.Active) {
+    subscriptionStatus = subscription.cancel_at_period_end
+      ? SubscriptionStatus.CancelAtPeriodEnd
+      : SubscriptionStatus.Active;
+  } else if (subscription.status === SubscriptionStatus.PastDue) {
+    subscriptionStatus = SubscriptionStatus.PastDue;
   }
   if (subscriptionStatus) {
     const user = await updateUserStripePaymentDetails(
@@ -199,7 +201,10 @@ export async function handleCustomerSubscriptionDeleted(
   prismaUserDelegate: PrismaClient['user']
 ) {
   const userStripeId = subscription.customer;
-  return updateUserStripePaymentDetails({ userStripeId, subscriptionStatus: 'deleted' }, prismaUserDelegate);
+  return updateUserStripePaymentDetails(
+    { userStripeId, subscriptionStatus: SubscriptionStatus.Deleted },
+    prismaUserDelegate
+  );
 }
 
 type SubscsriptionItems = z.infer<typeof subscriptionItemsSchema>;

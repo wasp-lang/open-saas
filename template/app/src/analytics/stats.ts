@@ -1,11 +1,12 @@
 import { type DailyStats } from 'wasp/entities';
 import { type DailyStatsJob } from 'wasp/server/jobs';
 import Stripe from 'stripe';
-import { stripe } from '../payment/stripe/stripeClient'
+import { stripe } from '../payment/stripe/stripeClient';
 import { listOrders } from '@lemonsqueezy/lemonsqueezy.js';
 import { getDailyPageViews, getSources } from './providers/plausibleAnalyticsUtils';
 // import { getDailyPageViews, getSources } from './providers/googleAnalyticsUtils';
 import { paymentProcessor } from '../payment/paymentProcessor';
+import { SubscriptionStatus } from '../payment/plans';
 
 export type DailyStatsProps = { dailyStats?: DailyStats; weeklyStats?: DailyStats[]; isLoading?: boolean };
 
@@ -30,7 +31,7 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, con
     // we don't want to count those users as current paying users
     const paidUserCount = await context.entities.User.count({
       where: {
-        subscriptionStatus: 'active',
+        subscriptionStatus: SubscriptionStatus.Active,
       },
     });
 
