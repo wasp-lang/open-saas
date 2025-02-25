@@ -3,6 +3,7 @@
   "type": "module",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.523.0",
+    "@aws-sdk/s3-presigned-post": "^3.750.0",
     "@aws-sdk/s3-request-presigner": "^3.523.0",
     "@faker-js/faker": "8.3.1",
     "@google-analytics/data": "4.1.0",
@@ -18,17 +19,17 @@
     "prettier": "3.1.1",
     "prettier-plugin-tailwindcss": "0.5.11",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.26.2",
     "react-apexcharts": "1.4.1",
+    "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
     "react-icons": "4.11.0",
+    "react-router-dom": "^6.26.2",
     "stripe": "11.15.0",
     "tailwind-merge": "^2.2.1",
+    "tailwindcss": "^3.2.7",
     "vanilla-cookieconsent": "^3.0.1",
     "wasp": "file:.wasp/out/sdk/wasp",
-    "zod": "^3.23.8",
-    "tailwindcss": "^3.2.7"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
