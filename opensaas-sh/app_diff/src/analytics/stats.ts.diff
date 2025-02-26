@@ -1,18 +1,19 @@
 --- template/app/src/analytics/stats.ts
 +++ opensaas-sh/app/src/analytics/stats.ts
-@@ -2,10 +2,8 @@
+@@ -2,11 +2,9 @@
  import { type DailyStatsJob } from 'wasp/server/jobs';
  import Stripe from 'stripe';
- import { stripe } from '../payment/stripe/stripeClient'
+ import { stripe } from '../payment/stripe/stripeClient';
 -import { listOrders } from '@lemonsqueezy/lemonsqueezy.js';
  import { getDailyPageViews, getSources } from './providers/plausibleAnalyticsUtils';
 -// import { getDailyPageViews, getSources } from './providers/googleAnalyticsUtils';
 -import { paymentProcessor } from '../payment/paymentProcessor';
-+// import { getDailyPageViews, getSources } from './providers/googleAnalyticsUtils;
+ import { SubscriptionStatus } from '../payment/plans';
++// import { getDailyPageViews, getSources } from './providers/googleAnalyticsUtils';
  
  export type DailyStatsProps = { dailyStats?: DailyStats; weeklyStats?: DailyStats[]; isLoading?: boolean };
  
-@@ -41,17 +39,7 @@
+@@ -42,17 +40,7 @@
        paidUserDelta -= yesterdaysStats.paidUserCount;
      }
  
@@ -27,11 +28,11 @@
 -      default:
 -        throw new Error(`Unsupported payment processor: ${paymentProcessor.id}`);
 -    }
-+    let totalRevenue = await fetchTotalStripeRevenue()
++    let totalRevenue = await fetchTotalStripeRevenue();
  
      const { totalViews, prevDayViewsChangePercent } = await getDailyPageViews();
  
-@@ -162,38 +150,3 @@
+@@ -163,38 +151,3 @@
    // Revenue is in cents so we convert to dollars (or your main currency unit)
    return totalRevenue / 100;
  }
@@ -70,4 +71,3 @@
 -    throw error;
 -  }
 -}
-\ No newline at end of file

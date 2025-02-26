@@ -1,18 +1,18 @@
 --- template/app/src/user/operations.ts
 +++ opensaas-sh/app/src/user/operations.ts
-@@ -41,7 +41,10 @@
+@@ -34,10 +34,7 @@
  };
  
  type GetPaginatedUsersOutput = {
--  users: Pick<User, 'id' | 'email' | 'username' | 'subscriptionStatus' | 'paymentProcessorUserId'>[];
-+  users: Pick<
-+    User,
-+    'id' | 'email' | 'username' | 'subscriptionStatus' | 'stripeId'
-+  >[];
+-  users: Pick<
+-    User,
+-    'id' | 'email' | 'username' | 'subscriptionStatus' | 'paymentProcessorUserId' | 'isAdmin'
+-  >[];
++  users: Pick<User, 'id' | 'email' | 'username' | 'subscriptionStatus' | 'stripeId' | 'isAdmin'>[];
    totalPages: number;
  };
  
-@@ -85,6 +88,7 @@
+@@ -85,6 +82,7 @@
              mode: 'insensitive',
            },
            isAdmin,
@@ -20,7 +20,7 @@
          },
          {
            OR: [
-@@ -108,7 +112,7 @@
+@@ -106,7 +104,7 @@
        username: true,
        isAdmin: true,
        subscriptionStatus: true,
@@ -28,12 +28,4 @@
 +      stripeId: true,
      },
      orderBy: {
-       id: 'desc',
-@@ -124,6 +128,7 @@
-             mode: 'insensitive',
-           },
-           isAdmin,
-+          isMockUser: true,
-         },
-         {
-           OR: [
+       username: 'asc',

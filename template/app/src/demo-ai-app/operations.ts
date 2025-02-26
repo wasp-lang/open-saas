@@ -11,6 +11,7 @@ import type {
 import { HttpError } from 'wasp/server';
 import { GeneratedSchedule } from './schedule';
 import OpenAI from 'openai';
+import { SubscriptionStatus } from '../payment/plans';
 import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
 
 const openai = setupOpenAI();
@@ -61,8 +62,8 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
     const hasCredits = context.user.credits > 0;
     const hasValidSubscription =
       !!context.user.subscriptionStatus &&
-      context.user.subscriptionStatus !== 'deleted' &&
-      context.user.subscriptionStatus !== 'past_due';
+      context.user.subscriptionStatus !== SubscriptionStatus.Deleted &&
+      context.user.subscriptionStatus !== SubscriptionStatus.PastDue;
     const canUserContinue = hasCredits || hasValidSubscription;
 
     if (!canUserContinue) {

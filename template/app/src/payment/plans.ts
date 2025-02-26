@@ -1,13 +1,12 @@
 import * as z from 'zod';
 import { requireNodeEnvVar } from '../server/utils';
 
-export const subscriptionStatusSchema = z
-  .literal('past_due')
-  .or(z.literal('cancel_at_period_end'))
-  .or(z.literal('active'))
-  .or(z.literal('deleted'));
-
-export type SubscriptionStatus = z.infer<typeof subscriptionStatusSchema>;
+export enum SubscriptionStatus {
+  PastDue = 'past_due',
+  CancelAtPeriodEnd = 'cancel_at_period_end',
+  Active = 'active',
+  Deleted = 'deleted',
+}
 
 export enum PaymentPlanId {
   Hobby = 'hobby',
