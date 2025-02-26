@@ -2,7 +2,6 @@ src/client/static/avatar-placeholder.webp
 src/client/static/da-boi.webp
 src/client/static/open-saas-banner.webp
 src/landing-page/logos/SalesforceLogo.tsx
-src/newsletter/sendNewsletter.ts
 src/payment/lemonSqueezy/checkoutUtils.ts
 src/payment/lemonSqueezy/paymentDetails.ts
 src/payment/lemonSqueezy/paymentProcessor.ts
