@@ -99,6 +99,12 @@ export default defineConfig({
               picture: '/milica.jpg', // Images in the `public` directory are supported.
               url: 'https://wasp.sh',
             },
+            martin: {
+              name: 'Martin',
+              title: 'CTO @ Wasp',
+              picture: '/martin.jpg', // Images in the `public` directory are supported.
+              url: 'https://wasp.sh',
+            },
           },
         }),
       ],
