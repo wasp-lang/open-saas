@@ -70,7 +70,6 @@ If you are using an older version of the OpenSaaS template with Wasp `v0.13.x` o
 │   ├── file-upload/       # Logic for uploading files to S3.
 │   ├── landing-page       # Landing page related code
 │   ├── messages           # Logic for app user messages.
-│   ├── newsletter/        # Logic for scheduled recurring newsletter sending.
 │   ├── payment/           # Logic for handling payments and webhooks.
 │   ├── server/            # Scripts, shared server utils, and other server-specific code (NodeJS).
 │   ├── shared/            # Shared constants and util functions.
