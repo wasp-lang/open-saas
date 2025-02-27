@@ -1,8 +1,8 @@
 --- template/app/src/file-upload/operations.ts
 +++ opensaas-sh/app/src/file-upload/operations.ts
-@@ -25,6 +25,18 @@
- 
-   const { fileType, fileName } = ensureArgsSchemaOrThrowHttpError(createFileInputSchema, rawArgs);
+@@ -37,6 +37,18 @@
+     userId: context.user.id,
+   });
  
 +  const numberOfFilesByUser = await context.entities.File.count({
 +    where: {
@@ -16,6 +16,6 @@
 +    throw new HttpError(403, 'Thanks for trying Open SaaS. This demo only allows 2 file uploads per user.');
 +  }
 +
-   const { uploadUrl, key } = await getUploadFileSignedURLFromS3({
-     fileType,
-     fileName,
+   await context.entities.File.create({
+     data: {
+       name: fileName,

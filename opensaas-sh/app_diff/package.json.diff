@@ -1,6 +1,6 @@
 --- template/app/package.json
 +++ opensaas-sh/app/package.json
-@@ -1,13 +1,17 @@
+@@ -1,6 +1,11 @@
  {
    "name": "opensaas",
    "type": "module",
@@ -11,7 +11,8 @@
 +  },
    "dependencies": {
      "@aws-sdk/client-s3": "^3.523.0",
-     "@aws-sdk/s3-request-presigner": "^3.523.0",
+     "@aws-sdk/s3-presigned-post": "^3.750.0",
+@@ -8,7 +13,6 @@
      "@faker-js/faker": "8.3.1",
      "@google-analytics/data": "4.1.0",
      "@headlessui/react": "1.7.13",
