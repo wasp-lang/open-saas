@@ -1,6 +1,6 @@
 import { useAuth } from 'wasp/client/auth';
 import { generateCheckoutSession, getCustomerPortalUrl, useQuery } from 'wasp/client/operations';
-import { PaymentPlanId, paymentPlans, prettyPaymentPlanName } from './plans';
+import { PaymentPlanId, paymentPlans, prettyPaymentPlanName, SubscriptionStatus } from './plans';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -40,7 +40,7 @@ const PricingPage = () => {
   const [isPaymentLoading, setIsPaymentLoading] = useState<boolean>(false);
   
   const { data: user } = useAuth();
-  const isUserSubscribed = !!user && !!user.subscriptionStatus && user.subscriptionStatus !== 'deleted';
+  const isUserSubscribed = !!user && !!user.subscriptionStatus && user.subscriptionStatus !== SubscriptionStatus.Deleted;
 
   const {
     data: customerPortalUrl,
