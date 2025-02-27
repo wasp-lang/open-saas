@@ -8,16 +8,7 @@
  
  interface PaymentPlanCard {
    name: string;
-@@ -82,7 +83,7 @@
-     }
- 
-     if (!customerPortalUrl) {
--      throw new Error(`Customer Portal does not exist for user ${user.id}`)
-+      throw new Error(`Customer Portal does not exist for user ${user.id}`);
-     }
- 
-     window.open(customerPortalUrl, '_blank');
-@@ -96,11 +97,18 @@
+@@ -105,16 +106,24 @@
              Pick your <span className='text-yellow-500'>pricing</span>
            </h2>
          </div>
@@ -38,10 +29,16 @@
 +          </p>
 +        </div>
 +
+         {errorMessage && (
+           <div className='mt-8 p-4 bg-red-100 text-red-600 rounded-md dark:bg-red-200 dark:text-red-800'>
+             {errorMessage}
+           </div>
+         )}
++
          <div className='isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 lg:gap-x-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3'>
            {Object.values(PaymentPlanId).map((planId) => (
              <div
-@@ -187,7 +195,7 @@
+@@ -201,7 +210,7 @@
                    )}
                    disabled={isPaymentLoading}
                  >
