@@ -1,14 +1,6 @@
 --- template/app/src/admin/dashboards/users/UsersTable.tsx
 +++ opensaas-sh/app/src/admin/dashboards/users/UsersTable.tsx
-@@ -9,6 +9,7 @@
-   const [skip, setskip] = useState(0);
-   const [page, setPage] = useState(1);
-   const [email, setEmail] = useState<string | undefined>(undefined);
-+  
-   const [isAdminFilter, setIsAdminFilter] = useState<boolean | undefined>(undefined);
-   const [statusOptions, setStatusOptions] = useState<SubscriptionStatus[]>([]);
-   const { data, isLoading, error } = useQuery(getPaginatedUsers, {
-@@ -222,7 +223,7 @@
+@@ -207,7 +207,7 @@
                  <p className='text-sm text-black dark:text-white'>{user.subscriptionStatus}</p>
                </div>
                <div className='col-span-2 flex items-center'>

@@ -140,11 +140,6 @@ query getPaginatedUsers {
   entities: [User]
 }
 
-action updateCurrentUserLastActiveTimestamp {
-  fn: import { updateCurrentUserLastActiveTimestamp } from "@src/user/operations",
-  entities: [User]
-}
-
 action updateIsUserAdminById {
   fn: import { updateIsUserAdminById } from "@src/user/operations",
   entities: [User]

@@ -30,10 +30,13 @@ These are the steps necessary for you to deploy your app. We recommend you follo
 Each of these steps is covered in more detail below.
 
 ### Prerequisites
-
-Make sure you've got all your API keys and environment variables set up before you deploy. 
+#### AWS S3 CORS configuration
+If you're storing files in AWS S3, ensure you've listed your production domain
+in the bucket's CORS configuration under `AllowedOrigins`. Check the [File
+uploading guide](/guides/file-uploading/#change-the-cors-settings) for details.
 
 #### Env Vars
+Make sure you've got all your API keys and environment variables set up before you deploy.
 ##### Payment Processor Vars
 In the [Payments Processor integration guide](/guides/payments-integration/), you set up your API keys using test keys and test product ids. You'll need to get the live/production versions of those keys. To get these, repeat the instructions in the [Integration Guide](/guides/payments-integration/) without being in test mode. Add the new keys to your deployed environment secrets.
 
@@ -178,6 +181,7 @@ export const stripe = new Stripe(process.env.STRIPE_KEY!, {
   <br/>- `customer.subscription.deleted`
   <br/>- `customer.subscription.updated`
   <br/>- `invoice.paid`
+  <br/>- `payment_intent.succeeded`
 <Image src={stripeSigningSecret} alt="signing secret" loading="lazy" />
 5. after that, go to the webhook you just created and `reveal` the new signing secret.
 6. add this secret to your deployed server's `STRIPE_WEBHOOK_SECRET=` environment variable. <br/>If you've deployed to Fly.io, you can do that easily with the following command:
