@@ -11,6 +11,7 @@ import defaultSettings from '@assets/file-uploads/default-settings.png';
 import newBucket from '@assets/file-uploads/new-bucket.png';
 import permissions from '@assets/file-uploads/permissions.png';
 import cors from '@assets/file-uploads/cors.png';
+import corsExample from '@assets/file-uploads/cors-example.png';
 import username from '@assets/file-uploads/username.png';
 import keys from '@assets/file-uploads/keys.png';
 
@@ -61,52 +62,62 @@ To do so, follow the steps in this external guide: [Creating IAM users and S3 bu
 Once you are logged in with your IAM user, you'll need to create an S3 bucket to store your files.
 
 1. Navigate to the S3 service in the AWS console
-<Image src={findS3} alt="find s3" loading="lazy" />
+    <Image src={findS3} alt="find s3" loading="lazy" />
 2. Click on the `Create bucket` button
-<Image src={createBucket} alt="create bucket" loading="lazy" />
+    <Image src={createBucket} alt="create bucket" loading="lazy" />
 3. Fill in the bucket name and region
 4. **Leave all the settings as default** and click `Create bucket`
-<Image src={defaultSettings} alt="bucket settings" loading="lazy" />
+    <Image src={defaultSettings} alt="bucket settings" loading="lazy" />
 
 ### Change the CORS settings
 
 Now we need to change some permissions on the bucket to allow for file uploads from your app.
 
 1. Click on the bucket you just created
-<Image src={newBucket} alt="new bucket" loading="lazy" />
+    <Image src={newBucket} alt="new bucket" loading="lazy" />
 2. Click on the `Permissions` tab
-<Image src={permissions} alt="permissions" loading="lazy" />
+    <Image src={permissions} alt="permissions" loading="lazy" />
 3. Scroll down to the `Cross-origin resource sharing (CORS)` section and click `Edit`
-<Image src={cors} alt="cors" loading="lazy" />
-5. Paste the following CORS configuration and click `Save changes`:
-```json
-[
-    {
-        "AllowedHeaders": [
-            "*"
-        ],
-        "AllowedMethods": [
-            "PUT",
-            "GET"
-        ],
-        "AllowedOrigins": [
-            "*"
-        ],
-        "ExposeHeaders": []
-    }
-]
-```
+    <Image src={cors} alt="cors" loading="lazy" />
+5. Insert the correct CORS configuration and click `Save changes`. You can
+   copy-paste most of the config below, but **you must edit the
+   `AllowedOrigins` field** to fit your app. Include `http://localhost:3000` for
+   local development, and `https://<your domain>` for production.
+
+   If you don't yet have a domain name, just list `http://localhost:3000` for
+   now. We'll remind you to add your domain before deploying to production in
+   the [Deployment docs](/guides/deploying/#aws-s3-cors-configuration).
+   ```json {11,12}
+   [
+       {
+           "AllowedHeaders": [
+               "*"
+           ],
+           "AllowedMethods": [
+               "PUT",
+               "GET"
+           ],
+           "AllowedOrigins": [
+               "http://localhost:3000",
+               "https://<your-domain>"
+           ],
+           "ExposeHeaders": []
+       }
+   ]
+   ```
+   As an example, here are the CORS permissions for this site - https://opensaas.sh:
+   <Image src={corsExample} alt="cors-example" loading="lazy" />
 
 ### Get your AWS S3 credentials
 
 Now that you have your S3 bucket set up, you'll need to get your S3 credentials to use in your app.
 
 1. Click on your username in the top right corner of the AWS console and select `Security Credentials`
-<Image src={username} alt="username" loading="lazy" />
+    <Image src={username} alt="username" loading="lazy" />
 2. Scroll down to the `Access keys` section
 3. Click on `Create Access Key`
 4. Select the `Application running on an AWS service` option and create the access key
-<Image src={keys} alt="keys" loading="lazy" />
+    <Image src={keys} alt="keys" loading="lazy" />
 5. Copy the `Access key ID` and `Secret access key` and paste them in your `src/app/.env.server` file: 
 ```sh
   AWS_S3_IAM_ACCESS_KEY=ACK...
