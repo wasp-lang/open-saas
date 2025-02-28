@@ -13,50 +13,31 @@ import { UnhandledWebhookEventError } from '../errors';
 
 export const lemonSqueezyWebhook: PaymentsWebhook = async (request, response, context) => {
   try {
-    const rawBody = request.body.toString('utf8');
-    const signature = request.get('X-Signature');
-    if (!signature) {
-      throw new HttpError(400, 'Lemon Squeezy Webhook Signature Not Provided');
-    }
+    const rawRequestBody = parseRequestBody(request);
 
-    const secret = requireNodeEnvVar('LEMONSQUEEZY_WEBHOOK_SECRET');
-    const hmac = crypto.createHmac('sha256', secret);
-    const digest = Buffer.from(hmac.update(rawBody).digest('hex'), 'utf8');
-
-    if (!crypto.timingSafeEqual(Buffer.from(signature, 'utf8'), digest)) {
-      throw new HttpError(400, 'Invalid signature');
-    }
-
-    const payload = await parseWebhookPayload(rawBody).catch((e) => {
-      if (e instanceof UnhandledWebhookEventError) {
-        throw e;
-      } else {
-        console.error('Error parsing webhook payload', e);
-        throw new HttpError(400, e.message);
-      }
-    });
-    const userId = payload.meta.custom_data.user_id;
+    const { eventName, meta, data } = await parseWebhookPayload(rawRequestBody);
+    const userId = meta.custom_data.user_id;
     const prismaUserDelegate = context.entities.User;
 
-    switch (payload.eventName) {
+    switch (eventName) {
       case 'order_created':
-        await handleOrderCreated(payload.data, userId, prismaUserDelegate);
+        await handleOrderCreated(data, userId, prismaUserDelegate);
         break;
       case 'subscription_created':
-        await handleSubscriptionCreated(payload.data, userId, prismaUserDelegate);
+        await handleSubscriptionCreated(data, userId, prismaUserDelegate);
         break;
       case 'subscription_updated':
-        await handleSubscriptionUpdated(payload.data, userId, prismaUserDelegate);
+        await handleSubscriptionUpdated(data, userId, prismaUserDelegate);
         break;
       case 'subscription_cancelled':
-        await handleSubscriptionCancelled(payload.data, userId, prismaUserDelegate);
+        await handleSubscriptionCancelled(data, userId, prismaUserDelegate);
         break;
       case 'subscription_expired':
-        await handleSubscriptionExpired(payload.data, userId, prismaUserDelegate);
+        await handleSubscriptionExpired(data, userId, prismaUserDelegate);
         break;
       default:
         // If you'd like to handle more events, you can add more cases above.
-        assertUnreachable(payload);
+        assertUnreachable(eventName);
     }
 
     return response.status(200).json({ received: true });
@@ -73,6 +54,24 @@ export const lemonSqueezyWebhook: PaymentsWebhook = async (request, response, co
     }
   }
 };
+
+function parseRequestBody(request: express.Request): string {
+  const requestBody = request.body.toString('utf8');
+  const signature = request.get('X-Signature');
+  if (!signature) {
+    throw new HttpError(400, 'Lemon Squeezy webhook signature not provided');
+  }
+
+  const secret = requireNodeEnvVar('LEMONSQUEEZY_WEBHOOK_SECRET');
+  const hmac = crypto.createHmac('sha256', secret);
+  const digest = Buffer.from(hmac.update(requestBody).digest('hex'), 'utf8');
+
+  if (!crypto.timingSafeEqual(Buffer.from(signature, 'utf8'), digest)) {
+    throw new HttpError(400, 'Invalid signature');
+  }
+
+  return requestBody;
+}
 
 export const lemonSqueezyMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig) => {
   // We need to delete the default 'express.json' middleware and replace it with 'express.raw' middleware

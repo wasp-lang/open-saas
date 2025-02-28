@@ -22,43 +22,31 @@ import { UnhandledWebhookEventError } from '../errors';
 
 export const stripeWebhook: PaymentsWebhook = async (request, response, context) => {
   try {
-    const secret = requireNodeEnvVar('STRIPE_WEBHOOK_SECRET');
-    const sig = request.headers['stripe-signature'];
-    if (!sig) {
-      throw new HttpError(400, 'Stripe Webhook Signature Not Provided');
-    }
-    const rawStripeEvent = ensureStripeEvent(request, sig, secret);
-    const payload = await parseWebhookPayload(rawStripeEvent).catch((e) => {
-      if (e instanceof UnhandledWebhookEventError) {
-        throw e;
-      } else {
-        console.error('Error parsing webhook payload', e);
-        throw new HttpError(400, e.message);
-      }
-    });
+    const rawStripeEvent = constructStripeEvent(request);
+    const { eventName, data } = await parseWebhookPayload(rawStripeEvent);
     const prismaUserDelegate = context.entities.User;
-    switch (payload.eventName) {
+    switch (eventName) {
       case 'checkout.session.completed':
-        await handleCheckoutSessionCompleted(payload.data, prismaUserDelegate);
+        await handleCheckoutSessionCompleted(data, prismaUserDelegate);
         break;
       case 'invoice.paid':
-        await handleInvoicePaid(payload.data, prismaUserDelegate);
+        await handleInvoicePaid(data, prismaUserDelegate);
         break;
       case 'payment_intent.succeeded':
-        await handlePaymentIntentSucceeded(payload.data, prismaUserDelegate);
+        await handlePaymentIntentSucceeded(data, prismaUserDelegate);
         break;
       case 'customer.subscription.updated':
-        await handleCustomerSubscriptionUpdated(payload.data, prismaUserDelegate);
+        await handleCustomerSubscriptionUpdated(data, prismaUserDelegate);
         break;
       case 'customer.subscription.deleted':
-        await handleCustomerSubscriptionDeleted(payload.data, prismaUserDelegate);
+        await handleCustomerSubscriptionDeleted(data, prismaUserDelegate);
         break;
       default:
         // If you'd like to handle more events, you can add more cases above.
         // When deploying your app, you configure your webhook in the Stripe dashboard to only send the events that you're
         // handling above and that are necessary for the functioning of your app. See: https://docs.opensaas.sh/guides/deploying/#setting-up-your-stripe-webhook
         // In development, it is likely that you will receive other events that you are not handling, and that's fine. These can be ignored without any issues.
-        assertUnreachable(payload);
+        assertUnreachable(eventName);
     }
     return response.json({ received: true }); // Stripe expects a 200 response to acknowledge receipt of the webhook
   } catch (err) {
@@ -70,16 +58,21 @@ export const stripeWebhook: PaymentsWebhook = async (request, response, context)
     if (err instanceof HttpError) {
       return response.status(err.statusCode).json({ error: err.message });
     } else {
-      return response.status(400).json({ error: 'Error Processing Stripe Webhook Event' });
+      return response.status(400).json({ error: 'Error processing Stripe webhook event' });
     }
   }
 };
 
-function ensureStripeEvent(request: express.Request, sig: string | string[], secret: string): Stripe.Event {
+function constructStripeEvent(request: express.Request): Stripe.Event {
   try {
+    const secret = requireNodeEnvVar('STRIPE_WEBHOOK_SECRET');
+    const sig = request.headers['stripe-signature'];
+    if (!sig) {
+      throw new HttpError(400, 'Stripe webhook signature not provided');
+    }
     return stripe.webhooks.constructEvent(request.body, sig, secret);
   } catch (err) {
-    throw new HttpError(500, 'Error Constructing Stripe Webhook Event');
+    throw new HttpError(500, 'Error constructing Stripe webhook event');
   }
 }
 
@@ -99,9 +92,7 @@ export async function handleCheckoutSessionCompleted(
   prismaUserDelegate: PrismaClient['user']
 ) {
   const userStripeId = session.customer;
-  const lineItems = await getSubscriptionLineItemsBySessionId(session.id).catch((e) => {
-    throw new HttpError(500, e.message);
-  });
+  const lineItems = await getSubscriptionLineItemsBySessionId(session.id);
 
   const lineItemPriceId = extractPriceId(lineItems);
 
@@ -227,16 +218,17 @@ function extractPriceId(items: SubscsriptionItems): string {
 }
 
 async function getSubscriptionLineItemsBySessionId(sessionId: string) {
-  const { line_items: lineItemsRaw } = await stripe.checkout.sessions.retrieve(sessionId, {
-    expand: ['line_items'],
-  });
+  try {
+    const { line_items: lineItemsRaw } = await stripe.checkout.sessions.retrieve(sessionId, {
+      expand: ['line_items'],
+    });
 
-  const lineItems = await subscriptionItemsSchema.parseAsync(lineItemsRaw).catch((e) => {
-    console.error(e);
-    throw new Error('Error parsing Stripe line items');
-  });
+    const lineItems = await subscriptionItemsSchema.parseAsync(lineItemsRaw);
 
-  return lineItems;
+    return lineItems;
+  } catch (e: unknown) {
+    throw new HttpError(500, 'Error parsing Stripe line items');
+  }
 }
 
 function getPlanIdByPriceId(priceId: string): PaymentPlanId {
