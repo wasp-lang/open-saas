@@ -326,16 +326,3 @@ page AdminMessagesPage {
   component: import AdminMessages from "@src/messages/MessagesPage"
 }
 //#endregion
-
-//#region Newsletter
-job sendNewsletter {
-  executor: PgBoss,
-  perform: {
-    fn: import { checkAndQueueNewsletterEmails } from "@src/newsletter/sendNewsletter"
-  },
-  schedule: {
-    cron: "0 7 * * 1" // at 7:00 am every Monday
-  },
-  entities: [User]
-}
-//#endregion
