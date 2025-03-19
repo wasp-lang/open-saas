@@ -88,9 +88,9 @@
 +        configFn: import { getDiscordAuthConfig } from "@src/auth/userSignupFields"
 +      }
      },
-     onAfterSignup: import { onAfterSignup } from "@src/auth/hooks",
      onAuthFailedRedirectTo: "/login",
-@@ -87,11 +83,11 @@
+     onAuthSucceededRedirectTo: "/demo-app",
+@@ -86,11 +82,11 @@
      // NOTE: "Dummy" provider is just for local development purposes.
      //   Make sure to check the server logs for the email confirmation url (it will not be sent to an address)!
      //   Once you are ready for production, switch to e.g. "SendGrid" or "Mailgun" providers. Check out https://docs.opensaas.sh/guides/email-sending/ .
@@ -104,7 +104,7 @@
      },
    },
  }
-@@ -207,9 +203,9 @@
+@@ -206,9 +202,9 @@
  }
  
  api paymentsWebhook {

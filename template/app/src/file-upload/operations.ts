@@ -18,28 +18,39 @@ const createFileInputSchema = z.object({
 
 type CreateFileInput = z.infer<typeof createFileInputSchema>;
 
-export const createFile: CreateFile<CreateFileInput, File> = async (rawArgs, context) => {
+export const createFile: CreateFile<
+  CreateFileInput,
+  {
+    s3UploadUrl: string;
+    s3UploadFields: Record<string, string>;
+  }
+> = async (rawArgs, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
 
   const { fileType, fileName } = ensureArgsSchemaOrThrowHttpError(createFileInputSchema, rawArgs);
 
-  const { uploadUrl, key } = await getUploadFileSignedURLFromS3({
+  const { s3UploadUrl, s3UploadFields, key } = await getUploadFileSignedURLFromS3({
     fileType,
     fileName,
     userId: context.user.id,
   });
 
-  return await context.entities.File.create({
+  await context.entities.File.create({
     data: {
       name: fileName,
       key,
-      uploadUrl,
+      uploadUrl: s3UploadUrl,
       type: fileType,
       user: { connect: { id: context.user.id } },
     },
   });
+
+  return {
+    s3UploadUrl,
+    s3UploadFields,
+  };
 };
 
 export const getAllFilesByUser: GetAllFilesByUser<void, File[]> = async (_args, context) => {

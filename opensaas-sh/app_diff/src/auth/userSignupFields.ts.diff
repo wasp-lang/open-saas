@@ -1,46 +1,64 @@
 --- template/app/src/auth/userSignupFields.ts
 +++ opensaas-sh/app/src/auth/userSignupFields.ts
-@@ -1,11 +1,8 @@
+@@ -1,8 +1,6 @@
  import { z } from 'zod';
  import { defineUserSignupFields } from 'wasp/auth/providers/types';
  
 -const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
 -
- export const getEmailUserFields = defineUserSignupFields({
-   username: (data: any) => data.email,
--  isAdmin: (data: any) => adminEmails.includes(data.email),
-   email: (data: any) => data.email,
+ const emailDataSchema = z.object({
+   email: z.string(),
+ });
+@@ -16,10 +14,6 @@
+     const emailData = emailDataSchema.parse(data);
+     return emailData.email;
+   },
+-  isAdmin: (data) => {
+-    const emailData = emailDataSchema.parse(data);
+-    return adminEmails.includes(emailData.email);
+-  },
  });
  
-@@ -29,10 +26,6 @@
+ const githubDataSchema = z.object({
+@@ -45,14 +39,6 @@
      const githubData = githubDataSchema.parse(data);
      return githubData.profile.login;
    },
 -  isAdmin: (data) => {
 -    const githubData = githubDataSchema.parse(data);
--    return adminEmails.includes(githubData.profile.emails[0].email);
+-    const emailInfo = getGithubEmailInfo(githubData);
+-    if (!emailInfo.verified) {
+-      return false;
+-    }
+-    return adminEmails.includes(emailInfo.email);
 -  },
  });
  
- // NOTE: if we don't want to access users' emails, we can use scope ["user:read"]
-@@ -58,10 +51,6 @@
+ // We are using the first email from the list of emails returned by GitHub.
+@@ -85,13 +71,6 @@
      const googleData = googleDataSchema.parse(data);
      return googleData.profile.email;
    },
 -  isAdmin: (data) => {
 -    const googleData = googleDataSchema.parse(data);
+-    if (!googleData.profile.email_verified) {
+-      return false;
+-    }
 -    return adminEmails.includes(googleData.profile.email);
 -  },
  });
  
  export function getGoogleAuthConfig() {
-@@ -86,10 +75,6 @@
+@@ -121,13 +100,6 @@
      const discordData = discordDataSchema.parse(data);
      return discordData.profile.username;
    },
 -  isAdmin: (data) => {
--    const email = discordDataSchema.parse(data).profile.email;
--    return !!email && adminEmails.includes(email);
+-    const discordData = discordDataSchema.parse(data);
+-    if (!discordData.profile.email || !discordData.profile.verified) {
+-      return false;
+-    }
+-    return adminEmails.includes(discordData.profile.email);
 -  },
  });
  
