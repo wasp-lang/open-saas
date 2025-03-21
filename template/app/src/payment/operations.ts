@@ -19,8 +19,9 @@ export const generateCheckoutSession: GenerateCheckoutSession<
   CheckoutSession
 > = async (rawPaymentPlanId, context) => {
   if (!context.user) {
-    throw new HttpError(401);
+    throw new HttpError(401, 'Only authenticated users are allowed to perform this operation');
   }
+
   const paymentPlanId = ensureArgsSchemaOrThrowHttpError(generateCheckoutSessionSchema, rawPaymentPlanId);
   const userId = context.user.id;
   const userEmail = context.user.email;
@@ -45,8 +46,9 @@ export const generateCheckoutSession: GenerateCheckoutSession<
 
 export const getCustomerPortalUrl: GetCustomerPortalUrl<void, string | null> = async (_args, context) => {
   if (!context.user) {
-    throw new HttpError(401);
+    throw new HttpError(401, 'Only authenticated users are allowed to perform this operation');
   }
+
   return paymentProcessor.fetchCustomerPortalUrl({
     userId: context.user.id,
     prismaUserDelegate: context.entities.User,
