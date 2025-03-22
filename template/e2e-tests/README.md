@@ -18,13 +18,28 @@ Start your Wasp DB and leave it running:
 cd ../app && wasp db start
 ```
 
+### Skipping Email Verification in e2e Tests
+
 Open another terminal and start the Wasp app with the environment variable set to skip email verification in development mode:
-```shell
+
+> [!IMPORTANT]  
+> When using the email auth method, a verification link is typically sent when a user registers. If you're using the default Dummy provider, this link is logged in the console.  
+> 
+> **However, during e2e tests, this manual step will cause the tests to hang and fail** because the link is never clicked. To prevent this, set the following environment variable when starting your app:
+
+```bash
 cd app && SKIP_EMAIL_VERIFICATION_IN_DEV=true wasp start
 ```
 
-> [!IMPORTANT]  
-> When using the email auth method a verification link is sent when the user registers, or logged to the console if you're using the default Dummy provider. You must click this link to complete registration. Setting SKIP_EMAIL_VERIFICATION_IN_DEV to "true" skips this verification step, allowing you to automatically log in. This step must be skipped when running tests, otherwise the tests will hang and fail as the verification link is never clicked!
+#### What this step will do:
+- **Automated Testing:** Skipping email verification ensures e2e tests run uninterrupted.
+- **Consistent Behavior:** It guarantees login flows won’t break during automated test runs.
+- **CI/CD Pipelines:** This variable should also be set in CI pipelines to avoid test failures.
+    ```yaml
+    env:
+        SKIP_EMAIL_VERIFICATION_IN_DEV: "true"
+    ```
+
 
 In another terminal, run the local e2e tests:
 ```shell
