@@ -46,7 +46,7 @@ You also get access to Wasp's diverse, helpful community if you get stuck or nee
 
 First, to install the latest version of [Wasp](https://wasp.sh/) on macOS, Linux, or Windows with WSL, run the following command:
 ```bash
-curl -sSL https://get.wasp-lang.dev/installer.sh | sh
+curl -sSL https://get.wasp.sh/installer.sh | sh
 ```
 
 Then, create a new SaaS app with the following command:
