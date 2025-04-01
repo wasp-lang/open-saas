@@ -5,7 +5,9 @@ import { MdOutlineSpaceDashboard } from 'react-icons/md';
 import { TfiDashboard } from 'react-icons/tfi';
 import { cn } from '../client/cn';
 
-export const UserMenuItems = ({ user, setMobileMenuOpen }: { user?: Partial<User>; setMobileMenuOpen?: any }) => {
+type SetMobileMenuOpen = (open: boolean) => void;
+
+export const UserMenuItems = ({ user, setMobileMenuOpen }: { user?: Partial<User>; setMobileMenuOpen?: SetMobileMenuOpen }) => {
   const path = window.location.pathname;
   const landingPagePath = routes.LandingPageRoute.to;
   const adminDashboardPath = routes.AdminRoute.to;

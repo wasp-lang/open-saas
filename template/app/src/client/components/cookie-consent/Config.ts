@@ -2,7 +2,7 @@ import type { CookieConsentConfig } from 'vanilla-cookieconsent';
 
 declare global {
   interface Window {
-    dataLayer: any;
+    dataLayer: Array<Record<string, unknown>>;
   }
 }
 
@@ -64,7 +64,7 @@ const getConfig = () => {
                 }
                 window.dataLayer = window.dataLayer || [];
                 function gtag(..._args: unknown[]) {
-                  (window.dataLayer as Array<any>).push(arguments);
+                  (window.dataLayer as Array<unknown>).push(arguments);
                 }
                 gtag('js', new Date());
                 gtag('config', GA_ANALYTICS_ID);

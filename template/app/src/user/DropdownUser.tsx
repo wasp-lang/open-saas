@@ -5,17 +5,17 @@ import { UserMenuItems } from './UserMenuItems';
 import { cn } from '../client/cn';
 
 const DropdownUser = ({ user }: { user: Partial<User> }) => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState <Boolean>(false);
 
-  const trigger = useRef<any>(null);
-  const dropdown = useRef<any>(null);
+  const trigger = useRef<HTMLButtonElement | null>(null);
+  const dropdown = useRef<HTMLDivElement | null >(null);
 
   const toggleDropdown = () => setDropdownOpen((prev) => !prev);
 
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
-      if (!dropdown.current) return;
-      if (!dropdownOpen || dropdown.current.contains(target) || trigger.current.contains(target)) {
+      if (!dropdown.current || !trigger.current) return;
+      if (!dropdownOpen || dropdown.current.contains(target as Node) || trigger.current.contains(target as Node)) {
         return;
       }
       setDropdownOpen(false);
