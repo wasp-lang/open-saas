@@ -14,7 +14,8 @@ import OpenAI from 'openai';
 import { SubscriptionStatus } from '../payment/plans';
 import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
 
-function getOpenAI(): OpenAI | null {
+const openAi = getOpenAi();
+function getOpenAi(): OpenAI | null {
   if (process.env.OPENAI_API_KEY) {
     return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   } else {
@@ -55,7 +56,7 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
   console.log('Calling open AI api');
   const dailyPlanJson = await getDailyPlanFromGpt(tasks, hours);
   if (dailyPlanJson === null) {
-    throw new HttpError(500, 'Bad response from OpenAI');
+    throw new HttpError(500, 'Encountered a problem in communication with OpenAI');
   }
 
   // TODO: Do I need a try catch now that I'm saving a response and
@@ -82,9 +83,6 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
     },
   });
 
-  // NOTE: Since these two are now brought together, I put them in a single transaction - so no rollback necessary
-  // TODO: But what if the server crashes after the transaction and before
-  // the response? I guess no big deal, since the response is in the db.
   console.log('Decrementing credits and saving response');
   prisma.$transaction([decrementCredit, createResponse]);
 
@@ -93,17 +91,10 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
 };
 
 function isEligibleForResponse(user: User) {
-  // TODO: Why not check for allowed states?
   const isUserSubscribed =
-    user.subscriptionStatus !== SubscriptionStatus.Deleted &&
-    user.subscriptionStatus !== SubscriptionStatus.PastDue;
+    user.subscriptionStatus === SubscriptionStatus.Active ||
+    user.subscriptionStatus === SubscriptionStatus.CancelAtPeriodEnd;
   const userHasCredits = user.credits > 0;
-  // TODO: If the user is subscribed (flat rate, use their subscription) -
-  // shouldn't take priority over credits since it makes no sece spending
-  // credits when a subscription is active?
-  // If they aren't subscribed, then it would make sense to spend credits.
-  // The old code always subtracted credits so I kept that, is this a bug?
-  // Also, no one checks for subscription plan (10credits or flat rate).
   return isUserSubscribed || userHasCredits;
 }
 
@@ -212,11 +203,8 @@ export const getAllTasksByUser: GetAllTasksByUser<void, Task[]> = async (_args, 
 };
 //#endregion
 
-// TODO: Why is hours a string?
 async function getDailyPlanFromGpt(tasks: Task[], hours: string): Promise<string | null> {
-  // TODO: Why was this a singleton
-  const openai = getOpenAI();
-  if (openai === null) {
+  if (openAi === null) {
     return null;
   }
 
@@ -225,7 +213,7 @@ async function getDailyPlanFromGpt(tasks: Task[], hours: string): Promise<string
     time,
   }));
 
-  const completion = await openai.chat.completions.create({
+  const completion = await openAi.chat.completions.create({
     model: 'gpt-3.5-turbo', // you can use any model here, e.g. 'gpt-3.5-turbo', 'gpt-4', etc.
     messages: [
       {
