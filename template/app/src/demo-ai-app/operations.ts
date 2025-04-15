@@ -64,9 +64,6 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
 
   // NOTE: I changed this up, first I do the request, and then I decrement
   // credits. Is that dangerous? Protecting from it could be too complicated
-  // TODO: Potential issue here, user can lose credits between the point we
-  // inject it into the context and here
-  // Seems to me that there should be users in the database with negative credits
   const decrementCredit = context.entities.User.update({
     where: { id: context.user.id },
     data: {
