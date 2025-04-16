@@ -34,6 +34,9 @@ export type SubscriptionData = z.infer<typeof subscriptionDataSchema>;
 
 export type OrderData = z.infer<typeof orderDataSchema>;
 
+/**
+ * This schema is based on LemonSqueezyResponse type
+ */
 const genericEventSchema = z.object({
   meta: z.object({
     event_name: z.string(),
@@ -44,8 +47,11 @@ const genericEventSchema = z.object({
   data: z.unknown(),
 });
 
-// This is a subtype of Order type from "@lemonsqueezy/lemonsqueezy.js"
-// specifically Order['data']
+/**
+ * This schema is based on
+ * @type import('@lemonsqueezy/lemonsqueezy.js').Order
+ * specifically Order['data'].
+ */
 const orderDataSchema = z.object({
   attributes: z.object({
     customer_id: z.number(),
@@ -57,8 +63,11 @@ const orderDataSchema = z.object({
   }),
 });
 
-// This is a subtype of Subscription type from "@lemonsqueezy/lemonsqueezy.js"
-// specifically Subscription['data']
+/**
+ * This schema is based on
+ * @type import('@lemonsqueezy/lemonsqueezy.js').Subscription
+ * specifically Subscription['data'].
+ */
 const subscriptionDataSchema = z.object({
   attributes: z.object({
     customer_id: z.number(),

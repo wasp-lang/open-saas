@@ -43,7 +43,7 @@ export const lemonSqueezyWebhook: PaymentsWebhook = async (request, response, co
     return response.status(200).json({ received: true });
   } catch (err) {
     if (err instanceof UnhandledWebhookEventError) {
-      return response.status(200).json({ received: true });
+      return response.status(422).json({ error: err.message });
     }
 
     console.error('Webhook error:', err);

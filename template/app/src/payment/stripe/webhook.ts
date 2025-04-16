@@ -51,7 +51,7 @@ export const stripeWebhook: PaymentsWebhook = async (request, response, context)
     return response.json({ received: true }); // Stripe expects a 200 response to acknowledge receipt of the webhook
   } catch (err) {
     if (err instanceof UnhandledWebhookEventError) {
-      return response.status(200).json({ received: true });
+      return response.status(422).json({ error: err.message });
     }
 
     console.error('Webhook error:', err);
@@ -211,6 +211,9 @@ const subscriptionItemsSchema = z.object({
 });
 
 function extractPriceId(items: SubscsriptionItems): string {
+  if (items.data.length === 0) {
+    throw new HttpError(400, 'No items in stripe event object');
+  }
   if (items.data.length > 1) {
     throw new HttpError(400, 'More than one item in stripe event object');
   }
