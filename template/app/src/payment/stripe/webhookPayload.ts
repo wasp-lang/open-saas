@@ -6,7 +6,6 @@ import { HttpError } from 'wasp/server';
 export async function parseWebhookPayload(rawStripeEvent: Stripe.Event) {
   try {
     const event = await genericStripeEventSchema.parseAsync(rawStripeEvent);
-    console.log('event', event);
     switch (event.type) {
       case 'checkout.session.completed':
         const session = await sessionCompletedDataSchema.parseAsync(event.data.object);
@@ -74,7 +73,7 @@ const paymentIntentSucceededDataSchema = z.object({
   invoice: z.unknown().optional(),
   created: z.number(),
   metadata: z.object({
-    priceId: z.string(),
+    priceId: z.string().optional(),
   }),
   customer: z.string(),
 });
