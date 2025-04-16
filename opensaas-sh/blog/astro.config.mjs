@@ -30,18 +30,9 @@ export default defineConfig({
         {
           tag: 'script',
           attrs: {
-            src: 'https://www.googletagmanager.com/gtag/js?id=G-8QGM76GR3Q',
+            defer: true,
+            src: '/piggy.js',
           },
-        },
-        {
-          tag: 'script',
-          content: `
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-        
-          gtag('config', 'G-8QGM76GR3Q');
-          `,
         },
       ],
       editLink: {

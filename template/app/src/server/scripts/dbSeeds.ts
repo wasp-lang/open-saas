@@ -35,7 +35,6 @@ function generateMockUserData(): MockUserData {
     username: faker.internet.userName({ firstName, lastName }),
     createdAt,
     isAdmin: false,
-    sendNewsletter: false,
     credits,
     subscriptionStatus,
     lemonSqueezyCustomerPortalUrl: null,

@@ -11,7 +11,6 @@ import defaultSettings from '@assets/file-uploads/default-settings.png';
 import newBucket from '@assets/file-uploads/new-bucket.png';
 import permissions from '@assets/file-uploads/permissions.png';
 import cors from '@assets/file-uploads/cors.png';
-import corsExample from '@assets/file-uploads/cors-example.png';
 import username from '@assets/file-uploads/username.png';
 import keys from '@assets/file-uploads/keys.png';
 
@@ -94,7 +93,7 @@ Now we need to change some permissions on the bucket to allow for file uploads f
                "*"
            ],
            "AllowedMethods": [
-               "PUT",
+               "POST",
                "GET"
            ],
            "AllowedOrigins": [
@@ -105,8 +104,6 @@ Now we need to change some permissions on the bucket to allow for file uploads f
        }
    ]
    ```
-   As an example, here are the CORS permissions for this site - https://opensaas.sh:
-   <Image src={corsExample} alt="cors-example" loading="lazy" />
 
 ### Get your AWS S3 credentials
 
