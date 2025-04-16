@@ -5,20 +5,20 @@ import { HttpError } from 'wasp/server';
 export async function parseWebhookPayload(rawPayload: string) {
   try {
     const rawEvent: unknown = JSON.parse(rawPayload);
-    const event = await genericEventSchema.parseAsync(rawEvent);
-    switch (event.meta.event_name) {
+    const { meta, data } = await genericEventSchema.parseAsync(rawEvent);
+    switch (meta.event_name) {
       case 'order_created':
-        const orderData = await orderDataSchema.parseAsync(event.data);
-        return { eventName: event.meta.event_name, meta: event.meta, data: orderData };
+        const orderData = await orderDataSchema.parseAsync(data);
+        return { eventName: meta.event_name, meta, data: orderData };
       case 'subscription_created':
       case 'subscription_updated':
       case 'subscription_cancelled':
       case 'subscription_expired':
-        const subscriptionData = await subscriptionDataSchema.parseAsync(event.data);
-        return { eventName: event.meta.event_name, meta: event.meta, data: subscriptionData };
+        const subscriptionData = await subscriptionDataSchema.parseAsync(data);
+        return { eventName: meta.event_name, meta, data: subscriptionData };
       default:
         // If you'd like to handle more events, you can add more cases above.
-        throw new UnhandledWebhookEventError(event.meta.event_name);
+        throw new UnhandledWebhookEventError(meta.event_name);
     }
   } catch (e: unknown) {
     if (e instanceof UnhandledWebhookEventError) {
