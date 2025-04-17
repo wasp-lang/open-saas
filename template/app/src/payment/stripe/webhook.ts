@@ -51,6 +51,7 @@ export const stripeWebhook: PaymentsWebhook = async (request, response, context)
     return response.json({ received: true }); // Stripe expects a 200 response to acknowledge receipt of the webhook
   } catch (err) {
     if (err instanceof UnhandledWebhookEventError) {
+      console.error(err.message);
       return response.status(422).json({ error: err.message });
     }
 
