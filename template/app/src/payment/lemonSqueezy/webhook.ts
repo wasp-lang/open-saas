@@ -4,59 +4,75 @@ import { type PrismaClient } from '@prisma/client';
 import express from 'express';
 import { paymentPlans, PaymentPlanId, SubscriptionStatus } from '../plans';
 import { updateUserLemonSqueezyPaymentDetails } from './paymentDetails';
-import { type Order, type Subscription, getCustomer } from '@lemonsqueezy/lemonsqueezy.js';
+import { getCustomer } from '@lemonsqueezy/lemonsqueezy.js';
 import crypto from 'crypto';
 import { requireNodeEnvVar } from '../../server/utils';
+import { parseWebhookPayload, type OrderData, type SubscriptionData } from './webhookPayload';
+import { assertUnreachable } from '../../shared/utils';
+import { UnhandledWebhookEventError } from '../errors';
 
 export const lemonSqueezyWebhook: PaymentsWebhook = async (request, response, context) => {
   try {
-    const rawBody = request.body.toString('utf8');
-    const signature = request.get('X-Signature');
-    if (!signature) {
-      throw new HttpError(400, 'Lemon Squeezy Webhook Signature Not Provided');
-    }
+    const rawRequestBody = parseRequestBody(request);
 
-    const secret = requireNodeEnvVar('LEMONSQUEEZY_WEBHOOK_SECRET');
-    const hmac = crypto.createHmac('sha256', secret);
-    const digest = Buffer.from(hmac.update(rawBody).digest('hex'), 'utf8');
-
-    if (!crypto.timingSafeEqual(Buffer.from(signature, 'utf8'), digest)) {
-      throw new HttpError(400, 'Invalid signature');
-    }
-
-    const event = JSON.parse(rawBody);
-    const userId = event.meta.custom_data.user_id;
+    const { eventName, meta, data } = await parseWebhookPayload(rawRequestBody);
+    const userId = meta.custom_data.user_id;
     const prismaUserDelegate = context.entities.User;
-    switch (event.meta.event_name) {
+
+    switch (eventName) {
       case 'order_created':
-        await handleOrderCreated(event as Order, userId, prismaUserDelegate);
+        await handleOrderCreated(data, userId, prismaUserDelegate);
         break;
       case 'subscription_created':
-        await handleSubscriptionCreated(event as Subscription, userId, prismaUserDelegate);
+        await handleSubscriptionCreated(data, userId, prismaUserDelegate);
         break;
       case 'subscription_updated':
-        await handleSubscriptionUpdated(event as Subscription, userId, prismaUserDelegate);
+        await handleSubscriptionUpdated(data, userId, prismaUserDelegate);
         break;
       case 'subscription_cancelled':
-        await handleSubscriptionCancelled(event as Subscription, userId, prismaUserDelegate);
+        await handleSubscriptionCancelled(data, userId, prismaUserDelegate);
         break;
       case 'subscription_expired':
-        await handleSubscriptionExpired(event as Subscription, userId, prismaUserDelegate);
+        await handleSubscriptionExpired(data, userId, prismaUserDelegate);
         break;
       default:
-        console.error('Unhandled event type: ', event.meta.event_name);
+        // If you'd like to handle more events, you can add more cases above.
+        assertUnreachable(eventName);
     }
 
-    response.status(200).json({ received: true });
+    return response.status(200).json({ received: true });
   } catch (err) {
+    if (err instanceof UnhandledWebhookEventError) {
+      console.error(err.message);
+      return response.status(422).json({ error: err.message });
+    }
+
     console.error('Webhook error:', err);
     if (err instanceof HttpError) {
-      response.status(err.statusCode).json({ error: err.message });
+      return response.status(err.statusCode).json({ error: err.message });
     } else {
-      response.status(400).json({ error: 'Error Processing Lemon Squeezy Webhook Event' });
+      return response.status(400).json({ error: 'Error Processing Lemon Squeezy Webhook Event' });
     }
   }
 };
+
+function parseRequestBody(request: express.Request): string {
+  const requestBody = request.body.toString('utf8');
+  const signature = request.get('X-Signature');
+  if (!signature) {
+    throw new HttpError(400, 'Lemon Squeezy webhook signature not provided');
+  }
+
+  const secret = requireNodeEnvVar('LEMONSQUEEZY_WEBHOOK_SECRET');
+  const hmac = crypto.createHmac('sha256', secret);
+  const digest = Buffer.from(hmac.update(requestBody).digest('hex'), 'utf8');
+
+  if (!crypto.timingSafeEqual(Buffer.from(signature, 'utf8'), digest)) {
+    throw new HttpError(400, 'Invalid signature');
+  }
+
+  return requestBody;
+}
 
 export const lemonSqueezyMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig) => {
   // We need to delete the default 'express.json' middleware and replace it with 'express.raw' middleware
@@ -69,8 +85,8 @@ export const lemonSqueezyMiddlewareConfigFn: MiddlewareConfigFn = (middlewareCon
 // This will fire for one-time payment orders AND subscriptions. But subscriptions will ALSO send a follow-up
 // event of 'subscription_created'. So we use this handler mainly to process one-time, credit-based orders,
 // as well as to save the customer portal URL and customer id for the user.
-async function handleOrderCreated(data: Order, userId: string, prismaUserDelegate: PrismaClient['user']) {
-  const { customer_id, status, first_order_item, order_number } = data.data.attributes;
+async function handleOrderCreated(data: OrderData, userId: string, prismaUserDelegate: PrismaClient['user']) {
+  const { customer_id, status, first_order_item, order_number } = data.attributes;
   const lemonSqueezyId = customer_id.toString();
 
   const planId = getPlanIdByVariantId(first_order_item.variant_id.toString());
@@ -94,11 +110,11 @@ async function handleOrderCreated(data: Order, userId: string, prismaUserDelegat
 }
 
 async function handleSubscriptionCreated(
-  data: Subscription,
+  data: SubscriptionData,
   userId: string,
   prismaUserDelegate: PrismaClient['user']
 ) {
-  const { customer_id, status, variant_id } = data.data.attributes;
+  const { customer_id, status, variant_id } = data.attributes;
   const lemonSqueezyId = customer_id.toString();
 
   const planId = getPlanIdByVariantId(variant_id.toString());
@@ -123,11 +139,11 @@ async function handleSubscriptionCreated(
 
 // NOTE: LemonSqueezy's 'subscription_updated' event is sent as a catch-all and fires even after 'subscription_created' & 'order_created'.
 async function handleSubscriptionUpdated(
-  data: Subscription,
+  data: SubscriptionData,
   userId: string,
   prismaUserDelegate: PrismaClient['user']
 ) {
-  const { customer_id, status, variant_id } = data.data.attributes;
+  const { customer_id, status, variant_id } = data.attributes;
   const lemonSqueezyId = customer_id.toString();
 
   const planId = getPlanIdByVariantId(variant_id.toString());
@@ -153,11 +169,11 @@ async function handleSubscriptionUpdated(
 }
 
 async function handleSubscriptionCancelled(
-  data: Subscription,
+  data: SubscriptionData,
   userId: string,
   prismaUserDelegate: PrismaClient['user']
 ) {
-  const { customer_id } = data.data.attributes;
+  const { customer_id } = data.attributes;
   const lemonSqueezyId = customer_id.toString();
 
   await updateUserLemonSqueezyPaymentDetails(
@@ -174,11 +190,11 @@ async function handleSubscriptionCancelled(
 }
 
 async function handleSubscriptionExpired(
-  data: Subscription,
+  data: SubscriptionData,
   userId: string,
   prismaUserDelegate: PrismaClient['user']
 ) {
-  const { customer_id } = data.data.attributes;
+  const { customer_id } = data.attributes;
   const lemonSqueezyId = customer_id.toString();
 
   await updateUserLemonSqueezyPaymentDetails(
@@ -217,4 +233,3 @@ function getPlanIdByVariantId(variantId: string): PaymentPlanId {
   }
   return planId;
 }
-
