@@ -32,6 +32,8 @@ Change the above highlighted meta tags to match your app. Wasp will inject these
 
 ## Other Pages Meta Tags
 
+By default, all pages will acquire the main Landing Page meta tags. You can set custom meta tags for each page using `react-helmet-async`.
+
 React Helmet Async is a React library that allows you to modify `<head>` directly from your React component, in a dynamic fashion. Therefore, it can also be used to set meta tags.
 
 :::note
