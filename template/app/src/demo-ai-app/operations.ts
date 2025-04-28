@@ -15,11 +15,11 @@ import { SubscriptionStatus } from '../payment/plans';
 import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
 
 const openAi = getOpenAi();
-function getOpenAi(): OpenAI | null {
+function getOpenAi(): OpenAI {
   if (process.env.OPENAI_API_KEY) {
     return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   } else {
-    return null;
+    throw new Error('OpenAI API key is not set');
   }
 }
 
@@ -38,12 +38,11 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
     throw new HttpError(401, 'Only authenticated users are allowed to perform this operation');
   }
 
-  const { hours } = ensureArgsSchemaOrThrowHttpError(generateGptResponseInputSchema, rawArgs);
-
   if (!isEligibleForResponse(context.user)) {
     throw new HttpError(402, 'User has not paid or is out of credits');
   }
 
+  const { hours } = ensureArgsSchemaOrThrowHttpError(generateGptResponseInputSchema, rawArgs);
   const tasks = await context.entities.Task.findMany({
     where: {
       user: {
@@ -53,16 +52,19 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
   });
 
   console.log('Calling open AI api');
-  const dailyPlanJson = await getDailyPlanFromGpt(tasks, hours);
-  if (dailyPlanJson === null) {
+  const generatedSchedule = await generateScheduleWithGpt(tasks, hours);
+  if (generatedSchedule === null) {
     throw new HttpError(500, 'Encountered a problem in communication with OpenAI');
   }
 
-  // TODO: Do I need a try catch now that I'm saving a response and
-  // decrementing credits in a transaction?
-
-  // NOTE: I changed this up, first I do the request, and then I decrement
-  // credits. Is that dangerous? Protecting from it could be too complicated
+  // We decrement the credits after using up tokens to get a daily plan
+  // from Chat GPT.
+  //
+  // This way, users don't feel cheated if something goes wrong.
+  // On the flipside, users can theoretically abuse this and spend more
+  // credits than they have, but the damage should be pretty limited.
+  //
+  // Think about which option you prefer for you and edit the code accordingly.
   const decrementCredit = context.entities.User.update({
     where: { id: context.user.id },
     data: {
@@ -75,15 +77,14 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
   const createResponse = context.entities.GptResponse.create({
     data: {
       user: { connect: { id: context.user.id } },
-      content: dailyPlanJson,
+      content: JSON.stringify(generatedSchedule),
     },
   });
 
   console.log('Decrementing credits and saving response');
   prisma.$transaction([decrementCredit, createResponse]);
 
-  // TODO: Can this ever fail?
-  return JSON.parse(dailyPlanJson);
+  return generatedSchedule;
 };
 
 function isEligibleForResponse(user: User) {
@@ -205,11 +206,7 @@ export const getAllTasksByUser: GetAllTasksByUser<void, Task[]> = async (_args, 
 };
 //#endregion
 
-async function getDailyPlanFromGpt(tasks: Task[], hours: string): Promise<string | null> {
-  if (openAi === null) {
-    return null;
-  }
-
+async function generateScheduleWithGpt(tasks: Task[], hours: string): Promise<GeneratedSchedule | null> {
   const parsedTasks = tasks.map(({ description, time }) => ({
     description,
     time,
@@ -294,5 +291,5 @@ async function getDailyPlanFromGpt(tasks: Task[], hours: string): Promise<string
   });
 
   const gptResponse = completion?.choices[0]?.message?.tool_calls?.[0]?.function.arguments;
-  return gptResponse ?? null;
+  return gptResponse !== undefined ? JSON.parse(gptResponse) : null;
 }
