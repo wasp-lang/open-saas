@@ -25,7 +25,7 @@ function setUpOpenAi(): OpenAI {
 
 //#region Actions
 const generateGptResponseInputSchema = z.object({
-  hours: z.string().regex(/^\d+(\.\d+)?$/, 'Hours must be a number'),
+  hours: z.number(),
 });
 
 type GenerateGptResponseInput = z.infer<typeof generateGptResponseInputSchema>;
@@ -206,7 +206,7 @@ export const getAllTasksByUser: GetAllTasksByUser<void, Task[]> = async (_args, 
 };
 //#endregion
 
-async function generateScheduleWithGpt(tasks: Task[], hours: string): Promise<GeneratedSchedule | null> {
+async function generateScheduleWithGpt(tasks: Task[], hours: number): Promise<GeneratedSchedule | null> {
   const parsedTasks = tasks.map(({ description, time }) => ({
     description,
     time,
