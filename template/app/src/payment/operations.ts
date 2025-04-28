@@ -26,10 +26,8 @@ export const generateCheckoutSession: GenerateCheckoutSession<
   const userId = context.user.id;
   const userEmail = context.user.email;
   if (!userEmail) {
-    throw new HttpError(
-      403,
-      'User needs an email to make a payment. If using the usernameAndPassword Auth method, switch to an Auth method that provides an email.'
-    );
+    // If using the usernameAndPassword Auth method, switch to an Auth method that provides an email.
+    throw new HttpError(403, 'User needs an email to make a payment.');
   }
 
   const paymentPlan = paymentPlans[paymentPlanId];

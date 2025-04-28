@@ -38,9 +38,11 @@ export const paymentPlanCards: Record<PaymentPlanId, PaymentPlanCard> = {
 
 const PricingPage = () => {
   const [isPaymentLoading, setIsPaymentLoading] = useState<boolean>(false);
-  
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const { data: user } = useAuth();
-  const isUserSubscribed = !!user && !!user.subscriptionStatus && user.subscriptionStatus !== SubscriptionStatus.Deleted;
+  const isUserSubscribed =
+    !!user && !!user.subscriptionStatus && user.subscriptionStatus !== SubscriptionStatus.Deleted;
 
   const {
     data: customerPortalUrl,
@@ -65,8 +67,13 @@ const PricingPage = () => {
       } else {
         throw new Error('Error generating checkout session URL');
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error(error);
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage('Error processing payment. Please try again later.');
+      }
       setIsPaymentLoading(false); // We only set this to false here and not in the try block because we redirect to the checkout url within the same window
     }
   }
@@ -78,11 +85,13 @@ const PricingPage = () => {
     }
 
     if (customerPortalUrlError) {
-      console.error('Error fetching customer portal url');
+      setErrorMessage('Error fetching Customer Portal URL');
+      return;
     }
 
     if (!customerPortalUrl) {
-      throw new Error(`Customer Portal does not exist for user ${user.id}`)
+      setErrorMessage(`Customer Portal does not exist for user ${user.id}`);
+      return;
     }
 
     window.open(customerPortalUrl, '_blank');
@@ -101,6 +110,11 @@ const PricingPage = () => {
           out below with test credit card number <br />
           <span className='px-2 py-1 bg-gray-100 rounded-md text-gray-500'>4242 4242 4242 4242 4242</span>
         </p>
+        {errorMessage && (
+          <div className='mt-8 p-4 bg-red-100 text-red-600 rounded-md dark:bg-red-200 dark:text-red-800'>
+            {errorMessage}
+          </div>
+        )}
         <div className='isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 lg:gap-x-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3'>
           {Object.values(PaymentPlanId).map((planId) => (
             <div

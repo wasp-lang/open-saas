@@ -24,7 +24,6 @@ function getOpenAi(): OpenAI | null {
 }
 
 //#region Actions
-
 const generateGptResponseInputSchema = z.object({
   hours: z.string().regex(/^\d+(\.\d+)?$/, 'Hours must be a number'),
 });
@@ -136,6 +135,9 @@ export const updateTask: UpdateTask<UpdateTaskInput, Task> = async (rawArgs, con
   const task = await context.entities.Task.update({
     where: {
       id,
+      user: {
+        id: context.user.id,
+      },
     },
     data: {
       isDone,
@@ -162,6 +164,9 @@ export const deleteTask: DeleteTask<DeleteTaskInput, Task> = async (rawArgs, con
   const task = await context.entities.Task.delete({
     where: {
       id,
+      user: {
+        id: context.user.id,
+      },
     },
   });
 
