@@ -14,8 +14,8 @@ import OpenAI from 'openai';
 import { SubscriptionStatus } from '../payment/plans';
 import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
 
-const openAi = getOpenAi();
-function getOpenAi(): OpenAI {
+const openAi = setUpOpenAi();
+function setUpOpenAi(): OpenAI {
   if (process.env.OPENAI_API_KEY) {
     return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   } else {
