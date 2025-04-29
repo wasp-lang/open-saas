@@ -20,7 +20,7 @@ Why?
 
 Because your codebase will naturally diverge from the template as you build your unique application, and any updates we may make to the template may not be compatible with your modified codebase, or your version of Wasp.
 
-Even if you *really* want to include a new feature from the template in your app, proceed with caution and througly consider the following:
+Even if you *really* want to include a new feature from the template in your app, proceed with caution and thoroughly consider the following:
 
 - Changes to the template may be tightly coupled. Implementing one change without related ones could cause unexpected issues.
 - Updates might not be compatible with your version of Wasp.
