@@ -30,7 +30,7 @@ Even if you *really* want to include a new feature from the template in your app
 ## If you still decide to update your app
 
 If you read above, considered the risks, and still need specific improvements, we recommend that you either:
-1. Recomended: [Manually merge the changes](#manually-merging-changes).
+1. Recommended: [Manually merge the changes](#manually-merging-changes).
 2. Riskier/Advanced: [Cherry-pick the commits](#cherry-picking-git-commits) that you want to merge and deal with any merge conflicts on a case-by-case basis. 
 
 :::caution[Difficulties finding the correct commit hash] 
