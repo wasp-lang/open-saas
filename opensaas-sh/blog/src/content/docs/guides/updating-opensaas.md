@@ -29,9 +29,7 @@ Even if you *really* want to include a new feature from the template in your app
 
 ## If you still decide to update your app
 
-If you read above, considered the risks, and still need specific improvements, we recommend that you either:
-1. Recommended: [Manually merge the changes](#manually-merging-changes).
-2. Riskier/Advanced: [Cherry-pick the commits](#cherry-picking-git-commits) that you want to merge and deal with any merge conflicts on a case-by-case basis. 
+If you read above, considered the risks, and still need specific improvements, we recommend that you manually merge the changes:
 
 :::caution[Difficulties finding the correct commit hash] 
 Open SaaS uses a tagging system in order to give you a version of the template that works for the version of Wasp you're using.
@@ -42,40 +40,18 @@ If we make important changes to the template we may update the tag to a newer co
 
 This may make it difficult to find the correct commit hash that matches the template code you started with.
 :::
-## Manually merging changes
-Compare your starting revision with the latest. You can find the commit hash of your starting revision in the [Open Saas GitHub repo's `main` branch](https://github.com/wasp-lang/open-saas/commits/main/).
 
-Once you've copied the commit hash, you can use it to compare with the latest commit hash:
+- Identify your starting revision by finding the commit with the matching Wasp version tag (e.g., `wasp-v0.16-template`) in the GitHub repository. Verify that the code in this commit matches your initial project code. If there's a mismatch, you'll need to search through the commit history just before the current version tag, as your starting point is likely a recent commit that preceded the current tag.
 
-```bash
-https://github.com/wasp-lang/open-saas/compare/<your-starting-commit-hash>..<latest-commit-hash>
-```
-For example, if your starting commit hash is `4c106fd` and the latest commit hash is `576d47a`, you can use the following URL:
-[https://github.com/wasp-lang/open-saas/compare/4c106fd..576d47a](https://github.com/wasp-lang/open-saas/compare/4c106fd..576d47a)
+- Compare your starting revision with the latest. You can find the commit hash of your starting revision in the [Open Saas GitHub repo's `main` branch](https://github.com/wasp-lang/open-saas/commits/main/).
 
-This will show you the changes between your starting revision and the latest.
+- Once you've copied the commit hash, you can use it to compare with the latest commit hash:
+  ```bash
+  https://github.com/wasp-lang/open-saas/compare/<your-starting-commit-hash>..<latest-commit-hash>
+  ```
+  For example, if your starting commit hash is `4c106fd` and the latest commit hash is `576d47a`, you can use the following URL: [https://github.com/wasp-lang/open-saas/compare/4c106fd..576d47a](https://github.com/wasp-lang/open-saas/compare/4c106fd..576d47a)
 
-Manually apply any changes you want into your local project.
+  This will show you the changes between your starting revision and the latest.
 
+- Take some time to understand these changes and apply any improvements you like to your project.
 
-## Cherry-picking git commits
-
-Add the Open SaaS repo as a remote:
-
-```bash
-git remote add upstream https://github.com/wasp-lang/open-saas/
-```
-
-Fetch the history:
-
-```bash
-git fetch upstream
-```
-
-Cherry-pick any or all commits since the release you started from. e.g. if you're currently using the [0.16 template](https://github.com/wasp-lang/open-saas/releases/tag/wasp-v0.16-template):
-
-```bash
-git cherry-pick 4c106fd^..upstream/main
-```
-
-This will replay every subsequent commit excluding the specified starting point (remove the `^` to be inclusive). If your codebase has diverged significantly, you may have to resolve any merge commits, but once complete, you'll have all the latest changes in your local repo.
