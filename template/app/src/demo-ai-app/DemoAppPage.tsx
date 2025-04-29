@@ -42,7 +42,7 @@ export default function DemoAppPage() {
 
 function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask }) {
   const [description, setDescription] = useState<string>('');
-  const [todaysHours, setTodaysHours] = useState<string>('8');
+  const [todaysHours, setTodaysHours] = useState<number>(8);
   const [response, setResponse] = useState<GeneratedSchedule | null>({
     mainTasks: [
       {
@@ -186,7 +186,7 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
                   max={24}
                   className='min-w-[7rem] text-gray-800/90 text-center font-medium rounded-md border border-gray-200 bg-yellow-50 hover:bg-yellow-100 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
                   value={todaysHours}
-                  onChange={(e) => setTodaysHours(e.currentTarget.value)}
+                  onChange={(e) => setTodaysHours(+e.currentTarget.value)}
                 />
               </div>
             </div>
