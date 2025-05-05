@@ -25,33 +25,21 @@ Even if you *really* want to include a new feature from the template in your app
 - Changes to the template may be tightly coupled. Implementing one change without related ones could cause unexpected issues.
 - Updates might not be compatible with your version of Wasp.
 - The more your codebase has diverged, the more challenging the update will be.
-- We use a tagging system to keep template and Wasp versions in sync. This can make it difficult for you to pin down the exact commit hash of the template you started with.
 
 ## If you still decide to update your app
 
-If you read above, considered the risks, and still need specific improvements, we recommend that you manually merge the changes:
+If you read above, considered the risks, and still need specific improvements, we recommend that you manually merge the changes.
 
-:::caution[Difficulties finding the correct commit hash] 
-Open SaaS uses a tagging system in order to give you a version of the template that works for the version of Wasp you're using.
+To do this, you should can either 1) merge new Open SaaS template changes into your current project, or 2) merge project changes into a fresh Open SaaS template.
 
-For example, if you're using Wasp `v0.16.x`, it will pull the template at the commit hash with the tag `wasp-v0.16-template`.
+1) Merge new Open SaaS template changes into your current project by:
+- reviewing the latest commits, 
+- understanding what happened, 
+- being mindful of the Wasp version you're using,
+- and then fitting those changes into your own codebase.
 
-If we make important changes to the template we may update the tag to a newer commit, so that new users will get the latest changes. That means that a tag, e.g. `wasp-v0.16-template`, may point to different commits over time, as changes are made to the template.
+2) Merge your project changes into a fresh Open SaaS template by:
+- starting a new, fresh project with the latest Open SaaS template,
+- and then copying over the logic from your existing project that you want to keep.
 
-This may make it difficult to find the correct commit hash that matches the template code you started with.
-:::
-
-- Identify your starting revision by finding the commit with the matching Wasp version tag (e.g., `wasp-v0.16-template`) in the GitHub repository. Verify that the code in this commit matches your initial project code. If there's a mismatch, you'll need to search through the commit history just before the current version tag, as your starting point is likely a recent commit that preceded the current tag.
-
-- Compare your starting revision with the latest. You can find the commit hash of your starting revision in the [Open Saas GitHub repo's `main` branch](https://github.com/wasp-lang/open-saas/commits/main/).
-
-- Once you've copied the commit hash, you can use it to compare with the latest commit hash:
-  ```bash
-  https://github.com/wasp-lang/open-saas/compare/<your-starting-commit-hash>..<latest-commit-hash>
-  ```
-  For example, if your starting commit hash is `4c106fd` and the latest commit hash is `576d47a`, you can use the following URL: [https://github.com/wasp-lang/open-saas/compare/4c106fd..576d47a](https://github.com/wasp-lang/open-saas/compare/4c106fd..576d47a)
-
-  This will show you the changes between your starting revision and the latest.
-
-- Take some time to understand these changes and apply any improvements you like to your project.
-
+The method you choose is up to you and will largely depend on the complexity of the changes you need to make.
