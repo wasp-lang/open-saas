@@ -16,8 +16,8 @@ This is a reference on how the Admin dashboard, available at `/admin`, is set up
 
 The Admin dashboard is only accessible to users with the `isAdmin` field set to true.
 
-```tsx title="main.wasp" {5}
-entity User {=psl
+```tsx title="schema.prisma" {5}
+model User {
   id                        Int             @id @default(autoincrement())
   email                     String?         @unique
   username                  String?
