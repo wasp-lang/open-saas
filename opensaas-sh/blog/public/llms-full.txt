@@ -1,0 +1,2232 @@
+# Introduction
+
+## Welcome to your new SaaS App!
+
+You've decided to build a SaaS app with this template. Great choice! 
+
+This template is:
+
+1. fully open-source
+2. completely free to use and distribute
+3. comes with a ton of features out of the box
+4. community-driven and constantly improving!
+
+Check it out in action here: [OpenSaaS.sh](https://opensaas.sh)  
+Check out the Code: [Open SaaS GitHub Repo](https://github.com/wasp-lang/open-saas)
+
+:::tip[FREE & OPEN-SOURCE!? ]
+That's right. Use this template however you like. No strings attached.
+
+If you find this template useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp). It helps us to keep bringing you open-source software just like this!
+:::
+
+## What's inside?
+
+The template itself is built on top of some very powerful tools and frameworks, including:
+  -  [Wasp](https://wasp.sh) - a full-stack React, NodeJS, Prisma framework with superpowers-  [Astro](https://starlight.astro.build/) - Astro's lightweight "Starlight" template for documentation and blog
+  -  [Stripe](https://stripe.com) or [Lemon Squeezy](https://lemonsqueezy.com/) - for products and payments
+  -  [Plausible](https://plausible.io) or [Google](https://analytics.google.com/) Analytics
+  -  [OpenAI](https://openai.com) - OpenAI API integrated into the app or [Replicate](https://replicate.com/) (coming soon )
+  -  [AWS S3](https://aws.amazon.com/s3/) - for file uploads
+  -  [SendGrid](https://sendgrid.com), [MailGun](https://mailgun.com), or SMTP - for email sending
+  -  [TailwindCSS](https://tailwindcss.com) - for styling
+  -  [TailAdmin](https://tailadmin.com/) - admin dashboard & components for TailwindCSS
+
+Because we're using Wasp as the full-stack framework, we can leverage a lot of its features to build our SaaS in record time, including:
+  -  [Full-stack Authentication](https://wasp.sh/docs/auth/overview) - Email verified + social Auth in a few lines of code.
+  -  [End-to-end Type Safety](https://wasp.sh/docs/data-model/operations/overview) - Type your backend functions and get inferred types on the front-end automatically, without the need to install or configure any third-party libraries. Oh, and type-safe Links, too!
+  -  [Jobs](https://wasp.sh/docs/advanced/jobs) - Run cron jobs in the background or set up queues simply by defining a function in the config file.
+  -  [One-command Deploy](https://wasp.sh/docs/advanced/deployment/overview) - Easily deploy via the CLI to [Fly.io](https://fly.io), or to other providers like [Railway](https://railway.app) and [Netlify](https://netlify.com).
+
+You also get access to Wasp's diverse, helpful community if you get stuck or need help.
+  -  [Wasp Discord](https://discord.gg/rzdnErX)
+
+:::caution["Work In Progress"]
+We've tried to get as many of the core features of a SaaS app into this template as possible, but there still might be some missing features or functionality.
+
+We could always use some help tying up loose ends, so consider [contributing](https://github.com/wasp-lang/open-saas/blob/main/CONTRIBUTING.md)!
+:::
+
+In the next sections, we'll get our SaaS app started and tour its features. Let's get started!
+
+---
+
+# Getting Started
+
+This guide will help you get your new SaaS app up and running.
+
+If you prefer video tutorials, you can watch this walkthrough below which will guide you through most of the setup (installation, authentication, payments, etc.). If you get stuck at any point, you can refer back to these docs for more information.
+
+<VideoPlayer src="https://youtu.be/lFGtwbwt66k" lgWidth="100%" />
+
+## Install Wasp
+
+### Pre-requisites
+
+You must have Node.js (and NPM) installed on your machine and available in `PATH` to use Wasp.
+Your version of Node.js must be >= 18.
+
+To switch easily between Node.js versions, we recommend using [nvm](https://github.com/nvm-sh/nvm).
+
+:::note[Installing and using nvm]
+<details aria-label="Installing and using nvm">
+  <summary aria-label="Need help with nvm?">
+    Need help with nvm?
+  </summary>
+  <div>
+    Install nvm via your OS package manager (`apt`, `pacman`, `homebrew`, ...) or via the [nvm](https://github.com/nvm-sh/nvm#install--update-script) install script.
+
+    Then, install a version of Node.js that you need:
+
+    ```shell
+    nvm install 20
+    ```
+
+    Finally, whenever you need to ensure a specific version of Node.js is used, run:
+
+    ```shell
+    nvm use 20
+    ```
+
+    to set the Node.js version for the current shell session.
+
+    You can run
+
+    ```shell
+    node -v
+    ```
+
+    to check the version of Node.js currently being used in this shell session.
+
+    Check NVM repo for more details: [https://github.com/nvm-sh/nvm](https://github.com/nvm-sh/nvm).
+  </div>
+</details>
+:::
+
+### Linux and macOS
+
+Open your terminal and run:
+
+```shell
+curl -sSL https://get.wasp.sh/installer.sh | sh
+```
+
+:::caution[Bad CPU type in executable]
+<details aria-label="Bad CPU type in executable">
+  <summary aria-label="Are you getting this error on a Mac (Apple Silicon)?">
+    Are you getting this error on a Mac (Apple Silicon)?
+  </summary>
+Given that the wasp binary is built for x86 and not for arm64 (Apple Silicon), you'll need to install <a href='https://support.apple.com/en-us/HT211861' alt='Rosetta on your Mac'>Rosetta on your Mac</a> if you are using a Mac with Mx (M1, M2, ...). Rosetta is a translation process that enables users to run applications designed for x86 on arm64 (Apple Silicon). To install Rosetta, run the following command in your terminal
+
+```bash
+softwareupdate --install-rosetta
+```
+Once Rosetta is installed, you should be able to run Wasp without any issues.
+
+</details>
+:::
+
+### Windows
+
+In order to use Wasp on Windows, you need to install WSL2 (Windows Subsystem for Linux) and a Linux distribution of your choice. We recommend using Ubuntu. 
+
+**You can refer to this [article](https://wasp.sh/blog/2023/11/21/guide-windows-development-wasp-wsl) for a step by step guide to using Wasp in the WSL environment.** If you need further help, reach out to us on [Discord](https://discord.gg/rzdnErX).
+
+:::caution[WSL2 Docker post installation steps]
+
+<details>
+  <summary>
+      Complete those steps to ensure that PostgreSQL and Docker work correctly with Wasp in WSL2.
+  </summary>
+It is recommended to complete those post-install steps in WSL, based on the official <a href="https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user">Docker</a> guide. These work if you are experiencing an error similar to <a href="https://github.com/wasp-lang/open-saas/issues/347">this</a> one.
+
+First, run
+
+```bash
+sudo groupadd docker
+```
+
+command to create the `docker` group in case it doesn't exist. If it exists, don't worry, just continue with next steps. After that, add your current user to docker group by running
+
+```bash
+sudo usermod -aG docker $USER
+```
+
+where $USER is your username. After that, log out and log back in to apply the changes. Finally, run
+
+```bash
+su -s $USER
+```
+
+</details>
+:::
+
+Once in WSL2, run the following command in your **WSL2 environment**:
+```sh
+curl -sSL https://get.wasp.sh/installer.sh | sh
+```
+
+:::caution[WSL2 and file system issues]
+<details aria-label="Are you getting file system issues using WSL2?">
+  <summary aria-label="Are you getting file system issues using WSL2?">
+    Are you getting file system issues using WSL2?
+  </summary>
+If you are using WSL2, make sure that your Wasp project is not on the Windows file system, <b>but instead on the Linux file system</b>. Otherwise, Wasp won't be able to detect file changes, due to this <a href='https://github.com/microsoft/WSL/issues/4739'>issue in WSL2</a>.
+</details>
+:::  
+
+### Finalize Installation
+
+Run the following command to verify that Wasp was installed correctly:
+
+```shell
+wasp version
+```
+
+Also be sure to install the Wasp VSCode extension to get the best DX, e.g. syntax highlighting, code scaffolding, autocomplete, etc.
+
+:::tip[Installing the Wasp VSCode Extension]
+You can install the Wasp VSCode extension by searching for "Wasp" in the Extensions tab in VSCode, or by visiting the [Wasp VSCode Extension](https://marketplace.visualstudio.com/items?itemName=wasp-lang.wasp) homepage
+:::
+
+## Setting up your SaaS app
+
+### Cloning the OpenSaaS template
+
+From the directory where you'd like to create your new project run:
+```sh
+wasp new
+```
+
+Then select option `[3] saas` from the list of templates after entering the name of your project.
+
+This will clone a **clean copy of the Open SaaS template** into a new directory! 
+
+### Start your DB
+
+Before you start your app, you need to have a Postgres Database connected and running. With Wasp, that's super easy!
+
+First, make sure you have **Docker installed and running**. If not, download and install it [here](https://www.docker.com/products/docker-desktop/)
+
+With Docker running, open a new terminal window/tab and position yourself in the `app` directory:
+
+```sh
+cd app
+```
+
+Then run:
+
+```sh
+wasp start db
+```
+
+This will start and connect your app to a Postgres database for you. No need to do anything else!  Just make sure to leave this terminal window open in the background while developing. Once you terminate the process, your DB will no longer be available to your app.
+
+Now let's create our very first database migration, to ensure the database has a correct schema. Open a new terminal tab/window and run the following command:
+
+```sh
+wasp db migrate-dev
+```
+
+This might take a bit since this is the first time you are running it and it needs to install all the
+dependencies for your Wasp project.
+
+In the future, you will also want to run `wasp db migrate-dev` whenever you make changes to your Prisma schema (Entities),
+to apply those schema changes to the database.
+
+Additionally, if you want to see or manage your DB via Prisma's DB Studio GUI, run:
+
+```sh
+wasp db studio
+```
+
+### Start your app
+
+At this point, you should be positioned in the `app/` directory and have the database running in another terminal session.
+
+Next, copy the `.env.server.example` file to `.env.server`.
+
+```sh
+cp .env.server.example .env.server
+```
+
+`.env.server` is where API keys for services like payments, email sender, and similar go, and this is where you will want to put them in later.
+For now, you can leave it as it is (dummy API keys), this will be enough to run the app.
+
+Then run:
+
+```sh
+wasp start
+```
+
+This will install all the dependencies and start the app (client and server) for you :)!
+
+If the app doesn't open automatically in your browser, you can open it manually by visiting `http://localhost:3000` in your browser.
+
+At this point, you should have:
+ - your database running in one terminal session, likely on port `5432`.
+ - your app running in another terminal session, the client likely on port `3000`, and the server likely on port `3001`.
+
+#### Run Blog and Docs
+
+This SaaS app comes with a docs and blog section built with the [Starlight template on top of the Astro](https://starlight.astro.build) framework. You can use this as a starting point for your own blog and documentation, if necessary.
+
+If you do not need this, you can simply delete the `blog` folder from the root of the project.
+
+If you want to run the Starlight docs and blog, first navigate to the `blog` folder:
+
+```sh
+cd ../blog
+```
+
+Then run:
+
+```sh
+npm install
+```
+
+Then start the development server:
+
+```sh
+npm run dev
+```
+
+Check the instructions in the terminal for the link to open the blog, it will typically be `https://localhost:4321/`.
+
+## What's next?
+
+Awesome! We have our new app ready and we know how to run both it and the blog/docs! Now, in the next section, we'll give you a quick "guided tour" of the different parts of the app we created and understand how it works.
+
+:::tip[Star our Repo on GitHub! ]
+We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
+
+If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
+:::
+
+---
+
+# Guided Tour
+
+Awesome, you now have your very own SaaS app up and running! But, first, here are some important things you need to know about your app in its current state:
+
+1. When signing up with a new user, you will get a message to check your email for a verification link. But, in development, these emails are simply written to your terminal. **So, to continue with the registration process, check your server logs after sign up**! 
+```sh title="server logs"
+[ Server ] 
+[ Server ]  Dummy email sender   
+[ Server ] 
+[ Server ] From:    Open SaaS App <me@example.com>
+[ Server ] To:      vinny@wasp.sh
+[ Server ] Subject: Verify your email
+[ Server ]  Text 
+[ Server ] Click the link below to verify your email: http://localhost:3000/email-verification?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZpbm55QHdhc3Auc2giLCJleHAiOjE3MTg5NjUyNTB9.PkRGrmuDPuYFXkTprf7QpAye0e_O9a70xbER6LfxGJw
+[ Server ]  HTML 
+[ Server ] <p>Click the link below to verify your email</p>
+[ Server ] <a href="http://localhost:3000/email-verification?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZpbm55QHdhc3Auc2giLCJleHAiOjE3MTg5NjUyNTB9.PkRGrmuDPuYFXkTprf7QpAye0e_O9a70xbER6LfxGJw">Verify email</a> 
+[ Server ] 
+```
+2. Your app is still missing some key configurations (e.g. API keys for Payment Processors, OpenAI, AWS S3, Auth, Analytics). These services won't work at the moment, but don't fear, because **we've provided detailed guides in these docs to help you set up all the services in this template**.
+3. If you want to get a feel for what your SaaS could look like when finished, **check out [OpenSaaS.sh](https://opensaas.sh) in your browser. It was built using this template!** So make sure to log in, play around with the demo app, make a test payment, and check out the admin dashboard.
+
+In the sections below, we will take a short guide through the codebase and the app's main features. Then at the end of this tour, we also prepared a checklist of likely changes you will want to make to the app to make it your own. 
+
+We're looking forward to seeing what you build!
+
+## Getting acquainted with the codebase
+Now that you've gotten a first look at the app, let's dive into the codebase.
+
+At the root of our project, you will see three folders:
+```sh
+.
+ app
+ blog
+ e2e-tests
+```
+
+`app` contains the Wasp project files, which is your full-stack React + NodeJS + Prisma app along with a Wasp config file, `main.wasp`, which will be explained in more detail below.
+
+`blog` contains the [Astro Starlight template](https://starlight.astro.build/) for the blog and documentation section. 
+
+`e2e-tests` contains the end-to-end tests using Playwright, which you can run to test your app's functionality.
+
+### App File Structure
+
+We've structured this full-stack app template vertically (by feature). That means that most directories within `app/src` contain both the React client code and NodeJS server code necessary for implementing its logic. 
+
+Let's check out what's in the `app` folder in more detail:
+
+:::caution[v0.13 and below]
+If you are using an older version of the OpenSaaS template with Wasp `v0.13.x` or below, you may see a slightly different file structure. But don't worry, the vast majority of the code and features are the same! 
+:::
+
+```sh
+.
+ main.wasp              # Wasp Config file. You define your app structure here.
+ .wasp/                 # Output dir for Wasp. DON'T MODIFY THESE FILES!
+ public/                # Public assets dir, e.g. www.yourdomain.com/public-banner.webp
+ src/                   # Your code goes here.
+    admin/             # Admin dashboard related pages and components.
+    analytics/         # Logic and background jobs for processing analytics.
+    auth/              # All auth-related pages/components and logic.
+    client/            # Shared components, hooks, landing page, and other client code (React).
+    demo-ai-app/       # Logic for the example AI-powered demo app.
+    file-upload/       # Logic for uploading files to S3.
+    landing-page       # Landing page related code
+    messages           # Logic for app user messages.
+    payment/           # Logic for handling payments and webhooks.
+    server/            # Scripts, shared server utils, and other server-specific code (NodeJS).
+    shared/            # Shared constants and util functions.
+    user/              # Logic related to users and their accounts.
+ .env.server            # Dev environment variables for your server code.
+ .env.client            # Dev environment variables for your client code.
+ .prettierrc            # Prettier configuration.
+ tailwind.config.js     # TailwindCSS configuration.
+ package.json
+ package-lock.json
+ .wasproot
+```
+
+### The Wasp Config file
+
+This template at its core is a Wasp project, where [Wasp](https://wasp.sh) is a full-stack web app framework that let's you write your app in React, NodeJS, and Prisma and will manage the "boilerplatey" work for you, allowing you to just take care of the fun stuff!
+
+[Wasp's secret sauce](https://wasp.sh/docs) is its use of a config file (`main.wasp`) and compiler which takes your code and outputs the client app, server app and deployment code for you. 
+
+In this template, we've already defined a number of things in the `main.wasp` config file, including:
+
+- [Auth](https://wasp.sh/docs/auth/overview)
+- [Routes and Pages](https://wasp.sh/docs/tutorial/pages)
+- [Prisma Database Models](https://wasp.sh/docs/data-model/entities)
+- [Operations (data read and write functions)](https://wasp.sh/docs/data-model/operations/overview)
+- [Background Jobs](https://wasp.sh/docs/advanced/jobs)
+- [Email Sending](https://wasp.sh/docs/advanced/email)
+
+By defining these things in the config file, Wasp continuously handles the boilerplate necessary with putting all these features together. You just need to focus on the business logic of your app.
+
+Wasp abstracts away some things that you would normally be used to doing during development, so don't be surprised if you don't see some of the things you're used to seeing.
+
+:::note
+It's possible to learn Wasp's feature set simply through using this template, but if you find yourself unsure how to implement a Wasp-specific feature and/or just want to learn more, a great starting point is the intro tutorial in the [Wasp docs](https://wasp.sh/docs) which takes ~20 minutes.
+:::
+
+### Client
+
+The `src/client` folder contains any additional client-side code that doesn't belong to a feature:
+
+```sh
+.
+ client
+     components         # Your shared React components.
+     fonts              # Extra fonts
+     hooks              # Your shared React hooks.
+     icons              # Your shared SVG icons.
+     static             # Assets that you need access to in your code, e.g. import logo from 'static/logo.png'
+     App.tsx            # Main app component to wrap all child components. Useful for global state, navbars, etc.
+     cn.ts              # Helper function for dynamic and conditional Tailwind CSS classes.
+     Main.css
+
+```
+
+### Server
+
+The `src/server` folder contains any additional server-side code that does not belong to a specific feature: 
+
+```sh
+ server
+     scripts            # Scripts to run via Wasp, e.g. database seeding.
+     utils.ts
+```
+
+## Main Features
+
+### Auth
+
+This template comes with a fully functional auth flow out of the box. It takes advantages of Wasp's built-in [Auth features](https://wasp.sh/docs/auth/overview), which do the dirty work of rolling your own full-stack auth for you!
+
+```js title="main.wasp"
+  auth: {
+    userEntity: User,
+    methods: {
+      email: { 
+        //...
+      },
+      google: {},
+      github: {},
+      discord: {}
+    },
+    onAuthFailedRedirectTo: "/",
+  },
+```
+
+By defining the auth structure in your `main.wasp` file, Wasp manages all the necessary code for you, including:
+- Email verified login with reset password
+- Social login with Google and/or GitHub
+- Auth-related database entities for user credentials, sessions, and social logins 
+- Custom-generated AuthUI components for login, signup, and reset password
+- Auth hooks for fetching user data
+
+We've set the template up with Wasp's `email`, `google`, and `gitHub` methods, which are all battle-tested and suitable for production. 
+
+You can get started developing your app with the `email` method right away! 
+
+:::caution[Dummy Email Provider]
+Note that the `email` method relies on an `emailSender` (configured at `app.emailSender` in the `main.wasp` file), a service which sends emails to verify users and reset passwords. 
+
+For development purposes, Wasp provides a `Dummy` email sender which Open SaaS comes with as the default. This provider *does not* actually send any confirmation emails to the specified email address, but instead logs all email verification links/tokens to the console! You can then follow these links to verify the user and continue with the sign-up process.
+
+```tsx title="main.wasp" 
+  emailSender: {
+    provider: Dummy, // logs all email verification links/tokens to the server's console
+    defaultFrom: {
+      name: "Open SaaS App",
+      email: "me@example.com" 
+    },
+  },
+```
+:::
+
+We will explain more about these auth methods, and how to properly integrate them into your app, in the [Authentication Guide](/guides/authentication/).
+
+### Subscription Payments with Stripe or Lemon Squeezy
+
+No SaaS is complete without payments, specifically subscription payments. That's why this template comes with a fully functional Stripe or Lemon Squeezy integration. 
+
+Let's take a quick look at how payments are handled in this template.
+
+1. a user clicks the `BUY` button and a **Checkout session** is created on the server
+2. the user is redirected to the Checkout page where they enter their payment info
+3. the user is redirected back to the app and the Checkout session is completed
+4. Stripe / Lemon Squeezy sends a webhook event to the server with the payment info
+5. The app server's **webhook handler** handles the event and updates the user's subscription status
+
+The payment processor you choose (Stripe or Lemon Squeezy) and its related functions can be found at `src/payment/paymentProcessor.ts`. The `Payment Processor` object holds the logic for creating checkout sessions, webhooks, etc.
+
+The logic for creating the Checkout session is defined in the `src/payment/operation.ts` file. [Actions](https://wasp.sh/docs/data-model/operations/actions) are a type of Wasp Operation, specifically your server-side functions that are used to **write** or **update** data to the database. Once they're defined in the `main.wasp` file, you can easily call them on the client-side:
+
+a) define the action in the `main.wasp` file
+```js title="main.wasp"
+action generateCheckoutSession {
+  fn: import { generateCheckoutSession } from "@src/payment/operations",
+  entities: [User]
+}
+```
+
+b) implement the action in the `src/payment/operations` file
+```js title="src/server/actions.ts"
+export const generateCheckoutSession = async (paymentPlanId, context) => { 
+  //...
+ }
+```
+
+c) call the action on the client-side
+```js title="src/client/app/SubscriptionPage.tsx"
+
+const handleBuyClick = async (paymentPlanId) => {
+  const checkoutSession = await generateCheckoutSession(paymentPlanId);
+};
+```
+
+The webhook handler is defined in the `src/payment/webhook.ts` file. Unlike Actions and Queries in Wasp which are only to be used internally, we define the webhook handler in the `main.wasp` file as an API endpoint in order to expose it externally to Stripe
+
+```js title="main.wasp"
+api paymentsWebhook {
+  fn: import { paymentsWebhook } from "@src/payment/webhook",
+  httpRoute: (POST, "/payments-webhook") 
+  entities: [User],
+}
+```
+
+Within the webhook handler, we look for specific events that the Payment Processor sends us to let us know which payment was completed and for which user. Then we update the user's subscription status in the database.
+
+To learn more about configuring the app to handle your products and payments, check out the [Payments Integration guide](/guides/payments-integration/).
+
+:::tip[Star our Repo on GitHub! ]
+We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
+
+If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
+:::
+
+### Analytics and Admin Dashboard
+
+Keeping an eye on your metrics is crucial for any SaaS. That's why we've built an administrator's dashboard where you can view your app's stats, user data, and revenue all in one place.
+
+To do that, we've leveraged Wasp's [Jobs feature](https://wasp.sh/docs/advanced/jobs) to run a cron job that calculates your daily stats. The app stats, such as page views and sources, can be pulled from either Plausible or Google Analytics. All you have to do is create a project with the analytics provider of your choice and import the respective pre-built helper functions!
+
+```js title="main.wasp"
+job dailyStatsJob {
+  executor: PgBoss,
+  perform: {
+    fn: import { calculateDailyStats } from "@src/analytics/stats"
+  },
+  schedule: {
+    cron: "0 * * * *" // runs every hour
+  },
+  entities: [User, DailyStats, Logs, PageViewSource]
+}
+```
+
+For more info on integrating Plausible or Google Analytics, check out the [Analytics guide](/guides/analytics/).
+
+## App Customization Walkthrough
+
+### General Considerations
+
+When you first start your Open SaaS app straight from the template, it will run, but many of the services won't work because they lack your own API keys. Here are list of services that need your API keys to work properly:
+
+- Auth Methods (Google, GitHub)
+- Stripe or Lemon Squeezy
+- OpenAI (Chat GPT API)
+- Email Sending (Sendgrid) -- you must set this up if you're using the `email` Auth method 
+- Analytics (Plausible or Google Analytics)
+- File Uploading (AWS S3)
+
+Now would be a good time to decide which features you do and do not need for your app, and remove the ones from the codebase that you don't need.
+
+For the features you will use, the next section of the documentation, `Guides`, will walk you through how to set each one up!
+
+:::note[Open SaaS is built on Wasp]
+Remember, this template is built on the Wasp framework. If, at any time, these docs fail to provide enough information about a certain built-in feature, make sure to check out the [Wasp docs](https://wasp.sh/docs)!
+:::
+
+But before you start setting up the main features, let's walk through the customizations you will likely want to make to the template to make it your own.
+
+### Customizations Checklist
+#### `main.wasp` Config File
+- [ ] Change the app name and title:
+  ```ts title="main.wasp" {1, 6}
+    app YourAppName { 
+      wasp: {
+        version: "^0.13.2"
+      },
+
+      title: "Your App Name",
+  ```
+  :::caution[Restart Your App]
+  Upon changing the app name, new, empty development database will be assigned to your app. This means you'll need to rerun `wasp db start`, `wasp db migrate-dev` and `wasp start`.
+  :::
+- [ ] Update meta tags in `app.head` (even if you don't have a custom domain yet, put one you would like to have, as this won't affect development).
+- [ ] Update `app.emailSender.defaultFrom.name` with the name of your app/company/whatever you want your users to see in their inbox, if you're using the `emailSender` feature and/or `email` Auth method.
+- [ ] Remove any features you might not use or need:
+  - [ ] Auth methods - `app.auth.methods`
+    - [ ] If you're not using `email` Auth method, remove the routes/pages `RequestPasswordReset`, `PasswordReset`, and `EmailVerification`
+  - [ ] Email Sending - `app.emailSender`, `job emailChecker`
+  - [ ] Plausible analytics - `app.head`
+  - [ ] File Uploading - `entity File`, `route FileUploadRoute`, `action createFile`, `query getAllFilesByUser`, `getDownloadFileSignedURL`
+- [ ] Rename Entites and their properties, Routes/Pages, & Operations, if you wish.
+
+#### Customizing the Look / Style of the App
+- [ ] Update your favicon at `public/favicon.ico`.
+- [ ] Update the banner image used when posting links to your site at `public/public-banner.webp`.
+  - [ ] Update the URL for this banner at `og:image` and `twitter:image` in `app.head` of the `main.wasp` file.
+- [ ] Make changes to your landing page, `landingPage.tsx`.
+  - [ ] Customize the `navBar`, `features`, `testimonials`, and `faqs` in the `contentSections.ts` file.
+  - [ ] Change/rename the `logo.webp` and main hero banner (`open-saas-banner.webp`) in the `static` folder.
+- [ ] If you want to make changes to the global styles of the app, you can do so in `tailwind.config.cjs`. **Be aware that the current custom global styles defined already are mostly used in the app's Admin Dashboard!**
+
+#### Customizing the Analytics & Admin Dashboard
+- [ ] If you're using Plausible, update the `app.head` with your Plausible domain.
+- [ ] Update the `calculateDailyStats` function in `src/server/workers/calculateDailyStats.ts` to pull the stats from the analytics provider you've chosen (Plausible or Google Analytics).
+- [ ] Change the cron schedule in the `dailyStatsJob` in the `main.wasp` file to match how often you want your stats to be calculated.
+- [ ] Update the `AdminDashboard` components to display the stats you do/don't want to see.
+
+#### `.env.server` and `.env.client` Files
+- [ ] After you've followed the `Guides` in the next section, you'll need to update the `.env.server` and `.env.client` files with your API keys and other environment variables for the services you've decided to use.
+- [ ] Delete any redundant environment variables that you're not using, from the `.env.*` files as well as the `.env.*.example` files.
+
+#### Other Customizations
+- [ ] Make a new GitHub Repo for your app.
+- [ ] Deploy your app to a hosting provider.
+- [ ] Buy a domain name for your app and get it set up with your hosting provider.
+- [ ] Read the `e2e-tests` README and get your end-to-end tests set up.
+  - [ ] Change the tests to suit the changes you've made to your app
+- [ ] Get the CI pipeline set up for your app (you can get started by using the Open SaaS development CI [example here](https://github.com/wasp-lang/open-saas/tree/main/.github/workflows))
+
+## What's next?
+
+In the following `Guides` sections, we'll walk you through getting those API keys and setting up the finer points of features such as Payments & Webhooks, Auth, Email Sending, Analytics, and more.
+
+---
+
+# Analytics
+
+This guide will show you how to integrate analytics for your app. You can choose between [Google Analytics](#google-analytics) and [Plausible](#plausible).
+
+Google Analytics is free, but uses cookies, so you'll probably want/need to implement the [Cookie Consent Modal](/guides/cookie-consent/) when using it.
+
+Plausible is an open-source, privacy-friendly alternative to Google Analytics. **You DO NOT have to use the cookie consent modal** with Plausible, as it does not use cookies. It's also easier to use than Google if you use their hosted service, but be aware it is a paid feature. It is completely free if you want to self-host it, although this comes with some additional setup steps.
+
+If you're looking to add analytics to your blog, you can follow the [Adding Analytics to your Blog](#adding-analytics-to-your-blog) section at the end of this guide.
+
+## Plausible
+
+### Hosted Plausible
+Sign up for a hosted Plausible account [here](https://plausible.io/).
+
+Once you've signed up, you'll be taken to your dashboard. Create your site by adding your domain. Your domain is also your `PLAUSIBLE_SITE_ID` in your `.env.server` file. Make sure to add it.
+
+```sh
+PLAUSIBLE_SITE_ID=<your domain without www>
+```
+
+After adding your domain, you'll be taken to a page with your Plausible script tag. Copy and paste this script tag into the `main.wasp` file's head section. 
+
+```js {7}
+app OpenSaaS {
+  wasp: {
+    version: "^0.13.0"
+  },
+  title: "My SaaS App",
+  head: [
+        "<your plausible script tag here>",
+  ],
+  //...
+```
+
+Go back to your Plausible dashboard, click on your username in the top right, and click on the `Settings` tab. Scroll down, find your API key and paste it into your `.env.server` file under the `PLAUSIBLE_API_KEY` variable.
+
+:::note[No Cookies]
+Plausible does not use cookies, so you don't need to add it to your [Cookie Consent Modal](/guides/cookie-consent/), hence the script can be added directly to `app.head` in your `main.wasp` file.
+:::
+
+### Self-hosted Plausible
+
+Plausible, being an open-source project, allows you to self-host your analytics. This is a great option if you want to keep your data private and not pay for the hosted service.
+
+*coming soon...*
+*until then, check out the [official documentation](https://plausible.io/docs)*
+
+:::tip[Contribute!] 
+If you'd like to help us write this guide, click the "Edit page" button at the bottom of this page 
+
+As a completely free, open-source project, we appreciate any help 
+:::
+
+## Google Analytics
+
+First off, head over to `src/analytics/stats.ts` and switch out the Plausible Provider for Google Analytics so that your [background (cron) job](https://wasp.sh/docs/advanced/jobs) fetches the data from Google Analytics for your [Admin Dashboard](/general/admin-dashboard/):
+
+```ts ins={3} del={2} title="stats.ts"
+//...
+
+export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, context) => { 
+  //...
+}
+```
+
+Next, make sure you sign up for [Google analytics](https://analytics.google.com/), then go to your `Admin` panel in the bottom of the left sidebar and then create a "Property" for your app.
+
+Once you've created a new Property, some Installation Instructions will pop up. Select `install manually` where you should see a string that looks like this:
+
+```sh title="<your-google-analytics-id>"
+ https://www.googletagmanager.com/gtag/js?id=<your-google-analytics-id>
+```
+and copy and paste the Google Analytics ID into your `.env.client` file to get it working with the [Cookie Consent Modal](/guides/cookie-consent/) provided with this template:
+
+```sh title=".env.client"
+REACT_APP_GOOGLE_ANALYTICS_ID=<your-google-analytics-id> # e.g. G-1234567890
+```
+
+:::tip[noscript]
+In the Installation Instructions, Google Tag Manager might also instruct you to paste the `noscript` code snippet immediately after the opening `<body>` tag.
+You should skip this step because this snippet is activated only if users try to browse your app without JavaScript enabled, which is very rare and Wasp needs JS anyway.
+:::
+
+Then, set up the Google Analytics API access by following these steps:
+
+1. **Set up a Google Cloud project:** If you haven't already, start by setting up a project in the [Google Cloud Console](https://console.cloud.google.com/).
+
+2. **Enable the Google Analytics API for your project:** Navigate to the "Library" in the Google Cloud Console and search for the "Google Analytics Data API" (for Google Analytics 4 properties) and enable it.
+
+3. **Create credentials:** Now go to the "Credentials" tab within your Google Cloud project, click on `+ credentials`, and create a new service account key. First, give it a name. Then, under "Grant this service account access to project", choose `viewer`.
+
+4. **Create Credentials:** When you go back to `Credentials` page, you should see a new service account listed under "Service Accounts". It will be a long email address to ends with `@your-project-id.iam.gserviceaccount.com`. Click on the service account name to go to the service account details page. 
+
+    - Under "Keys" in the service account details page, click "Add Key" and choose `Create new key`.
+  
+    - Select "JSON", then click "Create" to download your new service account's JSON key file. Keep this file secure and don't add it to your git repo as it grants access to your Google Analytics data.  
+5. **Update your Google Anayltics Settings:** Go back to your Google Analytics dashboard, and click on the `Admin` section in the left sidebar. Under `Property Settings > Property > Property Access Management` Add the service account email address (the one that ends with `@your-project-id.iam.gserviceaccount.com`) and give it `Viewer` permissions.
+
+6. **Encode and add the Credentials:** Add the `client_email` and the `private_key` from your JSON Key file into your `.env.server` file. But be careful! Because Google uses a special PEM private key, you need to first convert the key to base64, otherwise you will run into errors parsing the key. To do this, in a terminal window, run the command below and paste the output into your `.env.server` file under the `GOOGLE_ANALYTICS_PRIVATE_KEY` variable:
+    ```sh 
+    echo -n "-----BEGIN PRIVATE KEY-----\nMI...A++eK\n-----END PRIVATE KEY-----\n" | base64
+    ```
+    
+7. **Add your Google Analytics Property ID:** You will find the Property ID in your Google Analytics dashboard in the `Admin > Property > Property Settings > Property Details` section of your Google Analytics property (**not** your Google Cloud console). Add this 9-digit number to your `.env.server` file under the `GOOGLE_ANALYTICS_PROPERTY_ID` variable.
+
+## Adding Analytics to your Blog
+
+To add your analytics script to your Astro Starlight blog, all you need to do is modify the `head` property in your `blog/astro.config.mjs` file. 
+
+Below is an example of how to add Google Analytics to your blog:
+
+```js
+export default defineConfig({
+  site: 'https://opensaas.sh',
+  integrations: [
+    starlightBlog({ 
+      // ...
+    }),
+    starlight({
+      //...
+       head: [
+        {
+          tag: 'script',
+          attrs: {
+            src: 'https://www.googletagmanager.com/gtag/js?id=<YOUR-GOOGLE-ANALYTICS-ID>',
+          },
+        },
+        {
+          tag: 'script',
+          content: `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+        
+          gtag('config', '<YOUR-GOOGLE-ANALYTICS-ID>');
+          `,
+        },
+      ],
+```
+
+---
+
+# Authentication
+
+Setting up your app's authentication is easy with Wasp. In fact, it's already set up for you in the `main.wasp` file: 
+
+```tsx title="main.wasp"
+  auth: {
+    userEntity: User,
+    methods: {
+      email: {}, 
+      google: {},
+      gitHub: {},
+      discord: {}
+    },
+    onAuthFailedRedirectTo: "/",
+  },
+```
+
+The great part is, by defining your auth config in the `main.wasp` file, Wasp manages most of the Auth process for you, including the auth-related database entities for user credentials and sessions, as well as auto-generated client components for your app on the fly (aka AuthUI -- you can see them in use in the `src/auth` folder).
+
+## Email Verified Auth
+
+`email` method is the default auth method in Open Saas.
+
+Since it needs to send emails to verify users and reset passwords, it requires an [email sender](https://wasp.sh/docs/advanced/email) provider: a service it can use to send emails.
+"email sender" provider is configured via `app.emailSender` field in the `main.wasp` file.
+
+:::caution[Dummy Email Provider]
+To make it easy for you to get started, Open SaaS initially comes with the `Dummy` "email sender" provider, which does not send any emails, but instead logs all email verification links/tokens to the server's console!
+You can then follow these links to verify the user and continue with the sign-up process.
+
+```tsx title="main.wasp"
+  emailSender: {
+    provider: Dummy, // logs all email verification links/tokens to the server's console
+    defaultFrom: {
+      name: "Open SaaS App",
+      email: "me@example.com" 
+    },
+  },
+```
+
+You **can not use the Dummy provider in production** and your app **will not build** until you move to a production-ready provider, such as SendGrid. We outline the process of migrating to SendGrid below. 
+:::
+
+In order to use the `email` auth method in production, you'll need to switch from the `Dummy` "email sender" provider to a production-ready provider like SendGrid: 
+
+1. First, set up your app's `emailSender` in the `main.wasp` file by following [this guide](/guides/email-sending/#integrate-your-email-sender). 
+2. Add your `SENDGRID_API_KEY` to the `.env.server` file.
+3. Make sure the email address you use in the `fromField` object is the same email address that you configured your SendGrid account to send out emails with. In the end, your `main.wasp` file should look something like this: 
+```ts title="main.wasp" {6,7} del={15} ins={16}
+  auth: {
+    methods: {
+      email: {
+        fromField: {
+          name: "Open SaaS App",
+          // When using SendGrid, you must use the same email address that you configured your account to send out emails with!
+          email: "me@example.com" 
+        },
+        //...
+      }, 
+    }
+  },
+  //...
+  emailSender: {
+    provider: Dummy,
+    provider: SendGrid,
+    defaultFrom: {
+      name: "Open SaaS App",
+      // When using SendGrid, you must use the same email address that you configured your account to send out emails with!
+      email: "me@example.com" 
+    },
+  },
+  ```
+
+And that's it. Wasp will take care of the rest and update your AuthUI components accordingly.
+
+Check out the  [Wasp Auth docs](https://wasp.sh/docs/auth/overview) for more info.
+
+## Google, GitHub, & Discord Auth
+
+We've also customized and pre-built the Google and GitHub auth flow for you. To start using them, you just need to uncomment out the methods you want in your `main.wasp` file and obtain the proper API keys to add to your `.env.server` file. 
+
+To create a Google OAuth app and get your Google API keys, follow the instructions in [Wasp's Google Auth docs](https://wasp.sh/docs/auth/social-auth/google#3-creating-a-google-oauth-app).
+
+To create a GitHub OAuth app and get your GitHub API keys, follow the instructions in [Wasp's GitHub Auth docs](https://wasp.sh/docs/auth/social-auth/github#3-creating-a-github-oauth-app).
+
+To create a Discord OAuth app and get your Discord API keys, follow the instructions in [Wasp's Discord Auth docs](docs/auth/social-auth/google#3-creating-a-google-oauth-app)
+
+Again, Wasp will take care of the rest and update your AuthUI components accordingly.
+
+---
+
+# Authorization
+
+This guide will help you get started with authorization in your SaaS app. 
+
+Authorization refers to what users can access in your app. This is useful for differentiating between users who have paid for different subscription tiers (e.g. "hobby" vs "pro"), or between users who have admin privileges and those who do not.
+
+Authorization differs from [authentication](/guides/authentication/) in that authentication refers to the process of verifying that a user is who they say they are (e.g. logging in with a username and password).
+
+To learn more about the different types of user permissions built into this SaaS template, including Stripe subscription tiers and statuses, check out the [User Overview Reference](/general/user-overview/).
+
+Also, check out our [blog post](https://wasp.sh/blog/2022/11/29/permissions-in-web-apps) to learn more about authorization (access control) in web apps.
+
+### Client-side Authorization
+
+Open Saas starts with all users having access to the landing page (`/`), but only authenticated users having access to the rest of the app (e.g. to the `/demo-app`, or to the `/account`).
+
+To control which pages require users to be authenticated to access them, you can set the `authRequired` property of the corresponding `page` definition in your `main.wasp` file:
+
+```tsx title="main.wasp" {3}
+route AccountRoute { path: "/account", to: AccountPage }
+page AccountPage {
+  authRequired: true,
+  component: import Account from "@src/user/AccountPage"
+}
+```
+
+This will automatically redirect users to the login page if they are not logged in while trying to access that page.
+
+:::caution[Client-side authorization is just for the looks]
+Users can manipulate the client code as they wish, meaning that client-side access control (authorization) serves the purpose of ergonomics/user experience, not the purpose of restricting access to sensitive data.
+This means that authorization in the client code is a nice-to-have: it is here to make sure users don't get lost in the part of the app they can't work with because data is missing due to them not having access, not to actually restrict them from doing something.
+Actually ensuring they don't have access to the data, that is on the server to ensure, via server-side logic that you will implement for authorization (access control).
+:::
+
+If you want more fine-grained control over what users can access, there are two Wasp-specific options:
+1. When you define the `authRequired: true` property on the `page` definition, Wasp automatically passes the User object to the page component. Here you can check for certain user properties before authorizing access:
+
+```tsx title="ExamplePage.tsx" "{ user }: { user: User }"
+
+export default function Example({ user }: { user: User }) {
+
+  if (user.subscriptionStatus === 'past_due') {
+    return (<span>Your subscription is past due. Please update your payment information.</span>)
+  }
+  if (user.subscriptionStatus === 'cancel_at_period_end') {
+    return (<span>Your susbscription will end on 01.01.2024</span>)
+  }
+  if (user.subscriptionStatus === 'active') {
+    return (<span>Thanks so much for your support!</span>)
+  }
+
+}
+```
+
+2. Or you can take advantage of the `useAuth` hook and check for certain user properties before authorizing access to certain pages or components:
+
+```tsx title="ExamplePage.tsx" {1, 4}
+
+export default function ExampleHomePage() {
+  const { data: user } = useAuth();
+
+  return (
+    <h1> Hi {user.email || 'there'}  </h1>
+  )
+}
+```
+
+### Server-side Authorization
+
+Authorization on the server-side is the core of your access control logic, and determines what users actually can or can't do (unlike client-side authorization logic which is there merely for UX).
+
+You can authorize access to server-side operations by adding a check for a logged-in user on the `context.user` object which is passed to all operations in Wasp:
+
+```tsx title="src/server/actions.ts" 
+export const someServerAction: SomeServerAction<...> = async (args, context) => {
+  if (!context.user) {
+    throw new HttpError(401); // throw an error if user is not logged in
+  }
+
+  if (context.user.subscriptionStatus === 'past_due') {
+    throw new HttpError(403, 'Your subscription is past due. Please update your payment information.');
+  }
+  //...
+}
+```
+
+---
+
+# Cookie Consent Modal
+
+Cookie consent banners are annoying, we know. But they are legally required in many countries, so we have to deal with them.
+
+This guide will help you dynamically add or remove cookies from your app via the Cookie Consent modal that comes with this template. 
+
+This is needed for *non-essential cookies* that are not necessary for the basic functionality of your app, such as analytics cookies or marketing cookies.
+
+The Modal can be found at `app/src/client/components/cookie-consent/` and contains two main files:
+1. `Banner.tsx` - the component that displays the banner at the bottom of the page.
+2. `Config.ts` - the configuration file that contains the cookies/scripts that will be dynamically added.
+
+The `Banner.tsx` component is imported in `app/src/client/App.tsx` and is rendered at the bottom of the page, while all the changes to the banner itself are done within the `Config.ts` file, which we explain below.
+
+## Configuration
+
+We decided to use the `vanilla-cookieconsent` library to handle the cookie consent. We've set it up to give you some basic functionality, using mostly the default settings. For a full list of options, you can check the [official documentation](https://www.npmjs.com/package/vanilla-cookieconsent).
+
+Below, we will guide you through the necessary steps to get the cookie consent modal set up for your app.
+
+### Google Analytics
+
+What's impotant to note for this template is that we are simply using the `onAccept` callbacks to dynamically add or remove our [Google Analytics](/guides/analytics/#google-analytics) cookies from the page. In order for it to work correctly with your app, you need to add your [Google Analytics ID](/guides/analytics/#google-analytics) to your `.env.client` file.
+
+```sh title=".env.client"
+ REACT_APP_GOOGLE_ANALYTICS_ID=G-1234567890
+```
+
+And that's it! The cookie consent modal will now dynamically add or remove the Google Analytics cookies based on the user's choice.
+
+To check if it's working correctly, you can open the browser's developer tools and check the cookies tab. You should see the following cookies being added or removed based on the user's choice:
+
+```sh
+_ga
+_ga... # Google Analytics cookies.
+cc_cookie # Cookie Consent cookie. The name of this cookie can be changed in the config file.
+```
+
+### Plausible Analytics
+
+If you decide to go with [Plausible Analytics](/guides/analytics/#plausible), you **DO NOT** need to ask users for their consent to use cookies because Plausible, as a privacy-first analytics provider, [does not use cookies](https://plausible.io/privacy-focused-web-analytics). Instead, It collects website usage data anonymously and in aggregate form only, without any personally identifiable information
+
+**By avoiding cookies, Plausible Analytics avoids the need for cookie consent banners.**
+
+### Your Terms / Privacy Policy
+
+You should also add a link to your terms and privacy policy within `consentModal` section of `config.language`:
+
+```ts title="Config.ts" {10,11}
+    language: {
+      default: 'en',
+      translations: {
+        en: {
+          consentModal: {
+            title: 'We use cookies',
+            // ...
+            // TODO: Add your own privacy policy and terms and conditions links below.
+            footer: `
+            <a href="<your-url-here>" target="_blank">Privacy Policy</a>
+            <a href="<your-url-here>" target="_blank">Terms and Conditions</a>
+                    `,
+          },
+        },
+      },
+    }
+```
+
+### Allowing Users to Control Certain Cookies (OPTIONAL)
+
+If you've added more than just Google Analytics cookies to your app, you can allow users to control which cookies they want to accept or reject. For example, if you've added marketing cookies, you can add a button to the modal that allows users to reject them, while accepting analytics cookies.
+
+To do that, you can change the `preferencesModal.sections` property in `config.language`. Any section that you add to `preferencesModal.sections` must match a `linkedCategory` in the `config.categories` property. Make sure you also add a `showPreferencesBtn` property to `consentModal` (highlighted below). 
+
+Below is an example of what your config might look like if you want to give users the option to control over multiple cookie preferences:
+
+```ts title="Config.ts" {7,9-67}
+    language: {
+      default: 'en',
+      translations: {
+        en: {
+          consentModal: {
+            // ...
+            showPreferencesBtn: 'Manage Individual preferences', // This button will open the preferences modal below.
+          },
+          preferencesModal: {
+            title: 'Manage cookie preferences',
+            acceptAllBtn: 'Accept all',
+            acceptNecessaryBtn: 'Reject all',
+            savePreferencesBtn: 'Accept current selection',
+            closeIconLabel: 'Close modal',
+            serviceCounterLabel: 'Service|Services',
+            sections: [
+              {
+                title: 'Your Privacy Choices',
+                description: `In this panel you can express some preferences related to the processing of your personal information. You may review and change expressed choices at any time by resurfacing this panel via the provided link. To deny your consent to the specific processing activities described below, switch the toggles to off or use the "Reject all" button and confirm you want to save your choices.`,
+              },
+              {
+                title: 'Strictly Necessary',
+                description:
+                  'These cookies are essential for the proper functioning of the website and cannot be disabled.',
+                linkedCategory: 'necessary',
+              },
+              {
+                title: 'Performance and Analytics',
+                description:
+                  'These cookies collect information about how you use our website. All of the data is anonymized and cannot be used to identify you.',
+                linkedCategory: 'analytics',
+                cookieTable: {
+                  caption: 'Cookie table',
+                  headers: {
+                    name: 'Cookie',
+                    domain: 'Domain',
+                    desc: 'Description',
+                  },
+                  body: [
+                    {
+                      name: '_ga',
+                      domain: location.hostname,
+                      desc: 'Description 1',
+                    },
+                    {
+                      name: '_gid',
+                      domain: location.hostname,
+                      desc: 'Description 2',
+                    },
+                  ],
+                },
+              },
+              {
+                title: 'YouTube',
+                description: 'This service is used to display video content on the website.',
+                linkedCategory: 'youtube',
+                cookieTable: { 
+                  // ...
+                }
+              },
+              {
+                title: 'More information',
+                description:
+                  'For any queries in relation to my policy on cookies and your choices, please <a href="#contact-page">contact us</a>',
+              },
+            ],
+          },
+        },
+      },
+    }
+```
+
+For more information on how to do that, check the [official documentation](https://cookieconsent.orestbida.com/reference/configuration-reference.html#translation-preferencesmodal-sections).
+
+---
+
+# Deploying
+
+Because this SaaS app is a React/NodeJS/Postgres app built on top of [Wasp](https://wasp.sh), Open SaaS can take advantage of Wasp's easy, one-command deploy to Fly.io or manual deploy to any provider of your choice.
+
+The simplest and quickest option is to take advantage of Wasp's one-command deploy to Fly.io.
+
+Or if you prefer to deploy to a different provider, or your frontend and backend separately, you can follow the Deploying Manually section below.
+
+## Deploying your App
+### Steps for Deploying
+
+These are the steps necessary for you to deploy your app. We recommend you follow these steps in order.
+
+- [ ] Get your [production API keys and environment variables](#prerequisites)
+- [ ] Deploy your app easily to [Fly.io](#deploying-to-flyio) or [manually](#deploying-manually--to-other-providers) to any provider.
+- [ ] Add the correct [redirect URL's to your social auth credentials](#adding-server-redirect-urls-to-social-auth)
+- [ ] Set up your [production webhooks for either [Stripe](#setting-up-your-production-stripe-webhook) or [Lemon Squeezy](#setting-up-your-production-lemon-squeezy-webhook)
+- [ ] Set your [production environment variables](#other-vars) on your deployed apps
+- [ ] (Optional) [Deploy your blog](#deploying-your-blog)
+
+Each of these steps is covered in more detail below.
+
+### Prerequisites
+#### AWS S3 CORS configuration
+If you're storing files in AWS S3, ensure you've listed your production domain
+in the bucket's CORS configuration under `AllowedOrigins`. Check the [File
+uploading guide](/guides/file-uploading/#change-the-cors-settings) for details.
+
+#### Env Vars
+Make sure you've got all your API keys and environment variables set up before you deploy.
+##### Payment Processor Vars
+In the [Payments Processor integration guide](/guides/payments-integration/), you set up your API keys using test keys and test product ids. You'll need to get the live/production versions of those keys. To get these, repeat the instructions in the [Integration Guide](/guides/payments-integration/) without being in test mode. Add the new keys to your deployed environment secrets.
+
+##### Other Vars
+Many of your other environment variables will probably be the same as in development, but you should double-check that they are set correctly for production.
+
+Here are a list of all of them (some of which you may not be using, e.g. Analytics, Social Auth) in case you need to check:
+###### General Vars
+- [ ] `DATABASE_URL`
+- [ ] `JWT_SECRET`
+- [ ] `WASP_WEB_CLIENT_URL`
+- [ ] `WASP_SERVER_URL`
+
+###### Open AI API Key
+- [ ] `OPENAI_API_KEY`
+
+###### Sendgrid API Key
+- [ ] `SENDGRID_API_KEY`
+
+###### Social Auth Vars
+- [ ] `GOOGLE_CLIENT_ID`
+- [ ] `GOOGLE_CLIENT_SECRET`
+- [ ] `GITHUB_CLIENT_ID`
+- [ ] `GITHUB_CLIENT_SECRET`
+
+###### Analytics Vars
+- [ ] `REACT_APP_PLAUSIBLE_ANALYTICS_ID` (for client-side)
+- [ ] `PLAUSIBLE_API_KEY`
+- [ ] `PLAUSIBLE_SITE_ID`
+- [ ] `PLAUSIBLE_BASE_URL`
+- [ ] `REACT_APP_GOOGLE_ANALYTICS_ID` (for client-side)
+- [ ] `GOOGLE_ANALYTICS_CLIENT_EMAIL`
+- [ ] `GOOGLE_ANALYTICS_PROPERTY_ID` 
+- [ ] `GOOGLE_ANALYTICS_PRIVATE_KEY`
+(Make sure you convert the private key within the JSON file to base64 first with `echo -n "PRIVATE_KEY" | base64`. See the [Analytics docs](/guides/analytics/#google-analytics) for more info)
+
+###### AWS S3 Vars
+- [ ] `AWS_S3_IAM_ACCESS_KEY`
+- [ ] `AWS_S3_IAM_SECRET_KEY`
+- [ ] `AWS_S3_FILES_BUCKET`
+- [ ] `AWS_S3_REGION`
+
+:::tip[Deployed? Get some swag! ]
+
+Do you have an Open SaaS app running in production? If yes, we'd love to send some swag your way! All you need to do is fill out [this form](https://e44cy1h4s0q.typeform.com/to/EPJCwsMi) and we'll make it happen.
+
+:::
+
+### Deploying to Fly.io
+
+[Fly.io](https://fly.io) is a platform for running your apps globally. It's a great choice for deploying your SaaS app because it's free to get started, can host your entire full-stack app in one place, scales well, and has one-command deploy integration with Wasp.
+
+**Wasp provides the handy `wasp deploy` command to deploy your entire full-stack app (DB, server, and client) in one command.**
+
+To learn how, please follow the detailed guide for [deploying to Fly via the Wasp CLI](https://wasp.sh/docs/deployment/deployment-methods/cli) from the Wasp documentation. We suggest you follow this guide carefully to get your app deployed.
+
+:::caution[Setting Environment Variables]
+Remember, because we've set certain client-side env variables, make sure to pass them to the `wasp deploy` commands so that they can be included in the build: 
+```sh
+REACT_APP_CLIENT_ENV_VAR_1=<...> REACT_APP_CLIENT_ENV_VAR_2=<...> wasp deploy 
+```
+
+The `wasp deploy` command will also take care of setting the following server-side environment variables for you so you don't have to:
+- `DATABASE_URL`
+- `PORT`
+- `JWT_SECRET`
+- `WASP_WEB_CLIENT_URL`
+- `WASP_SERVER_URL`
+
+For setting the remaining server-side environment variables, please refer to the [Deploying with the Wasp CLI Guide](https://wasp.sh/docs/deployment/deployment-methods/cli#launch).
+:::
+
+### Deploying Manually / to Other Providers
+
+If you prefer to deploy manually, your frontend and backend separately, or just prefer using your favorite provider you can follow [Wasp's Manual Deployment Guide](https://wasp.sh/docs/deployment/deployment-methods/paas).
+
+:::caution[Client-side Environment Variables]
+Remember to always set additional client-side environment variables, such as `REACT_APP_STRIPE_CUSTOMER_PORTAL` by appending them to the build command, e.g. 
+```sh
+REACT_APP_CLIENT_ENV_VAR_1=<...> npm run build
+```
+:::
+
+### Adding Server Redirect URL's to Social Auth
+
+After deploying your server, you need to add the correct redirect URIs to the credential settings. For this, refer to the following guides from the Wasp Docs:
+
+- [Google Auth](https://wasp.sh/docs/auth/social-auth/google#3-creating-a-google-oauth-app:~:text=Under%20Authorized%20redirect%20URIs)
+- [Github Auth](https://wasp.sh/docs/auth/social-auth/github#3-creating-a-github-oauth-app:~:text=Authorization%20callback%20URL)
+
+### Setting up your Production Stripe Webhook
+
+Now you need to set up your stripe webhook for production use. Below are some important steps and considerations you should take as you prepare to deploy your app to production.
+
+#### Stripe API Versions
+
+When you create your Stripe account, Stripe will automatically assign you to their latest API version at that time. This API version is important because it determines the structure of the responses Stripe sends to your webhook, as well as the structure it expects of the requests you make toward the Stripe API.
+  
+Because this template was built with a specific version of the Stripe API in mind, it could be that your Stripe account is set to a different API version. 
+
+:::note
+```ts title="stripeClient.ts" 
+export const stripe = new Stripe(process.env.STRIPE_API_KEY!, {
+  apiVersion: 'YYYY-MM-DD', // e.g. 2023-08-16
+});
+```
+When you specify a specific API version in your Stripe client, the requests you send to Stripe from your server, along with their responses, will match that API version. On the other hand, Stripe will send all other events to your webhook that didn't originate as a request sent from your server, like those made after a user completes a payment on checkout, using the default API version of the API.
+
+This is why it's important to make sure your Stripe client version also matches the API version in your Stripe account, and to thoroughly test any changes you make to your Stripe client before deploying to production.
+:::
+
+To make sure your app is consistent with your Stripe account, here are some steps you can follow:
+
+1. You can find your `default` API version in the Stripe dashboard under the [Developers](https://dashboard.stripe.com/developers) section.
+2. Check that the API version in your `/src/payment/stripe/stripeClient.ts` file matches the default API version in your dashboard:
+```ts title="stripeClient.ts" {2}
+export const stripe = new Stripe(process.env.STRIPE_KEY!, {
+  apiVersion: 'YYYY-MM-DD', // e.g. 2023-08-16
+});
+```
+3. If they don't match, you can upgrade/downgrade your Stripe NPM package in `package.json` to match the API version in your dashboard:
+  - If your default version on the Stripe dashboard is also the latest version of the API, you can simply upgrade your Stripe NPM package to the latest version.
+  - If your default version on the Stripe dashboard is not the latest version, and you don't want to [upgrade to the latest version](https://docs.stripe.com/upgrades#how-can-i-upgrade-my-api), because e.g. you have other projects that depend on the current version, you can find and install the Stripe NPM package version that matches your default API version by following these steps:
+    - Find and note the date of your default API version in the [developer dashboard](https://dashboard.stripe.com/developers).
+    - Go to the [Stripe NPM package](https://www.npmjs.com/package/stripe) page and hover over `Published` date column until you find the package release that matches your version. For example, here we find the NPM version that matches the default API version of `2023-08-16` in our dashboard, which is `13.x.x`.
+    
+    - Install the correct version of the Stripe NPM package by running, :
+    ```sh
+      npm install stripe@x.x.x # e.g. npm install stripe@13.11.0
+    ```
+4. **Test your app thoroughly** to make sure that the changes you made to your Stripe client are working as expected before deploying to production.
+
+#### Creating Your Production Webhook
+1. go to [https://dashboard.stripe.com/webhooks](https://dashboard.stripe.com/webhooks)
+2. click on `+ add endpoint`
+3. enter your endpoint url, which will be the url of your deployed server + `/payments-webhook`, e.g. `https://open-saas-wasp-sh-server.fly.dev/payments-webhook`
+
+4. select the events you want to listen to. These should be the same events you're consuming in your webhook. For example, if you haven't added any additional events to the webhook and are using the defaults that came with this template, then you'll need to add:
+  <br/>- `account.updated`
+  <br/>- `checkout.session.completed`
+  <br/>- `customer.subscription.deleted`
+  <br/>- `customer.subscription.updated`
+  <br/>- `invoice.paid`
+  <br/>- `payment_intent.succeeded`
+
+5. after that, go to the webhook you just created and `reveal` the new signing secret.
+6. add this secret to your deployed server's `STRIPE_WEBHOOK_SECRET=` environment variable. <br/>If you've deployed to Fly.io, you can do that easily with the following command:
+```sh
+wasp deploy fly cmd --context server secrets set STRIPE_WEBHOOK_SECRET=whsec_...
+```
+
+### Setting up your Production Lemon Squeezy Webhook
+
+To set up your Lemon Squeezy webhook, you'll need the URL of you newly deployed server + `/payments-webhook`, e.g. `https://open-saas-wasp-sh-server.fly.dev/payments-webhook`. 
+
+With the webhook url ready, go to your [Lemon Squeezy Webhooks Dashboard](https://app.lemonsqueezy.com/settings/webhooks):
+- click the `+` button.
+- add the webhook forwarding url to the `Callback URL` section.
+- give your webhook a signing secret (a long, random string).
+- add this signing secret to your server's production environment variables under `LEMONSQUEEZY_WEBHOOK_SECRET=`
+- make sure to select at least the following updates to be sent:
+  - order_created
+  - subscription_created
+  - subscription_updated
+  - subscription_cancelled
+- click `save`
+
+## Deploying your Blog
+
+Deploying your Astro Starlight blog is a bit different than deploying your SaaS app. As an example, we will show you how to deploy your blog for free to Netlify. You will need a Netlify account and [Netlify CLI](https://docs.netlify.com/cli/get-started/) installed to follow these instructions.
+
+Make sure you are logged in with Netlify CLI. 
+- You can check if you are logged in with `netlify status`, 
+- you can log in with `netlify login`.
+
+Position yourself in the `blog` directory and run the following command:
+
+```sh
+npm run build
+```
+
+This will build your blog into the `blog/dist` directory. Now you can deploy your blog to Netlify with the following command:
+
+```sh
+netlify deploy 
+``` 
+
+Select the `dist` directory as the deploy path.
+
+Finally, if the deployment looks good, you can deploy your blog to production with the following command: 
+  
+```sh
+netlify deploy --prod
+```
+
+---
+
+# Email Sending
+
+This guide explains how to use the integrated email sender and how you can integrate your own account in this template.
+
+## Sending Emails
+
+### The `Dummy` Email Provider (for Local Dev Only)
+By default we've set up the email sender to use the `Dummy` provider. This is **for local development only** and no emails will actually be sent out!
+To obtain an email verification token/link, you must check the server logs on initial sign up. You can click this link to verify your email and continue with the sign up process.
+```tsx title="main.wasp"
+app SaaSTemplate {
+  // ...
+  emailSender: {
+    provider: Dummy,
+    defaultFrom: {
+      name: "Open SaaS App",
+      email: "me@example.com" 
+    },
+  },
+```
+
+Note that your app will not build if using the `Dummy` provider and you must switch to a production-ready provider in order to do so.
+
+### Using a Production-Ready Email Provider (e.g. SendGrid)
+To change your email provider to a production-ready one, such as SendGrid, you'll want to configure your `emailSender` like so:
+
+```tsx title="main.wasp"
+app SaaSTemplate {
+  // ...
+  emailSender: {
+    provider: SendGrid,
+    defaultFrom: {
+      name: "Open SaaS App",
+      // When using SendGrid, you must use the same email address that you configured your account to send out emails with!
+      email: "me@example.com" 
+    },
+  },
+```
+
+This means that you can send emails from your app using the `send` function from the `email` modul provided by Wasp:
+
+```tsx title="src/server/webhooks.ts"
+
+//...
+
+  if (subscription.cancel_at_period_end) {
+    await emailSender.send({
+      to: customer.email,
+      subject: 'We hate to see you go :(',
+      text: 'We hate to see you go. Here is a sweet offer...',
+      html: 'We hate to see you go. Here is a sweet offer...',
+    });
+  }
+```
+
+In the example above, you can see that we're sending an email to the customer when we receive a cancel subscription event within the Stripe webhook. 
+
+This is a powerful feature and super simple to use.
+
+## Integrate your email sender
+
+To set up your email sender, you first need an account with one of the supported email providers.
+
+<Tabs>
+  <TabItem label="SendGrid">
+    - Register at SendGrid.com and then get your [API KEYS](https://app.sendgrid.com/settings/api_keys).
+    - Copy yours to the `.env.server` file under the `SENDGRID_API_KEY` variable. 
+
+    Make sure to change the `defaultFrom` email address in the `main.wasp` file to use the same email address that you configured your account to send out emails with!
+
+    ```tsx title="main.wasp" {5}
+    emailSender: {
+      provider: SendGrid,
+      defaultFrom: {
+        name: "Open SaaS App",
+        email: "me@example.com" // <--- same email address you configured your SendGrid account to send emails with!
+      },
+    ``` 
+  </TabItem>
+  <TabItem label="Mailgun">
+    - Go to [Mailgun](https://mailgun.com) and create an account.
+    - Go to [API Keys](https://app.mailgun.com/settings/api_security/api_keys?onboardingTask=api-key) and create a new API key.
+    - Copy the API key and add it to your .env.server file under the `MAILGUN_API_KEY=` variable.
+    - Go to [Domains](https://app.mailgun.com/mg/sending/new-domain?onboardingTask=add-verify-domain) and create a new domain.
+    - Copy the domain and add it to your .env.server file as `MAILGUN_DOMAIN=`.
+
+    Make sure to change the `defaultFrom` email address in the `main.wasp` file to use the same email address that you configured your account to send out emails with!
+
+    ```tsx title="main.wasp" {5}
+    emailSender: {
+      provider: Mailgun,
+      defaultFrom: {
+        name: "Open SaaS App",
+        email: "me@example.com" // <--- same email address you configured your Mailgun account to send emails with!
+      },
+    ```
+  </TabItem>
+</Tabs>
+
+If you want more detailed info, or would like to use SMTP, check out the [Wasp docs](https://wasp.sh/docs/advanced/email).
+
+---
+
+# File Uploading
+
+This guide will show you how to set up file uploading in your SaaS app.
+
+There are two options we recommend:
+1. Using [AWS S3](https://aws.amazon.com/s3/) with presigned URLS for secure file storage
+2. Using Multer middleware to upload files to your own server
+
+**We recommend using AWS S3 as it's a scalable, secure option, that can handle a large amount of storage.** 
+
+If you're just looking to upload small files and don't expect your app to grow to a large scale, you can use Multer to upload files to your app's server.
+
+:::tip[Star our Repo on GitHub! ]
+We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
+
+If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
+:::
+
+## Using AWS S3
+
+### How presigned URLs work
+
+Presigned URLs are URLs that have been signed with your AWS credentials and can be used to upload files to your S3 bucket. They are time-limited and can be generated on the server and sent to the client to upload files directly to S3.
+
+The process of generating a presigned URL is as follows:
+1. The client sends a request to the server to upload a file
+2. The server generates a presigned URL using its AWS credentials
+3. The server sends the presigned URL to the client
+4. The client uses the presigned URL to upload the file directly to S3 before the URL expires
+
+We use this method to upload files to S3 because it is more secure than uploading files directly from the client to S3. It also allows us to keep our AWS credentials private and not expose them to the client.
+
+To use presigned URLs, we'll need to set up an S3 bucket and get our AWS credentials.
+
+### Create an AWS Account
+
+Before you begin, you'll need to create an AWS account. AWS accounts are free to create and are split up into:
+1. Root account
+2. IAM users
+
+You'll need to first create a root account, and then an IAM user for your SaaS app before you can start uploading files to S3.
+
+To do so, follow the steps in this external guide: [Creating IAM users and S3 buckets in AWS](https://medium.com/@emmanuelnwright/create-iam-users-and-s3-buckets-in-aws-264e78281f7f)
+
+### Create an AWS S3 Bucket
+
+Once you are logged in with your IAM user, you'll need to create an S3 bucket to store your files.
+
+1. Navigate to the S3 service in the AWS console
+    
+2. Click on the `Create bucket` button
+    
+3. Fill in the bucket name and region
+4. **Leave all the settings as default** and click `Create bucket`
+    
+
+### Change the CORS settings
+
+Now we need to change some permissions on the bucket to allow for file uploads from your app.
+
+1. Click on the bucket you just created
+    
+2. Click on the `Permissions` tab
+    
+3. Scroll down to the `Cross-origin resource sharing (CORS)` section and click `Edit`
+    
+5. Insert the correct CORS configuration and click `Save changes`. You can
+   copy-paste most of the config below, but **you must edit the
+   `AllowedOrigins` field** to fit your app. Include `http://localhost:3000` for
+   local development, and `https://<your domain>` for production.
+
+   If you don't yet have a domain name, just list `http://localhost:3000` for
+   now. We'll remind you to add your domain before deploying to production in
+   the [Deployment docs](/guides/deploying/#aws-s3-cors-configuration).
+   ```json {11,12}
+   [
+       {
+           "AllowedHeaders": [
+               "*"
+           ],
+           "AllowedMethods": [
+               "POST",
+               "GET"
+           ],
+           "AllowedOrigins": [
+               "http://localhost:3000",
+               "https://<your-domain>"
+           ],
+           "ExposeHeaders": []
+       }
+   ]
+   ```
+
+### Get your AWS S3 credentials
+
+Now that you have your S3 bucket set up, you'll need to get your S3 credentials to use in your app.
+
+1. Click on your username in the top right corner of the AWS console and select `Security Credentials`
+    
+2. Scroll down to the `Access keys` section
+3. Click on `Create Access Key`
+4. Select the `Application running on an AWS service` option and create the access key
+    
+5. Copy the `Access key ID` and `Secret access key` and paste them in your `src/app/.env.server` file: 
+```sh
+  AWS_S3_IAM_ACCESS_KEY=ACK...
+  AWS_S3_IAM_SECRET_KEY=t+33a...
+  AWS_S3_FILES_BUCKET=your-bucket-name
+  AWS_S3_REGION=your-region // (e.g. us-west-2)
+```
+
+:::tip[Star our Repo on GitHub! ]
+We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
+
+If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
+:::
+
+### Using and Customizing File Uploads with S3 in your App
+
+With your S3 bucket set up and your AWS credentials in place, you can now start uploading files in your app using presigned URLs by navigating to `localhost:3000/file-upload` and uploading a file.
+
+To begin customizing file uploads, is important to know where everything lives in your app. Here's a quick overview:
+- `main.wasp`:
+  - The `File entity` can be found here. Here you can modify the fields to suit your needs.
+- `src/file-upload/FileUploadPage.tsx`:
+  - The `FileUploadPage` component is where the file upload form lives. It also allows you to download the file from S3 by calling the `getDownloadFileSignedURL` based on that files `key` in the app DB.
+- `src/file-upload/operations.ts`:
+  - The `createFile` action lives here and calls the `getUploadFileSignedURLFromS3` within it using your AWS credentials before passing it to the client. This function stores the files in the S3 bucket within folders named after the user's ID, so that each user's files are stored separately.
+  - The `getAllFilesByUser` fetches all File information uploaded by the user. Note that the files do not exist in the app database, but rather the file data, its name and its `key`, which is used to fetch the file from S3.
+  - The `getDownloadFileSignedURL` query fetches the presigned URL for a file to be downloaded from S3 using the file's `key` stored in the app's database.
+
+## Using Multer to upload files to your server
+
+If you're looking to upload files to the app server, you can use the Multer middleware to handle file uploads. This will allow you to store files on your server and is a good option if you need a quick and dirty, free solution for simple file uploads.
+
+Below are GitHub Gists that show you how to set up file uploads using Multer in your app:
+
+### Wasp version 0.12 & higher
+
+<script src="https://gist.github.com/infomiho/ec379df4e33f3ae3410a251ba3aa81af.js"></script>
+
+---
+
+# Payments Integration
+
+This guide will show you how to set up Payments for testing and local development with the following payment processors:
+- Stripe
+- Lemon Squeezy
+
+:::note[Which should I choose?]
+Stripe is the industry standard, is more configurable, and has cheaper fees.
+Lemon Squeezy acts a [Merchant of Record](https://www.lemonsqueezy.com/reporting/merchant-of-record). This means they take care of paying taxes in multiple countries for you, but charge higher fees per transaction. 
+:::
+
+## Important First Steps
+
+First, go to `/src/payment/paymentProcessor.ts` and choose which payment processor you'd like to use, e.g. Stripe or Lemon Squeezy:
+
+```ts title="src/payment/paymentProcessor.ts" ins={5, 7}
+
+//...
+
+export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
+// or... 
+export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
+```
+
+At this point, you can delete:
+- the unused payment processor code within the `/src/payment/<unused-provider>` directory, 
+- any unused environment variables from `.env.server` (they will be prefixed with the name of the provider your are not using):
+  - e.g. `STRIPE_API_KEY`, `STRIPE_CUSTOMER_PORTAL_URL`, `LEMONSQUEEZY_API_KEY`, `LEMONSQUEEZY_WEBHOOK_SECRET`
+- Make sure to also uninstall the unused dependencies:
+  - `npm uninstall @lemonsqueezy/lemonsqueezy.js`
+  - or
+  - `npm uninstall stripe`
+- Remove any unused fields from the `User` model in the `schema.prisma` file if they exist:
+  - e.g. `lemonSqueezyCustomerPortalUrl`
+
+Now your code is ready to go with your preferred payment processor and it's time to configure your payment processor's API keys, products, and other settings.
+
+## Stripe
+
+First, you'll need to create a Stripe account. You can do that [here](https://dashboard.stripe.com/register).
+
+:::tip[Star our Repo on GitHub! ]
+We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
+
+If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
+:::
+
+### Get your test Stripe API Keys
+
+Once you've created your account, you'll need to get your test API keys. You can do that by navigating to [https://dashboard.stripe.com/test/apikeys](https://dashboard.stripe.com/test/apikeys) or by going to the [Stripe Dashboard](https://dashboard.stripe.com/test/dashboard) and clicking on the `Developers`.
+
+- Click on the `Reveal test key token` button and copy the `Secret key`.
+- Paste it in your `.env.server` file under `STRIPE_API_KEY=`
+
+### Create Test Products
+
+To create a test product, go to the test products url [https://dashboard.stripe.com/test/products](https://dashboard.stripe.com/test/products), or after navigating to your dashboard, click the `test mode` toggle.
+
+- Click on the `Add a product` button and fill in the relevant information for your product. 
+- Make sure you select `Software as a service (SaaS)` as the product type.
+- For Subscription products, make sure you select `Recurring` as the billing type.
+- For One-time payment products, make sure you select `One-time` as the billing type.
+- If you intend to let your users switch between two subscription plans, e.g. upgrade from hobby to pro, you'll need to create two separate products and with their own price IDs. The ability for users to swich plans can then be configured later in the [Customer Portal](#set-up-the-customer-portal).
+- If you want to add different price tiers for the same product (e.g. monthly and yearly), click the `Add another price` button at the buttom. 
+
+- After you save the product, you'll be directed to the product page. 
+- Copy the price IDs and paste them in the `.env.server` file
+  - We've set you up with two example subscription product environment variables, `PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID=` and `PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID=`.
+  - As well as a one-time payment product/credits-based environment variable, `PAYMENTS_CREDITS_10_PLAN_ID=`.
+- Note that if you change the names of the price IDs, you'll need to update your server code to match these names as well
+
+### Create a Test Customer
+
+To create a test customer, go to the test customers url [https://dashboard.stripe.com/test/customers](https://dashboard.stripe.com/test/customers).
+
+- Click on the `Add a customer` button and fill in the relevant information for your test customer.
+:::note
+ When filling in the test customer email address, use an address you have access to and will use when logging into your SaaS app. This is important because the email address is used to identify the customer when creating a subscription and allows you to manage your test user's payments/subscriptions via the test customer portal
+:::
+
+### Set up the Customer Portal
+
+Go to https://dashboard.stripe.com/test/settings/billing/portal in the Stripe Dashboard and activate and copy the `Customer portal link`. Paste it in your `.env.server` file:
+
+```ts title=".env.server"
+STRIPE_CUSTOMER_PORTAL_URL=<your-test-customer-portal-link>
+```
+
+If you'd like to give users the ability to switch between different plans, e.g. upgrade from a hobby to a pro subscription, go down to the `Subscriptions` dropdown and select `customers can switch plans`. 
+
+Then select the products you'd like them to be able to switch between.
+
+Now, after your users have paid, they can click on `Manage Subscription` in the client and will be taken to the customer portal where they can update their current plan.
+
+### Install the Stripe CLI
+
+To install the Stripe CLI with homebrew, run the following command in your terminal:
+
+```sh
+brew install stripe/stripe-cli/stripe
+```
+
+or for other install scripts or OSes, follow the instructions [here](https://stripe.com/docs/stripe-cli#install).
+
+Now, let's start the webhook server and get our webhook signing secret.
+
+First, login:
+```sh
+stripe login
+```
+
+:::caution[Errors running the Stripe CLI]
+If you're seeing errors, consider appending `sudo` to the stripe commands.
+See this [GitHuh issue](https://github.com/stripe/stripe-cli/issues/933) for more details.
+:::
+
+```sh
+stripe listen --forward-to localhost:3001/payments-webhook
+```
+
+You should see a message like this:
+
+```sh
+> Ready! You are using Stripe API Version [2023-08-16]. Your webhook signing secret is whsec_8a... (^C to quit)
+```
+
+copy this secret to your `.env.server` file under `STRIPE_WEBHOOK_SECRET=`.
+
+### Testing Webhooks via the Stripe CLI
+
+- In a new terminal window, run the following command:
+
+```sh
+stripe login
+```
+
+- start the Stripe CLI webhook forwarding on port 3001 where your Node server is running. 
+
+```sh
+stripe listen --forward-to localhost:3001/payments-webhook
+```
+
+:::caution[Webhook URL]
+In older versions of this template, the webhook URL was `http://localhost:3001/stripe-webhook`.
+If you're using an older version, **make sure to use the url that matches the webhook url in your `main.wasp` file payemnts API definition.**
+:::
+
+remember to copy and paste the outputted webhook signing secret (`whsec_...`) into your `.env.server` file under `STRIPE_WEBHOOK_SECRET=` if you haven't already.
+
+- In another terminal window, trigger a test event:
+
+```sh
+stripe trigger payment_intent.succeeded
+```
+
+The results of the event firing will be visible in the initial terminal window. You should see messages like this:
+
+```sh
+...
+2023-11-21 09:31:09   --> invoice.paid [evt_1OEpMPILOQf67J5TjrUgRpk4]
+2023-11-21 09:31:09  <--  [200] POST http://localhost:3001/payments-webhook [evt_1OEpMPILOQf67J5TjrUgRpk4]
+2023-11-21 09:31:10   --> invoice.payment_succeeded [evt_1OEpMPILOQf67J5T3MFBr1bq]
+2023-11-21 09:31:10  <--  [200] POST http://localhost:3001/payments-webhook [evt_1OEpMPILOQf67J5T3MFBr1bq]
+2023-11-21 09:31:10   --> checkout.session.completed [evt_1OEpMQILOQf67J5ThTZ0999r]
+2023-11-21 09:31:11  <--  [200] POST http://localhost:3001/payments-webhook [evt_1OEpMQILOQf67J5ThTZ0999r]
+```
+
+For more info on testing webhooks, check out https://stripe.com/docs/webhooks#test-webhook
+
+:::tip[Star our Repo on GitHub! ]
+We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
+
+If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
+:::
+
+### Testing Checkout and Payments via the Client
+
+Make sure the **Stripe CLI is running** by following the steps above.
+You can then test the payment flow via the client by doing the following:
+
+- Click on a Buy button on the for any of the products on the homepage. You should be redirected to the checkout page.
+- Fill in the form with the following test credit card number `4242 4242 4242 4242` and any future date for the expiration date and any 3 digits for the CVC.
+
+- Click on the "Pay" button. You should be redirected to the success page.
+
+- Check your terminal window for status messages and logs
+
+- You can also check your Database via the DB Studio to see if the user entity has been updated by running:
+
+```sh
+wasp db studio
+```
+
+- Navigate to `localhost:5555` and click on the `users` table. You should see the `subscriptionStatus` is `active` for the user that just made the purchase.
+
+:::note
+If you want to learn more about how a user's payment status, subscription status, and subscription tier affect a user's priveledges within the app, check out the [User Overview](/general/user-overview) reference.
+:::
+
+## Lemon Squeezy
+
+First, make sure you've defined your payment processor in `src/payment/paymentProcessor.ts`, as described in the [important first steps](#important-first-steps).
+
+Next, you'll need to create a Lemon Squeezy account in test mode. You can do that [here](https://lemonsqueezy.com).
+
+:::tip[Star our Repo on GitHub! ]
+We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
+
+If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
+:::
+
+### Get your test Lemon Squeezy API Keys
+
+Once you've created your account, you'll need to get your test API keys. You can do that by navigating to [https://app.lemonsqueezy.com/settings/api](https://app.lemonsqueezy.com/settings/api) and creating a new API key.
+
+- Click on the `+` button
+- Give your API key a name
+- Copy and paste it in your `.env.server` file under `LEMONSQUEEZY_API_KEY=`
+
+### Get your Lemon Squeezy Store ID
+
+To get your store ID, go to the [Lemon Squeezy Dashboard](https://app.lemonsqueezy.com/settings/stores) and copy the `Store ID` from the top right corner.
+
+Copy and paste this number in your `.env.server` file under `LEMONSQUEEZY_STORE_ID=`
+
+### Create Test Products
+
+To create a test product, go to the test products url [https://app.lemonsqueezy.com/products](https://app.lemonsqueezy.com/products).
+
+- Click on the `+ New Product` button and fill in the relevant information for your product. 
+- Fill in the general information.
+- For pricing, select the type of product you'd like to create, e.g. `Subscription` for a recurring monthly payment product or  `Single Payment` for credits-based product.
+
+- Make sure you select `Software as a service (SaaS)` as the Tax category type.
+- If you want to add different price tiers for `Subscription` products, click on `add variant` under the `variants` tab. Here you can input the name of the variant (e.g. "Hobby", "Pro"), and that variant's price.
+
+- For a product with no variants, on the product page, click the `...` menu button and select `Copy variant ID`
+
+- For a product with variants, on the product page, click on the product, go to the variants tab and select `Copy ID` for each variant.
+
+- Paste these IDs in the `.env.server` file:
+  - We've set you up with two example subscription product environment variables, `PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID=` and `PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID=`.
+  - As well as a one-time payment product/credits-based environment variable, `PAYMENTS_CREDITS__10_PLAN_ID=`.
+- Note that if you change the names of the these environment variables, you'll need to update your app code to match these names as well.
+
+### Create and Use the Lemon Squeezy Webhook in Local Development
+
+Lemon Squeezy sends messages/updates to your Wasp app via its webhook, e.g. when a payment is successful. For that to work during development, we need to expose our locally running (via `wasp start`) Wasp app and make it available online, specifically the server part of it. Since the Wasp server runs on port 3001, you should run ngrok on port 3001, which will provide you with a public URL that you can use to configure Lemon Squeezy with.
+
+To do this, first make sure you have installed [ngrok](https://ngrok.com/docs/getting-started/).
+
+Once installed, and with your wasp app running, run:
+```sh
+ngrok http 3001
+```
+
+Ngrok will output a forwarding address for you. Copy and paste this address and add `/payments-webhook` to the end (this URL path has been configured for you already in `main.wasp` under the `api paymentsWebhook` definition). It should look something like this: 
+
+```sh title="Callback URL"
+https://89e5-2003-c7-153c-72a5-f837.ngrok-free.app/payments-webhook
+```
+
+Now go to your [Lemon Squeezy Webhooks Dashboard](https://app.lemonsqueezy.com/settings/webhooks):
+- click the `+` button.
+- add the newly created webhook forwarding url to the `Callback URL` section.
+- give your webhook a signing secret (a long, random string).
+- copy and paste this same signing secret into your `.env.server` file under `LEMONSQUEEZY_WEBHOOK_SECRET=`
+- make sure to select at least the following updates to be sent:
+  - order_created
+  - subscription_created
+  - subscription_updated
+  - subscription_cancelled
+- click `save`
+
+You're now ready to start consuming Lemon Squeezy webhook events in local development.
+
+## Deploying
+
+Once you deploy your app, you can follow the same steps, just make sure that you are no longer in test mode within the Stripe or Lemon Squeezy Dashboards. After you've repeated the steps in live mode, add the new API keys and price/variant IDs to your environment variables in your deployed environment.
+
+---
+
+# SEO
+
+This guides explains how to improve SEO for of your app
+
+## Landing Page Meta Tags
+
+Wasp gives you the ability to add meta tags to your landing page HTML via the `main.wasp` file's `head` property:
+
+```js {8-11}
+app SaaSTemplate {
+  wasp: {
+    version: "^0.13.0"
+  },
+  title: "Open SaaS",
+  head: [
+        "<meta property='og:type' content='website' />",
+        "<meta property='og:url' content='https://opensaas.sh' />",
+        "<meta property='og:title' content='Open SaaS' />",
+        "<meta property='og:description' content='Free, open-source SaaS boilerplate starter for React & NodeJS.' />",
+        "<meta property='og:image' content='https://opensaas.sh/public-banner.webp' />",
+        //...
+  ],
+  //...
+```
+
+Change the above highlighted meta tags to match your app. Wasp will inject these tags into the HTML of your `index.html` file, which is the Landing Page (`app/src/client/landing-page/LandingPage.tsx`), in this case.
+
+This means you **do not** need to rely on a separate app or framework to serve your landing page for SEO purposes.
+
+:::tip[Star our Repo on GitHub! ]
+We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
+
+If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
+:::
+
+## Docs & Blog Meta Tags
+
+Astro, being a static-site generator, will automatically inject relevant information provided in the `blog/astro.config.mjs` file, as well as in the frontmatter of `.md` files into the pages HTML:
+
+```yaml
+---
+title: 'My First Blog Post'
+pubDate: 2022-07-01
+description: 'This is the first post of my new Astro blog.'
+author: 'Astro Learner'
+image:
+    url: 'https://docs.astro.build/assets/full-logo-light.png'
+    alt: 'The full Astro logo.'
+tags: ["astro", "blogging", "learning in public"]
+---
+```
+
+Improving your SEO is as simple as adding these properties to your docs and blog content!
+
+## A Word on SSR & SEO
+
+Open SaaS and Wasp do not currently have a SSR option (although it is coming soon!), but that does not mean that Open SaaS apps are at a disadvantage with regards to SEO.
+
+That's because the meta tags for the landing page (described above), plus the Astro docs/blog provided with Open SaaS are more than enough! Not to mention, Google is also able to crawl websites with JavaScript activated, making SSR unnecessary. 
+
+For example, try searching "Open SaaS" on Google and you'll see this App, which was built with this template, as the first result!
+
+---
+
+# Tests
+
+This guide will show you how to use the included end-to-end (e2e) tests for your Open SaaS application.
+
+## The Tests Directory
+
+In the root of your project, you'll find an `e2e-tests` directory which contains the [Playwright](https://playwright.dev) tests for your Open SaaS application.:
+
+```
+.
+ e2e-tests/
+    tests/                  # Directory containing the test files
+    README.md               # Instructions on how to run the tests
+    ci-start-app-and-db.js  # Script to start the app and db for CI
+    playwright.config.ts    # Playwright configuration
+    package.json
+    ...
+```
+
+To run the tests locally, or in a CI pipeline, follow the instructions in the `README.md` file in the `e2e-tests` directory.
+
+## Using Tests in CI with GitHub Actions
+Although the Open SaaS template does not come with an example workflow, you can find one at `.github/workflows/e2e-tests.yml` of the [remote repo](https://github.com/wasp-lang/open-saas).
+
+You can copy and paste the `.github/` directory containing the `e2e-tests.yml` workflow into the root of your own repository to run the tests as part of your CI pipeline.
+
+:::caution[WASP_VERSION]
+Please make sure to update the `WASP_VERSION` environment variable in the `e2e-tests.yml` file to match the version of Wasp you are using in your project.
+:::
+
+In order for these tests to run correctly on GitHub, you need to provide the environment variables mentioned in the `e2e-tests.yml` file within your GitHub repository's "Actions" secrets so that they can be accessed by the tests.
+
+---
+
+# How (Not) to Update Your Open SaaS App
+
+:::danger[We advise against merging the latest template changes into your app]
+If you've already started building your app, we generally advise against merging the latest template changes into your app.
+
+Below we outline our reasoning why, and provide a basic guide to help you update your app if you decide to do so anyway.
+:::
+
+## Why you probably shouldn't include the latest template changes in your app
+
+We generally **advise against updating your Open SaaS-based applications** after initial setup. 
+
+Why? 
+
+Because your codebase will naturally diverge from the template as you build your unique application, and any updates we may make to the template may not be compatible with your modified codebase, or your version of Wasp.
+
+Even if you *really* want to include a new feature from the template in your app, proceed with caution and thoroughly consider the following:
+
+- Changes to the template may be tightly coupled. Implementing one change without related ones could cause unexpected issues.
+- Updates might not be compatible with your version of Wasp.
+- The more your codebase has diverged, the more challenging the update will be.
+
+## If you still decide to update your app
+
+If you read above, considered the risks, and still need specific improvements, we recommend that you manually merge the changes.
+
+To do this, you should can either 1) merge new Open SaaS template changes into your current project, or 2) merge project changes into a fresh Open SaaS template.
+
+1) Merge new Open SaaS template changes into your current project by:
+- reviewing the latest commits, 
+- understanding what happened, 
+- being mindful of the Wasp version you're using,
+- and then fitting those changes into your own codebase.
+
+2) Merge your project changes into a fresh Open SaaS template by:
+- starting a new, fresh project with the latest Open SaaS template,
+- and then copying over the logic from your existing project that you want to keep.
+
+The method you choose is up to you and will largely depend on the complexity of the changes you need to make.
+
+---
+
+# Admin Dashboard
+
+This is a reference on how the Admin dashboard, available at `/admin`, is set up.
+
+## Permissions
+
+The Admin dashboard is only accessible to users with the `isAdmin` field set to true.
+
+```tsx title="schema.prisma" {5}
+model User {
+  id                        Int             @id @default(autoincrement())
+  email                     String?         @unique
+  username                  String?
+  isAdmin                   Boolean         @default(false)
+  //...
+```
+
+To give yourself administrator priveledges, make sure you add your email addresses to the `ADMIN_EMAILS` environment variable in `.env.server` file before registering/logging in with that email address:
+```sh title=".env.server"
+ADMIN_EMAILS=me@example.com
+
+// or add many admins with a comma-separated list
+
+ADMIN_EMAILS=me@example.com,you@example.com,them@example.com
+```
+
+Or if you've already logged in with an email address that you want to give admin priveledges to, you can run the following command in a separate terminal window to update the user's `isAdmin` field manually:
+
+```sh
+wasp db studio
+```
+
+---
+
+:::tip[Star our Repo on GitHub! ]
+We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
+
+If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
+:::
+
+## Admin Dashboard Pages
+
+### Analytics Dashboard
+The Admin analytics dashboard is a single place for you to view your most important metrics and perform some admin tasks. At the moment, it pulls data from:
+
+- [Payments Processor](/guides/payments-integration/):
+  - total revenue
+  - revenue for each day of the past week
+- [Google or Plausible](/guides/analytics/): 
+  - total number of page views (non-unique)
+  - percentage change in page views from the previous day
+  - top sources/referrers with unique visitor count (i.e. how many people came from that source to your app)
+- Database:
+  - total number of registered users
+  - daily change in number of registered users 
+  - total number of paying users
+  - daily change in number of paying users
+
+These metrics are aggregated within the background job `dailyStatsJob`, which by default is run every hour. You can change the frequency of this job by modifying its `cron` field:
+
+```ts title="main.wasp" {8,7}
+job dailyStatsJob {
+  executor: PgBoss,
+  perform: {
+    fn: import { calculateDailyStats } from "@src/analytics/stats"
+  },
+  schedule: {
+    cron: "0 * * * *" // every hour. useful in production
+    // cron: "* * * * *" // every minute. useful for debugging
+  },
+  entities: [User, DailyStats, Logs, PageViewSource]
+}
+```
+For more info on Wasp's recurring background jobs, check out the [Wasp Jobs docs](https://wasp.sh/docs/advanced/jobs).
+
+For a guide on how to integrate these services so that you can view your analytics via the dashboard, check out the [Payments Integration](/guides/payments-integration/) and [Analytics guide](/guides/analytics/) of the docs.
+
+:::note[Help us improve]
+We're always looking to improve the Admin dashboard. If you feel something is missing or could be improved, consider [opening an issue](https://github.com/wasp-lang/open-saas/issues) or [submitting a pull request](https://github.com/wasp-lang/open-saas/pulls)
+:::
+
+### Users
+The Users page is where you can view all your users and their most important details. You can also search and filter users by:
+- email address
+- subscription/payment status
+- admin status
+
+---
+
+# User Overview
+
+This reference will help you understand how the User entity works in this template.
+This includes the user roles, subscription plans and statuses, and how to authorize access to certain pages and components.
+
+## User Entity
+
+The `User` entity within your app is defined in the `schema.prisma` file:
+
+```tsx title="schema.prisma" ins="User: {}"
+model User {
+  id                        Int             @id @default(autoincrement())
+  email                     String?         @unique
+  username                  String?         
+  createdAt                 DateTime        @default(now())
+  isAdmin                   Boolean         @default(false)
+  paymentProcessorUserId    String?         @unique
+  lemonSqueezyCustomerPortalUrl String?     // You can delete this if you're not using Lemon Squeezy as your payments processor.
+  subscriptionPlan          String?
+  subscriptionStatus        String?
+  sendEmail                 Boolean         @default(false)
+  datePaid                  DateTime?
+  credits                   Int             @default(3)
+  gptResponses              GptResponse[]
+  contactFormMessages       ContactFormMessage[]
+  tasks                     Task[]
+  files                     File[] 
+}
+```
+
+We store all pertinent information to the user, including identification, subscription, and payment processor information. Meanwhile, Wasp abstracts away all the Auth related entities dealing with `passwords`, `sessions`, and `socialLogins`, so you don't have to worry about these at all in your Prisma schema (if you want to learn more about this process, check out the [Wasp Auth Docs](https://wasp.sh/docs/auth/overview)).
+
+## Stripe and Subscriptions
+
+We use Stripe to handle all of our subscription payments. The `User` entity has a number of fields that are related to Stripe and their ability to access features behind the paywall:
+
+```tsx title="schema.prisma" {4-10}
+model User {
+  id                        Int             @id @default(autoincrement())
+  //...
+  paymentProcessorUserId    String?         @unique
+  subscriptionPlan          String?
+  subscriptionStatus        String?
+  datePaid                  DateTime?
+  credits                   Int             @default(3)
+  //...
+}
+```
+
+- `paymentProcessorUserId`: The payment processor customer ID. This is created on checkout and used to identify the customer.
+- `subscriptionPlan`: The subscription plan the user is on. This is set by the app and is used to determine what features the user has access to. By default, we have three plans: `hobby` and `pro` subscription plans, as well as a `credits10` one-time purchase plan.
+- `subscriptionStatus`: The subscription status of the user. This is set by the payment processor and is used to determine whether the user has access to the app or not. By default, we have four statuses: `active`, `past_due`, `cancel_at_period_end`, and `deleted`.
+- `credits` (optional): By default, a user is given 3 credits to trial your product before they have to pay. You can create a one-time purchase product in Stripe to allow users to purchase more credits if they run out, e.g. the `credits10` plan in the template.
+
+### Subscription Statuses
+
+In general, we determine if a user has paid for an initial subscription by checking if the `subscriptionStatus` field is set. This field is set by Stripe within your webhook handler and is used to signify more detailed information on the user's current status. By default, the template handles four statuses: `active`, `past_due`, `cancel_at_period_end`, and `deleted`.
+
+- When `active` the user has paid for a subscription and has full access to the app. 
+
+- When `cancel_at_period_end`, the user has canceled their subscription and has access to the app until the end of their billing period. 
+
+- When `deleted`, the user has reached the end of their subscription period after canceling and no longer has access to the app.
+
+- When `past_due`, the user's automatic subscription renewal payment was declined (e.g. their credit card expired). You can choose how to handle this status within your app. For example, you can send the user an email to update their payment information:
+```tsx title="src/payment/stripe/webhook.ts" 
+
+//...
+
+if (subscription.status === 'past_due') {
+  const updatedCustomer = await context.entities.User.update({
+    where: {
+      id: customer.id,
+    },
+    data: {
+      subscriptionStatus: 'past_due',
+    },
+  });
+
+  if (updatedCustomer.email) {
+    await emailSender.send({
+      to: updatedCustomer.email,
+      subject: 'Your Payment is Past Due',
+      text: 'Please update your payment information to continue using our service.',
+      html: '...',
+    });
+  }
+}
+```
+
+See the client-side [authorization section](/guides/authorization/) below for more info on how to handle these statuses within your app.
+
+### Subscription Plans
+
+The `subscriptionPlan` field is used to determine what features the user has access to. 
+
+By default, we have three plans: `hobby` and `pro` subscription plans, as well as a `credits10` one-time purchase plan. 
+
+You can add more plans by adding more products and price IDs to your Stripe product and updating environment variables in your `.env.server` file as well as the relevant code in your app.
+
+See the [Payments Integration Guide](/guides/payments-integration/) for more info on how to do this.
+
+## User Roles
+
+At the moment, we have two user roles: `admin` and `user`. This is defined within the `isAdmin` field in the `User` entity:
+
+```tsx title="schema.prisma" {7}
+model User {
+  id                        Int             @id @default(autoincrement())
+  email                     String?         @unique
+  username                  String?
+  createdAt                 DateTime        @default(now())
+  isAdmin                   Boolean         @default(false)
+//...
+}
+```
+
+As an Admin, a user has access to the Admin dashboard, along with the user table where they can view and search for users, and edit and update information manually if necessary.
+
+:::tip[Admin Privileges]
+If you'd like to give yourself and/or certain users admin privileges, follow the instructions in the [Admin Dashboard](/general/admin-dashboard/#permissions) section.
+:::
+
+As a general User, a user has access to the user-facing app that sits behind the login, but not the Admin dashboard. You can further restrict access to certain features within the app by following the [authorization guide](/guides/authorization/).
+
+---

@@ -29,6 +29,10 @@ jobs:
       working-directory: ./opensaas-sh/blog
       run: npm install
 
+    - name: Generate LLM files
+      working-directory: ./opensaas-sh/blog
+      run: npm run generate-llm-files
+
     - name: Build site
       working-directory: ./opensaas-sh/blog
       run: npm run build
@@ -48,6 +52,10 @@ jobs:
     - name: Install dependencies
       working-directory: ./opensaas-sh/blog
       run: npm install
+
+    - name: Generate LLM files
+      working-directory: ./opensaas-sh/blog
+      run: npm run generate-llm-files
 
     - name: Build site
       working-directory: ./opensaas-sh/blog

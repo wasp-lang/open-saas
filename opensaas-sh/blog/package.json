@@ -7,7 +7,8 @@
     "start": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "generate-llm-files": "node ./scripts/generate-llm-files.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
@@ -19,5 +20,11 @@
     "sharp": "^0.32.5",
     "starlight-blog": "^0.15.0",
     "typescript": "^5.4.5"
+  },
+  "devDependencies": {
+    "front-matter": "^4.0.2",
+    "fs-extra": "^11.3.0",
+    "glob": "^11.0.2",
+    "path": "^0.12.7"
   }
 }

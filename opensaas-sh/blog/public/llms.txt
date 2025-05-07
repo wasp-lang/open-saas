@@ -1,0 +1,24 @@
+# Open SaaS Documentation for LLMs
+
+> Open SaaS is a free, open-source, full-stack starter kit for building SaaS applications quickly. It leverages the [Wasp](https://wasp.sh/docs) framework (React, Node.js, Prisma) and integrates with various services like Stripe/Lemon Squeezy, OpenAI API, AWS S3, and different email providers.
+
+## Full Documentation
+ - [View Complete LLM-formatted Open SaaS Documentation](https://docs.opensaas.sh/llms-full.txt)
+
+## Individual documentation sections and guides:
+- [Introduction](https://raw.githubusercontent.com/wasp-lang/open-saas/main/opensaas-sh/blog/src/content/docs/index.mdx)
+- [Getting Started](https://raw.githubusercontent.com/wasp-lang/open-saas/main/opensaas-sh/blog/src/content/docs/start/getting-started.mdx)
+- [Guided Tour](https://raw.githubusercontent.com/wasp-lang/open-saas/main/opensaas-sh/blog/src/content/docs/start/guided-tour.md)
+- [Analytics](https://raw.githubusercontent.com/wasp-lang/open-saas/main/opensaas-sh/blog/src/content/docs/guides/analytics.md)
+- [Authentication](https://raw.githubusercontent.com/wasp-lang/open-saas/main/opensaas-sh/blog/src/content/docs/guides/authentication.md)
+- [Authorization](https://raw.githubusercontent.com/wasp-lang/open-saas/main/opensaas-sh/blog/src/content/docs/guides/authorization.md)
+- [Cookie Consent Modal](https://raw.githubusercontent.com/wasp-lang/open-saas/main/opensaas-sh/blog/src/content/docs/guides/cookie-consent.mdx)
+- [Deploying](https://raw.githubusercontent.com/wasp-lang/open-saas/main/opensaas-sh/blog/src/content/docs/guides/deploying.mdx)
+- [Email Sending](https://raw.githubusercontent.com/wasp-lang/open-saas/main/opensaas-sh/blog/src/content/docs/guides/email-sending.mdx)
+- [File Uploading](https://raw.githubusercontent.com/wasp-lang/open-saas/main/opensaas-sh/blog/src/content/docs/guides/file-uploading.mdx)
+- [Payments Integration](https://raw.githubusercontent.com/wasp-lang/open-saas/main/opensaas-sh/blog/src/content/docs/guides/payments-integration.mdx)
+- [SEO](https://raw.githubusercontent.com/wasp-lang/open-saas/main/opensaas-sh/blog/src/content/docs/guides/seo.mdx)
+- [Tests](https://raw.githubusercontent.com/wasp-lang/open-saas/main/opensaas-sh/blog/src/content/docs/guides/tests.md)
+- [How (Not) to Update Your Open SaaS App](https://raw.githubusercontent.com/wasp-lang/open-saas/main/opensaas-sh/blog/src/content/docs/guides/updating-opensaas.md)
+- [Admin Dashboard](https://raw.githubusercontent.com/wasp-lang/open-saas/main/opensaas-sh/blog/src/content/docs/general/admin-dashboard.mdx)
+- [User Overview](https://raw.githubusercontent.com/wasp-lang/open-saas/main/opensaas-sh/blog/src/content/docs/general/user-overview.md)

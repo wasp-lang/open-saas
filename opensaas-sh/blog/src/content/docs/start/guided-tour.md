@@ -85,7 +85,7 @@ If you are using an older version of the OpenSaaS template with Wasp `v0.13.x` o
 
 ### The Wasp Config file
 
-This template at its core is a Wasp project, where [Wasp](https://wasp.sh) is a full-stack web app framework that let’s you write your app in React, NodeJS, and Prisma and will manage the "boilerplatey" work for you, allowing you to just take care of the fun stuff!
+This template at its core is a Wasp project, where [Wasp](https://wasp.sh) is a full-stack web app framework that let's you write your app in React, NodeJS, and Prisma and will manage the "boilerplatey" work for you, allowing you to just take care of the fun stuff!
 
 [Wasp's secret sauce](https://wasp.sh/docs) is its use of a config file (`main.wasp`) and compiler which takes your code and outputs the client app, server app and deployment code for you. 
 
