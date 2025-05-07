@@ -14,9 +14,9 @@
            >
              <NavLogo />
 -            {isLandingPage && (
--              <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Your Saas</span>
+-              <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Your SaaS</span>
 -            )}
-+            {isLandingPage && <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Open Saas</span>}
++            {isLandingPage && <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Open SaaS</span>}
            </WaspRouterLink>
          </div>
          <div className='flex lg:hidden'>
