@@ -1,4 +1,5 @@
 import * as z from 'zod';
+import type { PrismaPromise } from '@prisma/client';
 import type { Task, GptResponse, User } from 'wasp/entities';
 import type {
   GenerateGptResponse,
@@ -65,22 +66,6 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
   // credits than they have, but the damage should be pretty limited.
   //
   // Think about which option you prefer for your app and edit the code accordingly.
-  const decrementCredit = context.entities.User.update({
-    where: {
-      id: context.user.id,
-      NOT: {
-        OR: [
-          { subscriptionStatus: SubscriptionStatus.Active },
-          { subscriptionStatus: SubscriptionStatus.CancelAtPeriodEnd },
-        ],
-      },
-    },
-    data: {
-      credits: {
-        decrement: 1,
-      },
-    },
-  });
 
   const createResponse = context.entities.GptResponse.create({
     data: {
@@ -89,18 +74,35 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
     },
   });
 
+  const transactions: PrismaPromise<User | GptResponse>[] = [createResponse];
+
+  if (!isUserSubscribed(context.user)) {
+    const decrementCredit = context.entities.User.update({
+      where: { id: context.user.id },
+      data: {
+        credits: {
+          decrement: 1,
+        },
+      },
+    });
+    transactions.push(decrementCredit);
+  }
+
   console.log('Decrementing credits and saving response');
-  prisma.$transaction([decrementCredit, createResponse]);
+  await prisma.$transaction(transactions);
 
   return generatedSchedule;
 };
 
 function isEligibleForResponse(user: User) {
-  const isUserSubscribed =
+  return isUserSubscribed(user) || user.credits > 0;
+}
+
+function isUserSubscribed(user: User) {
+  return (
     user.subscriptionStatus === SubscriptionStatus.Active ||
-    user.subscriptionStatus === SubscriptionStatus.CancelAtPeriodEnd;
-  const userHasCredits = user.credits > 0;
-  return isUserSubscribed || userHasCredits;
+    user.subscriptionStatus === SubscriptionStatus.CancelAtPeriodEnd
+  );
 }
 
 const createTaskInputSchema = z.object({
