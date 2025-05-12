@@ -26,6 +26,12 @@ If you're running the `patch.sh` or `diff.sh` scripts on Mac, you need to instal
 - `gpatch`,
 - and `diffutils`.
 
+```sh
+brew install coreutils # contains grealpath
+brew install gpatch
+brew install diffutils
+```
+
 Make sure not to commit `app/` to git. It is currently (until we resolve this) not added to .gitignore because that messes up diffing for us.
 
 ### Blog (blog/)
