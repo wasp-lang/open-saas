@@ -5,6 +5,19 @@
 # Allows you to easily create a diff between the two projects (base and derived), or to patch those diffs onto the base project to get the derived one.
 # Useful when derived project has only small changes on top of base project and you want to keep it in a dir in the same repo as main project.
 
+# Determine the patch command to use based on OS
+PATCH_CMD="patch"
+if [[ "$(uname)" == "Darwin" ]]; then
+    # On macOS, require gpatch to be installed
+    if command -v gpatch &> /dev/null; then
+        PATCH_CMD="gpatch"
+    else
+        echo "Error: GNU patch (gpatch) not found. On MacOS, this script requires GNU patch."
+        echo "Install it with: brew install gpatch"
+        exit 1
+    fi
+fi
+
 # List all the source files in the specified dir.
 # "Source" files are any files that are not gitignored.
 list_source_files() {
@@ -92,7 +105,7 @@ recreate_derived_dir() {
 
         local patch_output
         local patch_exit_code
-        patch_output=$(patch --no-backup-if-mismatch --merge "${DERIVED_DIR}/${derived_filepath}" < "${diff_filepath}")
+        patch_output=$("${PATCH_CMD}" --no-backup-if-mismatch --merge "${DERIVED_DIR}/${derived_filepath}" < "${diff_filepath}")
         patch_exit_code=$?
         if [ ${patch_exit_code} -eq 0 ]; then
           echo "${patch_output}"

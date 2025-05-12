@@ -26,16 +26,10 @@ If you're running the `patch.sh` or `diff.sh` scripts on Mac, you need to instal
 - `gpatch`,
 - and `diffutils`.
 
-You should also create aliases for `realpath` and `patch`:
-
 ```sh
 brew install coreutils # contains grealpath
 brew install gpatch
 brew install diffutils
-
-echo 'alias realpath="grealpath"' >> ~/.zshrc
-echo 'alias patch="gpatch"' >> ~/.zshrc
-source ~/.zshrc
 ```
 
 Make sure not to commit `app/` to git. It is currently (until we resolve this) not added to .gitignore because that messes up diffing for us.
