@@ -13,7 +13,7 @@ import { z } from 'zod';
 import {
   parseWebhookPayload,
   type InvoicePaidData,
-  type PaymentIntentSucceededData,
+  SubscriptionCreatedData,
   type SessionCompletedData,
   type SubscriptionDeletedData,
   type SubscriptionUpdatedData,
@@ -32,8 +32,8 @@ export const stripeWebhook: PaymentsWebhook = async (request, response, context)
       case 'invoice.paid':
         await handleInvoicePaid(data, prismaUserDelegate);
         break;
-      case 'payment_intent.succeeded':
-        await handlePaymentIntentSucceeded(data, prismaUserDelegate);
+      case 'customer.subscription.created':
+        await handleCustomerSubscriptionCreated(data, prismaUserDelegate);
         break;
       case 'customer.subscription.updated':
         await handleCustomerSubscriptionUpdated(data, prismaUserDelegate);
@@ -85,67 +85,59 @@ export const stripeMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig) =
   return middlewareConfig;
 };
 
-// Because a checkout session completed could potentially result in a failed payment,
-// we can update the user's payment details here, but confirm credits or a subscription
-// if the payment succeeds in other, more specific, webhooks.
+// Here we only update the user's payment details, and confirm credits
+// if payment mode === payment (e.g. one-time payment). If payment mode === subscription,
+// we update its status in the customer.subscription.created or customer.subscription.updated webhook.
+// NOTE: If you're accepting async payment methods like bank transfers or SEPA and not just card payments
+// which are synchronous, checkout session completed could potentially result in a pending payment.
+// If so, use the checkout.session.async_payment_succeeded event to confirm the payment.
 export async function handleCheckoutSessionCompleted(
   session: SessionCompletedData,
   prismaUserDelegate: PrismaClient['user']
 ) {
-  const userStripeId = session.customer;
-  const lineItems = await getSubscriptionLineItemsBySessionId(session.id);
-
-  const lineItemPriceId = extractPriceId(lineItems);
-
-  const planId = getPlanIdByPriceId(lineItemPriceId);
-  const plan = paymentPlans[planId];
-  if (plan.effect.kind === 'credits') {
+  if (session.mode !== 'payment' || session.payment_status !== 'paid') {
     return;
   }
-  const { subscriptionPlan } = getPlanEffectPaymentDetails({ planId, planEffect: plan.effect });
-
-  return updateUserStripePaymentDetails({ userStripeId, subscriptionPlan }, prismaUserDelegate);
+  const userStripeId = session.customer;
+  const lineItems = await getCheckoutLineItemsBySessionId(session.id);
+  const lineItemPriceId = extractPriceId(lineItems);
+  const planId = getPlanIdByPriceId(lineItemPriceId);
+  const plan = paymentPlans[planId];
+  const { numOfCreditsPurchased } = getPlanEffectPaymentDetails({ planId, planEffect: plan.effect });
+  return updateUserStripePaymentDetails(
+    { userStripeId, numOfCreditsPurchased, datePaid: new Date() },
+    prismaUserDelegate
+  );
 }
 
-// This is called when a subscription is purchased or renewed and payment succeeds.
-// Invoices are not created for one-time payments, so we handle them in the payment_intent.succeeded webhook.
+// This is called when a subscription is successfully purchased or renewed and payment succeeds.
+// Invoices are not created for one-time payments, so we handle them above.
 export async function handleInvoicePaid(invoice: InvoicePaidData, prismaUserDelegate: PrismaClient['user']) {
   const userStripeId = invoice.customer;
   const datePaid = new Date(invoice.period_start * 1000);
-  return updateUserStripePaymentDetails({ userStripeId, datePaid }, prismaUserDelegate);
+  const priceId = extractPriceId(invoice.lines);
+  const subscriptionPlan = getPlanIdByPriceId(priceId);
+  return updateUserStripePaymentDetails(
+    { userStripeId, datePaid, subscriptionPlan, subscriptionStatus: SubscriptionStatus.Active },
+    prismaUserDelegate
+  );
 }
 
-export async function handlePaymentIntentSucceeded(
-  paymentIntent: PaymentIntentSucceededData,
+export async function handleCustomerSubscriptionCreated(
+  subscription: SubscriptionCreatedData,
   prismaUserDelegate: PrismaClient['user']
 ) {
-  // We handle invoices in the invoice.paid webhook. Invoices exist for subscription payments,
-  // but not for one-time payment/credits products which use the Stripe `payment` mode on checkout sessions.
-  if (paymentIntent.invoice) {
-    return;
-  }
-
-  const userStripeId = paymentIntent.customer;
-  const datePaid = new Date(paymentIntent.created * 1000);
-
-  // We capture the price id from the payment intent metadata
-  // that we passed in when creating the checkout session in checkoutUtils.ts.
-  const { metadata } = paymentIntent;
-
-  if (!metadata.priceId) {
-    throw new HttpError(400, 'No price id found in payment intent');
-  }
-
-  const planId = getPlanIdByPriceId(metadata.priceId);
-  const plan = paymentPlans[planId];
-  if (plan.effect.kind === 'subscription') {
-    return;
-  }
-
-  const { numOfCreditsPurchased } = getPlanEffectPaymentDetails({ planId, planEffect: plan.effect });
-
+  const userStripeId = subscription.customer;
+  const priceId = extractPriceId(subscription.items);
+  const subscriptionPlan = getPlanIdByPriceId(priceId);
+  // We currently use Pending for all other Stripe subscription statuses besides Active that we are not handling.
+  // If you want to handle these other statuses, make sure to update the `SubscriptionStatus` type in `payment/plans.ts`
+  const subscriptionStatus: SubscriptionStatus =
+    subscription.status === SubscriptionStatus.Active
+      ? SubscriptionStatus.Active
+      : SubscriptionStatus.Pending;
   return updateUserStripePaymentDetails(
-    { userStripeId, numOfCreditsPurchased, datePaid },
+    { userStripeId, subscriptionPlan, subscriptionStatus },
     prismaUserDelegate
   );
 }
@@ -156,12 +148,11 @@ export async function handleCustomerSubscriptionUpdated(
 ) {
   const userStripeId = subscription.customer;
   let subscriptionStatus: SubscriptionStatus | undefined;
-
   const priceId = extractPriceId(subscription.items);
   const subscriptionPlan = getPlanIdByPriceId(priceId);
 
   // There are other subscription statuses, such as `trialing` that we are not handling and simply ignore
-  // If you'd like to handle more statuses, you can add more cases above. Make sure to update the `SubscriptionStatus` type in `payment/plans.ts` as well
+  // If you'd like to handle more statuses, you can add more cases above. Make sure to update the `SubscriptionStatus` type in `payment/plans.ts` as well.
   if (subscription.status === SubscriptionStatus.Active) {
     subscriptionStatus = subscription.cancel_at_period_end
       ? SubscriptionStatus.CancelAtPeriodEnd
@@ -211,17 +202,37 @@ const subscriptionItemsSchema = z.object({
   ),
 });
 
-function extractPriceId(items: SubscsriptionItems): string {
+type InvoiceLineItems = z.infer<typeof invoiceLineItemsSchema>;
+
+const invoiceLineItemsSchema = z.object({
+  data: z.array(
+    z.object({
+      pricing: z.object({ price_details: z.object({ price: z.string() }) }),
+    })
+  ),
+});
+
+// We only expect one line item, but if you set up a product with multiple prices, you should change this function to handle them.
+function extractPriceId(items: SubscsriptionItems | InvoiceLineItems): string {
   if (items.data.length === 0) {
     throw new HttpError(400, 'No items in stripe event object');
   }
   if (items.data.length > 1) {
     throw new HttpError(400, 'More than one item in stripe event object');
   }
-  return items.data[0].price.id;
+
+  const firstItem = items.data[0];
+
+  if ('price' in firstItem) {
+    return firstItem.price.id;
+  } else if ('pricing' in firstItem) {
+    return firstItem.pricing.price_details.price;
+  } else {
+    throw new HttpError(500, 'Unable to extract price id due to unexpected item structure');
+  }
 }
 
-async function getSubscriptionLineItemsBySessionId(sessionId: string) {
+async function getCheckoutLineItemsBySessionId(sessionId: string) {
   try {
     const { line_items: lineItemsRaw } = await stripe.checkout.sessions.retrieve(sessionId, {
       expand: ['line_items'],
