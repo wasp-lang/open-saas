@@ -115,7 +115,8 @@ export async function handleCheckoutSessionCompleted(
 export async function handleInvoicePaid(invoice: InvoicePaidData, prismaUserDelegate: PrismaClient['user']) {
   const userStripeId = invoice.customer;
   const datePaid = new Date(invoice.period_start * 1000);
-  const priceId = extractPriceId(invoice.lines);
+  const lineItems = await invoiceLineItemsSchema.parseAsync(invoice.lines);
+  const priceId = extractPriceId(lineItems);
   const subscriptionPlan = getPlanIdByPriceId(priceId);
   return updateUserStripePaymentDetails(
     { userStripeId, datePaid, subscriptionPlan, subscriptionStatus: SubscriptionStatus.Active },
