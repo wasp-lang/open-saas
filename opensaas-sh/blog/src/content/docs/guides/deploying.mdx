@@ -175,13 +175,7 @@ export const stripe = new Stripe(process.env.STRIPE_KEY!, {
 2. click on `+ add endpoint`
 3. enter your endpoint url, which will be the url of your deployed server + `/payments-webhook`, e.g. `https://open-saas-wasp-sh-server.fly.dev/payments-webhook`
 <Image src={stripeListenEvents} alt="listen events" loading="lazy" />
-4. select the events you want to listen to. These should be the same events you're consuming in your webhook. For example, if you haven't added any additional events to the webhook and are using the defaults that came with this template, then you'll need to add:
-  <br/>- `account.updated`
-  <br/>- `checkout.session.completed`
-  <br/>- `customer.subscription.deleted`
-  <br/>- `customer.subscription.updated`
-  <br/>- `invoice.paid`
-  <br/>- `payment_intent.succeeded`
+4. select the events you want to listen to. These should be the same events you're consuming in your webhook which you can find listed in `src/payment/stripe/webhookPayload.ts`:
 <Image src={stripeSigningSecret} alt="signing secret" loading="lazy" />
 5. after that, go to the webhook you just created and `reveal` the new signing secret.
 6. add this secret to your deployed server's `STRIPE_WEBHOOK_SECRET=` environment variable. <br/>If you've deployed to Fly.io, you can do that easily with the following command:
