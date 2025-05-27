@@ -1,0 +1,50 @@
+app tcof {
+  wasp: { version: "^0.11.2" }
+  title: "TCOF Toolkit"
+}
+
+entity User {=psl
+  id            String   @id @default(uuid())
+  email         String   @unique
+  passwordHash  String
+  orgId         String?
+  stripeCustomerId String?
+  createdAt     DateTime @default(now())
+  org           Organization? @relation(fields: [orgId], references: [id])
+  projects      Project[]
+  tasks         Task[]
+psl=}
+
+entity Organization {=psl
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  users     User[]
+psl=}
+
+entity Project {=psl
+  id        String   @id @default(uuid())
+  name      String
+  owner     User     @relation(fields: [ownerId], references: [id])
+  ownerId   String
+  createdAt DateTime @default(now())
+  tasks     Task[]
+psl=}
+
+entity Task {=psl
+  id         String   @id @default(uuid())
+  project    Project  @relation(fields: [projectId], references: [id])
+  projectId  String
+  title      String
+  status     String   @default("todo")
+  owner      User?    @relation(fields: [ownerId], references: [id])
+  ownerId    String?
+  visibility String   @default("visible")
+  createdAt  DateTime @default(now())
+psl=}
+
+entity SuccessFactor {=psl
+  id   String  @id @default(uuid())
+  name String
+  description String?
+psl=}

@@ -1,0 +1,2 @@
+-- Migration placeholder for Project, Task, and SuccessFactor tables
+-- Run `wasp db migrate-dev "add_project_task_successfactor"` to generate SQL

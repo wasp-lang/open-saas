@@ -1,0 +1,63 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Organization {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  users     User[]
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  passwordHash  String
+  orgId         String?
+  stripeCustomerId String?
+  createdAt     DateTime @default(now())
+  org           Organization? @relation(fields: [orgId], references: [id])
+  projects      Project[]
+  tasks         Task[]
+}
+
+model Project {
+  id        String   @id @default(uuid())
+  name      String
+  owner     User     @relation(fields: [ownerId], references: [id])
+  ownerId   String
+  createdAt DateTime @default(now())
+  tasks     Task[]
+}
+
+model Task {
+  id         String   @id @default(uuid())
+  project    Project  @relation(fields: [projectId], references: [id])
+  projectId  String
+  title      String
+  status     String   @default("todo")
+  owner      User?    @relation(fields: [ownerId], references: [id])
+  ownerId    String?
+  visibility String   @default("visible")
+  createdAt  DateTime @default(now())
+}
+
+model SuccessFactor {
+  id   String  @id @default(uuid())
+  name String
+  description String?
+  templates FactorTaskTemplate[]
+}
+
+model FactorTaskTemplate {
+  id        String   @id @default(uuid())
+  factor    SuccessFactor @relation(fields: [factorId], references: [id])
+  factorId  String
+  title     String
+  sortOrder Int?
+}
