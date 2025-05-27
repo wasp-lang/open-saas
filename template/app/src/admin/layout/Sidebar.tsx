@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { storage } from '../../shared/storageAdapter';
 import { NavLink, useLocation } from 'react-router-dom';
 import Logo from '../../client/static/logo.webp';
 import SidebarLinkGroup from './SidebarLinkGroup';
@@ -16,10 +17,15 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
 
-  const storedSidebarExpanded = localStorage.getItem('sidebar-expanded');
-  const [sidebarExpanded, setSidebarExpanded] = useState(
-    storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
-  );
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
+
+  useEffect(() => {
+    storage.get('sidebar-expanded').then((value) => {
+      if (value !== null) {
+        setSidebarExpanded(value === 'true' || value === true);
+      }
+    });
+  }, []);
 
   // close on click outside
   useEffect(() => {
@@ -43,7 +49,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   });
 
   useEffect(() => {
-    localStorage.setItem('sidebar-expanded', sidebarExpanded.toString());
+    storage.set('sidebar-expanded', sidebarExpanded.toString());
     if (sidebarExpanded) {
       document.querySelector('body')?.classList.add('sidebar-expanded');
     } else {
