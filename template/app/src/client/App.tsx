@@ -1,6 +1,7 @@
 import './Main.css';
 import NavBar from './components/NavBar/NavBar';
-import CookieConsentBanner from './components/cookie-consent/Banner';
+import ErrorBoundary from './components/ErrorBoundary';
+import ConsentBanner from './components/ConsentBanner';
 import { appNavigationItems } from './components/NavBar/contentSections';
 import { landingPageNavigationItems } from '../landing-page/contentSections';
 import { useMemo, useEffect } from 'react';
@@ -38,7 +39,7 @@ export default function App() {
   }, [location]);
 
   return (
-    <>
+    <ErrorBoundary>
       <div className='min-h-screen dark:text-white dark:bg-boxdark-2'>
         {isAdminDashboard ? (
           <Outlet />
@@ -51,7 +52,7 @@ export default function App() {
           </>
         )}
       </div>
-      <CookieConsentBanner />
-    </>
+      <ConsentBanner />
+    </ErrorBoundary>
   );
 }
