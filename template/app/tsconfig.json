@@ -25,6 +25,10 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "skipLibCheck": true,
     "allowJs": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
     "typeRoots": [
       // This is needed to properly support Vitest testing with jest-dom matchers.
       // Types for jest-dom are not recognized automatically and Typescript complains
