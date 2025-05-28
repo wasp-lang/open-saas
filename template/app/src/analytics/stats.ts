@@ -100,23 +100,29 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, con
       if (typeof source.visitors !== 'number') {
         visitors = parseInt(source.visitors);
       }
-      await context.entities.PageViewSource.upsert({
+
+      const existing = await context.entities.PageViewSource.findFirst({
         where: {
-          date_name: {
-            date: nowUTC,
-            name: source.source,
-          },
-        },
-        create: {
           date: nowUTC,
           name: source.source,
-          visitors,
-          dailyStatsId: dailyStats.id,
-        },
-        update: {
-          visitors,
         },
       });
+
+      if (existing) {
+        await context.entities.PageViewSource.update({
+          where: { id: existing.id },
+          data: { visitors },
+        });
+      } else {
+        await context.entities.PageViewSource.create({
+          data: {
+            date: nowUTC,
+            name: source.source,
+            visitors,
+            dailyStatsId: dailyStats.id,
+          },
+        });
+      }
     }
 
     console.table({ dailyStats });

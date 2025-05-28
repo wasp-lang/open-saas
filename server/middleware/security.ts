@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import cors from 'cors';
 
 /**
  * Applies standard security middleware.
@@ -9,6 +10,7 @@ import rateLimit from 'express-rate-limit';
  */
 export function applySecurityMiddleware(app: import('express').Express) {
   app.use(helmet());
+  app.use(cors());
   const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100,
