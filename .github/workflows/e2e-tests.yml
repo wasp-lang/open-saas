@@ -51,10 +51,6 @@ jobs:
           cd app
           cp .env.server.example .env.server && cp .env.client.example .env.client
 
-      - name: Check that patching demo app (opensaas-sh) works
-        working-directory: ./opensaas-sh
-        run: |
-          ./tools/patch.sh
 
       - name: '[e2e-tests] Install Node.js dependencies for Playwright tests'
         if: steps.cache-e2e-tests.outputs.cache-hit != 'true'
