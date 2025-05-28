@@ -31,3 +31,4 @@ const Button = ({ className = '', variant = 'default', size = 'md', children, ..
 };
 
 export default Button;
+export { Button };

@@ -25,9 +25,11 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "skipLibCheck": true,
     "allowJs": true,
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./*"],
+      "@/components/*": ["./components/*"],
+      "@/components/ui/*": ["./components/ui/*"]
     },
     "typeRoots": [
       // This is needed to properly support Vitest testing with jest-dom matchers.

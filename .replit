@@ -25,4 +25,8 @@ args = "cd template/app"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
+args = "wasp db migrate-dev --skip-checks"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
 args = "wasp start"
