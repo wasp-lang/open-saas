@@ -1,6 +1,13 @@
-import { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
+import { ButtonHTMLAttributes } from 'react';
 
-export default function Button(props: DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>) {
-  const { children, ...rest } = props;
-  return <button {...rest}>{children}</button>;
-}
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
+
+const Button = ({ className, children, ...props }: ButtonProps) => {
+  return (
+    <button className={className} {...props}>
+      {children}
+    </button>
+  );
+};
+
+export default Button;
