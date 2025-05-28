@@ -17,11 +17,7 @@ mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd template/app && wasp start db &"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd template/app && sleep 10 && wasp db migrate-dev --name initial_setup"
+args = "cd template/app && wasp db migrate-dev --name initial_setup"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
