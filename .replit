@@ -21,4 +21,8 @@ args = "export PATH=$PATH:$HOME/.local/bin"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
+args = "cd template/app"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
 args = "wasp start"
