@@ -21,6 +21,10 @@ model User {
   datePaid                  DateTime?
   credits                   Int             @default(3)
   isAdmin                   Boolean         @default(false)
+  subscriptionStatus        String?
+  paymentProcessorUserId    String?
+  subscriptionPlan          String?
+  lemonSqueezyCustomerPortalUrl String?
   
   tasks                     Task[]
   gptResponses              GptResponse[]
@@ -111,6 +115,8 @@ model PageViewSource {
   id               String     @id @default(cuid())
   name             String
   visitors         Int
+  date             DateTime?
+  date_name        String?
   dailyStats       DailyStats @relation(fields: [dailyStatsId], references: [id], onDelete: Cascade)
   dailyStatsId     Int
   

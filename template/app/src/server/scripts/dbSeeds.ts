@@ -19,27 +19,23 @@ function generateMockUsersData(numOfUsers: number): MockUserData[] {
 }
 
 function generateMockUserData(): MockUserData {
-  const firstName = faker.person.firstName();
-  const lastName = faker.person.lastName();
-  const subscriptionStatus = faker.helpers.arrayElement<SubscriptionStatus | null>([
-    ...Object.values(SubscriptionStatus),
-    null,
-  ]);
-  const now = new Date();
-  const createdAt = faker.date.past({ refDate: now });
-  const timePaid = faker.date.between({ from: createdAt, to: now });
-  const credits = subscriptionStatus ? 0 : faker.number.int({ min: 0, max: 10 });
-  const hasUserPaidOnStripe = !!subscriptionStatus || credits > 3;
-  return {
-    email: faker.internet.email({ firstName, lastName }),
-    username: faker.internet.userName({ firstName, lastName }),
-    createdAt,
-    isAdmin: false,
-    credits,
-    subscriptionStatus,
-    lemonSqueezyCustomerPortalUrl: null,
-    paymentProcessorUserId: hasUserPaidOnStripe ? `cus_test_${faker.string.uuid()}` : null,
-    datePaid: hasUserPaidOnStripe ? faker.date.between({ from: createdAt, to: timePaid }) : null,
-    subscriptionPlan: subscriptionStatus ? faker.helpers.arrayElement(getSubscriptionPaymentPlanIds()) : null,
-  };
+  const mockUsers = [
+    {
+      email: faker.internet.email(),
+      username: faker.internet.userName(),
+      isEmailVerified: faker.datatype.boolean(),
+      isAdmin: false,
+      stripeId: `cus_${faker.string.alphanumeric(14)}`,
+      checkoutSessionId: null,
+      hasPaid: faker.datatype.boolean(),
+      sendEmail: faker.datatype.boolean(),
+      datePaid: faker.date.past(),
+      credits: faker.number.int({ min: 0, max: 20 }),
+      subscriptionStatus: faker.helpers.arrayElement(['active', 'inactive', 'canceled', null]),
+      paymentProcessorUserId: `user_${faker.string.alphanumeric(10)}`,
+      subscriptionPlan: faker.helpers.arrayElement(['hobby', 'pro', null]),
+      lemonSqueezyCustomerPortalUrl: null,
+    },
+  ];
+  return faker.helpers.arrayElement(mockUsers);
 }
