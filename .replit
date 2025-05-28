@@ -17,16 +17,4 @@ mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "export PATH=$PATH:$HOME/.local/bin"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd template/app"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "wasp db migrate-dev --skip-checks"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "wasp start"
+args = "cd template/app && export PATH=$PATH:$HOME/.local/bin && wasp db migrate-dev --skip-checks && wasp start"
