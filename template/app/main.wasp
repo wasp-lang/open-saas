@@ -96,6 +96,102 @@ app OpenSaaS {
   },
 }
 
+// Entity definitions
+entity User {=psl
+  id                String    @id @default(cuid())
+  email             String?   @unique
+  username          String?   @unique
+  isEmailVerified   Boolean   @default(false)
+  emailVerificationSentAt DateTime?
+  passwordResetSentAt DateTime?
+  stripeId          String?
+  checkoutSessionId String?
+  hasPaid           Boolean   @default(false)
+  sendEmail         Boolean   @default(false)
+  datePaid          DateTime?
+  credits           Int       @default(3)
+  isAdmin           Boolean   @default(false)
+  
+  tasks             Task[]
+  gptResponses      GptResponse[]
+  files             File[]
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+psl=}
+
+entity Task {=psl
+  id          String   @id @default(cuid())
+  description String
+  time        String   @default("1")
+  isDone      Boolean  @default(false)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+psl=}
+
+entity GptResponse {=psl
+  id            String   @id @default(cuid())
+  content       String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+psl=}
+
+entity File {=psl
+  id          String   @id @default(cuid())
+  name        String
+  type        String
+  key         String
+  uploadUrl   String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+psl=}
+
+entity DailyStats {=psl
+  id                     Int       @id @default(autoincrement())
+  date                   DateTime  @unique
+  totalViews             Int       @default(0)
+  prevDayViewsChangePercent String @default("0")
+  userCount              Int       @default(0)
+  paidUserCount          Int       @default(0)
+  userDelta              Int       @default(0)
+  paidUserDelta          Int       @default(0)
+  totalRevenue           Float     @default(0)
+  totalProfit            Float     @default(0)
+  sources                PageViewSource[]
+  
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+  
+  @@map("daily_stats")
+psl=}
+
+entity Logs {=psl
+  id        String   @id @default(cuid())
+  message   String
+  level     String
+  
+  createdAt DateTime @default(now())
+psl=}
+
+entity PageViewSource {=psl
+  id               String     @id @default(cuid())
+  name             String
+  visitors         Int
+  dailyStats       DailyStats @relation(fields: [dailyStatsId], references: [id], onDelete: Cascade)
+  dailyStatsId     Int
+  
+  @@map("page_view_source")
+psl=}
+
 route LandingPageRoute { path: "/", to: LandingPage }
 page LandingPage {
   component: import LandingPage from "@src/landing-page/LandingPage"
