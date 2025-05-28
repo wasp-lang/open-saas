@@ -1,20 +1,24 @@
 
-import { Request, Response, NextFunction } from 'express';
+import type { Application } from 'express';
 import helmet from 'helmet';
-import rateLimit from 'express-rate-limit';
+import cors from 'cors';
 
-/**
- * Applies standard security middleware.
- * Helmet for headers and express-rate-limit (100 req per 15 min).
- * Note: ensure `helmet` and `express-rate-limit` packages are installed.
- */
-export function applySecurityMiddleware(app: import('express').Express) {
-  app.use(helmet());
-  const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
-    standardHeaders: true,
-    legacyHeaders: false,
-  });
-  app.use(limiter);
+export function setupMiddleware(app: Application) {
+  // Security middleware
+  app.use(helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrc: ["'self'"],
+        imgSrc: ["'self'", "data:", "https:"],
+      },
+    },
+  }));
+
+  // CORS middleware
+  app.use(cors({
+    origin: process.env.WASP_WEB_CLIENT_URL || 'http://localhost:3000',
+    credentials: true,
+  }));
 }

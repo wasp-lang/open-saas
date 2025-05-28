@@ -35,6 +35,10 @@ function generateMockUserData(): MockUserData {
       paymentProcessorUserId: `user_${faker.string.alphanumeric(10)}`,
       subscriptionPlan: faker.helpers.arrayElement(['hobby', 'pro', null]),
       lemonSqueezyCustomerPortalUrl: null,
+      emailVerificationSentAt: faker.date.recent(),
+      passwordResetSentAt: faker.date.recent(),
+      createdAt: faker.date.past(),
+      updatedAt: faker.date.recent(),
     },
   ];
   return faker.helpers.arrayElement(mockUsers);
