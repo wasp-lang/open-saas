@@ -74,7 +74,8 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
     },
   });
 
-  const transactions: PrismaPromise<User | GptResponse>[] = [createResponse];
+  const transactions = [];
+  transactions.push(createResponse);
 
   if (!isUserSubscribed(context.user)) {
     const decrementCredit = context.entities.User.update({
