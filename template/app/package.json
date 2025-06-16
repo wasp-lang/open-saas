@@ -5,7 +5,6 @@
     "@aws-sdk/client-s3": "^3.523.0",
     "@aws-sdk/s3-presigned-post": "^3.750.0",
     "@aws-sdk/s3-request-presigner": "^3.523.0",
-    "@faker-js/faker": "8.3.1",
     "@google-analytics/data": "4.1.0",
     "@headlessui/react": "1.7.13",
     "@lemonsqueezy/lemonsqueezy.js": "^3.2.0",
@@ -32,6 +31,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@faker-js/faker": "8.3.1",
     "@types/express": "^4.17.13",
     "@types/react": "^18.0.37",
     "prisma": "5.19.1",
