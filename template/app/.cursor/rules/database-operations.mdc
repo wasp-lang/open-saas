@@ -5,7 +5,9 @@ alwaysApply: true
 ---
 # 3. Database, Entities, and Operations
 
-This document covers how Wasp interacts with the database using Prisma, defines Wasp Entities, and explains the rules for creating and using Wasp Operations (Queries and Actions).
+This document gives a quick rundown on how Wasp interacts with the database using Prisma, defines Wasp Entities, and explains the rules for creating and using Wasp Operations (Queries and Actions).
+
+See the Wasp Data Model docs for more info [wasp-overview.mdc](mdc:template/app/.cursor/rules/wasp-overview.mdc)
 
 ## Wasp Database and Entities
 
@@ -70,11 +72,11 @@ This document covers how Wasp interacts with the database using Prisma, defines 
 - **Entity Types:** Wasp generates types for your Prisma models from [schema.prisma](mdc:schema.prisma).
   - Import entity types using `import type { MyModel } from 'wasp/entities';`
 - **Entity Access:** Ensure all Entities needed within an operation's logic are listed in its `entities: [...]` definition in [main.wasp](mdc:main.wasp). This makes `context.entities.YourModel` available.
-- **Internal Communication:** Prioritize Wasp operations for client-server communication within the app. Use API Routes (see [6-advanced-troubleshooting.mdc](mdc:.cursor/rules/6-advanced-troubleshooting.mdc)) primarily for external integrations (webhooks, etc.).
+- **Internal Communication:** Prioritize Wasp operations for client-server communication within the app. Use Custom HTTP API Endpoints (see [advanced-troubleshooting.mdc](mdc:template/app/.cursor/rules/advanced-troubleshooting.mdc)) primarily for external integrations (webhooks, etc.).
 - **Client-Side Query Usage:** Use Wasp's `useQuery` hook from `wasp/client/operations` to fetch data.
   - `import { useQuery } from 'wasp/client/operations';`
   - `const { data, isLoading, error } = useQuery(getQueryName, { queryArgs });`
-- **Client-Side Action Usage:** Call actions *directly* using `async`/`await`. **DO NOT USE** the `useAction` hook unless you specifically need optimistic UI updates (see [6-advanced-troubleshooting.mdc](mdc:.cursor/rules/6-advanced-troubleshooting.mdc)).
+- **Client-Side Action Usage:** Call actions *directly* using `async`/`await`. **DO NOT USE** the `useAction` hook unless you specifically need optimistic UI updates (see [advanced-troubleshooting.mdc](mdc:template/app/.cursor/rules/advanced-troubleshooting.mdc)).
   - `import { myAction } from 'wasp/client/operations';`
   - `const result = await myAction({ actionArgs });`
 - **Example Operation Implementation (`src/features/tasks/operations.ts`):
@@ -117,7 +119,6 @@ This document covers how Wasp interacts with the database using Prisma, defines 
 
 ## Server-Side Error Handling
 
-- Use `try/catch` blocks within operation functions.
 - Throw `HttpError` from `wasp/server` for expected errors (e.g., unauthorized, not found, bad input) to send structured responses to the client.
 - Log unexpected errors for debugging.
 - Example:
@@ -155,5 +156,3 @@ This document covers how Wasp interacts with the database using Prisma, defines 
     }
   }
   ```
-
-</rewritten_file> 

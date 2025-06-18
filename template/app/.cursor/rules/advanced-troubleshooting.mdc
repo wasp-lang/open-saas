@@ -14,7 +14,7 @@ These features are configured in [main.wasp](mdc:main.wasp).
 ### Jobs and Workers
 
 - Wasp supports background jobs, useful for tasks like sending emails, processing data, or scheduled operations.
-- Jobs require a job executor like PgBoss (which requires PostgreSQL, see [3-database-operations.mdc](mdc:.cursor/rules/3-database-operations.mdc) ).
+- Jobs require a job executor like PgBoss (which requires PostgreSQL, see [database-operations.mdc](mdc:template/app/.cursor/rules/database-operations.mdc)).
 - Example Job definition in [main.wasp](mdc:main.wasp):
   ```wasp
   job emailSender {
@@ -28,9 +28,9 @@ These features are configured in [main.wasp](mdc:main.wasp).
   }
   ```
 - Jobs can be scheduled or triggered programmatically from Wasp actions or other jobs.
-- See [Wasp Jobs Documentation](mdc:https:/wasp-lang.com/docs/advanced/jobs).
+- See the Wasp Recurring Jobs Docs for more info [wasp-overview.mdc](mdc:template/app/.cursor/rules/wasp-overview.mdc)
 
-### API Routes
+### Custom HTTP API Endpoints
 
 - Define custom server API endpoints, often used for external integrations (webhooks, third-party services) where Wasp Operations are not suitable.
 - Example API route definition in [main.wasp](mdc:main.wasp):
@@ -42,13 +42,15 @@ These features are configured in [main.wasp](mdc:main.wasp).
     httpRoute: (POST, "/webhooks/stripe"),
     // Optional: Grant entity access
     entities: [User, Payment],
-    // Optional: Apply middleware
-    // middlewares: [checkStripeSignature]
-    // Optional: Disable default auth check if webhook handles its own
+    // Optional: Apply middleware config function 
+    // middlewareConfigFn: import { apiMiddleware } from "@src/apis"
+    // Optional: If auth is enabled, this will default to true and provide a context.user
+    // object. If you do not wish to attempt to parse the JWT in the Authorization Header
+    // you should set this to false.
     // auth: false
   }
   ```
-- See [Wasp API Routes Documentation](mdc:https:/wasp-lang.com/docs/advanced/apis).
+- See the Wasp Custom HTTP API Endpoints docs for more info [wasp-overview.mdc](mdc:template/app/.cursor/rules/wasp-overview.mdc)
 
 ### Middleware
 
@@ -56,26 +58,15 @@ These features are configured in [main.wasp](mdc:main.wasp).
 - Useful for logging, custom authentication/authorization checks, request transformation, etc.
 - Example Middleware definition in [main.wasp](mdc:main.wasp):
   ```wasp
-  // Define the middleware itself
-  middleware checkAdmin {
-    fn: import { checkAdminMiddleware } from "@src/server/middleware/auth.js"
-  }
-
-  // Apply it to a page or API route
-  page AdminDashboardPage {
-    component: import { AdminDashboard } from "@src/features/admin/AdminDashboardPage.tsx",
-    auth: true, // Ensure user is logged in first
-    middlewares: [checkAdmin] // Apply custom admin check
-  }
-
-  api adminAction {
-      fn: import { handleAdminAction } from "@src/server/apis/admin.js",
-      httpRoute: (POST, "/api/admin/action"),
-      auth: true,
-      middlewares: [checkAdmin]
+  // Customize global middleware
+  app todoApp {
+  // ...
+    server: {
+      middlewareConfigFn: import { serverMiddlewareFn } from "@src/serverSetup"
+    },
   }
   ```
-- See [Wasp Middleware Documentation](mdc:https:/wasp-lang.com/docs/advanced/middleware).
+- See the Wasp Middleware Docs for more info [wasp-overview.mdc](mdc:template/app/.cursor/rules/wasp-overview.mdc)
 
 ## Performance Optimization
 
@@ -89,43 +80,7 @@ These features are configured in [main.wasp](mdc:main.wasp).
   - For actions where perceived speed is critical (e.g., deleting an item, marking as complete), consider using Wasp's `useAction` hook (from `wasp/client/operations`) with `optimisticUpdates`.
   - This updates the client-side cache (affecting relevant `useQuery` results) *before* the action completes on the server, providing instant feedback.
   - **Use Sparingly:** Only implement optimistic updates where the action is highly likely to succeed and the instant feedback significantly improves UX. Remember to handle potential server-side failures gracefully (Wasp helps revert optimistic updates on error).
-  - Example:
-    ```typescript
-    import { useAction, useQuery } from 'wasp/client/operations';
-    import { deleteTask, getTasks } from 'wasp/client/operations'; // Assuming these exist
-    import type { Task } from 'wasp/entities';
-
-    function TaskList() {
-      const { data: tasks } = useQuery(getTasks);
-
-      // Use useAction when optimistic updates are needed
-      const { execute: deleteAction, isExecuting } = useAction(deleteTask, {
-        optimisticUpdates: [
-          {
-            // Specify the query to update optimistically
-            getQuerySpecifier: getTasks,
-            // Function to update the query cache
-            updateQuery: (oldTasks, args) => {
-              // args contains { taskId: number } passed to deleteAction
-              return oldTasks.filter(task => task.id !== args.taskId);
-            }
-          }
-        ]
-      });
-
-      const handleDelete = async (taskId: number) => {
-        try {
-          await deleteAction({ taskId });
-        } catch (error) {
-          console.error("Failed to delete task:", error);
-          // Optionally show an error message to the user
-        }
-      };
-
-      // ... render task list with delete buttons calling handleDelete ...
-    }
-    ```
-  - See [Wasp Optimistic Updates Documentation](mdc:https:/wasp-lang.com/docs/advanced/optimistic-updates).
+  - See the Wasp Actions docs for more info [wasp-overview.mdc](mdc:template/app/.cursor/rules/wasp-overview.mdc)
 
 ## Troubleshooting
 
@@ -146,6 +101,6 @@ These features are configured in [main.wasp](mdc:main.wasp).
   - If using PostgreSQL, ensure the database server is running.
   - Check the `.env.server` file for the correct `DATABASE_URL`.
 - **Build/Runtime Errors:**
-  - Check import paths carefully (Wasp vs. relative vs. `@src/` rules, see [2-project-conventions.mdc](mdc:.cursor/rules/2-project-conventions.mdc) ).
+  - Check import paths carefully (Wasp vs. relative vs. `@src/` rules, see [project-conventions.mdc](mdc:template/app/.cursor/rules/project-conventions.mdc)).
   - Ensure all dependencies are installed (`npm install`).
   - Check the Wasp server console and the browser's developer console for specific error messages. 

@@ -5,12 +5,13 @@ alwaysApply: true
 ---
 # 4. Authentication
 
-This document details how authentication is configured and used within the Wasp application.
+This document gives a quick rundown on how authentication is configured and used within the Wasp application.
 
-## Wasp Auth Setup (`@main.wasp`)
+See the Wasp Auth docs for available methods and complete guides [wasp-overview.mdc](mdc:template/app/.cursor/rules/wasp-overview.mdc)
 
-- Wasp provides built-in authentication with minimal configuration in [main.wasp](mdc:main.wasp). 
-- See the general [Auth overview and available methods here](mdc:https:/raw.githubusercontent.com/wasp-lang/wasp/refs/heads/release/web/versioned_docs/version-0.16.0/auth/overview.md).
+## Wasp Auth Setup
+
+- Wasp provides built-in authentication with minimal configuration via the Wasp config file. 
 - Wasp generates all necessary auth routes, middleware, and UI components based on the configuration.
 - Example auth configuration in [main.wasp](mdc:main.wasp):
   ```wasp
