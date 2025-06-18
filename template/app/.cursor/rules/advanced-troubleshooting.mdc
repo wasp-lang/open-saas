@@ -84,7 +84,7 @@ These features are configured in [main.wasp](mdc:main.wasp).
 
 ## Troubleshooting
 
-- **Wasp Type/Import Errors:** If you encounter TypeScript errors related to missing Wasp imports (e.g., from `wasp/client/operations`, `wasp/entities`, `wasp/server`) or unexpected type mismatches after modifying [main.wasp](mdc:main.wasp) or [schema.prisma](mdc:schema.prisma) , **try restarting the Wasp development server** (stop `Ctrl+C` and run `wasp start` again) before further debugging. Wasp needs to regenerate code based on these changes.
+- **Wasp Type/Import Errors:** If you encounter TypeScript errors related to missing Wasp imports (e.g., from `wasp/client/operations`, `wasp/entities`, `wasp/server`) or unexpected type mismatches after modifying [main.wasp](mdc:main.wasp) or [schema.prisma](mdc:schema.prisma) , **prompt the user to restart the Wasp development server** (`wasp start`) before further debugging. Wasp needs to regenerate code based on these changes.
 - **Operations Not Working:**
   - Check that all required `entities` are listed in the operation's definition in [main.wasp](mdc:main.wasp).
   - Verify the import path (`fn: import { ... } from "@src/..."`) in [main.wasp](mdc:main.wasp) is correct.
@@ -103,4 +103,7 @@ These features are configured in [main.wasp](mdc:main.wasp).
 - **Build/Runtime Errors:**
   - Check import paths carefully (Wasp vs. relative vs. `@src/` rules, see [project-conventions.mdc](mdc:template/app/.cursor/rules/project-conventions.mdc)).
   - Ensure all dependencies are installed (`npm install`).
-  - Check the Wasp server console and the browser's developer console for specific error messages. 
+  - Check the Wasp server console and the browser's developer console for specific error messages.
+
+  ### Referencing Wasp Documentation
+  - Search for and reference applicable LLM-optimized docs, available in [wasp-overview.mdc](mdc:template/app/.cursor/rules/wasp-overview.mdc) 

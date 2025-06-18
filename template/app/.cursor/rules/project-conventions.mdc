@@ -79,3 +79,6 @@ This document outlines the specific conventions, file structures, and general ru
 
 - Avoid adding dependencies directly to the [main.wasp](mdc:main.wasp) config file.
 - Install dependencies via `npm install` instead. This updates [package.json](mdc:package.json) and [package-lock.json](mdc:package-lock.json)
+
+### Referencing Documentation
+- Make sure the user has added the applicable LLM-optimized docs, available in  [wasp-overview.mdc](mdc:template/app/.cursor/rules/wasp-overview.mdc), in the chat context or settings when using AI-assisted coding tools. 
