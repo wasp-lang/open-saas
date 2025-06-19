@@ -1,0 +1,7 @@
+PyPDF2
+python-docx
+spacy
+pytest
+fastapi
+uvicorn[standard]
+pydantic
