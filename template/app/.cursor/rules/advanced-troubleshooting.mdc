@@ -55,7 +55,7 @@ These features are configured in [main.wasp](mdc:main.wasp).
 ### Middleware
 
 - Wasp supports custom middleware functions that can run before API route handlers or Page components.
-- Useful for logging, custom authentication/authorization checks, request transformation, etc.
+- Useful for logging, custom checks, request transformation, etc.
 - Example Middleware definition in [main.wasp](mdc:main.wasp):
   ```wasp
   // Customize global middleware
