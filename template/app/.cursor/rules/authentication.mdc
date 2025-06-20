@@ -54,10 +54,10 @@ See the Wasp Auth docs for available methods and complete guides [wasp-overview.
   }
 
   // Define the routes needed by email auth methods
-  route EmailVerificationRoute { path: "/auth/verify-email/:token", to: EmailVerificationPage }
+  route EmailVerificationRoute { path: "/auth/verify-email", to: EmailVerificationPage }
   page EmailVerificationPage { component: import { EmailVerification } from "@src/features/auth/EmailVerificationPage.tsx" }
 
-  route PasswordResetRoute { path: "/auth/reset-password/:token", to: PasswordResetPage }
+  route PasswordResetRoute { path: "/auth/reset-password", to: PasswordResetPage }
   page PasswordResetPage { component: import { PasswordReset } from "@src/features/auth/PasswordResetPage.tsx" }
   ```
 
