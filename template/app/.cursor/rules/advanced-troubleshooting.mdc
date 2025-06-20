@@ -106,4 +106,4 @@ These features are configured in [main.wasp](mdc:main.wasp).
   - Check the Wasp server console and the browser's developer console for specific error messages.
 
   ### Referencing Wasp Documentation
-  - Search for and reference applicable LLM-optimized docs, available in [wasp-overview.mdc](mdc:template/app/.cursor/rules/wasp-overview.mdc) 
+  - Search for and reference applicable LLM-optimized docs, available in [wasp-overview.mdc](mdc:template/app/.cursor/rules/wasp-overview.mdc)   
