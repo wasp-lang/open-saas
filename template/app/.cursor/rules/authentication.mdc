@@ -134,7 +134,34 @@ See the Wasp Auth docs for available methods and complete guides [wasp-overview.
           // other fields...
         }
         ```
-    2.  **Ensure this field is populated correctly** when the user signs up or updates their profile. You might need a Wasp action to update the `User` model after signup or when an email is verified.
+    2.  **Ensure this field is populated correctly** when the user signs up or updates their profile. You can do this through the `userSignupFields` property in the wasp config file for each auth method.
+        ```wasp
+        //main.wasp
+        auth: {
+          userEntity: User,
+          methods: {
+            email: { 
+              //...
+              userSignupFields: import { getEmailUserFields } from "@src/auth/userSignupFields"
+            },
+          }
+        }
+        ```
+        ```ts
+        //userSignupFields.ts
+        import { defineUserSignupFields } from 'wasp/auth/providers/types';
+
+        const userDataSchema = z.object({
+          email: z.string(),
+        });
+
+        export const getEmailUserFields = defineUserSignupFields({
+          email: (data) => {
+            const userData = userDataSchema.parse(data);
+            return userData.email;
+          }
+        })
+        ```
     3.  This makes the field (`email` in this example) a standard, queryable field on your `User` entity, accessible via `context.entities.User`, separate from the `AuthUser`'s identity structure.
 
 - **Common Issue:** If auth isn't working, first verify the `auth` configuration in [main.wasp](mdc:main.wasp) is correct and matches your intent (correct `userEntity`, enabled `methods`, `onAuthFailedRedirectTo`). Ensure environment variables for social providers are set if applicable. Check the Wasp server logs for errors. 
