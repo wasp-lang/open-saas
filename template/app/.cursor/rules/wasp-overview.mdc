@@ -50,7 +50,7 @@ This document covers the fundamental concepts of the Wasp framework and the basi
   ``` 
 
 ### Wasp Documentation 
-More info on all of Wasp's features can be found in the Wasp documentation:
+More info on all of Wasp's features can be found in the Wasp documentation (NOTE: You can follow these links, instruct the user to add these docs to Cursor's settings, or have the user manually include them in the chat context):
 - Links to Wasp documentation sections (LLM-optimized): https://wasp.sh/llms.txt
 - Complete Wasp documentation (LLM-optimized): https://wasp.sh/llms-full.txt
 - Wasp Docs homepage (human-readable): https://wasp.sh/docs
