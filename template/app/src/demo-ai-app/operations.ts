@@ -61,8 +61,7 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
     },
   });
 
-  const transactions = [];
-  transactions.push(createResponse);
+  const transactions: PrismaPromise<GptResponse | User>[] = [createResponse];
 
   // We decrement the credits for users without an active subscription
   // after using up tokens to get a daily plan from Chat GPT.
