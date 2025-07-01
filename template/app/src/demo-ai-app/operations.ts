@@ -58,15 +58,6 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
     throw new HttpError(500, 'Encountered a problem in communication with OpenAI');
   }
 
-  // We decrement the credits for users without an active subscription
-  // after using up tokens to get a daily plan from Chat GPT.
-  //
-  // This way, users don't feel cheated if something goes wrong.
-  // On the flipside, users can theoretically abuse this and spend more
-  // credits than they have, but the damage should be pretty limited.
-  //
-  // Think about which option you prefer for your app and edit the code accordingly.
-
   const createResponse = context.entities.GptResponse.create({
     data: {
       user: { connect: { id: context.user.id } },
@@ -77,6 +68,14 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
   const transactions = [];
   transactions.push(createResponse);
 
+  // We decrement the credits for users without an active subscription
+  // after using up tokens to get a daily plan from Chat GPT.
+  //
+  // This way, users don't feel cheated if something goes wrong.
+  // On the flipside, users can theoretically abuse this and spend more
+  // credits than they have, but the damage should be pretty limited.
+  //
+  // Think about which option you prefer for your app and edit the code accordingly.
   if (!isUserSubscribed(context.user)) {
     const decrementCredit = context.entities.User.update({
       where: { id: context.user.id },
