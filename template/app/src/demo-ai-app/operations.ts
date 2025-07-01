@@ -39,10 +39,6 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
     throw new HttpError(401, 'Only authenticated users are allowed to perform this operation');
   }
 
-  if (!isEligibleForResponse(context.user)) {
-    throw new HttpError(402, 'User has not paid or is out of credits');
-  }
-
   const { hours } = ensureArgsSchemaOrThrowHttpError(generateGptResponseInputSchema, rawArgs);
   const tasks = await context.entities.Task.findMany({
     where: {
@@ -77,15 +73,19 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
   //
   // Think about which option you prefer for your app and edit the code accordingly.
   if (!isUserSubscribed(context.user)) {
-    const decrementCredit = context.entities.User.update({
-      where: { id: context.user.id },
-      data: {
-        credits: {
-          decrement: 1,
+    if (context.user.credits > 0) {
+      const decrementCredit = context.entities.User.update({
+        where: { id: context.user.id },
+        data: {
+          credits: {
+            decrement: 1,
+          },
         },
-      },
-    });
-    transactions.push(decrementCredit);
+      });
+      transactions.push(decrementCredit);
+    } else {
+      throw new HttpError(402, 'User has not paid or is out of credits');
+    }
   }
 
   console.log('Decrementing credits and saving response');
@@ -93,10 +93,6 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
 
   return generatedSchedule;
 };
-
-function isEligibleForResponse(user: User) {
-  return isUserSubscribed(user) || user.credits > 0;
-}
 
 function isUserSubscribed(user: User) {
   return (
