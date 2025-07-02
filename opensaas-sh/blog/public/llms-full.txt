@@ -64,7 +64,7 @@ If you prefer video tutorials, you can watch this walkthrough below which will g
 ### Pre-requisites
 
 You must have Node.js (and NPM) installed on your machine and available in `PATH` to use Wasp.
-Your version of Node.js must be >= 18.
+Your version of Node.js must be >= 20.
 
 To switch easily between Node.js versions, we recommend using [nvm](https://github.com/nvm-sh/nvm).
 
