@@ -21,7 +21,7 @@ This document covers the fundamental concepts of the Wasp framework and the basi
 
 - A Wasp project consists of a [main.wasp](mdc:main.wasp) (or `main.wasp.ts`) file in the root directory that defines the app's configuration.
 - The [schema.prisma](mdc:schema.prisma) file in the root directory defines your database models ("entities").
-- Your custom code lives in the `src/` directory (e.g. `src/features/`), which contains client-side and server-side code.
+- Your custom code lives in the `src/` directory (e.g. `src/{featureName}`), which contains client-side and server-side code.
 - Wasp generates additional code that connects everything together when you run your app.
 
 ### The Wasp Config File
