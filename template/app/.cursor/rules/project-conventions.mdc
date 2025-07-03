@@ -13,7 +13,7 @@ This document outlines the specific conventions, file structures, and general ru
 
 - Define app structure in the Wasp config file: [main.wasp](mdc:main.wasp) or `main.wasp.ts`.
 - Define data models ("entities") in [schema.prisma](mdc:schema.prisma).
-- Group feature code in `src/features/{featureName}` directories.
+- Group feature code in `src/{featureName}` directories.
 - Group feature config definitions (e.g. routes, pages, operations, etc.) into sections within the Wasp config file ([main.wasp](mdc:main.wasp)) using the `//#region` directive:
   ```wasp
   // Example in @main.wasp
@@ -31,11 +31,11 @@ This document outlines the specific conventions, file structures, and general ru
   - ✅ `import type { GetTasks } from 'wasp/server/operations'`
   - ✅ `import { getTasks, useQuery } from 'wasp/client/operations'`
   - ❌ `import { ... } from '@wasp/...'`
-  - ❌ `import { ... } from '@src/features/...'` (Use relative paths for non-Wasp imports within `src`)
+  - ❌ `import { ... } from '@src/featureName/...'` (Use relative paths for non-Wasp imports within `src`)
   - If you see "Cannot find module 'wasp/...'": Double-check the import path prefix.
 - **Wasp Config Imports in [main.wasp](mdc:main.wasp) :** Imports of your code *must* start with `@src/`.
-  - ✅ `component: import { LoginPage } from "@src/features/auth/LoginPage.tsx"`
-  - ❌ `component: import { LoginPage } from "../src/features/auth/LoginPage.tsx"`
+  - ✅ `component: import { LoginPage } from "@src/auth/LoginPage.tsx"`
+  - ❌ `component: import { LoginPage } from "../src/auth/LoginPage.tsx"`
   - ❌ `component: import { LoginPage } from "client/pages/auth/LoginPage.tsx"`
 - **General Imports in `.ts`/`.tsx`:** Use relative paths for imports within the `src/` directory. Avoid using the `@src/` alias directly in `.ts`/`.tsx` files.
   - If you see "Cannot find module '@src/...'": Use a relative path instead.
@@ -70,9 +70,9 @@ This document outlines the specific conventions, file structures, and general ru
 
 - Always reference the Wasp config file ([main.wasp](mdc:main.wasp) or `main.wasp.ts`) as your source of truth for the app's configuration and structure.
 - Group feature config definitions in the Wasp config file using `//#region` (as noted above).
-- Group feature code into feature directories (e.g. `src/features/transactions`).
+- Group feature code into feature directories (e.g. `src/transactions`).
 - Use the latest Wasp version, as defined in the Wasp configl file.
-- Combine Wasp operations (queries and actions) into an `operations.ts` file within the feature directory (e.g., `src/features/transactions/operations.ts`).
+- Combine Wasp operations (queries and actions) into an `operations.ts` file within the feature directory (e.g., `src/transactions/operations.ts`).
 - Always use TypeScript for Wasp code (`.ts`/`.tsx`).
 
 ### Wasp Dependencies
