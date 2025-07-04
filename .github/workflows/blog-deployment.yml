@@ -17,58 +17,58 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
 
-    - name: Install dependencies
-      working-directory: ./opensaas-sh/blog
-      run: npm install
+      - name: Install dependencies
+        working-directory: ./opensaas-sh/blog
+        run: npm install
 
-    - name: Generate LLM files
-      working-directory: ./opensaas-sh/blog
-      run: npm run generate-llm-files
+      - name: Generate LLM files
+        working-directory: ./opensaas-sh/blog
+        run: npm run generate-llm-files
 
-    - name: Build site
-      working-directory: ./opensaas-sh/blog
-      run: npm run build
+      - name: Build site
+        working-directory: ./opensaas-sh/blog
+        run: npm run build
 
   deploy:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
 
-    - name: Install dependencies
-      working-directory: ./opensaas-sh/blog
-      run: npm install
+      - name: Install dependencies
+        working-directory: ./opensaas-sh/blog
+        run: npm install
 
-    - name: Generate LLM files
-      working-directory: ./opensaas-sh/blog
-      run: npm run generate-llm-files
+      - name: Generate LLM files
+        working-directory: ./opensaas-sh/blog
+        run: npm run generate-llm-files
 
-    - name: Build site
-      working-directory: ./opensaas-sh/blog
-      run: npm run build
+      - name: Build site
+        working-directory: ./opensaas-sh/blog
+        run: npm run build
 
-    - name: Deploy to Netlify
-      uses: nwtgck/actions-netlify@v2
-      with:
-        publish-dir: './opensaas-sh/blog/dist'
-        production-branch: main
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        deploy-message: "Deploy from GitHub Actions"
-      env:
-        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-      timeout-minutes: 1
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v2
+        with:
+          publish-dir: './opensaas-sh/blog/dist'
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: 'Deploy from GitHub Actions'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 1
