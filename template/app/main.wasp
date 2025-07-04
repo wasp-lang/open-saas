@@ -238,21 +238,21 @@ query getDownloadFileSignedURL {
 //#endregion
 
 //#region Analytics
-query getDailyStats {
-  fn: import { getDailyStats } from "@src/analytics/operations",
-  entities: [User, DailyStats]
+query getAnalyticsDataByDay {
+  fn: import { getAnalyticsDataByDay } from "@src/analytics/operations",
+  entities: [User, DailyAnalytics]
 }
 
-job dailyStatsJob {
+job dailyAnalyticsJob {
   executor: PgBoss,
   perform: {
-    fn: import { calculateDailyStats } from "@src/analytics/stats"
+    fn: import { calculateDailyAnalytics } from "@src/analytics/stats"
   },
   schedule: {
-    cron: "0 * * * *" // every hour. useful in production
-    // cron: "* * * * *" // every minute. useful for debugging
+    // cron: "0 * * * *" // every hour. useful in production
+    cron: "* * * * *" // every minute. useful for debugging
   },
-  entities: [User, DailyStats, Logs, PageViewSource]
+  entities: [User, DailyAnalytics, Logs, PageViewSource]
 }
 //#endregion
 

@@ -1,22 +1,23 @@
 import { useMemo } from 'react';
 import { UpArrow, DownArrow } from '../../../client/icons/icons-arrows';
-import { type DailyStatsProps } from '../../../analytics/stats';
+import { type DailyAnalyticsProps } from './types';
 
-const TotalRevenueCard = ({dailyStats, weeklyStats, isLoading}: DailyStatsProps) => {
+
+const TotalRevenueCard = ({dailyAnalytics, dailyAnalyticsFromPastWeek, isLoading}: DailyAnalyticsProps) => {
   const isDeltaPositive = useMemo(() => {
-    if (!weeklyStats) return false;
-    return (weeklyStats[0].totalRevenue - weeklyStats[1]?.totalRevenue) > 0;
-  }, [weeklyStats]);
+    if (!dailyAnalyticsFromPastWeek) return false;
+    return (dailyAnalyticsFromPastWeek[0].totalRevenue - dailyAnalyticsFromPastWeek[1]?.totalRevenue) > 0;
+  }, [dailyAnalyticsFromPastWeek]);
 
   const deltaPercentage = useMemo(() => {
-    if ( !weeklyStats || weeklyStats.length < 2 || isLoading) return;
-    if ( weeklyStats[1]?.totalRevenue === 0 || weeklyStats[0]?.totalRevenue === 0 ) return 0;
+    if ( !dailyAnalyticsFromPastWeek || dailyAnalyticsFromPastWeek.length < 2 || isLoading) return;
+    if ( dailyAnalyticsFromPastWeek[1]?.totalRevenue === 0 || dailyAnalyticsFromPastWeek[0]?.totalRevenue === 0 ) return 0;
 
-    weeklyStats.sort((a, b) => b.id - a.id);
+    dailyAnalyticsFromPastWeek.sort((a, b) => b.id - a.id);
 
-    const percentage = ((weeklyStats[0].totalRevenue - weeklyStats[1]?.totalRevenue) / weeklyStats[1]?.totalRevenue) * 100;
+    const percentage = ((dailyAnalyticsFromPastWeek[0].totalRevenue - dailyAnalyticsFromPastWeek[1]?.totalRevenue) / dailyAnalyticsFromPastWeek[1]?.totalRevenue) * 100;
     return Math.floor(percentage);
-  }, [weeklyStats]);
+  }, [dailyAnalyticsFromPastWeek]);
 
   return (
     <div className='rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark'>
@@ -46,7 +47,7 @@ const TotalRevenueCard = ({dailyStats, weeklyStats, isLoading}: DailyStatsProps)
 
       <div className='mt-4 flex items-end justify-between'>
         <div>
-          <h4 className='text-title-md font-bold text-black dark:text-white'>${dailyStats?.totalRevenue}</h4>
+          <h4 className='text-title-md font-bold text-black dark:text-white'>${dailyAnalytics?.totalRevenue}</h4>
           <span className='text-sm font-medium'>Total Revenue</span>
         </div>
 

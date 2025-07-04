@@ -1,12 +1,13 @@
 import { useMemo } from 'react';
 import { cn } from '../../../client/cn';
 import { UpArrow } from '../../../client/icons/icons-arrows';
-import { type DailyStatsProps } from '../../../analytics/stats';
+import { type DailyAnalyticsProps } from './types';
 
-const TotalSignupsCard = ({ dailyStats, isLoading }: DailyStatsProps) => {
+
+const TotalSignupsCard = ({ dailyAnalytics, isLoading }: DailyAnalyticsProps) => {
   const isDeltaPositive = useMemo(() => {
-    return !!dailyStats?.userDelta && dailyStats.userDelta > 0;
-  }, [dailyStats]);
+    return !!dailyAnalytics?.userDelta && dailyAnalytics.userDelta > 0;
+  }, [dailyAnalytics]);
 
   return (
     <div className='rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark'>
@@ -36,7 +37,7 @@ const TotalSignupsCard = ({ dailyStats, isLoading }: DailyStatsProps) => {
 
       <div className='mt-4 flex items-end justify-between'>
         <div>
-          <h4 className='text-title-md font-bold text-black dark:text-white'>{dailyStats?.userCount}</h4>
+          <h4 className='text-title-md font-bold text-black dark:text-white'>{dailyAnalytics?.userCount}</h4>
           <span className='text-sm font-medium'>Total Signups</span>
         </div>
 
@@ -46,8 +47,8 @@ const TotalSignupsCard = ({ dailyStats, isLoading }: DailyStatsProps) => {
             'text-meta-5': !isDeltaPositive,
           })}
         >
-          {isLoading ? '...' : isDeltaPositive ? dailyStats?.userDelta : '-'}
-          {!!dailyStats && isDeltaPositive && <UpArrow />}
+          {isLoading ? '...' : isDeltaPositive ? dailyAnalytics?.userDelta : '-'}
+          {!!dailyAnalytics && isDeltaPositive && <UpArrow />}
         </span>
       </div>
     </div>

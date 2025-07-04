@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
 import { cn } from '../../../client/cn';
 import { UpArrow, DownArrow } from '../../../client/icons/icons-arrows';
-import { type DailyStatsProps } from '../../../analytics/stats';
+import { type DailyAnalyticsProps } from './types';
 
-const TotalPayingUsersCard = ({ dailyStats, isLoading }: DailyStatsProps) => {
+const TotalPayingUsersCard = ({ dailyAnalytics, isLoading }: DailyAnalyticsProps) => {
   const isDeltaPositive = useMemo(() => {
-    return !!dailyStats?.paidUserDelta && dailyStats?.paidUserDelta > 0;
-  }, [dailyStats]);
+    return !!dailyAnalytics?.paidUserDelta && dailyAnalytics?.paidUserDelta > 0;
+  }, [dailyAnalytics]);
 
   return (
     <div className='rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark'>
@@ -32,7 +32,7 @@ const TotalPayingUsersCard = ({ dailyStats, isLoading }: DailyStatsProps) => {
 
       <div className='mt-4 flex items-end justify-between'>
         <div>
-          <h4 className='text-title-md font-bold text-black dark:text-white'>{dailyStats?.paidUserCount}</h4>
+          <h4 className='text-title-md font-bold text-black dark:text-white'>{dailyAnalytics?.paidUserCount}</h4>
           <span className='text-sm font-medium'>Total Paying Users</span>
         </div>
 
@@ -42,8 +42,8 @@ const TotalPayingUsersCard = ({ dailyStats, isLoading }: DailyStatsProps) => {
             'text-meta-5': !isDeltaPositive,
           })}
         >
-          {isLoading ? '...' : dailyStats?.paidUserDelta !== 0 ? dailyStats?.paidUserDelta : '-'}
-          {dailyStats?.paidUserDelta !== 0 ? isDeltaPositive ? <UpArrow /> : <DownArrow /> : null}
+          {isLoading ? '...' : dailyAnalytics?.paidUserDelta !== 0 ? dailyAnalytics?.paidUserDelta : '-'}
+          {dailyAnalytics?.paidUserDelta !== 0 ? isDeltaPositive ? <UpArrow /> : <DownArrow /> : null}
         </span>
       </div>
     </div>
