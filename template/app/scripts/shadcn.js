@@ -6,7 +6,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Default ShadCN version for Wasp + Tailwind 3
 const DEFAULT_SHADCN_VERSION = '2.3.0';
