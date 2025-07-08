@@ -8,11 +8,14 @@
     "@google-analytics/data": "4.1.0",
     "@headlessui/react": "1.7.13",
     "@lemonsqueezy/lemonsqueezy.js": "^3.2.0",
+    "@radix-ui/react-slot": "^1.2.3",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.7",
     "apexcharts": "3.41.0",
-    "clsx": "^2.1.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "headlessui": "^0.0.0",
+    "lucide-react": "^0.525.0",
     "node-fetch": "3.3.0",
     "openai": "^4.55.3",
     "prettier": "3.1.1",
@@ -24,8 +27,9 @@
     "react-icons": "4.11.0",
     "react-router-dom": "^6.26.2",
     "stripe": "11.15.0",
-    "tailwind-merge": "^2.2.1",
+    "tailwind-merge": "^2.6.0",
     "tailwindcss": "^3.2.7",
+    "tailwindcss-animate": "^1.0.7",
     "vanilla-cookieconsent": "^3.0.1",
     "wasp": "file:.wasp/out/sdk/wasp",
     "zod": "^3.23.8"
@@ -37,5 +41,8 @@
     "prisma": "5.19.1",
     "typescript": "5.8.2",
     "vite": "^4.3.9"
+  },
+  "scripts": {
+    "shadcn": "node scripts/shadcn.js"
   }
 }
