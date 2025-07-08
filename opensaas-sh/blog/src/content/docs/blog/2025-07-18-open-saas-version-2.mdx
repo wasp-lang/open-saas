@@ -1,0 +1,120 @@
+---
+title: "Open SaaS v2.0 -- New Look, New Features. Same Open-Source Dopeness."
+subtitle: "A summary of the changes and improvements in the latest version of Open SaaS."
+date: 2025-07-18
+tags:
+  - gpt
+  - saas
+  - microsaas
+  - sideproject
+  - indiehacker
+  - marketing
+  - saas-marketing
+authors: vince
+---
+import { Image } from 'astro:assets';
+import VideoPlayer from '../../../components/VideoPlayer.astro';
+import demoVideo from '../../../assets/cover-letter-gpt/demo-video.mp4';
+import Tweet from '../../../components/Tweet.astro';
+import StarOpenSaaSCTA from '../../../components/StarOpenSaaSCTA.astro';
+import redditPost from '../../../assets/cover-letter-gpt/coverlettergpt-reddit.png';
+import polar from '../../../assets/open-saas-v2/polar.webp';
+import llmsFull from '../../../assets/ai/llm-txt-chat.webp';
+import openSaaSRedesign from '../../../assets/open-saas-v2/open-saas-redesign.webp';
+
+What could make a free, open-source, full-featured SaaS boilerplate even better? Probably a fresh new look on top the hottest UI library out there, plus a slew of new features. 
+
+Well, that's exactly what we've done with Open SaaS v2.0. The most significant change is a complete redesign using Shadcn UI, providing a more modern, consistent, and customizable experience out of the box. This update also includes key framework upgrades, new integrations, and significant codebase improvements to help you build your SaaS faster than ever.
+
+You're welcome.
+
+## New Look with Shadcn UI
+
+
+People really love Open SaaS, but we knew from the start that if there were a way to imporve it, than it would be to offer a better look and feel.
+
+So we've done just that. And not only did we redesign it to look more professional and get you building slick, modern looking apps right away, we also redesigned the entire project using Shadcn UI.
+
+<Image src={openSaaSRedesign} alt="Open SaaS Redesign" />
+{/* <Image src={shadcn} alt="Shadcn UI" /> */}
+
+Shadcn UI is all the rage right now, and for good reason. It's a library of reusable components for React that are designed to be used out of the box, while also being highly customizable.
+
+In short, they look great, and are a breeze to use. That's probably why we were getting tons of requests from the community to use it.
+
+So we listened. And delivered.
+
+On top of that, we've also made the styles easily themable, and in the future we'll be offering a range of different Landing Page templates for you to choose from. 
+
+<StarOpenSaaSCTA />
+
+## New Features
+### Lemon Squeezy, Polar, and Paddle Merchants of Record
+
+Merchants of Record (MoR) are great. They're a layer on top of payment processors like Stripe that take the pain out of the legalities and tax compliance of being a merchant.
+
+<Image src={polar} alt="Polar" />
+
+We've added support for [Lemon Squeezy](https://www.lemonsqueezy.com/) with [Polar](https://www.polar.sh/) integration in the works as we speak! Choose the payment processor that best fits your SaaS if Stripe is too granular for your needs.
+
+Coming soon, we'll also be adding support for [Paddle](https://www.paddle.com/) as a MoR to satisfy the needs of the broader international indiehacker community (follow the [GitHub issue here](https://github.com/wasp-lang/open-saas/issues/445)).
+
+### LLM-friendly Docs
+
+We've also added a LLM-friendly version of the Open SaaS, as well as Wasp frameworkdocs, [LLMs-full.txt](https://docs.opensaas.sh/llms-full.txt), to make it easier for you to use in your AI coding environments.
+
+<Image src={llmsFull} alt="LLMs-full.txt" />
+
+Just add the following urls to your AI coding environment such as Cursor, Copilot, etc, and mention it in your prompt to get precise answers to your Open SaaS and Wasp framework questions.
+
+```
+https://docs.opensaas.sh/llms-full.txt # for Open SaaS docs
+https://wasp.sh/llms-full.txt # for Wasp framework docs
+```
+
+### End-to-End Testing with Playwright
+
+One thing I hate about building a SaaS is that I'm constantly worried it might break. To give you peace of mind, we've integrated a full suite of end-to-end tests using [Playwright](https://playwright.dev/). These tests act like a robot user, clicking through your app to verify that everything from user sign-ups to critical payment flows is working exactly as it should.
+
+But we didn't just write tests for ourselves. We've provided the entire setup, including a CI/CD workflow file for GitHub Actions. This means you can automatically run these checks on every code change, ensuring you never accidentally break your production app. Ship with confidence, knowing your core features are easily protected, and use our test suite as a foundation for your own custom test cases.
+
+
+### More Refactors & Improvements
+
+But wait, there's more! On top of the headlining features, we've been busy shipping a ton of other improvements to make your life easier. We've squashed bugs, upgraded major dependencies like Node.js and the Wasp framework, and completely refactored the codebase for better organization. We also threw in some handy new integrations like enhanced file uploads with progress bars and a cookie consent banner. Here's a quick rundown of other key changes:
+
+*   **New Features & Integrations**:
+    *   **Enhanced File Uploads**: The file upload functionality has been improved with features like progress bars and validation. The S3 CORS configuration was tightened for improved security.
+    *   **Cookie Consent**: A cookie consent banner has been implemented.
+
+*   **Major Dependency and Framework Upgrades**:
+    *   **Wasp Framework**: There have been multiple upgrades to the Wasp framework, moving from version 0.13.0 up to 0.16.0 and beyond. This indicates active maintenance and adoption of new Wasp features.
+    *   **SDKs**: The AWS and OpenAI SDKs have been updated to their latest versions.
+    *   **Node.js**: The environment has been updated to Node.js version 20.
+
+*   **Codebase Refactoring and Organization**:
+    *   **Vertical Reorganization**: A major refactoring effort was undertaken to organize the codebase "vertically". Functionality for features like `auth`, `payments`, `users`, and `file-upload` are now grouped together, improving modularity.
+    *   **User Management**: Significant refactoring was done on the user management and administration pages.
+
+*   **Documentation and Content**:
+    *   A substantial number of commits are related to adding new blog posts, updating documentation, and creating other content. This reflects a strong focus on community engagement and developer resources.
+
+
+## Help Us, Help You!
+
+We're not done yet. We're going to keep listening to our commonunity and improving Open SaaS.
+
+So if you've got ideas on how to improve it, please create a [GitHub issue](https://github.com/wasp-lang/open-saas/issues) or [submit a pull request](https://github.com/wasp-lang/open-saas/pulls).
+
+Got a cool landing page variation? Submit a PR!
+Found a bug? Create an issue!
+
+Want to support us? Star the [repo on GitHub](https://github.com/wasp-lang/open-saas)!
+
+<StarOpenSaaSCTA />
+
+
+
+### More Landing Page Templates
+
+We're working on a ton of new landing page templates for you to choose from. We'll be adding more templates in the coming weeks and months, so keep an eye out for updates.
