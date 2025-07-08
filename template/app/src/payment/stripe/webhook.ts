@@ -95,9 +95,17 @@ export async function handleCheckoutSessionCompleted(
   session: SessionCompletedData,
   prismaUserDelegate: PrismaClient['user']
 ) {
-  if (session.mode !== 'payment' || session.payment_status !== 'paid') {
-    return;
-  }
+  if (isSuccessfulOneTimePayment(session)) await saveSuccessfulOneTimePayment(session, prismaUserDelegate);
+}
+
+function isSuccessfulOneTimePayment(session: SessionCompletedData) {
+  return session.mode === 'payment' && session.payment_status === 'paid';
+}
+
+async function saveSuccessfulOneTimePayment(
+  session: SessionCompletedData,
+  prismaUserDelegate: PrismaClient['user']
+) {
   const userStripeId = session.customer;
   const lineItems = await getCheckoutLineItemsBySessionId(session.id);
   const lineItemPriceId = extractPriceId(lineItems);
@@ -124,6 +132,8 @@ export async function handleInvoicePaid(invoice: InvoicePaidData, prismaUserDele
   );
 }
 
+// This is called when a subscription is successfully created
+// But we wait to update the user's subscription status until the invoice is paid in the handleInvoicePaid function.
 export async function handleCustomerSubscriptionCreated(
   subscription: SubscriptionCreatedData,
   prismaUserDelegate: PrismaClient['user']
@@ -131,16 +141,7 @@ export async function handleCustomerSubscriptionCreated(
   const userStripeId = subscription.customer;
   const priceId = extractPriceId(subscription.items);
   const subscriptionPlan = getPlanIdByPriceId(priceId);
-  // We currently use Pending for all other Stripe subscription statuses besides Active that we are not handling.
-  // If you want to handle these other statuses, make sure to update the `SubscriptionStatus` type in `payment/plans.ts`
-  const subscriptionStatus: SubscriptionStatus =
-    subscription.status === SubscriptionStatus.Active
-      ? SubscriptionStatus.Active
-      : SubscriptionStatus.Pending;
-  return updateUserStripePaymentDetails(
-    { userStripeId, subscriptionPlan, subscriptionStatus },
-    prismaUserDelegate
-  );
+  return updateUserStripePaymentDetails({ userStripeId, subscriptionPlan }, prismaUserDelegate);
 }
 
 export async function handleCustomerSubscriptionUpdated(

@@ -119,7 +119,6 @@ function prettyPrintStatus(
     past_due: `Payment for your ${planName} plan is past due! Please update your subscription payment information.`,
     cancel_at_period_end: `Your ${planName} plan subscription has been canceled, but remains active until the end of the current billing period${endOfBillingPeriod}`,
     deleted: `Your previous subscription has been canceled and is no longer active.`,
-    pending: `Your subscription is pending. Your payment must be finalized or is still being processed.`,
   };
   if (Object.keys(statusToMessage).includes(subscriptionStatus)) {
     return statusToMessage[subscriptionStatus];

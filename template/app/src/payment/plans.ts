@@ -5,7 +5,6 @@ export enum SubscriptionStatus {
   CancelAtPeriodEnd = 'cancel_at_period_end',
   Active = 'active',
   Deleted = 'deleted',
-  Pending = 'pending',
 }
 
 export enum PaymentPlanId {
