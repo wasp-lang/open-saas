@@ -1,7 +1,5 @@
 import openSaasBannerWebp from '../../client/static/open-saas-banner.webp';
 import { Button } from '../../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { DocsUrl } from '../../shared/common';
 
 export default function Hero() {
   return (
@@ -17,26 +15,10 @@ export default function Hero() {
             <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-gray-600 dark:text-white'>
               With some more exciting words about your product!
             </p>
-            <div className='mt-10 flex items-center justify-center gap-x-6'>
-              <a
-                href={DocsUrl}
-                className='rounded-md px-3.5 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-yellow-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-white'
-              >
-                Get Started <span aria-hidden='true'>→</span>
-              </a>
-              <Button variant='outline' size='lg'>
-                ShadCN Button Test
-              </Button>
-            </div>
+            <Button size='lg' variant='outline'>
+              Get Started <span aria-hidden='true'>→</span>
+            </Button>
           </div>
-          <Card>
-            <CardHeader>
-              <CardTitle>Card Title</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>Card Content</p>
-            </CardContent>
-          </Card>
           <div className='mt-14 flow-root sm:mt-14'>
             <div className='-m-2  flex justify-center rounded-xl lg:-m-4 lg:rounded-2xl lg:p-4'>
               <img

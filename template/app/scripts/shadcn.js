@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 
 // Default ShadCN version for Wasp + Tailwind 3
 const DEFAULT_SHADCN_VERSION = '2.3.0';
-const COMPONENTS_DIR = 'src/components/ui';
+const COMPONENTS_DIR = 'src/shadcn/components/ui';
 
 function log(message, type = 'info') {
   const colors = {
