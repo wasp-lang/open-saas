@@ -9,25 +9,30 @@ export default function Hero() {
       <div className='py-24 sm:py-32'>
         <div className='mx-auto max-w-8xl px-6 lg:px-8'>
           <div className='lg:mb-18 mx-auto max-w-3xl text-center'>
-            <h1 className='text-4xl font-bold text-gray-900 sm:text-6xl dark:text-white'>
-              Some <span className='italic'>cool</span> words about your product
+            <h1 className='text-4xl font-bold text-foreground sm:text-6xl'>
+              Some <span className='italic text-primary'>cool</span> words about your product
             </h1>
-            <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-gray-600 dark:text-white'>
+            <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-muted-foreground'>
               With some more exciting words about your product!
             </p>
-            <Button size='lg' variant='outline'>
-              Get Started <span aria-hidden='true'>→</span>
-            </Button>
+            <div className='mt-10 flex items-center justify-center gap-x-6'>
+              <Button size='lg' variant='default'>
+                Get Started <span aria-hidden='true'>→</span>
+              </Button>
+              <Button size='lg' variant='outline'>
+                Learn More
+              </Button>
+            </div>
           </div>
           <div className='mt-14 flow-root sm:mt-14'>
-            <div className='-m-2  flex justify-center rounded-xl lg:-m-4 lg:rounded-2xl lg:p-4'>
+            <div className='-m-2 flex justify-center rounded-xl lg:-m-4 lg:rounded-2xl lg:p-4'>
               <img
                 src={openSaasBannerWebp}
                 alt='App screenshot'
                 width={1000}
                 height={530}
                 loading='lazy'
-                className='rounded-md shadow-2xl ring-1 ring-gray-900/10'
+                className='rounded-md shadow-2xl ring-1 ring-border'
               />
             </div>
           </div>
