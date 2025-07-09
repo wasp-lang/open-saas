@@ -1,5 +1,5 @@
 import { Dialog } from '@headlessui/react';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { BiLogIn } from 'react-icons/bi';
 import { HiBars3 } from 'react-icons/hi2';
@@ -22,15 +22,26 @@ const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Your SaaS App' />
 
 export default function AppNavBar({ navigationItems }: { navigationItems: NavigationItem[] }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const isLandingPage = useIsLandingPage();
 
   const { data: user, isLoading: isUserLoading } = useAuth();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <header
       className={cn(
-        'absolute inset-x-0 top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border',
+        'sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border transition-all duration-300',
         {
-          'shadow-sm': !isLandingPage,
+          'shadow-sm': isScrolled || !isLandingPage,
         }
       )}
     >
