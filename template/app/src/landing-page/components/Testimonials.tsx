@@ -1,4 +1,11 @@
-import { Card, CardContent, CardDescription, CardFooter, CardTitle } from '../../components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '../../components/ui/card';
 
 interface Testimonial {
   name: string;
@@ -11,11 +18,13 @@ interface Testimonial {
 export default function Testimonials({ testimonials }: { testimonials: Testimonial[] }) {
   return (
     <div className='mx-auto mt-32 max-w-7xl sm:mt-56 sm:px-6 lg:px-8'>
-      <div className='relative sm:left-5 -m-2 rounded-xl bg-primary/10 lg:ring-1 lg:ring-primary/20 lg:-m-4 transition-all duration-300 hover:bg-primary/15'>
-        <div className='relative sm:top-5 sm:right-5 bg-card dark:bg-card px-8 py-20 shadow-xl sm:rounded-xl sm:px-10 sm:py-16 md:px-12 lg:px-20 border border-border/50'>
-          <h2 className='text-left text-xl font-semibold tracking-wide leading-7 text-muted-foreground dark:text-foreground mb-8'>
+      <Card>
+        <CardHeader>
+          <CardTitle className='text-left text-xl font-semibold tracking-wide leading-7 text-muted-foreground dark:text-foreground mb-8'>
             What Our Users Say
-          </h2>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
           <div className='relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full z-10'>
             {testimonials.map((testimonial, idx) => (
               <Card
@@ -51,8 +60,8 @@ export default function Testimonials({ testimonials }: { testimonials: Testimoni
               </Card>
             ))}
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
