@@ -1,3 +1,5 @@
+import { Card, CardContent, CardDescription, CardFooter, CardTitle } from '../../components/ui/card';
+
 interface Testimonial {
   name: string;
   role: string;
@@ -11,37 +13,42 @@ export default function Testimonials({ testimonials }: { testimonials: Testimoni
     <div className='mx-auto mt-32 max-w-7xl sm:mt-56 sm:px-6 lg:px-8'>
       <div className='relative sm:left-5 -m-2 rounded-xl bg-primary/10 lg:ring-1 lg:ring-primary/20 lg:-m-4 transition-all duration-300 hover:bg-primary/15'>
         <div className='relative sm:top-5 sm:right-5 bg-card dark:bg-card px-8 py-20 shadow-xl sm:rounded-xl sm:px-10 sm:py-16 md:px-12 lg:px-20 border border-border/50'>
-          <h2 className='text-left text-xl font-semibold tracking-wide leading-7 text-muted-foreground dark:text-foreground'>
+          <h2 className='text-left text-xl font-semibold tracking-wide leading-7 text-muted-foreground dark:text-foreground mb-8'>
             What Our Users Say
           </h2>
-          <div className='relative flex flex-wrap gap-6 w-full mt-6 z-10 justify-between lg:mx-0'>
+          <div className='relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full z-10'>
             {testimonials.map((testimonial, idx) => (
-              <figure
+              <Card
                 key={idx}
-                className='w-full lg:w-1/4 box-content flex flex-col justify-between p-8 rounded-xl bg-muted/30 hover:bg-muted/50 transition-all duration-300 border border-border/20 hover:border-border/40'
+                className='group hover:shadow-lg transition-all duration-300 hover:scale-[1.02]'
               >
-                <blockquote className='text-lg text-foreground sm:text-md sm:leading-8'>
-                  <p className='text-muted-foreground'>{testimonial.quote}</p>
-                </blockquote>
-                <figcaption className='mt-6 text-base text-foreground'>
+                <CardContent className='p-6'>
+                  <blockquote className='text-sm leading-6 text-muted-foreground mb-4'>
+                    <p className='italic'>"{testimonial.quote}"</p>
+                  </blockquote>
+                </CardContent>
+                <CardFooter className='pt-0'>
                   <a
                     href={testimonial.socialUrl}
-                    className='flex items-center gap-x-2 group transition-all duration-200 hover:opacity-80'
+                    className='flex items-center gap-x-3 group transition-all duration-200 hover:opacity-80 w-full'
                   >
                     <img
                       src={testimonial.avatarSrc}
                       loading='lazy'
-                      className='h-12 w-12 rounded-full ring-2 ring-border/20 group-hover:ring-primary/30 transition-all duration-200'
+                      alt={`${testimonial.name}'s avatar`}
+                      className='h-10 w-10 rounded-full ring-2 ring-border/20 group-hover:ring-primary/30 transition-all duration-200 flex-shrink-0'
                     />
-                    <div>
-                      <div className='font-semibold text-foreground group-hover:text-primary transition-colors duration-200'>
+                    <div className='min-w-0 flex-1'>
+                      <CardTitle className='text-sm font-semibold text-foreground group-hover:text-primary transition-colors duration-200 truncate'>
                         {testimonial.name}
-                      </div>
-                      <div className='mt-1 text-muted-foreground'>{testimonial.role}</div>
+                      </CardTitle>
+                      <CardDescription className='text-xs text-muted-foreground truncate'>
+                        {testimonial.role}
+                      </CardDescription>
                     </div>
                   </a>
-                </figcaption>
-              </figure>
+                </CardFooter>
+              </Card>
             ))}
           </div>
         </div>

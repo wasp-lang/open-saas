@@ -1,8 +1,8 @@
-import type { NavigationItem } from '../client/components/NavBar/NavBar';
 import { routes } from 'wasp/client/router';
-import { DocsUrl, BlogUrl } from '../shared/common';
-import daBoiAvatar from '../client/static/da-boi.webp';
+import type { NavigationItem } from '../client/components/NavBar/NavBar';
 import avatarPlaceholder from '../client/static/avatar-placeholder.webp';
+import daBoiAvatar from '../client/static/da-boi.webp';
+import { BlogUrl, DocsUrl } from '../shared/common';
 
 export const landingPageNavigationItems: NavigationItem[] = [
   { name: 'Features', to: '#features' },

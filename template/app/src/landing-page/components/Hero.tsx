@@ -16,11 +16,11 @@ export default function Hero() {
               With some more exciting words about your product!
             </p>
             <div className='mt-10 flex items-center justify-center gap-x-6'>
-              <Button size='lg' variant='default'>
-                Get Started <span aria-hidden='true'>→</span>
-              </Button>
               <Button size='lg' variant='outline'>
                 Learn More
+              </Button>
+              <Button size='lg' variant='default'>
+                Get Started <span aria-hidden='true'>→</span>
               </Button>
             </div>
           </div>
