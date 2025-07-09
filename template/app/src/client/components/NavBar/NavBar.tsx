@@ -116,7 +116,9 @@ export default function AppNavBar({ navigationItems }: { navigationItems: Naviga
                     </div>
                   </WaspRouterLink>
                 ) : (
-                  <UserMenuItems user={user} setMobileMenuOpen={setMobileMenuOpen} />
+                  <div className='space-y-2'>
+                    <UserMenuItems user={user} onItemClick={() => setMobileMenuOpen(false)} />
+                  </div>
                 )}
               </div>
               <div className='py-6'>
