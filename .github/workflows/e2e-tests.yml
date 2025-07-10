@@ -10,7 +10,7 @@ on:
 
 env:
   WASP_TELEMETRY_DISABLE: 1
-  WASP_VERSION: 0.16.7
+  WASP_VERSION: 0.17.0
 
 jobs:
   test:
