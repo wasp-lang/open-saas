@@ -91,15 +91,14 @@ export const stripeMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig) =
 // NOTE: If you're accepting async payment methods like bank transfers or SEPA and not just card payments
 // which are synchronous, checkout session completed could potentially result in a pending payment.
 // If so, use the checkout.session.async_payment_succeeded event to confirm the payment.
-export async function handleCheckoutSessionCompleted(
+async function handleCheckoutSessionCompleted(
   session: SessionCompletedData,
   prismaUserDelegate: PrismaClient['user']
 ) {
-  if (isSuccessfulOneTimePayment(session)) await saveSuccessfulOneTimePayment(session, prismaUserDelegate);
-}
-
-function isSuccessfulOneTimePayment(session: SessionCompletedData) {
-  return session.mode === 'payment' && session.payment_status === 'paid';
+  const isSuccessfulOneTimePayment = session.mode === 'payment' && session.payment_status === 'paid';
+  if (isSuccessfulOneTimePayment) {
+    await saveSuccessfulOneTimePayment(session, prismaUserDelegate);
+  }
 }
 
 async function saveSuccessfulOneTimePayment(
@@ -120,7 +119,11 @@ async function saveSuccessfulOneTimePayment(
 
 // This is called when a subscription is successfully purchased or renewed and payment succeeds.
 // Invoices are not created for one-time payments, so we handle them above.
-export async function handleInvoicePaid(invoice: InvoicePaidData, prismaUserDelegate: PrismaClient['user']) {
+async function handleInvoicePaid(invoice: InvoicePaidData, prismaUserDelegate: PrismaClient['user']) {
+  await saveActiveSubscription(invoice, prismaUserDelegate);
+}
+
+async function saveActiveSubscription(invoice: InvoicePaidData, prismaUserDelegate: PrismaClient['user']) {
   const userStripeId = invoice.customer;
   const datePaid = new Date(invoice.period_start * 1000);
   const lineItems = await invoiceLineItemsSchema.parseAsync(invoice.lines);
@@ -132,9 +135,16 @@ export async function handleInvoicePaid(invoice: InvoicePaidData, prismaUserDele
   );
 }
 
-// This is called when a subscription is successfully created
-// But we wait to update the user's subscription status until the invoice is paid in the handleInvoicePaid function.
-export async function handleCustomerSubscriptionCreated(
+async function handleCustomerSubscriptionCreated(
+  subscription: SubscriptionCreatedData,
+  prismaUserDelegate: PrismaClient['user']
+) {
+  // We save everything except the subscription status (hence "unpaid"),
+  // which we update in handleInvoicePaid once we get confirmation the payment succeeded.
+  await saveUnpaidSubscription(subscription, prismaUserDelegate);
+}
+
+async function saveUnpaidSubscription(
   subscription: SubscriptionCreatedData,
   prismaUserDelegate: PrismaClient['user']
 ) {
@@ -144,7 +154,7 @@ export async function handleCustomerSubscriptionCreated(
   return updateUserStripePaymentDetails({ userStripeId, subscriptionPlan }, prismaUserDelegate);
 }
 
-export async function handleCustomerSubscriptionUpdated(
+async function handleCustomerSubscriptionUpdated(
   subscription: SubscriptionUpdatedData,
   prismaUserDelegate: PrismaClient['user']
 ) {
@@ -181,7 +191,7 @@ export async function handleCustomerSubscriptionUpdated(
   }
 }
 
-export async function handleCustomerSubscriptionDeleted(
+async function handleCustomerSubscriptionDeleted(
   subscription: SubscriptionDeletedData,
   prismaUserDelegate: PrismaClient['user']
 ) {
