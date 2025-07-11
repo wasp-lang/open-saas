@@ -1,53 +1,36 @@
-/**
- * Pure ShadCN theme utilities
- * Only includes ShadCN semantic colors - no custom colors
- */
-
-// ShadCN color palette
 export const themeColors = {
-  // Core colors
   background: 'hsl(var(--background))',
   foreground: 'hsl(var(--foreground))',
 
-  // Card colors
   card: 'hsl(var(--card))',
   cardForeground: 'hsl(var(--card-foreground))',
 
-  // Popover colors
   popover: 'hsl(var(--popover))',
   popoverForeground: 'hsl(var(--popover-foreground))',
 
-  // Primary colors
   primary: 'hsl(var(--primary))',
   primaryForeground: 'hsl(var(--primary-foreground))',
 
-  // Secondary colors
   secondary: 'hsl(var(--secondary))',
   secondaryForeground: 'hsl(var(--secondary-foreground))',
 
-  // Secondary muted colors
   secondaryMuted: 'hsl(var(--secondary-muted))',
   secondaryMutedForeground: 'hsl(var(--secondary-muted-foreground))',
 
-  // Muted colors
   muted: 'hsl(var(--muted))',
   mutedForeground: 'hsl(var(--muted-foreground))',
 
-  // Accent colors
   accent: 'hsl(var(--accent))',
   accentForeground: 'hsl(var(--accent-foreground))',
 
-  // Destructive colors
   destructive: 'hsl(var(--destructive))',
   destructiveForeground: 'hsl(var(--destructive-foreground))',
 
-  // Border and input colors
   border: 'hsl(var(--border))',
   input: 'hsl(var(--input))',
   ring: 'hsl(var(--ring))',
 } as const;
 
-// Gradient definitions using theme colors
 export const gradients = {
   primary: {
     toRight: `linear-gradient(to right, ${themeColors.secondaryMuted}, ${themeColors.secondary})`,
@@ -64,12 +47,10 @@ export const gradients = {
   },
 } as const;
 
-// Utility function to get CSS variable value
 export function getThemeColor(colorName: keyof typeof themeColors): string {
   return themeColors[colorName];
 }
 
-// Utility function to get gradient
 export function getGradient(gradientPath: string): string {
   const pathParts = gradientPath.split('.');
   let current: any = gradients;
@@ -85,7 +66,6 @@ export function getGradient(gradientPath: string): string {
   return current;
 }
 
-// Utility function to create custom gradient
 export function createGradient(
   fromColor: keyof typeof themeColors,
   toColor: keyof typeof themeColors,
@@ -94,7 +74,6 @@ export function createGradient(
   return `linear-gradient(${direction}, ${themeColors[fromColor]}, ${themeColors[toColor]})`;
 }
 
-// Common color combinations for components
 export const colorSchemes = {
   primary: {
     bg: themeColors.accent,
