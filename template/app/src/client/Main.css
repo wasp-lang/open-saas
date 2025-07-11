@@ -19,6 +19,75 @@
   .inbox-height {
     @apply h-[calc(100vh_-_8.125rem)] lg:h-[calc(100vh_-_5.625rem)];
   }
+
+  /* Gradient utilities */
+  .bg-gradient-primary {
+    background: linear-gradient(to right, hsl(var(--secondary-muted)), hsl(var(--secondary)));
+  }
+  
+  .bg-gradient-accent {
+    background: linear-gradient(to right, hsl(var(--secondary)), hsl(var(--secondary-muted)));
+  }
+  
+  .bg-gradient-primary-diagonal {
+    background: linear-gradient(135deg, hsl(var(--secondary-muted)), hsl(var(--secondary)));
+  }
+  
+  .bg-gradient-accent-diagonal {
+    background: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--secondary-muted)));
+  }
+  
+  .bg-gradient-subtle {
+    background: linear-gradient(to right, hsl(var(--secondary-muted) / 0.2), hsl(var(--secondary) / 0.2));
+  }
+
+  /* Text gradient utilities */
+  .text-gradient-primary {
+    background: linear-gradient(to right, hsl(var(--secondary-muted)), hsl(var(--secondary)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .text-gradient-accent {
+    background: linear-gradient(to right, hsl(var(--secondary)), hsl(var(--secondary-muted)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .text-gradient-primary-diagonal {
+    background: linear-gradient(135deg, hsl(var(--secondary-muted)), hsl(var(--secondary)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .text-gradient-accent-diagonal {
+    background: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--secondary-muted)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Border gradient utilities */
+  .border-gradient-primary {
+    background: linear-gradient(to right, hsl(var(--secondary-muted)), hsl(var(--secondary)));
+    padding: 1px;
+  }
+  
+  .border-gradient-accent {
+    background: linear-gradient(to right, hsl(var(--secondary)), hsl(var(--secondary-muted)));
+    padding: 1px;
+  }
+  
+  .border-gradient-primary > * {
+    background: hsl(var(--background));
+  }
+  
+  .border-gradient-accent > * {
+    background: hsl(var(--background));
+  }
 }
 
 /* Here is an example of how to add a custom font. 
@@ -172,14 +241,16 @@ span.flatpickr-weekday,
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
-    --card-accent: 31 57% 93%;
+    --card-accent:  0 0% 100%;
     --card-accent-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
     --primary: 0 0% 9%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
+    --secondary: 32 75% 78%;
     --secondary-foreground: 0 0% 9%;
+    --secondary-muted: 32 100% 37%;
+    --secondary-muted-foreground: 0 0% 3.9%;
     --muted: 0 0% 96.1%;
     --muted-foreground: 0 0% 45.1%;
     --accent: 33 74% 62%;
@@ -197,12 +268,16 @@ span.flatpickr-weekday,
     --foreground: 0 0% 98%;
     --card: 210 50% 5%;
     --card-foreground: 0 0% 98%;
+    --card-accent: 31 57% 93%;
+    --card-accent-foreground: 0 0% 3.9%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
     --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
+    --secondary: 209 91% 61%;
     --secondary-foreground: 0 0% 98%;
+    --secondary-muted: 210 67% 94%;
+    --secondary-muted-foreground: 0 0% 3.9%;
     --muted: 210 100% 13%;
     --muted-foreground: 0 0% 63.9%;
     --accent: 31 57% 93%;

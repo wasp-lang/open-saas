@@ -10,7 +10,8 @@ export default function Hero() {
         <div className='mx-auto max-w-8xl px-6 lg:px-8'>
           <div className='lg:mb-18 mx-auto max-w-3xl text-center'>
             <h1 className='text-4xl font-bold text-foreground sm:text-6xl'>
-              Some <span className='italic text-primary'>cool</span> words about your product
+              Some <span className='italic'>cool</span> words about{' '}
+              <span className='text-gradient-primary'>your product</span>
             </h1>
             <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-muted-foreground'>
               With some more exciting words about your product!
