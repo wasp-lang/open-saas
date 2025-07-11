@@ -13,7 +13,7 @@ export default function Features({ features }: { features: Feature[] }) {
       <SectionTitle
         title={
           <p className='mt-2 text-4xl font-bold tracking-tight text-foreground sm:text-5xl'>
-            The <span className='text-accent'>Best</span> Features
+            The <span className='text-secondary'>Best</span> Features
           </p>
         }
         subtitle="Don't work harder. Work smarter."
@@ -23,7 +23,7 @@ export default function Features({ features }: { features: Feature[] }) {
           {features.map((feature) => (
             <div key={feature.name} className='relative pl-16'>
               <dt className='text-base font-semibold leading-7 text-foreground'>
-                <div className='absolute left-0 top-0 flex h-10 w-10 items-center justify-center border border-accent/20 bg-accent/10 rounded-lg'>
+                <div className='absolute left-0 top-0 flex h-10 w-10 items-center justify-center border border-accent bg-accent/30 rounded-lg'>
                   <div className='text-2xl'>{feature.icon}</div>
                 </div>
                 {feature.name}

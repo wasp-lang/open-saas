@@ -154,7 +154,7 @@ const ContestURL = 'https://github.com/wasp-lang/wasp';
 
 function Announcement() {
   return (
-    <div className='flex justify-center items-center gap-3 p-3 w-full bg-gradient-to-r from-primary to-primary/80 font-semibold text-primary-foreground text-center z-49'>
+    <div className='flex justify-center items-center gap-3 p-3 w-full bg-gradient-to-r from-accent to-secondary font-semibold text-primary-foreground text-center z-49'>
       <p
         onClick={() => window.open(ContestURL, '_blank')}
         className='hidden lg:block cursor-pointer hover:opacity-90 hover:drop-shadow transition-opacity'

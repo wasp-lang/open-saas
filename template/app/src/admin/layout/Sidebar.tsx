@@ -350,8 +350,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               end
                               className={({ isActive }) =>
                                 cn(
-                                  'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:text-white',
-                                  { '!text-white': isActive }
+                                  'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:text-accent',
+                                  { '!text-accent': isActive }
                                 )
                               }
                             >
@@ -364,8 +364,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               end
                               className={({ isActive }) =>
                                 cn(
-                                  'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:text-white',
-                                  { '!text-white': isActive }
+                                  'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:text-accent',
+                                  { '!text-accent': isActive }
                                 )
                               }
                             >
@@ -487,8 +487,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               end
                               className={({ isActive }) =>
                                 cn(
-                                  'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:text-white',
-                                  { '!text-white': isActive }
+                                  'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:text-accent',
+                                  { '!text-accent': isActive }
                                 )
                               }
                             >
@@ -501,8 +501,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               end
                               className={({ isActive }) =>
                                 cn(
-                                  'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:text-white',
-                                  { '!text-white': isActive }
+                                  'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:text-accent',
+                                  { '!text-accent': isActive }
                                 )
                               }
                             >

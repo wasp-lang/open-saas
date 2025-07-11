@@ -20,37 +20,9 @@
     @apply h-[calc(100vh_-_8.125rem)] lg:h-[calc(100vh_-_5.625rem)];
   }
 
-  /* Gradient utilities */
-  .bg-gradient-primary {
-    background: linear-gradient(to right, hsl(var(--secondary-muted)), hsl(var(--secondary)));
-  }
-  
-  .bg-gradient-accent {
-    background: linear-gradient(to right, hsl(var(--secondary)), hsl(var(--secondary-muted)));
-  }
-  
-  .bg-gradient-primary-diagonal {
-    background: linear-gradient(135deg, hsl(var(--secondary-muted)), hsl(var(--secondary)));
-  }
-  
-  .bg-gradient-accent-diagonal {
-    background: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--secondary-muted)));
-  }
-  
-  .bg-gradient-subtle {
-    background: linear-gradient(to right, hsl(var(--secondary-muted) / 0.2), hsl(var(--secondary) / 0.2));
-  }
-
   /* Text gradient utilities */
   .text-gradient-primary {
     background: linear-gradient(to right, hsl(var(--secondary-muted)), hsl(var(--secondary)));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  
-  .text-gradient-accent {
-    background: linear-gradient(to right, hsl(var(--secondary)), hsl(var(--secondary-muted)));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -62,13 +34,6 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  
-  .text-gradient-accent-diagonal {
-    background: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--secondary-muted)));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
 
   /* Border gradient utilities */
   .border-gradient-primary {
@@ -76,16 +41,7 @@
     padding: 1px;
   }
   
-  .border-gradient-accent {
-    background: linear-gradient(to right, hsl(var(--secondary)), hsl(var(--secondary-muted)));
-    padding: 1px;
-  }
-  
   .border-gradient-primary > * {
-    background: hsl(var(--background));
-  }
-  
-  .border-gradient-accent > * {
     background: hsl(var(--background));
   }
 }
@@ -245,15 +201,15 @@ span.flatpickr-weekday,
     --card-accent-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
+    --primary: 210 100% 13%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 32 75% 78%;
+    --secondary: 32 100% 37%;
     --secondary-foreground: 0 0% 9%;
-    --secondary-muted: 32 100% 37%;
+    --secondary-muted: 32 75% 78%;
     --secondary-muted-foreground: 0 0% 3.9%;
     --muted: 0 0% 96.1%;
     --muted-foreground: 0 0% 45.1%;
-    --accent: 33 74% 62%;
+    --accent: 31 57% 93%;
     --accent-foreground: 0 0% 9%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
@@ -272,7 +228,7 @@ span.flatpickr-weekday,
     --card-accent-foreground: 0 0% 3.9%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
+    --primary: 31 57% 93%;
     --primary-foreground: 0 0% 9%;
     --secondary: 209 91% 61%;
     --secondary-foreground: 0 0% 98%;
