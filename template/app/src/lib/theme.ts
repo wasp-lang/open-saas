@@ -4,6 +4,8 @@ export const themeColors = {
 
   card: 'hsl(var(--card))',
   cardForeground: 'hsl(var(--card-foreground))',
+  cardAccent: 'hsl(var(--card-accent))',
+  cardAccentForeground: 'hsl(var(--card-accent-foreground))',
 
   popover: 'hsl(var(--popover))',
   popoverForeground: 'hsl(var(--popover-foreground))',

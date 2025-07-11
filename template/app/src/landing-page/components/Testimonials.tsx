@@ -16,13 +16,10 @@ export default function Testimonials({ testimonials }: { testimonials: Testimoni
 
       <div className='relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full z-10'>
         {testimonials.map((testimonial, idx) => (
-          <Card
-            key={idx}
-            className='group hover:shadow-lg transition-all duration-300 hover:scale-[1.02] bg-card-accent'
-          >
+          <Card key={idx} variant='accent'>
             <CardContent className='p-6'>
-              <blockquote className='text-sm leading-6 text-muted-foreground mb-4'>
-                <p className='italic'>"{testimonial.quote}"</p>
+              <blockquote className='text-sm leading-6 mb-4'>
+                <p className='italic'>{testimonial.quote}</p>
               </blockquote>
             </CardContent>
             <CardFooter className='pt-0'>
@@ -37,12 +34,10 @@ export default function Testimonials({ testimonials }: { testimonials: Testimoni
                   className='h-10 w-10 rounded-full ring-2 ring-border/20 group-hover:ring-primary/30 transition-all duration-200 flex-shrink-0'
                 />
                 <div className='min-w-0 flex-1'>
-                  <CardTitle className='text-sm font-semibold text-foreground group-hover:text-primary transition-colors duration-200 truncate'>
+                  <CardTitle className='text-sm font-semibold group-hover:text-card-foreground transition-colors duration-200 truncate'>
                     {testimonial.name}
                   </CardTitle>
-                  <CardDescription className='text-xs text-muted-foreground truncate'>
-                    {testimonial.role}
-                  </CardDescription>
+                  <CardDescription className='text-xs truncate'>{testimonial.role}</CardDescription>
                 </div>
               </a>
             </CardFooter>
