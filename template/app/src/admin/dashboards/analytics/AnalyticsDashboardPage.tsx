@@ -1,14 +1,14 @@
 import { type AuthUser } from 'wasp/auth';
-import { useQuery, getDailyStats } from 'wasp/client/operations';
-import TotalSignupsCard from './TotalSignupsCard';
+import { getDailyStats, useQuery } from 'wasp/client/operations';
+import { cn } from '../../../client/cn';
+import DefaultLayout from '../../layout/DefaultLayout';
+import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin';
+import RevenueAndProfitChart from './RevenueAndProfitChart';
+import SourcesTable from './SourcesTable';
 import TotalPageViewsCard from './TotalPageViewsCard';
 import TotalPayingUsersCard from './TotalPayingUsersCard';
 import TotalRevenueCard from './TotalRevenueCard';
-import RevenueAndProfitChart from './RevenueAndProfitChart';
-import SourcesTable from './SourcesTable';
-import DefaultLayout from '../../layout/DefaultLayout';
-import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin';
-import { cn } from '../../../client/cn';
+import TotalSignupsCard from './TotalSignupsCard';
 
 const Dashboard = ({ user }: { user: AuthUser }) => {
   useRedirectHomeUnlessUserIsAdmin({ user });
@@ -18,9 +18,11 @@ const Dashboard = ({ user }: { user: AuthUser }) => {
   return (
     <DefaultLayout user={user}>
       <div className='relative'>
-        <div className={cn({
-          'opacity-25': !stats,
-        })}>
+        <div
+          className={cn({
+            'opacity-25': !stats,
+          })}
+        >
           <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5'>
             <TotalPageViewsCard
               totalPageViews={stats?.dailyStats.totalViews}
@@ -45,12 +47,10 @@ const Dashboard = ({ user }: { user: AuthUser }) => {
         </div>
 
         {!stats && (
-          <div className='absolute inset-0 flex items-start justify-center bg-white/50 dark:bg-boxdark-2/50'>
-            <div className='rounded-lg bg-white p-8 shadow-lg dark:bg-boxdark'>
-              <p className='text-2xl font-bold text-boxdark dark:text-white'>
-                No daily stats generated yet
-              </p>
-              <p className='mt-2 text-sm text-bodydark2'>
+          <div className='absolute inset-0 flex items-start justify-center bg-background/50'>
+            <div className='rounded-lg bg-card p-8 shadow-lg'>
+              <p className='text-2xl font-bold text-foreground'>No daily stats generated yet</p>
+              <p className='mt-2 text-sm text-muted-foreground'>
                 Stats will appear here once the daily stats job has run
               </p>
             </div>

@@ -1,5 +1,5 @@
+import { FC, ReactNode, useState } from 'react';
 import { type AuthUser } from 'wasp/auth';
-import { useState, ReactNode, FC } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 
@@ -12,7 +12,7 @@ const DefaultLayout: FC<Props> = ({ children, user }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className='dark:bg-boxdark-2 dark:text-bodydark'>
+    <div className='bg-background text-foreground'>
       {/* <!-- ===== Page Wrapper Start ===== --> */}
       <div className='flex h-screen overflow-hidden'>
         {/* <!-- ===== Sidebar Start ===== --> */}

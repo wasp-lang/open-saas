@@ -5,7 +5,10 @@ const CheckboxTwo = () => {
   const [enabled, setEnabled] = useState<boolean>(false);
   return (
     <div>
-      <label htmlFor='checkboxLabelTwo' className='flex cursor-pointer text-sm text-gray-700 select-none items-center'>
+      <label
+        htmlFor='checkboxLabelTwo'
+        className='flex cursor-pointer text-sm text-muted-foreground select-none items-center'
+      >
         enabled:
         <div className='relative'>
           <input
@@ -18,7 +21,7 @@ const CheckboxTwo = () => {
           />
           <div
             className={cn('ml-2 flex h-5 w-5 items-center justify-center rounded border', {
-              'border-primary bg-gray dark:bg-transparent': enabled,
+              'border-primary bg-gray': enabled,
             })}
           >
             <span

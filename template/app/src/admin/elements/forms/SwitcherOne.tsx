@@ -15,10 +15,10 @@ function SwitcherOne({ isOn, onChange }: { isOn: boolean; onChange: (value: bool
             checked={isOn}
             onChange={(e) => onChange(e.target.checked)}
           />
-          <div className='reblock h-8 w-14 rounded-full bg-meta-9 dark:bg-[#5A616B]'></div>
+          <div className='reblock h-8 w-14 rounded-full bg-muted'></div>
           <div
-            className={cn('absolute left-1 top-1 h-6 w-6 rounded-full bg-white dark:bg-gray-400 transition', {
-              '!right-1 !translate-x-full !bg-primary dark:!bg-white': isOn,
+            className={cn('absolute left-1 top-1 h-6 w-6 rounded-full bg-background transition', {
+              '!right-1 !translate-x-full !bg-primary': isOn,
             })}
           ></div>
         </div>

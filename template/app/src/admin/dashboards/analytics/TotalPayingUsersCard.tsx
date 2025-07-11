@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { cn } from '../../../client/cn';
-import { UpArrow, DownArrow } from '../../../client/icons/icons-arrows';
 import { type DailyStatsProps } from '../../../analytics/stats';
+import { cn } from '../../../client/cn';
+import { DownArrow, UpArrow } from '../../../client/icons/icons-arrows';
 
 const TotalPayingUsersCard = ({ dailyStats, isLoading }: DailyStatsProps) => {
   const isDeltaPositive = useMemo(() => {
@@ -9,10 +9,10 @@ const TotalPayingUsersCard = ({ dailyStats, isLoading }: DailyStatsProps) => {
   }, [dailyStats]);
 
   return (
-    <div className='rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark'>
-      <div className='flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4'>
+    <div className='rounded-sm border border-border bg-card py-6 px-7.5 shadow'>
+      <div className='flex h-11.5 w-11.5 items-center justify-center rounded-full bg-muted'>
         <svg
-          className='fill-primary dark:fill-white'
+          className='fill-primary'
           width='22'
           height='22'
           viewBox='0 0 22 22'
@@ -32,14 +32,14 @@ const TotalPayingUsersCard = ({ dailyStats, isLoading }: DailyStatsProps) => {
 
       <div className='mt-4 flex items-end justify-between'>
         <div>
-          <h4 className='text-title-md font-bold text-black dark:text-white'>{dailyStats?.paidUserCount}</h4>
-          <span className='text-sm font-medium'>Total Paying Users</span>
+          <h4 className='text-title-md font-bold text-foreground'>{dailyStats?.paidUserCount}</h4>
+          <span className='text-sm font-medium text-muted-foreground'>Total Paying Users</span>
         </div>
 
         <span
           className={cn('flex items-center gap-1 text-sm font-medium', {
-            'text-meta-3': isDeltaPositive,
-            'text-meta-5': !isDeltaPositive,
+            'text-success': isDeltaPositive,
+            'text-destructive': !isDeltaPositive,
           })}
         >
           {isLoading ? '...' : dailyStats?.paidUserDelta !== 0 ? dailyStats?.paidUserDelta : '-'}

@@ -1,28 +1,29 @@
 import { useMemo } from 'react';
-import { UpArrow, DownArrow } from '../../../client/icons/icons-arrows';
 import { type DailyStatsProps } from '../../../analytics/stats';
+import { DownArrow, UpArrow } from '../../../client/icons/icons-arrows';
 
-const TotalRevenueCard = ({dailyStats, weeklyStats, isLoading}: DailyStatsProps) => {
+const TotalRevenueCard = ({ dailyStats, weeklyStats, isLoading }: DailyStatsProps) => {
   const isDeltaPositive = useMemo(() => {
     if (!weeklyStats) return false;
-    return (weeklyStats[0].totalRevenue - weeklyStats[1]?.totalRevenue) > 0;
+    return weeklyStats[0].totalRevenue - weeklyStats[1]?.totalRevenue > 0;
   }, [weeklyStats]);
 
   const deltaPercentage = useMemo(() => {
-    if ( !weeklyStats || weeklyStats.length < 2 || isLoading) return;
-    if ( weeklyStats[1]?.totalRevenue === 0 || weeklyStats[0]?.totalRevenue === 0 ) return 0;
+    if (!weeklyStats || weeklyStats.length < 2 || isLoading) return;
+    if (weeklyStats[1]?.totalRevenue === 0 || weeklyStats[0]?.totalRevenue === 0) return 0;
 
     weeklyStats.sort((a, b) => b.id - a.id);
 
-    const percentage = ((weeklyStats[0].totalRevenue - weeklyStats[1]?.totalRevenue) / weeklyStats[1]?.totalRevenue) * 100;
+    const percentage =
+      ((weeklyStats[0].totalRevenue - weeklyStats[1]?.totalRevenue) / weeklyStats[1]?.totalRevenue) * 100;
     return Math.floor(percentage);
   }, [weeklyStats]);
 
   return (
-    <div className='rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark'>
-      <div className='flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4'>
+    <div className='rounded-sm border border-border bg-card py-6 px-7.5 shadow-default'>
+      <div className='flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2'>
         <svg
-          className='fill-primary dark:fill-white'
+          className='fill-primary'
           width='20'
           height='22'
           viewBox='0 0 20 22'
@@ -46,11 +47,11 @@ const TotalRevenueCard = ({dailyStats, weeklyStats, isLoading}: DailyStatsProps)
 
       <div className='mt-4 flex items-end justify-between'>
         <div>
-          <h4 className='text-title-md font-bold text-black dark:text-white'>${dailyStats?.totalRevenue}</h4>
+          <h4 className='text-title-md font-bold text-foreground'>${dailyStats?.totalRevenue}</h4>
           <span className='text-sm font-medium'>Total Revenue</span>
         </div>
 
-        <span className='flex items-center gap-1 text-sm font-medium text-meta-3'>
+        <span className='flex items-center gap-1 text-sm font-medium text-success'>
           {isLoading ? '...' : !!deltaPercentage ? deltaPercentage + '%' : '-'}
           {!!deltaPercentage ? isDeltaPositive ? <UpArrow /> : <DownArrow /> : null}
         </span>

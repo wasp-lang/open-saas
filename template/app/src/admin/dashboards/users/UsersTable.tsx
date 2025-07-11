@@ -1,11 +1,10 @@
+import { useEffect, useState } from 'react';
+import { getPaginatedUsers, updateIsUserAdminById, useQuery } from 'wasp/client/operations';
+import { type User } from 'wasp/entities';
 import { SubscriptionStatus } from '../../../payment/plans';
-import { useQuery, getPaginatedUsers } from 'wasp/client/operations';
-import { useState, useEffect } from 'react';
 import SwitcherOne from '../../elements/forms/SwitcherOne';
 import LoadingSpinner from '../../layout/LoadingSpinner';
 import DropdownEditDelete from './DropdownEditDelete';
-import { updateIsUserAdminById } from 'wasp/client/operations';
-import { type User } from 'wasp/entities';
 
 function AdminSwitch({ id, isAdmin }: Pick<User, 'id' | 'isAdmin'>) {
   return (
@@ -41,12 +40,12 @@ const UsersTable = () => {
 
   return (
     <div className='flex flex-col gap-4'>
-      <div className='rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark'>
-        <div className='flex-col flex items-start justify-between p-6 gap-3 w-full bg-gray-100/40 dark:bg-gray-700/50'>
+      <div className='rounded-sm border border-border bg-card shadow'>
+        <div className='flex-col flex items-start justify-between p-6 gap-3 w-full bg-muted/40'>
           <span className='text-sm font-medium'>Filters:</span>
           <div className='flex items-center justify-between gap-3 w-full px-2'>
             <div className='relative flex items-center gap-3 '>
-              <label htmlFor='email-filter' className='block text-sm text-gray-700 dark:text-white'>
+              <label htmlFor='email-filter' className='block text-sm text-muted-foreground'>
                 email:
               </label>
               <input
@@ -57,18 +56,18 @@ const UsersTable = () => {
                   const value = e.currentTarget.value;
                   setEmailFilter(value === '' ? undefined : value);
                 }}
-                className='rounded border border-stroke py-2 px-5 bg-white outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary'
+                className='rounded border border-border py-2 px-5 bg-background outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-muted'
               />
-              <label htmlFor='status-filter' className='block text-sm ml-2 text-gray-700 dark:text-white'>
+              <label htmlFor='status-filter' className='block text-sm ml-2 text-muted-foreground'>
                 status:
               </label>
-              <div className='flex-grow relative z-20 rounded border border-stroke pr-8 outline-none bg-white transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input'>
+              <div className='flex-grow relative z-20 rounded border border-border pr-8 outline-none bg-background transition focus:border-primary active:border-primary'>
                 <div className='flex items-center'>
                   {subscriptionStatusFilter.length > 0 ? (
                     subscriptionStatusFilter.map((opt) => (
                       <span
                         key={opt}
-                        className='z-30 flex items-center my-1 mx-2 py-1 px-2 outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary'
+                        className='z-30 flex items-center my-1 mx-2 py-1 px-2 outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-muted'
                       >
                         {opt ? opt : 'has not subscribed'}
                         <span
@@ -78,14 +77,14 @@ const UsersTable = () => {
                               return prevValue?.filter((val) => val !== opt);
                             });
                           }}
-                          className='z-30 cursor-pointer pl-2 hover:text-danger'
+                          className='z-30 cursor-pointer pl-2 hover:text-destructive'
                         >
                           <XIcon />
                         </span>
                       </span>
                     ))
                   ) : (
-                    <span className='bg-white text-gray-500 py-2 px-5 outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary'>
+                    <span className='bg-background text-muted-foreground py-2 px-5 outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-muted'>
                       Select Status Filters
                     </span>
                   )}
@@ -109,16 +108,18 @@ const UsersTable = () => {
                   }}
                   name='status-filter'
                   id='status-filter'
-                  className='absolute top-0 left-0 z-20 h-full w-full bg-white opacity-0'
+                  className='absolute top-0 left-0 z-20 h-full w-full bg-background opacity-0'
                 >
                   <option value='select-filters'>Select filters</option>
                   {[...Object.values(SubscriptionStatus), null]
                     .filter((status) => !subscriptionStatusFilter.includes(status))
                     .map((status) => {
-                      const extendedStatus = status ?? 'has_not_subscribed'
-                      return <option key={extendedStatus} value={extendedStatus}>
-                        {extendedStatus}
-                      </option>
+                      const extendedStatus = status ?? 'has_not_subscribed';
+                      return (
+                        <option key={extendedStatus} value={extendedStatus}>
+                          {extendedStatus}
+                        </option>
+                      );
                     })}
                 </select>
                 <span className='absolute top-1/2 right-4 z-10 -translate-y-1/2'>
@@ -126,7 +127,7 @@ const UsersTable = () => {
                 </span>
               </div>
               <div className='flex items-center gap-2'>
-                <label htmlFor='isAdmin-filter' className='block text-sm ml-2 text-gray-700 dark:text-white'>
+                <label htmlFor='isAdmin-filter' className='block text-sm ml-2 text-muted-foreground'>
                   isAdmin:
                 </label>
                 <select
@@ -138,7 +139,7 @@ const UsersTable = () => {
                       setIsAdminFilter(e.target.value === 'true');
                     }
                   }}
-                  className='relative z-20 w-full appearance-none rounded border border-stroke bg-white p-2 pl-4 pr-8  outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input'
+                  className='relative z-20 w-full appearance-none rounded border border-border bg-background p-2 pl-4 pr-8  outline-none transition focus:border-primary active:border-primary'
                 >
                   <option value='both'>both</option>
                   <option value='true'>true</option>
@@ -148,7 +149,7 @@ const UsersTable = () => {
             </div>
             {!isLoading && (
               <div className='max-w-60'>
-                <span className='text-md mr-2 text-black dark:text-white'>page</span>
+                <span className='text-md mr-2 text-foreground'>page</span>
                 <input
                   type='number'
                   min={1}
@@ -160,15 +161,15 @@ const UsersTable = () => {
                       setCurrentPage(value);
                     }
                   }}
-                  className='rounded-md border-1 border-stroke bg-transparent  px-4 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary'
+                  className='rounded-md border-1 border-border bg-transparent  px-4 font-medium outline-none transition focus:border-primary active:border-primary'
                 />
-                <span className='text-md text-black dark:text-white'> / {data?.totalPages} </span>
+                <span className='text-md text-foreground'> / {data?.totalPages} </span>
               </div>
             )}
           </div>
         </div>
 
-        <div className='grid grid-cols-9 border-t-4  border-stroke py-4.5 px-4 dark:border-strokedark md:px-6 '>
+        <div className='grid grid-cols-9 border-t-4  border-border py-4.5 px-4 md:px-6 '>
           <div className='col-span-3 flex items-center'>
             <p className='font-medium'>Email / Username</p>
           </div>
@@ -193,24 +194,21 @@ const UsersTable = () => {
         {!!data?.users &&
           data?.users?.length > 0 &&
           data.users.map((user) => (
-            <div
-              key={user.id}
-              className='grid grid-cols-9 gap-4 border-t border-stroke py-4.5 px-4 dark:border-strokedark  md:px-6 '
-            >
+            <div key={user.id} className='grid grid-cols-9 gap-4 border-t border-border py-4.5 px-4 md:px-6 '>
               <div className='col-span-3 flex items-center'>
                 <div className='flex flex-col gap-1 '>
-                  <p className='text-sm text-black dark:text-white'>{user.email}</p>
-                  <p className='text-sm text-black dark:text-white'>{user.username}</p>
+                  <p className='text-sm text-foreground'>{user.email}</p>
+                  <p className='text-sm text-foreground'>{user.username}</p>
                 </div>
               </div>
               <div className='col-span-2 flex items-center'>
-                <p className='text-sm text-black dark:text-white'>{user.subscriptionStatus}</p>
+                <p className='text-sm text-foreground'>{user.subscriptionStatus}</p>
               </div>
               <div className='col-span-2 flex items-center'>
-                <p className='text-sm text-meta-3'>{user.paymentProcessorUserId}</p>
+                <p className='text-sm text-muted-foreground'>{user.paymentProcessorUserId}</p>
               </div>
               <div className='col-span-1 flex items-center'>
-                <div className='text-sm text-black dark:text-white'>
+                <div className='text-sm text-foreground'>
                   <AdminSwitch {...user} />
                 </div>
               </div>
