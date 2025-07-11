@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react';
 import { getPaginatedUsers, updateIsUserAdminById, useQuery } from 'wasp/client/operations';
 import { type User } from 'wasp/entities';
+import { Input } from '../../../components/ui/input';
+import { Label } from '../../../components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
+import { Switch } from '../../../components/ui/switch';
 import { SubscriptionStatus } from '../../../payment/plans';
-import SwitcherOne from '../../elements/forms/SwitcherOne';
 import LoadingSpinner from '../../layout/LoadingSpinner';
 import DropdownEditDelete from './DropdownEditDelete';
 
 function AdminSwitch({ id, isAdmin }: Pick<User, 'id' | 'isAdmin'>) {
   return (
-    <SwitcherOne isOn={isAdmin} onChange={(value) => updateIsUserAdminById({ id: id, isAdmin: value })} />
+    <Switch
+      checked={isAdmin}
+      onCheckedChange={(value) => updateIsUserAdminById({ id: id, isAdmin: value })}
+    />
   );
 }
 
@@ -45,10 +51,10 @@ const UsersTable = () => {
           <span className='text-sm font-medium'>Filters:</span>
           <div className='flex items-center justify-between gap-3 w-full px-2'>
             <div className='relative flex items-center gap-3 '>
-              <label htmlFor='email-filter' className='block text-sm text-muted-foreground'>
+              <Label htmlFor='email-filter' className='text-sm text-muted-foreground'>
                 email:
-              </label>
-              <input
+              </Label>
+              <Input
                 type='text'
                 id='email-filter'
                 placeholder='dude@example.com'
@@ -56,12 +62,11 @@ const UsersTable = () => {
                   const value = e.currentTarget.value;
                   setEmailFilter(value === '' ? undefined : value);
                 }}
-                className='rounded border border-border py-2 px-5 bg-background outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-muted'
               />
-              <label htmlFor='status-filter' className='block text-sm ml-2 text-muted-foreground'>
+              <Label htmlFor='status-filter' className='text-sm ml-2 text-muted-foreground'>
                 status:
-              </label>
-              <div className='flex-grow relative z-20 rounded border border-border pr-8 outline-none bg-background transition focus:border-primary active:border-primary'>
+              </Label>
+              <div className='flex-grow relative z-20'>
                 <div className='flex items-center'>
                   {subscriptionStatusFilter.length > 0 ? (
                     subscriptionStatusFilter.map((opt) => (
@@ -84,73 +89,71 @@ const UsersTable = () => {
                       </span>
                     ))
                   ) : (
-                    <span className='bg-background text-muted-foreground py-2 px-5 outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-muted'>
-                      Select Status Filters
-                    </span>
+                    <Select
+                      onValueChange={(value) => {
+                        const selectedValue = value === 'has_not_subscribed' ? null : value;
+
+                        console.log(selectedValue);
+                        if (selectedValue === 'clear-all') {
+                          setSubcriptionStatusFilter([]);
+                        } else {
+                          setSubcriptionStatusFilter((prevValue) => {
+                            if (prevValue.includes(selectedValue as SubscriptionStatus)) {
+                              return prevValue.filter((val) => val !== selectedValue);
+                            } else {
+                              return [...prevValue, selectedValue as SubscriptionStatus];
+                            }
+                          });
+                        }
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder='Select Status Filter' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {[...Object.values(SubscriptionStatus), null]
+                          .filter((status) => !subscriptionStatusFilter.includes(status))
+                          .map((status) => {
+                            const extendedStatus = status ?? 'has_not_subscribed';
+                            return (
+                              <SelectItem key={extendedStatus} value={extendedStatus}>
+                                {extendedStatus}
+                              </SelectItem>
+                            );
+                          })}
+                      </SelectContent>
+                    </Select>
                   )}
                 </div>
-                <select
-                  onChange={(e) => {
-                    const selectedValue = e.target.value == 'has_not_subscribed' ? null : e.target.value;
-
-                    console.log(selectedValue);
-                    if (selectedValue === 'clear-all') {
-                      setSubcriptionStatusFilter([]);
-                    } else {
-                      setSubcriptionStatusFilter((prevValue) => {
-                        if (prevValue.includes(selectedValue as SubscriptionStatus)) {
-                          return prevValue.filter((val) => val !== selectedValue);
-                        } else {
-                          return [...prevValue, selectedValue as SubscriptionStatus];
-                        }
-                      });
-                    }
-                  }}
-                  name='status-filter'
-                  id='status-filter'
-                  className='absolute top-0 left-0 z-20 h-full w-full bg-background opacity-0'
-                >
-                  <option value='select-filters'>Select filters</option>
-                  {[...Object.values(SubscriptionStatus), null]
-                    .filter((status) => !subscriptionStatusFilter.includes(status))
-                    .map((status) => {
-                      const extendedStatus = status ?? 'has_not_subscribed';
-                      return (
-                        <option key={extendedStatus} value={extendedStatus}>
-                          {extendedStatus}
-                        </option>
-                      );
-                    })}
-                </select>
-                <span className='absolute top-1/2 right-4 z-10 -translate-y-1/2'>
-                  <ChevronDownIcon />
-                </span>
               </div>
               <div className='flex items-center gap-2'>
-                <label htmlFor='isAdmin-filter' className='block text-sm ml-2 text-muted-foreground'>
+                <Label htmlFor='isAdmin-filter' className='text-sm ml-2 text-muted-foreground'>
                   isAdmin:
-                </label>
-                <select
-                  name='isAdmin-filter'
-                  onChange={(e) => {
-                    if (e.target.value === 'both') {
+                </Label>
+                <Select
+                  onValueChange={(value) => {
+                    if (value === 'both') {
                       setIsAdminFilter(undefined);
                     } else {
-                      setIsAdminFilter(e.target.value === 'true');
+                      setIsAdminFilter(value === 'true');
                     }
                   }}
-                  className='relative z-20 w-full appearance-none rounded border border-border bg-background p-2 pl-4 pr-8  outline-none transition focus:border-primary active:border-primary'
                 >
-                  <option value='both'>both</option>
-                  <option value='true'>true</option>
-                  <option value='false'>false</option>
-                </select>
+                  <SelectTrigger className='w-full'>
+                    <SelectValue placeholder='both' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value='both'>both</SelectItem>
+                    <SelectItem value='true'>true</SelectItem>
+                    <SelectItem value='false'>false</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
             {!isLoading && (
-              <div className='max-w-60'>
+              <div className='max-w-60 flex flex-row items-center'>
                 <span className='text-md mr-2 text-foreground'>page</span>
-                <input
+                <Input
                   type='number'
                   min={1}
                   defaultValue={currentPage}
@@ -161,7 +164,7 @@ const UsersTable = () => {
                       setCurrentPage(value);
                     }
                   }}
-                  className='rounded-md border-1 border-border bg-transparent  px-4 font-medium outline-none transition focus:border-primary active:border-primary'
+                  className='w-20'
                 />
                 <span className='text-md text-foreground'> / {data?.totalPages} </span>
               </div>

@@ -132,7 +132,7 @@ function renderNavigationItems(
   const menuStyles = cn({
     '-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-foreground hover:bg-accent hover:text-accent-foreground transition-colors':
       !!setMobileMenuOpen,
-    'text-lg font-semibold leading-6 text-foreground duration-300 ease-in-out hover:text-primary transition-colors':
+    'text-sm font-semibold leading-6 text-foreground duration-300 ease-in-out hover:text-primary transition-colors':
       !setMobileMenuOpen,
   });
 

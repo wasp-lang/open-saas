@@ -62,7 +62,7 @@ const Calendar = ({ user }: { user: AuthUser }) => {
                 <span className='font-medium text-foreground'>2</span>
               </td>
               <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>3</span>
+                <span className='font-medium text-foreground '>3</span>
               </td>
               <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
                 <span className='font-medium text-foreground'>4</span>

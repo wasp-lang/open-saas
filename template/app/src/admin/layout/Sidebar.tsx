@@ -106,9 +106,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 end
                 className={({ isActive }) =>
                   cn(
-                    'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:bg-accent',
+                    'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:bg-accent hover:text-accent-foreground',
                     {
-                      'bg-accent': isActive,
+                      'bg-accent text-accent-foreground': isActive,
                     }
                   )
                 }
@@ -147,11 +147,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               <li>
                 <NavLink
                   to='/admin/users'
+                  end
                   className={({ isActive }) =>
                     cn(
-                      'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:bg-accent',
+                      'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:bg-accent hover:text-accent-foreground',
                       {
-                        'bg-accent': isActive,
+                        'bg-accent text-accent-foreground': isActive,
                       }
                     )
                   }
@@ -185,11 +186,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               <li>
                 <NavLink
                   to='/admin/settings'
+                  end
                   className={({ isActive }) =>
                     cn(
-                      'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:bg-accent',
+                      'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:bg-accent hover:text-accent-foreground',
                       {
-                        'bg-accent': isActive,
+                        'bg-accent text-accent-foreground': isActive,
                       }
                     )
                   }
@@ -234,11 +236,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               <li>
                 <NavLink
                   to='/admin/chart'
+                  end
                   className={({ isActive }) =>
                     cn(
-                      'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:bg-accent',
+                      'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:bg-accent hover:text-accent-foreground',
                       {
-                        'bg-accent': isActive,
+                        'bg-accent text-accent-foreground': isActive,
                       }
                     )
                   }
@@ -280,9 +283,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       <NavLink
                         to='#'
                         className={cn(
-                          'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:bg-accent',
+                          'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:bg-accent hover:text-accent-foreground',
                           {
-                            'bg-accent': pathname.includes('forms'),
+                            'bg-accent text-accent-foreground': pathname.includes('forms'),
                           }
                         )}
                         onClick={(e) => {
@@ -344,6 +347,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           <li>
                             <NavLink
                               to='/admin/forms/form-elements'
+                              end
                               className={({ isActive }) =>
                                 cn(
                                   'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:text-white',
@@ -357,6 +361,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           <li>
                             <NavLink
                               to='/admin/forms/form-layouts'
+                              end
                               className={({ isActive }) =>
                                 cn(
                                   'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:text-white',
@@ -380,11 +385,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               <li>
                 <NavLink
                   to='/admin/calendar'
+                  end
                   className={({ isActive }) =>
                     cn(
-                      'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:bg-accent',
+                      'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:bg-accent hover:text-accent-foreground',
                       {
-                        'bg-accent': isActive,
+                        'bg-accent text-accent-foreground': isActive,
                       }
                     )
                   }
@@ -415,9 +421,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       <NavLink
                         to='#'
                         className={cn(
-                          'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:bg-accent',
+                          'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:bg-accent hover:text-accent-foreground',
                           {
-                            'bg-accent': pathname.includes('ui'),
+                            'bg-accent text-accent-foreground': pathname.includes('ui'),
                           }
                         )}
                         onClick={(e) => {
@@ -478,6 +484,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           <li>
                             <NavLink
                               to='/admin/ui/alerts'
+                              end
                               className={({ isActive }) =>
                                 cn(
                                   'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:text-white',
@@ -491,6 +498,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           <li>
                             <NavLink
                               to='/admin/ui/buttons'
+                              end
                               className={({ isActive }) =>
                                 cn(
                                   'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-muted-foreground duration-300 ease-in-out hover:text-white',
