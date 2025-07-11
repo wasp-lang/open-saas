@@ -1,4 +1,5 @@
 import { Card, CardContent, CardDescription, CardFooter, CardTitle } from '../../components/ui/card';
+import SectionTitle from './SectionTitle';
 
 interface Testimonial {
   name: string;
@@ -11,9 +12,7 @@ interface Testimonial {
 export default function Testimonials({ testimonials }: { testimonials: Testimonial[] }) {
   return (
     <div className='mx-auto mt-32 max-w-7xl sm:mt-56 sm:px-6 lg:px-8'>
-      <h2 className='text-left text-xl font-semibold tracking-wide leading-7 text-muted-foreground dark:text-foreground mb-8'>
-        What Our Users Say
-      </h2>
+      <SectionTitle title='What Our Users Say' />
 
       <div className='relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full z-10'>
         {testimonials.map((testimonial, idx) => (
