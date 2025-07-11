@@ -1,0 +1,23 @@
+# PR Review TODOs for PR #444
+
+- [x] `template/app/src/analytics/operations.ts:9` Hm, it has daily and weekly stats, so maybe `DailyStatsValues` is not the best name?
+- [x] `template/app/src/analytics/operations.ts:34` We can probably just do `findMany` and get first one from it.
+- [x] `template/app/src/analytics/operations.ts:38` This assumes that `dailyStatsJob` generates the daily stats and that it is called that way. Might be better if the message here is less specific, or if it didn't happen here at all.
+- [x] `template/app/src/analytics/operations.ts:42` Ok so this function says `getAnalyticsDataByDay` but returns both daily Stats and `weeklyStats`, look into that.
+- [x] `template/app/src/analytics/operations.ts:5` Is it clear enough here that sources are `PageViewSources`? Maybe it is, but if not we can make it clearer.
+- [ ] `template/app/src/analytics/stats.ts:1` Consider renaming to `jobs.ts` and creating an `index.ts` entrypoint file.
+- [ ] `template/app/src/analytics/stats.ts:7` This often gets overlooked. Maybe create an interface in `index.ts` that's explicit about which provider is being used. 
+- [ ] `template/app/src/analytics/stats.ts:11` This type is only being used by the admin dash components. Consider moving it to a central place there.
+- [ ] `template/app/src/analytics/stats.ts:18` Let's extract this to a function or make it a one liner with a descriptive variable name.
+- [ ] `template/app/src/analytics/stats.ts:24` Investigate whether this needs to be `equals` or it could be, .e.g. the most recent entity from yesterday, or `>=` or `<=` or something like that.
+- [ ] `template/app/src/analytics/stats.ts:31` Clarify how this applies to the code below.
+- [ ] `template/app/src/analytics/stats.ts:43` The variable names are are unclear and could benefit from a cleaner implementation. Don't use `let`, use `const`. Rethink what is `userDelta` for if there is no `yesterdaysStats`.
+- [ ] `template/app/src/analytics/stats.ts:55` Can we abstract the `switch` case away?
+- [ ] `template/app/src/analytics/stats.ts:59` `dailyStats` could be renamed to `todaysDailyStats`.
+- [ ] `template/app/src/analytics/stats.ts:13` This whole function would benefit a lot by extracting the main parts to helper functions and organizing them logically.
+- [ ] `template/app/src/analytics/stats.ts:95` Replace with `upsert`.
+- [ ] `template/app/src/analytics/stats.ts:59` It looks like always have just one `DailyStats` entity per day in the DB. We accomplish that by always keeping the date set to midnight (`nowUTC`). Make this explicit or somehow more robust.
+- [ ] `template/app/src/analytics/stats.ts:96` `const sources = await getSources();`
+- [ ] `template/app/src/analytics/stats.ts:96` Rename to `pageViewSources`.
+- [ ] `template/app/src/analytics/stats.ts:120` Can we make the user more aware of why `pageViewSources` are here and what's going on? Can we make it more clear what the connection between `dailyStats` and `pageViewSources` is here? Also, can we extract this `upsert` logic to a helper function because it feels too specific?
+- [ ] `template/app/src/analytics/stats.ts:125` This could be extracted to a log provider/helper. 

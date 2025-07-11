@@ -64,7 +64,7 @@ model File {
   uploadUrl                 String
 }
 
-model DailyStats {
+model DailyAnalytics {
   id                               Int             @id @default(autoincrement())
   date                             DateTime        @default(now()) @unique
 
@@ -77,7 +77,7 @@ model DailyStats {
   totalRevenue                     Float           @default(0)
   totalProfit                      Float           @default(0)
 
-  sources                          PageViewSource[]
+  pageViewSources                          PageViewSource[]
 }
 
 model PageViewSource {

@@ -1,7 +1,8 @@
 import { ApexOptions } from 'apexcharts';
 import React, { useState, useMemo, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
-import { type DailyStatsProps } from '../../../analytics/stats';
+import { type DailyAnalytics } from 'wasp/entities';
+import { type DailyAnalyticsProps } from './types';
 
 const options: ApexOptions = {
   legend: {
@@ -109,26 +110,26 @@ interface ChartOneState {
   }[];
 }
 
-const RevenueAndProfitChart = ({ weeklyStats, isLoading }: DailyStatsProps) => {
+const RevenueAndProfitChart = ({ dailyAnalyticsFromPastWeek, isLoading }: DailyAnalyticsProps) => {
   const dailyRevenueArray = useMemo(() => {
-    if (!!weeklyStats && weeklyStats?.length > 0) {
-      const sortedWeeks = weeklyStats?.sort((a, b) => {
+    if (!!dailyAnalyticsFromPastWeek && dailyAnalyticsFromPastWeek?.length > 0) {
+      const sortedWeeks = dailyAnalyticsFromPastWeek?.sort((a, b) => {
         return new Date(a.date).getTime() - new Date(b.date).getTime();
       });
       return sortedWeeks.map((stat) => stat.totalRevenue);
     }
-  }, [weeklyStats]);
+  }, [dailyAnalyticsFromPastWeek]);
 
   const daysOfWeekArr = useMemo(() => {
-    if (!!weeklyStats && weeklyStats?.length > 0) {
-      const datesArr = weeklyStats?.map((stat) => {
+    if (!!dailyAnalyticsFromPastWeek && dailyAnalyticsFromPastWeek?.length > 0) {
+      const datesArr = dailyAnalyticsFromPastWeek?.map((stat) => {
         // get day of week, month, and day of month
         const dateArr = stat.date.toString().split(' ');
         return dateArr.slice(0, 3).join(' ');
       });
       return datesArr;
     }
-  }, [weeklyStats]);
+  }, [dailyAnalyticsFromPastWeek]);
 
   const [state, setState] = useState<ChartOneState>({
     series: [

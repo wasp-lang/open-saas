@@ -1,5 +1,5 @@
-import { type DailyStats } from 'wasp/entities';
-import { type DailyStatsJob } from 'wasp/server/jobs';
+import { type DailyAnalytics } from 'wasp/entities';
+import { type DailyAnalyticsJob } from 'wasp/server/jobs';
 import Stripe from 'stripe';
 import { stripe } from '../payment/stripe/stripeClient';
 import { listOrders } from '@lemonsqueezy/lemonsqueezy.js';
@@ -8,9 +8,7 @@ import { getDailyPageViews, getSources } from './providers/plausibleAnalyticsUti
 import { paymentProcessor } from '../payment/paymentProcessor';
 import { SubscriptionStatus } from '../payment/plans';
 
-export type DailyStatsProps = { dailyStats?: DailyStats; weeklyStats?: DailyStats[]; isLoading?: boolean };
-
-export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, context) => {
+export const calculateDailyAnalytics: DailyAnalyticsJob<never, void> = async (_args, context) => {
   const nowUTC = new Date(Date.now());
   nowUTC.setUTCHours(0, 0, 0, 0);
 
@@ -18,7 +16,7 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, con
   yesterdayUTC.setUTCDate(yesterdayUTC.getUTCDate() - 1);
 
   try {
-    const yesterdaysStats = await context.entities.DailyStats.findFirst({
+    const yesterdaysAnalytics = await context.entities.DailyAnalytics.findFirst({
       where: {
         date: {
           equals: yesterdayUTC,
@@ -37,9 +35,9 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, con
 
     let userDelta = userCount;
     let paidUserDelta = paidUserCount;
-    if (yesterdaysStats) {
-      userDelta -= yesterdaysStats.userCount;
-      paidUserDelta -= yesterdaysStats.paidUserCount;
+    if (yesterdaysAnalytics) {
+      userDelta -= yesterdaysAnalytics.userCount;
+      paidUserDelta -= yesterdaysAnalytics.paidUserCount;
     }
 
     let totalRevenue;
@@ -56,15 +54,15 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, con
 
     const { totalViews, prevDayViewsChangePercent } = await getDailyPageViews();
 
-    let dailyStats = await context.entities.DailyStats.findUnique({
+    let dailyAnalytics = await context.entities.DailyAnalytics.findUnique({
       where: {
         date: nowUTC,
       },
     });
 
-    if (!dailyStats) {
-      console.log('No daily stat found for today, creating one...');
-      dailyStats = await context.entities.DailyStats.create({
+    if (!dailyAnalytics) {
+      console.log('No daily analytics found for today, creating one...');
+      dailyAnalytics = await context.entities.DailyAnalytics.create({
         data: {
           date: nowUTC,
           totalViews,
@@ -78,9 +76,9 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, con
       });
     } else {
       console.log('Daily stat found for today, updating it...');
-      dailyStats = await context.entities.DailyStats.update({
+      dailyAnalytics = await context.entities.DailyAnalytics.update({
         where: {
-          id: dailyStats.id,
+          id: dailyAnalytics.id,
         },
         data: {
           totalViews,
@@ -111,7 +109,7 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, con
           date: nowUTC,
           name: source.source,
           visitors,
-          dailyStatsId: dailyStats.id,
+          dailyAnalyticsId: dailyAnalytics.id,
         },
         update: {
           visitors,
@@ -119,12 +117,12 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, con
       });
     }
 
-    console.table({ dailyStats });
+    console.table({ dailyAnalytics });
   } catch (error: any) {
-    console.error('Error calculating daily stats: ', error);
+    console.error('Error calculating daily analytics: ', error);
     await context.entities.Logs.create({
       data: {
-        message: `Error calculating daily stats: ${error?.message}`,
+        message: `Error calculating daily analytics: ${error?.message}`,
         level: 'job-error',
       },
     });
