@@ -16,7 +16,9 @@ interface ExampleApp {
 const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
   const [currentExample, setCurrentExample] = useState(Math.floor(examples.length / 2 - 1));
   const [hoveredExample, setHoveredExample] = useState<number | null>(null);
+  const [isInView, setIsInView] = useState(false);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const handleMouseEnter = (index: number) => {
     setHoveredExample(index);
@@ -27,9 +29,35 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
   };
 
   useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      {
+        threshold: 0.3,
+        rootMargin: '0px 0px -100px 0px',
+      }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isInView || hoveredExample !== null) {
+      return;
+    }
+
     const interval = setInterval(handleNext, 3000);
     return () => clearInterval(interval);
-  }, [handleNext]);
+  }, [isInView, hoveredExample, handleNext]);
 
   const highlightedIndex = hoveredExample ?? currentExample;
 
@@ -46,27 +74,29 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
   }, [currentExample, hoveredExample]);
 
   return (
-    <div className='flex flex-col items-center my-10'>
+    <div ref={containerRef} className='flex flex-col items-center my-10'>
       <h2 className='mb-6 text-center font-semibold tracking-wide text-muted-foreground'>Used by:</h2>
-      <div className='flex overflow-y-visible overflow-x-auto scroll-smooth pb-10 no-scrollbar snap-x'>
-        {examples.map((example, index) => (
-          <Card
-            key={index}
-            ref={(el) => (cardRefs.current[index] = el)}
-            className='flex-shrink-0 overflow-hidden'
-            variant={index === highlightedIndex ? 'default' : 'faded'}
-            onMouseEnter={() => handleMouseEnter(index)}
-            onMouseLeave={() => setHoveredExample(null)}
-          >
-            <CardContent className='p-0'>
-              <img src={example.imageSrc} alt={example.name} className='w-100 h-auto aspect-video' />
-              <div className='p-4'>
-                <h3 className='text-lg font-bold'>{example.name}</h3>
-                <p className='text-sm'>{example.description}</p>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+      <div className='w-full max-w-full overflow-hidden'>
+        <div className='flex overflow-x-auto scroll-smooth pb-10 no-scrollbar snap-x gap-4 px-4'>
+          {examples.map((example, index) => (
+            <Card
+              key={index}
+              ref={(el) => (cardRefs.current[index] = el)}
+              className='flex-shrink-0 overflow-hidden cursor-pointer w-[280px] sm:w-[320px] md:w-[350px]'
+              variant={index === highlightedIndex ? 'default' : 'faded'}
+              onMouseEnter={() => handleMouseEnter(index)}
+              onMouseLeave={() => setHoveredExample(null)}
+            >
+              <CardContent className='p-0'>
+                <img src={example.imageSrc} alt={example.name} className='w-full h-auto aspect-video' />
+                <div className='p-4'>
+                  <h3 className='text-lg font-bold'>{example.name}</h3>
+                  <p className='text-sm'>{example.description}</p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   );
