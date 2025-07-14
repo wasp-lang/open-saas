@@ -24,6 +24,11 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
     setHoveredExample(index);
   };
 
+  const handleMouseLeave = (index: number) => {
+    setCurrentExample(index);
+    setHoveredExample(null);
+  };
+
   const handleNext = () => {
     setCurrentExample((prev) => (prev + 1) % examples.length);
   };
@@ -85,7 +90,7 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
               className='flex-shrink-0 overflow-hidden cursor-pointer w-[280px] sm:w-[320px] md:w-[350px]'
               variant={index === highlightedIndex ? 'default' : 'faded'}
               onMouseEnter={() => handleMouseEnter(index)}
-              onMouseLeave={() => setHoveredExample(null)}
+              onMouseLeave={() => handleMouseLeave(index)}
             >
               <CardContent className='p-0'>
                 <img src={example.imageSrc} alt={example.name} className='w-full h-auto aspect-video' />
