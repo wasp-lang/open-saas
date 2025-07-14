@@ -199,6 +199,8 @@ span.flatpickr-weekday,
     --card-foreground: 0 0% 3.9%;
     --card-accent:  0 0% 100%;
     --card-accent-foreground: 0 0% 3.9%;
+    --card-subtle: 31 57% 96%;
+    --card-subtle-foreground: 0 0% 9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
     --primary: 210 100% 13%;
@@ -226,6 +228,8 @@ span.flatpickr-weekday,
     --card-foreground: 0 0% 98%;
     --card-accent: 31 57% 93%;
     --card-accent-foreground: 0 0% 3.9%;
+    --card-subtle: 233 24% 15%;
+    --card-subtle-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
     --primary: 31 57% 93%;

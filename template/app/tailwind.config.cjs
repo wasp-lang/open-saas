@@ -28,6 +28,10 @@ module.exports = {
   				accent: {
 						DEFAULT: 'hsl(var(--card-accent))',
 						foreground: 'hsl(var(--card-accent-foreground))'
+					},
+					subtle: {
+						DEFAULT: 'hsl(var(--card-subtle))',
+						foreground: 'hsl(var(--card-subtle-foreground))'
 					}
   			},
   			popover: {

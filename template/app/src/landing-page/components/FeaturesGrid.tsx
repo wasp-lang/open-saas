@@ -43,7 +43,10 @@ const FeaturesGrid = ({ features, className = '' }: FeaturesGridProps) => {
           return (
             <Card
               key={feature.name}
-              className={cn('h-full min-h-[140px] transition-all duration-300 hover:shadow-lg', gridClasses)}
+              className={cn(
+                'h-full min-h-[140px] transition-all duration-300 hover:shadow-lg cursor-pointer',
+                gridClasses
+              )}
               variant='bento'
             >
               <CardContent className={cn('p-4 h-full', span === 2 && 'flex flex-col justify-center')}>
@@ -55,11 +58,11 @@ const FeaturesGrid = ({ features, className = '' }: FeaturesGridProps) => {
                     align === 'center' ? 'justify-center items-center' : 'justify-start'
                   )}
                 >
-                  <div className='flex h-10 w-10 items-center justify-center rounded-lg border border-accent bg-accent/30'>
+                  <div className='flex h-10 w-10 items-center justify-center rounded-lg'>
                     {typeof feature.icon === 'string' ? (
                       <span className='text-2xl'>{feature.icon}</span>
                     ) : (
-                      <div className='text-2xl'>{feature.icon}</div>
+                      feature.icon
                     )}
                   </div>
                   <CardTitle
