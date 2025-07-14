@@ -41,12 +41,6 @@ export default function App() {
 
   return (
     <>
-      {/* 
-        MIGRATION: 
-        - dark:bg-boxdark-2 → bg-background (ShadCN semantic)
-        - dark:text-white → text-foreground (ShadCN semantic)
-        - Removed redundant dark: prefix since ShadCN handles this automatically
-      */}
       <div className='min-h-screen bg-background text-foreground'>
         {isAdminDashboard ? (
           <Outlet />
