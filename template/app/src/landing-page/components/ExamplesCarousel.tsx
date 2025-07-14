@@ -39,7 +39,7 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
         setIsInView(entry.isIntersecting);
       },
       {
-        threshold: 0.8,
+        threshold: 1,
         rootMargin: '0px 0px -100px 0px',
       }
     );
