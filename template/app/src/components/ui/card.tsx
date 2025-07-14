@@ -9,6 +9,7 @@ const cardVariants = cva('rounded-xl border shadow hover:shadow-lg transition-al
       default: 'bg-card text-card-foreground',
       accent: 'bg-card-accent text-card-accent-foreground hover:scale-[1.02]',
       faded: 'text-card-faded-foreground scale-95 opacity-50',
+      bento: 'bg-accent text-card-accent-foreground hover:scale-[1.02] border-none shadow-none',
     },
   },
 });

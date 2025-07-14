@@ -44,6 +44,7 @@ const FeaturesGrid = ({ features, className = '' }: FeaturesGridProps) => {
             <Card
               key={feature.name}
               className={cn('h-full min-h-[140px] transition-all duration-300 hover:shadow-lg', gridClasses)}
+              variant='bento'
             >
               <CardContent className={cn('p-4 h-full', span === 2 && 'flex flex-col justify-center')}>
                 <div
