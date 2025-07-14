@@ -14,7 +14,7 @@ export default function Testimonials({ testimonials }: { testimonials: Testimoni
     <div className='mx-auto mt-32 max-w-7xl sm:mt-56 sm:px-6 lg:px-8'>
       <SectionTitle title='What Our Users Say' />
 
-      <div className='relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full z-10'>
+      <div className='relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full z-10 px-4 md:px-0'>
         {testimonials.map((testimonial, idx) => (
           <Card key={idx} variant='accent'>
             <CardContent className='p-6'>
