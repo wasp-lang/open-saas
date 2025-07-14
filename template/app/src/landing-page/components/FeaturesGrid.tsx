@@ -1,0 +1,94 @@
+import React from 'react';
+import { cn } from '../../client/cn';
+import { Card, CardContent, CardDescription, CardTitle } from '../../components/ui/card';
+import { Feature } from './Features';
+import SectionTitle from './SectionTitle';
+
+export interface GridFeature extends Omit<Feature, 'icon'> {
+  icon: string | React.ReactNode;
+  direction?: 'col' | 'row' | 'col-reverse' | 'row-reverse';
+  align?: 'center' | 'left';
+  span?: number;
+}
+
+interface FeaturesGridProps {
+  features: GridFeature[];
+  className?: string;
+}
+
+const FeaturesGrid = ({ features, className = '' }: FeaturesGridProps) => {
+  return (
+    <div className='flex flex-col gap-4 my-16 md:my-24 lg:my-40'>
+      <SectionTitle
+        title={
+          <h3 className='text-3xl font-bold tracking-tight text-foreground sm:text-5xl'>
+            <span className='text-gradient-primary'>100%</span> Open Source
+          </h3>
+        }
+        subtitle='No vendor lock-in. Deploy anywhere.'
+      />
+      <div
+        className={cn(
+          'grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6 mx-4 md:mx-6 lg:mx-8 auto-rows-[minmax(140px,auto)]',
+          className
+        )}
+      >
+        {features.map((feature, index) => {
+          const direction = feature.direction || 'col';
+          const align = feature.align || 'left';
+          const span = feature.span || 1;
+
+          let gridClasses = '';
+          if (span < 1) {
+            gridClasses = 'col-span-1';
+          } else if (span === 1) {
+            gridClasses = 'col-span-2 md:col-span-2 lg:col-span-2';
+          } else if (span > 1) {
+            gridClasses = 'col-span-2 md:col-span-2 lg:col-span-2 row-span-2';
+          }
+
+          return (
+            <Card
+              key={feature.name}
+              className={cn('h-full min-h-[140px] transition-all duration-300 hover:shadow-lg', gridClasses)}
+            >
+              <CardContent className={cn('p-4 h-full', span === 2 && 'flex flex-col justify-center')}>
+                <div
+                  className={cn(
+                    'flex items-center gap-3',
+                    direction === 'row' || direction === 'row-reverse' ? 'flex-row' : 'flex-col',
+                    direction === 'col-reverse' || direction === 'row-reverse' ? 'flex-col-reverse' : '',
+                    align === 'center' ? 'justify-center items-center' : 'justify-start'
+                  )}
+                >
+                  <div className='flex h-10 w-10 items-center justify-center rounded-lg border border-accent bg-accent/30'>
+                    {typeof feature.icon === 'string' ? (
+                      <span className='text-2xl'>{feature.icon}</span>
+                    ) : (
+                      <div className='text-2xl'>{feature.icon}</div>
+                    )}
+                  </div>
+                  <CardTitle
+                    className={cn('text-lg font-semibold', align === 'center' ? 'text-center' : 'text-left')}
+                  >
+                    {feature.name}
+                  </CardTitle>
+                </div>
+                <CardDescription
+                  className={cn(
+                    'text-base leading-relaxed',
+                    direction === 'col' ? 'text-center' : align === 'center' ? 'text-center' : 'text-left'
+                  )}
+                >
+                  {feature.description}
+                </CardDescription>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+export default FeaturesGrid;

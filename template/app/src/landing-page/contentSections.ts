@@ -17,26 +17,64 @@ export const features = [
     description: 'Describe your cool feature here.',
     icon: '🤝',
     href: DocsUrl,
+    span: 0.5,
   },
   {
     name: 'Cool Feature #2',
     description: 'Describe your cool feature here.',
     icon: '🔐',
     href: DocsUrl,
+    span: 0.5,
   },
   {
     name: 'Cool Feature #3',
     description: 'Describe your cool feature here.',
     icon: '🥞',
     href: DocsUrl,
+    span: 1,
   },
   {
     name: 'Cool Feature #4',
     description: 'Describe your cool feature here.',
     icon: '💸',
     href: DocsUrl,
+    span: 2,
+  },
+  {
+    name: 'Cool Feature #5',
+    description: 'Describe your cool feature here.',
+    icon: '💼',
+    href: DocsUrl,
+    span: 2,
+  },
+  {
+    name: 'Cool Feature #6',
+    description: 'Describe your cool feature here.',
+    icon: '📈',
+    href: DocsUrl,
+    span: 0.5,
+  },
+  {
+    name: 'Cool Feature #7',
+    description: 'Describe your cool feature here.',
+    icon: '📧',
+    href: DocsUrl,
+    span: 0.5,
+  },
+  {
+    name: 'Cool Feature #8',
+    description: 'Describe your cool feature here.',
+    icon: '🤖',
+    href: DocsUrl,
+  },
+  {
+    name: 'Cool Feature #9',
+    description: 'Describe your cool feature here.',
+    icon: '🚀',
+    href: DocsUrl,
   },
 ];
+
 export const testimonials = [
   {
     name: 'Da Boi',

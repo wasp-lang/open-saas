@@ -1,6 +1,6 @@
 import SectionTitle from './SectionTitle';
 
-interface Feature {
+export interface Feature {
   name: string;
   description: string;
   icon: string;

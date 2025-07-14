@@ -1,7 +1,7 @@
 import Clients from './components/Clients';
 import ExamplesCarousel from './components/ExamplesCarousel';
 import FAQ from './components/FAQ';
-import Features from './components/Features';
+import FeaturesGrid from './components/FeaturesGrid';
 import Footer from './components/Footer';
 import Hero from './components/Hero';
 import Testimonials from './components/Testimonials';
@@ -14,7 +14,7 @@ export default function LandingPage() {
         <Hero />
         <ExamplesCarousel examples={examples} />
         <Clients />
-        <Features features={features} />
+        <FeaturesGrid features={features} />
         <Testimonials testimonials={testimonials} />
         <FAQ faqs={faqs} />
       </main>
