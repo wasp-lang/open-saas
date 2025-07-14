@@ -1,4 +1,3 @@
-import Clients from './components/Clients';
 import ExamplesCarousel from './components/ExamplesCarousel';
 import FAQ from './components/FAQ';
 import FeaturesGrid from './components/FeaturesGrid';
@@ -13,7 +12,6 @@ export default function LandingPage() {
       <main className='isolate'>
         <Hero />
         <ExamplesCarousel examples={examples} />
-        <Clients />
         <FeaturesGrid features={features} />
         <Testimonials testimonials={testimonials} />
         <FAQ faqs={faqs} />
