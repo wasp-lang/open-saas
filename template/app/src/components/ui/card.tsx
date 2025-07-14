@@ -3,17 +3,14 @@ import * as React from 'react';
 import { cva, VariantProps } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
 
-const cardVariants = cva(
-  'rounded-xl border shadow hover:shadow-lg transition-all duration-300 hover:scale-[1.02] xur',
-  {
-    variants: {
-      variant: {
-        default: 'bg-card text-card-foreground',
-        accent: 'bg-card-accent text-card-accent-foreground',
-      },
+const cardVariants = cva('rounded-xl border shadow hover:shadow-lg transition-all duration-300 xur', {
+  variants: {
+    variant: {
+      default: 'bg-card text-card-foreground',
+      accent: 'bg-card-accent text-card-accent-foreground hover:scale-[1.02]',
     },
-  }
-);
+  },
+});
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof cardVariants> {}
 
