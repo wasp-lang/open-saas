@@ -2,6 +2,7 @@ import { routes } from 'wasp/client/router';
 import type { NavigationItem } from '../client/components/NavBar/NavBar';
 import avatarPlaceholder from '../client/static/avatar-placeholder.webp';
 import daBoiAvatar from '../client/static/da-boi.webp';
+import openSaasBannerWebp from '../client/static/open-saas-banner.webp';
 import { BlogUrl, DocsUrl } from '../shared/common';
 
 export const landingPageNavigationItems: NavigationItem[] = [
@@ -79,3 +80,31 @@ export const footerNavigation = {
     { name: 'Terms of Service', href: '#' },
   ],
 };
+
+export const examples = [
+  {
+    name: 'Example #1',
+    description: 'Describe your example here.',
+    imageSrc: openSaasBannerWebp,
+  },
+  {
+    name: 'Example #2',
+    description: 'Describe your example here.',
+    imageSrc: openSaasBannerWebp,
+  },
+  {
+    name: 'Example #3',
+    description: 'Describe your example here.',
+    imageSrc: openSaasBannerWebp,
+  },
+  {
+    name: 'Example #4',
+    description: 'Describe your example here.',
+    imageSrc: openSaasBannerWebp,
+  },
+  {
+    name: 'Example #5',
+    description: 'Describe your example here.',
+    imageSrc: openSaasBannerWebp,
+  },
+];
