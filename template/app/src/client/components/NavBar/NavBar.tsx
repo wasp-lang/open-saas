@@ -72,7 +72,7 @@ export default function AppNavBar({ navigationItems }: { navigationItems: Naviga
                   <span
                     className={cn('font-semibold leading-6 text-foreground transition-all duration-300', {
                       'ml-2 text-sm': !isScrolled,
-                      'ml-2 text-xs opacity-0': isScrolled,
+                      'ml-2 text-xs': isScrolled,
                     })}
                   >
                     Your SaaS
