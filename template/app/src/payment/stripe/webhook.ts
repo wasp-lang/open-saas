@@ -9,11 +9,9 @@ import { updateUserStripePaymentDetails } from './paymentDetails';
 import { emailSender } from 'wasp/server/email';
 import { assertUnreachable } from '../../shared/utils';
 import { requireNodeEnvVar } from '../../server/utils';
-import { z } from 'zod';
 import {
   parseWebhookPayload,
   type InvoicePaidData,
-  SubscriptionCreatedData,
   type SessionCompletedData,
   type SubscriptionDeletedData,
   type SubscriptionUpdatedData,
@@ -31,9 +29,6 @@ export const stripeWebhook: PaymentsWebhook = async (request, response, context)
         break;
       case 'invoice.paid':
         await handleInvoicePaid(data, prismaUserDelegate);
-        break;
-      case 'customer.subscription.created':
-        await handleCustomerSubscriptionCreated(data, prismaUserDelegate);
         break;
       case 'customer.subscription.updated':
         await handleCustomerSubscriptionUpdated(data, prismaUserDelegate);
@@ -85,9 +80,7 @@ export const stripeMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig) =
   return middlewareConfig;
 };
 
-// Here we only update the user's payment details, and confirm credits
-// if payment mode === payment (e.g. one-time payment). If payment mode === subscription,
-// we update its status in the customer.subscription.created or customer.subscription.updated webhook.
+// Here we only update the user's payment details, and confirm credits because Stripe does not send invoices for one-time payments.
 // NOTE: If you're accepting async payment methods like bank transfers or SEPA and not just card payments
 // which are synchronous, checkout session completed could potentially result in a pending payment.
 // If so, use the checkout.session.async_payment_succeeded event to confirm the payment.
@@ -126,32 +119,12 @@ async function handleInvoicePaid(invoice: InvoicePaidData, prismaUserDelegate: P
 async function saveActiveSubscription(invoice: InvoicePaidData, prismaUserDelegate: PrismaClient['user']) {
   const userStripeId = invoice.customer;
   const datePaid = new Date(invoice.period_start * 1000);
-  const lineItems = await invoiceLineItemsSchema.parseAsync(invoice.lines);
-  const priceId = extractPriceId(lineItems);
+  const priceId = extractPriceId(invoice.lines);
   const subscriptionPlan = getPlanIdByPriceId(priceId);
   return updateUserStripePaymentDetails(
     { userStripeId, datePaid, subscriptionPlan, subscriptionStatus: SubscriptionStatus.Active },
     prismaUserDelegate
   );
-}
-
-async function handleCustomerSubscriptionCreated(
-  subscription: SubscriptionCreatedData,
-  prismaUserDelegate: PrismaClient['user']
-) {
-  // We save everything except the subscription status (hence "unpaid"),
-  // which we update in handleInvoicePaid once we get confirmation the payment succeeded.
-  await saveUnpaidSubscription(subscription, prismaUserDelegate);
-}
-
-async function saveUnpaidSubscription(
-  subscription: SubscriptionCreatedData,
-  prismaUserDelegate: PrismaClient['user']
-) {
-  const userStripeId = subscription.customer;
-  const priceId = extractPriceId(subscription.items);
-  const subscriptionPlan = getPlanIdByPriceId(priceId);
-  return updateUserStripePaymentDetails({ userStripeId, subscriptionPlan }, prismaUserDelegate);
 }
 
 async function handleCustomerSubscriptionUpdated(
@@ -202,60 +175,41 @@ async function handleCustomerSubscriptionDeleted(
   );
 }
 
-type SubscsriptionItems = z.infer<typeof subscriptionItemsSchema>;
-
-const subscriptionItemsSchema = z.object({
-  data: z.array(
-    z.object({
-      price: z.object({
-        id: z.string(),
-      }),
-    })
-  ),
-});
-
-type InvoiceLineItems = z.infer<typeof invoiceLineItemsSchema>;
-
-const invoiceLineItemsSchema = z.object({
-  data: z.array(
-    z.object({
-      pricing: z.object({ price_details: z.object({ price: z.string() }) }),
-    })
-  ),
-});
-
 // We only expect one line item, but if you set up a product with multiple prices, you should change this function to handle them.
-function extractPriceId(items: SubscsriptionItems | InvoiceLineItems): string {
+function extractPriceId(
+  items: Stripe.ApiList<Stripe.LineItem> | SubscriptionUpdatedData['items'] | InvoicePaidData['lines']
+): string {
   if (items.data.length === 0) {
     throw new HttpError(400, 'No items in stripe event object');
   }
   if (items.data.length > 1) {
     throw new HttpError(400, 'More than one item in stripe event object');
   }
+  const item = items.data[0];
 
-  const firstItem = items.data[0];
-
-  if ('price' in firstItem) {
-    return firstItem.price.id;
-  } else if ('pricing' in firstItem) {
-    return firstItem.pricing.price_details.price;
-  } else {
-    throw new HttpError(500, 'Unable to extract price id due to unexpected item structure');
+  // The 'price' property is found on SubscriptionItem and LineItem.
+  if ('price' in item && item.price?.id) {
+    return item.price.id;
   }
+
+  // The 'pricing' property is found on InvoiceLineItem.
+  if ('pricing' in item) {
+    const priceId = item.pricing?.price_details?.price;
+    if (priceId) {
+      return priceId;
+    }
+  }
+  throw new HttpError(400, 'Unable to extract price id from item');
 }
 
 async function getCheckoutLineItemsBySessionId(sessionId: string) {
-  try {
-    const { line_items: lineItemsRaw } = await stripe.checkout.sessions.retrieve(sessionId, {
-      expand: ['line_items'],
-    });
-
-    const lineItems = await subscriptionItemsSchema.parseAsync(lineItemsRaw);
-
-    return lineItems;
-  } catch (e: unknown) {
-    throw new HttpError(500, 'Error parsing Stripe line items');
+  const { line_items } = await stripe.checkout.sessions.retrieve(sessionId, {
+    expand: ['line_items'],
+  });
+  if (!line_items) {
+    throw new HttpError(400, 'No line items found in checkout session');
   }
+  return line_items;
 }
 
 function getPlanIdByPriceId(priceId: string): PaymentPlanId {

@@ -13,9 +13,6 @@ export async function parseWebhookPayload(rawStripeEvent: Stripe.Event) {
       case 'invoice.paid':
         const invoice = await invoicePaidDataSchema.parseAsync(event.data.object);
         return { eventName: event.type, data: invoice };
-      case 'customer.subscription.created':
-        const createdSubscription = await subscriptionCreatedDataSchema.parseAsync(event.data.object);
-        return { eventName: event.type, data: createdSubscription };
       case 'customer.subscription.updated':
         const updatedSubscription = await subscriptionUpdatedDataSchema.parseAsync(event.data.object);
         return { eventName: event.type, data: updatedSubscription };
@@ -79,24 +76,6 @@ const invoicePaidDataSchema = z.object({
  * This is a subtype of
  * @type import('stripe').Stripe.Subscription
  */
-const subscriptionCreatedDataSchema = z.object({
-  customer: z.string(),
-  status: z.string(),
-  items: z.object({
-    data: z.array(
-      z.object({
-        price: z.object({
-          id: z.string(),
-        }),
-      })
-    ),
-  }),
-});
-
-/**
- * This is a subtype of
- * @type import('stripe').Stripe.Subscription
- */
 const subscriptionUpdatedDataSchema = z.object({
   customer: z.string(),
   status: z.string(),
@@ -123,8 +102,6 @@ const subscriptionDeletedDataSchema = z.object({
 export type SessionCompletedData = z.infer<typeof sessionCompletedDataSchema>;
 
 export type InvoicePaidData = z.infer<typeof invoicePaidDataSchema>;
-
-export type SubscriptionCreatedData = z.infer<typeof subscriptionCreatedDataSchema>;
 
 export type SubscriptionUpdatedData = z.infer<typeof subscriptionUpdatedDataSchema>;
 
