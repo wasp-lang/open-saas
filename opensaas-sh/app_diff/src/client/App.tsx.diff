@@ -1,0 +1,18 @@
+--- template/app/src/client/App.tsx
++++ opensaas-sh/app/src/client/App.tsx
+@@ -41,13 +41,13 @@
+ 
+   return (
+     <>
+-      <div className='min-h-screen bg-background text-foreground'>
++      <div className='min-h-screen dark:text-white dark:bg-boxdark-2'>
+         {isAdminDashboard ? (
+           <Outlet />
+         ) : (
+           <>
+             {shouldDisplayAppNavBar && <NavBar navigationItems={navigationItems} />}
+-            <div className='mx-auto max-w-7xl'>
++            <div className='mx-auto max-w-7xl sm:px-6 lg:px-8'>
+               <Outlet />
+             </div>
+           </>

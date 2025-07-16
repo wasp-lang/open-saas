@@ -1,5 +1,18 @@
 --- template/app/src/user/operations.ts
 +++ opensaas-sh/app/src/user/operations.ts
+@@ -1,9 +1,9 @@
+-import * as z from 'zod';
+-import { type UpdateIsUserAdminById, type GetPaginatedUsers } from 'wasp/server/operations';
++import { type Prisma } from '@prisma/client';
+ import { type User } from 'wasp/entities';
+ import { HttpError, prisma } from 'wasp/server';
++import { type GetPaginatedUsers, type UpdateIsUserAdminById } from 'wasp/server/operations';
++import * as z from 'zod';
+ import { SubscriptionStatus } from '../payment/plans';
+-import { type Prisma } from '@prisma/client';
+ import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
+ 
+ const updateUserAdminByIdInputSchema = z.object({
 @@ -34,10 +34,7 @@
  };
  
