@@ -25,7 +25,7 @@ export default function FAQ({ faqs }: { faqs: FAQ[] }) {
               {faq.question}
             </AccordionTrigger>
             <AccordionContent className='text-muted-foreground'>
-              <div className='flex items-start justify-between gap-4'>
+              <div className='flex flex-col items-start justify-between gap-4'>
                 <p className='text-base leading-7 text-muted-foreground flex-1'>{faq.answer}</p>
                 {faq.href && (
                   <a
