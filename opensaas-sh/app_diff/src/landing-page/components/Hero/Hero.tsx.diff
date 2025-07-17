@@ -1,6 +1,6 @@
 --- template/app/src/landing-page/components/Hero/Hero.tsx
 +++ opensaas-sh/app/src/landing-page/components/Hero/Hero.tsx
-@@ -0,0 +1,67 @@
+@@ -0,0 +1,70 @@
 +import { Button } from '../../../components/ui/button';
 +import Orbit from './Orbit';
 +
@@ -12,15 +12,16 @@
 +      <div className='flex flex-col lg:flex-row'>
 +        <div className='py-24 sm:py-32'>
 +          <div className='max-w-8xl px-6 lg:px-8'>
-+            <div className='lg:mb-18 mx-auto max-w-3xl text-left'>
-+              <h1 className='text-4xl font-bold text-foreground sm:text-6xl'>
-+                The <span className='italic'>free</span> SaaS template with superpowers
++            <div className='lg:mb-18 mx-auto max-w-3xl text-center md:text-left'>
++              <h1 className='text-6xl font-bold text-foreground md:text-5xl'>
++                The <span className='italic'>free</span> SaaS template with{' '}
++                <span className='text-gradient-primary sm:text-foreground'>superpowers</span>
 +              </h1>
 +              <p className='mt-6 max-w-2xl text-lg leading-8 text-muted-foreground font-mono'>
 +                An open-source, feature-rich, full-stack React + NodeJS template that manages features for
 +                you.
 +              </p>
-+              <div className='mt-10 flex items-start justify-start gap-x-6'>
++              <div className='mt-10 flex items-center md:items-start justify-center md:justify-start gap-x-6'>
 +                <Button size='lg' variant='outline'>
 +                  Try the Demo App
 +                </Button>
@@ -31,7 +32,9 @@
 +            </div>
 +          </div>
 +        </div>
-+        <Orbit />
++        <div className='hidden lg:block'>
++          <Orbit />
++        </div>
 +      </div>
 +    </div>
 +  );

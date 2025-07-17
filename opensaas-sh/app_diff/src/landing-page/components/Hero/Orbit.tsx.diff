@@ -1,13 +1,14 @@
 --- template/app/src/landing-page/components/Hero/Orbit.tsx
 +++ opensaas-sh/app/src/landing-page/components/Hero/Orbit.tsx
-@@ -0,0 +1,215 @@
+@@ -0,0 +1,216 @@
 +import { useEffect, useState } from 'react';
 +import logo from '../../../client/static/logo.webp';
 +import nodeLogoDark from '../../../client/static/logos/nodejs-dark.png';
 +import nodeLogo from '../../../client/static/logos/nodejs-light.png';
 +import stripeLogoDark from '../../../client/static/logos/stripe-dark.png';
 +import stripeLogo from '../../../client/static/logos/stripe-light.png';
-+import { default as tailwindLogo, default as tailwindLogoDark } from '../../../client/static/logos/tailwind-dark.png';
++import tailwindLogoDark from '../../../client/static/logos/tailwind-dark.png';
++import tailwindLogo from '../../../client/static/logos/tailwind-light.png';
 +import { cn } from '../../../lib/utils';
 +import AstroLogo from '../../logos/AstroLogo';
 +import OpenAILogo from '../../logos/OpenAILogo';
