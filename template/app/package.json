@@ -53,8 +53,5 @@
     "prisma": "5.19.1",
     "typescript": "5.8.2",
     "vite": "^4.3.9"
-  },
-  "scripts": {
-    "shadcn": "node scripts/shadcn.js"
   }
 }

@@ -28,7 +28,7 @@ const FeaturesGrid = ({ features, className = '' }: FeaturesGridProps) => {
       >
         {features.map((feature, index) => {
           const direction = feature.direction || 'col';
-          const align = feature.align || 'left';
+          const align = feature.align || 'center';
           const span = feature.span || 1;
 
           let gridClasses = '';
@@ -48,8 +48,13 @@ const FeaturesGrid = ({ features, className = '' }: FeaturesGridProps) => {
                 gridClasses
               )}
               variant='bento'
+              onClick={() => {
+                if (feature.href) {
+                  window.open(feature.href, '_blank');
+                }
+              }}
             >
-              <CardContent className={cn('p-4 h-full', span === 2 && 'flex flex-col justify-center')}>
+              <CardContent className='p-4 h-full flex flex-col justify-center items-center'>
                 <div
                   className={cn(
                     'flex items-center gap-3',
