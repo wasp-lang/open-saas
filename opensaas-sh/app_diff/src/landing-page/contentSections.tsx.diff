@@ -1,6 +1,6 @@
 --- template/app/src/landing-page/contentSections.tsx
 +++ opensaas-sh/app/src/landing-page/contentSections.tsx
-@@ -0,0 +1,210 @@
+@@ -0,0 +1,211 @@
 +import { routes } from 'wasp/client/router';
 +import type { NavigationItem } from '../client/components/NavBar/NavBar';
 +import logo from '../client/static/logo.webp';
@@ -10,6 +10,7 @@
 +export const landingPageNavigationItems: NavigationItem[] = [
 +  { name: 'Features', to: '#features' },
 +  { name: 'Documentation', to: DocsUrl },
++  { name: 'Blog', to: BlogUrl },
 +];
 +export const features = [
 +  {
