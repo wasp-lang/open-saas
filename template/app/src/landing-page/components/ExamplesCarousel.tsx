@@ -97,8 +97,8 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
               <CardContent className='p-0 h-full'>
                 <img src={example.imageSrc} alt={example.name} className='w-full h-auto aspect-video' />
                 <div className='p-4'>
-                  <h3 className='text-lg font-bold'>{example.name}</h3>
-                  <p className='text-sm'>{example.description}</p>
+                  <p className='font-bold'>{example.name}</p>
+                  <p className='text-xs text-muted-foreground'>{example.description}</p>
                 </div>
               </CardContent>
             </Card>
