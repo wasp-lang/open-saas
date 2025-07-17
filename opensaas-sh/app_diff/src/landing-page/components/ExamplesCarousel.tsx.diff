@@ -1,6 +1,6 @@
 --- template/app/src/landing-page/components/ExamplesCarousel.tsx
 +++ opensaas-sh/app/src/landing-page/components/ExamplesCarousel.tsx
-@@ -80,7 +80,7 @@
+@@ -81,7 +81,7 @@
  
    return (
      <div ref={containerRef} className='flex flex-col items-center my-10'>
