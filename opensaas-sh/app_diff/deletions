@@ -1,4 +1,5 @@
 src/landing-page/components/Hero.tsx
+src/landing-page/contentSections.ts
 src/landing-page/logos/SalesforceLogo.tsx
 src/payment/lemonSqueezy/checkoutUtils.ts
 src/payment/lemonSqueezy/paymentDetails.ts
