@@ -18,7 +18,7 @@ interface FeaturesGridProps {
 
 const FeaturesGrid = ({ features, className = '' }: FeaturesGridProps) => {
   return (
-    <div className='flex flex-col gap-4 my-16 md:my-24 lg:my-40'>
+    <div className='flex flex-col gap-4 my-16 md:my-24 lg:my-40' id='features'>
       <SectionTitle title='Features' subtitle='These are some of the features of the product.' />
       <div
         className={cn(
@@ -70,15 +70,13 @@ const FeaturesGrid = ({ features, className = '' }: FeaturesGridProps) => {
                       feature.icon
                     )}
                   </div>
-                  <CardTitle
-                    className={cn('text-lg font-semibold', align === 'center' ? 'text-center' : 'text-left')}
-                  >
-                    {feature.name}
+                  <CardTitle className={cn(align === 'center' ? 'text-center' : 'text-left')}>
+                    <span className='text-sm'>{feature.name}</span>
                   </CardTitle>
                 </div>
                 <CardDescription
                   className={cn(
-                    'text-base leading-relaxed',
+                    'text-xs leading-relaxed',
                     direction === 'col' ? 'text-center' : align === 'center' ? 'text-center' : 'text-left'
                   )}
                 >
