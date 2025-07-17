@@ -1,0 +1,307 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .chat-height {
+    @apply h-[calc(100vh_-_8.125rem)] lg:h-[calc(100vh_-_5.625rem)];
+  }
+  .inbox-height {
+    @apply h-[calc(100vh_-_8.125rem)] lg:h-[calc(100vh_-_5.625rem)];
+  }
+
+  /* Text gradient utilities */
+  .text-gradient-primary {
+    background: linear-gradient(to right, hsl(var(--secondary-muted)), hsl(var(--secondary)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .text-gradient-primary-diagonal {
+    background: linear-gradient(135deg, hsl(var(--secondary-muted)), hsl(var(--secondary)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Border gradient utilities */
+  .border-gradient-primary {
+    background: linear-gradient(to right, hsl(var(--secondary-muted)), hsl(var(--secondary)));
+    padding: 1px;
+  }
+  
+  .border-gradient-primary > * {
+    background: hsl(var(--background));
+  }
+}
+
+/* Here is an example of how to add a custom font. 
+* Fonts are stored in the public/fonts folder.
+* They are defined first here, then need to be referenced in the tailwind.config.js file
+* under `theme.extend.fontFamily`, and then can be used as a tailwind class, e.g. className='font-satoshi'.
+*/
+
+/* Satoshi Font Family */
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-Bold.woff2') format('woff2');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* third-party libraries CSS */
+
+.tableCheckbox:checked ~ div span {
+  @apply opacity-100;
+}
+.tableCheckbox:checked ~ div {
+  @apply bg-primary border-primary;
+}
+
+.apexcharts-legend-text {
+  @apply !text-muted-foreground;
+}
+.apexcharts-text {
+  @apply !fill-muted-foreground;
+}
+.apexcharts-xcrosshairs {
+  @apply !fill-border;
+}
+.apexcharts-gridline {
+  @apply !stroke-border;
+}
+.apexcharts-series.apexcharts-pie-series path {
+  @apply dark:!stroke-transparent;
+}
+.apexcharts-legend-series {
+  @apply !inline-flex gap-1.5;
+}
+.apexcharts-tooltip.apexcharts-theme-light {
+  @apply dark:!bg-card dark:!border-border;
+}
+.apexcharts-tooltip.apexcharts-theme-light .apexcharts-tooltip-title {
+  @apply dark:!bg-muted dark:!border-border;
+}
+.apexcharts-xaxistooltip, .apexcharts-yaxistooltip {
+  @apply dark:!bg-muted dark:!border-muted dark:!text-muted-foreground;
+}
+.apexcharts-xaxistooltip-bottom:after {
+  @apply dark:!border-b-muted;
+}
+.apexcharts-xaxistooltip-bottom:before {
+  @apply dark:!border-b-muted;
+
+}
+
+.flatpickr-day.selected {
+  @apply bg-primary border-primary hover:bg-primary hover:border-primary;
+}
+.flatpickr-months .flatpickr-prev-month:hover svg,
+.flatpickr-months .flatpickr-next-month:hover svg {
+  @apply fill-primary;
+}
+.flatpickr-calendar.arrowTop:before {
+  @apply dark:!border-b-card;
+}
+.flatpickr-calendar.arrowTop:after {
+  @apply dark:!border-b-card;
+}
+.flatpickr-calendar {
+  @apply dark:!bg-card dark:!text-foreground dark:!shadow-8 !p-6 2xsm:!w-auto;
+}
+.flatpickr-day {
+  @apply dark:!text-foreground;
+}
+.flatpickr-months .flatpickr-prev-month, .flatpickr-months .flatpickr-next-month {
+  @apply !top-7 dark:!text-foreground dark:!fill-foreground;
+}
+.flatpickr-months .flatpickr-prev-month.flatpickr-prev-month, .flatpickr-months .flatpickr-next-month.flatpickr-prev-month {
+  @apply !left-7
+}
+.flatpickr-months .flatpickr-prev-month.flatpickr-next-month, .flatpickr-months .flatpickr-next-month.flatpickr-next-month {
+  @apply !right-7
+}
+span.flatpickr-weekday,
+.flatpickr-months .flatpickr-month {
+  @apply dark:!text-foreground dark:!fill-foreground;
+}
+.flatpickr-day.inRange {
+  @apply dark:!bg-muted dark:!border-muted dark:!shadow-7;
+}
+.flatpickr-day.selected, .flatpickr-day.startRange,
+.flatpickr-day.selected, .flatpickr-day.endRange {
+  @apply dark:!text-primary-foreground;
+}
+
+.map-btn .jvm-zoom-btn {
+  @apply flex items-center justify-center w-7.5 h-7.5 rounded border border-border hover:border-primary bg-background hover:bg-primary text-foreground hover:text-primary-foreground text-2xl leading-none px-0 pt-0 pb-0.5;
+}
+.mapOne .jvm-zoom-btn {
+  @apply left-auto top-auto bottom-0;
+}
+.mapOne .jvm-zoom-btn.jvm-zoomin {
+  @apply right-10;
+}
+.mapOne .jvm-zoom-btn.jvm-zoomout {
+  @apply right-0;
+}
+.mapTwo .jvm-zoom-btn {
+  @apply top-auto bottom-0;
+}
+.mapTwo .jvm-zoom-btn.jvm-zoomin {
+  @apply left-0;
+}
+.mapTwo .jvm-zoom-btn.jvm-zoomout {
+  @apply left-10;
+}
+
+.taskCheckbox:checked ~ .box span {
+  @apply opacity-100;
+}
+.taskCheckbox:checked ~ p {
+  @apply line-through;
+}
+.taskCheckbox:checked ~ .box {
+  @apply bg-primary border-primary dark:border-primary;
+}
+
+.custom-input-date::-webkit-calendar-picker-indicator {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 20px;
+}
+.custom-input-date-1::-webkit-calendar-picker-indicator {
+  background-image: url(./images/icon/icon-calendar.svg);
+}
+.custom-input-date-2::-webkit-calendar-picker-indicator {
+  background-image: url(./images/icon/icon-arrow-down.svg);
+}
+
+[x-cloak] {
+  display: none !important;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --card-accent:  0 0% 100%;
+    --card-accent-foreground: 0 0% 3.9%;
+    --card-subtle: 31 57% 96%;
+    --card-subtle-foreground: 0 0% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 210 100% 13%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 32 100% 37%;
+    --secondary-foreground: 0 0% 9%;
+    --secondary-muted: 32 75% 78%;
+    --secondary-muted-foreground: 0 0% 3.9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 31 57% 93%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 210 50% 5%;
+    --foreground: 0 0% 98%;
+    --card: 210 50% 5%;
+    --card-foreground: 0 0% 98%;
+    --card-accent: 31 57% 93%;
+    --card-accent-foreground: 0 0% 3.9%;
+    --card-subtle: 233 24% 15%;
+    --card-subtle-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 31 57% 93%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 209 91% 61%;
+    --secondary-foreground: 0 0% 98%;
+    --secondary-muted: 210 67% 94%;
+    --secondary-muted-foreground: 0 0% 3.9%;
+    --muted: 210 100% 13%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 31 57% 93%;
+    --accent-foreground: 210 100% 13%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+<<<<<<<
+}
+=======
+  
+  /* Global typography styles */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-satoshi font-black text-4xl sm:text-6xl leading-tight;
+  }
+  
+  p {
+    @apply font-mono text-base leading-relaxed;
+  }
+}
+>>>>>>>
