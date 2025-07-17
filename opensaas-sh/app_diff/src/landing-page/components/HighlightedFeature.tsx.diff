@@ -1,0 +1,16 @@
+--- template/app/src/landing-page/components/HighlightedFeature.tsx
++++ opensaas-sh/app/src/landing-page/components/HighlightedFeature.tsx
+@@ -38,11 +38,11 @@
+   return (
+     <div
+       className={cn(
+-        'flex flex-col items-center my-50 gap-x-20 justify-between px-8 md:px-4 transition-all duration-300 ease-in-out',
++        'flex flex-col items-center my-50 gap-x-20 justify-between px-8 md:px-0',
+         direction === 'row' ? 'md:flex-row' : 'md:flex-row-reverse'
+       )}
+     >
+-      <div className='flex-col flex-1 w-full'>
++      <div className='flex-col flex-1'>
+         <h2 className='text-4xl font-bold mb-2'>{name}</h2>
+         {typeof description === 'string' ? (
+           <p className='text-muted-foreground'>{description}</p>

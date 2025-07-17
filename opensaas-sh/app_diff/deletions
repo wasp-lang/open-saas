@@ -1,3 +1,5 @@
+src/client/static/assets/admin.png
+src/client/static/assets/payments.png
 src/landing-page/components/Hero.tsx
 src/landing-page/contentSections.ts
 src/landing-page/logos/SalesforceLogo.tsx
