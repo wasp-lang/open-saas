@@ -1,0 +1,87 @@
+---
+description: Deploying full-stack wasp apps via the CLI
+globs: 
+alwaysApply: false
+---
+# 7. Deployment (Fly.io via Wasp CLI)
+
+This document outlines the steps to deploy the Wasp application using the Wasp CLI, targeting the Fly.io hosting provider.
+
+For more info on deployments, see the Wasp deployment docs as mentioned in [wasp-overview.mdc](mdc:template/app/.cursor/rules/wasp-overview.mdc) 
+
+## 1. Prerequisites
+
+Before deploying, ensure the following prerequisites are met:
+
+*   **Fly.io Account:** You need an account with Fly.io (https://fly.io/docs/).
+*   **Billing Information:** Fly.io requires credit card information to be added to your account before you can deploy apps, even if you plan to stay within the free tier limits. Add this via your Fly.io account's billing page.
+*   **Install `flyctl` CLI:** The Fly.io command-line interface (`flyctl`) must be installed on your local machine. Follow the installation instructions here: https://fly.io/docs/flyctl/install/
+*   **Login to `flyctl`:** Authenticate the CLI with your Fly.io account by running:
+    ```bash
+    fly auth login
+    ```
+
+## 2. Deployment Steps
+
+The Wasp CLI simplifies deployment to a single command.
+
+1.  **Choose App Name and Region:**
+    *   Decide on a **unique base name** for your application (e.g., `my-budget-app`). This name must be unique across all Fly.io applications.
+    *   Select a Fly.io **region** for deployment (e.g., `mia` for Miami, `ams` for Amsterdam). See Fly.io's regions for a list of available regions.
+
+2.  **Run the Deployment Command:**
+    *   Open your terminal in the root directory of your Wasp project.
+    *   Execute the `wasp deploy fly launch` command, replacing `<your-app-name>` and `<chosen-region>` with your choices:
+        ```bash
+        wasp deploy fly launch <your-app-name> <chosen-region>
+        ```
+        *Example:*
+        ```bash
+        wasp deploy fly launch my-budget-app mia
+        ```
+    *   **Important:** Do **NOT** interrupt (e.g., Ctrl+C) the process while the command is running. It performs multiple steps: setting up the Fly app configuration, creating the database, building the project, and deploying the client and server components.
+
+3.  **Specify Fly.io Organization (If Necessary):**
+    *   If your Fly.io account belongs to multiple organizations, you must specify which one to use by adding the `--org <org-slug>` flag to the command.
+    *   Find your organization slugs by running: `fly orgs list`
+    *   *Example with organization:*
+        ```bash
+        wasp deploy fly launch my-budget-app mia --org my-fly-org-slug
+        ```
+
+## 3. Post-Deployment
+
+*   **Generated Files:** The deployment command creates two configuration files in your project root:
+    *   `fly-server.toml`
+    *   `fly-client.toml`
+    *   **Commit these files** to your version control system (e.g., Git). They contain the deployment configuration and are needed for future updates.
+*   **Accessing Your App:** Once deployment is complete, the CLI will output the URLs for your deployed client and server. The client URL is your main application entry point.
+*   **Updating Your App:** To redeploy changes after committing the `.toml` files, you can simply run:
+    ```bash
+    wasp deploy fly deploy
+    ```
+
+*   **Setting Environment Variables (Secrets):**
+    *   If your application requires environment variables beyond the ones Wasp/Fly set automatically (like `DATABASE_URL`), such as API keys or third-party service credentials (e.g., `SENDGRID_API_KEY`, OAuth client secrets), you need to set them as secrets on Fly.io.
+    *   Use the `wasp deploy fly cmd` command to interact with the `flyctl` CLI in the context of your deployed server app.
+    *   **Command:**
+        ```bash
+        wasp deploy fly cmd --context server secrets set VARIABLE_NAME="VALUE"
+        ```
+        *Replace `VARIABLE_NAME` with the name of your environment variable and `VALUE` with its value. Use quotes around the value if it contains special characters.*
+    *   **Example:**
+        ```bash
+        wasp deploy fly cmd --context server secrets set SENDGRID_API_KEY="SG.your_actual_api_key"
+        ```
+    *   You can list currently set secrets (values will be masked) using:
+        ```bash
+        wasp deploy fly cmd --context server secrets list
+        ```
+    *   **Important:** Set these secrets *after* the initial `launch` command completes but *before* your application fully relies on them. If you add new variables later, you might need to redeploy the server for it to pick them up (`wasp deploy fly deploy`).
+
+## 4. Troubleshooting
+
+*   **Unique Name Error:** If deployment fails due to a non-unique name, choose a different `<your-app-name>` and run the `launch` command again.
+*   **Billing Error:** Ensure you have added valid billing information to your Fly.io account.
+*   **Build Failures:** Check the output logs from the `wasp deploy` command for any build errors in your Wasp project code. Fix the errors and attempt deployment again.
+*   **Check Fly.io Dashboard:** Monitor the status and logs of your applications (`<your-app-name>-client`, `<your-app-name>-server`, `<your-app-name>-db`) directly in the Fly.io dashboard. 

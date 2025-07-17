@@ -5,7 +5,6 @@ interface ExampleApp {
   name: string;
   description: string;
   imageSrc: string;
-  href: string;
 }
 
 /**
@@ -81,7 +80,7 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
 
   return (
     <div ref={containerRef} className='flex flex-col items-center my-10'>
-      <h2 className='mb-6 text-center font-semibold tracking-wide text-muted-foreground'>Used by:</h2>
+      <p className='mb-6 text-center font-semibold tracking-wide text-muted-foreground'>Used by:</p>
       <div className='w-full max-w-full overflow-hidden'>
         <div className='flex overflow-x-auto scroll-smooth pb-10 no-scrollbar snap-x gap-4 px-4'>
           {examples.map((example, index) => (
@@ -92,9 +91,8 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
               variant={index === highlightedIndex ? 'default' : 'faded'}
               onMouseEnter={() => handleMouseEnter(index)}
               onMouseLeave={() => handleMouseLeave(index)}
-              onClick={() => window.open(example.href, '_blank')}
             >
-              <CardContent className='p-0 h-full'>
+              <CardContent className='p-0'>
                 <img src={example.imageSrc} alt={example.name} className='w-full h-auto aspect-video' />
                 <div className='p-4'>
                   <h3 className='text-lg font-bold'>{example.name}</h3>
