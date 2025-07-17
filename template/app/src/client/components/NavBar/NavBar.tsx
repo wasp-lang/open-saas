@@ -47,10 +47,10 @@ export default function AppNavBar({ navigationItems }: { navigationItems: Naviga
   return (
     <>
       {isLandingPage && <Announcement />}
-      <header className='sticky top-4 z-50 transition-all duration-300'>
+      <header className={cn('sticky top-0 z-50 transition-all duration-300', isScrolled && 'top-4')}>
         <div
           className={cn('transition-all duration-300', {
-            'mx-4 md:mx-20 rounded-full shadow-lg bg-background/90 backdrop-blur-lg border border-border mt-4':
+            'mx-4 md:mx-20 rounded-full shadow-lg bg-background/90 backdrop-blur-lg border border-border':
               isScrolled,
             'mx-0 bg-background/80 backdrop-blur-lg border-b border-border': !isScrolled,
           })}
