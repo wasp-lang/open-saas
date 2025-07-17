@@ -14,13 +14,13 @@ export default function Testimonials({ testimonials }: { testimonials: Testimoni
     <div className='mx-auto mt-32 max-w-7xl sm:mt-56 sm:px-6 lg:px-8'>
       <SectionTitle title='What Our Users Say' />
 
-      <div className='relative w-full z-10 px-4 md:px-0 columns-1 md:columns-2 lg:columns-3 gap-6'>
+      <div className='relative w-full z-10 px-4 md:px-0 columns-1 md:columns-2 lg:columns-3 gap-2 md:gap-6'>
         {testimonials.map((testimonial, idx) => (
           <div key={idx} className='break-inside-avoid mb-6'>
-            <Card variant='accent' className='flex flex-col justify-between'>
+            <Card className='flex flex-col justify-between'>
               <CardContent className='p-6'>
-                <blockquote className='text-sm leading-6 mb-4'>
-                  <p className='italic'>{testimonial.quote}</p>
+                <blockquote className='leading-6 mb-4'>
+                  <p className='italic text-sm'>{testimonial.quote}</p>
                 </blockquote>
               </CardContent>
               <CardFooter className='pt-0 flex flex-col'>
