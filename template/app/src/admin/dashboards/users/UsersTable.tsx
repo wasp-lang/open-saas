@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useAuth } from 'wasp/client/auth';
 import { getPaginatedUsers, updateIsUserAdminById, useQuery } from 'wasp/client/operations';
 import { type User } from 'wasp/entities';
 import { Input } from '../../../components/ui/input';
@@ -10,10 +11,14 @@ import LoadingSpinner from '../../layout/LoadingSpinner';
 import DropdownEditDelete from './DropdownEditDelete';
 
 function AdminSwitch({ id, isAdmin }: Pick<User, 'id' | 'isAdmin'>) {
+  const { data: currentUser } = useAuth();
+  const isCurrentUser = currentUser?.id === id;
+
   return (
     <Switch
       checked={isAdmin}
       onCheckedChange={(value) => updateIsUserAdminById({ id: id, isAdmin: value })}
+      disabled={isCurrentUser}
     />
   );
 }
@@ -127,7 +132,7 @@ const UsersTable = () => {
                 </div>
               </div>
               <div className='flex items-center gap-2'>
-                <Label htmlFor='isAdmin-filter' className='text-sm ml-2 text-muted-foreground'>
+                <Label htmlFor='x§-filter' className='text-sm ml-2 text-muted-foreground'>
                   isAdmin:
                 </Label>
                 <Select
