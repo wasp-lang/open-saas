@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from 'wasp/client/auth';
 import { getPaginatedUsers, updateIsUserAdminById, useQuery } from 'wasp/client/operations';
 import { type User } from 'wasp/entities';
+import useDebounce from '../../../client/hooks/useDebounce';
 import { Input } from '../../../components/ui/input';
 import { Label } from '../../../components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
@@ -31,12 +32,14 @@ const UsersTable = () => {
     []
   );
 
+  const debouncedEmailFilter = useDebounce(emailFilter, 300);
+
   const skipPages = currentPage - 1;
 
   const { data, isLoading } = useQuery(getPaginatedUsers, {
     skipPages,
     filter: {
-      ...(emailFilter && { emailContains: emailFilter }),
+      ...(debouncedEmailFilter && { emailContains: debouncedEmailFilter }),
       ...(isAdminFilter !== undefined && { isAdmin: isAdminFilter }),
       ...(subscriptionStatusFilter.length > 0 && { subscriptionStatusIn: subscriptionStatusFilter }),
     },
@@ -46,7 +49,7 @@ const UsersTable = () => {
     function backToPageOne() {
       setCurrentPage(1);
     },
-    [emailFilter, subscriptionStatusFilter, isAdminFilter]
+    [debouncedEmailFilter, subscriptionStatusFilter, isAdminFilter]
   );
 
   return (
@@ -155,7 +158,7 @@ const UsersTable = () => {
                 </Select>
               </div>
             </div>
-            {!isLoading && (
+            {data?.totalPages && (
               <div className='max-w-60 flex flex-row items-center'>
                 <span className='text-md mr-2 text-foreground'>page</span>
                 <Input
@@ -171,13 +174,13 @@ const UsersTable = () => {
                   }}
                   className='w-20'
                 />
-                <span className='text-md text-foreground'> / {data?.totalPages} </span>
+                <span className='text-md text-foreground'> /{data?.totalPages} </span>
               </div>
             )}
           </div>
         </div>
 
-        <div className='grid grid-cols-9 border-t-4  border-border py-4.5 px-4 md:px-6 '>
+        <div className='grid grid-cols-9 border-t-4 border-border py-4.5 px-4 md:px-6 '>
           <div className='col-span-3 flex items-center'>
             <p className='font-medium'>Email / Username</p>
           </div>
@@ -194,15 +197,11 @@ const UsersTable = () => {
             <p className='font-medium'></p>
           </div>
         </div>
-        {isLoading && (
-          <div className='-mt-40'>
-            <LoadingSpinner />
-          </div>
-        )}
+        {isLoading && <LoadingSpinner />}
         {!!data?.users &&
           data?.users?.length > 0 &&
           data.users.map((user) => (
-            <div key={user.id} className='grid grid-cols-9 gap-4 border-t border-border py-4.5 px-4 md:px-6 '>
+            <div key={user.id} className='grid grid-cols-9 gap-4 py-4.5 px-4 md:px-6 '>
               <div className='col-span-3 flex items-center'>
                 <div className='flex flex-col gap-1 '>
                   <p className='text-sm text-foreground'>{user.email}</p>
