@@ -8,11 +8,12 @@ const Breadcrumb = ({ pageName }: BreadcrumbProps) => {
       <h2 className='text-title-md2 font-semibold text-foreground'>{pageName}</h2>
 
       <nav>
-        <ol className='flex items-center gap-2'>
+        <ol className='flex items-center gap-1'>
           <li>
-            <WaspRouterLink to={routes.AdminRoute.to}>Dashboard /</WaspRouterLink>
+            <WaspRouterLink to={routes.AdminRoute.to}>Dashboard</WaspRouterLink>
           </li>
-          <li className='text-primary'>{pageName}</li>
+          <li>/</li>
+          <li className='font-medium'>{pageName}</li>
         </ol>
       </nav>
     </div>
