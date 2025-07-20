@@ -17,7 +17,7 @@ import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Checkbox } from '../components/ui/checkbox';
 import { Input } from '../components/ui/input';
-import type { GeneratedSchedule, MainTask, SubTask } from './schedule';
+import type { GeneratedSchedule, Task as ScheduleTask, TaskItem, TaskPriority } from './schedule';
 
 export default function DemoAppPage() {
   return (
@@ -48,65 +48,65 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
   const [description, setDescription] = useState<string>('');
   const [todaysHours, setTodaysHours] = useState<number>(8);
   const [response, setResponse] = useState<GeneratedSchedule | null>({
-    mainTasks: [
+    tasks: [
       {
         name: 'Respond to emails',
-        priority: 'high',
+        priority: 'high' as TaskPriority,
       },
       {
         name: 'Learn WASP',
-        priority: 'low',
+        priority: 'low' as TaskPriority,
       },
       {
         name: 'Read a book',
-        priority: 'medium',
+        priority: 'medium' as TaskPriority,
       },
     ],
-    subtasks: [
+    taskItems: [
       {
         description: 'Read introduction and chapter 1',
         time: 0.5,
-        mainTaskName: 'Read a book',
+        taskName: 'Read a book',
       },
       {
         description: 'Read chapter 2 and take notes',
         time: 0.3,
-        mainTaskName: 'Read a book',
+        taskName: 'Read a book',
       },
       {
         description: 'Read chapter 3 and summarize key points',
         time: 0.2,
-        mainTaskName: 'Read a book',
+        taskName: 'Read a book',
       },
       {
         description: 'Check and respond to important emails',
         time: 1,
-        mainTaskName: 'Respond to emails',
+        taskName: 'Respond to emails',
       },
       {
         description: 'Organize and prioritize remaining emails',
         time: 0.5,
-        mainTaskName: 'Respond to emails',
+        taskName: 'Respond to emails',
       },
       {
         description: 'Draft responses to urgent emails',
         time: 0.5,
-        mainTaskName: 'Respond to emails',
+        taskName: 'Respond to emails',
       },
       {
         description: 'Watch tutorial video on WASP',
         time: 0.5,
-        mainTaskName: 'Learn WASP',
+        taskName: 'Learn WASP',
       },
       {
         description: 'Complete online quiz on the basics of WASP',
         time: 1.5,
-        mainTaskName: 'Learn WASP',
+        taskName: 'Learn WASP',
       },
       {
         description: 'Review quiz answers and clarify doubts',
         time: 1,
-        mainTaskName: 'Learn WASP',
+        taskName: 'Learn WASP',
       },
     ],
   });
@@ -130,7 +130,7 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
         hours: todaysHours,
       });
       if (response) {
-        setResponse(response);
+        setResponse(response as unknown as GeneratedSchedule);
       }
     } catch (err: any) {
       window.alert('Error: ' + (err.message || 'Something went wrong'));
@@ -225,7 +225,7 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
       {!!response && (
         <div className='flex flex-col'>
           <h3 className='text-lg font-semibold text-foreground mb-4'>Today's Schedule</h3>
-          <TaskTable schedule={response} />
+          <Schedule schedule={response} />
         </div>
       )}
     </div>
@@ -308,77 +308,59 @@ function Todo({ id, isDone, description, time }: TodoProps) {
   );
 }
 
-function TaskTable({ schedule }: { schedule: GeneratedSchedule }) {
+function Schedule({ schedule }: { schedule: GeneratedSchedule }) {
   return (
     <div className='flex flex-col gap-6 py-6'>
       <div className='space-y-4'>
-        {!!schedule.mainTasks ? (
-          schedule.mainTasks
-            .map((mainTask) => (
-              <MainTaskTable key={mainTask.name} mainTask={mainTask} subtasks={schedule.subtasks} />
-            ))
+        {!!schedule.tasks ? (
+          schedule.tasks
+            .map((task) => <TaskCard key={task.name} task={task} taskItems={schedule.taskItems} />)
             .sort((a, b) => {
-              const priorityOrder = ['low', 'medium', 'high'];
-              if (a.props.mainTask.priority && b.props.mainTask.priority) {
+              const priorityOrder: TaskPriority[] = ['low', 'medium', 'high'];
+              if (a.props.task.priority && b.props.task.priority) {
                 return (
-                  priorityOrder.indexOf(b.props.mainTask.priority) -
-                  priorityOrder.indexOf(a.props.mainTask.priority)
+                  priorityOrder.indexOf(b.props.task.priority) - priorityOrder.indexOf(a.props.task.priority)
                 );
               } else {
                 return 0;
               }
             })
         ) : (
-          <div className='text-muted-foreground text-center'>
-            OpenAI didn't return any Main Tasks. Try again.
-          </div>
+          <div className='text-muted-foreground text-center'>OpenAI didn't return any Tasks. Try again.</div>
         )}
       </div>
     </div>
   );
 }
 
-function MainTaskTable({ mainTask, subtasks }: { mainTask: MainTask; subtasks: SubTask[] }) {
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high':
-        return 'bg-destructive/10 border-destructive/20 text-destructive';
-      case 'medium':
-        return 'bg-warning/10 border-warning/20 text-warning-foreground';
-      case 'low':
-        return 'bg-green-500/10 border-green-500/20 text-green-600';
-      default:
-        return 'bg-muted border-border text-foreground';
-    }
+function TaskCard({ task, taskItems }: { task: ScheduleTask; taskItems: TaskItem[] }) {
+  const taskPriorityToColorMap: Record<TaskPriority, string> = {
+    high: 'bg-destructive/10 border-destructive/20 text-destructive',
+    medium: 'bg-warning/10 border-warning/20 text-warning',
+    low: 'bg-success/10 border-success/20 text-success',
   };
 
   return (
-    <Card className={cn('border-2', getPriorityColor(mainTask.priority))}>
+    <Card className={cn('border-2', taskPriorityToColorMap[task.priority])}>
       <CardHeader className='pb-3'>
         <CardTitle className='flex items-center justify-between text-base'>
-          <span>{mainTask.name}</span>
-          <span className='opacity-70 text-xs font-medium italic'> {mainTask.priority} priority</span>
+          <span>{task.name}</span>
+          <span className='text-xs font-medium italic'> {task.priority} priority</span>
         </CardTitle>
       </CardHeader>
       <CardContent className='pt-0'>
-        {!!subtasks ? (
-          <div className='space-y-2'>
-            {subtasks.map((subtask) => {
-              if (subtask.mainTaskName === mainTask.name) {
-                return (
-                  <SubtaskTable
-                    key={subtask.description}
-                    description={subtask.description}
-                    time={subtask.time}
-                  />
-                );
+        {!!taskItems ? (
+          <ul className='space-y-2'>
+            {taskItems.map((taskItem) => {
+              if (taskItem.taskName === task.name) {
+                return <TaskCardStep key={taskItem.description} {...taskItem} />;
               }
               return null;
             })}
-          </div>
+          </ul>
         ) : (
           <div className='text-muted-foreground text-center'>
-            OpenAI didn't return any Subtasks. Try again.
+            OpenAI didn't return any Task Items. Try again.
           </div>
         )}
       </CardContent>
@@ -386,24 +368,27 @@ function MainTaskTable({ mainTask, subtasks }: { mainTask: MainTask; subtasks: S
   );
 }
 
-function SubtaskTable({ description, time }: { description: string; time: number }) {
+function TaskCardStep({ description, time }: TaskItem) {
   const [isDone, setIsDone] = useState<boolean>(false);
 
-  const convertHrsToMinutes = (time: number) => {
-    if (time === 0) return 0;
+  const formattedTime = useMemo(() => {
+    if (time === 0) return '0min';
     const hours = Math.floor(time);
     const minutes = Math.round((time - hours) * 60);
-    return `${hours > 0 ? hours + 'hr' : ''} ${minutes > 0 ? minutes + 'min' : ''}`;
-  };
 
-  const minutes = useMemo(() => convertHrsToMinutes(time), [time]);
+    const parts: string[] = [];
+    if (hours > 0) parts.push(`${hours}hr`);
+    if (minutes > 0) parts.push(`${minutes}min`);
+
+    return parts.join(' ');
+  }, [time]);
 
   const handleCheckedChange = (checked: boolean | 'indeterminate') => {
     setIsDone(checked === true);
   };
 
   return (
-    <div className='flex items-center justify-between gap-4 p-2 rounded-md bg-muted/30'>
+    <li className='flex items-center justify-between gap-4 p-2 rounded-md'>
       <div className='flex items-center gap-3 flex-1'>
         <Checkbox
           checked={isDone}
@@ -423,8 +408,8 @@ function SubtaskTable({ description, time }: { description: string; time: number
           'line-through text-muted-foreground opacity-50': isDone,
         })}
       >
-        {minutes}
+        {formattedTime}
       </span>
-    </div>
+    </li>
   );
 }

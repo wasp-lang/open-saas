@@ -1,7 +1,7 @@
 --- template/app/src/client/components/NavBar/NavBar.tsx
 +++ opensaas-sh/app/src/client/components/NavBar/NavBar.tsx
-@@ -24,7 +24,7 @@
-       'h-6 w-6': isScrolled,
+@@ -237,7 +237,7 @@
+       'size-6': isScrolled,
      })}
      src={logo}
 -    alt='Your SaaS App'
@@ -9,47 +9,3 @@
    />
  );
  
-@@ -75,7 +75,7 @@
-                       'ml-2 text-xs': isScrolled,
-                     })}
-                   >
--                    Your SaaS
-+                    Open SaaS
-                   </span>
-                 )}
-               </WaspRouterLink>
-@@ -205,32 +205,4 @@
-       </ReactRouterLink>
-     );
-   });
--}
--
--const ContestURL = 'https://github.com/wasp-lang/wasp';
--
--function Announcement() {
--  return (
--    <div className='flex justify-center items-center gap-3 p-3 w-full bg-gradient-to-r from-accent to-secondary font-semibold text-primary-foreground text-center z-49'>
--      <p
--        onClick={() => window.open(ContestURL, '_blank')}
--        className='hidden lg:block cursor-pointer hover:opacity-90 hover:drop-shadow transition-opacity'
--      >
--        Support Open-Source Software!
--      </p>
--      <div className='hidden lg:block self-stretch w-0.5 bg-primary-foreground/20'></div>
--      <div
--        onClick={() => window.open(ContestURL, '_blank')}
--        className='hidden lg:block cursor-pointer rounded-full bg-background/20 px-2.5 py-1 text-xs hover:bg-background/30 transition-colors tracking-wider'
--      >
--        Star Our Repo on Github ⭐️ →
--      </div>
--      <div
--        onClick={() => window.open(ContestURL, '_blank')}
--        className='lg:hidden cursor-pointer rounded-full bg-background/20 px-2.5 py-1 text-xs hover:bg-background/30 transition-colors'
--      >
--        ⭐️ Star the Our Repo on Github and Support Open-Source! ⭐️
--      </div>
--    </div>
--  );
--}
-+}
-\ No newline at end of file

@@ -27,7 +27,7 @@ export default function NavBar({ navigationItems }: { navigationItems: Navigatio
   useEffect(() => {
     const throttledHandler = throttleWithTrailingInvocation(() => {
       setIsScrolled(window.scrollY > 0);
-    }, 100);
+    }, 50);
 
     window.addEventListener('scroll', throttledHandler);
 
