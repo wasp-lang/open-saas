@@ -52,7 +52,7 @@ function TopGradient() {
       aria-hidden='true'
     >
       <div
-        className='aspect-[1020/880] w-[55rem] flex-none sm:right-1/4 sm:translate-x-1/2 dark:hidden bg-gradient-to-tr from-amber-400 to-purple-300 opacity-40'
+        className='aspect-[1020/880] w-[55rem] flex-none sm:right-1/4 sm:translate-x-1/2 dark:hidden bg-gradient-to-tr from-success to-accent opacity-40'
         style={{
           clipPath: 'polygon(80% 20%, 90% 55%, 50% 100%, 70% 30%, 20% 50%, 50% 0)',
         }}
@@ -68,7 +68,7 @@ function BottomGradient() {
       aria-hidden='true'
     >
       <div
-        className='relative aspect-[1020/880] sm:-left-3/4 sm:translate-x-1/4 dark:hidden bg-gradient-to-br from-amber-400 to-purple-300  opacity-50 w-[72.1875rem]'
+        className='relative aspect-[1020/880] sm:-left-3/4 sm:translate-x-1/4 dark:hidden bg-gradient-to-br from-accent to-destructive opacity-50 w-[72.1875rem]'
         style={{
           clipPath: 'ellipse(80% 30% at 80% 50%)',
         }}

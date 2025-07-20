@@ -1,10 +1,9 @@
-import { ChevronDown } from 'lucide-react';
-import { CgProfile } from 'react-icons/cg';
-import { type User } from 'wasp/entities';
+import { ChevronDown, User } from 'lucide-react';
+import { type User as UserEntity } from 'wasp/entities';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '../components/ui/dropdown-menu';
 import { UserMenuItems } from './UserMenuItems';
 
-const DropdownUser = ({ user }: { user: Partial<User> }) => {
+const DropdownUser = ({ user }: { user: Partial<UserEntity> }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -12,7 +11,7 @@ const DropdownUser = ({ user }: { user: Partial<User> }) => {
           <span className='hidden text-right lg:block'>
             <span className='block text-sm font-medium text-foreground'>{user.username}</span>
           </span>
-          <CgProfile size='1.1rem' className='ml-1 mt-[0.1rem]' />
+          <User />
           <ChevronDown className='h-4 w-4' />
         </button>
       </DropdownMenuTrigger>

@@ -1,4 +1,3 @@
-import { logout } from 'wasp/client/auth';
 import { getCustomerPortalUrl, useQuery } from 'wasp/client/operations';
 import { Link as WaspRouterLink, routes } from 'wasp/client/router';
 import type { User } from 'wasp/entities';
@@ -59,11 +58,6 @@ export default function AccountPage({ user }: { user: User }) {
           </div>
         </CardContent>
       </Card>
-      <div className='inline-flex w-full justify-end'>
-        <Button onClick={logout} variant='destructive' className='mx-8'>
-          Logout
-        </Button>
-      </div>
     </div>
   );
 }

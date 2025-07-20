@@ -1,6 +1,5 @@
+import { LogIn, Menu } from 'lucide-react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { BiLogIn } from 'react-icons/bi';
-import { HiBars3 } from 'react-icons/hi2';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import { useAuth } from 'wasp/client/auth';
 import { Link as WaspRouterLink, routes } from 'wasp/client/router';
@@ -87,7 +86,7 @@ export default function NavBar({ navigationItems }: { navigationItems: Navigatio
                     )}
                   >
                     <span className='sr-only'>Open main menu</span>
-                    <HiBars3
+                    <Menu
                       className={cn('transition-all duration-300', {
                         'h-6 w-6': !isScrolled,
                         'h-5 w-5': isScrolled,
@@ -114,7 +113,7 @@ export default function NavBar({ navigationItems }: { navigationItems: Navigatio
                         {isUserLoading ? null : !user ? (
                           <WaspRouterLink to={routes.LoginRoute.to}>
                             <div className='flex justify-end items-center duration-300 ease-in-out text-foreground hover:text-primary transition-colors'>
-                              Log in <BiLogIn size='1.1rem' className='ml-1' />
+                              Log in <LogIn size='1.1rem' className='ml-1' />
                             </div>
                           </WaspRouterLink>
                         ) : (
@@ -146,7 +145,7 @@ export default function NavBar({ navigationItems }: { navigationItems: Navigatio
                 >
                   <div className='flex items-center duration-300 ease-in-out text-foreground hover:text-primary transition-colors'>
                     Log in{' '}
-                    <BiLogIn
+                    <LogIn
                       size={isScrolled ? '1rem' : '1.1rem'}
                       className={cn('transition-all duration-300', {
                         'ml-1 mt-[0.1rem]': !isScrolled,

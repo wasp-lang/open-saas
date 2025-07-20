@@ -9,9 +9,8 @@ import {
   useQuery,
 } from 'wasp/client/operations';
 
+import { Loader2, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { CgSpinner } from 'react-icons/cg';
-import { TiDelete } from 'react-icons/ti';
 import { cn } from '../client/cn';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
@@ -214,7 +213,7 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
       >
         {isPlanGenerating ? (
           <>
-            <CgSpinner className='inline-block mr-2 animate-spin' />
+            <Loader2 className='inline-block mr-2 animate-spin' />
             Generating...
           </>
         ) : (
@@ -300,7 +299,7 @@ function Todo({ id, isDone, description, time }: TodoProps) {
             title='Remove task'
             className='p-1 h-auto text-destructive hover:text-destructive/80'
           >
-            <TiDelete size='20' />
+            <Trash2 size='20' />
           </Button>
         </div>
       </div>

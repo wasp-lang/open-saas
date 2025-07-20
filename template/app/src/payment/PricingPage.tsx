@@ -1,5 +1,5 @@
+import { CheckCircle } from 'lucide-react';
 import { useState } from 'react';
-import { AiFillCheckCircle } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from 'wasp/client/auth';
 import { generateCheckoutSession, getCustomerPortalUrl, useQuery } from 'wasp/client/operations';
@@ -127,7 +127,7 @@ const PricingPage = () => {
               className={cn(
                 'relative flex flex-col grow justify-between overflow-hidden transition-all duration-300 hover:shadow-lg',
                 {
-                  'ring-2 ring-primary': planId === bestDealPaymentPlanId,
+                  'ring-2 ring-primary !bg-transparent': planId === bestDealPaymentPlanId,
                   'ring-1 ring-border lg:mt-8': planId !== bestDealPaymentPlanId,
                 }
               )}
@@ -138,7 +138,7 @@ const PricingPage = () => {
                   aria-hidden='true'
                 >
                   <div
-                    className='absolute w-full h-full bg-gradient-to-br from-primary/20 to-primary/10 opacity-30'
+                    className='absolute w-full h-full bg-gradient-to-br from-primary/40 via-primary/20 to-primary/10 opacity-30'
                     style={{
                       clipPath: 'circle(670% at 50% 50%)',
                     }}
@@ -166,7 +166,7 @@ const PricingPage = () => {
                   <ul role='list' className='mt-8 space-y-3 text-sm leading-6 text-muted-foreground'>
                     {paymentPlanCards[planId].features.map((feature) => (
                       <li key={feature} className='flex gap-x-3'>
-                        <AiFillCheckCircle className='h-6 w-5 flex-none text-primary' aria-hidden='true' />
+                        <CheckCircle className='h-5 w-5 flex-none text-primary' aria-hidden='true' />
                         {feature}
                       </li>
                     ))}
