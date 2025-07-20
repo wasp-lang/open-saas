@@ -55,10 +55,10 @@ export default function NavBar({ navigationItems }: { navigationItems: Navigatio
             })}
             aria-label='Global'
           >
-            <div className='flex items-center lg:flex-1'>
+            <div className='flex items-center gap-6'>
               <WaspRouterLink
                 to={routes.LandingPageRoute.to}
-                className='flex items-center -m-1.5 p-1.5 text-foreground duration-300 ease-in-out hover:text-primary transition-colors'
+                className='flex items-center text-foreground duration-300 ease-in-out hover:text-primary transition-colors'
               >
                 <NavLogo isScrolled={isScrolled} />
                 {isLandingPage && (
@@ -72,6 +72,10 @@ export default function NavBar({ navigationItems }: { navigationItems: Navigatio
                   </span>
                 )}
               </WaspRouterLink>
+
+              <ol className='hidden lg:flex items-center gap-6 ml-4'>
+                {renderNavigationItems(navigationItems)}
+              </ol>
             </div>
             <div className='flex lg:hidden'>
               <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
@@ -79,11 +83,7 @@ export default function NavBar({ navigationItems }: { navigationItems: Navigatio
                   <button
                     type='button'
                     className={cn(
-                      'inline-flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors',
-                      {
-                        '-m-2.5 p-2.5': !isScrolled,
-                        '-m-1.5 p-1.5': isScrolled,
-                      }
+                      'inline-flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors'
                     )}
                   >
                     <span className='sr-only'>Open main menu</span>
@@ -99,7 +99,7 @@ export default function NavBar({ navigationItems }: { navigationItems: Navigatio
                 <SheetContent side='right' className='w-[300px] sm:w-[400px]'>
                   <SheetHeader>
                     <SheetTitle className='flex items-center'>
-                      <WaspRouterLink to={routes.LandingPageRoute.to} className='-m-1.5 p-1.5'>
+                      <WaspRouterLink to={routes.LandingPageRoute.to}>
                         <span className='sr-only'>Your SaaS</span>
                         <NavLogo isScrolled={false} />
                       </WaspRouterLink>
@@ -107,9 +107,9 @@ export default function NavBar({ navigationItems }: { navigationItems: Navigatio
                   </SheetHeader>
                   <div className='mt-6 flow-root'>
                     <div className='-my-6 divide-y divide-border'>
-                      <div className='space-y-2 py-6'>
+                      <ol className='space-y-2 py-6'>
                         {renderNavigationItems(navigationItems, setMobileMenuOpen)}
-                      </div>
+                      </ol>
                       <div className='py-6'>
                         {isUserLoading ? null : !user ? (
                           <WaspRouterLink to={routes.LoginRoute.to}>
@@ -131,14 +131,7 @@ export default function NavBar({ navigationItems }: { navigationItems: Navigatio
                 </SheetContent>
               </Sheet>
             </div>
-            <div
-              className={cn('hidden lg:flex transition-all duration-300', {
-                'lg:gap-x-8': !isScrolled,
-                'lg:gap-x-6': isScrolled,
-              })}
-            >
-              {renderNavigationItems(navigationItems)}
-            </div>
+
             <div className='hidden lg:flex lg:flex-1 gap-3 justify-end items-center'>
               <ul className='flex justify-center items-center gap-2 sm:gap-4'>
                 <DarkModeSwitcher />
@@ -216,22 +209,23 @@ function renderNavigationItems(
   setMobileMenuOpen?: Dispatch<SetStateAction<boolean>>
 ) {
   const menuStyles = cn({
-    '-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-foreground hover:bg-accent hover:text-accent-foreground transition-colors':
+    'block rounded-lg px-3 py-2 text-sm font-medium leading-7 text-foreground hover:bg-accent hover:text-accent-foreground transition-colors':
       !!setMobileMenuOpen,
-    'text-sm font-semibold leading-6 text-foreground duration-300 ease-in-out hover:text-primary transition-colors':
+    'text-sm font-normal leading-6 text-foreground duration-300 ease-in-out hover:text-primary transition-colors':
       !setMobileMenuOpen,
   });
 
   return navigationItems.map((item) => {
     return (
-      <ReactRouterLink
-        to={item.to}
-        key={item.name}
-        className={menuStyles}
-        onClick={setMobileMenuOpen && (() => setMobileMenuOpen(false))}
-      >
-        {item.name}
-      </ReactRouterLink>
+      <li key={item.name}>
+        <ReactRouterLink
+          to={item.to}
+          className={menuStyles}
+          onClick={setMobileMenuOpen && (() => setMobileMenuOpen(false))}
+        >
+          {item.name}
+        </ReactRouterLink>
+      </li>
     );
   });
 }
@@ -269,7 +263,7 @@ function Announcement() {
         onClick={() => window.open(ContestURL, '_blank')}
         className='lg:hidden cursor-pointer rounded-full bg-background/20 px-2.5 py-1 text-xs hover:bg-background/30 transition-colors'
       >
-        ⭐️ Star the Our Repo on Github and Support Open-Source! ⭐️
+        ⭐️ Star the Our Repo and Support Open-Source! ⭐️
       </div>
     </div>
   );
