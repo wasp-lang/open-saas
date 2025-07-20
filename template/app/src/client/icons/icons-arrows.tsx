@@ -1,7 +1,7 @@
 export function UpArrow() {
   return (
     <svg
-      className='fill-meta-3'
+      className='fill-primary'
       width='10'
       height='11'
       viewBox='0 0 10 11'
@@ -19,7 +19,7 @@ export function UpArrow() {
 export function DownArrow() {
   return (
     <svg
-      className='fill-meta-5'
+      className='fill-primary'
       width='10'
       height='11'
       viewBox='0 0 10 11'
