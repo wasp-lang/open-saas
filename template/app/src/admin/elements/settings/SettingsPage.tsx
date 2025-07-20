@@ -92,7 +92,7 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
                       Username
                     </Label>
                     <Input
-                      type='text'
+                      type='username'
                       name='Username'
                       id='Username'
                       placeholder='devidjhon24'
