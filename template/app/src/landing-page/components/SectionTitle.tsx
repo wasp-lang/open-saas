@@ -8,7 +8,7 @@ export default function SectionTitle({
 }) {
   const titleElement =
     typeof title === 'string' ? (
-      <h3 className='mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-5xl'>{title}</h3>
+      <h4 className='mt-2 text-4xl font-bold tracking-tight text-foreground sm:text-5xl'>{title}</h4>
     ) : (
       title
     );
