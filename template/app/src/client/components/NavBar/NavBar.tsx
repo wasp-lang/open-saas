@@ -25,12 +25,16 @@ export default function NavBar({ navigationItems }: { navigationItems: Navigatio
   const { data: user, isLoading: isUserLoading } = useAuth();
 
   useEffect(() => {
-    const handleScroll = () => {
+    const throttledHandler = throttleWithTrailingInvocation(() => {
       setIsScrolled(window.scrollY > 0);
-    };
+    }, 100);
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', throttledHandler);
+
+    return () => {
+      window.removeEventListener('scroll', throttledHandler);
+      throttledHandler.cancel();
+    };
   }, []);
 
   return (
@@ -171,6 +175,42 @@ export default function NavBar({ navigationItems }: { navigationItems: Navigatio
   );
 }
 
+function throttleWithTrailingInvocation(fn: () => void, delay: number) {
+  let fnLastCallTime: number | null = null;
+  let trailingInvocationTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  let isTrailingInvocationPending = false;
+
+  const throttledFn = () => {
+    const now = Date.now();
+
+    const callFn = () => {
+      fnLastCallTime = Date.now();
+      fn();
+    };
+
+    if (fnLastCallTime === null || now - fnLastCallTime >= delay) {
+      callFn();
+    } else {
+      if (!isTrailingInvocationPending) {
+        isTrailingInvocationPending = true;
+        const trailingInvocationTimeout = delay - (now - fnLastCallTime);
+        trailingInvocationTimeoutId = setTimeout(() => {
+          callFn();
+          isTrailingInvocationPending = false;
+        }, trailingInvocationTimeout);
+      }
+    }
+  };
+
+  throttledFn.cancel = () => {
+    if (trailingInvocationTimeoutId) {
+      clearTimeout(trailingInvocationTimeoutId);
+    }
+  };
+
+  return throttledFn;
+}
+
 function renderNavigationItems(
   navigationItems: NavigationItem[],
   setMobileMenuOpen?: Dispatch<SetStateAction<boolean>>
@@ -195,6 +235,17 @@ function renderNavigationItems(
     );
   });
 }
+
+const NavLogo = ({ isScrolled }: { isScrolled: boolean }) => (
+  <img
+    className={cn('transition-all duration-500', {
+      'size-8': !isScrolled,
+      'size-6': isScrolled,
+    })}
+    src={logo}
+    alt='Your SaaS App'
+  />
+);
 
 const ContestURL = 'https://github.com/wasp-lang/wasp';
 
@@ -223,14 +274,3 @@ function Announcement() {
     </div>
   );
 }
-
-const NavLogo = ({ isScrolled }: { isScrolled: boolean }) => (
-  <img
-    className={cn('transition-all duration-500', {
-      'size-8': !isScrolled,
-      'size-6': isScrolled,
-    })}
-    src={logo}
-    alt='Your SaaS App'
-  />
-);
