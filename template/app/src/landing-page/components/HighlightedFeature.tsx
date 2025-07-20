@@ -38,7 +38,7 @@ const HighlightedFeature = ({
   return (
     <div
       className={cn(
-        'flex flex-col items-center my-50 gap-x-20 justify-between px-8 md:px-4 transition-all duration-300 ease-in-out',
+        'flex flex-col items-center my-50 gap-x-20 gap-y-10 justify-between px-8 md:px-4 transition-all duration-300 ease-in-out',
         direction === 'row' ? 'md:flex-row' : 'md:flex-row-reverse'
       )}
     >
@@ -51,7 +51,10 @@ const HighlightedFeature = ({
         )}
       </div>
       <div
-        className={cn('flex-1 my-10 transition-transform duration-300 ease-in-out', rotate && rotateClass)}
+        className={cn(
+          'flex flex-1 my-10 transition-transform duration-300 ease-in-out w-full items-center justify-center',
+          rotate && rotateClass
+        )}
       >
         {highlightedComponent}
       </div>

@@ -71,7 +71,7 @@ const FeaturesGrid = ({ features, className = '' }: FeaturesGridProps) => {
                     )}
                   </div>
                   <CardTitle className={cn(align === 'center' ? 'text-center' : 'text-left')}>
-                    <span className='text-sm'>{feature.name}</span>
+                    {feature.name}
                   </CardTitle>
                 </div>
                 <CardDescription
