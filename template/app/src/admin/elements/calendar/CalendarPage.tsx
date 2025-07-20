@@ -48,8 +48,8 @@ const Calendar = ({ user }: { user: AuthUser }) => {
           <tbody>
             {/* <!-- Line 1 --> */}
             <tr className='grid grid-cols-7'>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>1</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>1</span>
                 <div className='group h-16 w-full flex-grow cursor-pointer py-1 md:h-30'>
                   <span className='group-hover:text-primary md:hidden'>More</span>
                   <div className='event invisible absolute left-2 z-99 mb-1 flex w-[200%] flex-col rounded-sm border-l-[3px] border-primary bg-muted px-3 py-1 text-left opacity-0 group-hover:visible group-hover:opacity-100 md:visible md:w-[190%] md:opacity-100'>
@@ -58,89 +58,89 @@ const Calendar = ({ user }: { user: AuthUser }) => {
                   </div>
                 </div>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>2</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>2</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground '>3</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>3</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>4</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>4</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>5</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>5</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>6</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>6</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>7</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>7</span>
               </td>
             </tr>
             {/* <!-- Line 1 --> */}
             {/* <!-- Line 2 --> */}
             <tr className='grid grid-cols-7'>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>8</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>8</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>9</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>9</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>10</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>10</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>11</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>11</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>12</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>12</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>13</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>13</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>14</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>14</span>
               </td>
             </tr>
             {/* <!-- Line 2 --> */}
             {/* <!-- Line 3 --> */}
             <tr className='grid grid-cols-7'>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>15</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>15</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>16</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>16</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>17</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>17</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>18</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>18</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>19</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>19</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>20</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>20</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>21</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>21</span>
               </td>
             </tr>
             {/* <!-- Line 3 --> */}
             {/* <!-- Line 4 --> */}
             <tr className='grid grid-cols-7'>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>22</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>22</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>23</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>23</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>24</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>24</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>25</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>25</span>
                 <div className='group h-16 w-full flex-grow cursor-pointer py-1 md:h-30'>
                   <span className='group-hover:text-primary md:hidden'>More</span>
                   <div className='event invisible absolute left-2 z-99 mb-1 flex w-[300%] flex-col rounded-sm border-l-[3px] border-primary bg-muted px-3 py-1 text-left opacity-0 group-hover:visible group-hover:opacity-100 md:visible md:w-[290%] md:opacity-100'>
@@ -149,39 +149,39 @@ const Calendar = ({ user }: { user: AuthUser }) => {
                   </div>
                 </div>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>26</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>26</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>27</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>27</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>28</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>28</span>
               </td>
             </tr>
             {/* <!-- Line 4 --> */}
             {/* <!-- Line 5 --> */}
             <tr className='grid grid-cols-7'>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>29</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>29</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>30</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>30</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>31</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>31</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>1</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>1</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>2</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>2</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>3</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>3</span>
               </td>
-              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 hover:bg-accent md:h-25 md:p-6 xl:h-31'>
-                <span className='font-medium text-foreground'>4</span>
+              <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
+                <span className='font-medium'>4</span>
               </td>
             </tr>
             {/* <!-- Line 5 --> */}
