@@ -61,7 +61,7 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
                         Phone Number
                       </Label>
                       <Input
-                        type='text'
+                        type='tel'
                         name='phoneNumber'
                         id='phoneNumber'
                         placeholder='+990 3343 7865'
