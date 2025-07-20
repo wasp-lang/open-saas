@@ -1,8 +1,11 @@
+import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useAuth } from 'wasp/client/auth';
 import { getPaginatedUsers, updateIsUserAdminById, useQuery } from 'wasp/client/operations';
 import { type User } from 'wasp/entities';
 import useDebounce from '../../../client/hooks/useDebounce';
+import { Button } from '../../../components/ui/button';
+import { Checkbox } from '../../../components/ui/checkbox';
 import { Input } from '../../../components/ui/input';
 import { Label } from '../../../components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
@@ -28,7 +31,7 @@ const UsersTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [emailFilter, setEmailFilter] = useState<string | undefined>(undefined);
   const [isAdminFilter, setIsAdminFilter] = useState<boolean | undefined>(undefined);
-  const [subscriptionStatusFilter, setSubcriptionStatusFilter] = useState<Array<SubscriptionStatus | null>>(
+  const [subscriptionStatusFilter, setSubscriptionStatusFilter] = useState<Array<SubscriptionStatus | null>>(
     []
   );
 
@@ -52,6 +55,23 @@ const UsersTable = () => {
     [debouncedEmailFilter, subscriptionStatusFilter, isAdminFilter]
   );
 
+  const handleStatusToggle = (status: SubscriptionStatus | null) => {
+    setSubscriptionStatusFilter((prev) => {
+      if (prev.includes(status)) {
+        return prev.filter((s) => s !== status);
+      } else {
+        return [...prev, status];
+      }
+    });
+  };
+
+  const clearAllStatusFilters = () => {
+    setSubscriptionStatusFilter([]);
+  };
+
+  const hasActiveFilters =
+    debouncedEmailFilter || isAdminFilter !== undefined || subscriptionStatusFilter.length > 0;
+
   return (
     <div className='flex flex-col gap-4'>
       <div className='rounded-sm border border-border bg-card shadow'>
@@ -74,68 +94,73 @@ const UsersTable = () => {
               <Label htmlFor='status-filter' className='text-sm ml-2 text-muted-foreground'>
                 status:
               </Label>
-              <div className='flex-grow relative z-20'>
-                <div className='flex items-center'>
-                  {subscriptionStatusFilter.length > 0 ? (
-                    subscriptionStatusFilter.map((opt) => (
-                      <span
-                        key={opt}
-                        className='z-30 flex items-center my-1 mx-2 py-1 px-2 outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-muted'
-                      >
-                        {opt ? opt : 'has not subscribed'}
-                        <span
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSubcriptionStatusFilter((prevValue) => {
-                              return prevValue?.filter((val) => val !== opt);
-                            });
-                          }}
-                          className='z-30 cursor-pointer pl-2 hover:text-destructive'
-                        >
-                          <XIcon />
-                        </span>
-                      </span>
-                    ))
-                  ) : (
-                    <Select
-                      onValueChange={(value) => {
-                        const selectedValue = value === 'has_not_subscribed' ? null : value;
-
-                        console.log(selectedValue);
-                        if (selectedValue === 'clear-all') {
-                          setSubcriptionStatusFilter([]);
-                        } else {
-                          setSubcriptionStatusFilter((prevValue) => {
-                            if (prevValue.includes(selectedValue as SubscriptionStatus)) {
-                              return prevValue.filter((val) => val !== selectedValue);
-                            } else {
-                              return [...prevValue, selectedValue as SubscriptionStatus];
-                            }
-                          });
-                        }
-                      }}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder='Select Status Filter' />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {[...Object.values(SubscriptionStatus), null]
-                          .filter((status) => !subscriptionStatusFilter.includes(status))
-                          .map((status) => {
-                            const extendedStatus = status ?? 'has_not_subscribed';
-                            return (
-                              <SelectItem key={extendedStatus} value={extendedStatus}>
-                                {extendedStatus}
-                              </SelectItem>
-                            );
-                          })}
-                      </SelectContent>
-                    </Select>
-                  )}
-                </div>
+              <div className='relative'>
+                <Select>
+                  <SelectTrigger className='w-full min-w-[200px]'>
+                    <SelectValue placeholder='Select Status Filter' />
+                  </SelectTrigger>
+                  <SelectContent className='w-[300px]'>
+                    <div className='p-2'>
+                      <div className='flex items-center justify-between mb-2'>
+                        <span className='text-sm font-medium'>Subscription Status</span>
+                        {subscriptionStatusFilter.length > 0 && (
+                          <button
+                            onClick={clearAllStatusFilters}
+                            className='text-xs text-muted-foreground hover:text-foreground'
+                          >
+                            Clear all
+                          </button>
+                        )}
+                      </div>
+                      <div className='space-y-2'>
+                        <div className='flex items-center space-x-2'>
+                          <Checkbox
+                            id='all-statuses'
+                            checked={subscriptionStatusFilter.length === 0}
+                            onCheckedChange={() => clearAllStatusFilters()}
+                          />
+                          <label
+                            htmlFor='all-statuses'
+                            className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+                          >
+                            All Statuses
+                          </label>
+                        </div>
+                        <div className='flex items-center space-x-2'>
+                          <Checkbox
+                            id='has-not-subscribed'
+                            checked={subscriptionStatusFilter.includes(null)}
+                            onCheckedChange={() => handleStatusToggle(null)}
+                          />
+                          <label
+                            htmlFor='has-not-subscribed'
+                            className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+                          >
+                            Has Not Subscribed
+                          </label>
+                        </div>
+                        {Object.values(SubscriptionStatus).map((status) => (
+                          <div key={status} className='flex items-center space-x-2'>
+                            <Checkbox
+                              id={status}
+                              checked={subscriptionStatusFilter.includes(status)}
+                              onCheckedChange={() => handleStatusToggle(status)}
+                            />
+                            <label
+                              htmlFor={status}
+                              className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+                            >
+                              {status}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </SelectContent>
+                </Select>
               </div>
               <div className='flex items-center gap-2'>
-                <Label htmlFor='x§-filter' className='text-sm ml-2 text-muted-foreground'>
+                <Label htmlFor='admin-filter' className='text-sm ml-2 text-muted-foreground'>
                   isAdmin:
                 </Label>
                 <Select
@@ -178,6 +203,24 @@ const UsersTable = () => {
               </div>
             )}
           </div>
+          {hasActiveFilters && (
+            <div className='flex items-center gap-2 px-2 pt-2 border-border'>
+              <span className='text-sm font-medium text-muted-foreground'>Active Filters:</span>
+              <div className='flex flex-wrap gap-2'>
+                {subscriptionStatusFilter.map((status) => (
+                  <Button
+                    key={status ?? 'null'}
+                    variant='outline'
+                    size='sm'
+                    onClick={() => handleStatusToggle(status)}
+                  >
+                    <X className='w-3 h-3 mr-1' />
+                    {status ?? 'Has Not Subscribed'}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className='grid grid-cols-9 border-t-4 border-border py-4.5 px-4 md:px-6 '>
@@ -240,19 +283,6 @@ function ChevronDownIcon() {
           fill='#637381'
         ></path>
       </g>
-    </svg>
-  );
-}
-
-function XIcon() {
-  return (
-    <svg width='14' height='14' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'>
-      <path
-        fillRule='evenodd'
-        clipRule='evenodd'
-        d='M9.35355 3.35355C9.54882 3.15829 9.54882 2.84171 9.35355 2.64645C9.15829 2.45118 8.84171 2.45118 8.64645 2.64645L6 5.29289L3.35355 2.64645C3.15829 2.45118 2.84171 2.45118 2.64645 2.64645C2.45118 2.84171 2.45118 3.15829 2.64645 3.35355L5.29289 6L2.64645 8.64645C2.45118 8.84171 2.45118 9.15829 2.64645 9.35355C2.84171 9.54882 3.15829 9.54882 3.35355 9.35355L6 6.70711L8.64645 9.35355C8.84171 9.54882 9.15829 9.54882 9.35355 9.35355C9.54882 9.15829 9.54882 8.84171 9.35355 8.64645L6.70711 6L9.35355 3.35355Z'
-        fill='currentColor'
-      ></path>
     </svg>
   );
 }
