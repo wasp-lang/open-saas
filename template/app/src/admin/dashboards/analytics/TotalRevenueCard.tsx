@@ -21,7 +21,7 @@ const TotalRevenueCard = ({ dailyStats, weeklyStats, isLoading }: DailyStatsProp
 
   return (
     <div className='rounded-sm border border-border bg-card py-6 px-7.5 shadow-default'>
-      <div className='flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2'>
+      <div className='flex h-11.5 w-11.5 items-center justify-center rounded-full bg-muted'>
         <svg
           className='fill-primary'
           width='20'
