@@ -9,29 +9,25 @@ interface ExampleApp {
 }
 
 /**
- * Horizontally scrollable carousel of example apps.
+ * Infinite horizontally scrolling carousel of example apps.
  *
  * @param examples - The examples to display in the carousel.
- * @returns A carousel of examples.
+ * @returns An infinite scrolling carousel of examples.
  */
 const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
-  const [currentExample, setCurrentExample] = useState(Math.floor(examples.length / 2 - 1));
-  const [hoveredExample, setHoveredExample] = useState<number | null>(null);
   const [isInView, setIsInView] = useState(false);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [isPaused, setIsPaused] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const handleMouseEnter = (index: number) => {
-    setHoveredExample(index);
+  const duplicatedExamples = [...examples, ...examples, ...examples];
+
+  const handleMouseEnter = () => {
+    setIsPaused(true);
   };
 
-  const handleMouseLeave = (index: number) => {
-    setCurrentExample(index);
-    setHoveredExample(null);
-  };
-
-  const handleNext = () => {
-    setCurrentExample((prev) => (prev + 1) % examples.length);
+  const handleMouseLeave = () => {
+    setIsPaused(false);
   };
 
   useEffect(() => {
@@ -40,7 +36,7 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
         setIsInView(entry.isIntersecting);
       },
       {
-        threshold: 1,
+        threshold: 0.1,
         rootMargin: '0px 0px -100px 0px',
       }
     );
@@ -57,41 +53,42 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
   }, []);
 
   useEffect(() => {
-    if (!isInView || hoveredExample !== null) {
+    if (!isInView || isPaused || !scrollContainerRef.current) {
       return;
     }
 
-    const interval = setInterval(handleNext, 3000);
-    return () => clearInterval(interval);
-  }, [isInView, hoveredExample, handleNext]);
+    const scrollContainer = scrollContainerRef.current;
+    const scrollStep = 0.5;
+    const fps = 60;
+    const interval = 1000 / fps;
 
-  const highlightedIndex = hoveredExample ?? currentExample;
+    const scroll = () => {
+      if (scrollContainer.scrollLeft >= scrollContainer.scrollWidth - scrollContainer.clientWidth) {
+        scrollContainer.scrollLeft = 0;
+      } else {
+        scrollContainer.scrollLeft += scrollStep;
+      }
+    };
 
-  useEffect(() => {
-    const highlightedElement = cardRefs.current[currentExample];
-
-    if (highlightedElement && !hoveredExample) {
-      highlightedElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-        inline: 'center',
-      });
-    }
-  }, [currentExample, hoveredExample]);
+    const scrollInterval = setInterval(scroll, interval);
+    return () => clearInterval(scrollInterval);
+  }, [isInView, isPaused]);
 
   return (
     <div ref={containerRef} className='flex flex-col items-center my-10'>
       <h2 className='mb-6 text-center font-semibold tracking-wide text-muted-foreground'>Used by:</h2>
       <div className='w-full max-w-full overflow-hidden'>
-        <div className='flex overflow-x-auto scroll-smooth pb-10 no-scrollbar snap-x gap-4 px-4'>
-          {examples.map((example, index) => (
+        <div
+          ref={scrollContainerRef}
+          className='flex overflow-x-auto scroll-smooth pb-10 no-scrollbar gap-4 px-4'
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          {duplicatedExamples.map((example, index) => (
             <Card
               key={index}
-              ref={(el) => (cardRefs.current[index] = el)}
               className='flex-shrink-0 overflow-hidden cursor-pointer w-[280px] sm:w-[320px] md:w-[350px]'
-              variant={index === highlightedIndex ? 'default' : 'faded'}
-              onMouseEnter={() => handleMouseEnter(index)}
-              onMouseLeave={() => handleMouseLeave(index)}
+              variant='default'
               onClick={() => window.open(example.href, '_blank')}
             >
               <CardContent className='p-0 h-full'>
