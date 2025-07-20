@@ -281,18 +281,6 @@ page AdminChartsPage {
   component: import AdminCharts from "@src/admin/elements/charts/ChartsPage"
 }
 
-route AdminFormElementsRoute { path: "/admin/forms/form-elements", to: AdminFormElementsPage }
-page AdminFormElementsPage {
-  authRequired: true,
-  component: import AdminForms from "@src/admin/elements/forms/FormElementsPage"
-}
-
-route AdminFormLayoutsRoute { path: "/admin/forms/form-layouts", to: AdminFormLayoutsPage }
-page AdminFormLayoutsPage {
-  authRequired: true,
-  component: import AdminForms from "@src/admin/elements/forms/FormLayoutsPage"
-}
-
 route AdminCalendarRoute { path: "/admin/calendar", to: AdminCalendarPage }
 page AdminCalendarPage {
   authRequired: true,
