@@ -58,7 +58,7 @@ const DropdownDefault = () => {
           }
         )}
       >
-        <button className='flex w-full items-center gap-2 rounded-sm py-1.5 px-4 text-left text-sm hover:bg-accent'>
+        <button className='flex w-full items-center gap-2 rounded-sm py-1.5 px-4 text-left text-sm hover:bg-accent hover:text-accent-foreground'>
           <svg
             className='fill-current'
             width='16'
@@ -81,7 +81,7 @@ const DropdownDefault = () => {
           </svg>
           Edit
         </button>
-        <button className='flex w-full items-center gap-2 rounded-sm py-1.5 px-4 text-left text-sm hover:bg-accent'>
+        <button className='flex w-full items-center gap-2 rounded-sm py-1.5 px-4 text-left text-sm hover:bg-accent hover:text-accent-foreground'>
           <svg
             className='fill-current'
             width='16'
