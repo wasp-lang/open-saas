@@ -5,10 +5,11 @@ import { Feature } from './Features';
 import SectionTitle from './SectionTitle';
 
 export interface GridFeature extends Omit<Feature, 'icon'> {
-  icon: string | React.ReactNode;
+  icon?: React.ReactNode;
+  emoji?: string;
   direction?: 'col' | 'row' | 'col-reverse' | 'row-reverse';
   align?: 'center' | 'left';
-  span?: number;
+  size?: 'small' | 'medium' | 'large';
 }
 
 interface FeaturesGridProps {
@@ -29,46 +30,41 @@ const FeaturesGrid = ({ features, className = '' }: FeaturesGridProps) => {
         {features.map((feature, index) => {
           const direction = feature.direction || 'col';
           const align = feature.align || 'center';
-          const span = feature.span || 1;
+          const size = feature.size || 'medium';
 
           let gridClasses = '';
-          if (span < 1) {
+          if (size === 'small') {
             gridClasses = 'col-span-1';
-          } else if (span === 1) {
+          } else if (size === 'medium') {
             gridClasses = 'col-span-2 md:col-span-2 lg:col-span-2';
-          } else if (span > 1) {
+          } else if (size === 'large') {
             gridClasses = 'col-span-2 md:col-span-2 lg:col-span-2 row-span-2';
           }
 
-          return (
+          const cardContent = (
             <Card
-              key={feature.name}
-              className={cn(
-                'h-full min-h-[140px] transition-all duration-300 hover:shadow-lg cursor-pointer',
-                gridClasses
-              )}
+              className='h-full min-h-[140px] transition-all duration-300 hover:shadow-lg cursor-pointer'
               variant='bento'
-              onClick={() => {
-                if (feature.href) {
-                  window.open(feature.href, '_blank');
-                }
-              }}
             >
               <CardContent className='p-4 h-full flex flex-col justify-center items-center'>
                 <div
                   className={cn(
                     'flex items-center gap-3',
-                    direction === 'row' || direction === 'row-reverse' ? 'flex-row' : 'flex-col',
-                    direction === 'col-reverse' || direction === 'row-reverse' ? 'flex-col-reverse' : '',
+                    direction.includes('row') ? 'flex-row' : 'flex-col',
+                    direction === 'row-reverse'
+                      ? 'flex-row-reverse'
+                      : direction === 'col-reverse'
+                        ? 'flex-col-reverse'
+                        : '',
                     align === 'center' ? 'justify-center items-center' : 'justify-start'
                   )}
                 >
                   <div className='flex h-10 w-10 items-center justify-center rounded-lg'>
-                    {typeof feature.icon === 'string' ? (
-                      <span className='text-2xl'>{feature.icon}</span>
-                    ) : (
+                    {feature.emoji ? (
+                      <span className='text-2xl'>{feature.emoji}</span>
+                    ) : feature.icon ? (
                       feature.icon
-                    )}
+                    ) : null}
                   </div>
                   <CardTitle className={cn(align === 'center' ? 'text-center' : 'text-left')}>
                     {feature.name}
@@ -77,13 +73,29 @@ const FeaturesGrid = ({ features, className = '' }: FeaturesGridProps) => {
                 <CardDescription
                   className={cn(
                     'text-xs leading-relaxed',
-                    direction === 'col' ? 'text-center' : align === 'center' ? 'text-center' : 'text-left'
+                    direction === 'col' || align === 'center' ? 'text-center' : 'text-left'
                   )}
                 >
                   {feature.description}
                 </CardDescription>
               </CardContent>
             </Card>
+          );
+
+          return feature.href ? (
+            <a
+              key={feature.name}
+              href={feature.href}
+              target='_blank'
+              rel='noopener noreferrer'
+              className={cn('block', gridClasses)}
+            >
+              {cardContent}
+            </a>
+          ) : (
+            <div key={feature.name} className={gridClasses}>
+              {cardContent}
+            </div>
           );
         })}
       </div>

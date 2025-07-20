@@ -4,6 +4,7 @@ import avatarPlaceholder from '../client/static/avatar-placeholder.webp';
 import daBoiAvatar from '../client/static/da-boi.webp';
 import openSaasBannerWebp from '../client/static/open-saas-banner.webp';
 import { BlogUrl, DocsUrl } from '../shared/common';
+import type { GridFeature } from './components/FeaturesGrid';
 
 export const landingPageNavigationItems: NavigationItem[] = [
   { name: 'Features', to: '#features' },
@@ -11,67 +12,69 @@ export const landingPageNavigationItems: NavigationItem[] = [
   { name: 'Documentation', to: DocsUrl },
   { name: 'Blog', to: BlogUrl },
 ];
-export const features = [
+export const features: GridFeature[] = [
   {
     name: 'Cool Feature 1',
     description: 'Your feature',
-    icon: '🤝',
+    emoji: '🤝',
     href: DocsUrl,
-    span: 0.5,
+    size: 'small',
   },
   {
     name: 'Cool Feature 2',
     description: 'Feature description',
-    icon: '🔐',
+    emoji: '🔐',
     href: DocsUrl,
-    span: 0.5,
+    size: 'small',
   },
   {
     name: 'Cool Feature 3',
     description: 'Describe your cool feature here',
-    icon: '🥞',
+    emoji: '🥞',
     href: DocsUrl,
-    span: 1,
+    size: 'medium',
   },
   {
     name: 'Cool Feature 4',
     description: 'Describe your cool feature here',
-    icon: '💸',
+    emoji: '💸',
     href: DocsUrl,
-    span: 2,
+    size: 'large',
   },
   {
     name: 'Cool Feature 5',
     description: 'Describe your cool feature here',
-    icon: '💼',
+    emoji: '💼',
     href: DocsUrl,
-    span: 2,
+    size: 'large',
   },
   {
     name: 'Cool Feature 6',
     description: 'It is cool',
-    icon: '📈',
+    emoji: '📈',
     href: DocsUrl,
-    span: 0.5,
+    size: 'small',
   },
   {
     name: 'Cool Feature 7',
     description: 'Cool feature',
-    icon: '📧',
+    emoji: '📧',
     href: DocsUrl,
-    span: 0.5,
+    size: 'small',
   },
   {
     name: 'Cool Feature 8',
     description: 'Describe your cool feature here',
-    icon: '🤖',
+    emoji: '🤖',
     href: DocsUrl,
+    size: 'medium',
   },
   {
     name: 'Cool Feature 9',
     description: 'Describe your cool feature here',
-    icon: '🚀',
+    emoji: '🚀',
     href: DocsUrl,
+    size: 'medium',
   },
 ];
 
