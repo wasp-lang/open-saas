@@ -5,35 +5,21 @@ interface FeatureProps {
   description: string | React.ReactNode;
   direction?: 'row' | 'row-reverse';
   highlightedComponent: React.ReactNode;
-  rotate?: boolean;
+  tilt?: 'left' | 'right';
 }
 
 /**
  * A component that highlights a feature with a description and a highlighted component.
  * Shows text description on one side, and whatever component you want to show on the other side to demonstrate the functionality.
- *
- * @example
- * <HighlightedFeature
- *   name="Feature Name"
- *   description="Feature description"
- *   direction="row" // or "row-reverse"
- *   highlightedComponent={<div>Highlighted Component</div>}
- *   rotate={true} // or false
- * />
- * @param name - The name of the feature.
- * @param description - The description of the feature.
- * @param direction - The direction of the feature.
- * @param highlightedComponent - The component to highlight.
- * @param rotate - Whether to rotate the highlighted component.
  */
 const HighlightedFeature = ({
   name,
   description,
   direction = 'row',
   highlightedComponent,
-  rotate = true,
+  tilt,
 }: FeatureProps) => {
-  const rotateClass = Math.random() > 0.5 ? 'rotate-1' : '-rotate-1';
+  const tiltClass = tilt === 'left' ? 'rotate-1' : tilt === 'right' ? '-rotate-1' : '';
 
   return (
     <div
@@ -53,7 +39,7 @@ const HighlightedFeature = ({
       <div
         className={cn(
           'flex flex-1 my-10 transition-transform duration-300 ease-in-out w-full items-center justify-center',
-          rotate && rotateClass
+          tilt && tiltClass
         )}
       >
         {highlightedComponent}

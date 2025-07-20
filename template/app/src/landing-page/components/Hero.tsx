@@ -1,3 +1,4 @@
+import { Link as WaspRouterLink, routes } from 'wasp/client/router';
 import openSaasBannerWebp from '../../client/static/open-saas-banner.webp';
 import { Button } from '../../components/ui/button';
 
@@ -17,11 +18,13 @@ export default function Hero() {
               With some more exciting words about your product!
             </p>
             <div className='mt-10 flex items-center justify-center gap-x-6'>
-              <Button size='lg' variant='outline'>
-                Learn More
+              <Button size='lg' variant='outline' asChild>
+                <WaspRouterLink to={routes.PricingPageRoute.to}>Learn More</WaspRouterLink>
               </Button>
-              <Button size='lg' variant='default'>
-                Get Started <span aria-hidden='true'>→</span>
+              <Button size='lg' variant='default' asChild>
+                <WaspRouterLink to={routes.SignupRoute.to}>
+                  Get Started <span aria-hidden='true'>→</span>
+                </WaspRouterLink>
               </Button>
             </div>
           </div>
@@ -32,7 +35,6 @@ export default function Hero() {
                 alt='App screenshot'
                 width={1000}
                 height={530}
-                loading='lazy'
                 className='rounded-md shadow-2xl ring-1 ring-border'
               />
             </div>
