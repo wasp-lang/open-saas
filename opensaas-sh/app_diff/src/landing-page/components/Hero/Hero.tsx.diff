@@ -1,6 +1,7 @@
 --- template/app/src/landing-page/components/Hero/Hero.tsx
 +++ opensaas-sh/app/src/landing-page/components/Hero/Hero.tsx
-@@ -0,0 +1,70 @@
+@@ -0,0 +1,73 @@
++import { Link as WaspRouterLink, routes } from 'wasp/client/router';
 +import { Button } from '../../../components/ui/button';
 +import Orbit from './Orbit';
 +
@@ -21,14 +22,16 @@
 +                An open-source, feature-rich, full-stack React + NodeJS template that manages features for
 +                you.
 +              </p>
-+              <div className='mt-10 flex items-center md:items-start justify-center md:justify-start gap-x-6'>
-+                <Button size='lg' variant='outline'>
-+                  Try the Demo App
-+                </Button>
-+                <Button size='lg' variant='default'>
++              <div className='mt-10 flex items-center justify-center gap-x-6'>
++              <Button size='lg' variant='outline' asChild>
++                <WaspRouterLink to={routes.PricingPageRoute.to}>Learn More</WaspRouterLink>
++              </Button>
++              <Button size='lg' variant='default' asChild>
++                <WaspRouterLink to={routes.SignupRoute.to}>
 +                  Get Started <span aria-hidden='true'>→</span>
-+                </Button>
-+              </div>
++                </WaspRouterLink>
++              </Button>
++            </div>
 +            </div>
 +          </div>
 +        </div>

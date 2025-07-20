@@ -1,8 +1,8 @@
 --- template/app/src/landing-page/components/Examples/Auth.tsx
 +++ opensaas-sh/app/src/landing-page/components/Examples/Auth.tsx
 @@ -0,0 +1,120 @@
++import { Github, MessageCircle, MessageSquare } from 'lucide-react';
 +import { useState } from 'react';
-+import { FaDiscord, FaGithub, FaGoogle, FaSlack } from 'react-icons/fa';
 +import { Button } from '../../../components/ui/button';
 +import { Card, CardContent, CardHeader } from '../../../components/ui/card';
 +import { Input } from '../../../components/ui/input';
@@ -14,19 +14,19 @@
 +const providers: { name: AuthProvider; icon: React.ComponentType<{ className?: string }> }[] = [
 +  {
 +    name: 'google',
-+    icon: FaGoogle,
++    icon: MessageCircle,
 +  },
 +  {
 +    name: 'github',
-+    icon: FaGithub,
++    icon: Github,
 +  },
 +  {
 +    name: 'discord',
-+    icon: FaDiscord,
++    icon: MessageSquare,
 +  },
 +  {
 +    name: 'slack',
-+    icon: FaSlack,
++    icon: MessageCircle,
 +  },
 +];
 +

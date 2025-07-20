@@ -1,6 +1,6 @@
 --- template/app/src/client/components/NavBar/NavBar.tsx
 +++ opensaas-sh/app/src/client/components/NavBar/NavBar.tsx
-@@ -237,7 +237,7 @@
+@@ -236,7 +236,7 @@
        'size-6': isScrolled,
      })}
      src={logo}
