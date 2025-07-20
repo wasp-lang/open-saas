@@ -17,18 +17,7 @@ export interface NavigationItem {
   to: string;
 }
 
-const NavLogo = ({ isScrolled }: { isScrolled: boolean }) => (
-  <img
-    className={cn('transition-all duration-500', {
-      'h-8 w-8': !isScrolled,
-      'h-6 w-6': isScrolled,
-    })}
-    src={logo}
-    alt='Your SaaS App'
-  />
-);
-
-export default function AppNavBar({ navigationItems }: { navigationItems: NavigationItem[] }) {
+export default function NavBar({ navigationItems }: { navigationItems: NavigationItem[] }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const isLandingPage = useIsLandingPage();
@@ -234,3 +223,14 @@ function Announcement() {
     </div>
   );
 }
+
+const NavLogo = ({ isScrolled }: { isScrolled: boolean }) => (
+  <img
+    className={cn('transition-all duration-500', {
+      'size-8': !isScrolled,
+      'size-6': isScrolled,
+    })}
+    src={logo}
+    alt='Your SaaS App'
+  />
+);

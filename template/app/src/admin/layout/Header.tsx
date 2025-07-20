@@ -10,7 +10,7 @@ const Header = (props: {
   user: AuthUser;
 }) => {
   return (
-    <header className='sticky top-0 z-999 flex w-full bg-background border-b border-border shadow-sm'>
+    <header className='sticky top-0 z-10 flex w-full bg-background border-b border-border shadow-sm'>
       <div className='flex flex-grow items-center justify-between sm:justify-end sm:gap-5 px-8 py-5'>
         <div className='flex items-center gap-2 sm:gap-4 lg:hidden'>
           {/* <!-- Hamburger Toggle BTN --> */}
