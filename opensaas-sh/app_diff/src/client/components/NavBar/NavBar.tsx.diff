@@ -1,9 +1,10 @@
 --- template/app/src/client/components/NavBar/NavBar.tsx
 +++ opensaas-sh/app/src/client/components/NavBar/NavBar.tsx
-@@ -39,10 +39,15 @@
+@@ -38,11 +38,15 @@
+ 
    return (
      <>
-       {isLandingPage && <Announcement />}
+-      {isLandingPage && <Announcement />}
 -      <header className={cn('sticky top-0 z-50 transition-all duration-300', isScrolled && 'top-4')}>
 +      <header
 +        className={cn(
@@ -18,7 +19,7 @@
                isScrolled,
              'mx-0 bg-background/80 backdrop-blur-lg border-b border-border': !isScrolled,
            })}
-@@ -67,7 +72,7 @@
+@@ -67,7 +71,7 @@
                        'ml-2 text-xs': isScrolled,
                      })}
                    >
@@ -27,7 +28,7 @@
                    </span>
                  )}
                </WaspRouterLink>
-@@ -99,7 +104,7 @@
+@@ -99,7 +103,7 @@
                    <SheetHeader>
                      <SheetTitle className='flex items-center'>
                        <WaspRouterLink to={routes.LandingPageRoute.to}>
@@ -36,7 +37,7 @@
                          <NavLogo isScrolled={false} />
                        </WaspRouterLink>
                      </SheetTitle>
-@@ -246,7 +251,7 @@
+@@ -246,34 +250,6 @@
        'size-6': isScrolled,
      })}
      src={logo}
@@ -44,4 +45,31 @@
 +    alt='Open SaaS App'
    />
  );
- 
+-
+-const ContestURL = 'https://github.com/wasp-lang/wasp';
+-
+-function Announcement() {
+-  return (
+-    <div className='flex justify-center items-center gap-3 p-3 w-full bg-gradient-to-r from-accent to-secondary font-semibold text-primary-foreground text-center z-49'>
+-      <p
+-        onClick={() => window.open(ContestURL, '_blank')}
+-        className='hidden lg:block cursor-pointer hover:opacity-90 hover:drop-shadow transition-opacity'
+-      >
+-        Support Open-Source Software!
+-      </p>
+-      <div className='hidden lg:block self-stretch w-0.5 bg-primary-foreground/20'></div>
+-      <div
+-        onClick={() => window.open(ContestURL, '_blank')}
+-        className='hidden lg:block cursor-pointer rounded-full bg-background/20 px-2.5 py-1 text-xs hover:bg-background/30 transition-colors tracking-wider'
+-      >
+-        Star Our Repo on Github ⭐️ →
+-      </div>
+-      <div
+-        onClick={() => window.open(ContestURL, '_blank')}
+-        className='lg:hidden cursor-pointer rounded-full bg-background/20 px-2.5 py-1 text-xs hover:bg-background/30 transition-colors'
+-      >
+-        ⭐️ Star the Our Repo and Support Open-Source! ⭐️
+-      </div>
+-    </div>
+-  );
+-}
