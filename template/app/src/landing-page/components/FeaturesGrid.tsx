@@ -9,7 +9,7 @@ export interface GridFeature extends Omit<Feature, 'icon'> {
   emoji?: string;
   direction?: 'col' | 'row' | 'col-reverse' | 'row-reverse';
   align?: 'center' | 'left';
-  size?: 'small' | 'medium' | 'large';
+  size: 'small' | 'medium' | 'large';
 }
 
 interface FeaturesGridProps {
@@ -27,80 +27,79 @@ const FeaturesGrid = ({ features, className = '' }: FeaturesGridProps) => {
           className
         )}
       >
-        {features.map((feature, index) => {
-          const direction = feature.direction || 'col';
-          const align = feature.align || 'center';
-          const size = feature.size || 'medium';
-
-          let gridClasses = '';
-          if (size === 'small') {
-            gridClasses = 'col-span-1';
-          } else if (size === 'medium') {
-            gridClasses = 'col-span-2 md:col-span-2 lg:col-span-2';
-          } else if (size === 'large') {
-            gridClasses = 'col-span-2 md:col-span-2 lg:col-span-2 row-span-2';
-          }
-
-          const cardContent = (
-            <Card
-              className='h-full min-h-[140px] transition-all duration-300 hover:shadow-lg cursor-pointer'
-              variant='bento'
-            >
-              <CardContent className='p-4 h-full flex flex-col justify-center items-center'>
-                <div
-                  className={cn(
-                    'flex items-center gap-3',
-                    direction.includes('row') ? 'flex-row' : 'flex-col',
-                    direction === 'row-reverse'
-                      ? 'flex-row-reverse'
-                      : direction === 'col-reverse'
-                        ? 'flex-col-reverse'
-                        : '',
-                    align === 'center' ? 'justify-center items-center' : 'justify-start'
-                  )}
-                >
-                  <div className='flex h-10 w-10 items-center justify-center rounded-lg'>
-                    {feature.emoji ? (
-                      <span className='text-2xl'>{feature.emoji}</span>
-                    ) : feature.icon ? (
-                      feature.icon
-                    ) : null}
-                  </div>
-                  <CardTitle className={cn(align === 'center' ? 'text-center' : 'text-left')}>
-                    {feature.name}
-                  </CardTitle>
-                </div>
-                <CardDescription
-                  className={cn(
-                    'text-xs leading-relaxed',
-                    direction === 'col' || align === 'center' ? 'text-center' : 'text-left'
-                  )}
-                >
-                  {feature.description}
-                </CardDescription>
-              </CardContent>
-            </Card>
-          );
-
-          return feature.href ? (
-            <a
-              key={feature.name}
-              href={feature.href}
-              target='_blank'
-              rel='noopener noreferrer'
-              className={cn('block', gridClasses)}
-            >
-              {cardContent}
-            </a>
-          ) : (
-            <div key={feature.name} className={gridClasses}>
-              {cardContent}
-            </div>
-          );
-        })}
+        {features.map((feature) => (
+          <FeaturesGridItem key={feature.name + feature.description} {...feature} />
+        ))}
       </div>
     </div>
   );
 };
+
+function FeaturesGridItem({
+  name,
+  description,
+  icon,
+  emoji,
+  href,
+  direction = 'col',
+  align = 'center',
+  size = 'medium',
+}: GridFeature) {
+  const gridFeatureSizeToClasses: Record<GridFeature['size'], string> = {
+    small: 'col-span-1',
+    medium: 'col-span-2 md:col-span-2 lg:col-span-2',
+    large: 'col-span-2 md:col-span-2 lg:col-span-2 row-span-2',
+  };
+
+  const directionToClass: Record<NonNullable<GridFeature['direction']>, string> = {
+    col: 'flex-col',
+    row: 'flex-row',
+    'row-reverse': 'flex-row-reverse',
+    'col-reverse': 'flex-col-reverse',
+  };
+
+  const gridFeatureCard = (
+    <Card
+      className={cn(
+        'h-full min-h-[140px] transition-all duration-300 hover:shadow-lg cursor-pointer',
+        gridFeatureSizeToClasses[size]
+      )}
+      variant='bento'
+    >
+      <CardContent className='p-4 h-full flex flex-col justify-center items-center'>
+        <div
+          className={cn(
+            'flex items-center gap-3',
+            directionToClass[direction],
+            align === 'center' ? 'justify-center items-center' : 'justify-start'
+          )}
+        >
+          <div className='flex h-10 w-10 items-center justify-center rounded-lg'>
+            {icon ? icon : emoji ? <span className='text-2xl'>{emoji}</span> : null}
+          </div>
+          <CardTitle className={cn(align === 'center' ? 'text-center' : 'text-left')}>{name}</CardTitle>
+        </div>
+        <CardDescription
+          className={cn(
+            'text-xs leading-relaxed',
+            direction === 'col' || align === 'center' ? 'text-center' : 'text-left'
+          )}
+        >
+          {description}
+        </CardDescription>
+      </CardContent>
+    </Card>
+  );
+
+  if (href) {
+    return (
+      <a href={href} target='_blank' rel='noopener noreferrer' className={gridFeatureSizeToClasses[size]}>
+        {gridFeatureCard}
+      </a>
+    );
+  }
+
+  return gridFeatureCard;
+}
 
 export default FeaturesGrid;

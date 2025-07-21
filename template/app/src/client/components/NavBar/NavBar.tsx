@@ -72,9 +72,9 @@ export default function NavBar({ navigationItems }: { navigationItems: Navigatio
                 )}
               </WaspRouterLink>
 
-              <ol className='hidden lg:flex items-center gap-6 ml-4'>
+              <ul className='hidden lg:flex items-center gap-6 ml-4'>
                 {renderNavigationItems(navigationItems)}
-              </ol>
+              </ul>
             </div>
             <div className='flex lg:hidden'>
               <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>

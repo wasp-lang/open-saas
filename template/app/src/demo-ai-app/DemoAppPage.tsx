@@ -352,7 +352,7 @@ function TaskCard({ task, taskItems }: { task: ScheduleTask; taskItems: TaskItem
           <ul className='space-y-2'>
             {taskItems.map((taskItem) => {
               if (taskItem.taskName === task.name) {
-                return <TaskCardStep key={taskItem.description} {...taskItem} />;
+                return <TaskCardItem key={taskItem.description} {...taskItem} />;
               }
               return null;
             })}
@@ -367,7 +367,7 @@ function TaskCard({ task, taskItems }: { task: ScheduleTask; taskItems: TaskItem
   );
 }
 
-function TaskCardStep({ description, time }: TaskItem) {
+function TaskCardItem({ description, time }: TaskItem) {
   const [isDone, setIsDone] = useState<boolean>(false);
 
   const formattedTime = useMemo(() => {
