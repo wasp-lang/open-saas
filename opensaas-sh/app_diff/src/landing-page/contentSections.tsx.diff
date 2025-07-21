@@ -1,13 +1,15 @@
 --- template/app/src/landing-page/contentSections.tsx
 +++ opensaas-sh/app/src/landing-page/contentSections.tsx
-@@ -0,0 +1,224 @@
+@@ -0,0 +1,238 @@
 +import { routes } from 'wasp/client/router';
 +import type { NavigationItem } from '../client/components/NavBar/NavBar';
++import kivo from '../client/static/examples/kivo.png';
 +import messync from '../client/static/examples/messync.png';
 +import microinfluencerClub from '../client/static/examples/microinfluencers.png';
 +import promptpanda from '../client/static/examples/promptpanda.png';
 +import reviewradar from '../client/static/examples/reviewradar.png';
 +import scribeist from '../client/static/examples/scribeist.png';
++import searchcraft from '../client/static/examples/searchcraft.png';
 +import logo from '../client/static/logo.webp';
 +import { BlogUrl, DocsUrl, GithubUrl } from '../shared/common';
 +import { GridFeature } from './components/FeaturesGrid';
@@ -199,6 +201,18 @@
 +    description: 'microinfluencer.club',
 +    imageSrc: microinfluencerClub,
 +    href: 'https://microinfluencer.club',
++  },
++  {
++    name: 'Kivo',
++    description: 'kivo.dev',
++    imageSrc: kivo,
++    href: 'https://kivo.dev',
++  },
++  {
++    name: 'Searchcraft',
++    description: 'searchcraft.io',
++    imageSrc: searchcraft,
++    href: 'https://www.searchcraft.io',
 +  },
 +  {
 +    name: 'Scribeist',
