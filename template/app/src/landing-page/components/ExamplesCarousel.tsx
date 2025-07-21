@@ -12,8 +12,10 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
   const [currentExample, setCurrentExample] = useState(Math.floor(examples.length / 2 - 1));
   const [hoveredExample, setHoveredExample] = useState<number | null>(null);
   const [isInView, setIsInView] = useState(false);
+  const [shouldCenter, setShouldCenter] = useState(false);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
@@ -39,6 +41,16 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
     }
   };
 
+  const checkShouldCenter = () => {
+    if (!scrollContainerRef.current) return;
+
+    const container = scrollContainerRef.current;
+    const containerWidth = container.clientWidth;
+    const scrollWidth = container.scrollWidth;
+
+    setShouldCenter(scrollWidth <= containerWidth);
+  };
+
   useEffect(() => {
     observerRef.current = new IntersectionObserver(([entry]) => setIsInView(entry.isIntersecting), {
       threshold: 1,
@@ -49,12 +61,21 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
       observerRef.current.observe(containerRef.current);
     }
 
+    const handleResize = () => {
+      checkShouldCenter();
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    checkShouldCenter();
+
     return () => {
       if (observerRef.current) {
         observerRef.current.disconnect();
       }
+      window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [examples]);
 
   useEffect(() => {
     if (intervalRef.current) {
@@ -74,10 +95,18 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
   const highlightedIndex = hoveredExample ?? currentExample;
 
   return (
-    <div ref={containerRef} className='flex flex-col items-center my-10'>
+    <div
+      ref={containerRef}
+      className='relative w-screen left-1/2 -translate-x-1/2 flex flex-col items-center my-10'
+    >
       <h2 className='mb-6 text-center font-semibold tracking-wide text-muted-foreground'>Used by:</h2>
       <div className='w-full max-w-full overflow-hidden'>
-        <div className='flex overflow-x-auto scroll-smooth pb-10 no-scrollbar snap-x gap-4 px-4'>
+        <div
+          ref={scrollContainerRef}
+          className={`flex overflow-x-auto scroll-smooth pb-10 no-scrollbar snap-x gap-4 px-4 ${
+            shouldCenter ? 'justify-center' : ''
+          }`}
+        >
           {examples.map((example, index) => (
             <Card
               key={index}

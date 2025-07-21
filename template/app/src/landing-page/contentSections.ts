@@ -153,4 +153,16 @@ export const examples = [
     imageSrc: openSaasBannerWebp,
     href: '#',
   },
+  {
+    name: 'Example #6',
+    description: 'Describe your example here.',
+    imageSrc: openSaasBannerWebp,
+    href: '#',
+  },
+  {
+    name: 'Example #7',
+    description: 'Describe your example here.',
+    imageSrc: openSaasBannerWebp,
+    href: '#',
+  },
 ];
