@@ -9,25 +9,25 @@ interface ExampleApp {
 }
 
 /**
- * Infinite horizontally scrolling carousel of example apps.
+ * Horizontally scrollable carousel of example apps.
  *
  * @param examples - The examples to display in the carousel.
- * @returns An infinite scrolling carousel of examples.
+ * @returns A carousel of examples.
  */
 const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
+  const [currentExample, setCurrentExample] = useState(Math.floor(examples.length / 2 - 1));
+  const [hoveredExample, setHoveredExample] = useState<number | null>(null);
   const [isInView, setIsInView] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const duplicatedExamples = [...examples, ...examples, ...examples];
-
-  const handleMouseEnter = () => {
-    setIsPaused(true);
+  const handleMouseEnter = (index: number) => {
+    setHoveredExample(index);
   };
 
-  const handleMouseLeave = () => {
-    setIsPaused(false);
+  const handleMouseLeave = (index: number) => {
+    setCurrentExample(index);
+    setHoveredExample(null);
   };
 
   useEffect(() => {
@@ -36,8 +36,8 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
         setIsInView(entry.isIntersecting);
       },
       {
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px',
+        threshold: 1,
+        rootMargin: '-200px 0px -200px 0px',
       }
     );
 
@@ -53,42 +53,47 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
   }, []);
 
   useEffect(() => {
-    if (!isInView || isPaused || !scrollContainerRef.current) {
+    if (!isInView || hoveredExample !== null) {
       return;
     }
 
-    const scrollContainer = scrollContainerRef.current;
-    const scrollStep = 0.5;
-    const fps = 60;
-    const interval = 1000 / fps;
-
-    const scroll = () => {
-      if (scrollContainer.scrollLeft >= scrollContainer.scrollWidth - scrollContainer.clientWidth) {
-        scrollContainer.scrollLeft = 0;
-      } else {
-        scrollContainer.scrollLeft += scrollStep;
-      }
+    const moveToNextExample = () => {
+      setCurrentExample((prev) => (prev + 1) % examples.length);
     };
 
-    const scrollInterval = setInterval(scroll, interval);
-    return () => clearInterval(scrollInterval);
-  }, [isInView, isPaused]);
+    const interval = setInterval(moveToNextExample, 3000);
+    return () => clearInterval(interval);
+  }, [isInView, hoveredExample]);
+
+  const highlightedIndex = hoveredExample ?? currentExample;
+
+  useEffect(() => {
+    if (hoveredExample !== null) return;
+    const container = containerRef.current?.querySelector('.flex.overflow-x-auto') as HTMLDivElement | null;
+    const highlightedElement = cardRefs.current[currentExample] as HTMLDivElement | null;
+    if (container && highlightedElement) {
+      const containerRect = container.getBoundingClientRect();
+      const cardRect = highlightedElement.getBoundingClientRect();
+
+      const scrollLeft =
+        highlightedElement.offsetLeft - container.offsetLeft - containerRect.width / 2 + cardRect.width / 2;
+      container.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+    }
+  }, [currentExample, hoveredExample]);
 
   return (
     <div ref={containerRef} className='flex flex-col items-center my-10'>
       <h2 className='mb-6 text-center font-semibold tracking-wide text-muted-foreground'>Used by:</h2>
       <div className='w-full max-w-full overflow-hidden'>
-        <div
-          ref={scrollContainerRef}
-          className='flex overflow-x-auto scroll-smooth pb-10 no-scrollbar gap-4 px-4'
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          {duplicatedExamples.map((example, index) => (
+        <div className='flex overflow-x-auto scroll-smooth pb-10 no-scrollbar snap-x gap-4 px-4'>
+          {examples.map((example, index) => (
             <Card
               key={index}
+              ref={(el) => (cardRefs.current[index] = el)}
               className='flex-shrink-0 overflow-hidden cursor-pointer w-[280px] sm:w-[320px] md:w-[350px]'
-              variant='default'
+              variant={index === highlightedIndex ? 'default' : 'faded'}
+              onMouseEnter={() => handleMouseEnter(index)}
+              onMouseLeave={() => handleMouseLeave(index)}
               onClick={() => window.open(example.href, '_blank')}
             >
               <CardContent className='p-0 h-full'>
