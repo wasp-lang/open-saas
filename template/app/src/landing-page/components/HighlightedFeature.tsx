@@ -23,6 +23,7 @@ const HighlightedFeature = ({
     left: 'rotate-1',
     right: '-rotate-1',
   };
+
   return (
     <div
       className={cn(
