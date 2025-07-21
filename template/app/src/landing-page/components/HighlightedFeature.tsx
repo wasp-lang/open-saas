@@ -19,8 +19,10 @@ const HighlightedFeature = ({
   highlightedComponent,
   tilt,
 }: FeatureProps) => {
-  const tiltClass = tilt === 'left' ? 'rotate-1' : tilt === 'right' ? '-rotate-1' : '';
-
+  const tiltToClass: Record<Required<FeatureProps>['tilt'], string> = {
+    left: 'rotate-1',
+    right: '-rotate-1',
+  };
   return (
     <div
       className={cn(
@@ -39,7 +41,7 @@ const HighlightedFeature = ({
       <div
         className={cn(
           'flex flex-1 my-10 transition-transform duration-300 ease-in-out w-full items-center justify-center',
-          tilt && tiltClass
+          tilt && tiltToClass[tilt]
         )}
       >
         {highlightedComponent}
