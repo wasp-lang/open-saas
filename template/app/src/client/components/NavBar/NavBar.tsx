@@ -167,40 +167,50 @@ export default function NavBar({ navigationItems }: { navigationItems: Navigatio
   );
 }
 
-function throttleWithTrailingInvocation(fn: () => void, delay: number) {
+function throttleWithTrailingInvocation(
+  fn: () => void,
+  delayInMilliseconds: number
+): ((...args: any[]) => void) & { cancel: () => void } {
   let fnLastCallTime: number | null = null;
   let trailingInvocationTimeoutId: ReturnType<typeof setTimeout> | null = null;
   let isTrailingInvocationPending = false;
 
+  const callFn = () => {
+    fnLastCallTime = Date.now();
+    fn();
+  };
+
   const throttledFn = () => {
-    const now = Date.now();
+    const currentTime = Date.now();
+    const timeSinceLastExecution = fnLastCallTime ? currentTime - fnLastCallTime : 0;
 
-    const callFn = () => {
-      fnLastCallTime = Date.now();
-      fn();
-    };
+    const shouldCallImmediately = fnLastCallTime === null || timeSinceLastExecution >= delayInMilliseconds;
 
-    if (fnLastCallTime === null || now - fnLastCallTime >= delay) {
+    if (shouldCallImmediately) {
       callFn();
-    } else {
-      if (!isTrailingInvocationPending) {
-        isTrailingInvocationPending = true;
-        const trailingInvocationTimeout = delay - (now - fnLastCallTime);
-        trailingInvocationTimeoutId = setTimeout(() => {
-          callFn();
-          isTrailingInvocationPending = false;
-        }, trailingInvocationTimeout);
-      }
+      return;
+    }
+
+    if (!isTrailingInvocationPending) {
+      isTrailingInvocationPending = true;
+      const remainingDelayTime = Math.max(delayInMilliseconds - timeSinceLastExecution, 0);
+
+      trailingInvocationTimeoutId = setTimeout(() => {
+        callFn();
+        isTrailingInvocationPending = false;
+      }, remainingDelayTime);
     }
   };
 
   throttledFn.cancel = () => {
     if (trailingInvocationTimeoutId) {
       clearTimeout(trailingInvocationTimeoutId);
+      trailingInvocationTimeoutId = null;
     }
+    isTrailingInvocationPending = false;
   };
 
-  return throttledFn;
+  return throttledFn as typeof throttledFn & { cancel: () => void };
 }
 
 function renderNavigationItems(

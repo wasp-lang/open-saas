@@ -69,8 +69,7 @@ const UsersTable = () => {
     setSubscriptionStatusFilter([]);
   };
 
-  const hasActiveFilters =
-    debouncedEmailFilter || isAdminFilter !== undefined || subscriptionStatusFilter.length > 0;
+  const hasActiveFilters = subscriptionStatusFilter && subscriptionStatusFilter.length > 0;
 
   return (
     <div className='flex flex-col gap-4'>
