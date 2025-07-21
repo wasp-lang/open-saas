@@ -97,7 +97,7 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
   return (
     <div
       ref={containerRef}
-      className='relative w-screen left-1/2 -translate-x-1/2 flex flex-col items-center my-10'
+      className='relative w-screen left-1/2 -translate-x-1/2 flex flex-col items-center my-16'
     >
       <h2 className='mb-6 text-center font-semibold tracking-wide text-muted-foreground'>Used by:</h2>
       <div className='w-full max-w-full overflow-hidden'>

@@ -12,7 +12,7 @@
 +  const { data: user } = useAuth();
 +
 +  return (
-+    <div className='relative pt-20 w-full'>
++    <div className='relative pt-32 w-full'>
 +      <TopGradient />
 +      <BottomGradient />
 +      <div className='flex flex-col lg:flex-row max-w-7xl'>

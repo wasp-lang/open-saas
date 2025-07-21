@@ -6,7 +6,7 @@ import { generateCheckoutSession, getCustomerPortalUrl, useQuery } from 'wasp/cl
 import { cn } from '../client/cn';
 import { Alert, AlertDescription } from '../components/ui/alert';
 import { Button } from '../components/ui/button';
-import { Card, CardContent, CardTitle } from '../components/ui/card';
+import { Card, CardContent, CardFooter, CardTitle } from '../components/ui/card';
 import { PaymentPlanId, paymentPlans, prettyPaymentPlanName, SubscriptionStatus } from './plans';
 
 const bestDealPaymentPlanId: PaymentPlanId = PaymentPlanId.Pro;
@@ -128,7 +128,7 @@ const PricingPage = () => {
                 'relative flex flex-col grow justify-between overflow-hidden transition-all duration-300 hover:shadow-lg',
                 {
                   'ring-2 ring-primary !bg-transparent': planId === bestDealPaymentPlanId,
-                  'ring-1 ring-border lg:mt-8': planId !== bestDealPaymentPlanId,
+                  'ring-1 ring-border lg:my-8': planId !== bestDealPaymentPlanId,
                 }
               )}
             >
@@ -145,33 +145,33 @@ const PricingPage = () => {
                   />
                 </div>
               )}
-              <CardContent className='p-8 xl:p-10'>
-                <div className='mb-8'>
-                  <div className='flex items-center justify-between gap-x-4'>
-                    <CardTitle id={planId} className='text-foreground text-lg font-semibold leading-8'>
-                      {paymentPlanCards[planId].name}
-                    </CardTitle>
-                  </div>
-                  <p className='mt-4 text-sm leading-6 text-muted-foreground'>
-                    {paymentPlanCards[planId].description}
-                  </p>
-                  <p className='mt-6 flex items-baseline gap-x-1'>
-                    <span className='text-4xl font-bold tracking-tight text-foreground'>
-                      {paymentPlanCards[planId].price}
-                    </span>
-                    <span className='text-sm font-semibold leading-6 text-muted-foreground'>
-                      {paymentPlans[planId].effect.kind === 'subscription' && '/month'}
-                    </span>
-                  </p>
-                  <ul role='list' className='mt-8 space-y-3 text-sm leading-6 text-muted-foreground'>
-                    {paymentPlanCards[planId].features.map((feature) => (
-                      <li key={feature} className='flex gap-x-3'>
-                        <CheckCircle className='h-5 w-5 flex-none text-primary' aria-hidden='true' />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
+              <CardContent className='p-8 xl:p-10 h-full justify-between'>
+                <div className='flex items-center justify-between gap-x-4'>
+                  <CardTitle id={planId} className='text-foreground text-lg font-semibold leading-8'>
+                    {paymentPlanCards[planId].name}
+                  </CardTitle>
                 </div>
+                <p className='mt-4 text-sm leading-6 text-muted-foreground'>
+                  {paymentPlanCards[planId].description}
+                </p>
+                <p className='mt-6 flex items-baseline gap-x-1'>
+                  <span className='text-4xl font-bold tracking-tight text-foreground'>
+                    {paymentPlanCards[planId].price}
+                  </span>
+                  <span className='text-sm font-semibold leading-6 text-muted-foreground'>
+                    {paymentPlans[planId].effect.kind === 'subscription' && '/month'}
+                  </span>
+                </p>
+                <ul role='list' className='mt-8 space-y-3 text-sm leading-6 text-muted-foreground'>
+                  {paymentPlanCards[planId].features.map((feature) => (
+                    <li key={feature} className='flex gap-x-3'>
+                      <CheckCircle className='h-5 w-5 flex-none text-primary' aria-hidden='true' />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+              <CardFooter>
                 {isUserSubscribed ? (
                   <Button
                     onClick={handleCustomerPortalClick}
@@ -193,7 +193,7 @@ const PricingPage = () => {
                     {!!user ? 'Buy plan' : 'Log in to buy plan'}
                   </Button>
                 )}
-              </CardContent>
+              </CardFooter>
             </Card>
           ))}
         </div>
