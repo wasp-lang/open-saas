@@ -1,0 +1,11 @@
+--- NavBar.tsx
++++ NavBar.tsx
+@@ -76,7 +76,7 @@
+                       'ml-2 text-xs': isScrolled,
+                     })}
+                   >
+-                    Your SaaS
++                    Open SaaS
+                   </span>
+                 )}
+               </WaspRouterLink>

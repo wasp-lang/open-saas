@@ -31,7 +31,7 @@
 +];
 +
 +export default function Auth() {
-+  const [selectedProviders, setSelectedProviders] = useState<AuthProvider[]>([]);
++  const [selectedProviders, setSelectedProviders] = useState<AuthProvider[]>(['google', 'github']);
 +
 +  const toggleProvider = (provider: AuthProvider) => {
 +    setSelectedProviders((prev) =>
@@ -67,7 +67,7 @@
 +              key={provider.name}
 +              onClick={() => toggleProvider(provider.name)}
 +              size='iconLg'
-+              variant={selectedProviders.includes(provider.name) ? 'selected' : 'default'}
++              variant={selectedProviders.includes(provider.name) ? 'inner' : 'outer'}
 +            >
 +              <IconComponent />
 +            </Button>
