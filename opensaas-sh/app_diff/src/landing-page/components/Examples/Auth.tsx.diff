@@ -1,8 +1,8 @@
 --- template/app/src/landing-page/components/Examples/Auth.tsx
 +++ opensaas-sh/app/src/landing-page/components/Examples/Auth.tsx
 @@ -0,0 +1,120 @@
-+import { Github, MessageCircle, MessageSquare } from 'lucide-react';
 +import { useState } from 'react';
++import { FaDiscord, FaGithub, FaGoogle, FaSlack } from 'react-icons/fa';
 +import { Button } from '../../../components/ui/button';
 +import { Card, CardContent, CardHeader } from '../../../components/ui/card';
 +import { Input } from '../../../components/ui/input';
@@ -14,19 +14,19 @@
 +const providers: { name: AuthProvider; icon: React.ComponentType<{ className?: string }> }[] = [
 +  {
 +    name: 'google',
-+    icon: MessageCircle,
++    icon: FaGoogle,
 +  },
 +  {
 +    name: 'github',
-+    icon: Github,
++    icon: FaGithub,
 +  },
 +  {
 +    name: 'discord',
-+    icon: MessageSquare,
++    icon: FaDiscord,
 +  },
 +  {
 +    name: 'slack',
-+    icon: MessageCircle,
++    icon: FaSlack,
 +  },
 +];
 +
@@ -66,10 +66,10 @@
 +            <Button
 +              key={provider.name}
 +              onClick={() => toggleProvider(provider.name)}
-+              variant={selectedProviders.includes(provider.name) ? 'outline' : 'default'}
++              size='iconLg'
++              variant={selectedProviders.includes(provider.name) ? 'selected' : 'default'}
 +            >
-+              <IconComponent className='w-4 h-4' />
-+              {provider.name.charAt(0).toUpperCase() + provider.name.slice(1)}
++              <IconComponent />
 +            </Button>
 +          );
 +        })}
@@ -90,7 +90,7 @@
 +
 +const AuthExample = ({ selectedProviders }: { selectedProviders: AuthProvider[] }) => {
 +  return (
-+    <Card className='py-10 max-w-md transition-all duration-300 ease-in-out'>
++    <Card className='py-10 max-w-lg transition-all duration-300 ease-in-out'>
 +      <CardHeader>
 +        <p className='text-2xl font-bold'>Log in to your account</p>
 +      </CardHeader>
