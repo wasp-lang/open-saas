@@ -8,78 +8,70 @@ interface ExampleApp {
   href: string;
 }
 
-/**
- * Horizontally scrollable carousel of example apps.
- *
- * @param examples - The examples to display in the carousel.
- * @returns A carousel of examples.
- */
 const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
   const [currentExample, setCurrentExample] = useState(Math.floor(examples.length / 2 - 1));
   const [hoveredExample, setHoveredExample] = useState<number | null>(null);
   const [isInView, setIsInView] = useState(false);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
-  const handleMouseEnter = (index: number) => {
-    setHoveredExample(index);
-  };
-
+  const handleMouseEnter = (index: number) => setHoveredExample(index);
   const handleMouseLeave = (index: number) => {
     setCurrentExample(index);
     setHoveredExample(null);
   };
 
+  const scrollToCenter = () => {
+    if (hoveredExample !== null) return;
+
+    const container = containerRef.current?.querySelector('.flex.overflow-x-auto') as HTMLDivElement | null;
+    const highlightedElement = cardRefs.current[currentExample] as HTMLDivElement | null;
+
+    if (container && highlightedElement) {
+      const containerRect = container.getBoundingClientRect();
+      const cardRect = highlightedElement.getBoundingClientRect();
+      const scrollLeft =
+        highlightedElement.offsetLeft - container.offsetLeft - containerRect.width / 2 + cardRect.width / 2;
+
+      container.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+    }
+  };
+
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsInView(entry.isIntersecting);
-      },
-      {
-        threshold: 1,
-        rootMargin: '-200px 0px -200px 0px',
-      }
-    );
+    observerRef.current = new IntersectionObserver(([entry]) => setIsInView(entry.isIntersecting), {
+      threshold: 1,
+      rootMargin: '-200px 0px -200px 0px',
+    });
 
     if (containerRef.current) {
-      observer.observe(containerRef.current);
+      observerRef.current.observe(containerRef.current);
     }
 
     return () => {
-      if (containerRef.current) {
-        observer.unobserve(containerRef.current);
+      if (observerRef.current) {
+        observerRef.current.disconnect();
       }
     };
   }, []);
 
   useEffect(() => {
-    if (!isInView || hoveredExample !== null) {
-      return;
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
 
-    const moveToNextExample = () => {
-      setCurrentExample((prev) => (prev + 1) % examples.length);
-    };
+    if (isInView && hoveredExample === null) {
+      intervalRef.current = setInterval(() => {
+        setCurrentExample((prev) => (prev + 1) % examples.length);
+      }, 3000);
+    }
 
-    const interval = setInterval(moveToNextExample, 3000);
-    return () => clearInterval(interval);
-  }, [isInView, hoveredExample]);
+    scrollToCenter();
+  }, [isInView, hoveredExample, currentExample, examples.length]);
 
   const highlightedIndex = hoveredExample ?? currentExample;
-
-  useEffect(() => {
-    if (hoveredExample !== null) return;
-    const container = containerRef.current?.querySelector('.flex.overflow-x-auto') as HTMLDivElement | null;
-    const highlightedElement = cardRefs.current[currentExample] as HTMLDivElement | null;
-    if (container && highlightedElement) {
-      const containerRect = container.getBoundingClientRect();
-      const cardRect = highlightedElement.getBoundingClientRect();
-
-      const scrollLeft =
-        highlightedElement.offsetLeft - container.offsetLeft - containerRect.width / 2 + cardRect.width / 2;
-      container.scrollTo({ left: scrollLeft, behavior: 'smooth' });
-    }
-  }, [currentExample, hoveredExample]);
 
   return (
     <div ref={containerRef} className='flex flex-col items-center my-10'>
