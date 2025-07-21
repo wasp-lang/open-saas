@@ -10,10 +10,11 @@ import type {
   GetAllTasksByUser,
 } from 'wasp/server/operations';
 import { HttpError, prisma } from 'wasp/server';
-import { GeneratedSchedule } from './schedule';
+import { GeneratedSchedule } from '../schedule';
 import OpenAI from 'openai';
-import { SubscriptionStatus } from '../payment/plans';
-import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
+import { SubscriptionStatus } from '../../payment/plans';
+import { ensureArgsSchemaOrThrowHttpError } from '../../server/validation';
+import { generateChatResponse } from './generateChatResponse';
 
 const openAi = setUpOpenAi();
 function setUpOpenAi(): OpenAI {
@@ -48,7 +49,11 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
     },
   });
 
-  console.log('Calling open AI api');
+  console.log('Calling open AI api', rawArgs);
+
+  const chatResponse = await generateChatResponse("test context")
+  console.log("AWT  >>> chatResponse:", chatResponse)
+
   const generatedSchedule = await generateScheduleWithGpt(tasks, hours);
   if (generatedSchedule === null) {
     throw new HttpError(500, 'Encountered a problem in communication with OpenAI');
@@ -71,24 +76,24 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
   // credits than they have, but the damage should be pretty limited.
   //
   // Think about which option you prefer for your app and edit the code accordingly.
-  if (!isUserSubscribed(context.user)) {
-    if (context.user.credits > 0) {
-      const decrementCredit = context.entities.User.update({
-        where: { id: context.user.id },
-        data: {
-          credits: {
-            decrement: 1,
-          },
-        },
-      });
-      transactions.push(decrementCredit);
-    } else {
-      throw new HttpError(402, 'User has not paid or is out of credits');
-    }
-  }
+  // if (!isUserSubscribed(context.user)) {
+  //   if (context.user.credits > 0) {
+  //     const decrementCredit = context.entities.User.update({
+  //       where: { id: context.user.id },
+  //       data: {
+  //         credits: {
+  //           decrement: 1,
+  //         },
+  //       },
+  //     });
+  //     transactions.push(decrementCredit);
+  //   } else {
+  //     throw new HttpError(402, 'User has not paid or is out of credits');
+  //   }
+  // }
 
-  console.log('Decrementing credits and saving response');
-  await prisma.$transaction(transactions);
+  // console.log('Decrementing credits and saving response');
+  // await prisma.$transaction(transactions);
 
   return generatedSchedule;
 };

@@ -18,7 +18,7 @@ export interface NavigationItem {
   to: string;
 }
 
-const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Your SaaS App' />;
+const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Lit Lab Chat App' />;
 
 export default function AppNavBar({ navigationItems }: { navigationItems: NavigationItem[] }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -32,7 +32,6 @@ export default function AppNavBar({ navigationItems }: { navigationItems: Naviga
           !isLandingPage,
       })}
     >
-      {isLandingPage && <Announcement />}
       <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
         <div className='flex items-center lg:flex-1'>
           <WaspRouterLink
@@ -41,7 +40,7 @@ export default function AppNavBar({ navigationItems }: { navigationItems: Naviga
           >
             <NavLogo />
             {isLandingPage && (
-              <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Your SaaS</span>
+              <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Lit Lab Chat App</span>
             )}
           </WaspRouterLink>
         </div>
@@ -78,7 +77,7 @@ export default function AppNavBar({ navigationItems }: { navigationItems: Naviga
         <Dialog.Panel className='fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white dark:text-white dark:bg-boxdark px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10'>
           <div className='flex items-center justify-between'>
             <WaspRouterLink to={routes.LandingPageRoute.to} className='-m-1.5 p-1.5'>
-              <span className='sr-only'>Your SaaS</span>
+              {/* <span className='sr-only'>Your SaaS</span> */}
               <NavLogo />
             </WaspRouterLink>
             <button
@@ -142,28 +141,3 @@ function renderNavigationItems(
 
 const ContestURL = 'https://github.com/wasp-lang/wasp';
 
-function Announcement() {
-  return (
-    <div className='flex justify-center items-center gap-3 p-3 w-full bg-gradient-to-r from-[#d946ef] to-[#fc0] font-semibold text-white text-center z-49'>
-      <p
-        onClick={() => window.open(ContestURL, '_blank')}
-        className='hidden lg:block cursor-pointer hover:opacity-90 hover:drop-shadow'
-      >
-        Support Open-Source Software!
-      </p>
-      <div className='hidden lg:block self-stretch w-0.5 bg-white'></div>
-      <div
-        onClick={() => window.open(ContestURL, '_blank')}
-        className='hidden lg:block cursor-pointer rounded-full bg-neutral-700 px-2.5 py-1 text-xs hover:bg-neutral-600 tracking-wider'
-      >
-        Star Our Repo on Github ⭐️ →
-      </div>
-      <div
-        onClick={() => window.open(ContestURL, '_blank')}
-        className='lg:hidden cursor-pointer rounded-full bg-neutral-700 px-2.5 py-1 text-xs hover:bg-neutral-600 tracking-wider'
-      >
-        ⭐️ Star the Our Repo on Github and Support Open-Source! ⭐️
-      </div>
-    </div>
-  );
-}
