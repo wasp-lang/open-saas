@@ -1,6 +1,6 @@
 --- template/app/src/admin/dashboards/users/UsersTable.tsx
 +++ opensaas-sh/app/src/admin/dashboards/users/UsersTable.tsx
-@@ -255,7 +255,7 @@
+@@ -254,7 +254,7 @@
                  <p className='text-sm text-foreground'>{user.subscriptionStatus}</p>
                </div>
                <div className='col-span-2 flex items-center'>

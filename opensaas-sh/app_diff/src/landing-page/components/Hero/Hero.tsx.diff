@@ -1,16 +1,21 @@
 --- template/app/src/landing-page/components/Hero/Hero.tsx
 +++ opensaas-sh/app/src/landing-page/components/Hero/Hero.tsx
-@@ -0,0 +1,73 @@
+@@ -0,0 +1,80 @@
++import { Link as ReactRouterLink } from 'react-router-dom';
++import { useAuth } from 'wasp/client/auth';
 +import { Link as WaspRouterLink, routes } from 'wasp/client/router';
 +import { Button } from '../../../components/ui/button';
++import { DocsUrl } from '../../../shared/common';
 +import Orbit from './Orbit';
 +
 +export default function Hero() {
++  const { data: user } = useAuth();
++
 +  return (
 +    <div className='relative pt-20 w-full'>
 +      <TopGradient />
 +      <BottomGradient />
-+      <div className='flex flex-col lg:flex-row'>
++      <div className='flex flex-col lg:flex-row max-w-7xl'>
 +        <div className='py-24 sm:py-32'>
 +          <div className='max-w-8xl px-6 lg:px-8'>
 +            <div className='lg:mb-18 mx-auto max-w-3xl text-center md:text-left'>
@@ -22,16 +27,18 @@
 +                An open-source, feature-rich, full-stack React + NodeJS template that manages features for
 +                you.
 +              </p>
-+              <div className='mt-10 flex items-center justify-center gap-x-6'>
-+              <Button size='lg' variant='outline' asChild>
-+                <WaspRouterLink to={routes.PricingPageRoute.to}>Learn More</WaspRouterLink>
-+              </Button>
-+              <Button size='lg' variant='default' asChild>
-+                <WaspRouterLink to={routes.SignupRoute.to}>
-+                  Get Started <span aria-hidden='true'>→</span>
-+                </WaspRouterLink>
-+              </Button>
-+            </div>
++              <div className='mt-10 flex items-center justify-center md:justify-start gap-x-6'>
++                <Button size='lg' variant='outline' asChild>
++                  <WaspRouterLink to={user ? routes.DemoAppRoute.to : routes.LoginRoute.to}>
++                    Try the Demo App
++                  </WaspRouterLink>
++                </Button>
++                <Button size='lg' variant='default' asChild>
++                  <ReactRouterLink to={DocsUrl}>
++                    Get Started <span aria-hidden='true'>→</span>
++                  </ReactRouterLink>
++                </Button>
++              </div>
 +            </div>
 +          </div>
 +        </div>

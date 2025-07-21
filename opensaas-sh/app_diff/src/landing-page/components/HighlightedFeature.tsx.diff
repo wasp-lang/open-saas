@@ -1,6 +1,6 @@
 --- template/app/src/landing-page/components/HighlightedFeature.tsx
 +++ opensaas-sh/app/src/landing-page/components/HighlightedFeature.tsx
-@@ -28,7 +28,7 @@
+@@ -31,7 +31,7 @@
          direction === 'row' ? 'md:flex-row' : 'md:flex-row-reverse'
        )}
      >

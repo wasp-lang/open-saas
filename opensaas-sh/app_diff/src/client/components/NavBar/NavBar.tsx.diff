@@ -1,6 +1,42 @@
 --- template/app/src/client/components/NavBar/NavBar.tsx
 +++ opensaas-sh/app/src/client/components/NavBar/NavBar.tsx
-@@ -236,7 +236,7 @@
+@@ -39,10 +39,15 @@
+   return (
+     <>
+       {isLandingPage && <Announcement />}
+-      <header className={cn('sticky top-0 z-50 transition-all duration-300', isScrolled && 'top-4')}>
++      <header
++        className={cn(
++          'sticky top-0 z-50 transition-all duration-300',
++          isScrolled && 'top-4 mx-4 xl:mx-30 lg:mx-10'
++        )}
++      >
+         <div
+           className={cn('transition-all duration-300', {
+-            'mx-4 md:mx-20 rounded-full shadow-lg bg-background/90 backdrop-blur-lg border border-border':
++            'mx-auto rounded-full shadow-lg bg-background/90 backdrop-blur-lg border border-border':
+               isScrolled,
+             'mx-0 bg-background/80 backdrop-blur-lg border-b border-border': !isScrolled,
+           })}
+@@ -67,7 +72,7 @@
+                       'ml-2 text-xs': isScrolled,
+                     })}
+                   >
+-                    Your SaaS
++                    Open SaaS
+                   </span>
+                 )}
+               </WaspRouterLink>
+@@ -99,7 +104,7 @@
+                   <SheetHeader>
+                     <SheetTitle className='flex items-center'>
+                       <WaspRouterLink to={routes.LandingPageRoute.to}>
+-                        <span className='sr-only'>Your SaaS</span>
++                        <span className='sr-only'>Open SaaS</span>
+                         <NavLogo isScrolled={false} />
+                       </WaspRouterLink>
+                     </SheetTitle>
+@@ -246,7 +251,7 @@
        'size-6': isScrolled,
      })}
      src={logo}

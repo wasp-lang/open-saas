@@ -1,22 +1,22 @@
 --- template/app/src/landing-page/components/FeaturesGrid.tsx
 +++ opensaas-sh/app/src/landing-page/components/FeaturesGrid.tsx
-@@ -59,14 +59,16 @@
-                     align === 'center' ? 'justify-center items-center' : 'justify-start'
-                   )}
-                 >
--                  <div className='flex h-10 w-10 items-center justify-center rounded-lg'>
-+                  <div className='flex h-16 w-16 items-center justify-center rounded-lg'>
-                     {feature.emoji ? (
--                      <span className='text-2xl'>{feature.emoji}</span>
-+                      <span className='text-3xl'>{feature.emoji}</span>
-+                    ) : typeof feature.icon === 'string' ? (
-+                      <span>{feature.icon}</span>
-                     ) : feature.icon ? (
-                       feature.icon
-                     ) : null}
-                   </div>
--                  <CardTitle className={cn(align === 'center' ? 'text-center' : 'text-left')}>
-+                  <CardTitle className={cn(align === 'center' ? 'text-center' : 'text-left', 'text-xl')}>
-                     {feature.name}
-                   </CardTitle>
-                 </div>
+@@ -20,7 +20,7 @@
+ const FeaturesGrid = ({ features, className = '' }: FeaturesGridProps) => {
+   return (
+     <div className='flex flex-col gap-4 my-16 md:my-24 lg:my-40' id='features'>
+-      <SectionTitle title='Features' subtitle='These are some of the features of the product.' />
++      <SectionTitle title='Other Features' subtitle='And many more!' />
+       <div
+         className={cn(
+           'grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6 mx-4 md:mx-6 lg:mx-8 auto-rows-[minmax(140px,auto)]',
+@@ -77,7 +77,9 @@
+           <div className='flex h-10 w-10 items-center justify-center rounded-lg'>
+             {icon ? icon : emoji ? <span className='text-2xl'>{emoji}</span> : null}
+           </div>
+-          <CardTitle className={cn(align === 'center' ? 'text-center' : 'text-left')}>{name}</CardTitle>
++          <CardTitle className={cn('text-lg', align === 'center' ? 'text-center' : 'text-left')}>
++            {name}
++          </CardTitle>
+         </div>
+         <CardDescription
+           className={cn(
