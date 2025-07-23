@@ -40,7 +40,7 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
                 <form onSubmit={handleSubmit}>
                   <div className='mb-5.5 flex flex-col gap-5.5 sm:flex-row'>
                     <div className='w-full sm:w-1/2'>
-                      <Label htmlFor='fullName' className='mb-3 block text-sm font-medium text-foreground'>
+                      <Label htmlFor='full-name' className='mb-3 block text-sm font-medium text-foreground'>
                         Full Name
                       </Label>
                       <div className='relative'>
@@ -49,7 +49,7 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
                           className='pl-11.5'
                           type='text'
                           name='fullName'
-                          id='fullName'
+                          id='full-name'
                           placeholder='Devid Jhon'
                           defaultValue='Devid Jhon'
                         />
@@ -57,13 +57,16 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
                     </div>
 
                     <div className='w-full sm:w-1/2'>
-                      <Label htmlFor='phoneNumber' className='mb-3 block text-sm font-medium text-foreground'>
+                      <Label
+                        htmlFor='phone-number'
+                        className='mb-3 block text-sm font-medium text-foreground'
+                      >
                         Phone Number
                       </Label>
                       <Input
-                        type='tel'
+                        type=''
                         name='phoneNumber'
-                        id='phoneNumber'
+                        id='phone-number'
                         placeholder='+990 3343 7865'
                         defaultValue='+990 3343 7865'
                       />
@@ -71,7 +74,7 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
                   </div>
 
                   <div className='mb-5.5'>
-                    <Label htmlFor='emailAddress' className='mb-3 block text-sm font-medium text-foreground'>
+                    <Label htmlFor='email-address' className='mb-3 block text-sm font-medium text-foreground'>
                       Email Address
                     </Label>
                     <div className='relative'>
@@ -80,7 +83,7 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
                         className='pl-11.5'
                         type='email'
                         name='emailAddress'
-                        id='emailAddress'
+                        id='email-address'
                         placeholder='devidjond45@gmail.com'
                         defaultValue='devidjond45@gmail.com'
                       />
@@ -88,13 +91,13 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
                   </div>
 
                   <div className='mb-5.5'>
-                    <Label htmlFor='Username' className='mb-3 block text-sm font-medium text-foreground'>
+                    <Label htmlFor='username' className='mb-3 block text-sm font-medium text-foreground'>
                       Username
                     </Label>
                     <Input
-                      type='username'
+                      type='text'
                       name='Username'
-                      id='Username'
+                      id='username'
                       placeholder='devidjhon24'
                       defaultValue='devidjhon24'
                     />
