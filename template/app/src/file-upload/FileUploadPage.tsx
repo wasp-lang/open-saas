@@ -6,6 +6,7 @@ import { Alert, AlertDescription } from '../components/ui/alert';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardTitle } from '../components/ui/card';
 import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
 import { Progress } from '../components/ui/progress';
 import {
   type FileUploadError,
@@ -112,9 +113,9 @@ export default function FileUploadPage() {
           <CardContent className='space-y-10 my-10 py-8 px-4 mx-auto sm:max-w-lg'>
             <form onSubmit={handleUpload} className='flex flex-col gap-4'>
               <div className='space-y-2'>
-                <label htmlFor='file-upload' className='text-sm font-medium text-foreground'>
+                <Label htmlFor='file-upload' className='text-sm font-medium text-foreground'>
                   Select a file to upload
-                </label>
+                </Label>
                 <Input
                   type='file'
                   id='file-upload'

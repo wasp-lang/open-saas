@@ -106,9 +106,9 @@ export default function NavBar({ navigationItems }: { navigationItems: Navigatio
                   </SheetHeader>
                   <div className='mt-6 flow-root'>
                     <div className='-my-6 divide-y divide-border'>
-                      <ol className='space-y-2 py-6'>
+                      <ul className='space-y-2 py-6'>
                         {renderNavigationItems(navigationItems, setMobileMenuOpen)}
-                      </ol>
+                      </ul>
                       <div className='py-6'>
                         {isUserLoading ? null : !user ? (
                           <WaspRouterLink to={routes.LoginRoute.to}>
