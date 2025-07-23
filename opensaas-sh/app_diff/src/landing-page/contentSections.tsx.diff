@@ -1,8 +1,12 @@
 --- template/app/src/landing-page/contentSections.tsx
 +++ opensaas-sh/app/src/landing-page/contentSections.tsx
-@@ -0,0 +1,239 @@
+@@ -0,0 +1,248 @@
 +import { routes } from 'wasp/client/router';
 +import type { NavigationItem } from '../client/components/NavBar/NavBar';
++import blog from '../client/static/assets/blog.webp';
++import email from '../client/static/assets/email.webp';
++import fileupload from '../client/static/assets/fileupload.webp';
++import ai from '../client/static/assets/openapi.webp';
 +import kivo from '../client/static/examples/kivo.webp';
 +import messync from '../client/static/examples/messync.webp';
 +import microinfluencerClub from '../client/static/examples/microinfluencers.webp';
@@ -21,61 +25,17 @@
 +];
 +export const features: GridFeature[] = [
 +  {
-+    name: 'Deploy Anywhere. Easily.',
-+    description:
-+      'No vendor lock-in because you own all your code. Deploy yourself, or let Wasp deploy it for you with a single command.',
-+    emoji: '🚀',
-+    href: DocsUrl + '/guides/deploying/',
-+    size: 'medium',
-+  },
-+  {
-+    name: 'File Uploads with AWS',
-+    description: 'File upload examples with AWS S3 presigned URLs are included and fully documented!',
-+    emoji: '📁',
-+    href: DocsUrl + '/guides/file-uploading/',
-+    size: 'medium',
-+  },
-+  {
-+    name: 'Email Sending',
-+    description:
-+      'Email sending built-in. Combine it with the cron jobs feature to easily send emails to your customers.',
-+    emoji: '📧',
-+    href: DocsUrl + '/guides/email-sending/',
-+    size: 'large',
-+  },
-+  {
-+    name: 'Open-Source Philosophy',
-+    description: 'The repo and framework are 100% open-source',
-+    emoji: '🤝',
-+    href: DocsUrl,
-+    size: 'small',
-+  },
-+  {
-+    name: 'Full-stack Type Safety',
-+    description: 'TypeScript with auto-generated types',
-+    emoji: '🥞',
-+    href: DocsUrl,
-+    size: 'small',
-+  },
-+  {
-+    name: 'Open SaaS',
-+    description: 'Try the demo app',
-+    icon: <img src={logo} alt='Wasp Logo' className='w-8 h-8' />,
-+    href: routes.LoginRoute.to,
-+    size: 'medium',
-+    highlight: true,
-+  },
-+  {
-+    name: 'OpenAI API Implemented',
 +    description: 'Have a sweet AI-powered app concept? Get your idea shipped to potential customers in days!',
-+    emoji: '🤖',
++    icon: <img src={ai} alt='AI illustration' />,
 +    href: DocsUrl,
 +    size: 'medium',
++    fullWidthIcon: true,
++    align: 'left',
 +  },
 +  {
 +    name: 'Complete Documentation & Support',
 +    description: 'And a Discord community to help!',
-+    emoji: '🫂',
++    emoji: '📝',
 +    href: DocsUrl,
 +    size: 'small',
 +  },
@@ -87,11 +47,60 @@
 +    size: 'small',
 +  },
 +  {
++    name: 'File Uploads with AWS',
++    description: 'File upload examples with AWS S3 presigned URLs are included and fully documented!',
++    icon: <img src={fileupload} alt='File upload illustration' className='w-full h-auto' />,
++    href: DocsUrl + '/guides/file-uploading/',
++    size: 'medium',
++    fullWidthIcon: true,
++  },
++  {
++    name: 'Email Sending',
++    description:
++      'Email sending built-in. Combine it with the cron jobs feature to easily send emails to your customers.',
++    icon: <img src={email} alt='Email sending illustration' />,
++    href: DocsUrl + '/guides/email-sending/',
++    size: 'medium',
++    fullWidthIcon: true,
++    direction: 'col-reverse',
++  },
++  {
++    name: 'Open SaaS',
++    description: 'Try the demo app',
++    icon: <img src={logo} alt='Wasp Logo' />,
++    href: routes.LoginRoute.to,
++    size: 'medium',
++    highlight: true,
++  },
++  {
 +    name: 'Blog w/ Astro',
 +    description:
 +      'Built-in blog with the Astro framework. Write your posts in Markdown, and watch your SEO performance take off.',
-+    emoji: '📝',
++    icon: <img src={blog} alt='Blog illustration' />,
 +    href: DocsUrl + '/start/guided-tour/',
++    size: 'medium',
++    fullWidthIcon: true,
++  },
++  {
++    name: 'Deploy Anywhere. Easily.',
++    description:
++      'No vendor lock-in because you own all your code. Deploy yourself, or let Wasp deploy it for you with a single command.',
++    emoji: '🚀',
++    href: DocsUrl + '/guides/deploying/',
++    size: 'medium',
++  },
++  {
++    name: 'Full-stack Type Safety',
++    description: 'TypeScript with auto-generated types',
++    emoji: '🥞',
++    href: DocsUrl,
++    size: 'medium',
++  },
++  {
++    name: 'Open-Source Philosophy',
++    description: 'The repo and framework are 100% open-source',
++    emoji: '🤝',
++    href: DocsUrl,
 +    size: 'medium',
 +  },
 +];

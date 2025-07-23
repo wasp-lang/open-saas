@@ -91,7 +91,7 @@
 +
 +const AuthExample = ({ selectedProviders }: { selectedProviders: AuthProvider[] }) => {
 +  return (
-+    <Card className='py-10 max-w-lg transition-all duration-300 ease-in-out' variant='outer'>
++    <Card className='py-10 w-full max-w-md transition-all duration-300 ease-in-out' variant='outer'>
 +      <CardHeader>
 +        <p className='text-2xl font-bold'>Log in to your account</p>
 +      </CardHeader>

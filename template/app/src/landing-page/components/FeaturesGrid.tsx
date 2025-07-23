@@ -10,6 +10,7 @@ export interface GridFeature extends Omit<Feature, 'icon'> {
   direction?: 'col' | 'row' | 'col-reverse' | 'row-reverse';
   align?: 'center' | 'left';
   size: 'small' | 'medium' | 'large';
+  fullWidthIcon?: boolean;
 }
 
 interface FeaturesGridProps {
@@ -44,6 +45,7 @@ function FeaturesGridItem({
   direction = 'col',
   align = 'center',
   size = 'medium',
+  fullWidthIcon = true,
 }: GridFeature) {
   const gridFeatureSizeToClasses: Record<GridFeature['size'], string> = {
     small: 'col-span-1',
@@ -67,22 +69,29 @@ function FeaturesGridItem({
       variant='bento'
     >
       <CardContent className='p-4 h-full flex flex-col justify-center items-center'>
-        <div
-          className={cn(
-            'flex items-center gap-3',
-            directionToClass[direction],
-            align === 'center' ? 'justify-center items-center' : 'justify-start'
-          )}
-        >
-          <div className='flex h-10 w-10 items-center justify-center rounded-lg'>
-            {icon ? icon : emoji ? <span className='text-2xl'>{emoji}</span> : null}
+        {fullWidthIcon && (icon || emoji) ? (
+          <div className='w-full flex justify-center items-center mb-3'>
+            {icon ? icon : emoji ? <span className='text-4xl'>{emoji}</span> : null}
           </div>
-          <CardTitle className={cn(align === 'center' ? 'text-center' : 'text-left')}>{name}</CardTitle>
-        </div>
+        ) : (
+          <div
+            className={cn(
+              'flex items-center gap-3',
+              directionToClass[direction],
+              align === 'center' ? 'justify-center items-center' : 'justify-start'
+            )}
+          >
+            <div className='flex h-10 w-10 items-center justify-center rounded-lg'>
+              {icon ? icon : emoji ? <span className='text-2xl'>{emoji}</span> : null}
+            </div>
+            <CardTitle className={cn(align === 'center' ? 'text-center' : 'text-left')}>{name}</CardTitle>
+          </div>
+        )}
+        {fullWidthIcon && (icon || emoji) && <CardTitle className='text-center mb-2'>{name}</CardTitle>}
         <CardDescription
           className={cn(
             'text-xs leading-relaxed',
-            direction === 'col' || align === 'center' ? 'text-center' : 'text-left'
+            fullWidthIcon || direction === 'col' || align === 'center' ? 'text-center' : 'text-left'
           )}
         >
           {description}
