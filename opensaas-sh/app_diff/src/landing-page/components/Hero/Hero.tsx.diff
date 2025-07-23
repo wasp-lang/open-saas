@@ -19,9 +19,9 @@
 +        <div className='py-24 sm:py-32'>
 +          <div className='max-w-8xl px-6 lg:px-8'>
 +            <div className='lg:mb-18 mx-auto max-w-3xl text-center md:text-left'>
-+              <h1 className='text-6xl font-bold text-foreground md:text-5xl'>
++              <h1 className='text-5xl font-black text-foreground md:text-6xl'>
 +                The <span className='italic'>free</span> SaaS template with{' '}
-+                <span className='text-gradient-primary sm:text-foreground'>superpowers</span>
++                <span className='text-gradient-primary'>superpowers</span>
 +              </h1>
 +              <p className='mt-6 max-w-2xl text-lg leading-8 text-muted-foreground font-mono'>
 +                An open-source, feature-rich, full-stack React + NodeJS template that manages features for

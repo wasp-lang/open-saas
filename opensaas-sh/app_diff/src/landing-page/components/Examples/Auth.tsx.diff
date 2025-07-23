@@ -1,6 +1,6 @@
 --- template/app/src/landing-page/components/Examples/Auth.tsx
 +++ opensaas-sh/app/src/landing-page/components/Examples/Auth.tsx
-@@ -0,0 +1,120 @@
+@@ -0,0 +1,121 @@
 +import { useState } from 'react';
 +import { FaDiscord, FaGithub, FaGoogle, FaSlack } from 'react-icons/fa';
 +import { Button } from '../../../components/ui/button';
@@ -45,6 +45,7 @@
 +Done for you'
 +      description={<AuthPlayground toggleProvider={toggleProvider} selectedProviders={selectedProviders} />}
 +      highlightedComponent={<AuthExample selectedProviders={selectedProviders} />}
++      tilt='left'
 +    />
 +  );
 +}
@@ -90,7 +91,7 @@
 +
 +const AuthExample = ({ selectedProviders }: { selectedProviders: AuthProvider[] }) => {
 +  return (
-+    <Card className='py-10 max-w-lg transition-all duration-300 ease-in-out'>
++    <Card className='py-10 max-w-lg transition-all duration-300 ease-in-out' variant='outer'>
 +      <CardHeader>
 +        <p className='text-2xl font-bold'>Log in to your account</p>
 +      </CardHeader>

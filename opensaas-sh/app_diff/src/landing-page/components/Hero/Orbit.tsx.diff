@@ -1,6 +1,6 @@
 --- template/app/src/landing-page/components/Hero/Orbit.tsx
 +++ opensaas-sh/app/src/landing-page/components/Hero/Orbit.tsx
-@@ -0,0 +1,216 @@
+@@ -0,0 +1,215 @@
 +import { useEffect, useState } from 'react';
 +import logo from '../../../client/static/logo.webp';
 +import nodeLogoDark from '../../../client/static/logos/nodejs-dark.png';
@@ -133,7 +133,7 @@
 +  return (
 +    <div className='relative w-[500px] h-[500px] flex items-center justify-center'>
 +      <div className='absolute flex items-center gap-2 flex-col'>
-+        <p className='text-5xl font-bold text-gradient-primary'>100%</p>
++        <p className='text-6xl font-black font-sans text-gradient-primary'>100%</p>
 +        <p className='text-lg text-muted-foreground'>Open Source</p>
 +      </div>
 +
@@ -192,7 +192,6 @@
 +        );
 +      })}
 +
-+      {/* Logos positioned on circles */}
 +      {logoConfigs.map((logoConfig) => {
 +        const { x, y } = getLogoPosition(logoConfig.circleIndex, logoConfig.position, rotation);
 +        const LogoComponent = logoConfig.component;
