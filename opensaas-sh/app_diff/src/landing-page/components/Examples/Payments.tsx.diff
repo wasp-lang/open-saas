@@ -1,7 +1,7 @@
 --- template/app/src/landing-page/components/Examples/Payments.tsx
 +++ opensaas-sh/app/src/landing-page/components/Examples/Payments.tsx
 @@ -0,0 +1,21 @@
-+import payments from '../../../client/static/assets/payments.png';
++import payments from '../../../client/static/assets/payments.webp';
 +import HighlightedFeature from '../HighlightedFeature';
 +
 +export default function Payments() {

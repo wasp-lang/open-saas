@@ -2,7 +2,13 @@ import { routes } from 'wasp/client/router';
 import type { NavigationItem } from '../client/components/NavBar/NavBar';
 import avatarPlaceholder from '../client/static/avatar-placeholder.webp';
 import daBoiAvatar from '../client/static/da-boi.webp';
-import openSaasBannerWebp from '../client/static/open-saas-banner.webp';
+import kivo from '../client/static/examples/kivo.webp';
+import messync from '../client/static/examples/messync.webp';
+import microinfluencerClub from '../client/static/examples/microinfluencers.webp';
+import promptpanda from '../client/static/examples/promptpanda.webp';
+import reviewradar from '../client/static/examples/reviewradar.webp';
+import scribeist from '../client/static/examples/scribeist.webp';
+import searchcraft from '../client/static/examples/searchcraft.webp';
 import { BlogUrl, DocsUrl } from '../shared/common';
 import type { GridFeature } from './components/FeaturesGrid';
 
@@ -126,43 +132,43 @@ export const examples = [
   {
     name: 'Example #1',
     description: 'Describe your example here.',
-    imageSrc: openSaasBannerWebp,
+    imageSrc: kivo,
     href: '#',
   },
   {
     name: 'Example #2',
     description: 'Describe your example here.',
-    imageSrc: openSaasBannerWebp,
+    imageSrc: messync,
     href: '#',
   },
   {
     name: 'Example #3',
     description: 'Describe your example here.',
-    imageSrc: openSaasBannerWebp,
+    imageSrc: microinfluencerClub,
     href: '#',
   },
   {
     name: 'Example #4',
     description: 'Describe your example here.',
-    imageSrc: openSaasBannerWebp,
+    imageSrc: promptpanda,
     href: '#',
   },
   {
     name: 'Example #5',
     description: 'Describe your example here.',
-    imageSrc: openSaasBannerWebp,
+    imageSrc: reviewradar,
     href: '#',
   },
   {
     name: 'Example #6',
     description: 'Describe your example here.',
-    imageSrc: openSaasBannerWebp,
+    imageSrc: scribeist,
     href: '#',
   },
   {
     name: 'Example #7',
     description: 'Describe your example here.',
-    imageSrc: openSaasBannerWebp,
+    imageSrc: searchcraft,
     href: '#',
   },
 ];

@@ -1,7 +1,7 @@
 --- template/app/src/landing-page/components/Examples/Admin.tsx
 +++ opensaas-sh/app/src/landing-page/components/Examples/Admin.tsx
 @@ -0,0 +1,20 @@
-+import admin from '../../../client/static/assets/admin.png';
++import admin from '../../../client/static/assets/admin.webp';
 +import HighlightedFeature from '../HighlightedFeature';
 +
 +export default function Admin() {

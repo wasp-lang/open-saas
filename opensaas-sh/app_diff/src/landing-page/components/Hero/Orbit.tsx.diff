@@ -3,12 +3,12 @@
 @@ -0,0 +1,215 @@
 +import { useEffect, useState } from 'react';
 +import logo from '../../../client/static/logo.webp';
-+import nodeLogoDark from '../../../client/static/logos/nodejs-dark.png';
-+import nodeLogo from '../../../client/static/logos/nodejs-light.png';
-+import stripeLogoDark from '../../../client/static/logos/stripe-dark.png';
-+import stripeLogo from '../../../client/static/logos/stripe-light.png';
-+import tailwindLogoDark from '../../../client/static/logos/tailwind-dark.png';
-+import tailwindLogo from '../../../client/static/logos/tailwind-light.png';
++import nodeLogoDark from '../../../client/static/logos/nodejs-dark.webp';
++import nodeLogo from '../../../client/static/logos/nodejs-light.webp';
++import stripeLogoDark from '../../../client/static/logos/stripe-dark.webp';
++import stripeLogo from '../../../client/static/logos/stripe-light.webp';
++import tailwindLogoDark from '../../../client/static/logos/tailwind-dark.webp';
++import tailwindLogo from '../../../client/static/logos/tailwind-light.webp';
 +import { cn } from '../../../lib/utils';
 +import AstroLogo from '../../logos/AstroLogo';
 +import OpenAILogo from '../../logos/OpenAILogo';

@@ -3,13 +3,13 @@
 @@ -0,0 +1,239 @@
 +import { routes } from 'wasp/client/router';
 +import type { NavigationItem } from '../client/components/NavBar/NavBar';
-+import kivo from '../client/static/examples/kivo.png';
-+import messync from '../client/static/examples/messync.png';
-+import microinfluencerClub from '../client/static/examples/microinfluencers.png';
-+import promptpanda from '../client/static/examples/promptpanda.png';
-+import reviewradar from '../client/static/examples/reviewradar.png';
-+import scribeist from '../client/static/examples/scribeist.png';
-+import searchcraft from '../client/static/examples/searchcraft.png';
++import kivo from '../client/static/examples/kivo.webp';
++import messync from '../client/static/examples/messync.webp';
++import microinfluencerClub from '../client/static/examples/microinfluencers.webp';
++import promptpanda from '../client/static/examples/promptpanda.webp';
++import reviewradar from '../client/static/examples/reviewradar.webp';
++import scribeist from '../client/static/examples/scribeist.webp';
++import searchcraft from '../client/static/examples/searchcraft.webp';
 +import logo from '../client/static/logo.webp';
 +import { BlogUrl, DocsUrl, GithubUrl } from '../shared/common';
 +import { GridFeature } from './components/FeaturesGrid';
