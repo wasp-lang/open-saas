@@ -1,6 +1,6 @@
 --- template/app/src/landing-page/components/Hero/Orbit.tsx
 +++ opensaas-sh/app/src/landing-page/components/Hero/Orbit.tsx
-@@ -0,0 +1,213 @@
+@@ -0,0 +1,217 @@
 +import { useEffect, useState } from 'react';
 +import logo from '../../../client/static/logo.webp';
 +import nodeLogoDark from '../../../client/static/logos/nodejs-dark.webp';
@@ -183,8 +183,12 @@
 +              width: circle.radius * 2,
 +              height: circle.radius * 2,
 +              background: gradients[circleIndex],
-+              mask: `radial-gradient(circle at center, transparent calc(${circle.radius}px - 2px), black calc(${circle.radius}px - 1px), black ${circle.radius}px, transparent calc(${circle.radius}px + 1px))`,
-+              WebkitMask: `radial-gradient(circle at center, transparent calc(${circle.radius}px - 2px), black calc(${circle.radius}px - 1px), black ${circle.radius}px, transparent calc(${circle.radius}px + 1px))`,
++              mask: `radial-gradient(circle at center, transparent ${circle.radius - 2}px, black ${
++                circle.radius - 1
++              }px, black ${circle.radius}px, transparent ${circle.radius + 1}px)`,
++              WebkitMask: `radial-gradient(circle at center, transparent ${circle.radius - 2}px, black ${
++                circle.radius - 1
++              }px, black ${circle.radius}px, transparent ${circle.radius + 1}px)`,
 +            }}
 +          />
 +        );

@@ -1,6 +1,6 @@
 --- template/app/src/landing-page/contentSections.tsx
 +++ opensaas-sh/app/src/landing-page/contentSections.tsx
-@@ -0,0 +1,245 @@
+@@ -0,0 +1,247 @@
 +import { routes } from 'wasp/client/router';
 +import type { NavigationItem } from '../client/components/NavBar/NavBar';
 +import blog from '../client/static/assets/blog.webp';
@@ -88,14 +88,16 @@
 +  },
 +  {
 +    name: 'Full-stack Type Safety',
-+    description: 'TypeScript with auto-generated types',
++    description:
++      'Full support for TypeScript with auto-generated types that span the whole stack. Nothing to configure!',
 +    emoji: '🥞',
 +    href: DocsUrl,
 +    size: 'medium',
 +  },
 +  {
 +    name: 'Open-Source Philosophy',
-+    description: 'The repo and framework are 100% open-source',
++    description:
++      'The repo and framework are 100% open-source, and so are the services wherever possible. Still missing something? Contribute!',
 +    emoji: '🤝',
 +    href: DocsUrl,
 +    size: 'medium',
