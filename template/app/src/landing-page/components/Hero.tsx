@@ -1,5 +1,4 @@
 import { Link as WaspRouterLink, routes } from 'wasp/client/router';
-import openSaasBannerWebp from '../../client/static/open-saas-banner.webp';
 import { Button } from '../../components/ui/button';
 
 export default function Hero() {
@@ -7,7 +6,7 @@ export default function Hero() {
     <div className='relative pt-14 w-full'>
       <TopGradient />
       <BottomGradient />
-      <div className='py-24 sm:py-32'>
+      <div className='p-24'>
         <div className='mx-auto max-w-8xl px-6 lg:px-8'>
           <div className='lg:mb-18 mx-auto max-w-3xl text-center'>
             <h1 className='text-4xl font-bold text-foreground sm:text-6xl'>
@@ -26,17 +25,6 @@ export default function Hero() {
                   Get Started <span aria-hidden='true'>→</span>
                 </WaspRouterLink>
               </Button>
-            </div>
-          </div>
-          <div className='mt-14 flow-root sm:mt-14'>
-            <div className='-m-2 flex justify-center rounded-xl lg:-m-4 lg:rounded-2xl lg:p-4'>
-              <img
-                src={openSaasBannerWebp}
-                alt='App screenshot'
-                width={1000}
-                height={530}
-                className='rounded-md shadow-2xl ring-1 ring-border'
-              />
             </div>
           </div>
         </div>
