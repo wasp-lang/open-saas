@@ -1,6 +1,6 @@
 --- template/app/src/landing-page/components/Hero/Orbit.tsx
 +++ opensaas-sh/app/src/landing-page/components/Hero/Orbit.tsx
-@@ -0,0 +1,215 @@
+@@ -0,0 +1,213 @@
 +import { useEffect, useState } from 'react';
 +import logo from '../../../client/static/logo.webp';
 +import nodeLogoDark from '../../../client/static/logos/nodejs-dark.webp';
@@ -56,7 +56,7 @@
 +  { id: 'prisma', component: PrismaLogo, circleIndex: 2, position: 90, size: 24 },
 +  { id: 'shadcn', component: ShadCNLogo, circleIndex: 2, position: 210, size: 24 },
 +  {
-+    id: 'tailwind',
++    id: 'tailwind-light',
 +    component: () => (
 +      <ImageLogo src={tailwindLogo} alt='Tailwind CSS Logo' className='w-8 h-8 dark:hidden' dark={false} />
 +    ),
@@ -64,32 +64,32 @@
 +    position: 330,
 +  },
 +  {
-+    id: 'tailwind',
++    id: 'tailwind-dark',
 +    component: () => <ImageLogo src={tailwindLogoDark} alt='Tailwind CSS Logo' dark={true} />,
 +    circleIndex: 2,
 +    position: 330,
 +  },
 +  {
-+    id: 'stripe',
++    id: 'stripe-light',
 +    component: () => <ImageLogo src={stripeLogo} alt='Stripe Logo' dark={false} />,
 +    circleIndex: 3,
 +    position: 180,
 +  },
 +  {
-+    id: 'stripe',
++    id: 'stripe-dark',
 +    component: () => <ImageLogo src={stripeLogoDark} alt='Stripe Logo' dark={true} />,
 +    circleIndex: 3,
 +    position: 180,
 +  },
 +  { id: 'react', component: ReactLogo, circleIndex: 3, position: 300, size: 32 },
 +  {
-+    id: 'node',
++    id: 'node-light',
 +    component: () => <ImageLogo src={nodeLogo} alt='Node.js Logo' dark={false} />,
 +    circleIndex: 3,
 +    position: 50,
 +  },
 +  {
-+    id: 'node',
++    id: 'node-dark',
 +    component: () => <ImageLogo src={nodeLogoDark} alt='Node.js Logo' dark={true} />,
 +    circleIndex: 3,
 +    position: 50,
@@ -108,17 +108,15 @@
 +export default function Orbit() {
 +  const [rotation, setRotation] = useState(0);
 +
-+  // Animation loop
 +  useEffect(() => {
 +    const animate = () => {
 +      setRotation((prev) => prev + 0.5);
 +    };
 +
-+    const interval = setInterval(animate, 50); // 20 FPS
++    const interval = setInterval(animate, 50);
 +    return () => clearInterval(interval);
 +  }, []);
 +
-+  // Calculate logo position on circle
 +  const getLogoPosition = (circleIndex: number, position: number, rotation: number) => {
 +    const circle = circles[circleIndex];
 +    const totalRotation = rotation * circle.rotationSpeed + position;

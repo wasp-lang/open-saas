@@ -1,6 +1,6 @@
 --- template/app/src/client/components/NavBar/NavBar.tsx
 +++ opensaas-sh/app/src/client/components/NavBar/NavBar.tsx
-@@ -38,13 +38,16 @@
+@@ -38,8 +38,12 @@
  
    return (
      <>
@@ -14,15 +14,8 @@
 +      >
          <div
            className={cn('transition-all duration-300', {
--            'mx-4 md:mx-20 rounded-full shadow-lg bg-background/90 backdrop-blur-lg border border-border':
--              isScrolled,
--            'mx-0 bg-background/80 backdrop-blur-lg border-b border-border': !isScrolled,
-+            'mx-auto rounded-full shadow-outer dark:shadow bg-background border border-border': isScrolled,
-+            'mx-0 bg-background border-b border-border': !isScrolled,
-           })}
-         >
-           <nav
-@@ -67,7 +70,7 @@
+             'mx-4 md:mx-20 rounded-full shadow-lg bg-background/90 backdrop-blur-lg border border-border':
+@@ -67,7 +71,7 @@
                        'ml-2 text-xs': isScrolled,
                      })}
                    >
@@ -31,7 +24,7 @@
                    </span>
                  )}
                </WaspRouterLink>
-@@ -99,7 +102,7 @@
+@@ -99,7 +103,7 @@
                    <SheetHeader>
                      <SheetTitle className='flex items-center'>
                        <WaspRouterLink to={routes.LandingPageRoute.to}>
@@ -40,7 +33,7 @@
                          <NavLogo isScrolled={false} />
                        </WaspRouterLink>
                      </SheetTitle>
-@@ -246,34 +249,6 @@
+@@ -246,34 +250,6 @@
        'size-6': isScrolled,
      })}
      src={logo}

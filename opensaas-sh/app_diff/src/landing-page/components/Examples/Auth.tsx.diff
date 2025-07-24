@@ -1,6 +1,6 @@
 --- template/app/src/landing-page/components/Examples/Auth.tsx
 +++ opensaas-sh/app/src/landing-page/components/Examples/Auth.tsx
-@@ -0,0 +1,121 @@
+@@ -0,0 +1,122 @@
 +import { useState } from 'react';
 +import { FaDiscord, FaGithub, FaGoogle, FaSlack } from 'react-icons/fa';
 +import { Button } from '../../../components/ui/button';
@@ -46,6 +46,7 @@
 +      description={<AuthPlayground toggleProvider={toggleProvider} selectedProviders={selectedProviders} />}
 +      highlightedComponent={<AuthExample selectedProviders={selectedProviders} />}
 +      tilt='left'
++      className='h-[400px]'
 +    />
 +  );
 +}

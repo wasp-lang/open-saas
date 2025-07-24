@@ -27,9 +27,19 @@
  }: GridFeature) {
    const gridFeatureSizeToClasses: Record<GridFeature['size'], string> = {
      small: 'col-span-1',
-@@ -66,12 +69,49 @@
+@@ -60,49 +63,102 @@
+     'col-reverse': 'flex-col-reverse',
+   };
+ 
++  const mobileOrderClass = highlight ? 'order-last md:order-none' : '';
++
+   const gridFeatureCard = (
+     <Card
+       className={cn(
          'h-full min-h-[140px] transition-all duration-300 hover:shadow-lg cursor-pointer',
-         gridFeatureSizeToClasses[size]
+-        gridFeatureSizeToClasses[size]
++        gridFeatureSizeToClasses[size],
++        mobileOrderClass
        )}
 -      variant='bento'
 +      variant={highlight ? 'bentoHighlight' : 'bento'}
@@ -50,7 +60,7 @@
 +            <div
 +              className={cn(
 +                'w-full flex items-center justify-center',
-+                direction === 'col-reverse' ? 'order-2' : 'order-1'
++                direction === 'col-reverse' ? 'order-2 mt-6' : 'order-1'
 +              )}
 +            >
 +              {icon ? (
@@ -61,10 +71,7 @@
 +            </div>
 +            {fullWidthIcon && (icon || emoji) && (
 +              <CardTitle
-+                className={cn(
-+                  'text-center mb-2 text-2xl',
-+                  direction === 'col-reverse' ? 'order-1' : 'order-2'
-+                )}
++                className={cn('text-center text-2xl', direction === 'col-reverse' ? 'order-1' : 'order-2')}
 +              >
 +                {name}
 +              </CardTitle>
@@ -81,14 +88,26 @@
            </div>
          ) : (
            <div
-@@ -84,18 +124,26 @@
-             <div className='flex h-10 w-10 items-center justify-center rounded-lg'>
-               {icon ? icon : emoji ? <span className='text-2xl'>{emoji}</span> : null}
-             </div>
+             className={cn(
+-              'flex items-center gap-3',
++              'flex items-center',
++              (icon || emoji) && 'gap-3',
+               directionToClass[direction],
+               align === 'center' ? 'justify-center items-center' : 'justify-start'
+             )}
+           >
+-            <div className='flex h-10 w-10 items-center justify-center rounded-lg'>
+-              {icon ? icon : emoji ? <span className='text-2xl'>{emoji}</span> : null}
+-            </div>
 -            <CardTitle className={cn(align === 'center' ? 'text-center' : 'text-left')}>{name}</CardTitle>
++            {(icon || emoji) && (
++              <div className='flex h-10 w-10 items-center justify-center rounded-lg'>
++                {icon ? icon : <span className='text-2xl'>{emoji}</span>}
++              </div>
++            )}
 +            <CardTitle
 +              className={cn(
-+                highlight ? 'text-3xl' : 'text-lg',
++                highlight ? 'text-4xl font-bold' : 'text-lg',
 +                align === 'center' ? 'text-center' : 'text-left'
 +              )}
 +            >
@@ -118,3 +137,16 @@
        </CardContent>
      </Card>
    );
+ 
+   if (href) {
+     return (
+-      <a href={href} target='_blank' rel='noopener noreferrer' className={gridFeatureSizeToClasses[size]}>
++      <a
++        href={href}
++        target='_blank'
++        rel='noopener noreferrer'
++        className={cn(gridFeatureSizeToClasses[size], mobileOrderClass)}
++      >
+         {gridFeatureCard}
+       </a>
+     );

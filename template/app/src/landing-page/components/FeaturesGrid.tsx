@@ -20,7 +20,7 @@ interface FeaturesGridProps {
 
 const FeaturesGrid = ({ features, className = '' }: FeaturesGridProps) => {
   return (
-    <div className='flex flex-col gap-4 my-16 md:my-24 lg:my-40' id='features'>
+    <div className='flex flex-col gap-4 my-16 md:my-24 lg:my-40 max-w-7xl mx-auto' id='features'>
       <SectionTitle title='Features' description='These are some of the features of the product.' />
       <div
         className={cn(
