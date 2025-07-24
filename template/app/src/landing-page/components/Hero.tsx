@@ -1,4 +1,6 @@
 import { Link as WaspRouterLink, routes } from 'wasp/client/router';
+import openSaasBannerDark from '../../client/static/open-saas-banner-dark.png';
+import openSaasBannerLight from '../../client/static/open-saas-banner-light.png';
 import { Button } from '../../components/ui/button';
 
 export default function Hero() {
@@ -6,10 +8,10 @@ export default function Hero() {
     <div className='relative pt-14 w-full'>
       <TopGradient />
       <BottomGradient />
-      <div className='p-24'>
+      <div className='md:p-24'>
         <div className='mx-auto max-w-8xl px-6 lg:px-8'>
           <div className='lg:mb-18 mx-auto max-w-3xl text-center'>
-            <h1 className='text-4xl font-bold text-foreground sm:text-6xl'>
+            <h1 className='text-5xl font-bold text-foreground sm:text-6xl'>
               Some <span className='italic'>cool</span> words about{' '}
               <span className='text-gradient-primary'>your product</span>
             </h1>
@@ -25,6 +27,26 @@ export default function Hero() {
                   Get Started <span aria-hidden='true'>→</span>
                 </WaspRouterLink>
               </Button>
+            </div>
+          </div>
+          <div className='mt-14 flow-root sm:mt-14'>
+            <div className='hidden md:flex m-2 justify-center rounded-xl lg:-m-4 lg:rounded-2xl lg:p-4'>
+              <img
+                src={openSaasBannerLight}
+                alt='App screenshot'
+                width={1000}
+                height={530}
+                loading='lazy'
+                className='rounded-md shadow-2xl ring-1 ring-gray-900/10 dark:hidden'
+              />
+              <img
+                src={openSaasBannerDark}
+                alt='App screenshot'
+                width={1000}
+                height={530}
+                loading='lazy'
+                className='rounded-md shadow-2xl ring-1 ring-gray-900/10 hidden dark:block'
+              />
             </div>
           </div>
         </div>

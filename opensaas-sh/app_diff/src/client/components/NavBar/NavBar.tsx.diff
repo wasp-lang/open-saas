@@ -1,6 +1,14 @@
 --- template/app/src/client/components/NavBar/NavBar.tsx
 +++ opensaas-sh/app/src/client/components/NavBar/NavBar.tsx
-@@ -38,8 +38,12 @@
+@@ -10,6 +10,7 @@
+ import { useIsLandingPage } from '../../hooks/useIsLandingPage';
+ import logo from '../../static/logo.webp';
+ import DarkModeSwitcher from '../DarkModeSwitcher';
++import RepoInfo from '../RepoInfo';
+ 
+ export interface NavigationItem {
+   name: string;
+@@ -38,8 +39,12 @@
  
    return (
      <>
@@ -15,7 +23,7 @@
          <div
            className={cn('transition-all duration-300', {
              'mx-4 md:mx-20 rounded-full shadow-lg bg-background/90 backdrop-blur-lg border border-border':
-@@ -67,7 +71,7 @@
+@@ -67,7 +72,7 @@
                        'ml-2 text-xs': isScrolled,
                      })}
                    >
@@ -24,7 +32,7 @@
                    </span>
                  )}
                </WaspRouterLink>
-@@ -99,7 +103,7 @@
+@@ -99,7 +104,7 @@
                    <SheetHeader>
                      <SheetTitle className='flex items-center'>
                        <WaspRouterLink to={routes.LandingPageRoute.to}>
@@ -33,7 +41,39 @@
                          <NavLogo isScrolled={false} />
                        </WaspRouterLink>
                      </SheetTitle>
-@@ -246,34 +250,6 @@
+@@ -123,7 +128,14 @@
+                         )}
+                       </div>
+                       <div className='py-6'>
+-                        <DarkModeSwitcher />
++                        <ul className='flex items-center justify-between gap-4'>
++                          <li>
++                            <DarkModeSwitcher />
++                          </li>
++                          <li>
++                            <RepoInfo />
++                          </li>
++                        </ul>
+                       </div>
+                     </div>
+                   </div>
+@@ -132,8 +144,13 @@
+             </div>
+ 
+             <div className='hidden lg:flex lg:flex-1 gap-3 justify-end items-center'>
+-              <ul className='flex justify-center items-center gap-2 sm:gap-4'>
+-                <DarkModeSwitcher />
++              <ul className='flex justify-center items-center gap-2 sm:gap-6'>
++                <li>
++                  <RepoInfo />
++                </li>
++                <li>
++                  <DarkModeSwitcher />
++                </li>
+               </ul>
+               {isUserLoading ? null : !user ? (
+                 <WaspRouterLink
+@@ -246,34 +263,6 @@
        'size-6': isScrolled,
      })}
      src={logo}
