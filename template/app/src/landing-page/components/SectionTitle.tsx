@@ -1,9 +1,9 @@
 export default function SectionTitle({
   title,
-  subtitle,
+  description,
 }: {
   title: string | React.ReactNode;
-  subtitle?: string | React.ReactNode;
+  description?: string | React.ReactNode;
   titleComponent?: React.ReactNode;
 }) {
   const titleElement =
@@ -12,17 +12,17 @@ export default function SectionTitle({
     ) : (
       title
     );
-  const subtitleElement =
-    typeof subtitle === 'string' ? (
-      <p className='mt-4 text-lg leading-8 text-muted-foreground'>{subtitle}</p>
+  const descriptionElement =
+    typeof description === 'string' ? (
+      <p className='mt-4 text-lg leading-8 text-muted-foreground'>{description}</p>
     ) : (
-      subtitle
+      description
     );
 
   return (
     <div className='mx-auto max-w-2xl text-center mb-8'>
       {titleElement}
-      {subtitleElement}
+      {descriptionElement}
     </div>
   );
 }

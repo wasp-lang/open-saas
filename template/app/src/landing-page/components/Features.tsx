@@ -16,7 +16,7 @@ export default function Features({ features }: { features: Feature[] }) {
             The <span className='text-secondary'>Best</span> Features
           </p>
         }
-        subtitle="Don't work harder. Work smarter."
+        description="Don't work harder. Work smarter."
       />
       <div className='mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl'>
         <dl className='grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16'>
