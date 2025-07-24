@@ -8,7 +8,8 @@ type PageViewsStats = {
 };
 
 const TotalPageViewsCard = ({ totalPageViews, prevDayViewsChangePercent }: PageViewsStats) => {
-  const isDeltaPositive = parseInt(prevDayViewsChangePercent || '') > 0;
+  const prevDayViewsChangePercentValue = parseInt(prevDayViewsChangePercent || '');
+  const isDeltaPositive = prevDayViewsChangePercentValue > 0;
 
   return (
     <Card>
@@ -27,18 +28,17 @@ const TotalPageViewsCard = ({ totalPageViews, prevDayViewsChangePercent }: PageV
         <span
           className={cn('flex items-center gap-1 text-sm font-medium', {
             'text-success':
-              isDeltaPositive && prevDayViewsChangePercent && parseInt(prevDayViewsChangePercent) !== 0,
+              isDeltaPositive && prevDayViewsChangePercent && prevDayViewsChangePercentValue !== 0,
             'text-destructive':
-              !isDeltaPositive && prevDayViewsChangePercent && parseInt(prevDayViewsChangePercent) !== 0,
-            'text-muted-foreground':
-              !prevDayViewsChangePercent || parseInt(prevDayViewsChangePercent || '') === 0,
+              !isDeltaPositive && prevDayViewsChangePercent && prevDayViewsChangePercentValue !== 0,
+            'text-muted-foreground': !prevDayViewsChangePercent || prevDayViewsChangePercentValue === 0,
           })}
         >
-          {prevDayViewsChangePercent && parseInt(prevDayViewsChangePercent) !== 0
+          {prevDayViewsChangePercent && prevDayViewsChangePercentValue !== 0
             ? `${prevDayViewsChangePercent}%`
             : '-'}
           {prevDayViewsChangePercent &&
-            parseInt(prevDayViewsChangePercent) !== 0 &&
+            prevDayViewsChangePercentValue !== 0 &&
             (isDeltaPositive ? <ArrowUp /> : <ArrowDown />)}
         </span>
       </CardContent>
