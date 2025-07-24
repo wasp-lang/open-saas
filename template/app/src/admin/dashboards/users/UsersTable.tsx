@@ -118,12 +118,12 @@ const UsersTable = () => {
                             checked={subscriptionStatusFilter.length === 0}
                             onCheckedChange={() => clearAllStatusFilters()}
                           />
-                          <label
+                          <Label
                             htmlFor='all-statuses'
                             className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
                           >
                             All Statuses
-                          </label>
+                          </Label>
                         </div>
                         <div className='flex items-center space-x-2'>
                           <Checkbox
@@ -131,12 +131,12 @@ const UsersTable = () => {
                             checked={subscriptionStatusFilter.includes(null)}
                             onCheckedChange={() => handleStatusToggle(null)}
                           />
-                          <label
+                          <Label
                             htmlFor='has-not-subscribed'
                             className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
                           >
                             Has Not Subscribed
-                          </label>
+                          </Label>
                         </div>
                         {Object.values(SubscriptionStatus).map((status) => (
                           <div key={status} className='flex items-center space-x-2'>
@@ -145,12 +145,12 @@ const UsersTable = () => {
                               checked={subscriptionStatusFilter.includes(status)}
                               onCheckedChange={() => handleStatusToggle(status)}
                             />
-                            <label
+                            <Label
                               htmlFor={status}
                               className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
                             >
                               {status}
-                            </label>
+                            </Label>
                           </div>
                         ))}
                       </div>
