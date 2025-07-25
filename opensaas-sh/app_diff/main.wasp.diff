@@ -119,3 +119,11 @@
    httpRoute: (POST, "/payments-webhook")
  }
  //#endregion
+@@ -281,7 +279,6 @@
+   component: import AdminCalendar from "@src/admin/elements/calendar/CalendarPage"
+ }
+ 
+-
+ route AdminUIButtonsRoute { path: "/admin/ui/buttons", to: AdminUIButtonsPage }
+ page AdminUIButtonsPage {
+   authRequired: true,

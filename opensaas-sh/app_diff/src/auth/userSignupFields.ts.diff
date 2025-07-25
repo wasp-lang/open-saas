@@ -1,14 +1,14 @@
 --- template/app/src/auth/userSignupFields.ts
 +++ opensaas-sh/app/src/auth/userSignupFields.ts
-@@ -1,8 +1,6 @@
- import { z } from 'zod';
+@@ -1,7 +1,5 @@
+-import { z } from 'zod';
  import { defineUserSignupFields } from 'wasp/auth/providers/types';
- 
--const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
 -
+-const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
++import { z } from 'zod';
+ 
  const emailDataSchema = z.object({
    email: z.string(),
- });
 @@ -16,10 +14,6 @@
      const emailData = emailDataSchema.parse(data);
      return emailData.email;

@@ -1,6 +1,6 @@
 --- template/app/README.md
 +++ opensaas-sh/app/README.md
-@@ -1,12 +1,25 @@
+@@ -1,6 +1,8 @@
 -# <YOUR_APP_NAME>
 +# opensaas.sh (demo) app
  
@@ -8,6 +8,10 @@
 +This is a Wasp app based on Open Saas template with minimal modifications that make it into a demo app that showcases Open Saas's abilities.
 +
 +It is deployed to https://opensaas.sh and serves both as a landing page for Open Saas and as a demo app.
+ 
+ ## UI Components
+ 
+@@ -8,9 +10,20 @@
  
  ## Development
  

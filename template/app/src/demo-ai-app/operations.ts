@@ -1,19 +1,19 @@
-import * as z from 'zod';
 import type { PrismaPromise } from '@prisma/client';
-import type { Task, GptResponse, User } from 'wasp/entities';
+import OpenAI from 'openai';
+import type { GptResponse, Task, User } from 'wasp/entities';
+import { HttpError, prisma } from 'wasp/server';
 import type {
-  GenerateGptResponse,
   CreateTask,
   DeleteTask,
-  UpdateTask,
-  GetGptResponses,
+  GenerateGptResponse,
   GetAllTasksByUser,
+  GetGptResponses,
+  UpdateTask,
 } from 'wasp/server/operations';
-import { HttpError, prisma } from 'wasp/server';
-import { GeneratedSchedule } from './schedule';
-import OpenAI from 'openai';
+import * as z from 'zod';
 import { SubscriptionStatus } from '../payment/plans';
 import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
+import { GeneratedSchedule, TaskPriority } from './schedule';
 
 const openAi = setUpOpenAi();
 function setUpOpenAi(): OpenAI {
@@ -241,7 +241,7 @@ async function generateScheduleWithGpt(tasks: Task[], hours: number): Promise<Ge
           parameters: {
             type: 'object',
             properties: {
-              mainTasks: {
+              tasks: {
                 type: 'array',
                 description: 'Name of main tasks provided by user, ordered by priority',
                 items: {
@@ -253,13 +253,13 @@ async function generateScheduleWithGpt(tasks: Task[], hours: number): Promise<Ge
                     },
                     priority: {
                       type: 'string',
-                      enum: ['low', 'medium', 'high'],
+                      enum: ['low', 'medium', 'high'] as TaskPriority[],
                       description: 'task priority',
                     },
                   },
                 },
               },
-              subtasks: {
+              taskItems: {
                 type: 'array',
                 items: {
                   type: 'object',
@@ -273,7 +273,7 @@ async function generateScheduleWithGpt(tasks: Task[], hours: number): Promise<Ge
                       type: 'number',
                       description: 'time allocated for a given subtask in hours, e.g. 0.5',
                     },
-                    mainTaskName: {
+                    taskName: {
                       type: 'string',
                       description: 'name of main task related to subtask',
                     },
@@ -281,7 +281,7 @@ async function generateScheduleWithGpt(tasks: Task[], hours: number): Promise<Ge
                 },
               },
             },
-            required: ['mainTasks', 'subtasks', 'time', 'priority'],
+            required: ['tasks', 'taskItems', 'time', 'priority'],
           },
         },
       },

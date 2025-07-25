@@ -1,0 +1,47 @@
+--- template/app/src/landing-page/components/HighlightedFeature.tsx
++++ opensaas-sh/app/src/landing-page/components/HighlightedFeature.tsx
+@@ -6,6 +6,8 @@
+   direction?: 'row' | 'row-reverse';
+   highlightedComponent: React.ReactNode;
+   tilt?: 'left' | 'right';
++  className?: string;
++  url?: string;
+ }
+ 
+ /**
+@@ -18,6 +20,8 @@
+   direction = 'row',
+   highlightedComponent,
+   tilt,
++  className,
++  url,
+ }: FeatureProps) => {
+   const tiltToClass: Record<Required<FeatureProps>['tilt'], string> = {
+     left: 'rotate-1',
+@@ -27,12 +31,14 @@
+   return (
+     <div
+       className={cn(
+-        'max-w-6xl mx-auto flex flex-col items-center my-50 gap-x-20 gap-y-10 justify-between px-8 md:px-4 transition-all duration-300 ease-in-out',
++        'max-w-6xl mx-auto flex flex-col md:items-center my-50 gap-x-20 gap-y-10 justify-between px-8 md:px-4 transition-all duration-300 ease-in-out',
+         direction === 'row' ? 'md:flex-row' : 'md:flex-row-reverse'
+       )}
+     >
+       <div className='flex-col flex-1'>
+-        <h2 className='text-4xl font-bold mb-2'>{name}</h2>
++        <a href={url} target='_blank' rel='noopener noreferrer'>
++          <h2 className='text-4xl font-bold mb-2'>{name}</h2>
++        </a>
+         {typeof description === 'string' ? (
+           <p className='text-muted-foreground'>{description}</p>
+         ) : (
+@@ -42,7 +48,8 @@
+       <div
+         className={cn(
+           'flex flex-1 my-10 transition-transform duration-300 ease-in-out w-full items-center justify-center',
+-          tilt && tiltToClass[tilt]
++          tilt && tiltToClass[tilt],
++          className
+         )}
+       >
+         {highlightedComponent}

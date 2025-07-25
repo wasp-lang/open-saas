@@ -1,0 +1,9 @@
+--- template/app/src/file-upload/fileUploading.ts
++++ opensaas-sh/app/src/file-upload/fileUploading.ts
+@@ -1,5 +1,5 @@
+-import { createFile } from 'wasp/client/operations';
+ import axios from 'axios';
++import { createFile } from 'wasp/client/operations';
+ import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE_BYTES } from './validation';
+ 
+ export type FileWithValidType = Omit<File, 'type'> & { type: AllowedFileType };
