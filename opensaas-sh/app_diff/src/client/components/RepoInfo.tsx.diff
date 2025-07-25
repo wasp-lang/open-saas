@@ -32,9 +32,9 @@
 +
 +  return (
 +    <a href='https://github.com/wasp-lang/open-saas' target='_blank' rel='noopener noreferrer'>
-+      <Button variant='ghost' className='rounded-full'>
++      <Button variant='ghost' className='rounded-full py-0 pl-2 pr-3 h-8'>
 +        <FaGithub />
-+        <span className='text-sm'>{formatNumber(repoInfo.stargazers_count)}</span>
++        <span className='text-sm leading-none'>{formatNumber(repoInfo.stargazers_count)}</span>
 +      </Button>
 +    </a>
 +  );
