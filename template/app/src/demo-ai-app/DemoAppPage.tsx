@@ -16,6 +16,7 @@ import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Checkbox } from '../components/ui/checkbox';
 import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
 import type { GeneratedSchedule, Task as ScheduleTask, TaskItem, TaskPriority } from './schedule';
 
 export default function DemoAppPage() {
@@ -182,9 +183,9 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
             ))}
             <div className='flex flex-col gap-3'>
               <div className='flex items-center justify-between gap-3'>
-                <label htmlFor='time' className='text-sm text-muted-foreground text-nowrap font-semibold'>
+                <Label htmlFor='time' className='text-sm text-muted-foreground text-nowrap font-semibold'>
                   How many hours will you work today?
-                </label>
+                </Label>
                 <Input
                   type='number'
                   id='time'

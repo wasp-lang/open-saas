@@ -15,6 +15,7 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
   const [currentExample, setCurrentExample] = useState(0);
   const [isInView, setIsInView] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -52,27 +53,20 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
     }
 
     scrollTimeoutRef.current = setTimeout(() => {
-      if (containerRef.current) {
-        const container = containerRef.current;
-        const scrollContainer = container.querySelector('.flex.overflow-x-auto') as HTMLElement;
-        if (scrollContainer) {
-          const cards = scrollContainer.querySelectorAll('.flex-shrink-0');
-          const targetCard = cards[currentExample] as HTMLElement;
+      if (scrollContainerRef.current) {
+        const scrollContainer = scrollContainerRef.current;
+        const targetCard = scrollContainer.children[currentExample] as HTMLElement | undefined;
 
-          if (targetCard) {
-            const containerRect = scrollContainer.getBoundingClientRect();
-            const cardRect = targetCard.getBoundingClientRect();
-            const scrollLeft =
-              targetCard.offsetLeft -
-              scrollContainer.offsetLeft -
-              containerRect.width / 2 +
-              cardRect.width / 2;
+        if (targetCard) {
+          const containerRect = scrollContainer.getBoundingClientRect();
+          const cardRect = targetCard.getBoundingClientRect();
+          const scrollLeft =
+            targetCard.offsetLeft - scrollContainer.offsetLeft - containerRect.width / 2 + cardRect.width / 2;
 
-            scrollContainer.scrollTo({
-              left: scrollLeft,
-              behavior: 'smooth',
-            });
-          }
+          scrollContainer.scrollTo({
+            left: scrollLeft,
+            behavior: 'smooth',
+          });
         }
       }
     }, EXAMPLES_CAROUSEL_SCROLL_TIMEOUT);
@@ -108,7 +102,10 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
     >
       <h2 className='mb-6 text-center font-semibold tracking-wide text-muted-foreground'>Used by:</h2>
       <div className='w-full max-w-full overflow-hidden'>
-        <div className='flex overflow-x-auto no-scrollbar scroll-smooth pb-10 pt-4 gap-4 px-4 snap-x snap-mandatory'>
+        <div
+          className='flex overflow-x-auto no-scrollbar scroll-smooth pb-10 pt-4 gap-4 px-4 snap-x snap-mandatory'
+          ref={scrollContainerRef}
+        >
           {examples.map((example, index) => (
             <ExampleCard
               key={index}
