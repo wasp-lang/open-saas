@@ -13,9 +13,6 @@ export async function parseWebhookPayload(rawStripeEvent: Stripe.Event) {
       case 'invoice.paid':
         const invoice = await invoicePaidDataSchema.parseAsync(event.data.object);
         return { eventName: event.type, data: invoice };
-      case 'payment_intent.succeeded':
-        const paymentIntent = await paymentIntentSucceededDataSchema.parseAsync(event.data.object);
-        return { eventName: event.type, data: paymentIntent };
       case 'customer.subscription.updated':
         const updatedSubscription = await subscriptionUpdatedDataSchema.parseAsync(event.data.object);
         return { eventName: event.type, data: updatedSubscription };
@@ -54,6 +51,8 @@ const genericStripeEventSchema = z.object({
 const sessionCompletedDataSchema = z.object({
   id: z.string(),
   customer: z.string(),
+  payment_status: z.enum(['paid', 'unpaid', 'no_payment_required']),
+  mode: z.enum(['payment', 'subscription']),
 });
 
 /**
@@ -61,21 +60,16 @@ const sessionCompletedDataSchema = z.object({
  * @type import('stripe').Stripe.Invoice
  */
 const invoicePaidDataSchema = z.object({
+  id: z.string(),
   customer: z.string(),
   period_start: z.number(),
-});
-
-/**
- * This is a subtype of
- * @type import('stripe').Stripe.PaymentIntent
- */
-const paymentIntentSucceededDataSchema = z.object({
-  invoice: z.unknown().optional(),
-  created: z.number(),
-  metadata: z.object({
-    priceId: z.string().optional(),
+  lines: z.object({
+    data: z.array(
+      z.object({
+        pricing: z.object({ price_details: z.object({ price: z.string() }) }),
+      })
+    ),
   }),
-  customer: z.string(),
 });
 
 /**
@@ -108,8 +102,6 @@ const subscriptionDeletedDataSchema = z.object({
 export type SessionCompletedData = z.infer<typeof sessionCompletedDataSchema>;
 
 export type InvoicePaidData = z.infer<typeof invoicePaidDataSchema>;
-
-export type PaymentIntentSucceededData = z.infer<typeof paymentIntentSucceededDataSchema>;
 
 export type SubscriptionUpdatedData = z.infer<typeof subscriptionUpdatedDataSchema>;
 
