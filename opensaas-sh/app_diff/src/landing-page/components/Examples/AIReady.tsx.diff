@@ -1,0 +1,26 @@
+--- template/app/src/landing-page/components/Examples/AIReady.tsx
++++ opensaas-sh/app/src/landing-page/components/Examples/AIReady.tsx
+@@ -0,0 +1,23 @@
++import aiReadyDark from '../../../client/static/assets/aiready-dark.webp';
++import aiReady from '../../../client/static/assets/aiready.webp';
++import HighlightedFeature from '../HighlightedFeature';
++
++export default function AIReady() {
++  return (
++    <HighlightedFeature
++      name='AI Ready'
++      description='Built-in OpenAI integration with LLM-optimized docs and AI-friendly architecture for seamless AI-assisted development.'
++      highlightedComponent={<AIReadyExample />}
++      direction='row-reverse'
++    />
++  );
++}
++
++const AIReadyExample = () => {
++  return (
++    <div className='w-full'>
++      <img src={aiReady} alt='AI Ready' className='dark:hidden' />
++      <img src={aiReadyDark} alt='AI Ready' className='hidden dark:block' />
++    </div>
++  );
++};

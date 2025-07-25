@@ -16,7 +16,7 @@
 +
 +const AdminExample = () => {
 +  return (
-+    <div className='w-full max-w-lg'>
++    <div className='w-full'>
 +      <img src={admin} alt='Admin' />
 +    </div>
 +  );
