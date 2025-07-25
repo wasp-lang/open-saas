@@ -1,6 +1,14 @@
 --- template/app/src/client/components/NavBar/NavBar.tsx
 +++ opensaas-sh/app/src/client/components/NavBar/NavBar.tsx
-@@ -10,6 +10,7 @@
+@@ -3,6 +3,7 @@
+ import { Link as ReactRouterLink } from 'react-router-dom';
+ import { useAuth } from 'wasp/client/auth';
+ import { Link as WaspRouterLink, routes } from 'wasp/client/router';
++import { Button } from '../../../components/ui/button';
+ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../../../components/ui/sheet';
+ import DropdownUser from '../../../user/DropdownUser';
+ import { UserMenuItems } from '../../../user/UserMenuItems';
+@@ -10,6 +11,7 @@
  import { useIsLandingPage } from '../../hooks/useIsLandingPage';
  import logo from '../../static/logo.webp';
  import DarkModeSwitcher from '../DarkModeSwitcher';
@@ -8,7 +16,7 @@
  
  export interface NavigationItem {
    name: string;
-@@ -38,8 +39,12 @@
+@@ -38,8 +40,12 @@
  
    return (
      <>
@@ -22,8 +30,17 @@
 +      >
          <div
            className={cn('transition-all duration-300', {
-             'mx-4 md:mx-20 rounded-full shadow-lg bg-background/90 backdrop-blur-lg border border-border':
-@@ -67,7 +72,7 @@
+             'mx-4 md:mx-20 pr-2 lg:pr-0 rounded-full shadow-lg bg-background/90 backdrop-blur-lg border border-border':
+@@ -49,7 +55,7 @@
+         >
+           <nav
+             className={cn('flex items-center justify-between transition-all duration-300', {
+-              'p-3 lg:px-6': isScrolled,
++              'p-3 px-4 lg:p-4 lg:px-5': isScrolled,
+               'p-6 lg:px-8': !isScrolled,
+             })}
+             aria-label='Global'
+@@ -67,7 +73,7 @@
                        'ml-2 text-xs': isScrolled,
                      })}
                    >
@@ -32,7 +49,7 @@
                    </span>
                  )}
                </WaspRouterLink>
-@@ -99,7 +104,7 @@
+@@ -99,7 +105,7 @@
                    <SheetHeader>
                      <SheetTitle className='flex items-center'>
                        <WaspRouterLink to={routes.LandingPageRoute.to}>
@@ -41,7 +58,20 @@
                          <NavLogo isScrolled={false} />
                        </WaspRouterLink>
                      </SheetTitle>
-@@ -123,7 +128,14 @@
+@@ -112,9 +118,9 @@
+                       <div className='py-6'>
+                         {isUserLoading ? null : !user ? (
+                           <WaspRouterLink to={routes.LoginRoute.to}>
+-                            <div className='flex justify-end items-center duration-300 ease-in-out text-foreground hover:text-primary transition-colors'>
+-                              Log in <LogIn size='1.1rem' className='ml-1' />
+-                            </div>
++                            <Button variant='outline'>
++                              <span>Demo App</span> <LogIn className='ml-1' />
++                            </Button>
+                           </WaspRouterLink>
+                         ) : (
+                           <div className='space-y-2'>
+@@ -123,7 +129,14 @@
                          )}
                        </div>
                        <div className='py-6'>
@@ -57,13 +87,11 @@
                        </div>
                      </div>
                    </div>
-@@ -132,8 +144,13 @@
-             </div>
+@@ -133,7 +146,12 @@
  
              <div className='hidden lg:flex lg:flex-1 gap-3 justify-end items-center'>
--              <ul className='flex justify-center items-center gap-2 sm:gap-4'>
+               <ul className='flex justify-center items-center gap-2 sm:gap-4'>
 -                <DarkModeSwitcher />
-+              <ul className='flex justify-center items-center gap-2 sm:gap-6'>
 +                <li>
 +                  <RepoInfo />
 +                </li>
@@ -73,7 +101,21 @@
                </ul>
                {isUserLoading ? null : !user ? (
                  <WaspRouterLink
-@@ -246,34 +263,6 @@
+@@ -143,10 +161,10 @@
+                     'text-xs': isScrolled,
+                   })}
+                 >
+-                  <div className='flex items-center duration-300 ease-in-out text-foreground hover:text-primary transition-colors'>
+-                    Log in{' '}
++                  <div className='flex items-center duration-300 gap-1 ease-in-out text-foreground hover:text-primary transition-colors'>
++                    <span>Demo App</span>
+                     <LogIn
+-                      size={isScrolled ? '1rem' : '1.1rem'}
++                      size='1rem'
+                       className={cn('transition-all duration-300', {
+                         'ml-1 mt-[0.1rem]': !isScrolled,
+                         'ml-1': isScrolled,
+@@ -246,34 +264,6 @@
        'size-6': isScrolled,
      })}
      src={logo}

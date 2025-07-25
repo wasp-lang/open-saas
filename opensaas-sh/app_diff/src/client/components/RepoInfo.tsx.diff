@@ -1,8 +1,9 @@
 --- template/app/src/client/components/RepoInfo.tsx
 +++ opensaas-sh/app/src/client/components/RepoInfo.tsx
-@@ -0,0 +1,38 @@
+@@ -0,0 +1,40 @@
 +import { useEffect, useState } from 'react';
 +import { FaGithub } from 'react-icons/fa';
++import { Button } from '../../components/ui/button';
 +import { formatNumber } from '../../lib/utils';
 +
 +const RepoInfo = () => {
@@ -31,9 +32,10 @@
 +
 +  return (
 +    <a href='https://github.com/wasp-lang/open-saas' target='_blank' rel='noopener noreferrer'>
-+      <div className='flex items-center gap-2'>
-+        <FaGithub /> <span>{formatNumber(repoInfo.stargazers_count)}</span>
-+      </div>
++      <Button variant='ghost' className='rounded-full'>
++        <FaGithub />
++        <span className='text-sm'>{formatNumber(repoInfo.stargazers_count)}</span>
++      </Button>
 +    </a>
 +  );
 +};

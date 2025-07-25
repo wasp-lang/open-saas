@@ -1,6 +1,22 @@
 --- template/app/src/client/Main.css
 +++ opensaas-sh/app/src/client/Main.css
-@@ -51,6 +51,16 @@
+@@ -44,6 +44,15 @@
+   .border-gradient-primary > * {
+     background: hsl(var(--background));
+   }
++
++  /* Radial gradient utilities */
++  .bg-radial-gradient {
++    background: radial-gradient(circle at 30% 30%, hsl(var(--card-accent)/0.5) 0%, hsl(var(--accent)/0.15) 100%);
++  }
++  
++  .dark .bg-radial-gradient {
++    background: radial-gradient(circle at 30% 30%, hsl(var(--card-subtle)/0.8) 0%, hsl(var(--card)) 100%);
++  }
+ }
+ 
+ /* Here is an example of how to add a custom font. 
+@@ -51,6 +60,16 @@
  * They are defined first here, then need to be referenced in the tailwind.config.js file
  * under `theme.extend.fontFamily`, and then can be used as a tailwind class, e.g. className='font-satoshi'.
  */
@@ -17,7 +33,7 @@
  @font-face {
    font-family: 'Satoshi';
    src: url('/fonts/Satoshi-Regular.woff2') format('woff2');
-@@ -59,6 +69,30 @@
+@@ -59,6 +78,30 @@
    font-display: swap;
  }
  
@@ -48,7 +64,7 @@
  /* third-party libraries CSS */
  
  .tableCheckbox:checked ~ div span {
-@@ -177,4 +211,17 @@
+@@ -177,4 +220,17 @@
    body {
      @apply bg-background text-foreground;
    }

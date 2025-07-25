@@ -1,6 +1,7 @@
 --- template/app/src/landing-page/components/Hero/Hero.tsx
 +++ opensaas-sh/app/src/landing-page/components/Hero/Hero.tsx
-@@ -0,0 +1,80 @@
+@@ -0,0 +1,82 @@
++import { ArrowRight } from 'lucide-react';
 +import { Link as ReactRouterLink } from 'react-router-dom';
 +import { useAuth } from 'wasp/client/auth';
 +import { Link as WaspRouterLink, routes } from 'wasp/client/router';
@@ -35,7 +36,8 @@
 +                </Button>
 +                <Button size='lg' variant='default' asChild>
 +                  <ReactRouterLink to={DocsUrl}>
-+                    Get Started <span aria-hidden='true'>→</span>
++                    Get Started
++                    <ArrowRight />
 +                  </ReactRouterLink>
 +                </Button>
 +              </div>

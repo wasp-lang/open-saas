@@ -1,11 +1,12 @@
 --- template/app/src/landing-page/components/Examples/Auth.tsx
 +++ opensaas-sh/app/src/landing-page/components/Examples/Auth.tsx
-@@ -0,0 +1,122 @@
+@@ -0,0 +1,130 @@
 +import { useState } from 'react';
 +import { FaDiscord, FaGithub, FaGoogle, FaSlack } from 'react-icons/fa';
 +import { Button } from '../../../components/ui/button';
 +import { Card, CardContent, CardHeader } from '../../../components/ui/card';
 +import { Input } from '../../../components/ui/input';
++import { DocsUrl } from '../../../shared/common';
 +import HighlightedFeature from '../HighlightedFeature';
 +
 +const SupportedAuthProviders = ['google', 'github', 'discord', 'slack'] as const;
@@ -105,9 +106,16 @@
 +                const providerData = providers.find((p) => p.name === provider);
 +                const IconComponent = providerData?.icon;
 +                return (
-+                  <Button key={provider} className='w-full mb-2' variant='outline'>
-+                    {IconComponent && <IconComponent className='w-4 h-4' />}
-+                  </Button>
++                  <a
++                    href={DocsUrl + '/guides/authentication/'}
++                    key={provider}
++                    className='w-full mb-2'
++                    target='_blank'
++                  >
++                    <Button variant='outline' className='w-full'>
++                      {IconComponent && <IconComponent className='w-4 h-4' />}
++                    </Button>
++                  </a>
 +                );
 +              })}
 +            </div>

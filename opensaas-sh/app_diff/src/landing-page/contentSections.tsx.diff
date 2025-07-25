@@ -33,16 +33,12 @@
 +    align: 'left',
 +  },
 +  {
-+    name: 'Complete Documentation & Support',
-+    description: 'And a Discord community to help!',
++    name: 'Full-stack Type Safety',
++    description:
++      'Full support for TypeScript with auto-generated types that span the whole stack. Nothing to configure!',
++    emoji: '🥞',
 +    href: DocsUrl,
-+    size: 'small',
-+  },
-+  {
-+    name: 'E2E Tests w/ Playwright',
-+    description: 'Tests and a CI pipeline w/ GitHub Actions',
-+    href: DocsUrl + '/guides/tests/',
-+    size: 'small',
++    size: 'medium',
 +  },
 +  {
 +    description: 'File upload examples with AWS S3 presigned URLs are included and fully documented!',
@@ -87,12 +83,16 @@
 +    size: 'medium',
 +  },
 +  {
-+    name: 'Full-stack Type Safety',
-+    description:
-+      'Full support for TypeScript with auto-generated types that span the whole stack. Nothing to configure!',
-+    emoji: '🥞',
++    name: 'Complete Documentation & Support',
++    description: 'And a Discord community to help!',
 +    href: DocsUrl,
-+    size: 'medium',
++    size: 'small',
++  },
++  {
++    name: 'E2E Tests w/ Playwright',
++    description: 'Tests and a CI pipeline w/ GitHub Actions',
++    href: DocsUrl + '/guides/tests/',
++    size: 'small',
 +  },
 +  {
 +    name: 'Open-Source Philosophy',

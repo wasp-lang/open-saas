@@ -27,7 +27,7 @@
  }: GridFeature) {
    const gridFeatureSizeToClasses: Record<GridFeature['size'], string> = {
      small: 'col-span-1',
-@@ -60,49 +63,102 @@
+@@ -60,49 +63,103 @@
      'col-reverse': 'flex-col-reverse',
    };
  
@@ -39,7 +39,8 @@
          'h-full min-h-[140px] transition-all duration-300 hover:shadow-lg cursor-pointer',
 -        gridFeatureSizeToClasses[size]
 +        gridFeatureSizeToClasses[size],
-+        mobileOrderClass
++        mobileOrderClass,
++        highlight && 'bg-radial-gradient'
        )}
 -      variant='bento'
 +      variant={highlight ? 'bentoHighlight' : 'bento'}
