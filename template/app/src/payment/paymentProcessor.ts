@@ -5,6 +5,11 @@ import { PrismaClient } from '@prisma/client';
 import { stripePaymentProcessor } from './stripe/paymentProcessor';
 import { lemonSqueezyPaymentProcessor } from './lemonSqueezy/paymentProcessor';
 
+/**
+ * All supported payment processor identifiers
+ */
+export type PaymentProcessorId = 'stripe' | 'lemonsqueezy';
+
 export interface CreateCheckoutSessionArgs {
   userId: string;
   userEmail: string;
@@ -17,7 +22,7 @@ export interface FetchCustomerPortalUrlArgs {
 };
 
 export interface PaymentProcessor {
-  id: 'stripe' | 'lemonsqueezy';
+  id: PaymentProcessorId;
   createCheckoutSession: (args: CreateCheckoutSessionArgs) => Promise<{ session: { id: string; url: string }; }>; 
   fetchCustomerPortalUrl: (args: FetchCustomerPortalUrlArgs) => Promise<string | null>;
   webhook: PaymentsWebhook;
