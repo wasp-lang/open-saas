@@ -25,6 +25,11 @@ export interface PaymentProcessor {
   id: PaymentProcessorId;
   createCheckoutSession: (args: CreateCheckoutSessionArgs) => Promise<{ session: { id: string; url: string }; }>; 
   fetchCustomerPortalUrl: (args: FetchCustomerPortalUrlArgs) => Promise<string | null>;
+  /**
+   * Calculates the total revenue from this payment processor
+   * @returns Promise resolving to total revenue in dollars
+   */
+  getTotalRevenue: () => Promise<number>;
   webhook: PaymentsWebhook;
   webhookMiddlewareConfigFn: MiddlewareConfigFn;
 }
