@@ -6,6 +6,7 @@ import {
 import type { PaymentPlanEffect } from '../plans';
 import { createPolarCheckoutSession } from './checkoutUtils';
 import { getPolarApiConfig } from './config';
+import { polar } from './polarClient';
 import { polarMiddlewareConfigFn, polarWebhook } from './webhook';
 import { PaymentProcessors } from '../types';
 
@@ -13,13 +14,32 @@ export type PolarMode = 'subscription' | 'payment';
 
 /**
  * Calculates total revenue from Polar transactions
- * TODO: Implement actual revenue calculation using Polar SDK
  * @returns Promise resolving to total revenue in dollars
  */
 async function fetchTotalPolarRevenue(): Promise<number> {
-  // TODO: Implement actual Polar revenue calculation
-  console.warn('Polar getTotalRevenue not yet implemented - returning 0');
-  return 0;
+  try {
+    let totalRevenue = 0;
+
+    const result = await polar.orders.list({
+      limit: 100,
+    });
+
+    for await (const page of result) {
+      const orders = (page as any).items || [];
+      
+      for (const order of orders) {
+        if (order.status === 'completed' && typeof order.amount === 'number' && order.amount > 0) {
+          totalRevenue += order.amount;
+        }
+      }
+    }
+
+    return totalRevenue / 100;
+
+  } catch (error) {
+    console.error('Error calculating Polar total revenue:', error);
+    return 0;
+  }
 }
 
 export const polarPaymentProcessor: PaymentProcessor = {
