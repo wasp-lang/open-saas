@@ -95,14 +95,14 @@ export const testimonials = [
   {
     name: 'Mr. Foobar',
     role: 'Founder @ Cool Startup',
-    avatarSrc: avatarPlaceholder,
+    avatarSrc: daBoiAvatar,
     socialUrl: '',
     quote: 'This product makes me cooler than I already am.',
   },
   {
     name: 'Jamie',
     role: 'Happy Customer',
-    avatarSrc: avatarPlaceholder,
+    avatarSrc: daBoiAvatar,
     socialUrl: '#',
     quote: 'My cats love it!',
   },
