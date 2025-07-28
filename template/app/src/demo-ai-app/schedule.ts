@@ -1,15 +1,17 @@
+export type TaskPriority = 'low' | 'medium' | 'high';
+
 export type GeneratedSchedule = {
-  mainTasks: MainTask[]; // Main tasks provided by user, ordered by priority
-  subtasks: SubTask[];
+  tasks: Task[]; // Main tasks provided by user, ordered by priority
+  taskItems: TaskItem[];
 };
 
-export type MainTask = {
+export type Task = {
   name: string;
-  priority: 'low' | 'medium' | 'high';
+  priority: TaskPriority;
 };
 
-export type SubTask = {
+export type TaskItem = {
   description: string;
   time: number; // total time it takes to complete given main task in hours, e.g. 2.75
-  mainTaskName: string; // name of main task related to subtask
+  taskName: string; // name of main task related to subtask
 };

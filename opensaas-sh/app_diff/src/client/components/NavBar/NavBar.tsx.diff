@@ -1,95 +1,168 @@
 --- template/app/src/client/components/NavBar/NavBar.tsx
 +++ opensaas-sh/app/src/client/components/NavBar/NavBar.tsx
-@@ -32,7 +32,7 @@
-           !isLandingPage,
-       })}
-     >
--      {isLandingPage && <Announcement />}
-+      {/* {isLandingPage && <Announcement />} */}
-       <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
-         <div className='flex items-center lg:flex-1'>
-           <WaspRouterLink
-@@ -40,9 +40,7 @@
-             className='flex items-center -m-1.5 p-1.5 text-gray-900 duration-300 ease-in-out hover:text-yellow-500'
-           >
-             <NavLogo />
--            {isLandingPage && (
--              <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Your SaaS</span>
--            )}
-+            {isLandingPage && <span className='ml-2 text-sm font-semibold leading-6 dark:text-white'>Open SaaS</span>}
-           </WaspRouterLink>
-         </div>
-         <div className='flex lg:hidden'>
-@@ -57,13 +55,13 @@
-         </div>
-         <div className='hidden lg:flex lg:gap-x-12'>{renderNavigationItems(navigationItems)}</div>
-         <div className='hidden lg:flex lg:flex-1 gap-3 justify-end items-center'>
--          <ul className='flex justify-center items-center gap-2 sm:gap-4'>
-+          <ul className='ml-4 flex justify-center items-center gap-2 sm:gap-4'>
-             <DarkModeSwitcher />
-           </ul>
-           {isUserLoading ? null : !user ? (
-             <WaspRouterLink to={routes.LoginRoute.to} className='text-sm font-semibold leading-6 ml-3'>
--              <div className='flex items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500 dark:text-white'>
--                Log in <BiLogIn size='1.1rem' className='ml-1 mt-[0.1rem]' />
-+                <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500 dark:text-white test-sm'>
-+                  Try the demo App <BiLogIn size='1.1rem' className='ml-1' />
-               </div>
-             </WaspRouterLink>
-           ) : (
-@@ -78,7 +76,7 @@
-         <Dialog.Panel className='fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white dark:text-white dark:bg-boxdark px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10'>
-           <div className='flex items-center justify-between'>
-             <WaspRouterLink to={routes.LandingPageRoute.to} className='-m-1.5 p-1.5'>
--              <span className='sr-only'>Your SaaS</span>
-+              <span className='sr-only'>Open SaaS</span>
-               <NavLogo />
-             </WaspRouterLink>
-             <button
-@@ -97,7 +95,7 @@
-                 {isUserLoading ? null : !user ? (
-                   <WaspRouterLink to={routes.LoginRoute.to}>
-                     <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500 dark:text-white'>
--                      Log in <BiLogIn size='1.1rem' className='ml-1' />
-+                      Try the Demo App{' '} <BiLogIn size='1.1rem' className='ml-1' />
-                     </div>
-                   </WaspRouterLink>
-                 ) : (
-@@ -140,30 +138,26 @@
-   });
- }
+@@ -3,6 +3,7 @@
+ import { Link as ReactRouterLink } from 'react-router-dom';
+ import { useAuth } from 'wasp/client/auth';
+ import { Link as WaspRouterLink, routes } from 'wasp/client/router';
++import { Button } from '../../../components/ui/button';
+ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../../../components/ui/sheet';
+ import DropdownUser from '../../../user/DropdownUser';
+ import { UserMenuItems } from '../../../user/UserMenuItems';
+@@ -10,6 +11,7 @@
+ import { useIsLandingPage } from '../../hooks/useIsLandingPage';
+ import logo from '../../static/logo.webp';
+ import DarkModeSwitcher from '../DarkModeSwitcher';
++import RepoInfo from '../RepoInfo';
  
--const ContestURL = 'https://github.com/wasp-lang/wasp';
-+const ContestURL =
-+  'https://docs.opensaas.sh/blog/';
+ export interface NavigationItem {
+   name: string;
+@@ -39,7 +41,12 @@
+   return (
+     <>
+       {isLandingPage && <Announcement />}
+-      <header className={cn('sticky top-0 z-50 transition-all duration-300', isScrolled && 'top-4')}>
++      <header
++        className={cn(
++          'sticky top-0 z-50 transition-all duration-300',
++          isScrolled && 'top-4 mx-4 xl:mx-30 lg:mx-10'
++        )}
++        >
+         <div
+           className={cn('transition-all duration-300', {
+             'mx-4 md:mx-20 pr-2 lg:pr-0 rounded-full shadow-lg bg-background/90 backdrop-blur-lg border border-border':
+@@ -49,7 +56,7 @@
+         >
+           <nav
+             className={cn('flex items-center justify-between transition-all duration-300', {
+-              'p-3 lg:px-6': isScrolled,
++              'p-3 px-4 lg:p-4 lg:px-5': isScrolled,
+               'p-6 lg:px-8': !isScrolled,
+             })}
+             aria-label='Global'
+@@ -67,7 +74,7 @@
+                       'ml-2 text-xs': isScrolled,
+                     })}
+                   >
+-                    Your SaaS
++                    Open SaaS
+                   </span>
+                 )}
+               </WaspRouterLink>
+@@ -99,7 +106,7 @@
+                   <SheetHeader>
+                     <SheetTitle className='flex items-center'>
+                       <WaspRouterLink to={routes.LandingPageRoute.to}>
+-                        <span className='sr-only'>Your SaaS</span>
++                        <span className='sr-only'>Open SaaS</span>
+                         <NavLogo isScrolled={false} />
+                       </WaspRouterLink>
+                     </SheetTitle>
+@@ -112,9 +119,9 @@
+                       <div className='py-6'>
+                         {isUserLoading ? null : !user ? (
+                           <WaspRouterLink to={routes.LoginRoute.to}>
+-                            <div className='flex justify-end items-center duration-300 ease-in-out text-foreground hover:text-primary transition-colors'>
+-                              Log in <LogIn size='1.1rem' className='ml-1' />
+-                            </div>
++                            <Button variant='outline'>
++                              <span>Demo App</span> <LogIn className='ml-1' />
++                            </Button>
+                           </WaspRouterLink>
+                         ) : (
+                           <div className='space-y-2'>
+@@ -123,7 +130,14 @@
+                         )}
+                       </div>
+                       <div className='py-6'>
+-                        <DarkModeSwitcher />
++                        <ul className='flex items-center justify-between gap-4'>
++                          <li>
++                            <DarkModeSwitcher />
++                          </li>
++                          <li>
++                            <RepoInfo />
++                          </li>
++                        </ul>
+                       </div>
+                     </div>
+                   </div>
+@@ -133,7 +147,12 @@
+ 
+             <div className='hidden lg:flex lg:flex-1 gap-3 justify-end items-center'>
+               <ul className='flex justify-center items-center gap-2 sm:gap-4'>
+-                <DarkModeSwitcher />
++                <li>
++                  <RepoInfo />
++                </li>
++                <li>
++                  <DarkModeSwitcher />
++                </li>
+               </ul>
+               {isUserLoading ? null : !user ? (
+                 <WaspRouterLink
+@@ -143,10 +162,10 @@
+                     'text-xs': isScrolled,
+                   })}
+                 >
+-                  <div className='flex items-center duration-300 ease-in-out text-foreground hover:text-primary transition-colors'>
+-                    Log in{' '}
++                  <div className='flex items-center duration-300 gap-1 ease-in-out text-foreground hover:text-primary transition-colors'>
++                    <span>Demo App</span>
+                     <LogIn
+-                      size={isScrolled ? '1rem' : '1.1rem'}
++                      size='1rem'
+                       className={cn('transition-all duration-300', {
+                         'ml-1 mt-[0.1rem]': !isScrolled,
+                         'ml-1': isScrolled,
+@@ -246,39 +265,40 @@
+       'size-6': isScrolled,
+     })}
+     src={logo}
+-    alt='Your SaaS App'
++    alt='Open SaaS App'
+   />
+ );
+ 
+-const announcementUrl = 'https://github.com/wasp-lang/wasp';
++const announcementUrl = 'https://www.producthunt.com/products/open-saas'
  
  function Announcement() {
++  const launchDate = new Date('2025-07-29T00:00:00-07:00'); // July 29, 2025 PST
++  const today = new Date();
++  const hasLaunched = today.toISOString().slice(0, 10) >= launchDate.toISOString().slice(0, 10);
++
    return (
-     <div className='flex justify-center items-center gap-3 p-3 w-full bg-gradient-to-r from-[#d946ef] to-[#fc0] font-semibold text-white text-center z-49'>
--      <p
--        onClick={() => window.open(ContestURL, '_blank')}
--        className='hidden lg:block cursor-pointer hover:opacity-90 hover:drop-shadow'
--      >
+-    <div className='relative flex justify-center items-center gap-3 p-3 w-full bg-gradient-to-r from-accent to-secondary font-semibold text-primary-foreground text-center z-[51]'>
++    <div className='relative flex justify-center items-center gap-3 p-3 w-full bg-gradient-to-r from-accent to-secondary font-semibold text-primary-foreground text-center tracking-wider z-[51]'>
+       <a
+         href={announcementUrl}
+         target='_blank'
+-        rel='noopener noreferrer'
+-        className='hidden lg:block cursor-pointer hover:opacity-90 hover:drop-shadow transition-opacity'
++        className='hidden lg:block hover:opacity-90 hover:drop-shadow transition-opacity'
+       >
 -        Support Open-Source Software!
--      </p>
-+      <p onClick={() => window.open(ContestURL, '_blank')} className='hidden lg:block cursor-pointer hover:opacity-90 hover:drop-shadow'>🍪 THE MOST ANNOYING COOKIE BANNER EVER HACKATHON 🤬</p>
-       <div className='hidden lg:block self-stretch w-0.5 bg-white'></div>
-       <div
-         onClick={() => window.open(ContestURL, '_blank')}
-         className='hidden lg:block cursor-pointer rounded-full bg-neutral-700 px-2.5 py-1 text-xs hover:bg-neutral-600 tracking-wider'
++        🚀 Open SaaS v2.0 {hasLaunched ? 'is here!' : 'launches tomorrow!'}
+       </a>
+       <div className='hidden lg:block self-stretch w-0.5 bg-primary-foreground/20'></div>
+       <a
+         href={announcementUrl}
+         target='_blank'
+-        rel='noopener noreferrer'
+-        className='hidden lg:block cursor-pointer rounded-full bg-background/20 px-2.5 py-1 text-xs hover:bg-background/30 transition-colors tracking-wider'
++        className='hidden lg:block opacity-95 cursor-pointer rounded-full bg-background/20 px-2.5 py-1 hover:bg-background/30 transition-colors tracking-wider'
        >
 -        Star Our Repo on Github ⭐️ →
-+        Enter here and win prizes! →
-       </div>
-       <div
-         onClick={() => window.open(ContestURL, '_blank')}
-         className='lg:hidden cursor-pointer rounded-full bg-neutral-700 px-2.5 py-1 text-xs hover:bg-neutral-600 tracking-wider'
++        {hasLaunched ? 'Check out the Launch 🎉' : 'Get notified! 📆'}  →
+       </a>
+       <a
+         href={announcementUrl}
+         target='_blank'
+-        rel='noopener noreferrer'
+         className='lg:hidden cursor-pointer rounded-full bg-background/20 px-2.5 py-1 text-xs hover:bg-background/30 transition-colors'
        >
--        ⭐️ Star the Our Repo on Github and Support Open-Source! ⭐️
-+        🍪 The Most Annoying Cookie Banner Contest! 🤬 →
-       </div>
+-        ⭐️ Star the Our Repo and Support Open-Source! ⭐️
++        🎉 The Open SaaS v2.0 Launch is Live! 🚀
+       </a>
      </div>
    );
--}
-+}
-\ No newline at end of file

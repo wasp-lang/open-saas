@@ -1,0 +1,153 @@
+--- template/app/src/landing-page/components/FeaturesGrid.tsx
++++ opensaas-sh/app/src/landing-page/components/FeaturesGrid.tsx
+@@ -4,13 +4,15 @@
+ import { Feature } from './Features';
+ import SectionTitle from './SectionTitle';
+ 
+-export interface GridFeature extends Omit<Feature, 'icon'> {
++export interface GridFeature extends Omit<Feature, 'icon' | 'name'> {
++  name?: string;
+   icon?: React.ReactNode;
+   emoji?: string;
+   direction?: 'col' | 'row' | 'col-reverse' | 'row-reverse';
+   align?: 'center' | 'left';
+   size: 'small' | 'medium' | 'large';
+   fullWidthIcon?: boolean;
++  highlight?: boolean;
+ }
+ 
+ interface FeaturesGridProps {
+@@ -45,7 +47,8 @@
+   direction = 'col',
+   align = 'center',
+   size = 'medium',
+-  fullWidthIcon = true,
++  fullWidthIcon = false,
++  highlight = false,
+ }: GridFeature) {
+   const gridFeatureSizeToClasses: Record<GridFeature['size'], string> = {
+     small: 'col-span-1',
+@@ -60,49 +63,103 @@
+     'col-reverse': 'flex-col-reverse',
+   };
+ 
++  const mobileOrderClass = highlight ? 'order-last md:order-none' : '';
++
+   const gridFeatureCard = (
+     <Card
+       className={cn(
+         'h-full min-h-[140px] transition-all duration-300 hover:shadow-lg cursor-pointer',
+-        gridFeatureSizeToClasses[size]
++        gridFeatureSizeToClasses[size],
++        mobileOrderClass,
++        highlight && 'bg-radial-gradient'
+       )}
+-      variant='bento'
++      variant={highlight ? 'bentoHighlight' : 'bento'}
+     >
+-      <CardContent className='p-4 h-full flex flex-col justify-center items-center'>
++      <CardContent
++        className={cn(
++          'py-8 px-4 h-full flex flex-col justify-center items-center',
++          fullWidthIcon && direction === 'col-reverse'
++            ? 'p-0 pt-8 pb-0 justify-end'
++            : fullWidthIcon && 'p-0 pb-8 pt-0 justify-start'
++        )}
++      >
+         {fullWidthIcon && (icon || emoji) ? (
+-          <div className='w-full flex justify-center items-center mb-3'>
+-            {icon ? icon : emoji ? <span className='text-4xl'>{emoji}</span> : null}
++          <div className='flex flex-col w-full'>
++            <div
++              className={cn(
++                'w-full flex items-center justify-center',
++                direction === 'col-reverse' ? 'order-2 mt-6' : 'order-1'
++              )}
++            >
++              {icon ? (
++                <div className='w-full flex justify-center'>{icon}</div>
++              ) : emoji ? (
++                <span className='text-4xl'>{emoji}</span>
++              ) : null}
++            </div>
++            {fullWidthIcon && (icon || emoji) && (
++              <CardTitle
++                className={cn('text-center text-2xl', direction === 'col-reverse' ? 'order-1' : 'order-2')}
++              >
++                {name}
++              </CardTitle>
++            )}
++            <CardDescription
++              className={cn(
++                'text-xs leading-relaxed px-8',
++                'text-center',
++                direction === 'col-reverse' ? 'order-1' : 'order-2'
++              )}
++            >
++              {description}
++            </CardDescription>
+           </div>
+         ) : (
+           <div
+             className={cn(
+-              'flex items-center gap-3',
++              'flex items-center',
++              (icon || emoji) && 'gap-3',
+               directionToClass[direction],
+               align === 'center' ? 'justify-center items-center' : 'justify-start'
+             )}
+           >
+-            <div className='flex h-10 w-10 items-center justify-center rounded-lg'>
+-              {icon ? icon : emoji ? <span className='text-2xl'>{emoji}</span> : null}
+-            </div>
+-            <CardTitle className={cn(align === 'center' ? 'text-center' : 'text-left')}>{name}</CardTitle>
++            {(icon || emoji) && (
++              <div className='flex h-10 w-10 items-center justify-center rounded-lg'>
++                {icon ? icon : <span className='text-2xl'>{emoji}</span>}
++              </div>
++            )}
++            <CardTitle
++              className={cn(
++                highlight ? 'text-4xl font-bold' : 'text-lg',
++                align === 'center' ? 'text-center' : 'text-left'
++              )}
++            >
++              {name}
++            </CardTitle>
+           </div>
+         )}
+-        {fullWidthIcon && (icon || emoji) && <CardTitle className='text-center mb-2'>{name}</CardTitle>}
+-        <CardDescription
+-          className={cn(
+-            'text-xs leading-relaxed',
+-            fullWidthIcon || direction === 'col' || align === 'center' ? 'text-center' : 'text-left'
+-          )}
+-        >
+-          {description}
+-        </CardDescription>
++        {!fullWidthIcon && (
++          <CardDescription
++            className={cn(
++              'text-xs leading-relaxed px-8',
++              direction === 'col' || align === 'center' ? 'text-center' : 'text-left'
++            )}
++          >
++            {description}
++          </CardDescription>
++        )}
+       </CardContent>
+     </Card>
+   );
+ 
+   if (href) {
+     return (
+-      <a href={href} target='_blank' rel='noopener noreferrer' className={gridFeatureSizeToClasses[size]}>
++      <a
++        href={href}
++        target='_blank'
++        rel='noopener noreferrer'
++        className={cn(gridFeatureSizeToClasses[size], mobileOrderClass)}
++      >
+         {gridFeatureCard}
+       </a>
+     );
