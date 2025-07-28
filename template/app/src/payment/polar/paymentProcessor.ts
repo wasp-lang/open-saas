@@ -75,8 +75,36 @@ export const polarPaymentProcessor: PaymentProcessor = {
       },
     };
   },
-  fetchCustomerPortalUrl: async (_args: FetchCustomerPortalUrlArgs) => {
-    return getPolarApiConfig().customerPortalUrl;
+  fetchCustomerPortalUrl: async (args: FetchCustomerPortalUrlArgs) => {
+    const defaultPortalUrl = getPolarApiConfig().customerPortalUrl;
+
+    try {
+      const user = await args.prismaUserDelegate.findUnique({
+        where: {
+          id: args.userId,
+        },
+        select: {
+          paymentProcessorUserId: true,
+        },
+      });
+
+      if (user?.paymentProcessorUserId) {
+        try {
+          const customerSession = await polar.customerSessions.create({
+            customerId: user.paymentProcessorUserId,
+          });
+
+          return customerSession.customerPortalUrl;
+        } catch (polarError) {
+          console.error('Error creating Polar customer session:', polarError);
+        }
+      }
+
+      return defaultPortalUrl;
+    } catch (error) {
+      console.error('Error fetching customer portal URL:', error);
+      return defaultPortalUrl;
+    }
   },
   getTotalRevenue: fetchTotalPolarRevenue,
   webhook: polarWebhook,
