@@ -8,6 +8,8 @@
     "@google-analytics/data": "4.1.0",
     "@headlessui/react": "1.7.13",
     "@lemonsqueezy/lemonsqueezy.js": "^3.2.0",
+    "@polar-sh/express": "^0.3.2",
+    "@polar-sh/sdk": "^0.34.3",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.7",
     "apexcharts": "3.41.0",

@@ -4,6 +4,7 @@
 export enum PaymentProcessors {
   Stripe = 'stripe',
   LemonSqueezy = 'lemonSqueezy',
+  Polar = 'polar',
 }
 
 /**
