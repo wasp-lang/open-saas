@@ -16,22 +16,21 @@
  
  export interface NavigationItem {
    name: string;
-@@ -38,8 +40,12 @@
- 
+@@ -39,7 +41,12 @@
    return (
      <>
--      {isLandingPage && <Announcement />}
+       {isLandingPage && <Announcement />}
 -      <header className={cn('sticky top-0 z-50 transition-all duration-300', isScrolled && 'top-4')}>
 +      <header
 +        className={cn(
 +          'sticky top-0 z-50 transition-all duration-300',
 +          isScrolled && 'top-4 mx-4 xl:mx-30 lg:mx-10'
 +        )}
-+      >
++        >
          <div
            className={cn('transition-all duration-300', {
              'mx-4 md:mx-20 pr-2 lg:pr-0 rounded-full shadow-lg bg-background/90 backdrop-blur-lg border border-border':
-@@ -49,7 +55,7 @@
+@@ -49,7 +56,7 @@
          >
            <nav
              className={cn('flex items-center justify-between transition-all duration-300', {
@@ -40,7 +39,7 @@
                'p-6 lg:px-8': !isScrolled,
              })}
              aria-label='Global'
-@@ -67,7 +73,7 @@
+@@ -67,7 +74,7 @@
                        'ml-2 text-xs': isScrolled,
                      })}
                    >
@@ -49,7 +48,7 @@
                    </span>
                  )}
                </WaspRouterLink>
-@@ -99,7 +105,7 @@
+@@ -99,7 +106,7 @@
                    <SheetHeader>
                      <SheetTitle className='flex items-center'>
                        <WaspRouterLink to={routes.LandingPageRoute.to}>
@@ -58,7 +57,7 @@
                          <NavLogo isScrolled={false} />
                        </WaspRouterLink>
                      </SheetTitle>
-@@ -112,9 +118,9 @@
+@@ -112,9 +119,9 @@
                        <div className='py-6'>
                          {isUserLoading ? null : !user ? (
                            <WaspRouterLink to={routes.LoginRoute.to}>
@@ -71,7 +70,7 @@
                            </WaspRouterLink>
                          ) : (
                            <div className='space-y-2'>
-@@ -123,7 +129,14 @@
+@@ -123,7 +130,14 @@
                          )}
                        </div>
                        <div className='py-6'>
@@ -87,7 +86,7 @@
                        </div>
                      </div>
                    </div>
-@@ -133,7 +146,12 @@
+@@ -133,7 +147,12 @@
  
              <div className='hidden lg:flex lg:flex-1 gap-3 justify-end items-center'>
                <ul className='flex justify-center items-center gap-2 sm:gap-4'>
@@ -101,7 +100,7 @@
                </ul>
                {isUserLoading ? null : !user ? (
                  <WaspRouterLink
-@@ -143,10 +161,10 @@
+@@ -143,10 +162,10 @@
                      'text-xs': isScrolled,
                    })}
                  >
@@ -115,7 +114,7 @@
                        className={cn('transition-all duration-300', {
                          'ml-1 mt-[0.1rem]': !isScrolled,
                          'ml-1': isScrolled,
-@@ -246,34 +264,6 @@
+@@ -246,39 +265,40 @@
        'size-6': isScrolled,
      })}
      src={logo}
@@ -123,31 +122,47 @@
 +    alt='Open SaaS App'
    />
  );
--
--const ContestURL = 'https://github.com/wasp-lang/wasp';
--
--function Announcement() {
--  return (
--    <div className='flex justify-center items-center gap-3 p-3 w-full bg-gradient-to-r from-accent to-secondary font-semibold text-primary-foreground text-center z-49'>
--      <p
--        onClick={() => window.open(ContestURL, '_blank')}
+ 
+-const announcementUrl = 'https://github.com/wasp-lang/wasp';
++const announcementUrl = 'https://www.producthunt.com/products/open-saas'
+ 
+ function Announcement() {
++  const launchDate = new Date('2025-07-29T00:00:00-07:00'); // July 29, 2025 PST
++  const today = new Date();
++  const hasLaunched = today.toISOString().slice(0, 10) >= launchDate.toISOString().slice(0, 10);
++
+   return (
+-    <div className='relative flex justify-center items-center gap-3 p-3 w-full bg-gradient-to-r from-accent to-secondary font-semibold text-primary-foreground text-center z-[51]'>
++    <div className='relative flex justify-center items-center gap-3 p-3 w-full bg-gradient-to-r from-accent to-secondary font-semibold text-primary-foreground text-center tracking-wider z-[51]'>
+       <a
+         href={announcementUrl}
+         target='_blank'
+-        rel='noopener noreferrer'
 -        className='hidden lg:block cursor-pointer hover:opacity-90 hover:drop-shadow transition-opacity'
--      >
++        className='hidden lg:block hover:opacity-90 hover:drop-shadow transition-opacity'
+       >
 -        Support Open-Source Software!
--      </p>
--      <div className='hidden lg:block self-stretch w-0.5 bg-primary-foreground/20'></div>
--      <div
--        onClick={() => window.open(ContestURL, '_blank')}
++        🚀 Open SaaS v2.0 {hasLaunched ? 'is here!' : 'launches tomorrow!'}
+       </a>
+       <div className='hidden lg:block self-stretch w-0.5 bg-primary-foreground/20'></div>
+       <a
+         href={announcementUrl}
+         target='_blank'
+-        rel='noopener noreferrer'
 -        className='hidden lg:block cursor-pointer rounded-full bg-background/20 px-2.5 py-1 text-xs hover:bg-background/30 transition-colors tracking-wider'
--      >
++        className='hidden lg:block opacity-95 cursor-pointer rounded-full bg-background/20 px-2.5 py-1 hover:bg-background/30 transition-colors tracking-wider'
+       >
 -        Star Our Repo on Github ⭐️ →
--      </div>
--      <div
--        onClick={() => window.open(ContestURL, '_blank')}
--        className='lg:hidden cursor-pointer rounded-full bg-background/20 px-2.5 py-1 text-xs hover:bg-background/30 transition-colors'
--      >
++        {hasLaunched ? 'Check out the Launch 🎉' : 'Get notified! 📆'}  →
+       </a>
+       <a
+         href={announcementUrl}
+         target='_blank'
+-        rel='noopener noreferrer'
+         className='lg:hidden cursor-pointer rounded-full bg-background/20 px-2.5 py-1 text-xs hover:bg-background/30 transition-colors'
+       >
 -        ⭐️ Star the Our Repo and Support Open-Source! ⭐️
--      </div>
--    </div>
--  );
--}
++        🎉 The Open SaaS v2.0 Launch is Live! 🚀
+       </a>
+     </div>
+   );

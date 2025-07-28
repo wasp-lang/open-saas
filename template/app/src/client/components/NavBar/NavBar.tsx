@@ -250,30 +250,36 @@ const NavLogo = ({ isScrolled }: { isScrolled: boolean }) => (
   />
 );
 
-const ContestURL = 'https://github.com/wasp-lang/wasp';
+const announcementUrl = 'https://github.com/wasp-lang/wasp';
 
 function Announcement() {
   return (
-    <div className='flex justify-center items-center gap-3 p-3 w-full bg-gradient-to-r from-accent to-secondary font-semibold text-primary-foreground text-center z-49'>
-      <p
-        onClick={() => window.open(ContestURL, '_blank')}
+    <div className='relative flex justify-center items-center gap-3 p-3 w-full bg-gradient-to-r from-accent to-secondary font-semibold text-primary-foreground text-center z-[51]'>
+      <a
+        href={announcementUrl}
+        target='_blank'
+        rel='noopener noreferrer'
         className='hidden lg:block cursor-pointer hover:opacity-90 hover:drop-shadow transition-opacity'
       >
         Support Open-Source Software!
-      </p>
+      </a>
       <div className='hidden lg:block self-stretch w-0.5 bg-primary-foreground/20'></div>
-      <div
-        onClick={() => window.open(ContestURL, '_blank')}
+      <a
+        href={announcementUrl}
+        target='_blank'
+        rel='noopener noreferrer'
         className='hidden lg:block cursor-pointer rounded-full bg-background/20 px-2.5 py-1 text-xs hover:bg-background/30 transition-colors tracking-wider'
       >
         Star Our Repo on Github ⭐️ →
-      </div>
-      <div
-        onClick={() => window.open(ContestURL, '_blank')}
+      </a>
+      <a
+        href={announcementUrl}
+        target='_blank'
+        rel='noopener noreferrer'
         className='lg:hidden cursor-pointer rounded-full bg-background/20 px-2.5 py-1 text-xs hover:bg-background/30 transition-colors'
       >
         ⭐️ Star the Our Repo and Support Open-Source! ⭐️
-      </div>
+      </a>
     </div>
   );
 }
