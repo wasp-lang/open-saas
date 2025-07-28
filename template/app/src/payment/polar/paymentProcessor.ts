@@ -26,7 +26,7 @@ async function fetchTotalPolarRevenue(): Promise<number> {
 
     for await (const page of result) {
       const orders = (page as any).items || [];
-      
+
       for (const order of orders) {
         if (order.status === 'completed' && typeof order.amount === 'number' && order.amount > 0) {
           totalRevenue += order.amount;
@@ -35,7 +35,6 @@ async function fetchTotalPolarRevenue(): Promise<number> {
     }
 
     return totalRevenue / 100;
-
   } catch (error) {
     console.error('Error calculating Polar total revenue:', error);
     return 0;
@@ -44,36 +43,54 @@ async function fetchTotalPolarRevenue(): Promise<number> {
 
 export const polarPaymentProcessor: PaymentProcessor = {
   id: PaymentProcessors.Polar,
+  /**
+   * Creates a Polar checkout session for subscription or one-time payments
+   * Handles customer creation/lookup automatically via externalCustomerId
+   * @param args Checkout session arguments including user info and payment plan
+   * @returns Promise resolving to checkout session with ID and redirect URL
+   */
   createCheckoutSession: async ({
     userId,
     userEmail,
     paymentPlan,
     prismaUserDelegate,
   }: CreateCheckoutSessionArgs) => {
-    const session = await createPolarCheckoutSession({
-      productId: paymentPlan.getPaymentProcessorPlanId(),
-      userEmail,
-      userId,
-      mode: paymentPlanEffectToPolarMode(paymentPlan.effect),
-    });
-
-    if (session.customerId) {
-      await prismaUserDelegate.update({
-        where: {
-          id: userId,
-        },
-        data: {
-          paymentProcessorUserId: session.customerId,
-        },
+    try {
+      const session = await createPolarCheckoutSession({
+        productId: paymentPlan.getPaymentProcessorPlanId(),
+        userEmail,
+        userId,
+        mode: paymentPlanEffectToPolarMode(paymentPlan.effect),
       });
-    }
 
-    return {
-      session: {
-        id: session.id,
-        url: session.url,
-      },
-    };
+      if (session.customerId) {
+        try {
+          await prismaUserDelegate.update({
+            where: {
+              id: userId,
+            },
+            data: {
+              paymentProcessorUserId: session.customerId,
+            },
+          });
+        } catch (dbError) {
+          console.error('Error updating user with Polar customer ID:', dbError);
+        }
+      }
+
+      return {
+        session: {
+          id: session.id,
+          url: session.url,
+        },
+      };
+    } catch (error) {
+      console.error('Error in Polar createCheckoutSession:', error);
+
+      throw new Error(
+        `Failed to create Polar checkout session: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
+    }
   },
   fetchCustomerPortalUrl: async (args: FetchCustomerPortalUrlArgs) => {
     const defaultPortalUrl = getPolarApiConfig().customerPortalUrl;

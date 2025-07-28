@@ -24,7 +24,7 @@ export interface PolarCheckoutSession {
 /**
  * Creates a Polar checkout session
  * @param args Arguments for creating a Polar checkout session
- * @param args.productId Product/price ID to use for the checkout session
+ * @param args.productId Polar Product ID to use for the checkout session
  * @param args.userEmail Email address of the customer
  * @param args.userId Internal user ID for tracking
  * @param args.mode Mode of the checkout session (subscription or payment)
@@ -37,54 +37,65 @@ export async function createPolarCheckoutSession({
   mode,
 }: CreatePolarCheckoutSessionArgs): Promise<PolarCheckoutSession> {
   try {
-    // TODO: Verify exact API structure with Polar SDK documentation
+    const baseUrl = requireNodeEnvVar('WASP_WEB_CLIENT_URL');
+
+    // Create checkout session with proper Polar API structure
+    // Using type assertion due to potential API/TypeScript definition mismatches
     const checkoutSession = await polar.checkouts.create({
-      // TODO: Verify correct property name for product/price ID
-      productPriceId: productId,
-      successUrl: `${requireNodeEnvVar('WASP_WEB_CLIENT_URL')}/checkout/success`,
-      customerEmail: userEmail,
+      products: [productId], // Array of Polar Product IDs
+      externalCustomerId: userId, // Use userId for customer deduplication
+      customerBillingAddress: {
+        country: 'US', // Default country - could be enhanced with user's actual country
+      },
+      successUrl: `${baseUrl}/checkout/success`,
+      cancelUrl: `${baseUrl}/checkout/cancel`, // May need to be 'cancel_url' based on API
       metadata: {
         userId: userId,
-        mode: mode,
+        userEmail: userEmail,
+        paymentMode: mode,
+        source: 'OpenSaaS',
       },
-      allowDiscountCodes: true,
-      requireBillingAddress: false,
-    } as any); // TODO: Replace temporary type assertion once API is verified
+    } as any);
 
     if (!checkoutSession.url) {
       throw new Error('Polar checkout session created without URL');
     }
 
+    // Return customer ID from checkout session if available
+    const customerId = (checkoutSession as any).customer_id || (checkoutSession as any).customerId;
+
     return {
       id: checkoutSession.id,
       url: checkoutSession.url,
-      customerId: checkoutSession.customerId || undefined,
+      customerId: customerId || undefined,
     };
   } catch (error) {
     console.error('Error creating Polar checkout session:', error);
-    throw new Error(`Failed to create Polar checkout session: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to create Polar checkout session: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 }
 
 /**
- * Fetches or creates a Polar customer
+ * Fetches or creates a Polar customer for a given email address
  * @param email Email address of the customer
- * @returns Promise resolving to a PolarCustomer object
+ * @returns Promise resolving to a Polar customer object
  */
 export async function fetchPolarCustomer(email: string) {
   try {
-    // TODO: Verify exact customer lookup and creation API with Polar SDK documentation
-    // Try to find existing customer by email
     const customersIterator = await polar.customers.list({
       email: email,
       limit: 1,
-    } as any); // Temporary type assertion until API is verified
-
-    // TODO: Verify how to properly iterate through PageIterator results
+    });
     let existingCustomer = null;
+
     for await (const page of customersIterator as any) {
-      if ((page as any).items && (page as any).items.length > 0) {
-        existingCustomer = (page as any).items[0];
+      const customers = (page as any).items || [];
+
+      if (customers.length > 0) {
+        existingCustomer = customers[0];
+
         break;
       }
     }
@@ -93,14 +104,16 @@ export async function fetchPolarCustomer(email: string) {
       return existingCustomer;
     }
 
-    // If no customer found, create a new one
     const newCustomer = await polar.customers.create({
       email: email,
-    } as any); // Temporary type assertion until API is verified
+    });
 
     return newCustomer;
   } catch (error) {
     console.error('Error fetching/creating Polar customer:', error);
-    throw new Error(`Failed to fetch/create Polar customer: ${error instanceof Error ? error.message : 'Unknown error'}`);
+
+    throw new Error(
+      `Failed to fetch/create Polar customer: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
-} 
+}
