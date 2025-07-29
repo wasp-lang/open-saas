@@ -18,5 +18,5 @@
      "react-hot-toast": "^2.4.1",
 +    "react-icons": "^5.5.0",
      "react-router-dom": "^6.26.2",
-     "stripe": "11.15.0",
-     "tailwind-merge": "^2.6.0",
+     "stripe": "18.1.0",
+     "tailwind-merge": "^2.2.1",

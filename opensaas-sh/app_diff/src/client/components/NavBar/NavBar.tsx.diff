@@ -115,7 +115,7 @@
              </div>
            </div>
 @@ -217,6 +237,6 @@
-       'size-6': isScrolled,
+       'size-7': isScrolled,
      })}
      src={logo}
 -    alt='Your SaaS App'
