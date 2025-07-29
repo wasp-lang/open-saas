@@ -1,13 +1,10 @@
 import { useEffect, useMemo } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { useAuth } from 'wasp/client/auth';
 import { routes } from 'wasp/client/router';
-import { landingPageNavigationItems } from '../landing-page/contentSections';
 import './Main.css';
 import NavBar from './components/NavBar/NavBar';
-import { appNavigationItems } from './components/NavBar/contentSections';
+import { demoNavigationitems, marketingNavigationItems } from './components/NavBar/constants';
 import CookieConsentBanner from './components/cookie-consent/Banner';
-import { useIsLandingPage } from './hooks/useIsLandingPage';
 
 /**
  * use this component to wrap all child components
@@ -15,9 +12,11 @@ import { useIsLandingPage } from './hooks/useIsLandingPage';
  */
 export default function App() {
   const location = useLocation();
-  const { data: user } = useAuth();
-  const isLandingPage = useIsLandingPage();
-  const navigationItems = isLandingPage ? landingPageNavigationItems : appNavigationItems;
+  const isMarketingPage = useMemo(() => {
+    return location.pathname === '/' || location.pathname.startsWith('/pricing');
+  }, [location]);
+
+  const navigationItems = isMarketingPage ? marketingNavigationItems : demoNavigationitems;
 
   const shouldDisplayAppNavBar = useMemo(() => {
     return (

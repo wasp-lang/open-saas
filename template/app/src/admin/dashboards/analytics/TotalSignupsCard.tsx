@@ -1,8 +1,8 @@
 import { ArrowUp, UsersRound } from 'lucide-react';
 import { useMemo } from 'react';
 import { type DailyStatsProps } from '../../../analytics/stats';
-import { cn } from '../../../client/cn';
 import { Card, CardContent, CardHeader } from '../../../components/ui/card';
+import { cn } from '../../../lib/utils';
 
 const TotalSignupsCard = ({ dailyStats, isLoading }: DailyStatsProps) => {
   const isDeltaPositive = useMemo(() => {

@@ -27,7 +27,7 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  
+
   .text-gradient-primary-diagonal {
     background: linear-gradient(135deg, hsl(var(--secondary-muted)), hsl(var(--secondary)));
     -webkit-background-clip: text;
@@ -40,7 +40,7 @@
     background: linear-gradient(to right, hsl(var(--secondary-muted)), hsl(var(--secondary)));
     padding: 1px;
   }
-  
+
   .border-gradient-primary > * {
     background: hsl(var(--background));
   }
@@ -92,7 +92,8 @@
 .apexcharts-tooltip.apexcharts-theme-light .apexcharts-tooltip-title {
   @apply dark:!bg-muted dark:!border-border;
 }
-.apexcharts-xaxistooltip, .apexcharts-yaxistooltip {
+.apexcharts-xaxistooltip,
+.apexcharts-yaxistooltip {
   @apply dark:!bg-muted dark:!border-muted dark:!text-muted-foreground;
 }
 .apexcharts-xaxistooltip-bottom:after {
@@ -100,7 +101,6 @@
 }
 .apexcharts-xaxistooltip-bottom:before {
   @apply dark:!border-b-muted;
-
 }
 
 @layer base {
@@ -109,7 +109,7 @@
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
-    --card-accent:  0 0% 100%;
+    --card-accent: 0 0% 100%;
     --card-accent-foreground: 0 0% 3.9%;
     --card-subtle: 31 57% 96%;
     --card-subtle-foreground: 0 0% 9%;

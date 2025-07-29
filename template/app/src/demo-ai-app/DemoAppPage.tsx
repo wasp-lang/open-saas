@@ -11,12 +11,12 @@ import {
 
 import { Loader2, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { cn } from '../client/cn';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Checkbox } from '../components/ui/checkbox';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
+import { cn } from '../lib/utils';
 import type { GeneratedSchedule, Task as ScheduleTask, TaskItem, TaskPriority } from './schedule';
 
 export default function DemoAppPage() {
@@ -33,7 +33,7 @@ export default function DemoAppPage() {
           object. Try it out, enter your day's tasks, and let AI do the rest!
         </p>
         {/* begin AI-powered Todo List */}
-        <Card className='my-8'>
+        <Card className='my-8 bg-muted/10'>
           <CardContent className='sm:w-[90%] md:w-[70%] lg:w-[50%] py-10 px-6 mx-auto my-8 space-y-10'>
             <NewTaskForm handleCreateTask={createTask} />
           </CardContent>
@@ -335,7 +335,7 @@ function Schedule({ schedule }: { schedule: GeneratedSchedule }) {
 
 function TaskCard({ task, taskItems }: { task: ScheduleTask; taskItems: TaskItem[] }) {
   const taskPriorityToColorMap: Record<TaskPriority, string> = {
-    high: 'bg-destructive/10 border-destructive/20 text-destructive',
+    high: 'bg-destructive/20 border-destructive/40 text-red-500',
     medium: 'bg-warning/10 border-warning/20 text-warning',
     low: 'bg-success/10 border-success/20 text-success',
   };
@@ -405,7 +405,7 @@ function TaskCardItem({ description, time }: TaskItem) {
       </div>
       <span
         className={cn('text-sm text-muted-foreground', {
-          'line-through text-muted-foreground opacity-50': isDone,
+          'line-through opacity-50': isDone,
         })}
       >
         {formattedTime}

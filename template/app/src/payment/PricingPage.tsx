@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from 'wasp/client/auth';
 import { generateCheckoutSession, getCustomerPortalUrl, useQuery } from 'wasp/client/operations';
-import { cn } from '../client/cn';
 import { Alert, AlertDescription } from '../components/ui/alert';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardFooter, CardTitle } from '../components/ui/card';
+import { cn } from '../lib/utils';
 import { PaymentPlanId, paymentPlans, prettyPaymentPlanName, SubscriptionStatus } from './plans';
 
 const bestDealPaymentPlanId: PaymentPlanId = PaymentPlanId.Pro;

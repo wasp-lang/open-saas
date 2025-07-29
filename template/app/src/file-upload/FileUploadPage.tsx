@@ -1,13 +1,13 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { getAllFilesByUser, getDownloadFileSignedURL, useQuery } from 'wasp/client/operations';
 import type { File } from 'wasp/entities';
-import { cn } from '../client/cn';
 import { Alert, AlertDescription } from '../components/ui/alert';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardTitle } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Progress } from '../components/ui/progress';
+import { cn } from '../lib/utils';
 import {
   type FileUploadError,
   type FileWithValidType,

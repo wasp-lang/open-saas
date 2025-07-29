@@ -1,0 +1,46 @@
+--- template/app/src/client/components/NavBar/Announcement.tsx
++++ opensaas-sh/app/src/client/components/NavBar/Announcement.tsx
+@@ -1,32 +1,33 @@
+-const ANNOUNCEMENT_URL = 'https://github.com/wasp-lang/wasp';
++const ANNOUNCEMENT_URL = 'https://x.com/hot_town/status/1950117243246821770';
+ 
+ export function Announcement() {
++  const launchDate = new Date('2025-07-29T00:00:00-07:00');
++  const today = new Date();
++  const hasLaunched = today.toISOString().slice(0, 10) >= launchDate.toISOString().slice(0, 10);
++
+   return (
+-    <div className='relative flex justify-center items-center gap-3 p-3 w-full bg-gradient-to-r from-accent to-secondary font-semibold text-primary-foreground text-center'>
++    <div className='relative flex justify-center items-center gap-3 p-3 w-full bg-gradient-to-r from-accent to-secondary font-semibold text-primary-foreground text-center tracking-wider z-[51]'>
+       <a
+         href={ANNOUNCEMENT_URL}
+         target='_blank'
+-        rel='noopener noreferrer'
+-        className='hidden lg:block cursor-pointer hover:opacity-90 hover:drop-shadow transition-opacity'
++        className='hidden lg:block hover:opacity-90 hover:drop-shadow transition-opacity'
+       >
+-        Support Open-Source Software!
++        🚀 Open SaaS v2.0 {hasLaunched ? 'is here!' : 'launches tomorrow!'}
+       </a>
+       <div className='hidden lg:block self-stretch w-0.5 bg-primary-foreground/20'></div>
+       <a
+         href={ANNOUNCEMENT_URL}
+         target='_blank'
+-        rel='noopener noreferrer'
+-        className='hidden lg:block cursor-pointer rounded-full bg-background/20 px-2.5 py-1 text-xs hover:bg-background/30 transition-colors tracking-wider'
++        className='hidden lg:block opacity-95 cursor-pointer rounded-full bg-background/20 px-2.5 py-1 hover:bg-background/30 transition-colors tracking-wider'
+       >
+-        Star Our Repo on Github ⭐️ →
++        {hasLaunched ? 'Check out the Launch 🎉' : 'Get notified! 📆'} →
+       </a>
+       <a
+         href={ANNOUNCEMENT_URL}
+         target='_blank'
+-        rel='noopener noreferrer'
+         className='lg:hidden cursor-pointer rounded-full bg-background/20 px-2.5 py-1 text-xs hover:bg-background/30 transition-colors'
+       >
+-        ⭐️ Star the Our Repo and Support Open-Source! ⭐️
++        🎉 The Open SaaS v2.0 Launch is Live! 🚀
+       </a>
+     </div>
+   );

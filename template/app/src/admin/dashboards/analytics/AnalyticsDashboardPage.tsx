@@ -1,6 +1,6 @@
 import { type AuthUser } from 'wasp/auth';
 import { getDailyStats, useQuery } from 'wasp/client/operations';
-import { cn } from '../../../client/cn';
+import { cn } from '../../../lib/utils';
 import DefaultLayout from '../../layout/DefaultLayout';
 import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin';
 import RevenueAndProfitChart from './RevenueAndProfitChart';

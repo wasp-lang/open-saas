@@ -1,8 +1,8 @@
 import { type AuthUser } from 'wasp/auth';
-import { cn } from '../../client/cn';
 import DarkModeSwitcher from '../../client/components/DarkModeSwitcher';
+import { cn } from '../../lib/utils';
 import MessageButton from '../../messages/MessageButton';
-import DropdownUser from '../../user/DropdownUser';
+import { UserDropdown } from '../../user/UserDropdown';
 
 const Header = (props: {
   sidebarOpen: string | boolean | undefined;
@@ -86,7 +86,7 @@ const Header = (props: {
 
         <div className='flex items-center gap-3 2xsm:gap-7'>
           {/* <!-- User Area --> */}
-          <DropdownUser user={props.user} />
+          <UserDropdown user={props.user} />
           {/* <!-- User Area --> */}
         </div>
       </div>

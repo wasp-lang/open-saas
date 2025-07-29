@@ -1,4 +1,4 @@
-import { cn } from '../../client/cn';
+import { cn } from '../../lib/utils';
 
 interface FeatureProps {
   name: string;
