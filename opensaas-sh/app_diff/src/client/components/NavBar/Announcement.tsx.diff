@@ -2,7 +2,7 @@
 +++ opensaas-sh/app/src/client/components/NavBar/Announcement.tsx
 @@ -1,32 +1,33 @@
 -const ANNOUNCEMENT_URL = 'https://github.com/wasp-lang/wasp';
-+const ANNOUNCEMENT_URL = 'https://www.producthunt.com/products/open-saas';
++const ANNOUNCEMENT_URL = 'https://x.com/hot_town/status/1950117243246821770';
  
  export function Announcement() {
 +  const launchDate = new Date('2025-07-29T00:00:00-07:00');
