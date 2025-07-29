@@ -1,24 +1,5 @@
 ## Welcome to your new SaaS App! 🎉
-<div style='border-radius: 8px; overflow: hidden;'>
-  <a
-    href='https://www.producthunt.com/products/open-saas?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-open&#0045;saas&#0045;2'
-    target='_blank'
-    style='position: relative; display: flex; justify-content: center; align-items: center; height: 200px; width: 100%;'
-  >
-    <img
-      src='https://opensaas.sh/public-banner.webp'
-      alt='Open SaaS v2.0 Banner'
-      style='position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 53%; filter: grayscale(100%); z-index: 1; opacity: 0.2;'
-    />
-    <img
-      src='https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=991058&theme=neutral&t=1753441449297'
-      alt='Open&#0032;SaaS - The&#0032;open&#0045;source&#0032;SaaS&#0032;boilerplate&#0032;with&#0032;superpowers&#0033; | Product Hunt'
-      style='width: 250px; height: 54px; position: relative; z-index: 2'
-      width='250'
-      height='54'
-    />
-  </a>
-</div>
+<a href="https://www.producthunt.com/products/open-saas?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-open&#0045;saas&#0045;2" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=991058&theme=neutral&t=1753776395137" alt="Open&#0032;SaaS - The&#0032;open&#0045;source&#0032;SaaS&#0032;boilerplate&#0032;with&#0032;superpowers&#0033; | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 
 https://github.com/wasp-lang/open-saas/assets/70215737/5ff289b1-12b9-4b46-aa90-a6a3122de93e
 
