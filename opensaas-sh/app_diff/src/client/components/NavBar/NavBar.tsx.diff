@@ -124,7 +124,7 @@
  );
  
 -const announcementUrl = 'https://github.com/wasp-lang/wasp';
-+const announcementUrl = 'https://www.producthunt.com/products/open-saas'
++const announcementUrl = 'https://x.com/hot_town/status/1950117243246821770';
  
  function Announcement() {
 +  const launchDate = new Date('2025-07-29T00:00:00-07:00'); // July 29, 2025 PST
