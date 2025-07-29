@@ -1,0 +1,41 @@
+---
+description: Describes where the ui components built on top with Shadcn UI exist, how they are customized, and Wasp specific rules concerning how new ShadCN UI components should be installed
+alwaysApply: false
+---
+Only ShadCN UI version 2.3.0 should be used with Wasp at the moment. Due to dependency conflicts Wasp cannot be used with Tailwindcss v4, which the newer version of Shadcn depends on. 
+
+Shadcn has already been setup with this project template, so there is no need to install it. All the ShadCN specific components exist in [src/components/ui](../../src/components/ui/)
+
+## Adding a new ShadCN component
+### 1. Add a new component
+
+```bash
+npx shadcn@2.3.0 add button
+```
+
+### 2. Adjust the `utils` import in `button.tsx` (for each component you add)
+
+There will be a brand new `button.tsx` file in `src/components/ui`. We need to fix some import issues:
+```diff
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
+
+-import { cn } from "s/lib/utils"
++import { cn } from "../../lib/utils"
+```
+
+### 3. Use the `Button` component
+Now you are ready to use the `Button` component. That's it!
+```jsx
+import './Main.css'
+
+import { Button } from './components/ui/button'
+
+export const MainPage = () => {
+  return (
+    <div className="container">
+      <Button>This works</Button>
+    </div>
+  )
+}
