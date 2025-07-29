@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAuth } from 'wasp/client/auth';
 import { Link as WaspRouterLink, routes } from 'wasp/client/router';
 
@@ -12,7 +11,7 @@ export function NotFoundPage() {
         <p className='text-lg text-bodydark mb-8'>Oops! The page you're looking for doesn't exist.</p>
         <WaspRouterLink
           to={user ? routes.DemoAppRoute.to : routes.LandingPageRoute.to}
-          className='inline-block px-8 py-3 text-white font-semibold bg-yellow-500 rounded-lg hover:bg-yellow-400 transition duration-300'
+          className='inline-block px-8 py-3 text-accent-foreground font-semibold bg-accent rounded-lg hover:bg-accent/90 transition duration-300'
         >
           Go Back Home
         </WaspRouterLink>

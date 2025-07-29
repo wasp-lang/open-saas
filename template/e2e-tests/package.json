@@ -29,6 +29,6 @@
     "prisma": "5.19.1"
   },
   "devDependencies": {
-    "@types/node": "^18.0.0"
+    "@types/node": "^20.14.8"
   }
 }

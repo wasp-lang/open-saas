@@ -1,0 +1,8 @@
+--- template/app/src/auth/email-and-pass/emails.ts
++++ opensaas-sh/app/src/auth/email-and-pass/emails.ts
+@@ -1,4 +1,4 @@
+-import { type GetVerificationEmailContentFn, type GetPasswordResetEmailContentFn } from 'wasp/server/auth';
++import { type GetPasswordResetEmailContentFn, type GetVerificationEmailContentFn } from 'wasp/server/auth';
+ 
+ export const getVerificationEmailContent: GetVerificationEmailContentFn = ({ verificationLink }) => ({
+   subject: 'Verify your email',

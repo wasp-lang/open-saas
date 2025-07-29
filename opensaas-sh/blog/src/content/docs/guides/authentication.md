@@ -89,6 +89,6 @@ To create a Google OAuth app and get your Google API keys, follow the instructio
 
 To create a GitHub OAuth app and get your GitHub API keys, follow the instructions in [Wasp's GitHub Auth docs](https://wasp.sh/docs/auth/social-auth/github#3-creating-a-github-oauth-app).
 
-To create a Discord OAuth app and get your Discord API keys, follow the instructions in [Wasp's Discord Auth docs](docs/auth/social-auth/google#3-creating-a-google-oauth-app)
+To create a Discord OAuth app and get your Discord API keys, follow the instructions in [Wasp's Discord Auth docs](https://wasp.sh/docs/auth/social-auth/discord#3-creating-a-discord-app)
 
 Again, Wasp will take care of the rest and update your AuthUI components accordingly.

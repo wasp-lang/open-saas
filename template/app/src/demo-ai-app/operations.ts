@@ -1,18 +1,19 @@
-import * as z from 'zod';
-import type { Task, GptResponse, User } from 'wasp/entities';
+import type { PrismaPromise } from '@prisma/client';
+import OpenAI from 'openai';
+import type { GptResponse, Task, User } from 'wasp/entities';
+import { HttpError, prisma } from 'wasp/server';
 import type {
-  GenerateGptResponse,
   CreateTask,
   DeleteTask,
-  UpdateTask,
-  GetGptResponses,
+  GenerateGptResponse,
   GetAllTasksByUser,
+  GetGptResponses,
+  UpdateTask,
 } from 'wasp/server/operations';
-import { HttpError, prisma } from 'wasp/server';
-import { GeneratedSchedule } from './schedule';
-import OpenAI from 'openai';
+import * as z from 'zod';
 import { SubscriptionStatus } from '../payment/plans';
 import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
+import { GeneratedSchedule, TaskPriority } from './schedule';
 
 const openAi = setUpOpenAi();
 function setUpOpenAi(): OpenAI {
@@ -38,10 +39,6 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
     throw new HttpError(401, 'Only authenticated users are allowed to perform this operation');
   }
 
-  if (!isEligibleForResponse(context.user)) {
-    throw new HttpError(402, 'User has not paid or is out of credits');
-  }
-
   const { hours } = ensureArgsSchemaOrThrowHttpError(generateGptResponseInputSchema, rawArgs);
   const tasks = await context.entities.Task.findMany({
     where: {
@@ -57,23 +54,6 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
     throw new HttpError(500, 'Encountered a problem in communication with OpenAI');
   }
 
-  // We decrement the credits after using up tokens to get a daily plan
-  // from Chat GPT.
-  //
-  // This way, users don't feel cheated if something goes wrong.
-  // On the flipside, users can theoretically abuse this and spend more
-  // credits than they have, but the damage should be pretty limited.
-  //
-  // Think about which option you prefer for you and edit the code accordingly.
-  const decrementCredit = context.entities.User.update({
-    where: { id: context.user.id },
-    data: {
-      credits: {
-        decrement: 1,
-      },
-    },
-  });
-
   const createResponse = context.entities.GptResponse.create({
     data: {
       user: { connect: { id: context.user.id } },
@@ -81,18 +61,43 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
     },
   });
 
+  const transactions: PrismaPromise<GptResponse | User>[] = [createResponse];
+
+  // We decrement the credits for users without an active subscription
+  // after using up tokens to get a daily plan from Chat GPT.
+  //
+  // This way, users don't feel cheated if something goes wrong.
+  // On the flipside, users can theoretically abuse this and spend more
+  // credits than they have, but the damage should be pretty limited.
+  //
+  // Think about which option you prefer for your app and edit the code accordingly.
+  if (!isUserSubscribed(context.user)) {
+    if (context.user.credits > 0) {
+      const decrementCredit = context.entities.User.update({
+        where: { id: context.user.id },
+        data: {
+          credits: {
+            decrement: 1,
+          },
+        },
+      });
+      transactions.push(decrementCredit);
+    } else {
+      throw new HttpError(402, 'User has not paid or is out of credits');
+    }
+  }
+
   console.log('Decrementing credits and saving response');
-  prisma.$transaction([decrementCredit, createResponse]);
+  await prisma.$transaction(transactions);
 
   return generatedSchedule;
 };
 
-function isEligibleForResponse(user: User) {
-  const isUserSubscribed =
+function isUserSubscribed(user: User) {
+  return (
     user.subscriptionStatus === SubscriptionStatus.Active ||
-    user.subscriptionStatus === SubscriptionStatus.CancelAtPeriodEnd;
-  const userHasCredits = user.credits > 0;
-  return isUserSubscribed || userHasCredits;
+    user.subscriptionStatus === SubscriptionStatus.CancelAtPeriodEnd
+  );
 }
 
 const createTaskInputSchema = z.object({
@@ -236,7 +241,7 @@ async function generateScheduleWithGpt(tasks: Task[], hours: number): Promise<Ge
           parameters: {
             type: 'object',
             properties: {
-              mainTasks: {
+              tasks: {
                 type: 'array',
                 description: 'Name of main tasks provided by user, ordered by priority',
                 items: {
@@ -248,13 +253,13 @@ async function generateScheduleWithGpt(tasks: Task[], hours: number): Promise<Ge
                     },
                     priority: {
                       type: 'string',
-                      enum: ['low', 'medium', 'high'],
+                      enum: ['low', 'medium', 'high'] as TaskPriority[],
                       description: 'task priority',
                     },
                   },
                 },
               },
-              subtasks: {
+              taskItems: {
                 type: 'array',
                 items: {
                   type: 'object',
@@ -268,7 +273,7 @@ async function generateScheduleWithGpt(tasks: Task[], hours: number): Promise<Ge
                       type: 'number',
                       description: 'time allocated for a given subtask in hours, e.g. 0.5',
                     },
-                    mainTaskName: {
+                    taskName: {
                       type: 'string',
                       description: 'name of main task related to subtask',
                     },
@@ -276,7 +281,7 @@ async function generateScheduleWithGpt(tasks: Task[], hours: number): Promise<Ge
                 },
               },
             },
-            required: ['mainTasks', 'subtasks', 'time', 'priority'],
+            required: ['tasks', 'taskItems', 'time', 'priority'],
           },
         },
       },
