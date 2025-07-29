@@ -5,7 +5,7 @@
     target='_blank'
     style='position: relative; display: flex; justify-content: center; align-items: center; height: 200px; width: 100%;'
   >
-    <Image
+    <img
       src='https://opensaas.sh/public-banner.webp'
       alt='Open SaaS v2.0 Banner'
       style='position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 53%; filter: grayscale(100%); z-index: 1; opacity: 0.2;'
