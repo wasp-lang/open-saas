@@ -1,107 +1,41 @@
-import { LayoutDashboard, LogOut, Settings, Shield } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import { logout } from 'wasp/client/auth';
-import { Link as WaspRouterLink, routes } from 'wasp/client/router';
+import { Link as WaspRouterLink } from 'wasp/client/router';
 import { type User } from 'wasp/entities';
-import { DropdownMenuItem } from '../components/ui/dropdown-menu';
+import { userMenuItems } from './constants';
 
 export const UserMenuItems = ({ user, onItemClick }: { user?: Partial<User>; onItemClick?: () => void }) => {
-  const isMobileMenu = !!onItemClick;
+  return (
+    <>
+      {userMenuItems.map((item) => {
+        if (item.isAuthRequired && !user) return null;
+        if (item.isAdminOnly && (!user || !user.isAdmin)) return null;
 
-  if (isMobileMenu) {
-    return (
-      <>
-        <div className='py-2'>
-          <WaspRouterLink
-            to={routes.DemoAppRoute.to}
-            onClick={onItemClick}
-            className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-foreground hover:text-primary'
-          >
-            <LayoutDashboard size='1.1rem' />
-            AI Scheduler (Demo App)
-          </WaspRouterLink>
-        </div>
-
-        <div className='py-2'>
-          <WaspRouterLink
-            to={routes.AccountRoute.to}
-            onClick={onItemClick}
-            className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-foreground hover:text-primary'
-          >
-            <Settings size='1.1rem' />
-            Account Settings
-          </WaspRouterLink>
-        </div>
-
-        {!!user && user.isAdmin && (
-          <div className='py-2'>
+        return (
+          <div key={item.name} className='py-2'>
             <WaspRouterLink
-              to={routes.AdminRoute.to}
+              to={item.to}
               onClick={onItemClick}
               className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-foreground hover:text-primary'
             >
-              <Shield size='1.1rem' />
-              Admin Dashboard
+              <item.icon size='1.1rem' />
+              {item.name}
             </WaspRouterLink>
           </div>
-        )}
-
-        <div className='py-2'>
-          <button
-            onClick={() => {
-              logout();
-              onItemClick?.();
-            }}
-            className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-foreground hover:text-primary'
-          >
-            <LogOut size='1.1rem' />
-            Log Out
-          </button>
-        </div>
-      </>
-    );
-  }
-
-  return (
-    <>
-      <DropdownMenuItem asChild>
-        <WaspRouterLink
-          to={routes.DemoAppRoute.to}
-          className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary'
+        );
+      })}
+      <div className='py-2'>
+        <button
+          onClick={() => {
+            logout();
+            onItemClick?.();
+          }}
+          className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-foreground hover:text-primary'
         >
-          <LayoutDashboard size='1.1rem' />
-          AI Scheduler (Demo App)
-        </WaspRouterLink>
-      </DropdownMenuItem>
-
-      <DropdownMenuItem asChild>
-        <WaspRouterLink
-          to={routes.AccountRoute.to}
-          className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary'
-        >
-          <Settings size='1.1rem' />
-          Account Settings
-        </WaspRouterLink>
-      </DropdownMenuItem>
-
-      {!!user && user.isAdmin && (
-        <DropdownMenuItem asChild>
-          <WaspRouterLink
-            to={routes.AdminRoute.to}
-            className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary'
-          >
-            <Shield size='1.1rem' />
-            Admin Dashboard
-          </WaspRouterLink>
-        </DropdownMenuItem>
-      )}
-
-      <DropdownMenuItem
-        onClick={() => logout()}
-        className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary'
-      >
-        <LogOut size='1.1rem' />
-        Log Out
-      </DropdownMenuItem>
+          <LogOut size='1.1rem' />
+          Log Out
+        </button>
+      </div>
     </>
   );
 };

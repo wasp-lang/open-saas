@@ -1,6 +1,3 @@
-import { routes } from 'wasp/client/router';
-import type { NavigationItem } from '../client/components/NavBar/NavBar';
-import avatarPlaceholder from '../client/static/avatar-placeholder.webp';
 import daBoiAvatar from '../client/static/da-boi.webp';
 import kivo from '../client/static/examples/kivo.webp';
 import messync from '../client/static/examples/messync.webp';
@@ -12,12 +9,6 @@ import searchcraft from '../client/static/examples/searchcraft.webp';
 import { BlogUrl, DocsUrl } from '../shared/common';
 import type { GridFeature } from './components/FeaturesGrid';
 
-export const landingPageNavigationItems: NavigationItem[] = [
-  { name: 'Features', to: '#features' },
-  { name: 'Pricing', to: routes.PricingPageRoute.to },
-  { name: 'Documentation', to: DocsUrl },
-  { name: 'Blog', to: BlogUrl },
-];
 export const features: GridFeature[] = [
   {
     name: 'Cool Feature 1',
@@ -116,6 +107,7 @@ export const faqs = [
     href: 'https://en.wikipedia.org/wiki/42_(number)',
   },
 ];
+
 export const footerNavigation = {
   app: [
     { name: 'Documentation', href: DocsUrl },

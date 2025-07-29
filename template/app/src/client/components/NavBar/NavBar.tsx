@@ -4,12 +4,14 @@ import { Link as ReactRouterLink } from 'react-router-dom';
 import { useAuth } from 'wasp/client/auth';
 import { Link as WaspRouterLink, routes } from 'wasp/client/router';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../../../components/ui/sheet';
-import DropdownUser from '../../../user/DropdownUser';
+import { cn } from '../../../lib/utils';
+import { throttleWithTrailingInvocation } from '../../../shared/utils';
+import { UserDropdown } from '../../../user/UserDropdown';
 import { UserMenuItems } from '../../../user/UserMenuItems';
-import { cn } from '../../cn';
 import { useIsLandingPage } from '../../hooks/useIsLandingPage';
 import logo from '../../static/logo.webp';
 import DarkModeSwitcher from '../DarkModeSwitcher';
+import { Announcement } from './Announcement';
 
 export interface NavigationItem {
   name: string;
@@ -17,11 +19,8 @@ export interface NavigationItem {
 }
 
 export default function NavBar({ navigationItems }: { navigationItems: NavigationItem[] }) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const isLandingPage = useIsLandingPage();
-
-  const { data: user, isLoading: isUserLoading } = useAuth();
 
   useEffect(() => {
     const throttledHandler = throttleWithTrailingInvocation(() => {
@@ -60,106 +59,22 @@ export default function NavBar({ navigationItems }: { navigationItems: Navigatio
                 className='flex items-center text-foreground duration-300 ease-in-out hover:text-primary transition-colors'
               >
                 <NavLogo isScrolled={isScrolled} />
-                {isLandingPage && (
-                  <span
-                    className={cn('font-semibold leading-6 text-foreground transition-all duration-300', {
-                      'ml-2 text-sm': !isScrolled,
-                      'ml-2 text-xs': isScrolled,
-                    })}
-                  >
-                    Your SaaS
-                  </span>
-                )}
+                <span
+                  className={cn('font-semibold leading-6 text-foreground transition-all duration-300', {
+                    'ml-2 text-sm': !isScrolled,
+                    'ml-2 text-xs': isScrolled,
+                  })}
+                >
+                  Your SaaS
+                </span>
               </WaspRouterLink>
 
               <ul className='hidden lg:flex items-center gap-6 ml-4'>
                 {renderNavigationItems(navigationItems)}
               </ul>
             </div>
-            <div className='flex lg:hidden'>
-              <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-                <SheetTrigger asChild>
-                  <button
-                    type='button'
-                    className={cn(
-                      'inline-flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors'
-                    )}
-                  >
-                    <span className='sr-only'>Open main menu</span>
-                    <Menu
-                      className={cn('transition-all duration-300', {
-                        'h-6 w-6': !isScrolled,
-                        'h-5 w-5': isScrolled,
-                      })}
-                      aria-hidden='true'
-                    />
-                  </button>
-                </SheetTrigger>
-                <SheetContent side='right' className='w-[300px] sm:w-[400px]'>
-                  <SheetHeader>
-                    <SheetTitle className='flex items-center'>
-                      <WaspRouterLink to={routes.LandingPageRoute.to}>
-                        <span className='sr-only'>Your SaaS</span>
-                        <NavLogo isScrolled={false} />
-                      </WaspRouterLink>
-                    </SheetTitle>
-                  </SheetHeader>
-                  <div className='mt-6 flow-root'>
-                    <div className='-my-6 divide-y divide-border'>
-                      <ul className='space-y-2 py-6'>
-                        {renderNavigationItems(navigationItems, setMobileMenuOpen)}
-                      </ul>
-                      <div className='py-6'>
-                        {isUserLoading ? null : !user ? (
-                          <WaspRouterLink to={routes.LoginRoute.to}>
-                            <div className='flex justify-end items-center duration-300 ease-in-out text-foreground hover:text-primary transition-colors'>
-                              Log in <LogIn size='1.1rem' className='ml-1' />
-                            </div>
-                          </WaspRouterLink>
-                        ) : (
-                          <div className='space-y-2'>
-                            <UserMenuItems user={user} onItemClick={() => setMobileMenuOpen(false)} />
-                          </div>
-                        )}
-                      </div>
-                      <div className='py-6'>
-                        <DarkModeSwitcher />
-                      </div>
-                    </div>
-                  </div>
-                </SheetContent>
-              </Sheet>
-            </div>
-
-            <div className='hidden lg:flex lg:flex-1 gap-3 justify-end items-center'>
-              <ul className='flex justify-center items-center gap-2 sm:gap-4'>
-                <DarkModeSwitcher />
-              </ul>
-              {isUserLoading ? null : !user ? (
-                <WaspRouterLink
-                  to={routes.LoginRoute.to}
-                  className={cn('font-semibold leading-6 ml-3 transition-all duration-300', {
-                    'text-sm': !isScrolled,
-                    'text-xs': isScrolled,
-                  })}
-                >
-                  <div className='flex items-center duration-300 ease-in-out text-foreground hover:text-primary transition-colors'>
-                    Log in{' '}
-                    <LogIn
-                      size={isScrolled ? '1rem' : '1.1rem'}
-                      className={cn('transition-all duration-300', {
-                        'ml-1 mt-[0.1rem]': !isScrolled,
-                        'ml-1': isScrolled,
-                      })}
-                    />
-                  </div>
-                </WaspRouterLink>
-              ) : (
-                <div className='ml-3'>
-                  <DropdownUser user={user} />
-                </div>
-              )}
-            </div>
+            <NavBarMobileMenu isScrolled={isScrolled} navigationItems={navigationItems} />
+            <NavBarDesktopUserDropdown isScrolled={isScrolled} />
           </nav>
         </div>
       </header>
@@ -167,50 +82,106 @@ export default function NavBar({ navigationItems }: { navigationItems: Navigatio
   );
 }
 
-function throttleWithTrailingInvocation(
-  fn: () => void,
-  delayInMilliseconds: number
-): ((...args: any[]) => void) & { cancel: () => void } {
-  let fnLastCallTime: number | null = null;
-  let trailingInvocationTimeoutId: ReturnType<typeof setTimeout> | null = null;
-  let isTrailingInvocationPending = false;
+function NavBarDesktopUserDropdown({ isScrolled }: { isScrolled: boolean }) {
+  const { data: user, isLoading: isUserLoading } = useAuth();
 
-  const callFn = () => {
-    fnLastCallTime = Date.now();
-    fn();
-  };
+  return (
+    <div className='hidden lg:flex lg:flex-1 gap-3 justify-end items-center'>
+      <ul className='flex justify-center items-center gap-2 sm:gap-4'>
+        <DarkModeSwitcher />
+      </ul>
+      {isUserLoading ? null : !user ? (
+        <WaspRouterLink
+          to={routes.LoginRoute.to}
+          className={cn('font-semibold leading-6 ml-3 transition-all duration-300', {
+            'text-sm': !isScrolled,
+            'text-xs': isScrolled,
+          })}
+        >
+          <div className='flex items-center duration-300 ease-in-out text-foreground hover:text-primary transition-colors'>
+            Log in{' '}
+            <LogIn
+              size={isScrolled ? '1rem' : '1.1rem'}
+              className={cn('transition-all duration-300', {
+                'ml-1 mt-[0.1rem]': !isScrolled,
+                'ml-1': isScrolled,
+              })}
+            />
+          </div>
+        </WaspRouterLink>
+      ) : (
+        <div className='ml-3'>
+          <UserDropdown user={user} />
+        </div>
+      )}
+    </div>
+  );
+}
 
-  const throttledFn = () => {
-    const currentTime = Date.now();
-    const timeSinceLastExecution = fnLastCallTime ? currentTime - fnLastCallTime : 0;
+function NavBarMobileMenu({
+  isScrolled,
+  navigationItems,
+}: {
+  isScrolled: boolean;
+  navigationItems: NavigationItem[];
+}) {
+  const { data: user, isLoading: isUserLoading } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-    const shouldCallImmediately = fnLastCallTime === null || timeSinceLastExecution >= delayInMilliseconds;
-
-    if (shouldCallImmediately) {
-      callFn();
-      return;
-    }
-
-    if (!isTrailingInvocationPending) {
-      isTrailingInvocationPending = true;
-      const remainingDelayTime = Math.max(delayInMilliseconds - timeSinceLastExecution, 0);
-
-      trailingInvocationTimeoutId = setTimeout(() => {
-        callFn();
-        isTrailingInvocationPending = false;
-      }, remainingDelayTime);
-    }
-  };
-
-  throttledFn.cancel = () => {
-    if (trailingInvocationTimeoutId) {
-      clearTimeout(trailingInvocationTimeoutId);
-      trailingInvocationTimeoutId = null;
-    }
-    isTrailingInvocationPending = false;
-  };
-
-  return throttledFn as typeof throttledFn & { cancel: () => void };
+  return (
+    <div className='flex lg:hidden'>
+      <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+        <SheetTrigger asChild>
+          <button
+            type='button'
+            className={cn(
+              'inline-flex items-center justify-center rounded-md text-muted-foreground hover:text-muted hover:bg-accent transition-colors'
+            )}
+          >
+            <span className='sr-only'>Open main menu</span>
+            <Menu
+              className={cn('transition-all duration-300', {
+                'size-8 p-1': !isScrolled,
+                'size-6 p-0.5': isScrolled,
+              })}
+              aria-hidden='true'
+            />
+          </button>
+        </SheetTrigger>
+        <SheetContent side='right' className='w-[300px] sm:w-[400px]'>
+          <SheetHeader>
+            <SheetTitle className='flex items-center'>
+              <WaspRouterLink to={routes.LandingPageRoute.to}>
+                <span className='sr-only'>Your SaaS</span>
+                <NavLogo isScrolled={false} />
+              </WaspRouterLink>
+            </SheetTitle>
+          </SheetHeader>
+          <div className='mt-6 flow-root'>
+            <div className='-my-6 divide-y divide-border'>
+              <ul className='space-y-2 py-6'>{renderNavigationItems(navigationItems, setMobileMenuOpen)}</ul>
+              <div className='py-6'>
+                {isUserLoading ? null : !user ? (
+                  <WaspRouterLink to={routes.LoginRoute.to}>
+                    <div className='flex justify-end items-center duration-300 ease-in-out text-foreground hover:text-primary transition-colors'>
+                      Log in <LogIn size='1.1rem' className='ml-1' />
+                    </div>
+                  </WaspRouterLink>
+                ) : (
+                  <div className='space-y-2'>
+                    <UserMenuItems user={user} onItemClick={() => setMobileMenuOpen(false)} />
+                  </div>
+                )}
+              </div>
+              <div className='py-6'>
+                <DarkModeSwitcher />
+              </div>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
+    </div>
+  );
 }
 
 function renderNavigationItems(
@@ -249,37 +220,3 @@ const NavLogo = ({ isScrolled }: { isScrolled: boolean }) => (
     alt='Your SaaS App'
   />
 );
-
-const announcementUrl = 'https://github.com/wasp-lang/wasp';
-
-function Announcement() {
-  return (
-    <div className='relative flex justify-center items-center gap-3 p-3 w-full bg-gradient-to-r from-accent to-secondary font-semibold text-primary-foreground text-center z-[51]'>
-      <a
-        href={announcementUrl}
-        target='_blank'
-        rel='noopener noreferrer'
-        className='hidden lg:block cursor-pointer hover:opacity-90 hover:drop-shadow transition-opacity'
-      >
-        Support Open-Source Software!
-      </a>
-      <div className='hidden lg:block self-stretch w-0.5 bg-primary-foreground/20'></div>
-      <a
-        href={announcementUrl}
-        target='_blank'
-        rel='noopener noreferrer'
-        className='hidden lg:block cursor-pointer rounded-full bg-background/20 px-2.5 py-1 text-xs hover:bg-background/30 transition-colors tracking-wider'
-      >
-        Star Our Repo on Github ⭐️ →
-      </a>
-      <a
-        href={announcementUrl}
-        target='_blank'
-        rel='noopener noreferrer'
-        className='lg:hidden cursor-pointer rounded-full bg-background/20 px-2.5 py-1 text-xs hover:bg-background/30 transition-colors'
-      >
-        ⭐️ Star the Our Repo and Support Open-Source! ⭐️
-      </a>
-    </div>
-  );
-}

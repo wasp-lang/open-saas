@@ -9,8 +9,6 @@ const Calendar = ({ user }: { user: AuthUser }) => {
   return (
     <DefaultLayout user={user}>
       <Breadcrumb pageName='Calendar' />
-
-      {/* <!-- ====== Calendar Section Start ====== --> */}
       <div className='w-full max-w-full rounded-sm border border-border bg-card shadow-default'>
         <table className='w-full'>
           <thead>
@@ -103,7 +101,6 @@ const Calendar = ({ user }: { user: AuthUser }) => {
               </td>
             </tr>
             {/* <!-- Line 2 --> */}
-            {/* <!-- Line 3 --> */}
             <tr className='grid grid-cols-7'>
               <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
                 <span className='font-medium'>15</span>
@@ -128,7 +125,6 @@ const Calendar = ({ user }: { user: AuthUser }) => {
               </td>
             </tr>
             {/* <!-- Line 3 --> */}
-            {/* <!-- Line 4 --> */}
             <tr className='grid grid-cols-7'>
               <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
                 <span className='font-medium'>22</span>
@@ -160,7 +156,6 @@ const Calendar = ({ user }: { user: AuthUser }) => {
               </td>
             </tr>
             {/* <!-- Line 4 --> */}
-            {/* <!-- Line 5 --> */}
             <tr className='grid grid-cols-7'>
               <td className='ease relative h-20 cursor-pointer border border-border p-2 transition duration-500 text-accent hover:bg-accent hover:text-accent-foreground md:h-25 md:p-6 xl:h-31'>
                 <span className='font-medium'>29</span>
@@ -188,7 +183,6 @@ const Calendar = ({ user }: { user: AuthUser }) => {
           </tbody>
         </table>
       </div>
-      {/* <!-- ====== Calendar Section End ====== --> */}
     </DefaultLayout>
   );
 };

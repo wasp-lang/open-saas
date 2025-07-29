@@ -10,8 +10,8 @@ import {
 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { cn } from '../../client/cn';
 import Logo from '../../client/static/logo.webp';
+import { cn } from '../../lib/utils';
 import SidebarLinkGroup from './SidebarLinkGroup';
 
 interface SidebarProps {
