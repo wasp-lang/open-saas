@@ -71,7 +71,7 @@
 +  
 +  /* Global typography styles */
 +  h1, h2, h3, h4, h5, h6 {
-+    @apply font-satoshi font-black sm:text-6xl leading-tight;
++    @apply font-satoshi font-black leading-tight;
 +  }
 +  
 +  p {
