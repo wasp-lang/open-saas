@@ -4,7 +4,9 @@ import type { MiddlewareConfigFn } from 'wasp/server';
 import { PrismaClient } from '@prisma/client';
 import { stripePaymentProcessor } from './stripe/paymentProcessor';
 import { lemonSqueezyPaymentProcessor } from './lemonSqueezy/paymentProcessor';
-import { PaymentProcessorId } from './types';
+import { polarPaymentProcessor } from './polar/paymentProcessor';
+import { PaymentProcessorId, PaymentProcessors } from './types';
+import { getActivePaymentProcessor } from './env';
 
 export interface CreateCheckoutSessionArgs {
   userId: string;
@@ -76,10 +78,32 @@ export interface PaymentProcessor {
 }
 
 /**
+ * All available payment processors
+ */
+const paymentProcessorMap: Record<PaymentProcessors, PaymentProcessor> = {
+  [PaymentProcessors.Stripe]: stripePaymentProcessor,
+  [PaymentProcessors.LemonSqueezy]: lemonSqueezyPaymentProcessor,
+  [PaymentProcessors.Polar]: polarPaymentProcessor,
+};
+
+/**
+ * Get the payment processor instance based on environment configuration or override
+ * @param override Optional processor override for testing scenarios
+ * @returns The configured payment processor instance
+ * @throws {Error} When the specified processor is not found in the processor map
+ */
+export function getPaymentProcessor(override?: PaymentProcessorId): PaymentProcessor {
+  const processorId = getActivePaymentProcessor(override);
+  const processor = paymentProcessorMap[processorId];
+  
+  if (!processor) {
+    throw new Error(`Payment processor '${processorId}' not found. Available processors: ${Object.keys(paymentProcessorMap).join(', ')}`);
+  }
+  
+  return processor;
+}
+
+/**
  * The currently configured payment processor.
  */
-// Choose which payment processor you'd like to use, then delete the imports at the top of this file
-// and the code for any other payment processors from `/src/payment`
-// export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
-// export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
-export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
+export const paymentProcessor: PaymentProcessor = getPaymentProcessor();

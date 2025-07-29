@@ -1,6 +1,5 @@
-import { defineEnvValidationSchema } from 'wasp/env';
 import { z } from 'zod';
-import { PaymentProcessorId, PaymentProcessors } from '../payment/types';
+import { PaymentProcessorId, PaymentProcessors } from './types';
 
 const processorSchemas: Record<PaymentProcessors, object> = {
   [PaymentProcessors.Stripe]: {
@@ -91,17 +90,27 @@ const processorSchemas: Record<PaymentProcessors, object> = {
       .optional(),
   },
 };
-const baseSchema = {
-  PAYMENT_PROCESSOR_ID: z.nativeEnum(PaymentProcessors).default(PaymentProcessors.Stripe),
-  
-};
-const activePaymentProcessor: PaymentProcessorId =
-  (process.env.PAYMENT_PROCESSOR_ID as PaymentProcessorId) || PaymentProcessors.Stripe;
-const processorSchema = processorSchemas[activePaymentProcessor];
-const fullSchema = { ...baseSchema, ...processorSchema };
 
 /**
- * Complete environment validation schema including all payment processor variables
- * Wasp will only validate the variables that are actually needed based on the processor selection
+ * Get the active payment processor from environment variables
+ * @param override Optional processor override for testing scenarios
+ * @returns The active payment processor ID
  */
-export const envValidationSchema = defineEnvValidationSchema(z.object(fullSchema));
+export function getActivePaymentProcessor(override?: PaymentProcessorId): PaymentProcessorId {
+  if (override) {
+    return override;
+  }
+
+  return (process.env.PAYMENT_PROCESSOR_ID as PaymentProcessorId) || PaymentProcessors.Stripe;
+}
+
+const activePaymentProcessor: PaymentProcessorId = getActivePaymentProcessor();
+const processorSchema = processorSchemas[activePaymentProcessor];
+
+/**
+ * Payment processor validation schema for active payment processor
+ */
+export const paymentSchema = {
+  PAYMENT_PROCESSOR_ID: z.nativeEnum(PaymentProcessors).default(PaymentProcessors.Stripe),
+  ...processorSchema,
+};

@@ -80,7 +80,7 @@ app OpenSaaS {
   },
 
   server: {
-    envValidationSchema: import { envValidationSchema } from "@src/server/env",
+    envValidationSchema: import { envValidationSchema } from "@src/server/validation",
   },
 
   client: {
