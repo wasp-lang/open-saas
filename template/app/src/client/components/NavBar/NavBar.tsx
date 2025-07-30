@@ -168,9 +168,9 @@ function NavBarMobileMenu({
                     </div>
                   </WaspRouterLink>
                 ) : (
-                  <div className='space-y-2'>
+                  <ul className='space-y-2'>
                     <UserMenuItems user={user} onItemClick={() => setMobileMenuOpen(false)} />
-                  </div>
+                  </ul>
                 )}
               </div>
               <div className='py-6'>

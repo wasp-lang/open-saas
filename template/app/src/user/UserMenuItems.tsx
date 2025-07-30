@@ -12,30 +12,30 @@ export const UserMenuItems = ({ user, onItemClick }: { user?: Partial<User>; onI
         if (item.isAdminOnly && (!user || !user.isAdmin)) return null;
 
         return (
-          <div key={item.name} className='py-2'>
+          <li key={item.name}>
             <WaspRouterLink
               to={item.to}
               onClick={onItemClick}
-              className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-foreground hover:text-primary'
+              className='flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium leading-7 text-foreground hover:bg-accent hover:text-accent-foreground transition-colors'
             >
               <item.icon size='1.1rem' />
               {item.name}
             </WaspRouterLink>
-          </div>
+          </li>
         );
       })}
-      <div className='py-2'>
+      <li>
         <button
           onClick={() => {
             logout();
             onItemClick?.();
           }}
-          className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-foreground hover:text-primary'
+          className='flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium leading-7 text-foreground hover:bg-accent hover:text-accent-foreground transition-colors'
         >
           <LogOut size='1.1rem' />
           Log Out
         </button>
-      </div>
+      </li>
     </>
   );
 };
