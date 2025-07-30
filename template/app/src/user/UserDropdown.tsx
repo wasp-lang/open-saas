@@ -31,13 +31,13 @@ export function UserDropdown({ user }: { user: Partial<UserEntity> }) {
           if (item.isAdminOnly && (!user || !user.isAdmin)) return null;
 
           return (
-            <DropdownMenuItem asChild>
+            <DropdownMenuItem key={item.name}>
               <WaspRouterLink
                 to={item.to}
                 onClick={() => {
                   setOpen(false);
                 }}
-                className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary'
+                className='flex items-center gap-3 w-full'
               >
                 <item.icon size='1.1rem' />
                 {item.name}
@@ -45,12 +45,11 @@ export function UserDropdown({ user }: { user: Partial<UserEntity> }) {
             </DropdownMenuItem>
           );
         })}
-        <DropdownMenuItem
-          onClick={() => logout()}
-          className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary'
-        >
-          <LogOut size='1.1rem' />
-          Log Out
+        <DropdownMenuItem>
+          <button type='button' onClick={() => logout()} className='flex items-center gap-3 w-full'>
+            <LogOut size='1.1rem' />
+            Log Out
+          </button>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

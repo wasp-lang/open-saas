@@ -97,7 +97,7 @@
 +                    </Button>
                    </WaspRouterLink>
                  ) : (
-                   <div className='space-y-2'>
+                   <ul className='space-y-2'>
 @@ -174,7 +187,14 @@
                  )}
                </div>
@@ -114,7 +114,7 @@
                </div>
              </div>
            </div>
-@@ -217,6 +237,6 @@
+@@ -218,6 +238,6 @@
        'size-7': isScrolled,
      })}
      src={logo}
