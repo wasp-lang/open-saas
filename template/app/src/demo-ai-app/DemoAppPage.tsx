@@ -211,6 +211,7 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
         variant='default'
         size='default'
         className='w-full'
+        data-testid='generate-schedule-button'
       >
         {isPlanGenerating ? (
           <>
@@ -310,7 +311,7 @@ function Todo({ id, isDone, description, time }: TodoProps) {
 
 function Schedule({ schedule }: { schedule: GeneratedSchedule }) {
   return (
-    <div className='flex flex-col gap-6 py-6'>
+    <div className='flex flex-col gap-6 py-6' data-testid='schedule'>
       <div className='space-y-4'>
         {!!schedule.tasks ? (
           schedule.tasks

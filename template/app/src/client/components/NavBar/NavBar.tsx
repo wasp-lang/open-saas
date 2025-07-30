@@ -202,6 +202,7 @@ function renderNavigationItems(
           to={item.to}
           className={menuStyles}
           onClick={setMobileMenuOpen && (() => setMobileMenuOpen(false))}
+          target={item.to.startsWith('http') ? '_blank' : undefined}
         >
           {item.name}
         </ReactRouterLink>
