@@ -97,7 +97,7 @@
 +                    </Button>
                    </WaspRouterLink>
                  ) : (
-                   <div className='space-y-2'>
+                   <ul className='space-y-2'>
 @@ -174,7 +187,14 @@
                  )}
                </div>
