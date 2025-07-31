@@ -1,4 +1,5 @@
 import { type Task } from 'wasp/entities';
+import type { GeneratedSchedule, Task as ScheduleTask, TaskItem, TaskPriority } from './schedule';
 
 import {
   createTask,
@@ -8,8 +9,10 @@ import {
   updateTask,
   useQuery,
 } from 'wasp/client/operations';
+import { routes, Link } from 'wasp/client/router';
+import { useNavigate } from 'react-router-dom';
 
-import { Loader2, Trash2 } from 'lucide-react';
+import { ArrowRight, Loader2, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
@@ -17,7 +20,7 @@ import { Checkbox } from '../components/ui/checkbox';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { cn } from '../lib/utils';
-import type { GeneratedSchedule, Task as ScheduleTask, TaskItem, TaskPriority } from './schedule';
+import { toast } from '../hooks/use-toast';
 
 export default function DemoAppPage() {
   return (
@@ -113,6 +116,7 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
   const [isPlanGenerating, setIsPlanGenerating] = useState<boolean>(false);
 
   const { data: tasks, isLoading: isTasksLoading } = useQuery(getAllTasksByUser);
+  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     try {
@@ -130,10 +134,30 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
         hours: todaysHours,
       });
       if (response) {
-        setResponse(response as unknown as GeneratedSchedule);
+        setResponse(response);
       }
     } catch (err: any) {
-      window.alert('Error: ' + (err.message || 'Something went wrong'));
+      if (err.statusCode === 402) {
+        const toastId = toast({
+          title: '⚠️ You are out of credits!',
+          style: {
+            minWidth: '400px',
+          },
+          action: (
+            <Link to={routes.PricingPageRoute.to}>
+              <Button variant='default' onClick={() => toastId.dismiss()}>
+                Go to pricing page <ArrowRight className='w-4 h-4' />
+              </Button>
+            </Link>
+          ),
+        });
+      } else {
+        toast({
+          title: 'Error',
+          description: err.message || 'Something went wrong',
+          variant: 'destructive',
+        });
+      }
     } finally {
       setIsPlanGenerating(false);
     }

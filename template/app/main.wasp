@@ -221,8 +221,13 @@ page FileUploadPage {
   component: import FileUpload from "@src/file-upload/FileUploadPage"
 }
 
-action createFile {
-  fn: import { createFile } from "@src/file-upload/operations",
+action createFileUploadUrl {
+  fn: import { createFileUploadUrl } from "@src/file-upload/operations",
+  entities: [User, File]
+}
+
+action addFileToDb {
+  fn: import { addFileToDb } from "@src/file-upload/operations",
   entities: [User, File]
 }
 
@@ -233,6 +238,11 @@ query getAllFilesByUser {
 
 query getDownloadFileSignedURL {
   fn: import { getDownloadFileSignedURL } from "@src/file-upload/operations",
+  entities: [User, File]
+}
+
+action deleteFile {
+  fn: import { deleteFile } from "@src/file-upload/operations",
   entities: [User, File]
 }
 //#endregion

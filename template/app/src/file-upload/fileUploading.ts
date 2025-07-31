@@ -1,4 +1,3 @@
-import { createFile } from 'wasp/client/operations';
 import axios from 'axios';
 import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE_BYTES } from './validation';
 
@@ -6,12 +5,17 @@ export type FileWithValidType = Omit<File, 'type'> & { type: AllowedFileType };
 type AllowedFileType = (typeof ALLOWED_FILE_TYPES)[number];
 interface FileUploadProgress {
   file: FileWithValidType;
+  s3UploadUrl: string;
+  s3UploadFields: Record<string, string>;
   setUploadProgressPercent: (percentage: number) => void;
 }
 
-export async function uploadFileWithProgress({ file, setUploadProgressPercent }: FileUploadProgress) {
-  const { s3UploadUrl, s3UploadFields } = await createFile({ fileType: file.type, fileName: file.name });
-
+export async function uploadFileWithProgress({
+  file,
+  s3UploadUrl,
+  s3UploadFields,
+  setUploadProgressPercent,
+}: FileUploadProgress) {
   const formData = getFileUploadFormData(file, s3UploadFields);
 
   return axios.post(s3UploadUrl, formData, {

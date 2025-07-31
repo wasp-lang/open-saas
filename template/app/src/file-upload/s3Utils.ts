@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { randomUUID } from 'crypto';
-import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import { MAX_FILE_SIZE_BYTES } from './validation';
@@ -41,6 +41,14 @@ export const getDownloadFileSignedURLFromS3 = async ({ key }: { key: string }) =
     Key: key,
   });
   return await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+};
+
+export const deleteFileFromS3 = async ({ key }: { key: string }) => {
+  const command = new DeleteObjectCommand({
+    Bucket: process.env.AWS_S3_FILES_BUCKET,
+    Key: key,
+  });
+  await s3Client.send(command);
 };
 
 function getS3Key(fileName: string, userId: string) {
