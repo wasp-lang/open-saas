@@ -1,13 +1,10 @@
+import { useEffect, useMemo } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
+import { routes } from 'wasp/client/router';
 import './Main.css';
 import NavBar from './components/NavBar/NavBar';
+import { demoNavigationitems, marketingNavigationItems } from './components/NavBar/constants';
 import CookieConsentBanner from './components/cookie-consent/Banner';
-import { appNavigationItems } from './components/NavBar/contentSections';
-import { landingPageNavigationItems } from '../landing-page/contentSections';
-import { useMemo, useEffect } from 'react';
-import { routes } from 'wasp/client/router';
-import { Outlet, useLocation } from 'react-router-dom';
-import { useAuth } from 'wasp/client/auth';
-import { useIsLandingPage } from './hooks/useIsLandingPage';
 
 /**
  * use this component to wrap all child components
@@ -15,12 +12,16 @@ import { useIsLandingPage } from './hooks/useIsLandingPage';
  */
 export default function App() {
   const location = useLocation();
-  const { data: user } = useAuth();
-  const isLandingPage = useIsLandingPage();
-  const navigationItems = isLandingPage ? landingPageNavigationItems : appNavigationItems;
+  const isMarketingPage = useMemo(() => {
+    return location.pathname === '/' || location.pathname.startsWith('/pricing');
+  }, [location]);
+
+  const navigationItems = isMarketingPage ? marketingNavigationItems : demoNavigationitems;
 
   const shouldDisplayAppNavBar = useMemo(() => {
-    return location.pathname !== routes.LoginRoute.build() && location.pathname !== routes.SignupRoute.build();
+    return (
+      location.pathname !== routes.LoginRoute.build() && location.pathname !== routes.SignupRoute.build()
+    );
   }, [location]);
 
   const isAdminDashboard = useMemo(() => {
@@ -39,13 +40,13 @@ export default function App() {
 
   return (
     <>
-      <div className='min-h-screen dark:text-white dark:bg-boxdark-2'>
+      <div className='min-h-screen bg-background text-foreground'>
         {isAdminDashboard ? (
           <Outlet />
         ) : (
           <>
             {shouldDisplayAppNavBar && <NavBar navigationItems={navigationItems} />}
-            <div className='mx-auto max-w-7xl sm:px-6 lg:px-8'>
+            <div className='mx-auto max-w-screen-2xl'>
               <Outlet />
             </div>
           </>

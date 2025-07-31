@@ -1,0 +1,10 @@
+--- template/app/src/client/components/NavBar/constants.ts
++++ opensaas-sh/app/src/client/components/NavBar/constants.ts
+@@ -9,7 +9,6 @@
+ 
+ export const marketingNavigationItems: NavigationItem[] = [
+   { name: 'Features', to: '/#features' },
+-  { name: 'Pricing', to: routes.PricingPageRoute.to },
+   ...staticNavigationItems,
+ ] as const;
+ 

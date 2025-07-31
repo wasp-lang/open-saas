@@ -8,5 +8,5 @@ export const stripe = new Stripe(requireNodeEnvVar('STRIPE_API_KEY'), {
   // npm package to the API version that matches your Stripe dashboard's one.
   // For more details and alternative setups check
   // https://docs.stripe.com/api/versioning .
-  apiVersion: '2022-11-15',
+  apiVersion: '2025-04-30.basil',
 });

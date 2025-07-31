@@ -1,0 +1,84 @@
+--- template/app/src/client/Main.css
++++ opensaas-sh/app/src/client/Main.css
+@@ -44,6 +44,15 @@
+   .border-gradient-primary > * {
+     background: hsl(var(--background));
+   }
++
++  /* Radial gradient utilities */
++  .bg-radial-gradient {
++    background: radial-gradient(circle at 30% 30%, hsl(var(--card-accent)/0.5) 0%, hsl(var(--accent)/0.15) 100%);
++  }
++  
++  .dark .bg-radial-gradient {
++    background: radial-gradient(circle at 30% 30%, hsl(var(--card-subtle)/0.8) 0%, hsl(var(--card)) 100%);
++  }
+ }
+ 
+ /* Here is an example of how to add a custom font. 
+@@ -51,6 +60,16 @@
+ * They are defined first here, then need to be referenced in the tailwind.config.js file
+ * under `theme.extend.fontFamily`, and then can be used as a tailwind class, e.g. className='font-satoshi'.
+ */
++
++/* Satoshi Font Family */
++@font-face {
++  font-family: 'Satoshi';
++  src: url('/fonts/Satoshi-Light.woff2') format('woff2');
++  font-weight: 300;
++  font-style: normal;
++  font-display: swap;
++}
++
+ @font-face {
+   font-family: 'Satoshi';
+   src: url('/fonts/Satoshi-Regular.woff2') format('woff2');
+@@ -59,6 +78,30 @@
+   font-display: swap;
+ }
+ 
++@font-face {
++  font-family: 'Satoshi';
++  src: url('/fonts/Satoshi-Medium.woff2') format('woff2');
++  font-weight: 500;
++  font-style: normal;
++  font-display: swap;
++}
++
++@font-face {
++  font-family: 'Satoshi';
++  src: url('/fonts/Satoshi-Bold.woff2') format('woff2');
++  font-weight: bold;
++  font-style: normal;
++  font-display: swap;
++}
++
++@font-face {
++  font-family: 'Satoshi';
++  src: url('/fonts/Satoshi-Black.woff2') format('woff2');
++  font-weight: 900;
++  font-style: normal;
++  font-display: swap;
++}
++
+ /* third-party libraries CSS */
+ 
+ .tableCheckbox:checked ~ div span {
+@@ -177,4 +220,17 @@
+   body {
+     @apply bg-background text-foreground;
+   }
++  
++  /* Global typography styles */
++  h1, h2, h3, h4, h5, h6 {
++    @apply font-satoshi font-black leading-tight;
++  }
++  
++  p {
++    @apply font-mono text-base leading-relaxed;
++  }
++}
++
++.navbar-maxwidth-transition {
++  transition: max-width 300ms cubic-bezier(0.4,0,0.2,1);
+ }
