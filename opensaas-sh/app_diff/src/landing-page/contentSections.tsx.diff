@@ -1,6 +1,6 @@
 --- template/app/src/landing-page/contentSections.tsx
 +++ opensaas-sh/app/src/landing-page/contentSections.tsx
-@@ -0,0 +1,247 @@
+@@ -0,0 +1,239 @@
 +import { routes } from 'wasp/client/router';
 +import type { NavigationItem } from '../client/components/NavBar/NavBar';
 +import blog from '../client/static/assets/blog.webp';
@@ -113,20 +113,12 @@
 +      'I used Wasp to build and sell my AI-augmented SaaS app for marketplace vendors within two months!',
 +  },
 +  {
-+    name: 'Jonathan Cocharan',
-+    role: 'Entrepreneur',
-+    avatarSrc: 'https://pbs.twimg.com/profile_images/1910056203863883776/jtfVWaEG_400x400.jpg',
-+    socialUrl: 'https://twitter.com/JonathanCochran',
-+    quote:
-+      'In just 6 nights... my SaaS app is live 🎉! Huge thanks to the amazing @wasplang community 🙌 for their guidance along the way. These tools are incredibly efficient 🤯!',
-+  },
-+  {
 +    name: 'Billy Howell',
-+    role: 'Entrepreneur',
++    role: 'Founder @ Stupid Simple Apps',
 +    avatarSrc: 'https://pbs.twimg.com/profile_images/1877734205561430016/jjpG4mS6_400x400.jpg',
 +    socialUrl: 'https://twitter.com/billyjhowell',
 +    quote:
-+      "Congrats! I am loving Wasp. It's really helped me, a self-taught coder increase my confidence. I feel like I've finally found the perfect, versatile stack for all my projects instead of trying out a new one each time.",
++      "Congrats! I am loving Wasp & Open SaaS. It's really helped me, a self-taught coder increase my confidence. I feel like I've finally found the perfect, versatile stack for all my projects instead of trying out a new one each time.",
 +  },
 +  {
 +    name: 'Tim Skaggs',
@@ -140,7 +132,7 @@
 +    role: 'Founder @ Microinfluencer.club',
 +    avatarSrc: 'https://pbs.twimg.com/profile_images/1927721707164377089/it8oCAkf_400x400.jpg',
 +    socialUrl: 'https://twitter.com/CamBlackwood95',
-+    quote: 'Setting up a full stack SaaS in 1 minute with WaspLang.',
++    quote: 'Setting up a full stack SaaS in 1 minute with Wasp.',
 +  },
 +  {
 +    name: 'JLegendz',
