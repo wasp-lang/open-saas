@@ -6,7 +6,7 @@ import { stripePaymentProcessor } from './stripe/paymentProcessor';
 import { lemonSqueezyPaymentProcessor } from './lemonSqueezy/paymentProcessor';
 import { polarPaymentProcessor } from './polar/paymentProcessor';
 import { PaymentProcessorId, PaymentProcessors } from './types';
-import { getActivePaymentProcessor } from './env';
+import { getActivePaymentProcessor } from './validation';
 
 export interface CreateCheckoutSessionArgs {
   userId: string;

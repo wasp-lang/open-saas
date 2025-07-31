@@ -1,7 +1,7 @@
 import { defineEnvValidationSchema } from 'wasp/env';
 import { HttpError } from 'wasp/server';
 import * as z from 'zod';
-import { paymentSchema } from '../payment/env';
+import { paymentSchema } from '../payment/validation';
 
 /**
  * Add any custom environment variables here, e.g.
