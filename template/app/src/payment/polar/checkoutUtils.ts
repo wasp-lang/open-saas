@@ -1,4 +1,4 @@
-import { requireNodeEnvVar } from '../../server/utils';
+import { env } from 'wasp/server';
 import type { PolarMode } from './paymentProcessor';
 import { polar } from './polarClient';
 
@@ -37,25 +37,26 @@ export async function createPolarCheckoutSession({
   mode,
 }: CreatePolarCheckoutSessionArgs): Promise<PolarCheckoutSession> {
   try {
-    const baseUrl = requireNodeEnvVar('WASP_WEB_CLIENT_URL');
+    const baseUrl = env.WASP_WEB_CLIENT_URL;
 
     // Create checkout session with proper Polar API structure
     // Using type assertion due to potential API/TypeScript definition mismatches
-    const checkoutSession = await polar.checkouts.create({
+    const checkoutSessionArgs = {
       products: [productId], // Array of Polar Product IDs
       externalCustomerId: userId, // Use userId for customer deduplication
       customerBillingAddress: {
         country: 'US', // Default country - could be enhanced with user's actual country
       },
-      successUrl: `${baseUrl}/checkout/success`,
-      cancelUrl: `${baseUrl}/checkout/cancel`, // May need to be 'cancel_url' based on API
+      successUrl: `${baseUrl}/checkout?success=true`,
+      cancelUrl: `${baseUrl}/checkout?canceled=true`,
       metadata: {
         userId: userId,
         userEmail: userEmail,
         paymentMode: mode,
         source: 'OpenSaaS',
       },
-    } as any);
+    };
+    const checkoutSession = await polar.checkouts.create(checkoutSessionArgs as any);
 
     if (!checkoutSession.url) {
       throw new Error('Polar checkout session created without URL');

@@ -2,9 +2,9 @@
  * All supported payment processors
  */
 export enum PaymentProcessors {
-  Stripe = 'stripe',
-  LemonSqueezy = 'lemonSqueezy',
-  Polar = 'polar',
+  Stripe = 'Stripe',
+  LemonSqueezy = 'LemonSqueezy',
+  Polar = 'Polar',
 }
 
 /**

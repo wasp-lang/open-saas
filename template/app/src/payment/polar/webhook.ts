@@ -1,10 +1,17 @@
+// @ts-ignore
 import { validateEvent, WebhookVerificationError } from '@polar-sh/sdk/webhooks';
+import express from 'express';
 import type { MiddlewareConfigFn } from 'wasp/server';
 import type { PaymentsWebhook } from 'wasp/server/api';
-import { getPolarApiConfig, mapPolarProductIdToPlanId } from './config';
-import { updateUserPolarPaymentDetails, findUserByPolarCustomerId } from './paymentDetails';
-import { PolarSubscriptionStatus, isPolarSubscriptionStatus } from './types';
 import { PaymentPlanId, paymentPlans } from '../plans';
+import { getPolarApiConfig, mapPolarProductIdToPlanId } from './config';
+import { findUserByPolarCustomerId, updateUserPolarPaymentDetails } from './paymentDetails';
+import { isPolarSubscriptionStatus, PolarSubscriptionStatus, PolarWebhookPayload } from './types';
+// @ts-ignore
+import { Order } from '@polar-sh/sdk/models/components/order.js';
+// @ts-ignore
+import { Subscription } from '@polar-sh/sdk/models/components/subscription.js';
+import { MiddlewareConfig } from 'wasp/server/middleware';
 
 /**
  * Main Polar webhook handler with signature verification and proper event routing
@@ -13,12 +20,10 @@ import { PaymentPlanId, paymentPlans } from '../plans';
  * @param res Express response object for webhook acknowledgment
  * @param context Wasp context containing database entities and user information
  */
-export const polarWebhook: PaymentsWebhook = async (req: any, res: any, context: any) => {
+export const polarWebhook: PaymentsWebhook = async (req, res, context) => {
   try {
     const config = getPolarApiConfig();
-
-    const event = validateEvent(req.body, req.headers, config.webhookSecret);
-
+    const event = validateEvent(req.body, req.headers as Record<string, string>, config.webhookSecret);
     const success = await handlePolarEvent(event, context);
 
     if (success) {
@@ -44,7 +49,7 @@ export const polarWebhook: PaymentsWebhook = async (req: any, res: any, context:
  * @param context Wasp context with database entities
  * @returns Promise resolving to boolean indicating if event was handled
  */
-async function handlePolarEvent(event: any, context: any): Promise<boolean> {
+async function handlePolarEvent(event: PolarWebhookPayload, context: any): Promise<boolean> {
   const userDelegate = context.entities.User;
 
   try {
@@ -53,7 +58,7 @@ async function handlePolarEvent(event: any, context: any): Promise<boolean> {
         await handleOrderCreated(event.data, userDelegate);
         return true;
 
-      case 'order.completed':
+      case 'order.paid':
         await handleOrderCompleted(event.data, userDelegate);
         return true;
 
@@ -69,7 +74,7 @@ async function handlePolarEvent(event: any, context: any): Promise<boolean> {
         await handleSubscriptionCanceled(event.data, userDelegate);
         return true;
 
-      case 'subscription.activated':
+      case 'subscription.active':
         await handleSubscriptionActivated(event.data, userDelegate);
         return true;
 
@@ -88,9 +93,9 @@ async function handlePolarEvent(event: any, context: any): Promise<boolean> {
  * @param data Order data from webhook
  * @param userDelegate Prisma user delegate
  */
-async function handleOrderCreated(data: any, userDelegate: any): Promise<void> {
+async function handleOrderCreated(data: Order, userDelegate: any): Promise<void> {
   try {
-    const customerId = data.customer_id;
+    const customerId = data.customerId;
     const metadata = data.metadata || {};
     const paymentMode = metadata.paymentMode;
 
@@ -110,7 +115,7 @@ async function handleOrderCreated(data: any, userDelegate: any): Promise<void> {
       {
         polarCustomerId: customerId,
         numOfCreditsPurchased: creditsAmount,
-        datePaid: new Date(data.created_at),
+        datePaid: new Date(data.createdAt),
       },
       userDelegate
     );
@@ -127,9 +132,9 @@ async function handleOrderCreated(data: any, userDelegate: any): Promise<void> {
  * @param data Order data from webhook
  * @param userDelegate Prisma user delegate
  */
-async function handleOrderCompleted(data: any, userDelegate: any): Promise<void> {
+async function handleOrderCompleted(data: Order, userDelegate: any): Promise<void> {
   try {
-    const customerId = data.customer_id;
+    const customerId = data.customerId;
 
     if (!customerId) {
       console.warn('Order completed without customer_id');
@@ -143,7 +148,7 @@ async function handleOrderCompleted(data: any, userDelegate: any): Promise<void>
       await updateUserPolarPaymentDetails(
         {
           polarCustomerId: customerId,
-          datePaid: new Date(data.created_at),
+          datePaid: new Date(data.createdAt),
         },
         userDelegate
       );
@@ -159,10 +164,10 @@ async function handleOrderCompleted(data: any, userDelegate: any): Promise<void>
  * @param data Subscription data from webhook
  * @param userDelegate Prisma user delegate
  */
-async function handleSubscriptionCreated(data: any, userDelegate: any): Promise<void> {
+async function handleSubscriptionCreated(data: Subscription, userDelegate: any): Promise<void> {
   try {
-    const customerId = data.customer_id;
-    const planId = data.plan_id;
+    const customerId = data.customerId;
+    const planId = data.productId;
     const status = data.status;
 
     if (!customerId || !planId) {
@@ -178,7 +183,7 @@ async function handleSubscriptionCreated(data: any, userDelegate: any): Promise<
         polarCustomerId: customerId,
         subscriptionPlan: mappedPlanId,
         subscriptionStatus,
-        datePaid: new Date(data.created_at),
+        datePaid: new Date(data.createdAt),
       },
       userDelegate
     );
@@ -197,11 +202,11 @@ async function handleSubscriptionCreated(data: any, userDelegate: any): Promise<
  * @param data Subscription data from webhook
  * @param userDelegate Prisma user delegate
  */
-async function handleSubscriptionUpdated(data: any, userDelegate: any): Promise<void> {
+async function handleSubscriptionUpdated(data: Subscription, userDelegate: any): Promise<void> {
   try {
-    const customerId = data.customer_id;
+    const customerId = data.customerId;
     const status = data.status;
-    const planId = data.plan_id;
+    const planId = data.productId;
 
     if (!customerId) {
       console.warn('Subscription updated without customer_id');
@@ -233,9 +238,9 @@ async function handleSubscriptionUpdated(data: any, userDelegate: any): Promise<
  * @param data Subscription data from webhook
  * @param userDelegate Prisma user delegate
  */
-async function handleSubscriptionCanceled(data: any, userDelegate: any): Promise<void> {
+async function handleSubscriptionCanceled(data: Subscription, userDelegate: any): Promise<void> {
   try {
-    const customerId = data.customer_id;
+    const customerId = data.customerId;
 
     if (!customerId) {
       console.warn('Subscription canceled without customer_id');
@@ -262,10 +267,10 @@ async function handleSubscriptionCanceled(data: any, userDelegate: any): Promise
  * @param data Subscription data from webhook
  * @param userDelegate Prisma user delegate
  */
-async function handleSubscriptionActivated(data: any, userDelegate: any): Promise<void> {
+async function handleSubscriptionActivated(data: Subscription, userDelegate: any): Promise<void> {
   try {
-    const customerId = data.customer_id;
-    const planId = data.plan_id;
+    const customerId = data.customerId;
+    const planId = data.productId;
 
     if (!customerId) {
       console.warn('Subscription activated without customer_id');
@@ -322,9 +327,9 @@ function mapPolarStatusToOpenSaaS(polarStatus: string): string {
  * @param order Order data from Polar webhook payload
  * @returns Number of credits purchased
  */
-function extractCreditsFromPolarOrder(order: any): number {
+function extractCreditsFromPolarOrder(order: Order): number {
   try {
-    const productId = order.product_id;
+    const productId = order.productId;
 
     if (!productId) {
       console.warn('No product_id found in Polar order:', order.id);
@@ -365,17 +370,9 @@ function extractCreditsFromPolarOrder(order: any): number {
  * @param middlewareConfig Express middleware configuration object
  * @returns Updated middleware configuration
  */
-export const polarMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig: any) => {
-  // Configure raw body parsing for webhook endpoints
-  // This ensures the raw request body is available for signature verification
-  middlewareConfig.set('polar-webhook', (req: any, res: any, next: any) => {
-    // Ensure we have raw body for signature verification
-    if (req.url.includes('/polar') && req.method === 'POST') {
-      // The raw body should already be available through Wasp's webhook handling
-      // This middleware mainly serves as a placeholder for any future webhook-specific setup
-    }
-    next();
-  });
+export const polarMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig: MiddlewareConfig) => {
+  middlewareConfig.delete('express.json');
+  middlewareConfig.set('express.raw', express.raw({ type: 'application/json' }));
 
   return middlewareConfig;
 };

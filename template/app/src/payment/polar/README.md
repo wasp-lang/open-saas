@@ -8,6 +8,7 @@ The following environment variables are required when using Polar as your paymen
 
 ### Core Configuration
 ```bash
+PAYMENT_PROCESSOR_ID=polar  # Select Polar as the active payment processor
 POLAR_ACCESS_TOKEN=your_polar_access_token
 POLAR_ORGANIZATION_ID=your_polar_organization_id  
 POLAR_WEBHOOK_SECRET=your_polar_webhook_secret
@@ -24,7 +25,6 @@ POLAR_CREDITS_10_PLAN_ID=your_credits_plan_id
 ### Optional Configuration
 ```bash
 POLAR_SANDBOX_MODE=true  # Override sandbox mode (defaults to NODE_ENV-based detection)
-PAYMENT_PROCESSOR_ID=polar  # Select Polar as the active payment processor
 ```
 
 ## Integration with Existing Payment Plan Infrastructure

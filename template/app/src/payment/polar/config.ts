@@ -1,10 +1,5 @@
-import { requireNodeEnvVar } from '../../server/utils';
 import { PaymentPlanId, parsePaymentPlanId } from '../plans';
 import { env } from 'wasp/server';
-
-// ================================
-// INTERFACE DEFINITIONS
-// ================================
 
 /**
  * Core Polar API configuration environment variables
@@ -44,10 +39,6 @@ export interface PolarConfig {
   readonly plans: PolarPlanConfig;
 }
 
-// ================================
-// ENVIRONMENT VARIABLE DEFINITIONS
-// ================================
-
 /**
  * All Polar-related environment variables
  * Used for validation and configuration loading
@@ -59,16 +50,7 @@ export const POLAR_ENV_VARS = {
   POLAR_WEBHOOK_SECRET: 'POLAR_WEBHOOK_SECRET',
   POLAR_CUSTOMER_PORTAL_URL: 'POLAR_CUSTOMER_PORTAL_URL',
   POLAR_SANDBOX_MODE: 'POLAR_SANDBOX_MODE',
-  
-  // Product/Plan Mappings
-  POLAR_HOBBY_SUBSCRIPTION_PLAN_ID: 'POLAR_HOBBY_SUBSCRIPTION_PLAN_ID',
-  POLAR_PRO_SUBSCRIPTION_PLAN_ID: 'POLAR_PRO_SUBSCRIPTION_PLAN_ID',
-  POLAR_CREDITS_10_PLAN_ID: 'POLAR_CREDITS_10_PLAN_ID',
 } as const;
-
-// ================================
-// CONFIGURATION GETTERS
-// ================================
 
 /**
  * Gets the complete Polar configuration from environment variables
@@ -89,10 +71,10 @@ export function getPolarConfig(): PolarConfig {
  */
 export function getPolarApiConfig(): PolarApiConfig {
   return {
-    accessToken: requireNodeEnvVar(POLAR_ENV_VARS.POLAR_ACCESS_TOKEN),
-    organizationId: requireNodeEnvVar(POLAR_ENV_VARS.POLAR_ORGANIZATION_ID),
-    webhookSecret: requireNodeEnvVar(POLAR_ENV_VARS.POLAR_WEBHOOK_SECRET),
-    customerPortalUrl: requireNodeEnvVar(POLAR_ENV_VARS.POLAR_CUSTOMER_PORTAL_URL),
+    accessToken: process.env[POLAR_ENV_VARS.POLAR_ACCESS_TOKEN]!,
+    organizationId: process.env[POLAR_ENV_VARS.POLAR_ORGANIZATION_ID]!,
+    webhookSecret: process.env[POLAR_ENV_VARS.POLAR_WEBHOOK_SECRET]!,
+    customerPortalUrl: process.env[POLAR_ENV_VARS.POLAR_CUSTOMER_PORTAL_URL]!,
     sandboxMode: shouldUseSandboxMode(),
   };
 }
@@ -104,15 +86,11 @@ export function getPolarApiConfig(): PolarApiConfig {
  */
 export function getPolarPlanConfig(): PolarPlanConfig {
   return {
-    hobbySubscriptionPlanId: requireNodeEnvVar(POLAR_ENV_VARS.POLAR_HOBBY_SUBSCRIPTION_PLAN_ID),
-    proSubscriptionPlanId: requireNodeEnvVar(POLAR_ENV_VARS.POLAR_PRO_SUBSCRIPTION_PLAN_ID),
-    credits10PlanId: requireNodeEnvVar(POLAR_ENV_VARS.POLAR_CREDITS_10_PLAN_ID),
+    hobbySubscriptionPlanId: env.PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID,
+    proSubscriptionPlanId: env.PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID,
+    credits10PlanId: env.PAYMENTS_CREDITS_10_PLAN_ID,
   };
 }
-
-// ================================
-// UTILITY FUNCTIONS
-// ================================
 
 /**
  * Determines if Polar should use sandbox mode
