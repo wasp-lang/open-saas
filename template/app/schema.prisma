@@ -61,7 +61,6 @@ model File {
   name                      String
   type                      String
   key                       String
-  uploadUrl                 String
 }
 
 model DailyStats {

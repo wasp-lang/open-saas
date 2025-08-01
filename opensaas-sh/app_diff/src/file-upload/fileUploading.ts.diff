@@ -1,9 +1,29 @@
 --- template/app/src/file-upload/fileUploading.ts
 +++ opensaas-sh/app/src/file-upload/fileUploading.ts
-@@ -1,5 +1,5 @@
--import { createFile } from 'wasp/client/operations';
+@@ -1,5 +1,7 @@
++import type { User } from 'wasp/entities';
  import axios from 'axios';
-+import { createFile } from 'wasp/client/operations';
  import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE_BYTES } from './validation';
++import { PrismaClient } from '@prisma/client';
  
  export type FileWithValidType = Omit<File, 'type'> & { type: AllowedFileType };
+ type AllowedFileType = (typeof ALLOWED_FILE_TYPES)[number];
+@@ -63,3 +65,17 @@
+ function isAllowedFileType(fileType: string): fileType is AllowedFileType {
+   return (ALLOWED_FILE_TYPES as readonly string[]).includes(fileType);
+ }
++
++export async function checkIfUserHasReachedFileUploadLimit({ userId, prismaFileDelegate }: { userId: User['id']; prismaFileDelegate: PrismaClient['file'] }) {
++  const numberOfFilesByUser = await prismaFileDelegate.count({
++    where: {
++      user: {
++        id: userId,
++      },
++    },
++  });
++  if (numberOfFilesByUser >= 2) {
++    return true;
++  }
++  return false;
++}
+\ No newline at end of file
