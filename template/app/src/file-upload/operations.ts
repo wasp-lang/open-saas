@@ -100,7 +100,6 @@ export const addFileToDb: AddFileToDb<AddFileToDbInput, File> = async (args, con
 
 const deleteFileInputSchema = z.object({
   id: z.string(),
-  key: z.string(),
 });
 
 type DeleteFileInput = z.infer<typeof deleteFileInputSchema>;
@@ -110,7 +109,7 @@ export const deleteFile: DeleteFile<DeleteFileInput, File> = async (args, contex
     throw new HttpError(401);
   }
 
-  await context.entities.File.findUniqueOrThrow({
+  const deletedFile = await context.entities.File.delete({
     where: {
       id: args.id,
       user: {
@@ -119,11 +118,11 @@ export const deleteFile: DeleteFile<DeleteFileInput, File> = async (args, contex
     },
   });
 
-  await deleteFileFromS3({ key: args.key });
+  try {
+    await deleteFileFromS3({ key: deletedFile.key });
+  } catch (error) {
+    console.error(`S3 deletion failed. Orphaned file key: ${deletedFile.key}`, error);
+  }
 
-  return context.entities.File.delete({
-    where: {
-      id: args.id,
-    },
-  });
+  return deletedFile;
 };

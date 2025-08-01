@@ -245,7 +245,7 @@ export default function FileUploadPage() {
                 variant='destructive'
                 onClick={async () => {
                   try {
-                    await deleteFile({ id: fileToDelete.id, key: fileToDelete.key });
+                    await deleteFile({ id: fileToDelete.id });
                     toast({
                       title: 'File deleted',
                       description: (
@@ -255,10 +255,10 @@ export default function FileUploadPage() {
                       ),
                     });
                     allUserFiles.refetch();
-                  } catch (error: any) {
+                  } catch (error) {
                     toast({
                       title: 'Error',
-                      description: error.message || 'Error deleting file.',
+                      description: 'Error deleting file.',
                       variant: 'destructive',
                     });
                   } finally {

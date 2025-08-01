@@ -10,7 +10,6 @@ import {
   useQuery,
 } from 'wasp/client/operations';
 import { routes, Link } from 'wasp/client/router';
-import { useNavigate } from 'react-router-dom';
 
 import { ArrowRight, Loader2, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -116,7 +115,6 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
   const [isPlanGenerating, setIsPlanGenerating] = useState<boolean>(false);
 
   const { data: tasks, isLoading: isTasksLoading } = useQuery(getAllTasksByUser);
-  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     try {
