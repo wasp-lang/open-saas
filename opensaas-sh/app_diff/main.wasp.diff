@@ -28,7 +28,7 @@
 -    "<meta name='twitter:image' content='https://your-saas-app.com/public-banner.webp' />",
 +    "<meta property='og:title' content='Open SaaS' />",
 +    "<meta property='og:url' content='https://opensaas.sh' />",
-+    "<meta property='og:description' content='Free, open-source SaaS boilerplate starter for React & NodeJS.' />",
++    "<meta property='og:description' content='Free, open-source SaaS boilerplate starter for React & NodeJS. Powered by Wasp.' />",
 +    "<meta property='og:image' content='https://opensaas.sh/public-banner.webp' />",
 +
 +    "<meta name=\"twitter:title\" content=\"Open SaaS\" />",
