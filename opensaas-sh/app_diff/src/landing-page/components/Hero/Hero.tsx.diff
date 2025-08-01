@@ -6,7 +6,7 @@
 +import { useAuth } from 'wasp/client/auth';
 +import { Link as WaspRouterLink, routes } from 'wasp/client/router';
 +import { Button } from '../../../components/ui/button';
-+import { DocsUrl } from '../../../shared/common';
++import { DocsUrl, WaspUrl } from '../../../shared/common';
 +import Orbit from './Orbit';
 +
 +export default function Hero() {
@@ -26,8 +26,8 @@
 +              </h1>
 +              <p className='mt-6 max-w-2xl text-md leading-8 text-muted-foreground font-mono'>
 +                An open-source, feature-rich, full-stack React + NodeJS starter kit that manages boilerplate
-+                for you. Built by
-+                <a href='https://wasp.sh' className='group font-bold transition-all duration-300'>
++                for you. Powered by
++                <a href={WaspUrl} className='group font-bold transition-all duration-300'>
 +                  {' Wasp =}'}
 +                </a>
 +              </p>

@@ -1,6 +1,6 @@
 --- template/app/src/landing-page/contentSections.tsx
 +++ opensaas-sh/app/src/landing-page/contentSections.tsx
-@@ -0,0 +1,247 @@
+@@ -0,0 +1,244 @@
 +import { routes } from 'wasp/client/router';
 +import type { NavigationItem } from '../client/components/NavBar/NavBar';
 +import blog from '../client/static/assets/blog.webp';
@@ -15,7 +15,7 @@
 +import scribeist from '../client/static/examples/scribeist.webp';
 +import searchcraft from '../client/static/examples/searchcraft.webp';
 +import logo from '../client/static/logo.webp';
-+import { BlogUrl, DocsUrl, GithubUrl } from '../shared/common';
++import { BlogUrl, DocsUrl, GithubUrl, WaspUrl } from '../shared/common';
 +import { GridFeature } from './components/FeaturesGrid';
 +
 +export const landingPageNavigationItems: NavigationItem[] = [
@@ -175,7 +175,6 @@
 +      "This is exactly the framework I've been dreaming of ever since I've been waiting to fully venture into the JS Backend Dev world. I believe Wasp will go above 50k stars this year. The documentation alone gives me the confidence that this is my permanent Nodejs framework and I'm staying with Wasp. Phenomenal work by the team...  Please keep up your amazing spirits. Thank you",
 +  },
 +];
-+
 +export const faqs = [
 +  {
 +    id: 1,
@@ -198,12 +197,10 @@
 +    { name: 'Blog', href: BlogUrl },
 +  ],
 +  company: [
-+    { name: 'About', href: 'https://wasp.sh' },
-+    { name: 'Privacy', href: '#' },
-+    { name: 'Terms of Service', href: '#' },
++    { name: 'Terms of Service', href: GithubUrl + '/blob/main/LICENSE' },
++    { name: 'Made by the Wasp team = }', href: WaspUrl },
 +  ],
 +};
-+
 +export const examples = [
 +  {
 +    name: 'Microinfluencers',
