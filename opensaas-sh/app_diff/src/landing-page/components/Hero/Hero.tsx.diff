@@ -1,12 +1,12 @@
 --- template/app/src/landing-page/components/Hero/Hero.tsx
 +++ opensaas-sh/app/src/landing-page/components/Hero/Hero.tsx
-@@ -0,0 +1,82 @@
+@@ -0,0 +1,85 @@
 +import { ArrowRight } from 'lucide-react';
 +import { Link as ReactRouterLink } from 'react-router-dom';
 +import { useAuth } from 'wasp/client/auth';
 +import { Link as WaspRouterLink, routes } from 'wasp/client/router';
 +import { Button } from '../../../components/ui/button';
-+import { DocsUrl } from '../../../shared/common';
++import { DocsUrl, WaspUrl } from '../../../shared/common';
 +import Orbit from './Orbit';
 +
 +export default function Hero() {
@@ -24,9 +24,12 @@
 +                The <span className='italic'>free</span> SaaS template with{' '}
 +                <span className='text-gradient-primary font-black'>superpowers</span>
 +              </h1>
-+              <p className='mt-6 max-w-2xl text-lg leading-8 text-muted-foreground font-mono'>
-+                An open-source, feature-rich, full-stack React + NodeJS template that manages features for
-+                you.
++              <p className='mt-6 max-w-2xl text-md leading-8 text-muted-foreground font-mono'>
++                An open-source, feature-rich, full-stack React + NodeJS starter kit that manages boilerplate
++                for you. Powered by
++                <a href={WaspUrl} className='group font-bold transition-all duration-300'>
++                  {' Wasp =}'}
++                </a>
 +              </p>
 +              <div className='mt-10 flex items-center justify-center md:justify-start gap-x-6'>
 +                <Button size='lg' variant='outline' asChild>

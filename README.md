@@ -23,6 +23,7 @@ The template itself is built on top of some very powerful tools and frameworks, 
 - 🚀 [Astro](https://starlight.astro.build/) - Astro's lightweight "Starlight" template for documentation and blog
 - 💸 [Stripe](https://stripe.com) or [Lemon Squeezy](https://lemonsqueezy.com/) (with Polar.sh and Paddle coming soon!) - for products and payments
 - 💅 [ShadCN UI](https://tailwindcss.com) - for components & styling (plus admin dashboard!)
+- 🤖 [AI-Ready](https://docs.opensaas.sh/) - full set of Cursor rules & llms-full.txt for ai-assisted coding
 - 📈 [Plausible](https://plausible.io) or [Google](https://analytics.google.com/) Analytics
 - 🤖 [OpenAI](https://openai.com) - OpenAI API w/ function calling example
 - 📦 [AWS S3](https://aws.amazon.com/s3/) - for file uploads
