@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { randomUUID } from 'crypto';
-import { S3Client, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, GetObjectCommand, DeleteObjectCommand, HeadObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import { MAX_FILE_SIZE_BYTES } from './validation';
@@ -49,6 +49,21 @@ export const deleteFileFromS3 = async ({ key }: { key: string }) => {
     Key: key,
   });
   await s3Client.send(command);
+};
+
+  const command = new HeadObjectCommand({
+    Bucket: process.env.AWS_S3_FILES_BUCKET,
+    Key: key,
+  });
+  try {
+    await s3Client.send(command);
+    return true;
+  } catch (error: any) {
+    if (error.name === 'NotFound') {
+      return false;
+    }
+    throw error;
+  }
 };
 
 function getS3Key(fileName: string, userId: string) {

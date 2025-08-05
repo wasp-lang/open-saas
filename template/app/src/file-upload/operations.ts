@@ -9,7 +9,12 @@ import {
   type AddFileToDb,
 } from 'wasp/server/operations';
 
-import { getUploadFileSignedURLFromS3, getDownloadFileSignedURLFromS3, deleteFileFromS3 } from './s3Utils';
+import {
+  getUploadFileSignedURLFromS3,
+  getDownloadFileSignedURLFromS3,
+  deleteFileFromS3,
+  checkFileExistsInS3,
+} from './s3Utils';
 import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
 import { ALLOWED_FILE_TYPES } from './validation';
 
@@ -47,6 +52,34 @@ export const createFileUploadUrl: CreateFileUploadUrl<
   };
 };
 
+const addFileToDbInputSchema = z.object({
+  key: z.string(),
+  fileType: z.enum(ALLOWED_FILE_TYPES),
+  fileName: z.string(),
+});
+
+type AddFileToDbInput = z.infer<typeof addFileToDbInputSchema>;
+
+export const addFileToDb: AddFileToDb<AddFileToDbInput, File> = async (args, context) => {
+  if (!context.user) {
+    throw new HttpError(401);
+  }
+
+  const fileExists = await checkFileExistsInS3({ key: args.key });
+  if (!fileExists) {
+    throw new HttpError(404, 'File not found in S3.');
+  }
+
+  return context.entities.File.create({
+    data: {
+      name: args.fileName,
+      key: args.key,
+      type: args.fileType,
+      user: { connect: { id: context.user.id } },
+    },
+  });
+};
+
 export const getAllFilesByUser: GetAllFilesByUser<void, File[]> = async (_args, context) => {
   if (!context.user) {
     throw new HttpError(401);
@@ -73,29 +106,6 @@ export const getDownloadFileSignedURL: GetDownloadFileSignedURL<
 > = async (rawArgs, _context) => {
   const { key } = ensureArgsSchemaOrThrowHttpError(getDownloadFileSignedURLInputSchema, rawArgs);
   return await getDownloadFileSignedURLFromS3({ key });
-};
-
-const addFileToDbInputSchema = z.object({
-  key: z.string(),
-  fileType: z.enum(ALLOWED_FILE_TYPES),
-  fileName: z.string(),
-});
-
-type AddFileToDbInput = z.infer<typeof addFileToDbInputSchema>;
-
-export const addFileToDb: AddFileToDb<AddFileToDbInput, File> = async (args, context) => {
-  if (!context.user) {
-    throw new HttpError(401);
-  }
-
-  return context.entities.File.create({
-    data: {
-      name: args.fileName,
-      key: args.key,
-      type: args.fileType,
-      user: { connect: { id: context.user.id } }
-    },
-  });
 };
 
 const deleteFileInputSchema = z.object({

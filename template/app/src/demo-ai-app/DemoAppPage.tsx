@@ -20,6 +20,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { cn } from '../lib/utils';
 import { toast } from '../hooks/use-toast';
+import { ToastAction } from '../components/ui/toast';
 
 export default function DemoAppPage() {
   return (
@@ -136,17 +137,17 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
       }
     } catch (err: any) {
       if (err.statusCode === 402) {
-        const toastId = toast({
+        toast({
           title: '⚠️ You are out of credits!',
           style: {
             minWidth: '400px',
           },
           action: (
-            <Link to={routes.PricingPageRoute.to}>
-              <Button variant='default' onClick={() => toastId.dismiss()}>
+            <ToastAction altText='Go to pricing page to buy credits/subscription' asChild>
+              <Link to={routes.PricingPageRoute.to}>
                 Go to pricing page <ArrowRight className='w-4 h-4' />
-              </Button>
-            </Link>
+              </Link>
+            </ToastAction>
           ),
         });
       } else {
