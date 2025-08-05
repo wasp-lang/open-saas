@@ -51,6 +51,7 @@ export const deleteFileFromS3 = async ({ key }: { key: string }) => {
   await s3Client.send(command);
 };
 
+export const checkFileExistsInS3 = async ({ key }: { key: string }) => {
   const command = new HeadObjectCommand({
     Bucket: process.env.AWS_S3_FILES_BUCKET,
     Key: key,
