@@ -31,4 +31,4 @@
 +
    const { fileType, fileName } = ensureArgsSchemaOrThrowHttpError(createFileInputSchema, rawArgs);
  
-   const { s3UploadUrl, s3UploadFields, key } = await getUploadFileSignedURLFromS3({
+   return await getUploadFileSignedURLFromS3({

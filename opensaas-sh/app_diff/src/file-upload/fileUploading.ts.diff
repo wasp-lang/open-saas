@@ -6,11 +6,11 @@
  import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE_BYTES } from './validation';
 +import { PrismaClient } from '@prisma/client';
  
- export type FileWithValidType = Omit<File, 'type'> & { type: AllowedFileType };
- type AllowedFileType = (typeof ALLOWED_FILE_TYPES)[number];
-@@ -63,3 +65,17 @@
- function isAllowedFileType(fileType: string): fileType is AllowedFileType {
-   return (ALLOWED_FILE_TYPES as readonly string[]).includes(fileType);
+ type AllowedFileTypes = (typeof ALLOWED_FILE_TYPES)[number];
+ export type FileWithValidType = File & { type: AllowedFileTypes };
+@@ -51,3 +53,17 @@
+ function isFileWithAllowedFileType(file: File): file is FileWithValidType {
+   return ALLOWED_FILE_TYPES.includes(file.type as AllowedFileTypes);
  }
 +
 +export async function checkIfUserHasReachedFileUploadLimit({ userId, prismaFileDelegate }: { userId: User['id']; prismaFileDelegate: PrismaClient['file'] }) {
@@ -26,4 +26,3 @@
 +  }
 +  return false;
 +}
-\ No newline at end of file

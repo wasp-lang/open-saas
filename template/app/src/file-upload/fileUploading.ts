@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { type AllowedFileTypes, ALLOWED_FILE_TYPES_CONST, MAX_FILE_SIZE_BYTES } from './validation';
+import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE_BYTES } from './validation';
 
+type AllowedFileTypes = (typeof ALLOWED_FILE_TYPES)[number];
 export type FileWithValidType = File & { type: AllowedFileTypes };
 
 export async function uploadFileWithProgress({
@@ -48,5 +49,5 @@ export function validateFile(file: File): FileWithValidType {
 }
 
 function isFileWithAllowedFileType(file: File): file is FileWithValidType {
-  return ALLOWED_FILE_TYPES_CONST.includes(file.type as AllowedFileTypes);
+  return ALLOWED_FILE_TYPES.includes(file.type as AllowedFileTypes);
 }

@@ -16,10 +16,10 @@ import {
   checkFileExistsInS3,
 } from './s3Utils';
 import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
-import { ALLOWED_FILE_TYPES_CONST } from './validation';
+import { ALLOWED_FILE_TYPES } from './validation';
 
 const createFileInputSchema = z.object({
-  fileType: z.enum(ALLOWED_FILE_TYPES_CONST),
+  fileType: z.enum(ALLOWED_FILE_TYPES),
   fileName: z.string().nonempty(),
 });
 
@@ -30,7 +30,7 @@ export const createFileUploadUrl: CreateFileUploadUrl<
   {
     s3UploadUrl: string;
     s3UploadFields: Record<string, string>;
-    key: string;
+    s3Key: string;
   }
 > = async (rawArgs, context) => {
   if (!context.user) {
@@ -47,8 +47,8 @@ export const createFileUploadUrl: CreateFileUploadUrl<
 };
 
 const addFileToDbInputSchema = z.object({
-  key: z.string(),
-  fileType: z.enum(ALLOWED_FILE_TYPES_CONST),
+  s3Key: z.string(),
+  fileType: z.enum(ALLOWED_FILE_TYPES),
   fileName: z.string(),
 });
 
@@ -59,7 +59,7 @@ export const addFileToDb: AddFileToDb<AddFileToDbInput, File> = async (args, con
     throw new HttpError(401);
   }
 
-  const fileExists = await checkFileExistsInS3({ key: args.key });
+  const fileExists = await checkFileExistsInS3({ s3Key: args.s3Key });
   if (!fileExists) {
     throw new HttpError(404, 'File not found in S3.');
   }
@@ -67,7 +67,7 @@ export const addFileToDb: AddFileToDb<AddFileToDbInput, File> = async (args, con
   return context.entities.File.create({
     data: {
       name: args.fileName,
-      key: args.key,
+      s3Key: args.s3Key,
       type: args.fileType,
       user: { connect: { id: context.user.id } },
     },
@@ -90,7 +90,7 @@ export const getAllFilesByUser: GetAllFilesByUser<void, File[]> = async (_args, 
   });
 };
 
-const getDownloadFileSignedURLInputSchema = z.object({ key: z.string().nonempty() });
+const getDownloadFileSignedURLInputSchema = z.object({ s3Key: z.string().nonempty() });
 
 type GetDownloadFileSignedURLInput = z.infer<typeof getDownloadFileSignedURLInputSchema>;
 
@@ -98,8 +98,8 @@ export const getDownloadFileSignedURL: GetDownloadFileSignedURL<
   GetDownloadFileSignedURLInput,
   string
 > = async (rawArgs, _context) => {
-  const { key } = ensureArgsSchemaOrThrowHttpError(getDownloadFileSignedURLInputSchema, rawArgs);
-  return await getDownloadFileSignedURLFromS3({ key });
+  const { s3Key } = ensureArgsSchemaOrThrowHttpError(getDownloadFileSignedURLInputSchema, rawArgs);
+  return await getDownloadFileSignedURLFromS3({ s3Key });
 };
 
 const deleteFileInputSchema = z.object({
@@ -123,9 +123,9 @@ export const deleteFile: DeleteFile<DeleteFileInput, File> = async (args, contex
   });
 
   try {
-    await deleteFileFromS3({ key: deletedFile.key });
+    await deleteFileFromS3({ s3Key: deletedFile.s3Key });
   } catch (error) {
-    console.error(`S3 deletion failed. Orphaned file key: ${deletedFile.key}`, error);
+    console.error(`S3 deletion failed. Orphaned file s3Key: ${deletedFile.s3Key}`, error);
   }
 
   return deletedFile;

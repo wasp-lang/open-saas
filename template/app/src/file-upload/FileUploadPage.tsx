@@ -24,14 +24,14 @@ import { Label } from '../components/ui/label';
 import { Progress } from '../components/ui/progress';
 import { cn } from '../lib/utils';
 import { uploadFileWithProgress, validateFile } from './fileUploading';
-import { ALLOWED_FILE_TYPES_CONST } from './validation';
+import { ALLOWED_FILE_TYPES } from './validation';
 import { Trash, Download } from 'lucide-react';
 import { toast } from '../hooks/use-toast';
 
 export default function FileUploadPage() {
-  const [fileKeyForS3, setFileKeyForS3] = useState<File['key']>('');
+  const [fileKeyForS3, setFileKeyForS3] = useState<File['s3Key']>('');
   const [uploadProgressPercent, setUploadProgressPercent] = useState<number>(0);
-  const [fileToDelete, setFileToDelete] = useState<Pick<File, 'id' | 'key' | 'name'> | null>(null);
+  const [fileToDelete, setFileToDelete] = useState<Pick<File, 'id' | 's3Key' | 'name'> | null>(null);
 
   const allUserFiles = useQuery(getAllFilesByUser, undefined, {
     // We disable automatic refetching because otherwise files would be refetched after `createFile` is called and the S3 URL is returned,
@@ -40,7 +40,7 @@ export default function FileUploadPage() {
   });
   const { isLoading: isDownloadUrlLoading, refetch: refetchDownloadUrl } = useQuery(
     getDownloadFileSignedURL,
-    { key: fileKeyForS3 },
+    { s3Key: fileKeyForS3 },
     { enabled: false }
   );
 
@@ -95,7 +95,7 @@ export default function FileUploadPage() {
 
       const file = validateFile(formDataFileUpload);
 
-      const { s3UploadUrl, s3UploadFields, key } = await createFileUploadUrl({
+      const { s3UploadUrl, s3UploadFields, s3Key } = await createFileUploadUrl({
         fileType: file.type,
         fileName: file.name,
       });
@@ -108,7 +108,7 @@ export default function FileUploadPage() {
       });
 
       await addFileToDb({
-        key,
+        s3Key,
         fileType: file.type,
         fileName: file.name,
       });
@@ -156,7 +156,7 @@ export default function FileUploadPage() {
                     type='file'
                     id='file-upload'
                     name='file-upload'
-                    accept={ALLOWED_FILE_TYPES_CONST.join(',')}
+                    accept={ALLOWED_FILE_TYPES.join(',')}
                     className='cursor-pointer'
                   />
                 </div>
@@ -179,20 +179,20 @@ export default function FileUploadPage() {
                 {!!allUserFiles.data && allUserFiles.data.length > 0 && !allUserFiles.isLoading ? (
                   <div className='space-y-3'>
                     {allUserFiles.data.map((file: File) => (
-                      <Card key={file.key} className='p-4'>
+                      <Card key={file.s3Key} className='p-4'>
                         <div
                           className={cn(
                             'flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3',
                             {
-                              'opacity-70': file.key === fileKeyForS3 && isDownloadUrlLoading,
+                              'opacity-70': file.s3Key === fileKeyForS3 && isDownloadUrlLoading,
                             }
                           )}
                         >
                           <p className='text-foreground font-medium'>{file.name}</p>
                           <div className='flex items-center justify-end gap-2'>
                             <Button
-                              onClick={() => setFileKeyForS3(file.key)}
-                              disabled={file.key === fileKeyForS3 && isDownloadUrlLoading}
+                              onClick={() => setFileKeyForS3(file.s3Key)}
+                              disabled={file.s3Key === fileKeyForS3 && isDownloadUrlLoading}
                               variant='outline'
                               size='sm'
                             >

@@ -60,7 +60,7 @@ model File {
 
   name                      String
   type                      String
-  key                       String
+  s3Key                     String
 }
 
 model DailyStats {
