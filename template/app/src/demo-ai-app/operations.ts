@@ -39,22 +39,6 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
     throw new HttpError(401, 'Only authenticated users are allowed to perform this operation');
   }
 
-    if (!isUserSubscribed(context.user)) {
-      if (context.user.credits > 0) {
-        const decrementCredit = context.entities.User.update({
-          where: { id: context.user.id },
-          data: {
-            credits: {
-              decrement: 1,
-            },
-          },
-        });
-
-      } else {
-        throw new HttpError(402, 'User has not paid or is out of credits');
-      }
-    }
-
   const { hours } = ensureArgsSchemaOrThrowHttpError(generateGptResponseInputSchema, rawArgs);
   const tasks = await context.entities.Task.findMany({
     where: {
@@ -99,7 +83,7 @@ export const generateGptResponse: GenerateGptResponse<GenerateGptResponseInput, 
       });
       transactions.push(decrementCredit);
     } else {
-      throw new HttpError(402, 'User has not paid or is out of credits');
+      throw new HttpError(402, 'User has no subscription and is out of credits');
     }
   }
 

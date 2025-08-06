@@ -256,9 +256,10 @@ export default function FileUploadPage() {
                     });
                     allUserFiles.refetch();
                   } catch (error) {
+                    const errorMessage = error instanceof Error ? error.message : 'Error deleting file.';
                     toast({
                       title: 'Error',
-                      description: 'Error deleting file.',
+                      description: errorMessage,
                       variant: 'destructive',
                     });
                   } finally {

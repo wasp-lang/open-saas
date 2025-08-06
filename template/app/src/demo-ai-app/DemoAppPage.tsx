@@ -145,7 +145,7 @@ function NewTaskForm({ handleCreateTask }: { handleCreateTask: typeof createTask
           action: (
             <ToastAction altText='Go to pricing page to buy credits/subscription' asChild>
               <Link to={routes.PricingPageRoute.to}>
-                Go to pricing page <ArrowRight className='w-4 h-4' />
+                Go to pricing page <ArrowRight className='w-4 h-4 ml-1' />
               </Link>
             </ToastAction>
           ),
