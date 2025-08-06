@@ -16,10 +16,10 @@ import {
   checkFileExistsInS3,
 } from './s3Utils';
 import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
-import { ALLOWED_FILE_TYPES } from './validation';
+import { ALLOWED_FILE_TYPES_CONST } from './validation';
 
 const createFileInputSchema = z.object({
-  fileType: z.enum(ALLOWED_FILE_TYPES),
+  fileType: z.enum(ALLOWED_FILE_TYPES_CONST),
   fileName: z.string().nonempty(),
 });
 
@@ -39,22 +39,16 @@ export const createFileUploadUrl: CreateFileUploadUrl<
 
   const { fileType, fileName } = ensureArgsSchemaOrThrowHttpError(createFileInputSchema, rawArgs);
 
-  const { s3UploadUrl, s3UploadFields, key } = await getUploadFileSignedURLFromS3({
+  return await getUploadFileSignedURLFromS3({
     fileType,
     fileName,
     userId: context.user.id,
   });
-
-  return {
-    s3UploadUrl,
-    s3UploadFields,
-    key,
-  };
 };
 
 const addFileToDbInputSchema = z.object({
   key: z.string(),
-  fileType: z.enum(ALLOWED_FILE_TYPES),
+  fileType: z.enum(ALLOWED_FILE_TYPES_CONST),
   fileName: z.string(),
 });
 

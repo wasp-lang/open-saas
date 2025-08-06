@@ -23,20 +23,14 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Progress } from '../components/ui/progress';
 import { cn } from '../lib/utils';
-import {
-  type FileUploadError,
-  type FileWithValidType,
-  uploadFileWithProgress,
-  validateFile,
-} from './fileUploading';
-import { ALLOWED_FILE_TYPES } from './validation';
+import { uploadFileWithProgress, validateFile } from './fileUploading';
+import { ALLOWED_FILE_TYPES_CONST } from './validation';
 import { Trash, Download } from 'lucide-react';
 import { toast } from '../hooks/use-toast';
 
 export default function FileUploadPage() {
   const [fileKeyForS3, setFileKeyForS3] = useState<File['key']>('');
   const [uploadProgressPercent, setUploadProgressPercent] = useState<number>(0);
-  const [uploadError, setUploadError] = useState<FileUploadError | null>(null);
   const [fileToDelete, setFileToDelete] = useState<Pick<File, 'id' | 'key' | 'name'> | null>(null);
 
   const allUserFiles = useQuery(getAllFilesByUser, undefined, {
@@ -61,7 +55,11 @@ export default function FileUploadPage() {
           switch (urlQuery.status) {
             case 'error':
               console.error('Error fetching download URL', urlQuery.error);
-              alert('Error fetching download');
+              toast({
+                title: 'Error fetching download link',
+                description: 'Please try again later.',
+                variant: 'destructive',
+              });
               return;
             case 'success':
               window.open(urlQuery.data, '_blank');
@@ -84,31 +82,26 @@ export default function FileUploadPage() {
       }
 
       const formData = new FormData(formElement);
-      const file = formData.get('file-upload');
+      const formDataFileUpload = formData.get('file-upload');
 
-      if (!file || !(file instanceof File)) {
-        setUploadError({
-          message: 'Please select a file to upload.',
-          code: 'NO_FILE',
+      if (!formDataFileUpload || !(formDataFileUpload instanceof File) || formDataFileUpload.size === 0) {
+        toast({
+          title: 'No file selected',
+          description: 'Please select a file to upload.',
+          variant: 'destructive',
         });
         return;
       }
 
-      const fileValidationError = validateFile(file);
-      if (fileValidationError !== null) {
-        setUploadError(fileValidationError);
-        return;
-      }
-
-      const fileWithValidType = file as FileWithValidType;
+      const file = validateFile(formDataFileUpload);
 
       const { s3UploadUrl, s3UploadFields, key } = await createFileUploadUrl({
-        fileType: fileWithValidType.type,
-        fileName: fileWithValidType.name,
+        fileType: file.type,
+        fileName: file.name,
       });
 
       await uploadFileWithProgress({
-        file: fileWithValidType,
+        file,
         s3UploadUrl,
         s3UploadFields,
         setUploadProgressPercent,
@@ -116,18 +109,23 @@ export default function FileUploadPage() {
 
       await addFileToDb({
         key,
-        fileType: fileWithValidType.type,
-        fileName: fileWithValidType.name,
+        fileType: file.type,
+        fileName: file.name,
       });
 
       formElement.reset();
       allUserFiles.refetch();
+      toast({
+        title: 'File uploaded',
+        description: 'Your file has been successfully uploaded.',
+      });
     } catch (error) {
       console.error('Error uploading file:', error);
-      setUploadError({
-        message:
-          error instanceof Error ? error.message : 'An unexpected error occurred while uploading the file.',
-        code: 'UPLOAD_FAILED',
+      const errorMessage = error instanceof Error ? error.message : 'Error uploading file.';
+      toast({
+        title: 'Error uploading file',
+        description: errorMessage,
+        variant: 'destructive',
       });
     } finally {
       setUploadProgressPercent(0);
@@ -158,8 +156,7 @@ export default function FileUploadPage() {
                     type='file'
                     id='file-upload'
                     name='file-upload'
-                    accept={ALLOWED_FILE_TYPES.join(',')}
-                    onChange={() => setUploadError(null)}
+                    accept={ALLOWED_FILE_TYPES_CONST.join(',')}
                     className='cursor-pointer'
                   />
                 </div>
@@ -169,11 +166,6 @@ export default function FileUploadPage() {
                   </Button>
                   {uploadProgressPercent > 0 && <Progress value={uploadProgressPercent} className='w-full' />}
                 </div>
-                {uploadError && (
-                  <Alert variant='destructive'>
-                    <AlertDescription>{uploadError.message}</AlertDescription>
-                  </Alert>
-                )}
               </form>
               <div className='border-b-2 border-border'></div>
               <div className='space-y-4 col-span-full'>
