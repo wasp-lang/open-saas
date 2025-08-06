@@ -1,14 +1,16 @@
+// @ts-ignore
+import { OrderStatus } from '@polar-sh/sdk/models/components/orderstatus.js';
 import {
   type CreateCheckoutSessionArgs,
   type FetchCustomerPortalUrlArgs,
   type PaymentProcessor,
 } from '../paymentProcessor';
 import type { PaymentPlanEffect } from '../plans';
+import { PaymentProcessors } from '../types';
 import { createPolarCheckoutSession } from './checkoutUtils';
 import { getPolarApiConfig } from './config';
 import { polar } from './polarClient';
 import { polarMiddlewareConfigFn, polarWebhook } from './webhook';
-import { PaymentProcessors } from '../types';
 
 export type PolarMode = 'subscription' | 'payment';
 
@@ -25,11 +27,11 @@ async function fetchTotalPolarRevenue(): Promise<number> {
     });
 
     for await (const page of result) {
-      const orders = (page as any).items || [];
+      const orders = page.result.items || [];
 
       for (const order of orders) {
-        if (order.status === 'completed' && typeof order.amount === 'number' && order.amount > 0) {
-          totalRevenue += order.amount;
+        if (order.status === OrderStatus.Paid && order.totalAmount > 0) {
+          totalRevenue += order.totalAmount;
         }
       }
     }

@@ -13,36 +13,12 @@ const processorSchemas: Record<PaymentProcessors, object> = {
     LEMONSQUEEZY_STORE_ID: z.string(),
   },
   [PaymentProcessors.Polar]: {
-    /**
-     * Polar API access token
-     * Required for all Polar SDK operations
-     */
     POLAR_ACCESS_TOKEN: z.string().min(10, 'POLAR_ACCESS_TOKEN must be at least 10 characters long'),
-
-    /**
-     * Polar organization ID
-     * Required to identify your organization in Polar API calls
-     */
     POLAR_ORGANIZATION_ID: z.string().min(1, 'POLAR_ORGANIZATION_ID cannot be empty'),
-
-    /**
-     * Polar webhook secret for signature verification
-     * Required for secure webhook event processing
-     */
     POLAR_WEBHOOK_SECRET: z
       .string()
       .min(8, 'POLAR_WEBHOOK_SECRET must be at least 8 characters long for security'),
-
-    /**
-     * Polar customer portal URL for billing management
-     * Must be a valid URL where customers can manage their billing
-     */
     POLAR_CUSTOMER_PORTAL_URL: z.string().url('POLAR_CUSTOMER_PORTAL_URL must be a valid URL'),
-
-    /**
-     * Optional sandbox mode override
-     * When true, forces sandbox mode regardless of NODE_ENV
-     */
     POLAR_SANDBOX_MODE: z.string().transform((val) => val === 'true'),
   },
 };

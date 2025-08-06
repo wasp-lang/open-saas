@@ -56,14 +56,14 @@ export async function createPolarCheckoutSession({
         source: 'OpenSaaS',
       },
     };
-    const checkoutSession = await polar.checkouts.create(checkoutSessionArgs as any);
+    const checkoutSession = await polar.checkouts.create(checkoutSessionArgs);
 
     if (!checkoutSession.url) {
       throw new Error('Polar checkout session created without URL');
     }
 
     // Return customer ID from checkout session if available
-    const customerId = (checkoutSession as any).customer_id || (checkoutSession as any).customerId;
+    const customerId = checkoutSession.customerId;
 
     return {
       id: checkoutSession.id,
@@ -91,8 +91,8 @@ export async function fetchPolarCustomer(email: string) {
     });
     let existingCustomer = null;
 
-    for await (const page of customersIterator as any) {
-      const customers = (page as any).items || [];
+    for await (const page of customersIterator) {
+      const customers = page.result.items || [];
 
       if (customers.length > 0) {
         existingCustomer = customers[0];

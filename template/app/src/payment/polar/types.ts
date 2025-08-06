@@ -58,7 +58,10 @@ import { WebhookSubscriptionRevokedPayload } from '@polar-sh/sdk/models/componen
 // @ts-ignore
 import { WebhookSubscriptionUncanceledPayload } from '@polar-sh/sdk/models/components/webhooksubscriptionuncanceledpayload.js';
 // @ts-ignore
+import { SubscriptionStatus as PolarSubscriptionStatus } from '@polar-sh/sdk/models/components/subscriptionstatus.js';
+// @ts-ignore
 import { WebhookSubscriptionUpdatedPayload } from '@polar-sh/sdk/models/components/webhooksubscriptionupdatedpayload.js';
+import { SubscriptionStatus as OpenSaasSubscriptionStatus } from '../plans';
 
 // ================================
 // POLAR SDK TYPES
@@ -232,34 +235,6 @@ export interface PolarCustomer {
   /** Additional customer metadata */
   metadata?: Record<string, string>;
 }
-
-// ================================
-// SUBSCRIPTION STATUS MAPPING
-// ================================
-
-/**
- * Polar subscription status values
- */
-export enum PolarSubscriptionStatus {
-  ACTIVE = 'active',
-  CANCELLED = 'cancelled',
-  PAST_DUE = 'past_due',
-  EXPIRED = 'expired',
-  INCOMPLETE = 'incomplete',
-  TRIALING = 'trialing',
-}
-
-/**
- * Mapping from Polar subscription statuses to OpenSaaS statuses
- */
-export type PolarToOpenSaaSStatusMap = {
-  [PolarSubscriptionStatus.ACTIVE]: 'active';
-  [PolarSubscriptionStatus.CANCELLED]: 'cancelled';
-  [PolarSubscriptionStatus.PAST_DUE]: 'past_due';
-  [PolarSubscriptionStatus.EXPIRED]: 'cancelled';
-  [PolarSubscriptionStatus.INCOMPLETE]: 'pending';
-  [PolarSubscriptionStatus.TRIALING]: 'active';
-};
 
 // ================================
 // ERROR TYPES

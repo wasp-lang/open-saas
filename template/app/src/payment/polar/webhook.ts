@@ -3,10 +3,12 @@ import { validateEvent, WebhookVerificationError } from '@polar-sh/sdk/webhooks'
 import express from 'express';
 import type { MiddlewareConfigFn } from 'wasp/server';
 import type { PaymentsWebhook } from 'wasp/server/api';
-import { PaymentPlanId, paymentPlans } from '../plans';
+import { SubscriptionStatus as OpenSaasSubscriptionStatus, PaymentPlanId, paymentPlans } from '../plans';
 import { getPolarApiConfig, mapPolarProductIdToPlanId } from './config';
 import { findUserByPolarCustomerId, updateUserPolarPaymentDetails } from './paymentDetails';
-import { isPolarSubscriptionStatus, PolarSubscriptionStatus, PolarWebhookPayload } from './types';
+import { PolarWebhookPayload } from './types';
+// @ts-ignore
+import { SubscriptionStatus as PolarSubscriptionStatus } from '@polar-sh/sdk/models/components/subscriptionstatus.js';
 // @ts-ignore
 import { Order } from '@polar-sh/sdk/models/components/order.js';
 // @ts-ignore
@@ -302,24 +304,18 @@ async function handleSubscriptionActivated(data: Subscription, userDelegate: any
  * @param polarStatus The status from Polar webhook payload
  * @returns The corresponding OpenSaaS status
  */
-function mapPolarStatusToOpenSaaS(polarStatus: string): string {
-  // Validate that it's a known Polar status
-  if (!isPolarSubscriptionStatus(polarStatus)) {
-    console.warn(`Unknown Polar subscription status: ${polarStatus}`);
-    return polarStatus; // Return as-is if unknown
-  }
-
-  // Use the comprehensive status mapping from our type system
-  const statusMap: Record<PolarSubscriptionStatus, string> = {
-    [PolarSubscriptionStatus.ACTIVE]: 'active',
-    [PolarSubscriptionStatus.CANCELLED]: 'cancelled',
-    [PolarSubscriptionStatus.PAST_DUE]: 'past_due',
-    [PolarSubscriptionStatus.EXPIRED]: 'cancelled',
-    [PolarSubscriptionStatus.INCOMPLETE]: 'pending',
-    [PolarSubscriptionStatus.TRIALING]: 'active',
+function mapPolarStatusToOpenSaaS(polarStatus: PolarSubscriptionStatus): OpenSaasSubscriptionStatus {
+  const statusMap: Record<PolarSubscriptionStatus, OpenSaasSubscriptionStatus> = {
+    [PolarSubscriptionStatus.Active]: OpenSaasSubscriptionStatus.Active,
+    [PolarSubscriptionStatus.Canceled]: OpenSaasSubscriptionStatus.CancelAtPeriodEnd,
+    [PolarSubscriptionStatus.PastDue]: OpenSaasSubscriptionStatus.PastDue,
+    [PolarSubscriptionStatus.IncompleteExpired]: OpenSaasSubscriptionStatus.Deleted,
+    [PolarSubscriptionStatus.Incomplete]: OpenSaasSubscriptionStatus.PastDue,
+    [PolarSubscriptionStatus.Trialing]: OpenSaasSubscriptionStatus.Active,
+    [PolarSubscriptionStatus.Unpaid]: OpenSaasSubscriptionStatus.PastDue,
   };
 
-  return statusMap[polarStatus as PolarSubscriptionStatus];
+  return statusMap[polarStatus];
 }
 
 /**
