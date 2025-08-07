@@ -1,6 +1,8 @@
 import { env } from 'wasp/server';
 import type { PolarMode } from './paymentProcessor';
 import { polar } from './polarClient';
+// @ts-ignore
+import { Customer } from '@polar-sh/sdk/models/components/customer.js';
 
 /**
  * Arguments for creating a Polar checkout session
@@ -83,13 +85,13 @@ export async function createPolarCheckoutSession({
  * @param email Email address of the customer
  * @returns Promise resolving to a Polar customer object
  */
-export async function fetchPolarCustomer(email: string) {
+export async function fetchPolarCustomer(email: string): Promise<Customer> {
   try {
     const customersIterator = await polar.customers.list({
       email: email,
       limit: 1,
     });
-    let existingCustomer = null;
+    let existingCustomer: Customer | null = null;
 
     for await (const page of customersIterator) {
       const customers = page.result.items || [];
