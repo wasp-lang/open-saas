@@ -8,22 +8,13 @@ This project is based on [OpenSaas](https://opensaas.sh) template and consists o
 ## Payment Processors
 
 Open SaaS supports three payment processors out of the box:
-
-### Stripe
-The most popular payment processor with extensive features and global reach.
-
-### Lemon Squeezy
-Great for digital products with built-in tax handling and global compliance.
-
-### Paddle
-A comprehensive payment solution with built-in tax handling, subscription management, and global compliance.
+- [Stripe](https://stripe.com/)
+- [Paddle](https://www.paddle.com/)
+- [LemonSqueezy](https://www.lemonsqueezy.com/)
 
 To switch between payment processors, set the `PAYMENT_PROCESSOR` environment variable:
 - `PAYMENT_PROCESSOR=stripe` (default)
-- `PAYMENT_PROCESSOR=lemonsqueezy`
 - `PAYMENT_PROCESSOR=paddle`
-
-Each processor has its own configuration file:
-- `.env.server.example` - Default Stripe configuration
+- `PAYMENT_PROCESSOR=lemonsqueezy`
 
 For more details, check READMEs of each respective directory!
