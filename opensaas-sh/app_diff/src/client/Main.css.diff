@@ -64,6 +64,15 @@
  /* third-party libraries CSS */
  
  .tableCheckbox:checked ~ div span {
+@@ -158,7 +201,7 @@
+     --muted-foreground: 0 0% 63.9%;
+     --accent: 31 57% 93%;
+     --accent-foreground: 210 100% 13%;
+-    --destructive: 0 62.8% 65%;
++    --destructive: 0 62.8% 30.6%;
+     --destructive-foreground: 0 0% 98%;
+     --success: 141 71% 48%;
+     --success-foreground: 0 0% 98%;
 @@ -177,4 +220,17 @@
    body {
      @apply bg-background text-foreground;
