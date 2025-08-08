@@ -224,7 +224,7 @@ const NavLogo = ({ isScrolled }: { isScrolled: boolean }) => (
   <img
     className={cn('transition-transform duration-300 ease-out will-change-transform', {
       'size-8 transform scale-100': !isScrolled,
-      'size-8 transform scale-87.5': isScrolled, // 28px/32px = 0.875
+      'size-8 transform scale-90': isScrolled,
     })}
     src={logo}
     alt='Your SaaS App'
