@@ -5,7 +5,6 @@ import { useAuth } from 'wasp/client/auth';
 import { Link as WaspRouterLink, routes } from 'wasp/client/router';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../../../components/ui/sheet';
 import { cn } from '../../../lib/utils';
-import { throttleWithTrailingInvocation } from '../../../shared/utils';
 import { UserDropdown } from '../../../user/UserDropdown';
 import { UserMenuItems } from '../../../user/UserMenuItems';
 import { useIsLandingPage } from '../../hooks/useIsLandingPage';
@@ -23,22 +22,26 @@ export default function NavBar({ navigationItems }: { navigationItems: Navigatio
   const isLandingPage = useIsLandingPage();
 
   useEffect(() => {
-    const throttledHandler = throttleWithTrailingInvocation(() => {
+    const handleScroll = () => {
       setIsScrolled(window.scrollY > 0);
-    }, 50);
+    };
 
-    window.addEventListener('scroll', throttledHandler);
+    window.addEventListener('scroll', handleScroll);
 
     return () => {
-      window.removeEventListener('scroll', throttledHandler);
-      throttledHandler.cancel();
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
   return (
     <>
       {isLandingPage && <Announcement />}
-      <header className={cn('sticky top-0 z-50 transition-all duration-300', isScrolled && 'top-4')}>
+      <header
+        className={cn(
+          'sticky top-0 z-50 transition-transform duration-300 ease-out will-change-transform',
+          isScrolled && 'translate-y-4'
+        )}
+      >
         <div
           className={cn('transition-all duration-300', {
             'mx-4 md:mx-20 pr-2 lg:pr-0 rounded-full shadow-lg bg-background/90 backdrop-blur-lg border border-border':
@@ -60,10 +63,13 @@ export default function NavBar({ navigationItems }: { navigationItems: Navigatio
               >
                 <NavLogo isScrolled={isScrolled} />
                 <span
-                  className={cn('font-semibold leading-6 text-foreground transition-all duration-300', {
-                    'ml-2 text-sm': !isScrolled,
-                    'ml-2 text-xs': isScrolled,
-                  })}
+                  className={cn(
+                    'font-semibold leading-6 text-foreground transition-transform duration-300 ease-out will-change-transform',
+                    {
+                      'ml-2 text-sm transform scale-100': !isScrolled,
+                      'ml-2 text-sm transform scale-90': isScrolled,
+                    }
+                  )}
                 >
                   Your SaaS
                 </span>
@@ -93,18 +99,21 @@ function NavBarDesktopUserDropdown({ isScrolled }: { isScrolled: boolean }) {
       {isUserLoading ? null : !user ? (
         <WaspRouterLink
           to={routes.LoginRoute.to}
-          className={cn('font-semibold leading-6 ml-3 transition-all duration-300', {
-            'text-sm': !isScrolled,
-            'text-xs': isScrolled,
-          })}
+          className={cn(
+            'font-semibold leading-6 ml-3 transition-transform duration-300 ease-out will-change-transform',
+            {
+              'text-sm transform scale-100': !isScrolled,
+              'text-sm transform scale-90': isScrolled,
+            }
+          )}
         >
           <div className='flex items-center duration-300 ease-in-out text-foreground hover:text-primary transition-colors'>
             Log in{' '}
             <LogIn
               size={isScrolled ? '1rem' : '1.1rem'}
-              className={cn('transition-all duration-300', {
-                'ml-1 mt-[0.1rem]': !isScrolled,
-                'ml-1': isScrolled,
+              className={cn('transition-transform duration-300 ease-out will-change-transform', {
+                'ml-1 mt-[0.1rem] transform scale-100': !isScrolled,
+                'ml-1 transform scale-90': isScrolled,
               })}
             />
           </div>
@@ -140,9 +149,9 @@ function NavBarMobileMenu({
           >
             <span className='sr-only'>Open main menu</span>
             <Menu
-              className={cn('transition-all duration-300', {
-                'size-8 p-1': !isScrolled,
-                'size-6 p-0.5': isScrolled,
+              className={cn('transition-transform duration-300 ease-out will-change-transform', {
+                'size-8 p-1 transform scale-100': !isScrolled,
+                'size-8 p-1 transform scale-75': isScrolled,
               })}
               aria-hidden='true'
             />
@@ -213,9 +222,9 @@ function renderNavigationItems(
 
 const NavLogo = ({ isScrolled }: { isScrolled: boolean }) => (
   <img
-    className={cn('transition-all duration-500', {
-      'size-8': !isScrolled,
-      'size-7': isScrolled,
+    className={cn('transition-transform duration-300 ease-out will-change-transform', {
+      'size-8 transform scale-100': !isScrolled,
+      'size-8 transform scale-87.5': isScrolled, // 28px/32px = 0.875
     })}
     src={logo}
     alt='Your SaaS App'
