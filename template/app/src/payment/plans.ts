@@ -46,14 +46,17 @@ export function prettyPaymentPlanName(planId: PaymentPlanId): string {
   return planToName[planId];
 }
 
-export function parsePaymentPlanId(planId: string): PaymentPlanId {
-  if ((Object.values(PaymentPlanId) as string[]).includes(planId)) {
-    return planId as PaymentPlanId;
-  } else {
-    throw new Error(`Invalid PaymentPlanId: ${planId}`);
-  }
-}
-
 export function getSubscriptionPaymentPlanIds(): PaymentPlanId[] {
   return Object.values(PaymentPlanId).filter((planId) => paymentPlans[planId].effect.kind === 'subscription');
+}
+
+export function parsePaymentPlanId(planId: string): PaymentPlanId {
+  assertPaymentPlanId(planId);
+  return planId;
+}
+
+function assertPaymentPlanId(planId: string): asserts planId is PaymentPlanId {
+  if (!Object.values(PaymentPlanId).includes(planId as PaymentPlanId)) {
+    throw new Error(`Invalid PaymentPlanId: ${planId}`);
+  }
 }

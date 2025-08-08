@@ -1,56 +1,56 @@
-import { type MiddlewareConfigFn, HttpError } from 'wasp/server';
-import { type PaymentsWebhook } from 'wasp/server/api';
 import { type PrismaClient } from '@prisma/client';
 import express from 'express';
 import type { Stripe } from 'stripe';
-import { stripe } from './stripeClient';
-import { paymentPlans, PaymentPlanId, SubscriptionStatus, type PaymentPlanEffect } from '../plans';
-import { updateUserStripePaymentDetails } from './paymentDetails';
+import { HttpError, type MiddlewareConfigFn } from 'wasp/server';
+import { type PaymentsWebhook } from 'wasp/server/api';
 import { emailSender } from 'wasp/server/email';
-import { assertUnreachable } from '../../shared/utils';
 import { requireNodeEnvVar } from '../../server/utils';
+import { assertUnreachable } from '../../shared/utils';
+import { UnhandledWebhookEventError } from '../errors';
+import { PaymentPlanId, paymentPlans, SubscriptionStatus, type PaymentPlanEffect } from '../plans';
+import { stripeClient } from './stripeClient';
+import { updateUserStripePaymentDetails } from './userPaymentDetails';
 import {
-  parseWebhookPayload,
   type InvoicePaidData,
   type SessionCompletedData,
-  type SubscriptionDeletedData,
   type SubscriptionUpdatedData,
 } from './webhookPayload';
-import { UnhandledWebhookEventError } from '../errors';
 
 export const stripeWebhook: PaymentsWebhook = async (request, response, context) => {
+  const prismaUserDelegate = context.entities.User;
   try {
-    const rawStripeEvent = constructStripeEvent(request);
-    const { eventName, data } = await parseWebhookPayload(rawStripeEvent);
-    const prismaUserDelegate = context.entities.User;
-    switch (eventName) {
+    const stripeEvent = constructStripeEvent(request);
+
+    switch (stripeEvent.type) {
       case 'checkout.session.completed':
-        await handleCheckoutSessionCompleted(data, prismaUserDelegate);
+        await handleCheckoutSessionCompleted(stripeEvent, prismaUserDelegate);
         break;
       case 'invoice.paid':
-        await handleInvoicePaid(data, prismaUserDelegate);
+        await handleInvoicePaid(stripeEvent, prismaUserDelegate);
         break;
       case 'customer.subscription.updated':
-        await handleCustomerSubscriptionUpdated(data, prismaUserDelegate);
+        await handleCustomerSubscriptionUpdated(stripeEvent, prismaUserDelegate);
         break;
       case 'customer.subscription.deleted':
-        await handleCustomerSubscriptionDeleted(data, prismaUserDelegate);
+        await handleCustomerSubscriptionDeleted(stripeEvent, prismaUserDelegate);
         break;
       default:
         // If you'd like to handle more events, you can add more cases above.
-        // When deploying your app, you configure your webhook in the Stripe dashboard to only send the events that you're
-        // handling above and that are necessary for the functioning of your app. See: https://docs.opensaas.sh/guides/deploying/#setting-up-your-stripe-webhook
-        // In development, it is likely that you will receive other events that you are not handling, and that's fine. These can be ignored without any issues.
-        assertUnreachable(eventName);
+        // When deploying your app, you configure your webhook in the Stripe dashboard
+        // to only send the events that you're handling above.
+        // See: https://docs.opensaas.sh/guides/deploying/#setting-up-your-stripe-webhook
+        // In development, it is likely that you will receive other events that you are not handling.
+        // These can be ignored without any issues.
+        assertUnreachable();
     }
-    return response.json({ received: true }); // Stripe expects a 200 response to acknowledge receipt of the webhook
+    return response.status(204).send(); // any 2xx HTTP response is fine
   } catch (err) {
     if (err instanceof UnhandledWebhookEventError) {
-      console.error(err.message);
+      console.error('Unhandled Stripe webhook event: ', err.message);
       return response.status(422).json({ error: err.message });
     }
 
-    console.error('Webhook error:', err);
+    console.error('Stripe webhook error:', err);
     if (err instanceof HttpError) {
       return response.status(err.statusCode).json({ error: err.message });
     } else {
@@ -60,21 +60,25 @@ export const stripeWebhook: PaymentsWebhook = async (request, response, context)
 };
 
 function constructStripeEvent(request: express.Request): Stripe.Event {
+  const stripeWebhookSecret = requireNodeEnvVar('STRIPE_WEBHOOK_SECRET');
+  const stripeSignature = request.headers['stripe-signature'];
+  if (!stripeSignature) {
+    throw new HttpError(400, 'Stripe webhook signature not provided');
+  }
+
   try {
-    const secret = requireNodeEnvVar('STRIPE_WEBHOOK_SECRET');
-    const sig = request.headers['stripe-signature'];
-    if (!sig) {
-      throw new HttpError(400, 'Stripe webhook signature not provided');
-    }
-    return stripe.webhooks.constructEvent(request.body, sig, secret);
+    return stripeClient.webhooks.constructEvent(request.body, stripeSignature, stripeWebhookSecret);
   } catch (err) {
-    throw new HttpError(500, 'Error constructing Stripe webhook event');
+    throw new HttpError(400, 'Error constructing Stripe webhook event');
   }
 }
 
+/**
+ * Stripe requires the raw request to construct the event successfully.
+ * That is we we delete the Wasp's default 'express.json' middleware
+ * and replace it with 'express.raw' middleware.
+ */
 export const stripeMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig) => {
-  // We need to delete the default 'express.json' middleware and replace it with 'express.raw' middleware
-  // because webhook data in the body of the request as raw JSON, not as JSON in the body of the request.
   middlewareConfig.delete('express.json');
   middlewareConfig.set('express.raw', express.raw({ type: 'application/json' }));
   return middlewareConfig;
@@ -85,10 +89,12 @@ export const stripeMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig) =
 // which are synchronous, checkout session completed could potentially result in a pending payment.
 // If so, use the checkout.session.async_payment_succeeded event to confirm the payment.
 async function handleCheckoutSessionCompleted(
-  session: SessionCompletedData,
+  event: Stripe.CheckoutSessionCompletedEvent,
   prismaUserDelegate: PrismaClient['user']
 ) {
+  const session = event.data.object;
   const isSuccessfulOneTimePayment = session.mode === 'payment' && session.payment_status === 'paid';
+
   if (isSuccessfulOneTimePayment) {
     await saveSuccessfulOneTimePayment(session, prismaUserDelegate);
   }
@@ -98,40 +104,47 @@ async function saveSuccessfulOneTimePayment(
   session: SessionCompletedData,
   prismaUserDelegate: PrismaClient['user']
 ) {
-  const userStripeId = session.customer;
+  const stripeCustomerId = session.customer;
   const lineItems = await getCheckoutLineItemsBySessionId(session.id);
   const lineItemPriceId = extractPriceId(lineItems);
   const planId = getPlanIdByPriceId(lineItemPriceId);
   const plan = paymentPlans[planId];
   const { numOfCreditsPurchased } = getPlanEffectPaymentDetails({ planId, planEffect: plan.effect });
   return updateUserStripePaymentDetails(
-    { userStripeId, numOfCreditsPurchased, datePaid: new Date() },
+    { stripeCustomerId, numOfCreditsPurchased, datePaid: new Date() },
     prismaUserDelegate
   );
 }
 
 // This is called when a subscription is successfully purchased or renewed and payment succeeds.
-// Invoices are not created for one-time payments, so we handle them above.
-async function handleInvoicePaid(invoice: InvoicePaidData, prismaUserDelegate: PrismaClient['user']) {
+// Invoices are not created for one-time payments, so we handle them below.
+async function handleInvoicePaid(event: Stripe.InvoicePaidEvent, prismaUserDelegate: PrismaClient['user']) {
+  const invoice = event.data.object;
   await saveActiveSubscription(invoice, prismaUserDelegate);
 }
 
-async function saveActiveSubscription(invoice: InvoicePaidData, prismaUserDelegate: PrismaClient['user']) {
-  const userStripeId = invoice.customer;
+async function saveActiveSubscription(invoice: Stripe.Invoice, prismaUserDelegate: PrismaClient['user']) {
+  const stripeCustomerId = invoice.customer.id;
   const datePaid = new Date(invoice.period_start * 1000);
   const priceId = extractPriceId(invoice.lines);
   const subscriptionPlan = getPlanIdByPriceId(priceId);
   return updateUserStripePaymentDetails(
-    { userStripeId, datePaid, subscriptionPlan, subscriptionStatus: SubscriptionStatus.Active },
+    {
+      stripeCustomerId,
+      datePaid,
+      subscriptionPlan,
+      subscriptionStatus: SubscriptionStatus.Active,
+    },
     prismaUserDelegate
   );
 }
 
 async function handleCustomerSubscriptionUpdated(
-  subscription: SubscriptionUpdatedData,
+  event: Stripe.CustomerSubscriptionUpdatedEvent,
   prismaUserDelegate: PrismaClient['user']
 ) {
-  const userStripeId = subscription.customer;
+  const subscription = event.data.object;
+  const stripeCustomerId = subscription.customer;
   let subscriptionStatus: SubscriptionStatus | undefined;
   const priceId = extractPriceId(subscription.items);
   const subscriptionPlan = getPlanIdByPriceId(priceId);
@@ -147,7 +160,7 @@ async function handleCustomerSubscriptionUpdated(
   }
   if (subscriptionStatus) {
     const user = await updateUserStripePaymentDetails(
-      { userStripeId, subscriptionPlan, subscriptionStatus },
+      { stripeCustomerId, subscriptionPlan, subscriptionStatus },
       prismaUserDelegate
     );
     if (subscription.cancel_at_period_end) {
@@ -165,12 +178,13 @@ async function handleCustomerSubscriptionUpdated(
 }
 
 async function handleCustomerSubscriptionDeleted(
-  subscription: SubscriptionDeletedData,
+  event: Stripe.CustomerSubscriptionDeletedEvent,
   prismaUserDelegate: PrismaClient['user']
 ) {
-  const userStripeId = subscription.customer;
+  const subscription = event.data.object;
+  const stripeCustomerId = subscription.customer;
   return updateUserStripePaymentDetails(
-    { userStripeId, subscriptionStatus: SubscriptionStatus.Deleted },
+    { stripeCustomerId, subscriptionStatus: SubscriptionStatus.Deleted },
     prismaUserDelegate
   );
 }
@@ -203,7 +217,7 @@ function extractPriceId(
 }
 
 async function getCheckoutLineItemsBySessionId(sessionId: string) {
-  const { line_items } = await stripe.checkout.sessions.retrieve(sessionId, {
+  const { line_items } = await stripeClient.checkout.sessions.retrieve(sessionId, {
     expand: ['line_items'],
   });
   if (!line_items) {
@@ -238,6 +252,6 @@ function getPlanEffectPaymentDetails({
     case 'credits':
       return { subscriptionPlan: undefined, numOfCreditsPurchased: planEffect.amount };
     default:
-      assertUnreachable(planEffect);
+      assertUnreachable();
   }
 }

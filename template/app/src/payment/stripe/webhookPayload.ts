@@ -1,7 +1,7 @@
-import * as z from 'zod';
 import { Stripe } from 'stripe';
-import { UnhandledWebhookEventError } from '../errors';
 import { HttpError } from 'wasp/server';
+import * as z from 'zod';
+import { UnhandledWebhookEventError } from '../errors';
 
 export async function parseWebhookPayload(rawStripeEvent: Stripe.Event) {
   try {
