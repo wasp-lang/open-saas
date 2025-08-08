@@ -5,7 +5,7 @@ import { useAuth } from 'wasp/client/auth';
 import { Link as WaspRouterLink, routes } from 'wasp/client/router';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../../../components/ui/sheet';
 import DropdownUser from '../../../user/DropdownUser';
-import { UserMenuItems } from '../../../user/UserMenuItems';
+import { MobileMenuItems } from '../../../user/UserMenuItems';
 import { cn } from '../../cn';
 import { useIsLandingPage } from '../../hooks/useIsLandingPage';
 import logo from '../../static/logo.webp';
@@ -112,19 +112,17 @@ export default function NavBar({ navigationItems }: { navigationItems: Navigatio
                       <div className='py-6'>
                         {isUserLoading ? null : !user ? (
                           <WaspRouterLink to={routes.LoginRoute.to}>
-                            <div className='flex justify-end items-center duration-300 ease-in-out text-foreground hover:text-primary transition-colors'>
-                              Log in <LogIn size='1.1rem' className='ml-1' />
+                            <div className='flex justify-end items-center duration-300 ease-in-out text-foreground hover:text-primary transition-colors gap-2'>
+                              Log in <LogIn size='1rem' />
                             </div>
                           </WaspRouterLink>
                         ) : (
-                          <div className='space-y-2'>
-                            <UserMenuItems user={user} onItemClick={() => setMobileMenuOpen(false)} />
-                          </div>
+                          <MobileMenuItems user={user} onItemClick={() => setMobileMenuOpen(false)} />
                         )}
                       </div>
-                      <div className='py-6'>
-                        <DarkModeSwitcher />
-                      </div>
+                    </div>
+                    <div className='py-6'>
+                      <DarkModeSwitcher />
                     </div>
                   </div>
                 </SheetContent>
@@ -144,7 +142,7 @@ export default function NavBar({ navigationItems }: { navigationItems: Navigatio
                   })}
                 >
                   <div className='flex items-center duration-300 ease-in-out text-foreground hover:text-primary transition-colors'>
-                    Log in{' '}
+                    Log in
                     <LogIn
                       size={isScrolled ? '1rem' : '1.1rem'}
                       className={cn('transition-all duration-300', {

@@ -7,7 +7,7 @@
 +import { Button } from '../../../components/ui/button';
  import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../../../components/ui/sheet';
  import DropdownUser from '../../../user/DropdownUser';
- import { UserMenuItems } from '../../../user/UserMenuItems';
+ import { MobileMenuItems } from '../../../user/UserMenuItems';
 @@ -10,6 +11,7 @@
  import { useIsLandingPage } from '../../hooks/useIsLandingPage';
  import logo from '../../static/logo.webp';
@@ -57,24 +57,25 @@
                          <NavLogo isScrolled={false} />
                        </WaspRouterLink>
                      </SheetTitle>
-@@ -112,9 +119,9 @@
+@@ -112,17 +119,24 @@
                        <div className='py-6'>
                          {isUserLoading ? null : !user ? (
                            <WaspRouterLink to={routes.LoginRoute.to}>
--                            <div className='flex justify-end items-center duration-300 ease-in-out text-foreground hover:text-primary transition-colors'>
--                              Log in <LogIn size='1.1rem' className='ml-1' />
+-                            <div className='flex justify-end items-center duration-300 ease-in-out text-foreground hover:text-primary transition-colors gap-2'>
+-                              Log in <LogIn size='1rem' />
 -                            </div>
 +                            <Button variant='outline'>
 +                              <span>Demo App</span> <LogIn className='ml-1' />
 +                            </Button>
                            </WaspRouterLink>
                          ) : (
-                           <div className='space-y-2'>
-@@ -123,7 +130,14 @@
+                           <MobileMenuItems user={user} onItemClick={() => setMobileMenuOpen(false)} />
                          )}
                        </div>
-                       <div className='py-6'>
--                        <DarkModeSwitcher />
+-                    </div>
+-                    <div className='py-6'>
+-                      <DarkModeSwitcher />
++                      <div className='py-6'>
 +                        <ul className='flex items-center justify-between gap-4'>
 +                          <li>
 +                            <DarkModeSwitcher />
@@ -83,10 +84,11 @@
 +                            <RepoInfo />
 +                          </li>
 +                        </ul>
-                       </div>
++                      </div>
                      </div>
                    </div>
-@@ -133,7 +147,12 @@
+                 </SheetContent>
+@@ -131,7 +145,12 @@
  
              <div className='hidden lg:flex lg:flex-1 gap-3 justify-end items-center'>
                <ul className='flex justify-center items-center gap-2 sm:gap-4'>
@@ -100,12 +102,12 @@
                </ul>
                {isUserLoading ? null : !user ? (
                  <WaspRouterLink
-@@ -143,10 +162,10 @@
+@@ -141,10 +160,10 @@
                      'text-xs': isScrolled,
                    })}
                  >
 -                  <div className='flex items-center duration-300 ease-in-out text-foreground hover:text-primary transition-colors'>
--                    Log in{' '}
+-                    Log in
 +                  <div className='flex items-center duration-300 gap-1 ease-in-out text-foreground hover:text-primary transition-colors'>
 +                    <span>Demo App</span>
                      <LogIn
@@ -114,7 +116,7 @@
                        className={cn('transition-all duration-300', {
                          'ml-1 mt-[0.1rem]': !isScrolled,
                          'ml-1': isScrolled,
-@@ -246,39 +265,40 @@
+@@ -244,39 +263,40 @@
        'size-6': isScrolled,
      })}
      src={logo}
