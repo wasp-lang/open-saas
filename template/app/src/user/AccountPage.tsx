@@ -4,7 +4,7 @@ import type { User } from 'wasp/entities';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Separator } from '../components/ui/separator';
-import { SubscriptionStatus, parsePaymentPlanId, prettyPaymentPlanName } from '../payment/plans';
+import { SubscriptionStatus, assertPaymentPlanId, prettyPaymentPlanName } from '../payment/plans';
 
 export default function AccountPage({ user }: { user: User }) {
   return (
@@ -103,7 +103,9 @@ function getUserSubscriptionStatusDescription({
   subscriptionStatus: SubscriptionStatus;
   datePaid: Date;
 }) {
-  const planName = prettyPaymentPlanName(parsePaymentPlanId(subscriptionPlan));
+  assertPaymentPlanId(subscriptionPlan);
+
+  const planName = prettyPaymentPlanName(subscriptionPlan);
   const endOfBillingPeriod = prettyPrintEndOfBillingPeriod(datePaid);
   return prettyPrintStatus(planName, subscriptionStatus, endOfBillingPeriod);
 }
