@@ -1,0 +1,20 @@
+--- template/app/src/payment/stripe/userPaymentDetails.ts
++++ opensaas-sh/app/src/payment/stripe/userPaymentDetails.ts
+@@ -26,7 +26,7 @@
+ ) {
+   return userDelegate.update({
+     where: {
+-      paymentProcessorUserId: customerId,
++      stripeId: customerId,
+     },
+     data: {
+       datePaid,
+@@ -48,7 +48,7 @@
+ ) {
+   return userDelegate.update({
+     where: {
+-      paymentProcessorUserId: customerId,
++      stripeId: customerId,
+     },
+     data: {
+       subscriptionPlan: paymentPlanId,
