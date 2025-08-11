@@ -75,21 +75,19 @@ function UserCurrentPaymentPlan({
   datePaid,
   credits,
 }: UserCurrentPaymentPlanProps) {
-  if (subscriptionStatus && subscriptionPlan && datePaid) {
-    return (
-      <>
-        <dd className='mt-1 text-sm text-foreground sm:col-span-1 sm:mt-0'>
-          {getUserSubscriptionStatusDescription({ subscriptionPlan, subscriptionStatus, datePaid })}
-        </dd>
-        {subscriptionStatus !== SubscriptionStatus.Deleted ? <CustomerPortalButton /> : <BuyMoreButton />}
-      </>
-    );
-  }
-
   return (
     <>
-      <dd className='mt-1 text-sm text-foreground sm:col-span-1 sm:mt-0'>Credits remaining: {credits}</dd>
-      <BuyMoreButton />
+      <dd className='mt-1 text-sm text-foreground sm:col-span-1 sm:mt-0'>
+        {subscriptionStatus && subscriptionPlan && datePaid ? (
+          getUserSubscriptionStatusDescription({ subscriptionPlan, subscriptionStatus, datePaid })
+        ) : (
+          <>Credits remaining: {credits}</>
+        )}
+      </dd>
+      <div className='mt-4 sm:mt-0 flex gap-y-2 gap-x-6 flex-wrap'>
+        <CustomerPortalButton />
+        <BuyMoreButton />
+      </div>
     </>
   );
 }
@@ -136,47 +134,24 @@ function prettyPrintEndOfBillingPeriod(date: Date) {
 
 function BuyMoreButton() {
   return (
-    <div className='ml-4 flex-shrink-0 sm:col-span-1 sm:mt-0'>
-      <WaspRouterLink
-        to={routes.PricingPageRoute.to}
-        className='font-medium text-sm text-primary hover:text-primary/80 transition-colors duration-200'
-      >
-        Buy More/Upgrade
-      </WaspRouterLink>
-    </div>
+    <Button variant='link' className='px-0'>
+      <WaspRouterLink to={routes.PricingPageRoute.to}>Buy More/Upgrade</WaspRouterLink>
+    </Button>
   );
 }
 
 function CustomerPortalButton() {
-  const {
-    data: customerPortalUrl,
-    isLoading: isCustomerPortalUrlLoading,
-    error: customerPortalUrlError,
-  } = useQuery(getCustomerPortalUrl);
+  const { data: customerPortalUrl, isLoading: isCustomerPortalUrlLoading } = useQuery(getCustomerPortalUrl);
 
-  const handleClick = () => {
-    if (customerPortalUrlError) {
-      console.error('Error fetching customer portal url');
-    }
-
-    if (customerPortalUrl) {
-      window.open(customerPortalUrl, '_blank');
-    } else {
-      console.error('Customer portal URL is not available');
-    }
-  };
+  if (!customerPortalUrl) {
+    return null;
+  }
 
   return (
-    <div className='ml-4 flex-shrink-0 sm:col-span-1 sm:mt-0'>
-      <Button
-        onClick={handleClick}
-        disabled={isCustomerPortalUrlLoading}
-        variant='outline'
-        size='sm'
-        className='font-medium text-sm'
-      >
-        Manage Subscription
+    <a href={customerPortalUrl} target='_blank' rel='noopener noreferrer'>
+      <Button disabled={isCustomerPortalUrlLoading} variant='link' className='px-0'>
+        Manage Payment Details
       </Button>
-    </div>
+    </a>
   );
 }
