@@ -114,7 +114,7 @@ async function handleInvoicePaid(
       );
       break;
     default:
-      assertUnreachable();
+      assertUnreachable(paymentPlanId);
   }
 }
 
