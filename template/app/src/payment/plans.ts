@@ -27,15 +27,15 @@ export type PaymentPlanEffect = { kind: 'subscription' } | { kind: 'credits'; am
 
 export const paymentPlans = {
   [PaymentPlanId.Hobby]: {
-    getPaymentProcessorPlanId: () => requireNodeEnvVar('PAYMENTS_HOBBY_SUBSCRIPTION_PRICE_ID'),
+    getPaymentProcessorPlanId: () => requireNodeEnvVar('PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID'),
     effect: { kind: 'subscription' },
   },
   [PaymentPlanId.Pro]: {
-    getPaymentProcessorPlanId: () => requireNodeEnvVar('PAYMENTS_PRO_SUBSCRIPTION_PRICE_ID'),
+    getPaymentProcessorPlanId: () => requireNodeEnvVar('PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID'),
     effect: { kind: 'subscription' },
   },
   [PaymentPlanId.Credits10]: {
-    getPaymentProcessorPlanId: () => requireNodeEnvVar('PAYMENTS_CREDITS_10_PRICE_ID'),
+    getPaymentProcessorPlanId: () => requireNodeEnvVar('PAYMENTS_CREDITS_10_PLAN_ID'),
     effect: { kind: 'credits', amount: 10 },
   },
 } as const satisfies Record<PaymentPlanId, PaymentPlan>;
