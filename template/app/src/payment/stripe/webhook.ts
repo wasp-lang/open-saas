@@ -89,7 +89,6 @@ async function handleInvoicePaid(
   prismaUserDelegate: PrismaClient['user']
 ): Promise<void> {
   const invoice = event.data.object;
-  console.log(JSON.stringify(invoice, null, 2));
   const customerId = getCustomerId(invoice.customer);
   const datePaid = getInvoicePaidAtDate(invoice);
   const priceId = getItemsPriceId(invoice.lines.data);
