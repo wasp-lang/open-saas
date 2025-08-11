@@ -57,9 +57,12 @@ export async function createStripeCheckoutSession({
       customer_update: {
         address: 'auto',
       },
-      invoice_creation: {
-        enabled: true,
-      },
+      invoice_creation:
+        mode === 'payment'
+          ? {
+              enabled: true,
+            }
+          : undefined,
     });
   } catch (error) {
     console.error(error);

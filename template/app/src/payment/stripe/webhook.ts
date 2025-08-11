@@ -33,7 +33,9 @@ export const stripeWebhook: PaymentsWebhook = async (request, response, context)
         // See: https://docs.opensaas.sh/guides/deploying/#setting-up-your-stripe-webhook
         // In development, it is likely that you will receive other events that you are not handling.
         // These can be ignored without any issues.
-        assertUnreachable();
+        if (process.env.NODE_ENV === 'production') {
+          throw new UnhandledWebhookEventError(stripeEvent.type);
+        }
     }
     return response.status(204).send(); // any 2xx HTTP response is fine
   } catch (err) {
@@ -93,26 +95,27 @@ async function handleInvoicePaid(
   const priceId = getItemsPriceId(invoice.lines.data);
   const paymentPlanId = getPaymentPlanIdByPriceId(priceId);
 
-  if (priceId === paymentPlans.credits10.getPaymentProcessorPlanId()) {
-    updateUserStripePaymentDetails(
-      { customerId, numOfCreditsPurchased: paymentPlans.credits10.effect.amount, datePaid },
-      prismaUserDelegate
-    );
-  } else if (
-    priceId === paymentPlans.pro.getPaymentProcessorPlanId() ||
-    priceId === paymentPlans.hobby.getPaymentProcessorPlanId()
-  ) {
-    updateUserStripePaymentDetails(
-      {
-        customerId,
-        datePaid,
-        paymentPlanId,
-        subscriptionStatus: SubscriptionStatus.Active,
-      },
-      prismaUserDelegate
-    );
-  } else {
-    assertUnreachable();
+  switch (paymentPlanId) {
+    case PaymentPlanId.Credits10:
+      updateUserStripePaymentDetails(
+        { customerId, numOfCreditsPurchased: paymentPlans.credits10.effect.amount, datePaid },
+        prismaUserDelegate
+      );
+      break;
+    case PaymentPlanId.Pro:
+    case PaymentPlanId.Hobby:
+      updateUserStripePaymentDetails(
+        {
+          customerId,
+          datePaid,
+          paymentPlanId,
+          subscriptionStatus: SubscriptionStatus.Active,
+        },
+        prismaUserDelegate
+      );
+      break;
+    default:
+      assertUnreachable();
   }
 }
 
