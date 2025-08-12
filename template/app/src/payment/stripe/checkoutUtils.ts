@@ -57,6 +57,9 @@ export async function createStripeCheckoutSession({
       customer_update: {
         address: 'auto',
       },
+      // Stripe automatically creates invoices for subscriptions.
+      // For one-time payments, we must enable them manually.
+      // Enabling invoices for subscriptions will cause an error.
       invoice_creation:
         mode === 'payment'
           ? {
