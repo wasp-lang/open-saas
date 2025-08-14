@@ -336,7 +336,7 @@ function Schedule({ schedule }: { schedule: GeneratedSchedule }) {
 
 function TaskCard({ task, taskItems }: { task: ScheduleTask; taskItems: TaskItem[] }) {
   const taskPriorityToColorMap: Record<TaskPriority, string> = {
-    high: 'bg-destructive/20 border-destructive/40 text-red-500',
+    high: 'bg-destructive/10 border-destructive/20 text-red-500',
     medium: 'bg-warning/10 border-warning/20 text-warning',
     low: 'bg-success/10 border-success/20 text-success',
   };
