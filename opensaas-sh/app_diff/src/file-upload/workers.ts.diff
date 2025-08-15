@@ -1,0 +1,52 @@
+--- template/app/src/file-upload/workers.ts
++++ opensaas-sh/app/src/file-upload/workers.ts
+@@ -1,11 +1,8 @@
+-import type { CleanUpOrphanedFilesS3Job } from 'wasp/server/jobs';
++import type { DeleteFilesJob, CleanUpOrphanedFilesS3Job } from 'wasp/server/jobs';
+ import { s3Client, deleteFileFromS3 } from './s3Utils';
+ import { ListObjectsV2Command, ListObjectsV2CommandOutput } from '@aws-sdk/client-s3';
+ 
+-export const cleanUpOrphanedFilesS3: CleanUpOrphanedFilesS3Job<never, void> = async (
+-  _args,
+-  context
+-) => {
++export const cleanUpOrphanedFilesS3: CleanUpOrphanedFilesS3Job<never, void> = async (_args, context) => {
+   const allFileKeysFromS3 = await fetchAllFileKeysFromS3();
+   const allFileKeysFromDb = await context.entities.File.findMany({
+     select: { s3Key: true },
+@@ -63,3 +60,35 @@
+     `Successfully deleted ${successfulDeletions.length} out of ${s3KeysNotFoundInDb.length} orphaned files from S3`
+   );
+ };
++
++export const deleteFilesJob: DeleteFilesJob<never, void> = async (_args, context) => {
++  const dayInMiliseconds = 1000 * 60 * 60 * 24;
++  const sevenDaysAgo = Date.now() - 7 * dayInMiliseconds;
++  const filesToDelete = await context.entities.File.findMany({
++    where: {
++      createdAt: {
++        lt: new Date(sevenDaysAgo),
++      },
++    },
++    select: { s3Key: true, id: true },
++  });
++
++  const deletionResults = await Promise.allSettled(
++    filesToDelete.map(async (file) => {
++      await deleteFileFromS3({ s3Key: file.s3Key });
++      return file.id;
++    })
++  );
++
++  const successfullyDeletedFromS3Ids = deletionResults
++    .filter((result) => result.status === 'fulfilled')
++    .map((result) => result.value);
++
++  const deletedFiles = await context.entities.File.deleteMany({
++    where: {
++      id: { in: successfullyDeletedFromS3Ids },
++    },
++  });
++
++  console.log(`Deleted ${deletedFiles.count} files`);
++};
