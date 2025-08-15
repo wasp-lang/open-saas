@@ -132,6 +132,30 @@ export default function FileUploadPage() {
     }
   };
 
+  const handleDelete = async ({ id, name }: Pick<File, 'id' | 'name'>) => {
+    try {
+      await deleteFile({ id });
+      toast({
+        title: 'File deleted',
+        description: (
+          <span>
+            File <strong>{name}</strong> deleted.
+          </span>
+        ),
+      });
+      allUserFiles.refetch();
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Error deleting file.';
+      toast({
+        title: 'Error',
+        description: errorMessage,
+        variant: 'destructive',
+      });
+    } finally {
+      setFileToDelete(null);
+    }
+  };
+
   return (
     <>
       <div className='py-10 lg:mt-10'>
@@ -235,29 +259,7 @@ export default function FileUploadPage() {
               </Button>
               <Button
                 variant='destructive'
-                onClick={async () => {
-                  try {
-                    await deleteFile({ id: fileToDelete.id });
-                    toast({
-                      title: 'File deleted',
-                      description: (
-                        <span>
-                          File <strong>{fileToDelete.name}</strong> deleted.
-                        </span>
-                      ),
-                    });
-                    allUserFiles.refetch();
-                  } catch (error) {
-                    const errorMessage = error instanceof Error ? error.message : 'Error deleting file.';
-                    toast({
-                      title: 'Error',
-                      description: errorMessage,
-                      variant: 'destructive',
-                    });
-                  } finally {
-                    setFileToDelete(null);
-                  }
-                }}
+                onClick={() => handleDelete(fileToDelete)}
               >
                 Delete
               </Button>

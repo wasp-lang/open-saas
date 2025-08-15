@@ -1,11 +1,11 @@
 import * as path from 'path';
 import { randomUUID } from 'crypto';
-import { S3Client, GetObjectCommand, DeleteObjectCommand, HeadObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, GetObjectCommand, DeleteObjectCommand, HeadObjectCommand, S3ServiceException } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import { MAX_FILE_SIZE_BYTES } from './validation';
 
-const s3Client = new S3Client({
+export const s3Client = new S3Client({
   region: process.env.AWS_S3_REGION,
   credentials: {
     accessKeyId: process.env.AWS_S3_IAM_ACCESS_KEY!,
@@ -59,8 +59,8 @@ export const checkFileExistsInS3 = async ({ s3Key }: { s3Key: string }) => {
   try {
     await s3Client.send(command);
     return true;
-  } catch (error: any) {
-    if (error.name === 'NotFound') {
+  } catch (error) {
+    if (error instanceof S3ServiceException && error.name === 'NotFound') {
       return false;
     }
     throw error;
