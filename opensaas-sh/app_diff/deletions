@@ -3,7 +3,8 @@ src/client/static/open-saas-banner-light.png
 src/landing-page/components/Hero.tsx
 src/landing-page/contentSections.ts
 src/payment/lemonSqueezy/checkoutUtils.ts
-src/payment/lemonSqueezy/paymentDetails.ts
 src/payment/lemonSqueezy/paymentProcessor.ts
+src/payment/lemonSqueezy/userPaymentDetails.ts
 src/payment/lemonSqueezy/webhook.ts
+src/payment/lemonSqueezy/webhookPayload.ts
 src/payment/webhook.ts

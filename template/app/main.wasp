@@ -190,10 +190,10 @@ page PricingPage {
   component: import PricingPage from "@src/payment/PricingPage"
 }
 
-route CheckoutRoute { path: "/checkout", to: CheckoutPage }
-page CheckoutPage {
+route CheckoutResultRoute { path: "/checkout", to: CheckoutResultPage }
+page CheckoutResultPage {
   authRequired: true,
-  component: import Checkout from "@src/payment/CheckoutPage"
+  component: import CheckoutResultPage from "@src/payment/CheckoutResultPage"
 }
 
 query getCustomerPortalUrl {
