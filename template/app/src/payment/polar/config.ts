@@ -44,7 +44,7 @@ export interface PolarConfig {
  * Used for validation and configuration loading
  */
 export const POLAR_ENV_VARS = {
-  // Core API Configuration
+  
   POLAR_ACCESS_TOKEN: 'POLAR_ACCESS_TOKEN',
   POLAR_ORGANIZATION_ID: 'POLAR_ORGANIZATION_ID',
   POLAR_WEBHOOK_SECRET: 'POLAR_WEBHOOK_SECRET',

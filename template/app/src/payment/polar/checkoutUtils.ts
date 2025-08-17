@@ -4,9 +4,6 @@ import { polar } from './polarClient';
 // @ts-ignore
 import { Customer } from '@polar-sh/sdk/models/components/customer.js';
 
-/**
- * Arguments for creating a Polar checkout session
- */
 export interface CreatePolarCheckoutSessionArgs {
   productId: string;
   userEmail: string;
@@ -14,24 +11,12 @@ export interface CreatePolarCheckoutSessionArgs {
   mode: PolarMode;
 }
 
-/**
- * Represents a Polar checkout session
- */
 export interface PolarCheckoutSession {
   id: string;
   url: string;
   customerId?: string;
 }
 
-/**
- * Creates a Polar checkout session
- * @param args Arguments for creating a Polar checkout session
- * @param args.productId Polar Product ID to use for the checkout session
- * @param args.userEmail Email address of the customer
- * @param args.userId Internal user ID for tracking
- * @param args.mode Mode of the checkout session (subscription or payment)
- * @returns Promise resolving to a PolarCheckoutSession object
- */
 export async function createPolarCheckoutSession({
   productId,
   userEmail,
@@ -41,8 +26,6 @@ export async function createPolarCheckoutSession({
   try {
     const baseUrl = env.WASP_WEB_CLIENT_URL;
 
-    // Create checkout session with proper Polar API structure
-    // Using type assertion due to potential API/TypeScript definition mismatches
     const checkoutSessionArgs = {
       products: [productId], // Array of Polar Product IDs
       externalCustomerId: userId, // Use userId for customer deduplication
@@ -64,7 +47,6 @@ export async function createPolarCheckoutSession({
       throw new Error('Polar checkout session created without URL');
     }
 
-    // Return customer ID from checkout session if available
     const customerId = checkoutSession.customerId;
 
     return {
@@ -80,11 +62,6 @@ export async function createPolarCheckoutSession({
   }
 }
 
-/**
- * Fetches or creates a Polar customer for a given email address
- * @param email Email address of the customer
- * @returns Promise resolving to a Polar customer object
- */
 export async function fetchPolarCustomer(email: string): Promise<Customer> {
   try {
     const customersIterator = await polar.customers.list({

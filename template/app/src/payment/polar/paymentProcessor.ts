@@ -45,12 +45,6 @@ async function fetchTotalPolarRevenue(): Promise<number> {
 
 export const polarPaymentProcessor: PaymentProcessor = {
   id: 'polar',
-  /**
-   * Creates a Polar checkout session for subscription or one-time payments
-   * Handles customer creation/lookup automatically via externalCustomerId
-   * @param args Checkout session arguments including user info and payment plan
-   * @returns Promise resolving to checkout session with ID and redirect URL
-   */
   createCheckoutSession: async ({
     userId,
     userEmail,
