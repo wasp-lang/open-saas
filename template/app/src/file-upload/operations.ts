@@ -2,12 +2,19 @@ import * as z from 'zod';
 import { HttpError } from 'wasp/server';
 import { type File } from 'wasp/entities';
 import {
-  type CreateFile,
   type GetAllFilesByUser,
   type GetDownloadFileSignedURL,
+  type DeleteFile,
+  type CreateFileUploadUrl,
+  type AddFileToDb,
 } from 'wasp/server/operations';
 
-import { getUploadFileSignedURLFromS3, getDownloadFileSignedURLFromS3 } from './s3Utils';
+import {
+  getUploadFileSignedURLFromS3,
+  getDownloadFileSignedURLFromS3,
+  deleteFileFromS3,
+  checkFileExistsInS3,
+} from './s3Utils';
 import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
 import { ALLOWED_FILE_TYPES } from './validation';
 
@@ -18,11 +25,12 @@ const createFileInputSchema = z.object({
 
 type CreateFileInput = z.infer<typeof createFileInputSchema>;
 
-export const createFile: CreateFile<
+export const createFileUploadUrl: CreateFileUploadUrl<
   CreateFileInput,
   {
     s3UploadUrl: string;
     s3UploadFields: Record<string, string>;
+    s3Key: string;
   }
 > = async (rawArgs, context) => {
   if (!context.user) {
@@ -31,26 +39,39 @@ export const createFile: CreateFile<
 
   const { fileType, fileName } = ensureArgsSchemaOrThrowHttpError(createFileInputSchema, rawArgs);
 
-  const { s3UploadUrl, s3UploadFields, key } = await getUploadFileSignedURLFromS3({
+  return await getUploadFileSignedURLFromS3({
     fileType,
     fileName,
     userId: context.user.id,
   });
+};
 
-  await context.entities.File.create({
+const addFileToDbInputSchema = z.object({
+  s3Key: z.string(),
+  fileType: z.enum(ALLOWED_FILE_TYPES),
+  fileName: z.string(),
+});
+
+type AddFileToDbInput = z.infer<typeof addFileToDbInputSchema>;
+
+export const addFileToDb: AddFileToDb<AddFileToDbInput, File> = async (args, context) => {
+  if (!context.user) {
+    throw new HttpError(401);
+  }
+
+  const fileExists = await checkFileExistsInS3({ s3Key: args.s3Key });
+  if (!fileExists) {
+    throw new HttpError(404, 'File not found in S3.');
+  }
+
+  return context.entities.File.create({
     data: {
-      name: fileName,
-      key,
-      uploadUrl: s3UploadUrl,
-      type: fileType,
+      name: args.fileName,
+      s3Key: args.s3Key,
+      type: args.fileType,
       user: { connect: { id: context.user.id } },
     },
   });
-
-  return {
-    s3UploadUrl,
-    s3UploadFields,
-  };
 };
 
 export const getAllFilesByUser: GetAllFilesByUser<void, File[]> = async (_args, context) => {
@@ -69,7 +90,7 @@ export const getAllFilesByUser: GetAllFilesByUser<void, File[]> = async (_args, 
   });
 };
 
-const getDownloadFileSignedURLInputSchema = z.object({ key: z.string().nonempty() });
+const getDownloadFileSignedURLInputSchema = z.object({ s3Key: z.string().nonempty() });
 
 type GetDownloadFileSignedURLInput = z.infer<typeof getDownloadFileSignedURLInputSchema>;
 
@@ -77,6 +98,35 @@ export const getDownloadFileSignedURL: GetDownloadFileSignedURL<
   GetDownloadFileSignedURLInput,
   string
 > = async (rawArgs, _context) => {
-  const { key } = ensureArgsSchemaOrThrowHttpError(getDownloadFileSignedURLInputSchema, rawArgs);
-  return await getDownloadFileSignedURLFromS3({ key });
+  const { s3Key } = ensureArgsSchemaOrThrowHttpError(getDownloadFileSignedURLInputSchema, rawArgs);
+  return await getDownloadFileSignedURLFromS3({ s3Key });
+};
+
+const deleteFileInputSchema = z.object({
+  id: z.string(),
+});
+
+type DeleteFileInput = z.infer<typeof deleteFileInputSchema>;
+
+export const deleteFile: DeleteFile<DeleteFileInput, File> = async (args, context) => {
+  if (!context.user) {
+    throw new HttpError(401);
+  }
+
+  const deletedFile = await context.entities.File.delete({
+    where: {
+      id: args.id,
+      user: {
+        id: context.user.id,
+      },
+    },
+  });
+
+  try {
+    await deleteFileFromS3({ s3Key: deletedFile.s3Key });
+  } catch (error) {
+    console.error(`S3 deletion failed. Orphaned file s3Key: ${deletedFile.s3Key}`, error);
+  }
+
+  return deletedFile;
 };

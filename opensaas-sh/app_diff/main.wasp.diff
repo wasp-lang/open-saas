@@ -119,7 +119,27 @@
    httpRoute: (POST, "/payments-webhook")
  }
  //#endregion
-@@ -281,7 +279,6 @@
+@@ -259,7 +257,18 @@
+     fn: import { calculateDailyStats } from "@src/analytics/stats"
+   },
+   schedule: {
+-    cron: "0 * * * *" // every hour. useful in production
++    cron: "0 5 * * *" // every day at 5am
++  },
++  entities: [File]
++}
++
++job deleteFilesJob {
++  executor: PgBoss,
++  perform: {
++    fn: import { deleteFilesJob } from "@src/file-upload/workers"
++  },
++  schedule: {
++    cron: "0 0 * * *" // every day at midnight
+     // cron: "* * * * *" // every minute. useful for debugging
+   },
+   entities: [User, DailyStats, Logs, PageViewSource]
+@@ -291,7 +300,6 @@
    component: import AdminCalendar from "@src/admin/elements/calendar/CalendarPage"
  }
  
