@@ -1,7 +1,6 @@
 import { defineEnvValidationSchema } from 'wasp/env';
 import { HttpError } from 'wasp/server';
 import * as z from 'zod';
-import { paymentSchema } from '../payment/validation';
 
 /**
  * Add any custom environment variables here, e.g.
@@ -10,14 +9,13 @@ import { paymentSchema } from '../payment/validation';
  * };
  */
 const customSchema = {};
-const fullSchema = {...customSchema, ...paymentSchema}
 
 /**
  * Complete environment validation schema
  * 
  * If you need to add custom variables, add them to the customSchema object above.
  */
-export const envValidationSchema = defineEnvValidationSchema(z.object(fullSchema));
+export const envValidationSchema = defineEnvValidationSchema(z.object(customSchema));
 
 export function ensureArgsSchemaOrThrowHttpError<Schema extends z.ZodType>(
   schema: Schema,

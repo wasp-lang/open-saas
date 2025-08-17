@@ -2,7 +2,7 @@ import { type DailyStats } from 'wasp/entities';
 import { type DailyStatsJob } from 'wasp/server/jobs';
 import { getDailyPageViews, getSources } from './providers/plausibleAnalyticsUtils';
 // import { getDailyPageViews, getSources } from './providers/googleAnalyticsUtils';
-import { paymentProcessor } from '../payment/paymentProcessor';
+import { stripePaymentProcessor } from '../payment/stripe/paymentProcessor';
 import { SubscriptionStatus } from '../payment/plans';
 
 export type DailyStatsProps = { dailyStats?: DailyStats; weeklyStats?: DailyStats[]; isLoading?: boolean };
@@ -39,7 +39,7 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, con
       paidUserDelta -= yesterdaysStats.paidUserCount;
     }
 
-    const totalRevenue = await paymentProcessor.getTotalRevenue();
+    const totalRevenue = await stripePaymentProcessor.getTotalRevenue();
     const { totalViews, prevDayViewsChangePercent } = await getDailyPageViews();
 
     let dailyStats = await context.entities.DailyStats.findUnique({

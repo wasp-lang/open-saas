@@ -5,8 +5,6 @@ import { requireNodeEnvVar } from '../../server/utils';
 import { stripeWebhook, stripeMiddlewareConfigFn } from './webhook';
 import Stripe from 'stripe';
 import { stripe } from './stripeClient';
-import { PaymentProcessors } from '../types';
-
 export type StripeMode = 'subscription' | 'payment';
 
 /**
@@ -47,7 +45,7 @@ async function fetchTotalStripeRevenue(): Promise<number> {
 }
 
 export const stripePaymentProcessor: PaymentProcessor = {
-  id: PaymentProcessors.Stripe,
+  id: 'stripe',
   createCheckoutSession: async ({ userId, userEmail, paymentPlan, prismaUserDelegate }: CreateCheckoutSessionArgs) => {
     const customer = await fetchStripeCustomer(userEmail);
     const stripeSession = await createStripeCheckoutSession({

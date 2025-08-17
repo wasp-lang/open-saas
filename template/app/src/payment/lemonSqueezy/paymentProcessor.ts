@@ -3,8 +3,6 @@ import { requireNodeEnvVar } from '../../server/utils';
 import { createLemonSqueezyCheckoutSession } from './checkoutUtils';
 import { lemonSqueezyWebhook, lemonSqueezyMiddlewareConfigFn } from './webhook';
 import { lemonSqueezySetup, listOrders } from '@lemonsqueezy/lemonsqueezy.js';
-import { PaymentProcessors } from '../types';
-
 lemonSqueezySetup({
   apiKey: requireNodeEnvVar('LEMONSQUEEZY_API_KEY'),
 });
@@ -49,7 +47,7 @@ async function fetchTotalLemonSqueezyRevenue(): Promise<number> {
 }
 
 export const lemonSqueezyPaymentProcessor: PaymentProcessor = {
-  id: PaymentProcessors.LemonSqueezy,
+  id: 'lemonsqueezy',
   createCheckoutSession: async ({ userId, userEmail, paymentPlan }: CreateCheckoutSessionArgs) => {
     if (!userId) throw new Error('User ID needed to create Lemon Squeezy Checkout Session');
     const session = await createLemonSqueezyCheckoutSession({

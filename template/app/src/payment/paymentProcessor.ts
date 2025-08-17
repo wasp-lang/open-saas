@@ -3,10 +3,8 @@ import type { PaymentsWebhook } from 'wasp/server/api';
 import type { MiddlewareConfigFn } from 'wasp/server';
 import { PrismaClient } from '@prisma/client';
 import { stripePaymentProcessor } from './stripe/paymentProcessor';
-import { lemonSqueezyPaymentProcessor } from './lemonSqueezy/paymentProcessor';
-import { polarPaymentProcessor } from './polar/paymentProcessor';
-import { PaymentProcessorId, PaymentProcessors } from './types';
-import { getActivePaymentProcessor } from './validation';
+// import { lemonSqueezyPaymentProcessor } from './lemonSqueezy/paymentProcessor';
+// import { polarPaymentProcessor } from './polar/paymentProcessor';
 
 export interface CreateCheckoutSessionArgs {
   userId: string;
@@ -24,7 +22,7 @@ export interface FetchCustomerPortalUrlArgs {
  * Provides a consistent API for payment operations across different providers
  */
 export interface PaymentProcessor {
-  id: PaymentProcessorId;
+  id: 'stripe' | 'lemonsqueezy' | 'polar';
   /**
    * Creates a checkout session for payment processing
    * Handles both subscription and one-time payment flows based on the payment plan configuration
@@ -78,32 +76,6 @@ export interface PaymentProcessor {
 }
 
 /**
- * All available payment processors
- */
-const paymentProcessorMap: Record<PaymentProcessors, PaymentProcessor> = {
-  [PaymentProcessors.Stripe]: stripePaymentProcessor,
-  [PaymentProcessors.LemonSqueezy]: lemonSqueezyPaymentProcessor,
-  [PaymentProcessors.Polar]: polarPaymentProcessor,
-};
-
-/**
- * Get the payment processor instance based on environment configuration or override
- * @param override Optional processor override for testing scenarios
- * @returns The configured payment processor instance
- * @throws {Error} When the specified processor is not found in the processor map
- */
-export function getPaymentProcessor(override?: PaymentProcessorId): PaymentProcessor {
-  const processorId = getActivePaymentProcessor(override);
-  const processor = paymentProcessorMap[processorId];
-  
-  if (!processor) {
-    throw new Error(`Payment processor '${processorId}' not found. Available processors: ${Object.keys(paymentProcessorMap).join(', ')}`);
-  }
-  
-  return processor;
-}
-
-/**
  * The currently configured payment processor.
  */
-export const paymentProcessor: PaymentProcessor = getPaymentProcessor();
+export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;

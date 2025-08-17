@@ -6,7 +6,7 @@ import {
   type PaymentProcessor,
 } from '../paymentProcessor';
 import type { PaymentPlanEffect } from '../plans';
-import { PaymentProcessors } from '../types';
+
 import { createPolarCheckoutSession } from './checkoutUtils';
 import { getPolarApiConfig } from './config';
 import { polar } from './polarClient';
@@ -44,7 +44,7 @@ async function fetchTotalPolarRevenue(): Promise<number> {
 }
 
 export const polarPaymentProcessor: PaymentProcessor = {
-  id: PaymentProcessors.Polar,
+  id: 'polar',
   /**
    * Creates a Polar checkout session for subscription or one-time payments
    * Handles customer creation/lookup automatically via externalCustomerId
