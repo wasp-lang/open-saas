@@ -245,18 +245,6 @@ action deleteFile {
   fn: import { deleteFile } from "@src/file-upload/operations",
   entities: [User, File]
 }
-
-job cleanUpOrphanedFilesS3Job {
-  executor: PgBoss,
-  perform: {
-    fn: import { cleanUpOrphanedFilesS3 } from "@src/file-upload/workers"
-  },
-  schedule: {
-    cron: "0 5 * * *" // every day at 5am
-    // cron: "* * * * *" // every minute. useful for debugging
-  },
-  entities: [File]
-}
 //#endregion
 
 //#region Analytics

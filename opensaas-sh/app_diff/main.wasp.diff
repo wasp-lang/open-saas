@@ -119,10 +119,12 @@
    httpRoute: (POST, "/payments-webhook")
  }
  //#endregion
-@@ -253,6 +251,17 @@
+@@ -259,7 +257,18 @@
+     fn: import { calculateDailyStats } from "@src/analytics/stats"
    },
    schedule: {
-     cron: "0 5 * * *" // every day at 5am
+-    cron: "0 * * * *" // every hour. useful in production
++    cron: "0 5 * * *" // every day at 5am
 +  },
 +  entities: [File]
 +}
@@ -136,8 +138,8 @@
 +    cron: "0 0 * * *" // every day at midnight
      // cron: "* * * * *" // every minute. useful for debugging
    },
-   entities: [File]
-@@ -303,7 +312,6 @@
+   entities: [User, DailyStats, Logs, PageViewSource]
+@@ -291,7 +300,6 @@
    component: import AdminCalendar from "@src/admin/elements/calendar/CalendarPage"
  }
  
