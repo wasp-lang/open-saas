@@ -2,7 +2,6 @@ import { type AuthUser } from 'wasp/auth';
 import { getDailyStats, useQuery } from 'wasp/client/operations';
 import { cn } from '../../../lib/utils';
 import DefaultLayout from '../../layout/DefaultLayout';
-import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin';
 import RevenueAndProfitChart from './RevenueAndProfitChart';
 import SourcesTable from './SourcesTable';
 import TotalPageViewsCard from './TotalPageViewsCard';
@@ -11,7 +10,6 @@ import TotalRevenueCard from './TotalRevenueCard';
 import TotalSignupsCard from './TotalSignupsCard';
 
 const Dashboard = ({ user }: { user: AuthUser }) => {
-  useRedirectHomeUnlessUserIsAdmin({ user });
 
   const { data: stats, isLoading, error } = useQuery(getDailyStats);
 
