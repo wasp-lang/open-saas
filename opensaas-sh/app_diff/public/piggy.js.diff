@@ -6,4 +6,3 @@
 +    api_host: 'https://us.i.posthog.com',
 +    person_profiles: 'identified_only',
 +})
-\ No newline at end of file
