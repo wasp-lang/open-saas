@@ -16,7 +16,7 @@
 +    <div className='relative pt-32 w-full'>
 +      <TopGradient />
 +      <BottomGradient />
-+      <div className='flex flex-col lg:flex-row max-w-7xl mx-auto'>
++      <div className='flex flex-col lg:flex-row max-w-7xl mx-auto overflow-x-hidden'>
 +        <div className='py-24 sm:py-32'>
 +          <div className='max-w-8xl px-6 lg:px-8'>
 +            <div className='lg:mb-18 mx-auto max-w-3xl text-center md:text-left'>
