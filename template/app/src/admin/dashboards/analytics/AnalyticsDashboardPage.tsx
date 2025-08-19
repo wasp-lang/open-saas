@@ -10,8 +10,22 @@ import TotalRevenueCard from './TotalRevenueCard';
 import TotalSignupsCard from './TotalSignupsCard';
 
 const Dashboard = ({ user }: { user: AuthUser }) => {
-
   const { data: stats, isLoading, error } = useQuery(getDailyStats);
+
+  if (error) {
+    return (
+      <DefaultLayout user={user}>
+        <div className='flex h-full items-center justify-center'>
+          <div className='rounded-lg bg-card p-8 shadow-lg'>
+            <p className='text-2xl font-bold text-red-500'>Error</p>
+            <p className='mt-2 text-sm text-muted-foreground'>
+              {error.message || 'Something went wrong while fetching stats.'}
+            </p>
+          </div>
+        </div>
+      </DefaultLayout>
+    );
+  }
 
   return (
     <DefaultLayout user={user}>
