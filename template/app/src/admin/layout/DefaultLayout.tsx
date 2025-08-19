@@ -1,5 +1,6 @@
-import { FC, ReactNode, useState } from 'react';
 import { type AuthUser } from 'wasp/auth';
+import { FC, ReactNode, useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import Header from './Header';
 import Sidebar from './Sidebar';
 
@@ -10,6 +11,10 @@ interface Props {
 
 const DefaultLayout: FC<Props> = ({ children, user }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  if (!user.isAdmin) {
+    return <Navigate to='/' replace />;
+  }
 
   return (
     <div className='bg-background text-foreground'>
