@@ -31,12 +31,12 @@ export const polarWebhook: PaymentsWebhook = async (req, res, context) => {
     if (success) {
       res.status(200).json({ received: true });
     } else {
-      res.status(202).json({ received: true, processed: false });
+      res.status(422).json({ received: true, processed: false });
     }
   } catch (error) {
     if (error instanceof WebhookVerificationError) {
       console.error('Polar webhook signature verification failed:', error);
-      res.status(403).json({ error: 'Invalid signature' });
+      res.status(400).json({ error: 'Invalid signature' });
       return;
     }
 
