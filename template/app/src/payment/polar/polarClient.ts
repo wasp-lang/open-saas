@@ -1,5 +1,5 @@
 import { Polar } from '@polar-sh/sdk';
-import { getPolarApiConfig } from './config';
+import { requireNodeEnvVar } from '../../server/utils';
 
 function shouldUseSandboxMode(): boolean {
   const explicitSandboxMode = process.env.POLAR_SANDBOX_MODE;
@@ -12,6 +12,6 @@ function shouldUseSandboxMode(): boolean {
 }
 
 export const polarClient = new Polar({
-  accessToken: getPolarApiConfig().accessToken,
+  accessToken: requireNodeEnvVar('POLAR_ACCESS_TOKEN'),
   server: shouldUseSandboxMode() ? 'sandbox' : 'production',
 });

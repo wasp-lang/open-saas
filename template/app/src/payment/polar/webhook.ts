@@ -4,7 +4,6 @@ import express from 'express';
 import type { MiddlewareConfigFn } from 'wasp/server';
 import type { PaymentsWebhook } from 'wasp/server/api';
 import { SubscriptionStatus as OpenSaasSubscriptionStatus, PaymentPlanId, paymentPlans } from '../plans';
-import { getPolarApiConfig, mapPolarProductIdToPlanId } from './config';
 import { findUserByPolarCustomerId, updateUserPolarPaymentDetails } from './paymentDetails';
 import { PolarWebhookPayload } from './types';
 // @ts-ignore
@@ -14,6 +13,7 @@ import { Order } from '@polar-sh/sdk/models/components/order.js';
 // @ts-ignore
 import { Subscription } from '@polar-sh/sdk/models/components/subscription.js';
 import { MiddlewareConfig } from 'wasp/server/middleware';
+import { requireNodeEnvVar } from '../../server/utils';
 
 /**
  * Main Polar webhook handler with signature verification and proper event routing
@@ -24,8 +24,8 @@ import { MiddlewareConfig } from 'wasp/server/middleware';
  */
 export const polarWebhook: PaymentsWebhook = async (req, res, context) => {
   try {
-    const config = getPolarApiConfig();
-    const event = validateEvent(req.body, req.headers as Record<string, string>, config.webhookSecret);
+    const secret = requireNodeEnvVar('POLAR_WEBHOOK_SECRET');
+    const event = validateEvent(req.body, req.headers as Record<string, string>, secret);
     const success = await handlePolarEvent(event, context);
 
     if (success) {
@@ -158,21 +158,21 @@ async function handleOrderCompleted(data: Order, userDelegate: any): Promise<voi
  */
 async function handleSubscriptionCreated(data: Subscription, userDelegate: any): Promise<void> {
   const customerId = data.customerId;
-  const planId = data.productId;
+  const productId = data.productId;
   const status = data.status;
 
-  if (!customerId || !planId) {
+  if (!customerId || !productId) {
     console.warn('Subscription created without required customer_id or plan_id');
     return;
   }
 
-  const mappedPlanId = mapPolarProductIdToPlanId(planId);
-  const subscriptionStatus = mapPolarStatusToOpenSaaS(status);
+  const planId = getPlanIdByProductId(productId);
+  const subscriptionStatus = getSubscriptionStatus(status);
 
   await updateUserPolarPaymentDetails(
     {
       polarCustomerId: customerId,
-      subscriptionPlan: mappedPlanId,
+      subscriptionPlan: planId,
       subscriptionStatus,
       datePaid: new Date(data.createdAt),
     },
@@ -180,7 +180,7 @@ async function handleSubscriptionCreated(data: Subscription, userDelegate: any):
   );
 
   console.log(
-    `Subscription created: ${data.id}, customer: ${customerId}, plan: ${mappedPlanId}, status: ${subscriptionStatus}`
+    `Subscription created: ${data.id}, customer: ${customerId}, plan: ${planId}, status: ${subscriptionStatus}`
   );
 }
 
@@ -192,20 +192,20 @@ async function handleSubscriptionCreated(data: Subscription, userDelegate: any):
 async function handleSubscriptionUpdated(data: Subscription, userDelegate: any): Promise<void> {
   const customerId = data.customerId;
   const status = data.status;
-  const planId = data.productId;
+  const productId = data.productId;
 
   if (!customerId) {
     console.warn('Subscription updated without customer_id');
     return;
   }
 
-  const subscriptionStatus = mapPolarStatusToOpenSaaS(status);
-  const mappedPlanId = planId ? mapPolarProductIdToPlanId(planId) : undefined;
+  const subscriptionStatus = getSubscriptionStatus(status);
+  const planId = productId ? getPlanIdByProductId(productId) : undefined;
 
   await updateUserPolarPaymentDetails(
     {
       polarCustomerId: customerId,
-      subscriptionPlan: mappedPlanId,
+      subscriptionPlan: planId,
       subscriptionStatus,
       ...(status === 'active' && { datePaid: new Date() }),
     },
@@ -246,26 +246,26 @@ async function handleSubscriptionCanceled(data: Subscription, userDelegate: any)
  */
 async function handleSubscriptionActivated(data: Subscription, userDelegate: any): Promise<void> {
   const customerId = data.customerId;
-  const planId = data.productId;
+  const productId = data.productId;
 
   if (!customerId) {
     console.warn('Subscription activated without customer_id');
     return;
   }
 
-  const mappedPlanId = planId ? mapPolarProductIdToPlanId(planId) : undefined;
+  const planId = productId ? getPlanIdByProductId(productId) : undefined;
 
   await updateUserPolarPaymentDetails(
     {
       polarCustomerId: customerId,
-      subscriptionPlan: mappedPlanId,
+      subscriptionPlan: planId,
       subscriptionStatus: 'active',
       datePaid: new Date(),
     },
     userDelegate
   );
 
-  console.log(`Subscription activated: ${data.id}, customer: ${customerId}, plan: ${mappedPlanId}`);
+  console.log(`Subscription activated: ${data.id}, customer: ${customerId}, plan: ${planId}`);
 }
 
 /**
@@ -274,7 +274,7 @@ async function handleSubscriptionActivated(data: Subscription, userDelegate: any
  * @param polarStatus The status from Polar webhook payload
  * @returns The corresponding OpenSaaS status
  */
-function mapPolarStatusToOpenSaaS(polarStatus: PolarSubscriptionStatus): OpenSaasSubscriptionStatus {
+function getSubscriptionStatus(polarStatus: PolarSubscriptionStatus): OpenSaasSubscriptionStatus {
   const statusMap: Record<PolarSubscriptionStatus, OpenSaasSubscriptionStatus> = {
     [PolarSubscriptionStatus.Active]: OpenSaasSubscriptionStatus.Active,
     [PolarSubscriptionStatus.Canceled]: OpenSaasSubscriptionStatus.CancelAtPeriodEnd,
@@ -303,7 +303,7 @@ function extractCreditsFromPolarOrder(order: Order): number {
 
   let planId: PaymentPlanId;
   try {
-    planId = mapPolarProductIdToPlanId(productId);
+    planId = getPlanIdByProductId(productId);
   } catch (error) {
     console.warn(`Unknown Polar product ID ${productId} in order ${order.id}`);
     return 0;
@@ -331,6 +331,16 @@ function extractCreditsFromPolarOrder(order: Order): number {
  * @param middlewareConfig Express middleware configuration object
  * @returns Updated middleware configuration
  */
+function getPlanIdByProductId(polarProductId: string): PaymentPlanId {
+  for (const [planId, plan] of Object.entries(paymentPlans)) {
+    if (plan.getPaymentProcessorPlanId() === polarProductId) {
+      return planId as PaymentPlanId;
+    }
+  }
+
+  throw new Error(`Unknown Polar product ID: ${polarProductId}`);
+}
+
 export const polarMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig: MiddlewareConfig) => {
   middlewareConfig.delete('express.json');
   middlewareConfig.set('express.raw', express.raw({ type: 'application/json' }));
