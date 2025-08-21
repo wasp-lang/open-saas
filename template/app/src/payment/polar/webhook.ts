@@ -96,37 +96,32 @@ async function handlePolarEvent(event: PolarWebhookPayload, context: any): Promi
  * @param userDelegate Prisma user delegate
  */
 async function handleOrderCreated(data: Order, userDelegate: any): Promise<void> {
-  try {
-    const customerId = data.customerId;
-    const metadata = data.metadata || {};
-    const paymentMode = metadata.paymentMode;
+  const customerId = data.customerId;
+  const metadata = data.metadata || {};
+  const paymentMode = metadata.paymentMode;
 
-    if (!customerId) {
-      console.warn('Order created without customer_id');
-      return;
-    }
-
-    if (paymentMode !== 'payment') {
-      console.log(`Order ${data.id} is not for credits (mode: ${paymentMode})`);
-      return;
-    }
-
-    const creditsAmount = extractCreditsFromPolarOrder(data);
-
-    await updateUserPolarPaymentDetails(
-      {
-        polarCustomerId: customerId,
-        numOfCreditsPurchased: creditsAmount,
-        datePaid: new Date(data.createdAt),
-      },
-      userDelegate
-    );
-
-    console.log(`Order created: ${data.id}, customer: ${customerId}, credits: ${creditsAmount}`);
-  } catch (error) {
-    console.error('Error handling order created:', error);
-    throw error;
+  if (!customerId) {
+    console.warn('Order created without customer_id');
+    return;
   }
+
+  if (paymentMode !== 'payment') {
+    console.log(`Order ${data.id} is not for credits (mode: ${paymentMode})`);
+    return;
+  }
+
+  const creditsAmount = extractCreditsFromPolarOrder(data);
+
+  await updateUserPolarPaymentDetails(
+    {
+      polarCustomerId: customerId,
+      numOfCreditsPurchased: creditsAmount,
+      datePaid: new Date(data.createdAt),
+    },
+    userDelegate
+  );
+
+  console.log(`Order created: ${data.id}, customer: ${customerId}, credits: ${creditsAmount}`);
 }
 
 /**
@@ -135,29 +130,24 @@ async function handleOrderCreated(data: Order, userDelegate: any): Promise<void>
  * @param userDelegate Prisma user delegate
  */
 async function handleOrderCompleted(data: Order, userDelegate: any): Promise<void> {
-  try {
-    const customerId = data.customerId;
+  const customerId = data.customerId;
 
-    if (!customerId) {
-      console.warn('Order completed without customer_id');
-      return;
-    }
+  if (!customerId) {
+    console.warn('Order completed without customer_id');
+    return;
+  }
 
-    console.log(`Order completed: ${data.id} for customer: ${customerId}`);
+  console.log(`Order completed: ${data.id} for customer: ${customerId}`);
 
-    const user = await findUserByPolarCustomerId(customerId, userDelegate);
-    if (user) {
-      await updateUserPolarPaymentDetails(
-        {
-          polarCustomerId: customerId,
-          datePaid: new Date(data.createdAt),
-        },
-        userDelegate
-      );
-    }
-  } catch (error) {
-    console.error('Error handling order completed:', error);
-    throw error;
+  const user = await findUserByPolarCustomerId(customerId, userDelegate);
+  if (user) {
+    await updateUserPolarPaymentDetails(
+      {
+        polarCustomerId: customerId,
+        datePaid: new Date(data.createdAt),
+      },
+      userDelegate
+    );
   }
 }
 
@@ -167,36 +157,31 @@ async function handleOrderCompleted(data: Order, userDelegate: any): Promise<voi
  * @param userDelegate Prisma user delegate
  */
 async function handleSubscriptionCreated(data: Subscription, userDelegate: any): Promise<void> {
-  try {
-    const customerId = data.customerId;
-    const planId = data.productId;
-    const status = data.status;
+  const customerId = data.customerId;
+  const planId = data.productId;
+  const status = data.status;
 
-    if (!customerId || !planId) {
-      console.warn('Subscription created without required customer_id or plan_id');
-      return;
-    }
-
-    const mappedPlanId = mapPolarProductIdToPlanId(planId);
-    const subscriptionStatus = mapPolarStatusToOpenSaaS(status);
-
-    await updateUserPolarPaymentDetails(
-      {
-        polarCustomerId: customerId,
-        subscriptionPlan: mappedPlanId,
-        subscriptionStatus,
-        datePaid: new Date(data.createdAt),
-      },
-      userDelegate
-    );
-
-    console.log(
-      `Subscription created: ${data.id}, customer: ${customerId}, plan: ${mappedPlanId}, status: ${subscriptionStatus}`
-    );
-  } catch (error) {
-    console.error('Error handling subscription created:', error);
-    throw error;
+  if (!customerId || !planId) {
+    console.warn('Subscription created without required customer_id or plan_id');
+    return;
   }
+
+  const mappedPlanId = mapPolarProductIdToPlanId(planId);
+  const subscriptionStatus = mapPolarStatusToOpenSaaS(status);
+
+  await updateUserPolarPaymentDetails(
+    {
+      polarCustomerId: customerId,
+      subscriptionPlan: mappedPlanId,
+      subscriptionStatus,
+      datePaid: new Date(data.createdAt),
+    },
+    userDelegate
+  );
+
+  console.log(
+    `Subscription created: ${data.id}, customer: ${customerId}, plan: ${mappedPlanId}, status: ${subscriptionStatus}`
+  );
 }
 
 /**
@@ -205,34 +190,29 @@ async function handleSubscriptionCreated(data: Subscription, userDelegate: any):
  * @param userDelegate Prisma user delegate
  */
 async function handleSubscriptionUpdated(data: Subscription, userDelegate: any): Promise<void> {
-  try {
-    const customerId = data.customerId;
-    const status = data.status;
-    const planId = data.productId;
+  const customerId = data.customerId;
+  const status = data.status;
+  const planId = data.productId;
 
-    if (!customerId) {
-      console.warn('Subscription updated without customer_id');
-      return;
-    }
-
-    const subscriptionStatus = mapPolarStatusToOpenSaaS(status);
-    const mappedPlanId = planId ? mapPolarProductIdToPlanId(planId) : undefined;
-
-    await updateUserPolarPaymentDetails(
-      {
-        polarCustomerId: customerId,
-        subscriptionPlan: mappedPlanId,
-        subscriptionStatus,
-        ...(status === 'active' && { datePaid: new Date() }),
-      },
-      userDelegate
-    );
-
-    console.log(`Subscription updated: ${data.id}, customer: ${customerId}, status: ${subscriptionStatus}`);
-  } catch (error) {
-    console.error('Error handling subscription updated:', error);
-    throw error;
+  if (!customerId) {
+    console.warn('Subscription updated without customer_id');
+    return;
   }
+
+  const subscriptionStatus = mapPolarStatusToOpenSaaS(status);
+  const mappedPlanId = planId ? mapPolarProductIdToPlanId(planId) : undefined;
+
+  await updateUserPolarPaymentDetails(
+    {
+      polarCustomerId: customerId,
+      subscriptionPlan: mappedPlanId,
+      subscriptionStatus,
+      ...(status === 'active' && { datePaid: new Date() }),
+    },
+    userDelegate
+  );
+
+  console.log(`Subscription updated: ${data.id}, customer: ${customerId}, status: ${subscriptionStatus}`);
 }
 
 /**
@@ -241,27 +221,22 @@ async function handleSubscriptionUpdated(data: Subscription, userDelegate: any):
  * @param userDelegate Prisma user delegate
  */
 async function handleSubscriptionCanceled(data: Subscription, userDelegate: any): Promise<void> {
-  try {
-    const customerId = data.customerId;
+  const customerId = data.customerId;
 
-    if (!customerId) {
-      console.warn('Subscription canceled without customer_id');
-      return;
-    }
-
-    await updateUserPolarPaymentDetails(
-      {
-        polarCustomerId: customerId,
-        subscriptionStatus: 'cancelled',
-      },
-      userDelegate
-    );
-
-    console.log(`Subscription canceled: ${data.id}, customer: ${customerId}`);
-  } catch (error) {
-    console.error('Error handling subscription canceled:', error);
-    throw error;
+  if (!customerId) {
+    console.warn('Subscription canceled without customer_id');
+    return;
   }
+
+  await updateUserPolarPaymentDetails(
+    {
+      polarCustomerId: customerId,
+      subscriptionStatus: 'cancelled',
+    },
+    userDelegate
+  );
+
+  console.log(`Subscription canceled: ${data.id}, customer: ${customerId}`);
 }
 
 /**
@@ -270,32 +245,27 @@ async function handleSubscriptionCanceled(data: Subscription, userDelegate: any)
  * @param userDelegate Prisma user delegate
  */
 async function handleSubscriptionActivated(data: Subscription, userDelegate: any): Promise<void> {
-  try {
-    const customerId = data.customerId;
-    const planId = data.productId;
+  const customerId = data.customerId;
+  const planId = data.productId;
 
-    if (!customerId) {
-      console.warn('Subscription activated without customer_id');
-      return;
-    }
-
-    const mappedPlanId = planId ? mapPolarProductIdToPlanId(planId) : undefined;
-
-    await updateUserPolarPaymentDetails(
-      {
-        polarCustomerId: customerId,
-        subscriptionPlan: mappedPlanId,
-        subscriptionStatus: 'active',
-        datePaid: new Date(),
-      },
-      userDelegate
-    );
-
-    console.log(`Subscription activated: ${data.id}, customer: ${customerId}, plan: ${mappedPlanId}`);
-  } catch (error) {
-    console.error('Error handling subscription activated:', error);
-    throw error;
+  if (!customerId) {
+    console.warn('Subscription activated without customer_id');
+    return;
   }
+
+  const mappedPlanId = planId ? mapPolarProductIdToPlanId(planId) : undefined;
+
+  await updateUserPolarPaymentDetails(
+    {
+      polarCustomerId: customerId,
+      subscriptionPlan: mappedPlanId,
+      subscriptionStatus: 'active',
+      datePaid: new Date(),
+    },
+    userDelegate
+  );
+
+  console.log(`Subscription activated: ${data.id}, customer: ${customerId}, plan: ${mappedPlanId}`);
 }
 
 /**
@@ -324,40 +294,35 @@ function mapPolarStatusToOpenSaaS(polarStatus: PolarSubscriptionStatus): OpenSaa
  * @returns Number of credits purchased
  */
 function extractCreditsFromPolarOrder(order: Order): number {
-  try {
-    const productId = order.productId;
+  const productId = order.productId;
 
-    if (!productId) {
-      console.warn('No product_id found in Polar order:', order.id);
-      return 0;
-    }
-
-    let planId: PaymentPlanId;
-    try {
-      planId = mapPolarProductIdToPlanId(productId);
-    } catch (error) {
-      console.warn(`Unknown Polar product ID ${productId} in order ${order.id}`);
-      return 0;
-    }
-
-    const plan = paymentPlans[planId];
-    if (!plan) {
-      console.warn(`No payment plan found for plan ID ${planId}`);
-      return 0;
-    }
-
-    if (plan.effect.kind === 'credits') {
-      const credits = plan.effect.amount;
-      console.log(`Extracted ${credits} credits from order ${order.id} (product: ${productId})`);
-      return credits;
-    }
-
-    console.log(`Order ${order.id} product ${productId} is not a credit product (plan: ${planId})`);
-    return 0;
-  } catch (error) {
-    console.error('Error extracting credits from Polar order:', error, order);
+  if (!productId) {
+    console.warn('No product_id found in Polar order:', order.id);
     return 0;
   }
+
+  let planId: PaymentPlanId;
+  try {
+    planId = mapPolarProductIdToPlanId(productId);
+  } catch (error) {
+    console.warn(`Unknown Polar product ID ${productId} in order ${order.id}`);
+    return 0;
+  }
+
+  const plan = paymentPlans[planId];
+  if (!plan) {
+    console.warn(`No payment plan found for plan ID ${planId}`);
+    return 0;
+  }
+
+  if (plan.effect.kind !== 'credits') {
+    console.log(`Order ${order.id} product ${productId} is not a credit product (plan: ${planId})`);
+    return 0;
+  }
+
+  const credits = plan.effect.amount;
+  console.log(`Extracted ${credits} credits from order ${order.id} (product: ${productId})`);
+  return credits;
 }
 
 /**
