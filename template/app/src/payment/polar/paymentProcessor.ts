@@ -8,7 +8,7 @@ import {
 import type { PaymentPlanEffect } from '../plans';
 
 import { createPolarCheckoutSession } from './checkoutUtils';
-import { polar } from './polarClient';
+import { polarClient } from './polarClient';
 import { polarMiddlewareConfigFn, polarWebhook } from './webhook';
 
 export type PolarMode = 'subscription' | 'payment';
@@ -16,7 +16,7 @@ export type PolarMode = 'subscription' | 'payment';
 async function fetchTotalPolarRevenue(): Promise<number> {
   let totalRevenue = 0;
 
-  const result = await polar.orders.list({
+  const result = await polarClient.orders.list({
     limit: 100,
   });
 
@@ -82,7 +82,7 @@ export const polarPaymentProcessor: PaymentProcessor = {
       throw new Error('No Polar customer ID found for user');
     }
 
-    const customerSession = await polar.customerSessions.create({
+    const customerSession = await polarClient.customerSessions.create({
       customerId: user.paymentProcessorUserId,
     });
 

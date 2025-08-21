@@ -1,6 +1,6 @@
 import { env } from 'wasp/server';
 import type { PolarMode } from './paymentProcessor';
-import { polar } from './polarClient';
+import { polarClient } from './polarClient';
 // @ts-ignore
 import { Customer } from '@polar-sh/sdk/models/components/customer.js';
 
@@ -40,7 +40,7 @@ export async function createPolarCheckoutSession({
       source: 'OpenSaaS',
     },
   };
-  const checkoutSession = await polar.checkouts.create(checkoutSessionArgs);
+  const checkoutSession = await polarClient.checkouts.create(checkoutSessionArgs);
 
   if (!checkoutSession.url) {
     throw new Error('Polar checkout session created without URL');
@@ -56,7 +56,7 @@ export async function createPolarCheckoutSession({
 }
 
 export async function fetchPolarCustomer(email: string): Promise<Customer> {
-  const customersIterator = await polar.customers.list({
+  const customersIterator = await polarClient.customers.list({
     email: email,
     limit: 1,
   });
@@ -71,7 +71,7 @@ export async function fetchPolarCustomer(email: string): Promise<Customer> {
     break;
   }
 
-  const newCustomer = await polar.customers.create({
+  const newCustomer = await polarClient.customers.create({
     email: email,
   });
 

@@ -12,8 +12,6 @@ export interface PolarApiConfig {
   readonly organizationId: string;
   /** Webhook secret for signature verification (required) - generated when setting up webhooks */
   readonly webhookSecret: string;
-  /** Optional sandbox mode override (defaults to NODE_ENV-based detection) */
-  readonly sandboxMode?: boolean;
 }
 
 /**
@@ -37,17 +35,7 @@ export interface PolarConfig {
   readonly plans: PolarPlanConfig;
 }
 
-/**
- * All Polar-related environment variables
- * Used for validation and configuration loading
- */
-export const POLAR_ENV_VARS = {
-  
-  POLAR_ACCESS_TOKEN: 'POLAR_ACCESS_TOKEN',
-  POLAR_ORGANIZATION_ID: 'POLAR_ORGANIZATION_ID',
-  POLAR_WEBHOOK_SECRET: 'POLAR_WEBHOOK_SECRET',
-  POLAR_SANDBOX_MODE: 'POLAR_SANDBOX_MODE',
-} as const;
+
 
 /**
  * Gets the complete Polar configuration from environment variables
@@ -68,10 +56,9 @@ export function getPolarConfig(): PolarConfig {
  */
 export function getPolarApiConfig(): PolarApiConfig {
   return {
-    accessToken: process.env[POLAR_ENV_VARS.POLAR_ACCESS_TOKEN]!,
-    organizationId: process.env[POLAR_ENV_VARS.POLAR_ORGANIZATION_ID]!,
-    webhookSecret: process.env[POLAR_ENV_VARS.POLAR_WEBHOOK_SECRET]!,
-    sandboxMode: shouldUseSandboxMode(),
+    accessToken: process.env.POLAR_ACCESS_TOKEN!,
+    organizationId: process.env.POLAR_ORGANIZATION_ID!,
+    webhookSecret: process.env.POLAR_WEBHOOK_SECRET!,
   };
 }
 
@@ -88,19 +75,7 @@ export function getPolarPlanConfig(): PolarPlanConfig {
   };
 }
 
-/**
- * Determines if Polar should use sandbox mode
- * Checks POLAR_SANDBOX_MODE environment variable first, then falls back to NODE_ENV
- * @returns true if sandbox mode should be used, false for production mode
- */
-export function shouldUseSandboxMode(): boolean {
-  const explicitSandboxMode = process.env.POLAR_SANDBOX_MODE;
-  if (explicitSandboxMode !== undefined) {
-    return explicitSandboxMode === 'true';
-  }
-  
-  return env.NODE_ENV !== 'production';
-}
+
 
 /**
  * Maps a Polar product ID to an OpenSaaS plan ID
