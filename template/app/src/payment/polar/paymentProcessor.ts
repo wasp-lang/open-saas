@@ -14,33 +14,24 @@ import { polarMiddlewareConfigFn, polarWebhook } from './webhook';
 
 export type PolarMode = 'subscription' | 'payment';
 
-/**
- * Calculates total revenue from Polar transactions
- * @returns Promise resolving to total revenue in dollars
- */
 async function fetchTotalPolarRevenue(): Promise<number> {
-  try {
-    let totalRevenue = 0;
+  let totalRevenue = 0;
 
-    const result = await polar.orders.list({
-      limit: 100,
-    });
+  const result = await polar.orders.list({
+    limit: 100,
+  });
 
-    for await (const page of result) {
-      const orders = page.result.items || [];
+  for await (const page of result) {
+    const orders = page.result.items || [];
 
-      for (const order of orders) {
-        if (order.status === OrderStatus.Paid && order.totalAmount > 0) {
-          totalRevenue += order.totalAmount;
-        }
+    for (const order of orders) {
+      if (order.status === OrderStatus.Paid && order.totalAmount > 0) {
+        totalRevenue += order.totalAmount;
       }
     }
-
-    return totalRevenue / 100;
-  } catch (error) {
-    console.error('Error calculating Polar total revenue:', error);
-    return 0;
   }
+
+  return totalRevenue / 100;
 }
 
 export const polarPaymentProcessor: PaymentProcessor = {
@@ -51,73 +42,52 @@ export const polarPaymentProcessor: PaymentProcessor = {
     paymentPlan,
     prismaUserDelegate,
   }: CreateCheckoutSessionArgs) => {
-    try {
-      const session = await createPolarCheckoutSession({
-        productId: paymentPlan.getPaymentProcessorPlanId(),
-        userEmail,
-        userId,
-        mode: paymentPlanEffectToPolarMode(paymentPlan.effect),
-      });
+    const session = await createPolarCheckoutSession({
+      productId: paymentPlan.getPaymentProcessorPlanId(),
+      userEmail,
+      userId,
+      mode: paymentPlanEffectToPolarMode(paymentPlan.effect),
+    });
 
-      if (session.customerId) {
-        try {
-          await prismaUserDelegate.update({
-            where: {
-              id: userId,
-            },
-            data: {
-              paymentProcessorUserId: session.customerId,
-            },
-          });
-        } catch (dbError) {
-          console.error('Error updating user with Polar customer ID:', dbError);
-        }
-      }
-
-      return {
-        session: {
-          id: session.id,
-          url: session.url,
+    if (session.customerId) {
+      await prismaUserDelegate.update({
+        where: {
+          id: userId,
         },
-      };
-    } catch (error) {
-      console.error('Error in Polar createCheckoutSession:', error);
-
-      throw new Error(
-        `Failed to create Polar checkout session: ${error instanceof Error ? error.message : 'Unknown error'}`
-      );
+        data: {
+          paymentProcessorUserId: session.customerId,
+        },
+      });
     }
+
+    return {
+      session: {
+        id: session.id,
+        url: session.url,
+      },
+    };
   },
   fetchCustomerPortalUrl: async (args: FetchCustomerPortalUrlArgs) => {
     const defaultPortalUrl = getPolarApiConfig().customerPortalUrl;
 
-    try {
-      const user = await args.prismaUserDelegate.findUnique({
-        where: {
-          id: args.userId,
-        },
-        select: {
-          paymentProcessorUserId: true,
-        },
+    const user = await args.prismaUserDelegate.findUnique({
+      where: {
+        id: args.userId,
+      },
+      select: {
+        paymentProcessorUserId: true,
+      },
+    });
+
+    if (user?.paymentProcessorUserId) {
+      const customerSession = await polar.customerSessions.create({
+        customerId: user.paymentProcessorUserId,
       });
 
-      if (user?.paymentProcessorUserId) {
-        try {
-          const customerSession = await polar.customerSessions.create({
-            customerId: user.paymentProcessorUserId,
-          });
-
-          return customerSession.customerPortalUrl;
-        } catch (polarError) {
-          console.error('Error creating Polar customer session:', polarError);
-        }
-      }
-
-      return defaultPortalUrl;
-    } catch (error) {
-      console.error('Error fetching customer portal URL:', error);
-      return defaultPortalUrl;
+      return customerSession.customerPortalUrl;
     }
+
+    return defaultPortalUrl;
   },
   getTotalRevenue: fetchTotalPolarRevenue,
   webhook: polarWebhook,
