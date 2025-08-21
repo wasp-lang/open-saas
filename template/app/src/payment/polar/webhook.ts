@@ -15,13 +15,6 @@ import { Subscription } from '@polar-sh/sdk/models/components/subscription.js';
 import { MiddlewareConfig } from 'wasp/server/middleware';
 import { requireNodeEnvVar } from '../../server/utils';
 
-/**
- * Main Polar webhook handler with signature verification and proper event routing
- * Handles all Polar webhook events with comprehensive error handling and logging
- * @param req Express request object containing raw webhook payload
- * @param res Express response object for webhook acknowledgment
- * @param context Wasp context containing database entities and user information
- */
 export const polarWebhook: PaymentsWebhook = async (req, res, context) => {
   try {
     const secret = requireNodeEnvVar('POLAR_WEBHOOK_SECRET');
@@ -45,12 +38,6 @@ export const polarWebhook: PaymentsWebhook = async (req, res, context) => {
   }
 };
 
-/**
- * Routes Polar webhook events to appropriate handlers
- * @param event Verified Polar webhook event
- * @param context Wasp context with database entities
- * @returns Promise resolving to boolean indicating if event was handled
- */
 async function handlePolarEvent(event: PolarWebhookPayload, context: any): Promise<boolean> {
   const userDelegate = context.entities.User;
 
@@ -90,11 +77,6 @@ async function handlePolarEvent(event: PolarWebhookPayload, context: any): Promi
   }
 }
 
-/**
- * Handle order creation events (one-time payments/credits)
- * @param data Order data from webhook
- * @param userDelegate Prisma user delegate
- */
 async function handleOrderCreated(data: Order, userDelegate: any): Promise<void> {
   const customerId = data.customerId;
   const metadata = data.metadata || {};
@@ -124,11 +106,6 @@ async function handleOrderCreated(data: Order, userDelegate: any): Promise<void>
   console.log(`Order created: ${data.id}, customer: ${customerId}, credits: ${creditsAmount}`);
 }
 
-/**
- * Handle order completion events
- * @param data Order data from webhook
- * @param userDelegate Prisma user delegate
- */
 async function handleOrderCompleted(data: Order, userDelegate: any): Promise<void> {
   const customerId = data.customerId;
 
@@ -151,11 +128,6 @@ async function handleOrderCompleted(data: Order, userDelegate: any): Promise<voi
   }
 }
 
-/**
- * Handle subscription creation events
- * @param data Subscription data from webhook
- * @param userDelegate Prisma user delegate
- */
 async function handleSubscriptionCreated(data: Subscription, userDelegate: any): Promise<void> {
   const customerId = data.customerId;
   const productId = data.productId;
@@ -184,11 +156,6 @@ async function handleSubscriptionCreated(data: Subscription, userDelegate: any):
   );
 }
 
-/**
- * Handle subscription update events
- * @param data Subscription data from webhook
- * @param userDelegate Prisma user delegate
- */
 async function handleSubscriptionUpdated(data: Subscription, userDelegate: any): Promise<void> {
   const customerId = data.customerId;
   const status = data.status;
@@ -215,11 +182,6 @@ async function handleSubscriptionUpdated(data: Subscription, userDelegate: any):
   console.log(`Subscription updated: ${data.id}, customer: ${customerId}, status: ${subscriptionStatus}`);
 }
 
-/**
- * Handle subscription cancellation events
- * @param data Subscription data from webhook
- * @param userDelegate Prisma user delegate
- */
 async function handleSubscriptionCanceled(data: Subscription, userDelegate: any): Promise<void> {
   const customerId = data.customerId;
 
@@ -239,11 +201,6 @@ async function handleSubscriptionCanceled(data: Subscription, userDelegate: any)
   console.log(`Subscription canceled: ${data.id}, customer: ${customerId}`);
 }
 
-/**
- * Handle subscription activation events
- * @param data Subscription data from webhook
- * @param userDelegate Prisma user delegate
- */
 async function handleSubscriptionActivated(data: Subscription, userDelegate: any): Promise<void> {
   const customerId = data.customerId;
   const productId = data.productId;
@@ -268,12 +225,6 @@ async function handleSubscriptionActivated(data: Subscription, userDelegate: any
   console.log(`Subscription activated: ${data.id}, customer: ${customerId}, plan: ${planId}`);
 }
 
-/**
- * Maps Polar subscription status to OpenSaaS subscription status
- * Uses the comprehensive type system for better type safety and consistency
- * @param polarStatus The status from Polar webhook payload
- * @returns The corresponding OpenSaaS status
- */
 function getSubscriptionStatus(polarStatus: PolarSubscriptionStatus): OpenSaasSubscriptionStatus {
   const statusMap: Record<PolarSubscriptionStatus, OpenSaasSubscriptionStatus> = {
     [PolarSubscriptionStatus.Active]: OpenSaasSubscriptionStatus.Active,
@@ -288,11 +239,6 @@ function getSubscriptionStatus(polarStatus: PolarSubscriptionStatus): OpenSaasSu
   return statusMap[polarStatus];
 }
 
-/**
- * Helper function to extract credits amount from order
- * @param order Order data from Polar webhook payload
- * @returns Number of credits purchased
- */
 function extractCreditsFromPolarOrder(order: Order): number {
   const productId = order.productId;
 
@@ -325,12 +271,6 @@ function extractCreditsFromPolarOrder(order: Order): number {
   return credits;
 }
 
-/**
- * Middleware configuration function for Polar webhooks
- * Sets up raw body parsing for webhook signature verification
- * @param middlewareConfig Express middleware configuration object
- * @returns Updated middleware configuration
- */
 function getPlanIdByProductId(polarProductId: string): PaymentPlanId {
   for (const [planId, plan] of Object.entries(paymentPlans)) {
     if (plan.getPaymentProcessorPlanId() === polarProductId) {
