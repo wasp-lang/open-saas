@@ -12,8 +12,6 @@ export interface PolarApiConfig {
   readonly organizationId: string;
   /** Webhook secret for signature verification (required) - generated when setting up webhooks */
   readonly webhookSecret: string;
-  /** Customer portal URL for subscription management (required) - provided by Polar */
-  readonly customerPortalUrl: string;
   /** Optional sandbox mode override (defaults to NODE_ENV-based detection) */
   readonly sandboxMode?: boolean;
 }
@@ -48,7 +46,6 @@ export const POLAR_ENV_VARS = {
   POLAR_ACCESS_TOKEN: 'POLAR_ACCESS_TOKEN',
   POLAR_ORGANIZATION_ID: 'POLAR_ORGANIZATION_ID',
   POLAR_WEBHOOK_SECRET: 'POLAR_WEBHOOK_SECRET',
-  POLAR_CUSTOMER_PORTAL_URL: 'POLAR_CUSTOMER_PORTAL_URL',
   POLAR_SANDBOX_MODE: 'POLAR_SANDBOX_MODE',
 } as const;
 
@@ -74,7 +71,6 @@ export function getPolarApiConfig(): PolarApiConfig {
     accessToken: process.env[POLAR_ENV_VARS.POLAR_ACCESS_TOKEN]!,
     organizationId: process.env[POLAR_ENV_VARS.POLAR_ORGANIZATION_ID]!,
     webhookSecret: process.env[POLAR_ENV_VARS.POLAR_WEBHOOK_SECRET]!,
-    customerPortalUrl: process.env[POLAR_ENV_VARS.POLAR_CUSTOMER_PORTAL_URL]!,
     sandboxMode: shouldUseSandboxMode(),
   };
 }
