@@ -60,19 +60,15 @@ export async function fetchPolarCustomer(email: string): Promise<Customer> {
     email: email,
     limit: 1,
   });
-  let existingCustomer: Customer | null = null;
 
   for await (const page of customersIterator) {
-    const customers = page.result.items || [];
+    const customers = page.result?.items || [];
 
     if (customers.length > 0) {
-      existingCustomer = customers[0];
-      break;
+      return customers[0];
     }
-  }
 
-  if (existingCustomer) {
-    return existingCustomer;
+    break;
   }
 
   const newCustomer = await polar.customers.create({
