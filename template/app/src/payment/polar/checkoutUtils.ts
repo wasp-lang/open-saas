@@ -40,11 +40,6 @@ export async function createPolarCheckoutSession({
     ...(existingCustomer && { customerId: existingCustomer.id }),
   };
   const checkoutSession = await polarClient.checkouts.create(checkoutSessionArgs);
-
-  if (!checkoutSession.url) {
-    throw new Error('Polar checkout session created without URL');
-  }
-
   const customerId = checkoutSession.customerId;
 
   return {
