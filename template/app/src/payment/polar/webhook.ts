@@ -3,18 +3,18 @@ import { validateEvent, WebhookVerificationError } from '@polar-sh/sdk/webhooks'
 import express from 'express';
 import type { MiddlewareConfigFn } from 'wasp/server';
 import type { PaymentsWebhook } from 'wasp/server/api';
-import { SubscriptionStatus as OpenSaasSubscriptionStatus, PaymentPlanId, paymentPlans } from '../plans';
-import { updateUserPolarPaymentDetails } from './paymentDetails';
 import { MiddlewareConfig } from 'wasp/server/middleware';
 import { requireNodeEnvVar } from '../../server/utils';
+import { assertUnreachable } from '../../shared/utils';
+import { UnhandledWebhookEventError } from '../errors';
+import { SubscriptionStatus as OpenSaasSubscriptionStatus, PaymentPlanId, paymentPlans } from '../plans';
+import { updateUserPolarPaymentDetails } from './userPaymentDetails';
 import {
   parseWebhookPayload,
   type OrderData,
-  type SubscriptionData,
   type PolarWebhookPayload,
+  type SubscriptionData,
 } from './webhookPayload';
-import { UnhandledWebhookEventError } from '../errors';
-import { assertUnreachable } from '../../shared/utils';
 
 export const polarWebhook: PaymentsWebhook = async (req, res, context) => {
   try {

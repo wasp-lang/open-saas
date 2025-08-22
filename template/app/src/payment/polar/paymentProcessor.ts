@@ -1,16 +1,15 @@
 // @ts-ignore
 import { OrderStatus } from '@polar-sh/sdk/models/components/orderstatus.js';
+import { requireNodeEnvVar } from '../../server/utils';
 import {
   type CreateCheckoutSessionArgs,
   type FetchCustomerPortalUrlArgs,
   type PaymentProcessor,
 } from '../paymentProcessor';
 import type { PaymentPlanEffect } from '../plans';
-
 import { createPolarCheckoutSession } from './checkoutUtils';
 import { polarClient } from './polarClient';
 import { polarMiddlewareConfigFn, polarWebhook } from './webhook';
-import { requireNodeEnvVar } from '../../server/utils';
 
 export type PolarMode = 'subscription' | 'payment';
 
