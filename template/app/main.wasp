@@ -79,10 +79,6 @@ app OpenSaaS {
     ]
   },
 
-  server: {
-    envValidationSchema: import { envValidationSchema } from "@src/server/validation",
-  },
-
   client: {
     rootComponent: import App from "@src/client/App",
   },
