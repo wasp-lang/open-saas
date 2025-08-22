@@ -39,7 +39,7 @@ export default defineConfig({
    * For local development, where this does pose a nuisance, we start the app / web server manually with `wasp db start` and `wasp start` and then start tests with `npm run local:e2e:start`.
    */
   webServer: {
-    command: 'npm run ci:e2e:start',
+    command: 'run-wasp-app dev --path-to-app=../app --wasp-cli-cmd=wasp',
     // Wait for the backend to start
     url: 'http://localhost:3001',
     reuseExistingServer: !process.env.CI,
