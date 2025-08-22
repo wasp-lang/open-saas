@@ -90,7 +90,6 @@ export type PolarWebhookPayload =
   | WebhookCustomerStateChangedPayload;
 
 export type ParsedWebhookPayload =
-  | { eventName: 'order.created'; data: OrderData }
   | { eventName: 'order.paid'; data: OrderData }
   | { eventName: 'subscription.created'; data: SubscriptionData }
   | { eventName: 'subscription.updated'; data: SubscriptionData }
@@ -100,7 +99,6 @@ export type ParsedWebhookPayload =
 export async function parseWebhookPayload(rawEvent: PolarWebhookPayload): Promise<ParsedWebhookPayload> {
   try {
     switch (rawEvent.type) {
-      case 'order.created':
       case 'order.paid': {
         const orderData = await orderDataSchema.parseAsync(rawEvent.data);
 

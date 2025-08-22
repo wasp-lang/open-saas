@@ -23,10 +23,6 @@ export const polarWebhook: PaymentsWebhook = async (req, res, context) => {
     const prismaUserDelegate = context.entities.User;
 
     switch (eventName) {
-      case 'order.created':
-        await handleOrderCreated(data, prismaUserDelegate);
-
-        break;
       case 'order.paid':
         await handleOrderCompleted(data, prismaUserDelegate);
 
@@ -68,43 +64,9 @@ export const polarWebhook: PaymentsWebhook = async (req, res, context) => {
 };
 
 function constructPolarEvent(request: express.Request): PolarWebhookPayload {
-  try {
-    const secret = requireNodeEnvVar('POLAR_WEBHOOK_SECRET');
-    return validateEvent(request.body, request.headers as Record<string, string>, secret);
-  } catch (err) {
-    throw new WebhookVerificationError('Error constructing Polar webhook event');
-  }
-}
+  const secret = requireNodeEnvVar('POLAR_WEBHOOK_SECRET');
 
-async function handleOrderCreated(data: OrderData, userDelegate: any): Promise<void> {
-  const customerId = data.customer.id;
-  const waspUserId = data.customer.externalId;
-  const metadata = data.metadata || {};
-  const paymentMode = metadata?.paymentMode;
-
-  if (!waspUserId) {
-    console.warn('Order created without customer.externalId (Wasp user ID)');
-    return;
-  }
-
-  if (paymentMode !== 'payment') {
-    console.log(`Order ${data.id} is not for credits (mode: ${paymentMode})`);
-    return;
-  }
-
-  const creditsAmount = extractCreditsFromPolarOrder(data);
-
-  await updateUserPolarPaymentDetails(
-    {
-      waspUserId,
-      polarCustomerId: customerId,
-      numOfCreditsPurchased: creditsAmount,
-      datePaid: data.createdAt,
-    },
-    userDelegate
-  );
-
-  console.log(`Order created: ${data.id}, customer: ${customerId}, credits: ${creditsAmount}`);
+  return validateEvent(request.body, request.headers as Record<string, string>, secret);
 }
 
 async function handleOrderCompleted(data: OrderData, userDelegate: any): Promise<void> {
