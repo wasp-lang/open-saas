@@ -10,6 +10,7 @@ import type { PaymentPlanEffect } from '../plans';
 import { createPolarCheckoutSession } from './checkoutUtils';
 import { polarClient } from './polarClient';
 import { polarMiddlewareConfigFn, polarWebhook } from './webhook';
+import { requireNodeEnvVar } from '../../server/utils';
 
 export type PolarMode = 'subscription' | 'payment';
 
@@ -69,6 +70,7 @@ export const polarPaymentProcessor: PaymentProcessor = {
     };
   },
   fetchCustomerPortalUrl: async (args: FetchCustomerPortalUrlArgs) => {
+    const defaultPortalUrl = requireNodeEnvVar('POLAR_CUSTOMER_PORTAL_URL');
     const user = await args.prismaUserDelegate.findUnique({
       where: {
         id: args.userId,
@@ -78,15 +80,15 @@ export const polarPaymentProcessor: PaymentProcessor = {
       },
     });
 
-    if (!user?.paymentProcessorUserId) {
-      throw new Error('No Polar customer ID found for user');
+    if (user?.paymentProcessorUserId) {
+      const customerSession = await polarClient.customerSessions.create({
+        customerId: user.paymentProcessorUserId,
+      });
+
+      return customerSession.customerPortalUrl;
     }
 
-    const customerSession = await polarClient.customerSessions.create({
-      customerId: user.paymentProcessorUserId,
-    });
-
-    return customerSession.customerPortalUrl;
+    return defaultPortalUrl;
   },
   getTotalRevenue: fetchTotalPolarRevenue,
   webhook: polarWebhook,

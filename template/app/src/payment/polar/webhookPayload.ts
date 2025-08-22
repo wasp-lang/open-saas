@@ -2,6 +2,10 @@ import * as z from 'zod';
 import { UnhandledWebhookEventError } from '../errors';
 import { HttpError } from 'wasp/server';
 // @ts-ignore
+import { OrderStatus } from '@polar-sh/sdk/models/components/orderstatus.js';
+// @ts-ignore
+import { SubscriptionStatus } from '@polar-sh/sdk/models/components/subscriptionstatus.js';
+// @ts-ignore
 import { WebhookBenefitCreatedPayload } from '@polar-sh/sdk/models/components/webhookbenefitcreatedpayload.js';
 // @ts-ignore
 import { WebhookBenefitGrantCreatedPayload } from '@polar-sh/sdk/models/components/webhookbenefitgrantcreatedpayload.js';
@@ -111,6 +115,7 @@ export async function parseWebhookPayload(rawEvent: PolarWebhookPayload): Promis
         return { eventName: rawEvent.type, data: subscriptionData };
       }
       default:
+        // If you'd like to handle more events, you can add more cases above.
         throw new UnhandledWebhookEventError(rawEvent.type);
     }
   } catch (e: unknown) {
@@ -127,18 +132,41 @@ const orderDataSchema = z.object({
   id: z.string(),
   customerId: z.string().optional(),
   productId: z.string().optional(),
-  status: z.string(),
+  status: z.enum(Object.values(OrderStatus) as [string, ...string[]]),
   totalAmount: z.number(),
-  createdAt: z.string(),
-  metadata: z.record(z.string()).optional(),
+  createdAt: z.date(),
+  customer: z.object({
+    id: z.string(),
+    externalId: z.string(),
+    email: z.string(),
+    name: z.string().optional(),
+  }),
+  metadata: z
+    .object({
+      source: z.string().optional(),
+      paymentMode: z.string().optional(),
+    })
+    .optional(),
 });
 
 const subscriptionDataSchema = z.object({
   id: z.string(),
   customerId: z.string().optional(),
   productId: z.string().optional(),
-  status: z.string(),
-  createdAt: z.string(),
+  status: z.enum(Object.values(SubscriptionStatus) as [string, ...string[]]),
+  createdAt: z.date(),
+  customer: z.object({
+    id: z.string(),
+    externalId: z.string(),
+    email: z.string(),
+    name: z.string().optional(),
+  }),
+  metadata: z
+    .object({
+      source: z.string().optional(),
+      paymentMode: z.string().optional(),
+    })
+    .optional(),
 });
 
 export type OrderData = z.infer<typeof orderDataSchema>;

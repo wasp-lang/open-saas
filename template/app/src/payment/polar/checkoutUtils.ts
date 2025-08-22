@@ -2,6 +2,8 @@ import { env } from 'wasp/server';
 import type { PolarMode } from './paymentProcessor';
 import { polarClient } from './polarClient';
 // @ts-ignore
+import { CheckoutCreate } from '@polar-sh/sdk/models/components/checkoutcreate.js';
+// @ts-ignore
 import { Customer } from '@polar-sh/sdk/models/components/customer.js';
 
 export interface CreatePolarCheckoutSessionArgs {
@@ -23,22 +25,19 @@ export async function createPolarCheckoutSession({
   userId,
   mode,
 }: CreatePolarCheckoutSessionArgs): Promise<PolarCheckoutSession> {
-  const baseUrl = env.WASP_WEB_CLIENT_URL;
-
-  const checkoutSessionArgs = {
-    products: [productId], // Array of Polar Product IDs
-    externalCustomerId: userId, // Use userId for customer deduplication
-    customerBillingAddress: {
-      country: 'US', // Default country - could be enhanced with user's actual country
-    },
-    successUrl: `${baseUrl}/checkout?success=true`,
-    cancelUrl: `${baseUrl}/checkout?canceled=true`,
+  const baseUrl = env.WASP_WEB_CLIENT_URL.replace(/\/+$/, '');
+  const successUrl = `${baseUrl}/checkout?success=true`;
+  const existingCustomer = await fetchPolarCustomer(userId, userEmail);
+  const checkoutSessionArgs: CheckoutCreate = {
+    products: [productId],
+    externalCustomerId: userId,
+    customerEmail: userEmail,
+    successUrl: successUrl,
     metadata: {
-      userId: userId,
-      userEmail: userEmail,
       paymentMode: mode,
-      source: 'OpenSaaS',
+      source: baseUrl,
     },
+    ...(existingCustomer && { customerId: existingCustomer.id }),
   };
   const checkoutSession = await polarClient.checkouts.create(checkoutSessionArgs);
 
@@ -55,25 +54,33 @@ export async function createPolarCheckoutSession({
   };
 }
 
-export async function fetchPolarCustomer(email: string): Promise<Customer> {
-  const customersIterator = await polarClient.customers.list({
-    email: email,
-    limit: 1,
-  });
+export async function fetchPolarCustomer(waspUserId: string, customerEmail: string): Promise<Customer> {
+  try {
+    const existingCustomer = await polarClient.customers.getExternal({
+      externalId: waspUserId,
+    });
 
-  for await (const page of customersIterator) {
-    const customers = page.result?.items || [];
+    if (existingCustomer) {
+      console.log('Using existing Polar customer');
 
-    if (customers.length > 0) {
-      return customers[0];
+      return existingCustomer;
     }
-
-    break;
+  } catch (error) {
+    console.log('No existing Polar customer found by external ID, will create new one');
   }
 
-  const newCustomer = await polarClient.customers.create({
-    email: email,
-  });
+  try {
+    console.log('Creating new Polar customer');
 
-  return newCustomer;
+    const newCustomer = await polarClient.customers.create({
+      externalId: waspUserId,
+      email: customerEmail,
+    });
+
+    return newCustomer;
+  } catch (error) {
+    console.error('Error creating Polar customer:', error);
+
+    throw error;
+  }
 }

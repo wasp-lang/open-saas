@@ -2,7 +2,8 @@ import type { PrismaClient } from '@prisma/client';
 import type { SubscriptionStatus, PaymentPlanId } from '../plans';
 
 export interface UpdateUserPolarPaymentDetailsArgs {
-  polarCustomerId: string;
+  waspUserId: string;
+  polarCustomerId?: string;
   subscriptionPlan?: PaymentPlanId;
   subscriptionStatus?: SubscriptionStatus | string;
   numOfCreditsPurchased?: number;
@@ -14,6 +15,7 @@ export const updateUserPolarPaymentDetails = async (
   userDelegate: PrismaClient['user']
 ) => {
   const {
+    waspUserId,
     polarCustomerId,
     subscriptionPlan,
     subscriptionStatus,
@@ -23,16 +25,14 @@ export const updateUserPolarPaymentDetails = async (
 
   return await userDelegate.update({
     where: {
-      paymentProcessorUserId: polarCustomerId
+      id: waspUserId,
     },
     data: {
-      paymentProcessorUserId: polarCustomerId,
+      ...(polarCustomerId && { paymentProcessorUserId: polarCustomerId }),
       subscriptionPlan,
       subscriptionStatus,
       datePaid,
-      credits: numOfCreditsPurchased !== undefined 
-        ? { increment: numOfCreditsPurchased } 
-        : undefined,
+      credits: numOfCreditsPurchased !== undefined ? { increment: numOfCreditsPurchased } : undefined,
     },
   });
 };
@@ -43,8 +43,8 @@ export const findUserByPolarCustomerId = async (
 ) => {
   return await userDelegate.findFirst({
     where: {
-      paymentProcessorUserId: polarCustomerId
-    }
+      paymentProcessorUserId: polarCustomerId,
+    },
   });
 };
 
@@ -55,7 +55,7 @@ export const updateUserSubscriptionStatus = async (
 ) => {
   return await userDelegate.update({
     where: {
-      paymentProcessorUserId: polarCustomerId
+      paymentProcessorUserId: polarCustomerId,
     },
     data: {
       subscriptionStatus,
@@ -70,11 +70,11 @@ export const addCreditsToUser = async (
 ) => {
   return await userDelegate.update({
     where: {
-      paymentProcessorUserId: polarCustomerId
+      paymentProcessorUserId: polarCustomerId,
     },
     data: {
       credits: { increment: creditsAmount },
       datePaid: new Date(),
     },
   });
-}; 
+};

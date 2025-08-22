@@ -4,7 +4,7 @@ import express from 'express';
 import type { MiddlewareConfigFn } from 'wasp/server';
 import type { PaymentsWebhook } from 'wasp/server/api';
 import { SubscriptionStatus as OpenSaasSubscriptionStatus, PaymentPlanId, paymentPlans } from '../plans';
-import { findUserByPolarCustomerId, updateUserPolarPaymentDetails } from './paymentDetails';
+import { updateUserPolarPaymentDetails } from './paymentDetails';
 import { MiddlewareConfig } from 'wasp/server/middleware';
 import { requireNodeEnvVar } from '../../server/utils';
 import {
@@ -12,7 +12,6 @@ import {
   type OrderData,
   type SubscriptionData,
   type PolarWebhookPayload,
-  type ParsedWebhookPayload,
 } from './webhookPayload';
 import { UnhandledWebhookEventError } from '../errors';
 import { assertUnreachable } from '../../shared/utils';
@@ -78,12 +77,13 @@ function constructPolarEvent(request: express.Request): PolarWebhookPayload {
 }
 
 async function handleOrderCreated(data: OrderData, userDelegate: any): Promise<void> {
-  const customerId = data.customerId;
+  const customerId = data.customer.id;
+  const waspUserId = data.customer.externalId;
   const metadata = data.metadata || {};
-  const paymentMode = metadata.paymentMode;
+  const paymentMode = metadata?.paymentMode;
 
-  if (!customerId) {
-    console.warn('Order created without customer_id');
+  if (!waspUserId) {
+    console.warn('Order created without customer.externalId (Wasp user ID)');
     return;
   }
 
@@ -96,9 +96,10 @@ async function handleOrderCreated(data: OrderData, userDelegate: any): Promise<v
 
   await updateUserPolarPaymentDetails(
     {
+      waspUserId,
       polarCustomerId: customerId,
       numOfCreditsPurchased: creditsAmount,
-      datePaid: new Date(data.createdAt),
+      datePaid: data.createdAt,
     },
     userDelegate
   );
@@ -107,34 +108,34 @@ async function handleOrderCreated(data: OrderData, userDelegate: any): Promise<v
 }
 
 async function handleOrderCompleted(data: OrderData, userDelegate: any): Promise<void> {
-  const customerId = data.customerId;
+  const customerId = data.customer.id;
+  const waspUserId = data.customer.externalId;
 
-  if (!customerId) {
-    console.warn('Order completed without customer_id');
+  if (!waspUserId) {
+    console.warn('Order completed without customer.externalId (Wasp user ID)');
     return;
   }
 
   console.log(`Order completed: ${data.id} for customer: ${customerId}`);
 
-  const user = await findUserByPolarCustomerId(customerId, userDelegate);
-  if (user) {
-    await updateUserPolarPaymentDetails(
-      {
-        polarCustomerId: customerId,
-        datePaid: new Date(data.createdAt),
-      },
-      userDelegate
-    );
-  }
+  await updateUserPolarPaymentDetails(
+    {
+      waspUserId,
+      polarCustomerId: customerId,
+      datePaid: data.createdAt,
+    },
+    userDelegate
+  );
 }
 
 async function handleSubscriptionCreated(data: SubscriptionData, userDelegate: any): Promise<void> {
-  const customerId = data.customerId;
+  const customerId = data.customer.id;
   const productId = data.productId;
   const status = data.status;
+  const waspUserId = data.customer.externalId;
 
-  if (!customerId || !productId) {
-    console.warn('Subscription created without required customer_id or plan_id');
+  if (!waspUserId || !productId) {
+    console.warn('Subscription created without required customer.externalId (Wasp user ID) or plan_id');
     return;
   }
 
@@ -143,10 +144,11 @@ async function handleSubscriptionCreated(data: SubscriptionData, userDelegate: a
 
   await updateUserPolarPaymentDetails(
     {
+      waspUserId,
       polarCustomerId: customerId,
       subscriptionPlan: planId,
       subscriptionStatus,
-      datePaid: new Date(data.createdAt),
+      datePaid: data.createdAt,
     },
     userDelegate
   );
@@ -157,12 +159,13 @@ async function handleSubscriptionCreated(data: SubscriptionData, userDelegate: a
 }
 
 async function handleSubscriptionUpdated(data: SubscriptionData, userDelegate: any): Promise<void> {
-  const customerId = data.customerId;
+  const customerId = data.customer.id;
   const status = data.status;
   const productId = data.productId;
+  const waspUserId = data.customer.externalId;
 
-  if (!customerId) {
-    console.warn('Subscription updated without customer_id');
+  if (!waspUserId) {
+    console.warn('Subscription updated without customer.externalId (Wasp user ID)');
     return;
   }
 
@@ -171,6 +174,7 @@ async function handleSubscriptionUpdated(data: SubscriptionData, userDelegate: a
 
   await updateUserPolarPaymentDetails(
     {
+      waspUserId,
       polarCustomerId: customerId,
       subscriptionPlan: planId,
       subscriptionStatus,
@@ -183,17 +187,19 @@ async function handleSubscriptionUpdated(data: SubscriptionData, userDelegate: a
 }
 
 async function handleSubscriptionCanceled(data: SubscriptionData, userDelegate: any): Promise<void> {
-  const customerId = data.customerId;
+  const customerId = data.customer.id;
+  const waspUserId = data.customer.externalId;
 
-  if (!customerId) {
-    console.warn('Subscription canceled without customer_id');
+  if (!waspUserId) {
+    console.warn('Subscription canceled without customer.externalId (Wasp user ID)');
     return;
   }
 
   await updateUserPolarPaymentDetails(
     {
+      waspUserId,
       polarCustomerId: customerId,
-      subscriptionStatus: 'cancelled',
+      subscriptionStatus: OpenSaasSubscriptionStatus.CancelAtPeriodEnd,
     },
     userDelegate
   );
@@ -202,11 +208,12 @@ async function handleSubscriptionCanceled(data: SubscriptionData, userDelegate: 
 }
 
 async function handleSubscriptionActivated(data: SubscriptionData, userDelegate: any): Promise<void> {
-  const customerId = data.customerId;
+  const customerId = data.customer.id;
   const productId = data.productId;
+  const waspUserId = data.customer.externalId;
 
-  if (!customerId) {
-    console.warn('Subscription activated without customer_id');
+  if (!waspUserId) {
+    console.warn('Subscription activated without customer.externalId (Wasp user ID)');
     return;
   }
 
@@ -214,9 +221,10 @@ async function handleSubscriptionActivated(data: SubscriptionData, userDelegate:
 
   await updateUserPolarPaymentDetails(
     {
+      waspUserId,
       polarCustomerId: customerId,
       subscriptionPlan: planId,
-      subscriptionStatus: 'active',
+      subscriptionStatus: OpenSaasSubscriptionStatus.Active,
       datePaid: new Date(),
     },
     userDelegate
@@ -262,13 +270,11 @@ function extractCreditsFromPolarOrder(order: OrderData): number {
   }
 
   if (plan.effect.kind !== 'credits') {
-    console.log(`Order ${order.id} product ${productId} is not a credit product (plan: ${planId})`);
+    console.warn(`Order ${order.id} product ${productId} is not a credit product (plan: ${planId})`);
     return 0;
   }
 
-  const credits = plan.effect.amount;
-  console.log(`Extracted ${credits} credits from order ${order.id} (product: ${productId})`);
-  return credits;
+  return plan.effect.amount;
 }
 
 function getPlanIdByProductId(polarProductId: string): PaymentPlanId {
