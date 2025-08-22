@@ -1,5 +1,5 @@
 import type { PrismaClient } from '@prisma/client';
-import type { SubscriptionStatus, PaymentPlanId } from '../plans';
+import type { PaymentPlanId, SubscriptionStatus } from '../plans';
 
 export interface UpdateUserPolarPaymentDetailsArgs {
   waspUserId: string;
