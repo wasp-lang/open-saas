@@ -72,11 +72,20 @@ function constructPolarEvent(request: express.Request): PolarWebhookPayload {
 async function handleOrderCompleted(data: OrderData, userDelegate: any): Promise<void> {
   const customerId = data.customer.id;
   const waspUserId = data.customer.externalId;
+  const metadata = data.metadata || {};
+  const paymentMode = metadata?.paymentMode;
 
   if (!waspUserId) {
     console.warn('Order completed without customer.externalId (Wasp user ID)');
     return;
   }
+
+  if (paymentMode !== 'payment') {
+    console.log(`Order ${data.id} is not for credits (mode: ${paymentMode})`);
+    return;
+  }
+
+  const creditsAmount = extractCreditsFromPolarOrder(data);
 
   console.log(`Order completed: ${data.id} for customer: ${customerId}`);
 
@@ -84,6 +93,7 @@ async function handleOrderCompleted(data: OrderData, userDelegate: any): Promise
     {
       waspUserId,
       polarCustomerId: customerId,
+      numOfCreditsPurchased: creditsAmount,
       datePaid: data.createdAt,
     },
     userDelegate
