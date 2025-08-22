@@ -223,27 +223,18 @@ function extractCreditsFromPolarOrder(order: OrderData): number {
   const productId = order.productId;
 
   if (!productId) {
-    console.warn('No product_id found in Polar order:', order.id);
-    return 0;
+    throw new Error(`No product ID found in order: ${order.id}`);
   }
 
-  let planId: PaymentPlanId;
-  try {
-    planId = getPlanIdByProductId(productId);
-  } catch (error) {
-    console.warn(`Unknown Polar product ID ${productId} in order ${order.id}`);
-    return 0;
-  }
-
+  const planId = getPlanIdByProductId(productId);
   const plan = paymentPlans[planId];
+
   if (!plan) {
-    console.warn(`No payment plan found for plan ID ${planId}`);
-    return 0;
+    throw new Error(`Unknown plan ID: ${planId}`);
   }
 
   if (plan.effect.kind !== 'credits') {
-    console.warn(`Order ${order.id} product ${productId} is not a credit product (plan: ${planId})`);
-    return 0;
+    throw new Error(`Order ${order.id} product ${productId} is not a credit product (plan: ${planId})`);
   }
 
   return plan.effect.amount;
