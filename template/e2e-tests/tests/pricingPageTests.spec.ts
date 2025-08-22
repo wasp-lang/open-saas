@@ -1,5 +1,12 @@
-import { test, expect, type Page } from '@playwright/test';
-import { signUserUp, logUserIn, createRandomUser, makeStripePayment, type User, acceptAllCookies } from './utils';
+import { expect, test, type Page } from '@playwright/test';
+import {
+  acceptAllCookies,
+  createRandomUser,
+  logUserIn,
+  makeStripePayment,
+  signUserUp,
+  type User,
+} from './utils';
 
 let page: Page;
 let testUser: User;

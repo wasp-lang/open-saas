@@ -275,35 +275,12 @@ page AdminSettingsPage {
   component: import AdminSettings from "@src/admin/elements/settings/SettingsPage"
 }
 
-route AdminChartsRoute { path: "/admin/chart", to: AdminChartsPage }
-page AdminChartsPage {
-  authRequired: true,
-  component: import AdminCharts from "@src/admin/elements/charts/ChartsPage"
-}
-
-route AdminFormElementsRoute { path: "/admin/forms/form-elements", to: AdminFormElementsPage }
-page AdminFormElementsPage {
-  authRequired: true,
-  component: import AdminForms from "@src/admin/elements/forms/FormElementsPage"
-}
-
-route AdminFormLayoutsRoute { path: "/admin/forms/form-layouts", to: AdminFormLayoutsPage }
-page AdminFormLayoutsPage {
-  authRequired: true,
-  component: import AdminForms from "@src/admin/elements/forms/FormLayoutsPage"
-}
-
 route AdminCalendarRoute { path: "/admin/calendar", to: AdminCalendarPage }
 page AdminCalendarPage {
   authRequired: true,
   component: import AdminCalendar from "@src/admin/elements/calendar/CalendarPage"
 }
 
-route AdminUIAlertsRoute { path: "/admin/ui/alerts", to: AdminUIAlertsPage }
-page AdminUIAlertsPage {
-  authRequired: true,
-  component: import AdminUI from "@src/admin/elements/ui-elements/AlertsPage"
-}
 
 route AdminUIButtonsRoute { path: "/admin/ui/buttons", to: AdminUIButtonsPage }
 page AdminUIButtonsPage {

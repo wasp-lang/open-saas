@@ -1,6 +1,4 @@
-import { test, expect, Cookie } from '@playwright/test';
-
-const DOCS_URL = 'https://docs.opensaas.sh';
+import { Cookie, expect, test } from '@playwright/test';
 
 test.describe('general landing page tests', () => {
   test.beforeEach(async ({ page }) => {
@@ -13,16 +11,12 @@ test.describe('general landing page tests', () => {
 
   test('get started link', async ({ page }) => {
     await page.getByRole('link', { name: 'Get started' }).click();
-    await page.waitForURL(DOCS_URL);
+    await page.waitForURL('**/signup');
   });
 
   test('headings', async ({ page }) => {
-    await expect(
-      page.getByRole('heading', { name: 'Frequently asked questions' })
-    ).toBeVisible();
-    await expect(
-      page.getByRole('heading', { name: 'Some cool words' })
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Frequently asked questions' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Some cool words' })).toBeVisible();
   });
 });
 
@@ -31,10 +25,7 @@ test.describe('cookie consent tests', () => {
     await page.goto('/');
   });
 
-  test('cookie consent banner rejection does not set cc_cookie', async ({
-    context,
-    page,
-  }) => {
+  test('cookie consent banner rejection does not set cc_cookie', async ({ context, page }) => {
     await page.$$('button:has-text("Reject all")');
     await page.click('button:has-text("Reject all")');
 
@@ -44,10 +35,7 @@ test.describe('cookie consent tests', () => {
     expect(cookieObject.categories.includes('analytics')).toBeFalsy();
   });
 
-  test('cookie consent banner acceptance sets cc_cookie and _ga cookies', async ({
-    context,
-    page,
-  }) => {
+  test('cookie consent banner acceptance sets cc_cookie and _ga cookies', async ({ context, page }) => {
     await page.$$('button:has-text("Accept all")');
     await page.click('button:has-text("Accept all")');
 
