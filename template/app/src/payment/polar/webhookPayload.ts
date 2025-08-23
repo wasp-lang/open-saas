@@ -91,10 +91,11 @@ export type PolarWebhookPayload =
 
 export type ParsedWebhookPayload =
   | { eventName: 'order.paid'; data: OrderData }
-  | { eventName: 'subscription.created'; data: SubscriptionData }
-  | { eventName: 'subscription.updated'; data: SubscriptionData }
+  | { eventName: 'subscription.active'; data: SubscriptionData }
   | { eventName: 'subscription.canceled'; data: SubscriptionData }
-  | { eventName: 'subscription.active'; data: SubscriptionData };
+  | { eventName: 'subscription.revoked'; data: SubscriptionData }
+  | { eventName: 'subscription.uncanceled'; data: SubscriptionData }
+  | { eventName: 'subscription.updated'; data: SubscriptionData };
 
 export async function parseWebhookPayload(rawEvent: PolarWebhookPayload): Promise<ParsedWebhookPayload> {
   try {
@@ -104,10 +105,11 @@ export async function parseWebhookPayload(rawEvent: PolarWebhookPayload): Promis
 
         return { eventName: rawEvent.type, data: orderData };
       }
-      case 'subscription.created':
-      case 'subscription.updated':
+      case 'subscription.active':
       case 'subscription.canceled':
-      case 'subscription.active': {
+      case 'subscription.revoked':
+      case 'subscription.uncanceled':
+      case 'subscription.updated': {
         const subscriptionData = await subscriptionDataSchema.parseAsync(rawEvent.data);
 
         return { eventName: rawEvent.type, data: subscriptionData };

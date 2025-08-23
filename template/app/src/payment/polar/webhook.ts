@@ -27,10 +27,11 @@ export const polarWebhook: PaymentsWebhook = async (req, res, context) => {
         await handleOrderCompleted(data, prismaUserDelegate);
 
         break;
-      case 'subscription.created':
-        await handleSubscriptionCreated(data, prismaUserDelegate);
+      case 'subscription.revoked':
+        await handleSubscriptionRevoked(data, prismaUserDelegate);
 
         break;
+      case 'subscription.uncanceled':
       case 'subscription.updated':
         await handleSubscriptionUpdated(data, prismaUserDelegate);
 
@@ -100,34 +101,25 @@ async function handleOrderCompleted(data: OrderData, userDelegate: any): Promise
   );
 }
 
-async function handleSubscriptionCreated(data: SubscriptionData, userDelegate: any): Promise<void> {
+async function handleSubscriptionRevoked(data: SubscriptionData, userDelegate: any): Promise<void> {
   const customerId = data.customer.id;
-  const productId = data.productId;
-  const status = data.status;
   const waspUserId = data.customer.externalId;
 
-  if (!waspUserId || !productId) {
-    console.warn('Subscription created without required customer.externalId (Wasp user ID) or plan_id');
+  if (!waspUserId) {
+    console.warn('Subscription revoked without required customer.externalId (Wasp user ID)');
     return;
   }
-
-  const planId = getPlanIdByProductId(productId);
-  const subscriptionStatus = getSubscriptionStatus(status);
 
   await updateUserPolarPaymentDetails(
     {
       waspUserId,
       polarCustomerId: customerId,
-      subscriptionPlan: planId,
-      subscriptionStatus,
-      datePaid: data.createdAt,
+      subscriptionStatus: OpenSaasSubscriptionStatus.Deleted,
     },
     userDelegate
   );
 
-  console.log(
-    `Subscription created: ${data.id}, customer: ${customerId}, plan: ${planId}, status: ${subscriptionStatus}`
-  );
+  console.log(`Subscription revoked: ${data.id}, customer: ${customerId}`);
 }
 
 async function handleSubscriptionUpdated(data: SubscriptionData, userDelegate: any): Promise<void> {
