@@ -1,3 +1,5 @@
+.env.client.example
+.env.server.example
 src/client/static/open-saas-banner-dark.png
 src/client/static/open-saas-banner-light.png
 src/landing-page/components/Hero.tsx
