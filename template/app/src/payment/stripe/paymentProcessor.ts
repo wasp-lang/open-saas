@@ -3,8 +3,7 @@ import type { CreateCheckoutSessionArgs, FetchCustomerPortalUrlArgs, PaymentProc
 import { fetchStripeCustomer, createStripeCheckoutSession } from './checkoutUtils';
 import { requireNodeEnvVar } from '../../server/utils';
 import { stripeWebhook, stripeMiddlewareConfigFn } from './webhook';
-import Stripe from 'stripe';
-import { stripe } from './stripeClient';
+
 export type StripeMode = 'subscription' | 'payment';
 
 export const stripePaymentProcessor: PaymentProcessor = {

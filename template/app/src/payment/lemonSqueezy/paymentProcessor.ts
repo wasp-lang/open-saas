@@ -2,7 +2,8 @@ import type { CreateCheckoutSessionArgs, FetchCustomerPortalUrlArgs, PaymentProc
 import { requireNodeEnvVar } from '../../server/utils';
 import { createLemonSqueezyCheckoutSession } from './checkoutUtils';
 import { lemonSqueezyWebhook, lemonSqueezyMiddlewareConfigFn } from './webhook';
-import { lemonSqueezySetup, listOrders } from '@lemonsqueezy/lemonsqueezy.js';
+import { lemonSqueezySetup } from '@lemonsqueezy/lemonsqueezy.js';
+
 lemonSqueezySetup({
   apiKey: requireNodeEnvVar('LEMONSQUEEZY_API_KEY'),
 });
