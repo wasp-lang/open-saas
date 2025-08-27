@@ -1,9 +1,15 @@
+import { listOrders } from '@lemonsqueezy/lemonsqueezy.js';
+import Stripe from 'stripe';
 import { type DailyStats } from 'wasp/entities';
 import { type DailyStatsJob } from 'wasp/server/jobs';
+import { stripe } from '../payment/stripe/stripeClient';
 import { getDailyPageViews, getSources } from './providers/plausibleAnalyticsUtils';
 // import { getDailyPageViews, getSources } from './providers/googleAnalyticsUtils';
-import { stripePaymentProcessor } from '../payment/stripe/paymentProcessor';
+// @ts-ignore
+import { OrderStatus } from '@polar-sh/sdk/models/components/orderstatus.js';
+import { paymentProcessor } from '../payment/paymentProcessor';
 import { SubscriptionStatus } from '../payment/plans';
+import { polarClient } from '../payment/polar/polarClient';
 
 export type DailyStatsProps = { dailyStats?: DailyStats; weeklyStats?: DailyStats[]; isLoading?: boolean };
 
@@ -39,7 +45,21 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, con
       paidUserDelta -= yesterdaysStats.paidUserCount;
     }
 
-    const totalRevenue = await stripePaymentProcessor.getTotalRevenue();
+    let totalRevenue;
+    switch (paymentProcessor.id) {
+      case 'stripe':
+        totalRevenue = await fetchTotalStripeRevenue();
+        break;
+      case 'lemonsqueezy':
+        totalRevenue = await fetchTotalLemonSqueezyRevenue();
+        break;
+      case 'polar':
+        totalRevenue = await fetchTotalPolarRevenue();
+        break;
+      default:
+        throw new Error(`Unsupported payment processor: ${paymentProcessor.id}`);
+    }
+
     const { totalViews, prevDayViewsChangePercent } = await getDailyPageViews();
 
     let dailyStats = await context.entities.DailyStats.findUnique({
@@ -116,3 +136,92 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, con
     });
   }
 };
+
+async function fetchTotalStripeRevenue() {
+  let totalRevenue = 0;
+  let params: Stripe.BalanceTransactionListParams = {
+    limit: 100,
+    // created: {
+    //   gte: startTimestamp,
+    //   lt: endTimestamp
+    // },
+    type: 'charge',
+  };
+
+  let hasMore = true;
+  while (hasMore) {
+    const balanceTransactions = await stripe.balanceTransactions.list(params);
+
+    for (const transaction of balanceTransactions.data) {
+      if (transaction.type === 'charge') {
+        totalRevenue += transaction.amount;
+      }
+    }
+
+    if (balanceTransactions.has_more) {
+      // Set the starting point for the next iteration to the last object fetched
+      params.starting_after = balanceTransactions.data[balanceTransactions.data.length - 1].id;
+    } else {
+      hasMore = false;
+    }
+  }
+
+  // Revenue is in cents so we convert to dollars (or your main currency unit)
+  return totalRevenue / 100;
+}
+
+async function fetchTotalLemonSqueezyRevenue() {
+  try {
+    let totalRevenue = 0;
+    let hasNextPage = true;
+    let currentPage = 1;
+
+    while (hasNextPage) {
+      const { data: response } = await listOrders({
+        filter: {
+          storeId: process.env.LEMONSQUEEZY_STORE_ID,
+        },
+        page: {
+          number: currentPage,
+          size: 100,
+        },
+      });
+
+      if (response?.data) {
+        for (const order of response.data) {
+          totalRevenue += order.attributes.total;
+        }
+      }
+
+      hasNextPage = !response?.meta?.page.lastPage;
+      currentPage++;
+    }
+
+    // Revenue is in cents so we convert to dollars (or your main currency unit)
+    return totalRevenue / 100;
+  } catch (error) {
+    console.error('Error fetching Lemon Squeezy revenue:', error);
+    throw error;
+  }
+}
+
+async function fetchTotalPolarRevenue(): Promise<number> {
+  let totalRevenue = 0;
+
+  const result = await polarClient.orders.list({
+    limit: 100,
+  });
+
+  for await (const page of result) {
+    const orders = page.result.items || [];
+
+    for (const order of orders) {
+      if (order.status === OrderStatus.Paid && order.totalAmount > 0) {
+        totalRevenue += order.totalAmount;
+      }
+    }
+  }
+
+  // Revenue is in cents so we convert to dollars
+  return totalRevenue / 100;
+}

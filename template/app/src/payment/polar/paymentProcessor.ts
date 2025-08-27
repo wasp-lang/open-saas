@@ -13,26 +13,6 @@ import { polarMiddlewareConfigFn, polarWebhook } from './webhook';
 
 export type PolarMode = 'subscription' | 'payment';
 
-async function fetchTotalPolarRevenue(): Promise<number> {
-  let totalRevenue = 0;
-
-  const result = await polarClient.orders.list({
-    limit: 100,
-  });
-
-  for await (const page of result) {
-    const orders = page.result.items || [];
-
-    for (const order of orders) {
-      if (order.status === OrderStatus.Paid && order.totalAmount > 0) {
-        totalRevenue += order.totalAmount;
-      }
-    }
-  }
-
-  return totalRevenue / 100;
-}
-
 export const polarPaymentProcessor: PaymentProcessor = {
   id: 'polar',
   createCheckoutSession: async ({
@@ -89,7 +69,6 @@ export const polarPaymentProcessor: PaymentProcessor = {
 
     return defaultPortalUrl;
   },
-  getTotalRevenue: fetchTotalPolarRevenue,
   webhook: polarWebhook,
   webhookMiddlewareConfigFn: polarMiddlewareConfigFn,
 };

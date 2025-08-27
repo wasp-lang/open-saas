@@ -21,7 +21,6 @@ export interface PaymentProcessor {
   id: 'stripe' | 'lemonsqueezy' | 'polar';
   createCheckoutSession: (args: CreateCheckoutSessionArgs) => Promise<{ session: { id: string; url: string }; }>; 
   fetchCustomerPortalUrl: (args: FetchCustomerPortalUrlArgs) => Promise<string | null>;
-  getTotalRevenue: () => Promise<number>;
   webhook: PaymentsWebhook;
   webhookMiddlewareConfigFn: MiddlewareConfigFn;
 }
