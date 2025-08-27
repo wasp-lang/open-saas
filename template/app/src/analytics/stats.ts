@@ -10,6 +10,7 @@ import { OrderStatus } from '@polar-sh/sdk/models/components/orderstatus.js';
 import { paymentProcessor } from '../payment/paymentProcessor';
 import { SubscriptionStatus } from '../payment/plans';
 import { polarClient } from '../payment/polar/polarClient';
+import { assertUnreachable } from '../shared/utils';
 
 export type DailyStatsProps = { dailyStats?: DailyStats; weeklyStats?: DailyStats[]; isLoading?: boolean };
 
@@ -57,7 +58,7 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, con
         totalRevenue = await fetchTotalPolarRevenue();
         break;
       default:
-        throw new Error(`Unsupported payment processor: ${paymentProcessor.id}`);
+        assertUnreachable(paymentProcessor.id);
     }
 
     const { totalViews, prevDayViewsChangePercent } = await getDailyPageViews();
