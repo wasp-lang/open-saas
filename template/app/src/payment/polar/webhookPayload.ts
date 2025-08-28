@@ -1,8 +1,4 @@
 // @ts-ignore
-import { OrderStatus } from '@polar-sh/sdk/models/components/orderstatus.js';
-// @ts-ignore
-import { SubscriptionStatus } from '@polar-sh/sdk/models/components/subscriptionstatus.js';
-// @ts-ignore
 import { WebhookBenefitCreatedPayload } from '@polar-sh/sdk/models/components/webhookbenefitcreatedpayload.js';
 // @ts-ignore
 import { WebhookBenefitGrantCreatedPayload } from '@polar-sh/sdk/models/components/webhookbenefitgrantcreatedpayload.js';
@@ -56,9 +52,6 @@ import { WebhookSubscriptionRevokedPayload } from '@polar-sh/sdk/models/componen
 import { WebhookSubscriptionUncanceledPayload } from '@polar-sh/sdk/models/components/webhooksubscriptionuncanceledpayload.js';
 // @ts-ignore
 import { WebhookSubscriptionUpdatedPayload } from '@polar-sh/sdk/models/components/webhooksubscriptionupdatedpayload.js';
-import { HttpError } from 'wasp/server';
-import * as z from 'zod';
-import { UnhandledWebhookEventError } from '../errors';
 
 export type PolarWebhookPayload =
   | WebhookCheckoutCreatedPayload
@@ -88,86 +81,3 @@ export type PolarWebhookPayload =
   | WebhookCustomerUpdatedPayload
   | WebhookCustomerDeletedPayload
   | WebhookCustomerStateChangedPayload;
-
-export type ParsedWebhookPayload =
-  | { eventName: 'order.paid'; data: OrderData }
-  | { eventName: 'subscription.active'; data: SubscriptionData }
-  | { eventName: 'subscription.canceled'; data: SubscriptionData }
-  | { eventName: 'subscription.revoked'; data: SubscriptionData }
-  | { eventName: 'subscription.uncanceled'; data: SubscriptionData }
-  | { eventName: 'subscription.updated'; data: SubscriptionData };
-
-export async function parseWebhookPayload(rawEvent: PolarWebhookPayload): Promise<ParsedWebhookPayload> {
-  try {
-    switch (rawEvent.type) {
-      case 'order.paid': {
-        const orderData = await orderDataSchema.parseAsync(rawEvent.data);
-
-        return { eventName: rawEvent.type, data: orderData };
-      }
-      case 'subscription.active':
-      case 'subscription.canceled':
-      case 'subscription.revoked':
-      case 'subscription.uncanceled':
-      case 'subscription.updated': {
-        const subscriptionData = await subscriptionDataSchema.parseAsync(rawEvent.data);
-
-        return { eventName: rawEvent.type, data: subscriptionData };
-      }
-      default:
-        // If you'd like to handle more events, you can add more cases above.
-        throw new UnhandledWebhookEventError(rawEvent.type);
-    }
-  } catch (e: unknown) {
-    if (e instanceof UnhandledWebhookEventError) {
-      throw e;
-    } else {
-      console.error(e);
-      throw new HttpError(400, 'Error parsing Polar webhook payload');
-    }
-  }
-}
-
-const orderDataSchema = z.object({
-  id: z.string(),
-  customerId: z.string().optional(),
-  productId: z.string().optional(),
-  status: z.enum(Object.values(OrderStatus) as [string, ...string[]]),
-  totalAmount: z.number(),
-  createdAt: z.date(),
-  customer: z.object({
-    id: z.string(),
-    externalId: z.string(),
-    email: z.string(),
-    name: z.string().optional(),
-  }),
-  metadata: z
-    .object({
-      source: z.string().optional(),
-      paymentMode: z.string().optional(),
-    })
-    .optional(),
-});
-
-const subscriptionDataSchema = z.object({
-  id: z.string(),
-  customerId: z.string().optional(),
-  productId: z.string().optional(),
-  status: z.enum(Object.values(SubscriptionStatus) as [string, ...string[]]),
-  createdAt: z.date(),
-  customer: z.object({
-    id: z.string(),
-    externalId: z.string(),
-    email: z.string(),
-    name: z.string().optional(),
-  }),
-  metadata: z
-    .object({
-      source: z.string().optional(),
-      paymentMode: z.string().optional(),
-    })
-    .optional(),
-});
-
-export type OrderData = z.infer<typeof orderDataSchema>;
-export type SubscriptionData = z.infer<typeof subscriptionDataSchema>;

@@ -1,54 +1,51 @@
 // @ts-ignore
+import { Order } from '@polar-sh/sdk/models/components/order.js';
+// @ts-ignore
+import { Subscription } from '@polar-sh/sdk/models/components/subscription.js';
+// @ts-ignore
 import { validateEvent, WebhookVerificationError } from '@polar-sh/sdk/webhooks';
 import express from 'express';
-import type { MiddlewareConfigFn } from 'wasp/server';
+import type { MiddlewareConfigFn, PrismaClient } from 'wasp/server';
 import type { PaymentsWebhook } from 'wasp/server/api';
 import { MiddlewareConfig } from 'wasp/server/middleware';
 import { requireNodeEnvVar } from '../../server/utils';
-import { assertUnreachable } from '../../shared/utils';
 import { UnhandledWebhookEventError } from '../errors';
 import { SubscriptionStatus as OpenSaasSubscriptionStatus, PaymentPlanId, paymentPlans } from '../plans';
 import { updateUserPolarPaymentDetails } from './userPaymentDetails';
-import {
-  parseWebhookPayload,
-  type OrderData,
-  type PolarWebhookPayload,
-  type SubscriptionData,
-} from './webhookPayload';
+import { type PolarWebhookPayload } from './webhookPayload';
 
 export const polarWebhook: PaymentsWebhook = async (req, res, context) => {
   try {
-    const rawEvent = constructPolarEvent(req);
-    const { eventName, data } = await parseWebhookPayload(rawEvent);
+    const polarEvent = constructPolarEvent(req);
     const prismaUserDelegate = context.entities.User;
 
-    switch (eventName) {
+    switch (polarEvent.type) {
       case 'order.paid':
-        await handleOrderCompleted(data, prismaUserDelegate);
+        await handleOrderCompleted(polarEvent.data, prismaUserDelegate);
 
         break;
       case 'subscription.revoked':
-        await handleSubscriptionRevoked(data, prismaUserDelegate);
+        await handleSubscriptionRevoked(polarEvent.data, prismaUserDelegate);
 
         break;
       case 'subscription.uncanceled':
-        await handleSubscriptionUncanceled(data, prismaUserDelegate);
+        await handleSubscriptionUncanceled(polarEvent.data, prismaUserDelegate);
 
         break;
       case 'subscription.updated':
-        await handleSubscriptionUpdated(data, prismaUserDelegate);
+        await handleSubscriptionUpdated(polarEvent.data, prismaUserDelegate);
 
         break;
       case 'subscription.canceled':
-        await handleSubscriptionCanceled(data, prismaUserDelegate);
+        await handleSubscriptionCanceled(polarEvent.data, prismaUserDelegate);
 
         break;
       case 'subscription.active':
-        await handleSubscriptionActivated(data, prismaUserDelegate);
+        await handleSubscriptionActivated(polarEvent.data, prismaUserDelegate);
 
         break;
       default:
-        assertUnreachable(eventName);
+        throw new UnhandledWebhookEventError(`Unhandled Polar webhook event type: ${polarEvent.type}`);
     }
 
     return res.status(200).json({ received: true });
@@ -73,7 +70,7 @@ function constructPolarEvent(request: express.Request): PolarWebhookPayload {
   return validateEvent(request.body, request.headers as Record<string, string>, secret);
 }
 
-function validateAndExtractCustomerData(data: OrderData | SubscriptionData, eventType: string) {
+function validateAndExtractCustomerData(data: Order | Subscription, eventType: string) {
   const customerId = data.customer.id;
   const userId = data.customer.externalId;
 
@@ -86,7 +83,7 @@ function validateAndExtractCustomerData(data: OrderData | SubscriptionData, even
   return { customerId, userId };
 }
 
-async function handleOrderCompleted(data: OrderData, userDelegate: any): Promise<void> {
+async function handleOrderCompleted(data: Order, userDelegate: PrismaClient['user']): Promise<void> {
   const customerData = validateAndExtractCustomerData(data, 'Order completed');
 
   if (!customerData) return;
@@ -115,8 +112,8 @@ async function handleOrderCompleted(data: OrderData, userDelegate: any): Promise
 }
 
 async function handleSubscriptionStateChange(
-  data: SubscriptionData,
-  userDelegate: any,
+  data: Subscription,
+  userDelegate: PrismaClient['user'],
   eventType: string,
   statusOverride?: OpenSaasSubscriptionStatus,
   includePlanUpdate = false,
@@ -145,7 +142,10 @@ async function handleSubscriptionStateChange(
   );
 }
 
-async function handleSubscriptionRevoked(data: SubscriptionData, userDelegate: any): Promise<void> {
+async function handleSubscriptionRevoked(
+  data: Subscription,
+  userDelegate: PrismaClient['user']
+): Promise<void> {
   await handleSubscriptionStateChange(
     data,
     userDelegate,
@@ -159,7 +159,10 @@ async function handleSubscriptionRevoked(data: SubscriptionData, userDelegate: a
  *
  * Only updates the user record if the plan changed, otherwise delegates responsibility to the more specific event handlers.
  */
-async function handleSubscriptionUpdated(data: SubscriptionData, userDelegate: any): Promise<void> {
+async function handleSubscriptionUpdated(
+  data: Subscription,
+  userDelegate: PrismaClient['user']
+): Promise<void> {
   const customerData = validateAndExtractCustomerData(data, 'Subscription updated');
 
   if (!customerData) return;
@@ -176,9 +179,9 @@ async function handleSubscriptionUpdated(data: SubscriptionData, userDelegate: a
   });
 
   const newPlanId = getPlanIdByProductId(data.productId);
-  const currentPlanId = currentUser.subscriptionPlan;
+  const currentPlanId = currentUser?.subscriptionPlan;
 
-  if (currentPlanId === newPlanId) {
+  if (!currentPlanId || currentPlanId === newPlanId) {
     return;
   }
 
@@ -200,11 +203,17 @@ async function handleSubscriptionUpdated(data: SubscriptionData, userDelegate: a
   );
 }
 
-async function handleSubscriptionUncanceled(data: SubscriptionData, userDelegate: any): Promise<void> {
+async function handleSubscriptionUncanceled(
+  data: Subscription,
+  userDelegate: PrismaClient['user']
+): Promise<void> {
   await handleSubscriptionStateChange(data, userDelegate, 'Subscription uncanceled', undefined, true);
 }
 
-async function handleSubscriptionCanceled(data: SubscriptionData, userDelegate: any): Promise<void> {
+async function handleSubscriptionCanceled(
+  data: Subscription,
+  userDelegate: PrismaClient['user']
+): Promise<void> {
   await handleSubscriptionStateChange(
     data,
     userDelegate,
@@ -213,7 +222,10 @@ async function handleSubscriptionCanceled(data: SubscriptionData, userDelegate: 
   );
 }
 
-async function handleSubscriptionActivated(data: SubscriptionData, userDelegate: any): Promise<void> {
+async function handleSubscriptionActivated(
+  data: Subscription,
+  userDelegate: PrismaClient['user']
+): Promise<void> {
   await handleSubscriptionStateChange(
     data,
     userDelegate,
@@ -238,7 +250,7 @@ function getSubscriptionStatus(polarStatus: string): OpenSaasSubscriptionStatus 
   return statusMap[polarStatus] || OpenSaasSubscriptionStatus.PastDue;
 }
 
-function extractCreditsFromPolarOrder(order: OrderData): number {
+function extractCreditsFromPolarOrder(order: Order): number {
   const productId = order.productId;
 
   if (!productId) {
