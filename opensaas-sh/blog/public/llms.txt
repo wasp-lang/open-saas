@@ -20,5 +20,6 @@
 - [SEO](https://raw.githubusercontent.com/wasp-lang/open-saas/main/opensaas-sh/blog/src/content/docs/guides/seo.mdx)
 - [Tests](https://raw.githubusercontent.com/wasp-lang/open-saas/main/opensaas-sh/blog/src/content/docs/guides/tests.md)
 - [How (Not) to Update Your Open SaaS App](https://raw.githubusercontent.com/wasp-lang/open-saas/main/opensaas-sh/blog/src/content/docs/guides/updating-opensaas.md)
+- [Vibe Coding with Open SaaS](https://raw.githubusercontent.com/wasp-lang/open-saas/main/opensaas-sh/blog/src/content/docs/guides/vibe-coding.mdx)
 - [Admin Dashboard](https://raw.githubusercontent.com/wasp-lang/open-saas/main/opensaas-sh/blog/src/content/docs/general/admin-dashboard.mdx)
 - [User Overview](https://raw.githubusercontent.com/wasp-lang/open-saas/main/opensaas-sh/blog/src/content/docs/general/user-overview.md)
