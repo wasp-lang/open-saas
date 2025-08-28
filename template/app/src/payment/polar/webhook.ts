@@ -3,6 +3,8 @@ import { Order } from '@polar-sh/sdk/models/components/order.js';
 // @ts-ignore
 import { Subscription } from '@polar-sh/sdk/models/components/subscription.js';
 // @ts-ignore
+import { SubscriptionStatus } from '@polar-sh/sdk/models/components/subscriptionstatus.js';
+// @ts-ignore
 import { validateEvent, WebhookVerificationError } from '@polar-sh/sdk/webhooks';
 import express from 'express';
 import type { MiddlewareConfigFn, PrismaClient } from 'wasp/server';
@@ -236,8 +238,8 @@ async function handleSubscriptionActivated(
   );
 }
 
-function getSubscriptionStatus(polarStatus: string): OpenSaasSubscriptionStatus {
-  const statusMap: Record<string, OpenSaasSubscriptionStatus> = {
+function getSubscriptionStatus(polarStatus: SubscriptionStatus): OpenSaasSubscriptionStatus {
+  const statusMap: Record<SubscriptionStatus, OpenSaasSubscriptionStatus> = {
     active: OpenSaasSubscriptionStatus.Active,
     canceled: OpenSaasSubscriptionStatus.CancelAtPeriodEnd,
     past_due: OpenSaasSubscriptionStatus.PastDue,
