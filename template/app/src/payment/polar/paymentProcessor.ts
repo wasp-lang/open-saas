@@ -1,5 +1,3 @@
-// @ts-ignore
-import { OrderStatus } from '@polar-sh/sdk/models/components/orderstatus.js';
 import { requireNodeEnvVar } from '../../server/utils';
 import {
   type CreateCheckoutSessionArgs,
