@@ -75,15 +75,15 @@ function constructPolarEvent(request: express.Request): PolarWebhookPayload {
 
 function validateAndExtractCustomerData(data: OrderData | SubscriptionData, eventType: string) {
   const customerId = data.customer.id;
-  const waspUserId = data.customer.externalId;
+  const userId = data.customer.externalId;
 
-  if (!waspUserId) {
+  if (!userId) {
     console.warn(`${eventType} event without customer.externalId (Wasp user ID)`);
 
     return null;
   }
 
-  return { customerId, waspUserId };
+  return { customerId, userId };
 }
 
 async function handleOrderCompleted(data: OrderData, userDelegate: any): Promise<void> {
@@ -91,7 +91,7 @@ async function handleOrderCompleted(data: OrderData, userDelegate: any): Promise
 
   if (!customerData) return;
 
-  const { customerId, waspUserId } = customerData;
+  const { customerId, userId } = customerData;
   const paymentMode = data.metadata?.paymentMode;
 
   if (paymentMode !== 'payment') {
@@ -105,7 +105,7 @@ async function handleOrderCompleted(data: OrderData, userDelegate: any): Promise
 
   await updateUserPolarPaymentDetails(
     {
-      waspUserId,
+      userId,
       polarCustomerId: customerId,
       numOfCreditsPurchased: creditsAmount,
       datePaid: data.createdAt,
@@ -126,7 +126,7 @@ async function handleSubscriptionStateChange(
 
   if (!customerData) return;
 
-  const { customerId, waspUserId } = customerData;
+  const { customerId, userId } = customerData;
   const subscriptionStatus = statusOverride || getSubscriptionStatus(data.status);
   const planId = includePlanUpdate && data.productId ? getPlanIdByProductId(data.productId) : undefined;
 
@@ -134,7 +134,7 @@ async function handleSubscriptionStateChange(
 
   await updateUserPolarPaymentDetails(
     {
-      waspUserId,
+      userId,
       polarCustomerId: customerId,
       subscriptionStatus,
       ...(planId && { subscriptionPlan: planId }),
@@ -164,14 +164,14 @@ async function handleSubscriptionUpdated(data: SubscriptionData, userDelegate: a
 
   if (!customerData) return;
 
-  const { customerId, waspUserId } = customerData;
+  const { customerId, userId } = customerData;
 
   if (!data.productId) {
     return;
   }
 
   const currentUser = await userDelegate.findUnique({
-    where: { id: waspUserId },
+    where: { id: userId },
     select: { subscriptionPlan: true },
   });
 
@@ -190,7 +190,7 @@ async function handleSubscriptionUpdated(data: SubscriptionData, userDelegate: a
 
   await updateUserPolarPaymentDetails(
     {
-      waspUserId,
+      userId,
       polarCustomerId: customerId,
       subscriptionPlan: newPlanId,
       subscriptionStatus,

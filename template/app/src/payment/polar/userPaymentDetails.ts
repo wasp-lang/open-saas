@@ -1,31 +1,27 @@
 import type { PrismaClient } from '@prisma/client';
 import type { PaymentPlanId, SubscriptionStatus } from '../plans';
 
-export interface UpdateUserPolarPaymentDetailsArgs {
-  waspUserId: string;
-  polarCustomerId?: string;
-  subscriptionPlan?: PaymentPlanId;
-  subscriptionStatus?: SubscriptionStatus | string;
-  numOfCreditsPurchased?: number;
-  datePaid?: Date;
-}
-
 export const updateUserPolarPaymentDetails = async (
-  args: UpdateUserPolarPaymentDetailsArgs,
-  userDelegate: PrismaClient['user']
-) => {
-  const {
-    waspUserId,
+  {
+    userId,
     polarCustomerId,
     subscriptionPlan,
     subscriptionStatus,
     numOfCreditsPurchased,
     datePaid,
-  } = args;
-
+  }: {
+    userId: string;
+    polarCustomerId?: string;
+    subscriptionPlan?: PaymentPlanId;
+    subscriptionStatus?: SubscriptionStatus | string;
+    numOfCreditsPurchased?: number;
+    datePaid?: Date;
+  },
+  userDelegate: PrismaClient['user']
+) => {
   return await userDelegate.update({
     where: {
-      id: waspUserId,
+      id: userId,
     },
     data: {
       ...(polarCustomerId && { paymentProcessorUserId: polarCustomerId }),
@@ -33,48 +29,6 @@ export const updateUserPolarPaymentDetails = async (
       subscriptionStatus,
       datePaid,
       credits: numOfCreditsPurchased !== undefined ? { increment: numOfCreditsPurchased } : undefined,
-    },
-  });
-};
-
-export const findUserByPolarCustomerId = async (
-  polarCustomerId: string,
-  userDelegate: PrismaClient['user']
-) => {
-  return await userDelegate.findFirst({
-    where: {
-      paymentProcessorUserId: polarCustomerId,
-    },
-  });
-};
-
-export const updateUserSubscriptionStatus = async (
-  polarCustomerId: string,
-  subscriptionStatus: SubscriptionStatus | string,
-  userDelegate: PrismaClient['user']
-) => {
-  return await userDelegate.update({
-    where: {
-      paymentProcessorUserId: polarCustomerId,
-    },
-    data: {
-      subscriptionStatus,
-    },
-  });
-};
-
-export const addCreditsToUser = async (
-  polarCustomerId: string,
-  creditsAmount: number,
-  userDelegate: PrismaClient['user']
-) => {
-  return await userDelegate.update({
-    where: {
-      paymentProcessorUserId: polarCustomerId,
-    },
-    data: {
-      credits: { increment: creditsAmount },
-      datePaid: new Date(),
     },
   });
 };
