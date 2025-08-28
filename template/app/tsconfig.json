@@ -24,7 +24,5 @@
     "allowJs": true,
     "outDir": ".wasp/out/user"
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }
