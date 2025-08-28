@@ -69,15 +69,11 @@ export const polarPaymentProcessor: PaymentProcessor = {
   webhookMiddlewareConfigFn: polarMiddlewareConfigFn,
 };
 
-/**
- * Maps a payment plan effect to a Polar mode
- * @param planEffect Payment plan effect
- * @returns Polar mode
- */
 function paymentPlanEffectToPolarMode(planEffect: PaymentPlanEffect): PolarMode {
   const effectToMode: Record<PaymentPlanEffect['kind'], PolarMode> = {
     subscription: 'subscription',
     credits: 'payment',
   };
+
   return effectToMode[planEffect.kind];
 }
