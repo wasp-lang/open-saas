@@ -27,7 +27,7 @@ export async function createPolarCheckoutSession({
 }: CreatePolarCheckoutSessionArgs): Promise<PolarCheckoutSession> {
   const baseUrl = env.WASP_WEB_CLIENT_URL.replace(/\/+$/, '');
   const successUrl = `${baseUrl}/checkout?success=true`;
-  const existingCustomer = await fetchPolarCustomer(userId, userEmail);
+  const existingCustomer = await ensurePolarCustomer(userId, userEmail);
   const checkoutSessionArgs: CheckoutCreate = {
     products: [productId],
     externalCustomerId: userId,
@@ -49,7 +49,7 @@ export async function createPolarCheckoutSession({
   };
 }
 
-export async function fetchPolarCustomer(waspUserId: string, customerEmail: string): Promise<Customer> {
+async function ensurePolarCustomer(waspUserId: string, customerEmail: string): Promise<Customer> {
   try {
     const existingCustomer = await polarClient.customers.getExternal({
       externalId: waspUserId,
