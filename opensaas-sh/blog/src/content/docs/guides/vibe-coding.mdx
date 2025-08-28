@@ -1,0 +1,49 @@
+---
+title: Vibe Coding with Open SaaS
+banner:
+  content: |
+    Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
+---
+import { Image } from 'astro:assets';
+import llmsFullCursor from '@assets/ai/llm-full-cursor.webp';
+import llmsTextChat from '@assets/ai/llm-txt-chat.webp';
+import vibeBoi from '@assets/ai/vibe-boi.png';
+
+<Image src={vibeBoi} alt="vibe boi" width={300} />
+
+If you're looking to use AI to help build (or "vibe code") your SaaS app, this guide is for you.
+
+## Coding with AI, Open SaaS, & Wasp
+
+Wasp is particularly well suited to coding with AI due to its central config file which gives LLMs context about the entire full-stack app, and its ability to manage boilerplate code so AI doesn't have to. 
+
+Regardless, there are still some shortcomings to using AI to code with Wasp, as well as a learning curve to using it effectively.
+
+Luckily, we did the work for you and put together a bunch of resources to help you use Wasp & Open SaaS with AI as effectively as possible.
+
+### AI Resources in the Template
+
+The template comes with:
+- A full set of rules files, `app/.cursor/rules`, to be used with Cursor or adapted to your coding tool of choice (Windsurf, Claude Code, etc.).
+- A set of example prompts, `app/.cursor/example-prompts.md`, to help you get started.
+
+### LLM-Friendly Documentation
+
+We've also created a bunch of LLM-friendly documentation:
+- [Open SaaS Docs - LLMs.txt](https://docs.opensaas.sh/llms.txt) - Links to the raw text docs.
+- **[Open SaaS Docs - LLMs-full.txt](https://docs.opensaas.sh/llms-full.txt) - Complete docs as one text file.** ✅😎
+- Coming Soon! ~~[Wasp Docs - LLMs.txt](https://wasp.sh/llms.txt)~~ - Links to the raw text docs.
+- Coming Soon! ~~[Wasp Docs - LLMs-full.txt](https://wasp.sh/llms-full.txt)~~ - Complete docs as one text file.
+
+Add these to your AI-assisted IDE settings so you can easily reference them in your chat sessions with the LLM.
+**In most cases, you'll want to pass the `llms-full.txt` to the LLM and ask it to help you with a specific task.**
+
+<Image src={llmsFullCursor} alt="add llms-full.txt to settings" />
+
+<Image src={llmsTextChat} alt="add llms.txt to settings" />
+
+### More AI-assisted Coding Learning Resources
+
+Here's a list of articles and tutorials we've made:
+- [3hr YouTube tutorial: Vibe Coding a Personal Finance App w/ Wasp & Cursor](https://www.youtube.com/watch?v=WYzEROo7reY)
+- [Article: A Structured Workflow for "Vibe Coding" Full-Stack Apps](https://dev.to/wasp/a-structured-workflow-for-vibe-coding-full-stack-apps-352l)

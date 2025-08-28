@@ -1,0 +1,24 @@
+--- template/app/src/landing-page/LandingPage.tsx
++++ opensaas-sh/app/src/landing-page/LandingPage.tsx
+@@ -1,10 +1,10 @@
++import { Admin, AIReady, Auth, Payments } from './components/Examples';
+ import ExamplesCarousel from './components/ExamplesCarousel';
+ import FAQ from './components/FAQ';
+ import FeaturesGrid from './components/FeaturesGrid';
+ import Footer from './components/Footer';
+ import Hero from './components/Hero';
+ import Testimonials from './components/Testimonials';
+-import AIReady from './ExampleHighlightedFeature';
+ import { examples, faqs, features, footerNavigation, testimonials } from './contentSections';
+ 
+ export default function LandingPage() {
+@@ -13,6 +13,9 @@
+       <main className='isolate'>
+         <Hero />
+         <ExamplesCarousel examples={examples} />
++        <Auth />
++        <Payments />
++        <Admin />
+         <AIReady />
+         <FeaturesGrid features={features} />
+         <Testimonials testimonials={testimonials} />

@@ -1,5 +1,5 @@
-import { test, expect, type Page } from '@playwright/test';
-import { signUserUp, logUserIn, createRandomUser, makeStripePayment, type User} from './utils';
+import { expect, test, type Page } from '@playwright/test';
+import { createRandomUser, logUserIn, makeStripePayment, signUserUp, type User } from './utils';
 
 let page: Page;
 let testUser: User;
@@ -23,8 +23,8 @@ test.afterAll(async () => {
   await page.close();
 });
 
-const task1 = 'create presentation on SaaS';
-const task2 = 'build SaaS app draft';
+const task1 = 'Create presentation on SaaS';
+const task2 = 'Build SaaS app draft';
 
 test('User can make 3 AI schedule generations', async () => {
   test.slow(); // Use a longer timeout time in case OpenAI is slow to respond
@@ -38,11 +38,13 @@ test('User can make 3 AI schedule generations', async () => {
   await expect(page.getByText(task2)).toBeVisible();
 
   for (let i = 0; i < 3; i++) {
-    const generateScheduleButton = page.getByRole('button', { name: 'Generate Schedule' });
+    const generateScheduleButton = page.getByTestId('generate-schedule-button');
     await expect(generateScheduleButton).toBeVisible();
 
     await Promise.all([
-      page.waitForRequest((req) => req.url().includes('operations/generate-gpt-response') && req.method() === 'POST'),
+      page.waitForRequest(
+        (req) => req.url().includes('operations/generate-gpt-response') && req.method() === 'POST'
+      ),
       page.waitForResponse((response) => {
         return response.url().includes('/operations/generate-gpt-response') && response.status() === 200;
       }),
@@ -50,13 +52,9 @@ test('User can make 3 AI schedule generations', async () => {
       generateScheduleButton.click(),
     ]);
 
-    // We already show a table with some dummy data even before the API call
-    // Now we want to check that the tasks we added are in the generated table
-    const table = page.getByRole('table');
-    await expect(table).toBeVisible();
-    const tableTextContent = (await table.innerText()).toLowerCase();
-    expect(tableTextContent.includes(task1.toLowerCase())).toBeTruthy();
-    expect(tableTextContent.includes(task2.toLowerCase())).toBeTruthy();
+    const schedule = page.getByTestId('schedule');
+    expect(schedule).toContainText(task1, { ignoreCase: true });
+    expect(schedule).toContainText(task2, { ignoreCase: true });
   }
 });
 
@@ -65,12 +63,13 @@ test('AI schedule generation fails on 4th attempt', async () => {
 
   await page.reload();
 
-  const generateScheduleButton = page.getByRole('button', { name: 'Generate Schedule' });
+  const generateScheduleButton = page.getByTestId('generate-schedule-button');
   await expect(generateScheduleButton).toBeVisible();
 
   await Promise.all([
-    page.waitForRequest((req) => req.url().includes('operations/generate-gpt-response') && req.method() === 'POST'),
-
+    page.waitForRequest(
+      (req) => req.url().includes('operations/generate-gpt-response') && req.method() === 'POST'
+    ),
     page.waitForResponse((response) => {
       // expect the response to be 402 "PAYMENT_REQUIRED"
       return response.url().includes('/operations/generate-gpt-response') && response.status() === 402;
@@ -79,14 +78,9 @@ test('AI schedule generation fails on 4th attempt', async () => {
     generateScheduleButton.click(),
   ]);
 
-  // We already show a table with some dummy data even before the API call
-  // Now we want to check that the tasks were NOT added because the API call should have failed
-  const table = page.getByRole('table');
-  await expect(table).toBeVisible();
-  const tableTextContent = (await table.innerText()).toLowerCase();
-
-  expect(tableTextContent.includes(task1.toLowerCase())).toBeFalsy();
-  expect(tableTextContent.includes(task2.toLowerCase())).toBeFalsy();
+  const schedule = page.getByTestId('schedule');
+  expect(schedule).not.toContainText(task1, { ignoreCase: true });
+  expect(schedule).not.toContainText(task2, { ignoreCase: true });
 });
 
 test('Make test payment with Stripe for hobby plan', async () => {
@@ -97,12 +91,14 @@ test('Make test payment with Stripe for hobby plan', async () => {
 test('User should be able to generate another schedule after payment', async () => {
   await page.goto('/demo-app');
 
-  const generateScheduleButton = page.getByRole('button', { name: 'Generate Schedule' });
+  const generateScheduleButton = page.getByTestId('generate-schedule-button');
   await expect(generateScheduleButton).toBeVisible();
 
   await Promise.all([
     page
-      .waitForRequest((req) => req.url().includes('operations/generate-gpt-response') && req.method() === 'POST')
+      .waitForRequest(
+        (req) => req.url().includes('operations/generate-gpt-response') && req.method() === 'POST'
+      )
       .catch((err) => console.error(err.message)),
     page
       .waitForResponse((response) => {
@@ -116,10 +112,7 @@ test('User should be able to generate another schedule after payment', async () 
     generateScheduleButton.click(),
   ]);
 
-  await page.waitForSelector('table');
-  const table = page.getByRole('table');
-  await expect(table).toBeVisible();
-  const tableTextContent = (await table.innerText()).toLowerCase();
-  expect(tableTextContent.includes(task1.toLowerCase())).toBeTruthy();
-  expect(tableTextContent.includes(task2.toLowerCase())).toBeTruthy();
+  const schedule = page.getByTestId('schedule');
+  expect(schedule).toContainText(task1, { ignoreCase: true });
+  expect(schedule).toContainText(task2, { ignoreCase: true });
 });

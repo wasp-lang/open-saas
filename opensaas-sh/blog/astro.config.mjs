@@ -40,9 +40,9 @@ export default defineConfig({
       },
       components: {
         SiteTitle: './src/components/MyHeader.astro',
-        ThemeSelect: './src/components/MyThemeSelect.astro',
+        // We customized ThemeSelect to include a "Copy URL for LLMs" button
+        ThemeSelect: './src/components/MyRightNavBarItems.astro',
         Head: './src/components/HeadWithOGImage.astro',
-        PageTitle: './src/components/TitleWithBannerImage.astro',
       },
       social: {
         github: 'https://github.com/wasp-lang/open-saas',

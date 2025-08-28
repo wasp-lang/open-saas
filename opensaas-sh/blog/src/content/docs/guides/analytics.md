@@ -98,9 +98,9 @@ Then, set up the Google Analytics API access by following these steps:
 
 4. **Create Credentials:** When you go back to `Credentials` page, you should see a new service account listed under "Service Accounts". It will be a long email address to ends with `@your-project-id.iam.gserviceaccount.com`. Click on the service account name to go to the service account details page. 
 
-    - Under “Keys” in the service account details page, click “Add Key” and choose `Create new key`.
+    - Under "Keys" in the service account details page, click "Add Key" and choose `Create new key`.
   
-    - Select "JSON", then click “Create” to download your new service account’s JSON key file. Keep this file secure and don't add it to your git repo – it grants access to your Google Analytics data.  
+    - Select "JSON", then click "Create" to download your new service account's JSON key file. Keep this file secure and don't add it to your git repo as it grants access to your Google Analytics data.  
 5. **Update your Google Anayltics Settings:** Go back to your Google Analytics dashboard, and click on the `Admin` section in the left sidebar. Under `Property Settings > Property > Property Access Management` Add the service account email address (the one that ends with `@your-project-id.iam.gserviceaccount.com`) and give it `Viewer` permissions.
 
 6. **Encode and add the Credentials:** Add the `client_email` and the `private_key` from your JSON Key file into your `.env.server` file. But be careful! Because Google uses a special PEM private key, you need to first convert the key to base64, otherwise you will run into errors parsing the key. To do this, in a terminal window, run the command below and paste the output into your `.env.server` file under the `GOOGLE_ANALYTICS_PRIVATE_KEY` variable:

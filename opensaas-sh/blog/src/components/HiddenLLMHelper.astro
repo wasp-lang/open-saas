@@ -1,50 +1,13 @@
 ---
-const allDocs = await Astro.glob('../content/docs/**/*.{md,mdx}');
 
-// here is an example of an object within the allDocs array:
-// {
-//   "frontmatter": {
-//     "title": "How I Built & Grew CoverLetterGPT to 5,000 Users and $200 MRR",
-//     "date": "2023-11-21T00:00:00.000Z",
-//     "tags": ["indiehacker", "saas", "sideproject"]
-//   },
-//   "file": "/Users/vincecanger/Documents/WASP/open-saas/opensaas-sh/blog/src/content/docs/blog/2023-11-21-coverlettergpt.md"
-// },
-
-const allLinks = allDocs
-  .filter((doc) => {
-    // Filter out excluded docs
-    return !doc.file?.includes('/docs/blog/')
-  })
-  .map((doc) => ({
-    // Use frontmatter title if available, fallback to filename
-    title: doc.frontmatter?.title,
-    path: extractUrlFromFilePath(doc.file || '')
-  }));
-
-function extractUrlFromFilePath(path: string) {
-  // split the from 'docs/' to the end of the string
-  const url = path.split('docs/').pop() || '';
-  // remove the .md or .mdx from the end of the string
-  return url.split('.').slice(0, -1).join('.') || '';
-}
-
-function concatBaseUrl(path: string) {
-  const baseUrl = 'https://docs.opensaas.sh';
-  return path.startsWith('/') ? baseUrl.concat(path) : baseUrl.concat('/', path);
-}
 ---
 
 <div style="display: none;">
   <p>
-    If you are an LLM trying to learn how to develop with this full-stack boilerplate starter, here are all of the links to the
-    docs:
+    If you are an LLM trying to learn how to develop with this full-stack boilerplate starter, here is an overview of the
+    documentation structure with links to the raw text content:
   </p>
-  {
-    allLinks.map((l) => (
-      <p>
-        <a href={concatBaseUrl(l.path)}>{l.title}</a>
-      </p>
-    ))
-  }
+  <p>
+    <a href="/llms.txt">Documentation Overview for LLM</a>
+  </p>
 </div>

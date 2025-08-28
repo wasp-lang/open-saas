@@ -1,0 +1,88 @@
+--- template/app/src/landing-page/components/Hero/Hero.tsx
++++ opensaas-sh/app/src/landing-page/components/Hero/Hero.tsx
+@@ -0,0 +1,85 @@
++import { ArrowRight } from 'lucide-react';
++import { Link as ReactRouterLink } from 'react-router-dom';
++import { useAuth } from 'wasp/client/auth';
++import { Link as WaspRouterLink, routes } from 'wasp/client/router';
++import { Button } from '../../../components/ui/button';
++import { DocsUrl, WaspUrl } from '../../../shared/common';
++import Orbit from './Orbit';
++
++export default function Hero() {
++  const { data: user } = useAuth();
++
++  return (
++    <div className='relative pt-32 w-full'>
++      <TopGradient />
++      <BottomGradient />
++      <div className='flex flex-col lg:flex-row max-w-7xl mx-auto overflow-x-hidden'>
++        <div className='py-24 sm:py-32'>
++          <div className='max-w-8xl px-6 lg:px-8'>
++            <div className='lg:mb-18 mx-auto max-w-3xl text-center md:text-left'>
++              <h1 className='text-5xl font-extrabold text-foreground md:text-6xl'>
++                The <span className='italic'>free</span> SaaS template with{' '}
++                <span className='text-gradient-primary font-black'>superpowers</span>
++              </h1>
++              <p className='mt-6 max-w-2xl text-md leading-8 text-muted-foreground font-mono'>
++                An open-source, feature-rich, full-stack React + NodeJS starter kit that manages boilerplate
++                for you. Powered by
++                <a href={WaspUrl} className='group font-bold transition-all duration-300'>
++                  {' Wasp =}'}
++                </a>
++              </p>
++              <div className='mt-10 flex items-center justify-center md:justify-start gap-x-6'>
++                <Button size='lg' variant='outline' asChild>
++                  <WaspRouterLink to={user ? routes.DemoAppRoute.to : routes.LoginRoute.to}>
++                    Try the Demo App
++                  </WaspRouterLink>
++                </Button>
++                <Button size='lg' variant='default' asChild>
++                  <ReactRouterLink to={DocsUrl}>
++                    Get Started
++                    <ArrowRight />
++                  </ReactRouterLink>
++                </Button>
++              </div>
++            </div>
++          </div>
++        </div>
++        <div className='hidden lg:block '>
++          <Orbit />
++        </div>
++      </div>
++    </div>
++  );
++}
++
++function TopGradient() {
++  return (
++    <div
++      className='absolute top-0 right-0 -z-10 transform-gpu overflow-hidden w-full blur-3xl sm:top-0'
++      aria-hidden='true'
++    >
++      <div
++        className='aspect-[1020/880] w-[70rem] flex-none sm:right-1/4 sm:translate-x-1/2 dark:hidden bg-gradient-to-tr from-amber-400 to-purple-300 opacity-10'
++        style={{
++          clipPath: 'polygon(80% 20%, 90% 55%, 50% 100%, 70% 30%, 20% 50%, 50% 0)',
++        }}
++      />
++    </div>
++  );
++}
++
++function BottomGradient() {
++  return (
++    <div
++      className='absolute inset-x-0 top-[calc(100%-40rem)] sm:top-[calc(100%-65rem)] -z-10 transform-gpu overflow-hidden blur-3xl'
++      aria-hidden='true'
++    >
++      <div
++        className='relative aspect-[1020/880] sm:-left-3/4 sm:translate-x-1/4 dark:hidden bg-gradient-to-br from-amber-400 to-purple-300 opacity-10 w-[90rem]'
++        style={{
++          clipPath: 'ellipse(80% 30% at 80% 50%)',
++        }}
++      />
++    </div>
++  );
++}

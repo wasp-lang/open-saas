@@ -1,13 +1,14 @@
 --- template/app/main.wasp
 +++ opensaas-sh/app/main.wasp
-@@ -3,30 +3,30 @@
-     version: "^0.16.0"
+@@ -3,31 +3,32 @@
+     version: "^0.17.0"
    },
  
 -  title: "My Open SaaS App",
 +  title: "Open SaaS",
  
    head: [
+     "<link rel='icon' href='/favicon.ico' />",
      "<meta charset='utf-8' />",
 -    "<meta name='description' content='Your apps main description and features.' />",
 -    "<meta name='author' content='Your (App) Name' />",
@@ -27,7 +28,7 @@
 -    "<meta name='twitter:image' content='https://your-saas-app.com/public-banner.webp' />",
 +    "<meta property='og:title' content='Open SaaS' />",
 +    "<meta property='og:url' content='https://opensaas.sh' />",
-+    "<meta property='og:description' content='Free, open-source SaaS boilerplate starter for React & NodeJS.' />",
++    "<meta property='og:description' content='Free, open-source SaaS boilerplate starter for React & NodeJS. Powered by Wasp.' />",
 +    "<meta property='og:image' content='https://opensaas.sh/public-banner.webp' />",
 +
 +    "<meta name=\"twitter:title\" content=\"Open SaaS\" />",
@@ -43,12 +44,13 @@
 -    // via the Cookie Consent component after the user clicks the "Accept" cookies button.
 -    "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.js'></script>",  // for production
 -    "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.local.js'></script>",  // for development
++
 +    "<script defer data-domain='opensaas.sh' data-api='/waspara/wasp/event' src='/waspara/wasp/script.js'></script>",
 +    "<script defer src='/piggy.js'></script>",
    ],
  
    // 🔐 Auth out of the box! https://wasp.sh/docs/auth/overview
-@@ -38,7 +38,7 @@
+@@ -39,7 +40,7 @@
        email: {
          fromField: {
            name: "Open SaaS App",
@@ -57,7 +59,7 @@
          },
          emailVerification: {
            clientRoute: EmailVerificationRoute,
-@@ -50,21 +50,18 @@
+@@ -51,21 +52,18 @@
          },
          userSignupFields: import { getEmailUserFields } from "@src/auth/userSignupFields",
        },
@@ -91,7 +93,7 @@
      },
      onAuthFailedRedirectTo: "/login",
      onAuthSucceededRedirectTo: "/demo-app",
-@@ -86,11 +83,11 @@
+@@ -87,11 +85,11 @@
      // NOTE: "Dummy" provider is just for local development purposes.
      //   Make sure to check the server logs for the email confirmation url (it will not be sent to an address)!
      //   Once you are ready for production, switch to e.g. "SendGrid" or "Mailgun" providers. Check out https://docs.opensaas.sh/guides/email-sending/ .
@@ -105,7 +107,7 @@
      },
    },
  }
-@@ -206,9 +203,9 @@
+@@ -207,9 +205,9 @@
  }
  
  api paymentsWebhook {
@@ -117,3 +119,11 @@
    httpRoute: (POST, "/payments-webhook")
  }
  //#endregion
+@@ -281,7 +279,6 @@
+   component: import AdminCalendar from "@src/admin/elements/calendar/CalendarPage"
+ }
+ 
+-
+ route AdminUIButtonsRoute { path: "/admin/ui/buttons", to: AdminUIButtonsPage }
+ page AdminUIButtonsPage {
+   authRequired: true,
