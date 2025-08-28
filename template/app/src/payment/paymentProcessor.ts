@@ -3,8 +3,8 @@ import type { PaymentsWebhook } from 'wasp/server/api';
 import type { MiddlewareConfigFn } from 'wasp/server';
 import { PrismaClient } from '@prisma/client';
 import { stripePaymentProcessor } from './stripe/paymentProcessor';
-// import { lemonSqueezyPaymentProcessor } from './lemonSqueezy/paymentProcessor';
-// import { polarPaymentProcessor } from './polar/paymentProcessor';
+import { lemonSqueezyPaymentProcessor } from './lemonSqueezy/paymentProcessor';
+import { polarPaymentProcessor } from './polar/paymentProcessor';
 
 export interface CreateCheckoutSessionArgs {
   userId: string;
