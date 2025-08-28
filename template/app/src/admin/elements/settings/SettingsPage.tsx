@@ -9,11 +9,8 @@ import { Label } from '../../../components/ui/label';
 import { Textarea } from '../../../components/ui/textarea';
 import Breadcrumb from '../../layout/Breadcrumb';
 import DefaultLayout from '../../layout/DefaultLayout';
-import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin';
 
 const SettingsPage = ({ user }: { user: AuthUser }) => {
-  useRedirectHomeUnlessUserIsAdmin({ user });
-
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     // TODO add toast provider / wrapper
     event.preventDefault();
