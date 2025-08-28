@@ -1,4 +1,3 @@
-import { requireNodeEnvVar } from '../../server/utils';
 import {
   type CreateCheckoutSessionArgs,
   type FetchCustomerPortalUrlArgs,
@@ -47,7 +46,6 @@ export const polarPaymentProcessor: PaymentProcessor = {
     };
   },
   fetchCustomerPortalUrl: async (args: FetchCustomerPortalUrlArgs) => {
-    const defaultPortalUrl = requireNodeEnvVar('POLAR_CUSTOMER_PORTAL_URL');
     const user = await args.prismaUserDelegate.findUnique({
       where: {
         id: args.userId,
@@ -65,7 +63,7 @@ export const polarPaymentProcessor: PaymentProcessor = {
       return customerSession.customerPortalUrl;
     }
 
-    return defaultPortalUrl;
+    return null;
   },
   webhook: polarWebhook,
   webhookMiddlewareConfigFn: polarMiddlewareConfigFn,
