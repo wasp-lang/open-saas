@@ -4,8 +4,7 @@ import {
   type PaymentProcessor,
 } from '../paymentProcessor';
 import type { PaymentPlanEffect } from '../plans';
-import { createPolarCheckoutSession } from './checkoutUtils';
-import { polarClient } from './polarClient';
+import { createPolarCheckoutSession, ensurePolarCustomer, getCustomerPortalUrl } from './clientUtils';
 import { polarMiddlewareConfigFn, polarWebhook } from './webhook';
 
 export type PolarMode = 'subscription' | 'payment';
@@ -18,23 +17,19 @@ export const polarPaymentProcessor: PaymentProcessor = {
     paymentPlan,
     prismaUserDelegate,
   }: CreateCheckoutSessionArgs) => {
+    const customer = await ensurePolarCustomer(userId, userEmail);
     const session = await createPolarCheckoutSession({
       productId: paymentPlan.getPaymentProcessorPlanId(),
-      userEmail,
-      userId,
+      customerId: customer.id,
       mode: paymentPlanEffectToPolarMode(paymentPlan.effect),
     });
-
-    if (!session.customerId) {
-      throw new Error('Polar checkout session created without customer ID');
-    }
 
     await prismaUserDelegate.update({
       where: {
         id: userId,
       },
       data: {
-        paymentProcessorUserId: session.customerId,
+        paymentProcessorUserId: customer.id,
       },
     });
 
@@ -56,11 +51,7 @@ export const polarPaymentProcessor: PaymentProcessor = {
     });
 
     if (user?.paymentProcessorUserId) {
-      const customerSession = await polarClient.customerSessions.create({
-        customerId: user.paymentProcessorUserId,
-      });
-
-      return customerSession.customerPortalUrl;
+      return await getCustomerPortalUrl(user.paymentProcessorUserId);
     }
 
     return null;

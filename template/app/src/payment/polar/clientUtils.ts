@@ -1,55 +1,43 @@
 // @ts-ignore
-import { CheckoutCreate } from '@polar-sh/sdk/models/components/checkoutcreate.js';
-// @ts-ignore
-import { Customer } from '@polar-sh/sdk/models/components/customer.js';
+import type { Customer } from '@polar-sh/sdk/models/components/customer.js';
 import { env } from 'wasp/server';
 import type { PolarMode } from './paymentProcessor';
 import { polarClient } from './polarClient';
 
-export interface CreatePolarCheckoutSessionArgs {
+interface CreatePolarCheckoutSessionArgs {
   productId: string;
-  userEmail: string;
-  userId: string;
+  customerId: string;
   mode: PolarMode;
 }
 
-export interface PolarCheckoutSession {
+interface PolarCheckoutSession {
   id: string;
   url: string;
-  customerId?: string;
 }
 
 export async function createPolarCheckoutSession({
   productId,
-  userEmail,
-  userId,
+  customerId,
   mode,
 }: CreatePolarCheckoutSessionArgs): Promise<PolarCheckoutSession> {
   const baseUrl = env.WASP_WEB_CLIENT_URL.replace(/\/+$/, '');
-  const successUrl = `${baseUrl}/checkout?success=true`;
-  const existingCustomer = await ensurePolarCustomer(userId, userEmail);
-  const checkoutSessionArgs: CheckoutCreate = {
+  const checkoutSession = await polarClient.checkouts.create({
     products: [productId],
-    externalCustomerId: userId,
-    customerEmail: userEmail,
-    successUrl: successUrl,
+    successUrl: `${baseUrl}/checkout?success=true`,
     metadata: {
       paymentMode: mode,
       source: baseUrl,
     },
-    ...(existingCustomer && { customerId: existingCustomer.id }),
-  };
-  const checkoutSession = await polarClient.checkouts.create(checkoutSessionArgs);
-  const customerId = checkoutSession.customerId;
+    customerId,
+  });
 
   return {
     id: checkoutSession.id,
     url: checkoutSession.url,
-    customerId: customerId || undefined,
   };
 }
 
-async function ensurePolarCustomer(waspUserId: string, customerEmail: string): Promise<Customer> {
+export async function ensurePolarCustomer(waspUserId: string, customerEmail: string): Promise<Customer> {
   try {
     const existingCustomer = await polarClient.customers.getExternal({
       externalId: waspUserId,
@@ -78,4 +66,12 @@ async function ensurePolarCustomer(waspUserId: string, customerEmail: string): P
 
     throw error;
   }
+}
+
+export async function getCustomerPortalUrl(customerId: string) {
+  const customerSession = await polarClient.customerSessions.create({
+    customerId,
+  });
+
+  return customerSession.customerPortalUrl;
 }
