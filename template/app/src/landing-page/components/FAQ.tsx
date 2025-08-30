@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../../components/ui/accordion';
 
 interface FAQ {
@@ -8,10 +9,11 @@ interface FAQ {
 }
 
 export default function FAQ({ faqs }: { faqs: FAQ[] }) {
+  const { t } = useTranslation();
   return (
     <div className='mt-32 mx-auto max-w-4xl px-6 pb-8 sm:pb-24 sm:pt-12 lg:max-w-7xl lg:px-8 lg:py-32'>
       <h2 className='text-2xl font-bold leading-10 tracking-tight text-foreground text-center mb-12'>
-        Frequently asked questions
+        {t('faq.title')}
       </h2>
 
       <Accordion type='single' collapsible className='w-full space-y-4'>
@@ -32,7 +34,7 @@ export default function FAQ({ faqs }: { faqs: FAQ[] }) {
                     href={faq.href}
                     className='text-base leading-7 text-primary hover:text-primary/80 transition-colors duration-200 font-medium whitespace-nowrap flex-shrink-0'
                   >
-                    Learn more →
+                    {t('faq.learnMore')}
                   </a>
                 )}
               </div>

@@ -1,9 +1,11 @@
+import { useTranslation } from 'react-i18next';
 import { Link as WaspRouterLink, routes } from 'wasp/client/router';
 import openSaasBannerDark from '../../client/static/open-saas-banner-dark.png';
 import openSaasBannerLight from '../../client/static/open-saas-banner-light.png';
 import { Button } from '../../components/ui/button';
 
 export default function Hero() {
+  const { t } = useTranslation();
   return (
     <div className='relative pt-14 w-full'>
       <TopGradient />
@@ -12,19 +14,18 @@ export default function Hero() {
         <div className='mx-auto max-w-8xl px-6 lg:px-8'>
           <div className='lg:mb-18 mx-auto max-w-3xl text-center'>
             <h1 className='text-5xl font-bold text-foreground sm:text-6xl'>
-              Some <span className='italic'>cool</span> words about{' '}
-              <span className='text-gradient-primary'>your product</span>
+              {t('hero.title')}
             </h1>
             <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-muted-foreground'>
-              With some more exciting words about your product!
+              {t('hero.subtitle')}
             </p>
             <div className='mt-10 flex items-center justify-center gap-x-6'>
               <Button size='lg' variant='outline' asChild>
-                <WaspRouterLink to={routes.PricingPageRoute.to}>Learn More</WaspRouterLink>
+                <WaspRouterLink to={routes.PricingPageRoute.to}>{t('hero.learnMore')}</WaspRouterLink>
               </Button>
               <Button size='lg' variant='default' asChild>
                 <WaspRouterLink to={routes.SignupRoute.to}>
-                  Get Started <span aria-hidden='true'>→</span>
+                  {t('hero.getStarted')} <span aria-hidden='true'>→</span>
                 </WaspRouterLink>
               </Button>
             </div>

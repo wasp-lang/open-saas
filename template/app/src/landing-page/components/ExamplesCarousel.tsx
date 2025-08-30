@@ -1,4 +1,5 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '../../components/ui/card';
 
 const EXAMPLES_CAROUSEL_INTERVAL = 3000;
@@ -12,6 +13,7 @@ interface ExampleApp {
 }
 
 const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
+  const { t } = useTranslation();
   const [currentExample, setCurrentExample] = useState(0);
   const [isInView, setIsInView] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -100,7 +102,7 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
       ref={containerRef}
       className='relative w-screen left-1/2 -translate-x-1/2 flex flex-col items-center my-16'
     >
-      <h2 className='mb-6 text-center font-semibold tracking-wide text-muted-foreground'>Used by:</h2>
+      <h2 className='mb-6 text-center font-semibold tracking-wide text-muted-foreground'>{t('examples.usedBy')}</h2>
       <div className='w-full max-w-full overflow-hidden'>
         <div
           className='flex overflow-x-auto no-scrollbar scroll-smooth pb-10 pt-4 gap-4 px-4 snap-x snap-mandatory'

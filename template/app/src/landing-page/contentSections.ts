@@ -9,6 +9,73 @@ import searchcraft from '../client/static/examples/searchcraft.webp';
 import { BlogUrl, DocsUrl } from '../shared/common';
 import type { GridFeature } from './components/FeaturesGrid';
 
+// 使用函数来获取翻译后的功能列表
+export const getFeatures = (t: (key: string) => string): GridFeature[] => [
+  {
+    name: t('landing.features.feature1.name'),
+    description: t('landing.features.feature1.description'),
+    emoji: '🤝',
+    href: DocsUrl,
+    size: 'small',
+  },
+  {
+    name: t('landing.features.feature2.name'),
+    description: t('landing.features.feature2.description'),
+    emoji: '🔐',
+    href: DocsUrl,
+    size: 'small',
+  },
+  {
+    name: t('landing.features.feature3.name'),
+    description: t('landing.features.feature3.description'),
+    emoji: '🥞',
+    href: DocsUrl,
+    size: 'medium',
+  },
+  {
+    name: t('landing.features.feature4.name'),
+    description: t('landing.features.feature4.description'),
+    emoji: '💸',
+    href: DocsUrl,
+    size: 'large',
+  },
+  {
+    name: t('landing.features.feature5.name'),
+    description: t('landing.features.feature5.description'),
+    emoji: '💼',
+    href: DocsUrl,
+    size: 'large',
+  },
+  {
+    name: t('landing.features.feature6.name'),
+    description: t('landing.features.feature6.description'),
+    emoji: '📈',
+    href: DocsUrl,
+    size: 'small',
+  },
+  {
+    name: t('landing.features.feature7.name'),
+    description: t('landing.features.feature7.description'),
+    emoji: '📧',
+    href: DocsUrl,
+    size: 'small',
+  },
+  {
+    name: t('landing.features.feature8.name'),
+    description: t('landing.features.feature8.description'),
+    emoji: '🤖',
+    href: DocsUrl,
+    size: 'medium',
+  },
+  {
+    name: t('landing.features.feature9.name'),
+    description: t('landing.features.feature9.description'),
+    emoji: '🚀',
+    href: DocsUrl,
+    size: 'medium',
+  },
+];
+
 export const features: GridFeature[] = [
   {
     name: 'Cool Feature 1',
@@ -108,6 +175,20 @@ export const faqs = [
   },
 ];
 
+// 使用函数来获取翻译后的页脚导航
+export const getFooterNavigation = (t: (key: string) => string) => ({
+  app: [
+    { name: t('navigation.documentation'), href: DocsUrl },
+    { name: t('navigation.blog'), href: BlogUrl },
+  ],
+  company: [
+    { name: t('footer.about'), href: 'https://wasp.sh' },
+    { name: t('footer.privacy'), href: '#' },
+    { name: t('footer.termsOfService'), href: '#' },
+  ],
+});
+
+// 保留旧的导出以保持向后兼容性
 export const footerNavigation = {
   app: [
     { name: 'Documentation', href: DocsUrl },
