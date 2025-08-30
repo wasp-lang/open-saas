@@ -3,8 +3,10 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { routes } from 'wasp/client/router';
 import './Main.css';
 import NavBar from './components/NavBar/NavBar';
-import { demoNavigationitems, marketingNavigationItems } from './components/NavBar/constants';
+import { getDemoNavigationItems, getMarketingNavigationItems } from './components/NavBar/constants';
 import CookieConsentBanner from './components/cookie-consent/Banner';
+import '../i18n';
+import { useTranslation } from 'react-i18next';
 
 /**
  * use this component to wrap all child components
@@ -12,11 +14,13 @@ import CookieConsentBanner from './components/cookie-consent/Banner';
  */
 export default function App() {
   const location = useLocation();
+  const { t } = useTranslation();
+  
   const isMarketingPage = useMemo(() => {
     return location.pathname === '/' || location.pathname.startsWith('/pricing');
   }, [location]);
 
-  const navigationItems = isMarketingPage ? marketingNavigationItems : demoNavigationitems;
+  const navigationItems = isMarketingPage ? getMarketingNavigationItems(t) : getDemoNavigationItems(t);
 
   const shouldDisplayAppNavBar = useMemo(() => {
     return (

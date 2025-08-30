@@ -1,6 +1,7 @@
 import { LogIn, Menu } from 'lucide-react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Link as ReactRouterLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from 'wasp/client/auth';
 import { Link as WaspRouterLink, routes } from 'wasp/client/router';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../../../components/ui/sheet';
@@ -11,7 +12,9 @@ import { UserMenuItems } from '../../../user/UserMenuItems';
 import { useIsLandingPage } from '../../hooks/useIsLandingPage';
 import logo from '../../static/logo.webp';
 import DarkModeSwitcher from '../DarkModeSwitcher';
+import LanguageSwitcher from '../LanguageSwitcher';
 import { Announcement } from './Announcement';
+import { getMarketingNavigationItems, getDemoNavigationItems } from './constants';
 
 export interface NavigationItem {
   name: string;
@@ -21,6 +24,7 @@ export interface NavigationItem {
 export default function NavBar({ navigationItems }: { navigationItems: NavigationItem[] }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const isLandingPage = useIsLandingPage();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const throttledHandler = throttleWithTrailingInvocation(() => {
@@ -84,10 +88,12 @@ export default function NavBar({ navigationItems }: { navigationItems: Navigatio
 
 function NavBarDesktopUserDropdown({ isScrolled }: { isScrolled: boolean }) {
   const { data: user, isLoading: isUserLoading } = useAuth();
+  const { t } = useTranslation();
 
   return (
     <div className='hidden lg:flex lg:flex-1 gap-3 justify-end items-center'>
       <ul className='flex justify-center items-center gap-2 sm:gap-4'>
+        <LanguageSwitcher />
         <DarkModeSwitcher />
       </ul>
       {isUserLoading ? null : !user ? (
@@ -99,7 +105,7 @@ function NavBarDesktopUserDropdown({ isScrolled }: { isScrolled: boolean }) {
           })}
         >
           <div className='flex items-center duration-300 ease-in-out text-foreground hover:text-primary transition-colors'>
-            Log in{' '}
+            {t('navigation.login')}{' '}
             <LogIn
               size={isScrolled ? '1rem' : '1.1rem'}
               className={cn('transition-all duration-300', {
@@ -126,6 +132,7 @@ function NavBarMobileMenu({
   navigationItems: NavigationItem[];
 }) {
   const { data: user, isLoading: isUserLoading } = useAuth();
+  const { t } = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -164,7 +171,7 @@ function NavBarMobileMenu({
                 {isUserLoading ? null : !user ? (
                   <WaspRouterLink to={routes.LoginRoute.to}>
                     <div className='flex justify-end items-center duration-300 ease-in-out text-foreground hover:text-primary transition-colors'>
-                      Log in <LogIn size='1.1rem' className='ml-1' />
+                      {t('navigation.login')} <LogIn size='1.1rem' className='ml-1' />
                     </div>
                   </WaspRouterLink>
                 ) : (
@@ -174,7 +181,10 @@ function NavBarMobileMenu({
                 )}
               </div>
               <div className='py-6'>
-                <DarkModeSwitcher />
+                <div className='flex items-center justify-between'>
+                  <LanguageSwitcher />
+                  <DarkModeSwitcher />
+                </div>
               </div>
             </div>
           </div>
