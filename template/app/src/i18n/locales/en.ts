@@ -34,7 +34,93 @@ export const enTranslations = {
     "logout": "Logout",
     "profile": "Profile",
     "settings": "Settings",
-    "admin": "Admin"
+    "admin": "Admin",
+    "documentation": "Documentation",
+    "blog": "Blog"
+  },
+  "user": {
+    "aiScheduler": "AI Scheduler (Demo App)",
+    "accountSettings": "Account Settings",
+    "adminDashboard": "Admin Dashboard",
+    "logOut": "Log Out"
+  },
+  "demo": {
+    "aiScheduler": "AI Scheduler",
+    "fileUpload": "File Upload"
+  },
+  "features": {
+    "title": "Features",
+    "description": "These are some of the features of the product."
+  },
+  "footer": {
+    "app": "App",
+    "company": "Company",
+    "about": "About",
+    "privacy": "Privacy",
+    "termsOfService": "Terms of Service"
+  },
+  "highlightedFeature": {
+    "name": "Example Feature Highlight",
+    "description": "Yo! Use this component to show off the most important features in your app."
+  },
+  "hero": {
+    "title": "Some cool words about your product",
+    "subtitle": "With some more exciting words about your product!",
+    "learnMore": "Learn More",
+    "getStarted": "Get Started"
+  },
+  "examples": {
+    "usedBy": "Used by:"
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "learnMore": "Learn more →"
+  },
+  "testimonials": {
+    "title": "What Our Users Say",
+    "showLess": "Show Less",
+    "showMore": "Show {count} More"
+  },
+  "pricing": {
+    "title": "Pick your pricing",
+    "subtitle": "Choose between Stripe and LemonSqueezy as your payment provider. Just add your Product IDs! Try it out below with test credit card number",
+    "testCardNumber": "4242 4242 4242 4242 4242",
+    "perMonth": "/month",
+    "manageSubscription": "Manage Subscription",
+    "buyPlan": "Buy plan",
+    "loginToBuyPlan": "Log in to buy plan",
+    "errorProcessingPayment": "Error processing payment. Please try again later.",
+    "errorGeneratingCheckout": "Error generating checkout session URL",
+    "errorFetchingPortal": "Error fetching Customer Portal URL",
+    "errorPortalNotExist": "Customer Portal does not exist for user {userId}",
+    "planNames": {
+      "hobby": "Hobby",
+      "pro": "Pro",
+      "credits10": "10 Credits"
+    },
+    "plans": {
+      "hobby": {
+        "description": "All you need to get started",
+        "features": {
+          "limitedUsage": "Limited monthly usage",
+          "basicSupport": "Basic support"
+        }
+      },
+      "pro": {
+        "description": "Our most popular plan",
+        "features": {
+          "unlimitedUsage": "Unlimited monthly usage",
+          "prioritySupport": "Priority customer support"
+        }
+      },
+      "credits10": {
+        "description": "One-time purchase of 10 credits for your account",
+        "features": {
+          "useCredits": "Use credits for e.g. OpenAI API calls",
+          "noExpiration": "No expiration date"
+        }
+      }
+    }
   },
   "landing": {
     "hero": {
@@ -143,34 +229,6 @@ export const enTranslations = {
       "revenue": "Revenue",
       "growth": "Growth",
       "conversion": "Conversion"
-    }
-  },
-  "pricing": {
-    "title": "Simple, transparent pricing",
-    "subtitle": "Choose the plan that's right for you",
-    "monthly": "Monthly",
-    "yearly": "Yearly",
-    "save": "Save",
-    "currentPlan": "Current Plan",
-    "upgrade": "Upgrade",
-    "downgrade": "Downgrade",
-    "cancel": "Cancel Plan",
-    "plans": {
-      "free": {
-        "name": "Free",
-        "price": "$0",
-        "description": "Perfect for getting started"
-      },
-      "pro": {
-        "name": "Pro",
-        "price": "$29",
-        "description": "For growing businesses"
-      },
-      "enterprise": {
-        "name": "Enterprise",
-        "price": "$99",
-        "description": "For large organizations"
-      }
     }
   },
   "language": {

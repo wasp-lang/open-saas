@@ -34,7 +34,52 @@ export const zhTranslations = {
     "logout": "退出",
     "profile": "个人资料",
     "settings": "设置",
-    "admin": "管理"
+    "admin": "管理",
+    "documentation": "文档",
+    "blog": "博客"
+  },
+  "user": {
+    "aiScheduler": "AI 调度器（演示应用）",
+    "accountSettings": "账户设置",
+    "adminDashboard": "管理仪表板",
+    "logOut": "退出登录"
+  },
+  "demo": {
+    "aiScheduler": "AI 调度器",
+    "fileUpload": "文件上传"
+  },
+  "features": {
+    "title": "功能特性",
+    "description": "这些是产品的一些功能特性。"
+  },
+  "footer": {
+    "app": "应用",
+    "company": "公司",
+    "about": "关于",
+    "privacy": "隐私",
+    "termsOfService": "服务条款"
+  },
+  "highlightedFeature": {
+    "name": "示例功能亮点",
+    "description": "嘿！使用此组件来展示您应用中最重要功能。"
+  },
+  "hero": {
+    "title": "关于您产品的一些酷炫词汇",
+    "subtitle": "还有更多关于您产品的激动人心的词汇！",
+    "learnMore": "了解更多",
+    "getStarted": "开始使用"
+  },
+  "examples": {
+    "usedBy": "使用方："
+  },
+  "faq": {
+    "title": "常见问题",
+    "learnMore": "了解更多 →"
+  },
+  "testimonials": {
+    "title": "用户评价",
+    "showLess": "显示更少",
+    "showMore": "显示更多 {count} 条"
   },
   "landing": {
     "hero": {
@@ -146,30 +191,43 @@ export const zhTranslations = {
     }
   },
   "pricing": {
-    "title": "简单透明的定价",
-    "subtitle": "选择适合您的计划",
-    "monthly": "月付",
-    "yearly": "年付",
-    "save": "节省",
-    "currentPlan": "当前计划",
-    "upgrade": "升级",
-    "downgrade": "降级",
-    "cancel": "取消计划",
+    "title": "选择您的定价",
+    "subtitle": "选择 Stripe 或 LemonSqueezy 作为您的支付提供商。只需添加您的产品 ID！使用测试信用卡号码在下方试用",
+    "testCardNumber": "4242 4242 4242 4242 4242",
+    "perMonth": "/月",
+    "manageSubscription": "管理订阅",
+    "buyPlan": "购买计划",
+    "loginToBuyPlan": "登录购买计划",
+    "errorProcessingPayment": "处理支付时出错。请稍后重试。",
+    "errorGeneratingCheckout": "生成结账会话 URL 时出错",
+    "errorFetchingPortal": "获取客户门户 URL 时出错",
+    "errorPortalNotExist": "用户 {userId} 的客户门户不存在",
+    "planNames": {
+      "hobby": "业余版",
+      "pro": "专业版",
+      "credits10": "10 积分"
+    },
     "plans": {
-      "free": {
-        "name": "免费",
-        "price": "¥0",
-        "description": "完美适合入门"
+      "hobby": {
+        "description": "开始所需的一切",
+        "features": {
+          "limitedUsage": "有限的月度使用量",
+          "basicSupport": "基础支持"
+        }
       },
       "pro": {
-        "name": "专业版",
-        "price": "¥199",
-        "description": "适合成长中的企业"
+        "description": "我们最受欢迎的计划",
+        "features": {
+          "unlimitedUsage": "无限月度使用量",
+          "prioritySupport": "优先客户支持"
+        }
       },
-      "enterprise": {
-        "name": "企业版",
-        "price": "¥699",
-        "description": "适合大型组织"
+      "credits10": {
+        "description": "为您的账户一次性购买 10 个积分",
+        "features": {
+          "useCredits": "使用积分，例如 OpenAI API 调用",
+          "noExpiration": "无过期日期"
+        }
       }
     }
   },

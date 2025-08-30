@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 interface NavigationItem {
   name: string;
   href: string;
@@ -9,6 +11,7 @@ export default function Footer({ footerNavigation }: {
     company: NavigationItem[]
   }
 }) {
+  const { t } = useTranslation();
   return (
     <div className='mx-auto mt-6 max-w-7xl px-6 lg:px-8 dark:bg-boxdark-2'>
       <footer
@@ -20,7 +23,7 @@ export default function Footer({ footerNavigation }: {
         </h2>
         <div className='flex items-start justify-end mt-10 gap-20'>
           <div>
-            <h3 className='text-sm font-semibold leading-6 text-gray-900 dark:text-white'>App</h3>
+            <h3 className='text-sm font-semibold leading-6 text-gray-900 dark:text-white'>{t('footer.app')}</h3>
             <ul role='list' className='mt-6 space-y-4'>
               {footerNavigation.app.map((item) => (
                 <li key={item.name}>
@@ -32,7 +35,7 @@ export default function Footer({ footerNavigation }: {
             </ul>
           </div>
           <div>
-            <h3 className='text-sm font-semibold leading-6 text-gray-900 dark:text-white'>Company</h3>
+            <h3 className='text-sm font-semibold leading-6 text-gray-900 dark:text-white'>{t('footer.company')}</h3>
             <ul role='list' className='mt-6 space-y-4'>
               {footerNavigation.company.map((item) => (
                 <li key={item.name}>

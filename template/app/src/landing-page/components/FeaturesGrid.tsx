@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardDescription, CardTitle } from '../../components/ui/card';
 import { cn } from '../../lib/utils';
 import { Feature } from './Features';
@@ -19,9 +20,11 @@ interface FeaturesGridProps {
 }
 
 const FeaturesGrid = ({ features, className = '' }: FeaturesGridProps) => {
+  const { t } = useTranslation();
+  
   return (
     <div className='flex flex-col gap-4 my-16 md:my-24 lg:my-40 max-w-7xl mx-auto' id='features'>
-      <SectionTitle title='Features' description='These are some of the features of the product.' />
+      <SectionTitle title={t('features.title')} description={t('features.description')} />
       <div
         className={cn(
           'grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6 mx-4 md:mx-6 lg:mx-8 auto-rows-[minmax(140px,auto)]',

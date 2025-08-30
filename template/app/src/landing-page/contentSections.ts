@@ -175,6 +175,20 @@ export const faqs = [
   },
 ];
 
+// 使用函数来获取翻译后的页脚导航
+export const getFooterNavigation = (t: (key: string) => string) => ({
+  app: [
+    { name: t('navigation.documentation'), href: DocsUrl },
+    { name: t('navigation.blog'), href: BlogUrl },
+  ],
+  company: [
+    { name: t('footer.about'), href: 'https://wasp.sh' },
+    { name: t('footer.privacy'), href: '#' },
+    { name: t('footer.termsOfService'), href: '#' },
+  ],
+});
+
+// 保留旧的导出以保持向后兼容性
 export const footerNavigation = {
   app: [
     { name: 'Documentation', href: DocsUrl },

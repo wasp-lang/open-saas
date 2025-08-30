@@ -6,16 +6,16 @@ import type { NavigationItem } from './NavBar';
 export const getMarketingNavigationItems = (t: (key: string) => string): NavigationItem[] => [
   { name: t('navigation.features'), to: '/#features' },
   { name: t('navigation.pricing'), to: routes.PricingPageRoute.to },
-  { name: 'Documentation', to: DocsUrl },
-  { name: 'Blog', to: BlogUrl },
+  { name: t('navigation.documentation'), to: DocsUrl },
+  { name: t('navigation.blog'), to: BlogUrl },
 ];
 
 export const getDemoNavigationItems = (t: (key: string) => string): NavigationItem[] => [
-  { name: 'AI Scheduler', to: routes.DemoAppRoute.to },
-  { name: 'File Upload', to: routes.FileUploadRoute.to },
+  { name: t('demo.aiScheduler'), to: routes.DemoAppRoute.to },
+  { name: t('demo.fileUpload'), to: routes.FileUploadRoute.to },
   { name: t('navigation.pricing'), to: routes.PricingPageRoute.to },
-  { name: 'Documentation', to: DocsUrl },
-  { name: 'Blog', to: BlogUrl },
+  { name: t('navigation.documentation'), to: DocsUrl },
+  { name: t('navigation.blog'), to: BlogUrl },
 ];
 
 // 保留旧的导出以保持向后兼容性
