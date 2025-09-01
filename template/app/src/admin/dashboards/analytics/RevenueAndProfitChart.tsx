@@ -1,6 +1,7 @@
 import { ApexOptions } from 'apexcharts';
 import { useEffect, useMemo, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
+import { useTranslation } from 'react-i18next';
 import { type DailyStatsProps } from '../../../analytics/stats';
 
 const options: ApexOptions = {
@@ -110,6 +111,7 @@ interface ChartOneState {
 }
 
 const RevenueAndProfitChart = ({ weeklyStats, isLoading }: DailyStatsProps) => {
+  const { t } = useTranslation();
   const dailyRevenueArray = useMemo(() => {
     if (!!weeklyStats && weeklyStats?.length > 0) {
       const sortedWeeks = weeklyStats?.sort((a, b) => {
@@ -206,8 +208,8 @@ const RevenueAndProfitChart = ({ weeklyStats, isLoading }: DailyStatsProps) => {
               <span className='block h-2.5 w-full max-w-2.5 rounded-full bg-primary'></span>
             </span>
             <div className='w-full'>
-              <p className='font-semibold text-primary'>Total Profit</p>
-              <p className='text-sm font-medium text-muted-foreground'>Last 7 Days</p>
+              <p className='font-semibold text-primary'>{t('admin.totalProfitLast7Days')}</p>
+              <p className='text-sm font-medium text-muted-foreground'>{t('admin.week')}</p>
             </div>
           </div>
           <div className='flex min-w-47.5'>
@@ -215,21 +217,21 @@ const RevenueAndProfitChart = ({ weeklyStats, isLoading }: DailyStatsProps) => {
               <span className='block h-2.5 w-full max-w-2.5 rounded-full bg-secondary'></span>
             </span>
             <div className='w-full'>
-              <p className='font-semibold text-secondary'>Total Revenue</p>
-              <p className='text-sm font-medium text-muted-foreground'>Last 7 Days</p>
+              <p className='font-semibold text-secondary'>{t('admin.totalRevenueLast7Days')}</p>
+              <p className='text-sm font-medium text-muted-foreground'>{t('admin.week')}</p>
             </div>
           </div>
         </div>
         <div className='flex w-full max-w-45 justify-end'>
           <div className='inline-flex items-center rounded-md bg-muted p-1.5'>
             <button className='rounded bg-background py-1 px-3 text-xs font-medium text-foreground shadow-card hover:bg-background hover:shadow-card'>
-              Day
+              {t('admin.day')}
             </button>
             <button className='rounded py-1 px-3 text-xs font-medium text-muted-foreground hover:bg-background hover:shadow-card'>
-              Week
+              {t('admin.week')}
             </button>
             <button className='rounded py-1 px-3 text-xs font-medium text-muted-foreground hover:bg-background hover:shadow-card'>
-              Month
+              {t('admin.month')}
             </button>
           </div>
         </div>

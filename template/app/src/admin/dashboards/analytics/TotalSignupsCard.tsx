@@ -1,10 +1,12 @@
 import { ArrowUp, UsersRound } from 'lucide-react';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { type DailyStatsProps } from '../../../analytics/stats';
 import { Card, CardContent, CardHeader } from '../../../components/ui/card';
 import { cn } from '../../../lib/utils';
 
 const TotalSignupsCard = ({ dailyStats, isLoading }: DailyStatsProps) => {
+  const { t } = useTranslation();
   const isDeltaPositive = useMemo(() => {
     return !!dailyStats?.userDelta && dailyStats.userDelta > 0;
   }, [dailyStats]);
@@ -20,7 +22,7 @@ const TotalSignupsCard = ({ dailyStats, isLoading }: DailyStatsProps) => {
       <CardContent className='flex justify-between'>
         <div>
           <h4 className='text-title-md font-bold text-foreground'>{dailyStats?.userCount}</h4>
-          <span className='text-sm font-medium text-muted-foreground'>Total Signups</span>
+          <span className='text-sm font-medium text-muted-foreground'>{t('admin.totalSignups')}</span>
         </div>
 
         <span

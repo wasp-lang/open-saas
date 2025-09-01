@@ -1,10 +1,12 @@
 import { ArrowDown, ArrowUp, ShoppingCart } from 'lucide-react';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { type DailyStatsProps } from '../../../analytics/stats';
 import { Card, CardContent, CardHeader } from '../../../components/ui/card';
 import { cn } from '../../../lib/utils';
 
 const TotalRevenueCard = ({ dailyStats, weeklyStats, isLoading }: DailyStatsProps) => {
+  const { t } = useTranslation();
   const isDeltaPositive = useMemo(() => {
     if (!weeklyStats) return false;
     return weeklyStats[0].totalRevenue - weeklyStats[1]?.totalRevenue > 0;
@@ -32,7 +34,7 @@ const TotalRevenueCard = ({ dailyStats, weeklyStats, isLoading }: DailyStatsProp
       <CardContent className='flex justify-between'>
         <div>
           <h4 className='text-title-md font-bold text-foreground'>${dailyStats?.totalRevenue}</h4>
-          <span className='text-sm font-medium text-muted-foreground'>Total Revenue</span>
+          <span className='text-sm font-medium text-muted-foreground'>{t('admin.totalRevenue')}</span>
         </div>
 
         <span

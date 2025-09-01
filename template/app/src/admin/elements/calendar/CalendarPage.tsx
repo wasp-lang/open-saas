@@ -1,45 +1,47 @@
 import { type AuthUser } from 'wasp/auth';
+import { useTranslation } from 'react-i18next';
 import Breadcrumb from '../../layout/Breadcrumb';
 import DefaultLayout from '../../layout/DefaultLayout';
 import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin';
 
 const Calendar = ({ user }: { user: AuthUser }) => {
   useRedirectHomeUnlessUserIsAdmin({ user });
+  const { t } = useTranslation();
 
   return (
     <DefaultLayout user={user}>
-      <Breadcrumb pageName='Calendar' />
+      <Breadcrumb pageName={t('admin.calendar')} />
       <div className='w-full max-w-full rounded-sm border border-border bg-card shadow-default'>
         <table className='w-full'>
           <thead>
             <tr className='grid grid-cols-7 rounded-t-sm bg-primary text-primary-foreground'>
               <th className='flex h-15 items-center justify-center rounded-tl-sm p-1 text-xs font-semibold sm:text-base xl:p-5'>
-                <span className='hidden lg:block'> Sunday </span>
-                <span className='block lg:hidden'> Sun </span>
+                <span className='hidden lg:block'> {t('admin.sunday')} </span>
+                <span className='block lg:hidden'> {t('admin.sun')} </span>
               </th>
               <th className='flex h-15 items-center justify-center p-1 text-xs font-semibold sm:text-base xl:p-5'>
-                <span className='hidden lg:block'> Monday </span>
-                <span className='block lg:hidden'> Mon </span>
+                <span className='hidden lg:block'> {t('admin.monday')} </span>
+                <span className='block lg:hidden'> {t('admin.mon')} </span>
               </th>
               <th className='flex h-15 items-center justify-center p-1 text-xs font-semibold sm:text-base xl:p-5'>
-                <span className='hidden lg:block'> Tuesday </span>
-                <span className='block lg:hidden'> Tue </span>
+                <span className='hidden lg:block'> {t('admin.tuesday')} </span>
+                <span className='block lg:hidden'> {t('admin.tue')} </span>
               </th>
               <th className='flex h-15 items-center justify-center p-1 text-xs font-semibold sm:text-base xl:p-5'>
-                <span className='hidden lg:block'> Wednesday </span>
-                <span className='block lg:hidden'> Wed </span>
+                <span className='hidden lg:block'> {t('admin.wednesday')} </span>
+                <span className='block lg:hidden'> {t('admin.wed')} </span>
               </th>
               <th className='flex h-15 items-center justify-center p-1 text-xs font-semibold sm:text-base xl:p-5'>
-                <span className='hidden lg:block'> Thursday </span>
-                <span className='block lg:hidden'> Thur </span>
+                <span className='hidden lg:block'> {t('admin.thursday')} </span>
+                <span className='block lg:hidden'> {t('admin.thu')} </span>
               </th>
               <th className='flex h-15 items-center justify-center p-1 text-xs font-semibold sm:text-base xl:p-5'>
-                <span className='hidden lg:block'> Friday </span>
-                <span className='block lg:hidden'> Fri </span>
+                <span className='hidden lg:block'> {t('admin.friday')} </span>
+                <span className='block lg:hidden'> {t('admin.fri')} </span>
               </th>
               <th className='flex h-15 items-center justify-center rounded-tr-sm p-1 text-xs font-semibold sm:text-base xl:p-5'>
-                <span className='hidden lg:block'> Saturday </span>
-                <span className='block lg:hidden'> Sat </span>
+                <span className='hidden lg:block'> {t('admin.saturday')} </span>
+                <span className='block lg:hidden'> {t('admin.sat')} </span>
               </th>
             </tr>
           </thead>

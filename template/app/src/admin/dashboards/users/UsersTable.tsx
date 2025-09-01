@@ -1,5 +1,6 @@
 import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from 'wasp/client/auth';
 import { getPaginatedUsers, updateIsUserAdminById, useQuery } from 'wasp/client/operations';
 import { type User } from 'wasp/entities';
@@ -28,6 +29,7 @@ function AdminSwitch({ id, isAdmin }: Pick<User, 'id' | 'isAdmin'>) {
 }
 
 const UsersTable = () => {
+  const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
   const [emailFilter, setEmailFilter] = useState<string | undefined>(undefined);
   const [isAdminFilter, setIsAdminFilter] = useState<boolean | undefined>(undefined);
@@ -75,11 +77,11 @@ const UsersTable = () => {
     <div className='flex flex-col gap-4'>
       <div className='rounded-sm border border-border bg-card shadow'>
         <div className='flex-col flex items-start justify-between p-6 gap-3 w-full bg-muted/40'>
-          <span className='text-sm font-medium'>Filters:</span>
+          <span className='text-sm font-medium'>{t('admin.filters')}:</span>
           <div className='flex items-center justify-between gap-3 w-full px-2'>
             <div className='relative flex items-center gap-3 '>
               <Label htmlFor='email-filter' className='text-sm text-muted-foreground'>
-                email:
+                {t('admin.email')}:
               </Label>
               <Input
                 type='text'
@@ -91,23 +93,23 @@ const UsersTable = () => {
                 }}
               />
               <Label htmlFor='status-filter' className='text-sm ml-2 text-muted-foreground'>
-                status:
+                {t('admin.status')}:
               </Label>
               <div className='relative'>
                 <Select>
                   <SelectTrigger className='w-full min-w-[200px]'>
-                    <SelectValue placeholder='Select Status Filter' />
+                    <SelectValue placeholder={t('admin.selectStatusFilter')} />
                   </SelectTrigger>
                   <SelectContent className='w-[300px]'>
                     <div className='p-2'>
                       <div className='flex items-center justify-between mb-2'>
-                        <span className='text-sm font-medium'>Subscription Status</span>
+                        <span className='text-sm font-medium'>{t('admin.subscriptionStatus')}</span>
                         {subscriptionStatusFilter.length > 0 && (
                           <button
                             onClick={clearAllStatusFilters}
                             className='text-xs text-muted-foreground hover:text-foreground'
                           >
-                            Clear all
+                            {t('admin.clearAll')}
                           </button>
                         )}
                       </div>
@@ -122,7 +124,7 @@ const UsersTable = () => {
                             htmlFor='all-statuses'
                             className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
                           >
-                            All Statuses
+                            {t('admin.allStatuses')}
                           </Label>
                         </div>
                         <div className='flex items-center space-x-2'>
@@ -135,7 +137,7 @@ const UsersTable = () => {
                             htmlFor='has-not-subscribed'
                             className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
                           >
-                            Has Not Subscribed
+                            {t('admin.hasNotSubscribed')}
                           </Label>
                         </div>
                         {Object.values(SubscriptionStatus).map((status) => (
@@ -159,9 +161,9 @@ const UsersTable = () => {
                 </Select>
               </div>
               <div className='flex items-center gap-2'>
-                <Label htmlFor='admin-filter' className='text-sm ml-2 text-muted-foreground'>
-                  isAdmin:
-                </Label>
+                              <Label htmlFor='admin-filter' className='text-sm ml-2 text-muted-foreground'>
+                {t('admin.isAdmin')}:
+              </Label>
                 <Select
                   onValueChange={(value) => {
                     if (value === 'both') {
@@ -175,16 +177,16 @@ const UsersTable = () => {
                     <SelectValue placeholder='both' />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value='both'>both</SelectItem>
-                    <SelectItem value='true'>true</SelectItem>
-                    <SelectItem value='false'>false</SelectItem>
+                    <SelectItem value='both'>{t('admin.both')}</SelectItem>
+                    <SelectItem value='true'>{t('admin.true')}</SelectItem>
+                    <SelectItem value='false'>{t('admin.false')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
             {data?.totalPages && (
               <div className='max-w-60 flex flex-row items-center'>
-                <span className='text-md mr-2 text-foreground'>page</span>
+                <span className='text-md mr-2 text-foreground'>{t('admin.page')}</span>
                 <Input
                   type='number'
                   min={1}
@@ -204,7 +206,7 @@ const UsersTable = () => {
           </div>
           {hasActiveFilters && (
             <div className='flex items-center gap-2 px-2 pt-2 border-border'>
-              <span className='text-sm font-medium text-muted-foreground'>Active Filters:</span>
+              <span className='text-sm font-medium text-muted-foreground'>{t('admin.activeFilters')}:</span>
               <div className='flex flex-wrap gap-2'>
                 {subscriptionStatusFilter.map((status) => (
                   <Button
@@ -214,7 +216,7 @@ const UsersTable = () => {
                     onClick={() => handleStatusToggle(status)}
                   >
                     <X className='w-3 h-3 mr-1' />
-                    {status ?? 'Has Not Subscribed'}
+                    {status ?? t('admin.hasNotSubscribed')}
                   </Button>
                 ))}
               </div>
@@ -224,16 +226,16 @@ const UsersTable = () => {
 
         <div className='grid grid-cols-9 border-t-4 border-border py-4.5 px-4 md:px-6 '>
           <div className='col-span-3 flex items-center'>
-            <p className='font-medium'>Email / Username</p>
+            <p className='font-medium'>{t('admin.emailUsername')}</p>
           </div>
           <div className='col-span-2 flex items-center'>
-            <p className='font-medium'>Subscription Status</p>
+            <p className='font-medium'>{t('admin.subscriptionStatus')}</p>
           </div>
           <div className='col-span-2 flex items-center'>
-            <p className='font-medium'>Stripe ID</p>
+            <p className='font-medium'>{t('admin.stripeId')}</p>
           </div>
           <div className='col-span-1 flex items-center'>
-            <p className='font-medium'>Is Admin</p>
+            <p className='font-medium'>{t('admin.isAdmin')}</p>
           </div>
           <div className='col-span-1 flex items-center'>
             <p className='font-medium'></p>

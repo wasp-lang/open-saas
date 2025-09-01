@@ -1,4 +1,5 @@
 import { ArrowDown, ArrowUp, Eye } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader } from '../../../components/ui/card';
 import { cn } from '../../../lib/utils';
 
@@ -8,6 +9,7 @@ type PageViewsStats = {
 };
 
 const TotalPageViewsCard = ({ totalPageViews, prevDayViewsChangePercent }: PageViewsStats) => {
+  const { t } = useTranslation();
   const prevDayViewsChangePercentValue = parseInt(prevDayViewsChangePercent || '');
   const isDeltaPositive = prevDayViewsChangePercentValue > 0;
 
@@ -22,7 +24,7 @@ const TotalPageViewsCard = ({ totalPageViews, prevDayViewsChangePercent }: PageV
       <CardContent className='flex justify-between'>
         <div>
           <h4 className='text-title-md font-bold text-foreground'>{totalPageViews}</h4>
-          <span className='text-sm font-medium text-muted-foreground'>Total page views</span>
+          <span className='text-sm font-medium text-muted-foreground'>{t('admin.totalPageViews')}</span>
         </div>
 
         <span

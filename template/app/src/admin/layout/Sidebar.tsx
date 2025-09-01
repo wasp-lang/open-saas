@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Logo from '../../client/static/logo.webp';
 import { cn } from '../../lib/utils';
 import SidebarLinkGroup from './SidebarLinkGroup';
@@ -22,6 +23,7 @@ interface SidebarProps {
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const location = useLocation();
   const { pathname } = location;
+  const { t } = useTranslation();
 
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
@@ -95,7 +97,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         <nav className='mt-5 py-4 px-4 lg:mt-9 lg:px-6'>
           {/* <!-- Menu Group --> */}
           <div>
-            <h3 className='mb-4 ml-4 text-sm font-semibold text-muted-foreground'>MENU</h3>
+            <h3 className='mb-4 ml-4 text-sm font-semibold text-muted-foreground'>{t('admin.menu')}</h3>
 
             <ul className='mb-6 flex flex-col gap-1.5'>
               {/* <!-- Menu Item Dashboard --> */}
@@ -112,7 +114,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 }
               >
                 <LayoutDashboard />
-                Dashboard
+                {t('admin.dashboard')}
               </NavLink>
 
               {/* <!-- Menu Item Dashboard --> */}
@@ -132,7 +134,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   }
                 >
                   <Sheet />
-                  Users
+                  {t('admin.users')}
                 </NavLink>
               </li>
               {/* <!-- Menu Item Users --> */}
@@ -152,7 +154,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   }
                 >
                   <Settings />
-                  Settings
+                  {t('admin.settings')}
                 </NavLink>
               </li>
               {/* <!-- Menu Item Settings --> */}
@@ -161,7 +163,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
           {/* <!-- Others Group --> */}
           <div>
-            <h3 className='mb-4 ml-4 text-sm font-semibold text-muted-foreground'>Extra Components</h3>
+            <h3 className='mb-4 ml-4 text-sm font-semibold text-muted-foreground'>{t('admin.extraComponents')}</h3>
 
             <ul className='mb-6 flex flex-col gap-1.5'>
               {/* <!-- Menu Item Calendar --> */}
@@ -179,7 +181,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   }
                 >
                   <Calendar />
-                  Calendar
+                  {t('admin.calendar')}
                 </NavLink>
               </li>
               {/* <!-- Menu Item Calendar --> */}
@@ -203,7 +205,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         }}
                       >
                         <LayoutTemplate />
-                        UI Elements
+                        {t('admin.uiElements')}
                         {open ? <ChevronUp /> : <ChevronDown />}
                       </NavLink>
                       {/* <!-- Dropdown Menu Start --> */}
@@ -220,7 +222,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 )
                               }
                             >
-                              Buttons
+                              {t('admin.buttons')}
                             </NavLink>
                           </li>
                         </ul>
