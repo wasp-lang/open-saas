@@ -1,6 +1,7 @@
 import { FileText, Mail, Upload, User } from 'lucide-react';
 import { FormEvent } from 'react';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import { type AuthUser } from 'wasp/auth';
 import { Button } from '../../../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
@@ -13,35 +14,36 @@ import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUse
 
 const SettingsPage = ({ user }: { user: AuthUser }) => {
   useRedirectHomeUnlessUserIsAdmin({ user });
+  const { t } = useTranslation();
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     // TODO add toast provider / wrapper
     event.preventDefault();
-    const confirmed = confirm('Are you sure you want to save the changes?');
+    const confirmed = confirm(t('admin.areYouSure'));
     if (confirmed) {
-      toast.success('Your changes have been saved successfully!');
+      toast.success(t('admin.changesSaved'));
     } else {
-      toast.error('Your changes have not been saved!');
+      toast.error(t('admin.changesNotSaved'));
     }
   };
 
   return (
     <DefaultLayout user={user}>
       <div className='mx-auto max-w-270'>
-        <Breadcrumb pageName='Settings' />
+        <Breadcrumb pageName={t('admin.settings')} />
 
         <div className='grid grid-cols-5 gap-8'>
           <div className='col-span-5 xl:col-span-3'>
             <Card>
               <CardHeader>
-                <CardTitle>Personal Information</CardTitle>
+                <CardTitle>{t('admin.personalInformation')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit}>
                   <div className='mb-5.5 flex flex-col gap-5.5 sm:flex-row'>
                     <div className='w-full sm:w-1/2'>
                       <Label htmlFor='full-name' className='mb-3 block text-sm font-medium text-foreground'>
-                        Full Name
+                        {t('admin.fullName')}
                       </Label>
                       <div className='relative'>
                         <User className='absolute left-4.5 top-2 h-5 w-5 text-muted-foreground' />
@@ -61,7 +63,7 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
                         htmlFor='phone-number'
                         className='mb-3 block text-sm font-medium text-foreground'
                       >
-                        Phone Number
+                        {t('admin.phoneNumber')}
                       </Label>
                       <Input
                         type=''
@@ -75,7 +77,7 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
 
                   <div className='mb-5.5'>
                     <Label htmlFor='email-address' className='mb-3 block text-sm font-medium text-foreground'>
-                      Email Address
+                      {t('common.email')}
                     </Label>
                     <div className='relative'>
                       <Mail className='absolute left-4.5 top-2 h-5 w-5 text-muted-foreground' />
@@ -92,7 +94,7 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
 
                   <div className='mb-5.5'>
                     <Label htmlFor='username' className='mb-3 block text-sm font-medium text-foreground'>
-                      Username
+                      {t('navigation.profile')}
                     </Label>
                     <Input
                       type='text'
@@ -105,7 +107,7 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
 
                   <div className='mb-5.5'>
                     <Label htmlFor='bio' className='mb-3 block text-sm font-medium text-foreground'>
-                      BIO
+                      {t('admin.bio')}
                     </Label>
                     <div className='relative'>
                       <FileText className='absolute left-4.5 top-4 h-5 w-5 text-muted-foreground' />
@@ -114,7 +116,7 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
                         name='bio'
                         id='bio'
                         rows={6}
-                        placeholder='Write your bio here'
+                        placeholder={t('admin.writeYourBioHere')}
                         defaultValue='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque posuere fermentum urna, eu condimentum mauris tempus ut. Donec fermentum blandit aliquet.'
                       ></Textarea>
                     </div>
@@ -122,9 +124,9 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
 
                   <div className='flex justify-end gap-4.5'>
                     <Button variant='outline' type='submit'>
-                      Cancel
+                      {t('common.cancel')}
                     </Button>
-                    <Button type='submit'>Save</Button>
+                    <Button type='submit'>{t('common.save')}</Button>
                   </div>
                 </form>
               </CardContent>
@@ -133,17 +135,17 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
           <div className='col-span-5 xl:col-span-2'>
             <Card>
               <CardHeader>
-                <CardTitle>Your Photo</CardTitle>
+                <CardTitle>{t('admin.yourPhoto')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <form action='#'>
                   <div className='mb-4 flex items-center gap-3'>
                     <div className='h-14 w-14 rounded-full'>{/* <img src={userThree} alt="User" /> */}</div>
                     <div>
-                      <span className='mb-1.5 text-foreground'>Edit your photo</span>
+                      <span className='mb-1.5 text-foreground'>{t('admin.editYourPhoto')}</span>
                       <span className='flex gap-2.5'>
-                        <button className='text-sm hover:text-primary'>Delete</button>
-                        <button className='text-sm hover:text-primary'>Update</button>
+                        <button className='text-sm hover:text-primary'>{t('common.delete')}</button>
+                        <button className='text-sm hover:text-primary'>{t('admin.update')}</button>
                       </span>
                     </div>
                   </div>
@@ -162,18 +164,18 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
                         <Upload className='h-4 w-4 text-primary' />
                       </span>
                       <p>
-                        <span className='text-primary'>Click to upload</span> or drag and drop
+                        <span className='text-primary'>{t('admin.clickToUpload')}</span> {t('admin.dragAndDrop')}
                       </p>
-                      <p className='mt-1.5'>SVG, PNG, JPG or GIF</p>
-                      <p>(max, 800 X 800px)</p>
+                      <p className='mt-1.5'>{t('admin.fileTypes')}</p>
+                      <p>{t('admin.maxSize')}</p>
                     </div>
                   </div>
 
                   <div className='flex justify-end gap-4.5'>
                     <Button variant='outline' type='submit'>
-                      Cancel
+                      {t('common.cancel')}
                     </Button>
-                    <Button type='submit'>Save</Button>
+                    <Button type='submit'>{t('common.save')}</Button>
                   </div>
                 </form>
               </CardContent>

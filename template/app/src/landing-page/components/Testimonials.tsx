@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardDescription, CardFooter, CardTitle } from '../../components/ui/card';
 import SectionTitle from './SectionTitle';
 
@@ -11,6 +12,7 @@ interface Testimonial {
 }
 
 export default function Testimonials({ testimonials }: { testimonials: Testimonial[] }) {
+  const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
   const shouldShowExpand = testimonials.length > 5;
   const mobileItemsToShow = 3;
@@ -18,7 +20,7 @@ export default function Testimonials({ testimonials }: { testimonials: Testimoni
 
   return (
     <div className='mx-auto mt-32 max-w-7xl sm:mt-56 sm:px-6 lg:px-8'>
-      <SectionTitle title='What Our Users Say' />
+      <SectionTitle title={t('testimonials.title')} />
 
       <div className='relative w-full z-10 px-4 md:px-0 columns-1 md:columns-2 lg:columns-3 gap-2 md:gap-6'>
         {testimonials.slice(0, itemsToShow).map((testimonial, idx) => (
@@ -59,7 +61,7 @@ export default function Testimonials({ testimonials }: { testimonials: Testimoni
             onClick={() => setIsExpanded(!isExpanded)}
             className='px-6 py-3 text-sm font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors duration-200'
           >
-            {isExpanded ? 'Show Less' : `Show ${testimonials.length - mobileItemsToShow} More`}
+            {isExpanded ? t('testimonials.showLess') : t('testimonials.showMore', { count: testimonials.length - mobileItemsToShow })}
           </button>
         </div>
       )}

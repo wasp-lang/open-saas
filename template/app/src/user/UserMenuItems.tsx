@@ -1,10 +1,14 @@
 import { LogOut } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { logout } from 'wasp/client/auth';
 import { Link as WaspRouterLink } from 'wasp/client/router';
 import { type User } from 'wasp/entities';
-import { userMenuItems } from './constants';
+import { getUserMenuItems } from './constants';
 
 export const UserMenuItems = ({ user, onItemClick }: { user?: Partial<User>; onItemClick?: () => void }) => {
+  const { t } = useTranslation();
+  const userMenuItems = getUserMenuItems(t);
+
   return (
     <>
       {userMenuItems.map((item) => {
@@ -33,7 +37,7 @@ export const UserMenuItems = ({ user, onItemClick }: { user?: Partial<User>; onI
           className='flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium leading-7 text-foreground hover:bg-accent hover:text-accent-foreground transition-colors'
         >
           <LogOut size='1.1rem' />
-          Log Out
+          {t('user.logOut')}
         </button>
       </li>
     </>

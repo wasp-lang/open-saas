@@ -1,5 +1,6 @@
 import { Heart, Plus, Trash2 } from 'lucide-react';
 import { type AuthUser } from 'wasp/auth';
+import { useTranslation } from 'react-i18next';
 import { Button } from '../../../components/ui/button';
 import Breadcrumb from '../../layout/Breadcrumb';
 import DefaultLayout from '../../layout/DefaultLayout';
@@ -7,25 +8,26 @@ import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUse
 
 const Buttons = ({ user }: { user: AuthUser }) => {
   useRedirectHomeUnlessUserIsAdmin({ user });
+  const { t } = useTranslation();
 
   return (
     <DefaultLayout user={user}>
-      <Breadcrumb pageName='Buttons' />
+      <Breadcrumb pageName={t('admin.buttons')} />
 
       {/* Button Variants */}
       <div className='mb-10 rounded-sm border border-border bg-card shadow-default'>
         <div className='border-b border-border px-7 py-4'>
-          <h3 className='font-medium text-foreground'>Button Variants</h3>
+          <h3 className='font-medium text-foreground'>{t('admin.buttonVariants')}</h3>
         </div>
 
         <div className='p-4 md:p-6 xl:p-9'>
           <div className='flex flex-wrap gap-4'>
-            <Button variant='default'>Default</Button>
-            <Button variant='outline'>Outline</Button>
-            <Button variant='secondary'>Secondary</Button>
-            <Button variant='ghost'>Ghost</Button>
-            <Button variant='link'>Link</Button>
-            <Button variant='destructive'>Destructive</Button>
+            <Button variant='default'>{t('admin.default')}</Button>
+            <Button variant='outline'>{t('admin.outline')}</Button>
+            <Button variant='secondary'>{t('admin.secondary')}</Button>
+            <Button variant='ghost'>{t('admin.ghost')}</Button>
+            <Button variant='link'>{t('admin.link')}</Button>
+            <Button variant='destructive'>{t('admin.destructive')}</Button>
           </div>
         </div>
       </div>
@@ -33,14 +35,14 @@ const Buttons = ({ user }: { user: AuthUser }) => {
       {/* Button Sizes */}
       <div className='mb-10 rounded-sm border border-border bg-card shadow-default'>
         <div className='border-b border-border px-7 py-4'>
-          <h3 className='font-medium text-foreground'>Button Sizes</h3>
+          <h3 className='font-medium text-foreground'>{t('admin.buttonSizes')}</h3>
         </div>
 
         <div className='p-4 md:p-6 xl:p-9'>
           <div className='flex flex-wrap items-center gap-4'>
-            <Button size='sm'>Small</Button>
-            <Button size='default'>Default</Button>
-            <Button size='lg'>Large</Button>
+            <Button size='sm'>{t('admin.small')}</Button>
+            <Button size='default'>{t('admin.default')}</Button>
+            <Button size='lg'>{t('admin.large')}</Button>
             <Button size='icon'>
               <Plus />
             </Button>
@@ -51,22 +53,22 @@ const Buttons = ({ user }: { user: AuthUser }) => {
       {/* Button with Icon */}
       <div className='mb-10 rounded-sm border border-border bg-card shadow-default'>
         <div className='border-b border-border px-7 py-4'>
-          <h3 className='font-medium text-foreground'>Button with Icon</h3>
+          <h3 className='font-medium text-foreground'>{t('admin.buttonWithIcon')}</h3>
         </div>
 
         <div className='p-4 md:p-6 xl:p-9'>
           <div className='flex flex-wrap gap-4'>
             <Button>
               <Plus />
-              Add Item
+              {t('admin.addItem')}
             </Button>
             <Button variant='outline'>
               <Heart />
-              Like
+              {t('admin.like')}
             </Button>
             <Button variant='destructive'>
               <Trash2 />
-              Delete
+              {t('admin.delete')}
             </Button>
           </div>
         </div>

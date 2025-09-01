@@ -1,6 +1,7 @@
 import { CheckCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from 'wasp/client/auth';
 import { generateCheckoutSession, getCustomerPortalUrl, useQuery } from 'wasp/client/operations';
 import { Alert, AlertDescription } from '../components/ui/alert';
@@ -18,6 +19,29 @@ interface PaymentPlanCard {
   features: string[];
 }
 
+// 使用函数来获取翻译后的计划卡片
+export const getPaymentPlanCards = (t: (key: string) => string): Record<PaymentPlanId, PaymentPlanCard> => ({
+  [PaymentPlanId.Hobby]: {
+    name: t('pricing.planNames.hobby'),
+    price: '$9.99',
+    description: t('pricing.plans.hobby.description'),
+    features: [t('pricing.plans.hobby.features.limitedUsage'), t('pricing.plans.hobby.features.basicSupport')],
+  },
+  [PaymentPlanId.Pro]: {
+    name: t('pricing.planNames.pro'),
+    price: '$19.99',
+    description: t('pricing.plans.pro.description'),
+    features: [t('pricing.plans.pro.features.unlimitedUsage'), t('pricing.plans.pro.features.prioritySupport')],
+  },
+  [PaymentPlanId.Credits10]: {
+    name: t('pricing.planNames.credits10'),
+    price: '$9.99',
+    description: t('pricing.plans.credits10.description'),
+    features: [t('pricing.plans.credits10.features.useCredits'), t('pricing.plans.credits10.features.noExpiration')],
+  },
+});
+
+// 保留旧的导出以保持向后兼容性
 export const paymentPlanCards: Record<PaymentPlanId, PaymentPlanCard> = {
   [PaymentPlanId.Hobby]: {
     name: prettyPaymentPlanName(PaymentPlanId.Hobby),
@@ -40,12 +64,15 @@ export const paymentPlanCards: Record<PaymentPlanId, PaymentPlanCard> = {
 };
 
 const PricingPage = () => {
+  const { t } = useTranslation();
   const [isPaymentLoading, setIsPaymentLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { data: user } = useAuth();
   const isUserSubscribed =
     !!user && !!user.subscriptionStatus && user.subscriptionStatus !== SubscriptionStatus.Deleted;
+
+  const paymentPlanCards = getPaymentPlanCards(t);
 
   const {
     data: customerPortalUrl,
@@ -68,14 +95,14 @@ const PricingPage = () => {
       if (checkoutResults?.sessionUrl) {
         window.open(checkoutResults.sessionUrl, '_self');
       } else {
-        throw new Error('Error generating checkout session URL');
+        throw new Error(t('pricing.errorGeneratingCheckout'));
       }
     } catch (error: unknown) {
       console.error(error);
       if (error instanceof Error) {
         setErrorMessage(error.message);
       } else {
-        setErrorMessage('Error processing payment. Please try again later.');
+        setErrorMessage(t('pricing.errorProcessingPayment'));
       }
       setIsPaymentLoading(false); // We only set this to false here and not in the try block because we redirect to the checkout url within the same window
     }
@@ -88,12 +115,12 @@ const PricingPage = () => {
     }
 
     if (customerPortalUrlError) {
-      setErrorMessage('Error fetching Customer Portal URL');
+      setErrorMessage(t('pricing.errorFetchingPortal'));
       return;
     }
 
     if (!customerPortalUrl) {
-      setErrorMessage(`Customer Portal does not exist for user ${user.id}`);
+      setErrorMessage(t('pricing.errorPortalNotExist', { userId: user.id }));
       return;
     }
 
@@ -105,14 +132,13 @@ const PricingPage = () => {
       <div className='mx-auto max-w-7xl px-6 lg:px-8'>
         <div id='pricing' className='mx-auto max-w-4xl text-center'>
           <h2 className='mt-2 text-4xl font-bold tracking-tight text-foreground sm:text-5xl'>
-            Pick your <span className='text-primary'>pricing</span>
+            {t('pricing.title')}
           </h2>
         </div>
         <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-muted-foreground'>
-          Choose between Stripe and LemonSqueezy as your payment provider. Just add your Product IDs! Try it
-          out below with test credit card number <br />
+          {t('pricing.subtitle')} <br />
           <span className='px-2 py-1 bg-muted rounded-md text-muted-foreground font-mono text-sm'>
-            4242 4242 4242 4242 4242
+            {t('pricing.testCardNumber')}
           </span>
         </p>
         {errorMessage && (
@@ -159,7 +185,7 @@ const PricingPage = () => {
                     {paymentPlanCards[planId].price}
                   </span>
                   <span className='text-sm font-semibold leading-6 text-muted-foreground'>
-                    {paymentPlans[planId].effect.kind === 'subscription' && '/month'}
+                    {paymentPlans[planId].effect.kind === 'subscription' && t('pricing.perMonth')}
                   </span>
                 </p>
                 <ul role='list' className='mt-8 space-y-3 text-sm leading-6 text-muted-foreground'>
@@ -180,7 +206,7 @@ const PricingPage = () => {
                     variant={planId === bestDealPaymentPlanId ? 'default' : 'outline'}
                     className='w-full'
                   >
-                    Manage Subscription
+                    {t('pricing.manageSubscription')}
                   </Button>
                 ) : (
                   <Button
@@ -190,7 +216,7 @@ const PricingPage = () => {
                     className='w-full'
                     disabled={isPaymentLoading}
                   >
-                    {!!user ? 'Buy plan' : 'Log in to buy plan'}
+                    {!!user ? t('pricing.buyPlan') : t('pricing.loginToBuyPlan')}
                   </Button>
                 )}
               </CardFooter>

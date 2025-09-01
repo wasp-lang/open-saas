@@ -1,5 +1,6 @@
 import { type AuthUser } from 'wasp/auth';
 import { getDailyStats, useQuery } from 'wasp/client/operations';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../../../lib/utils';
 import DefaultLayout from '../../layout/DefaultLayout';
 import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin';
@@ -12,6 +13,7 @@ import TotalSignupsCard from './TotalSignupsCard';
 
 const Dashboard = ({ user }: { user: AuthUser }) => {
   useRedirectHomeUnlessUserIsAdmin({ user });
+  const { t } = useTranslation();
 
   const { data: stats, isLoading, error } = useQuery(getDailyStats);
 
@@ -49,9 +51,9 @@ const Dashboard = ({ user }: { user: AuthUser }) => {
         {!stats && (
           <div className='absolute inset-0 flex items-start justify-center bg-background/50'>
             <div className='rounded-lg bg-card p-8 shadow-lg'>
-              <p className='text-2xl font-bold text-foreground'>No daily stats generated yet</p>
+              <p className='text-2xl font-bold text-foreground'>{t('admin.noDailyStats')}</p>
               <p className='mt-2 text-sm text-muted-foreground'>
-                Stats will appear here once the daily stats job has run
+                {t('admin.noDailyStatsDescription')}
               </p>
             </div>
           </div>
