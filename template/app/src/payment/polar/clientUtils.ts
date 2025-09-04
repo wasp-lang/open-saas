@@ -37,10 +37,10 @@ export async function createPolarCheckoutSession({
   };
 }
 
-export async function ensurePolarCustomer(waspUserId: string, customerEmail: string): Promise<Customer> {
+export async function ensurePolarCustomer(externalUserId: string, externalUserEmail: string): Promise<Customer> {
   try {
     const existingCustomer = await polarClient.customers.getExternal({
-      externalId: waspUserId,
+      externalId: externalUserId,
     });
 
     if (existingCustomer) {
@@ -56,8 +56,8 @@ export async function ensurePolarCustomer(waspUserId: string, customerEmail: str
     console.log('Creating new Polar customer');
 
     const newCustomer = await polarClient.customers.create({
-      externalId: waspUserId,
-      email: customerEmail,
+      externalId: externalUserId,
+      email: externalUserEmail,
     });
 
     return newCustomer;
