@@ -69,6 +69,24 @@ import { UnhandledWebhookEventError } from '../errors';
 import { SubscriptionStatus as OpenSaasSubscriptionStatus, PaymentPlanId, paymentPlans } from '../plans';
 import { updateUserPolarPaymentDetails } from './userPaymentDetails';
 
+enum SubscriptionAction {
+  CREATED = 'created',
+  CANCELLED = 'cancelled',
+  UNCANCELLED = 'uncancelled',
+  UPDATED = 'updated',
+  REVOKED = 'revoked',
+  PAST_DUE = 'past_due',
+  SKIP = 'skip',
+}
+
+interface SubscriptionActionContext {
+  currentPlanId: PaymentPlanId | null | undefined;
+  currentStatus: OpenSaasSubscriptionStatus | null | undefined;
+  newPlanId: PaymentPlanId;
+  newSubscriptionStatus: OpenSaasSubscriptionStatus;
+  subscription: Subscription;
+}
+
 type PolarWebhookPayload =
   | WebhookCheckoutCreatedPayload
   | WebhookBenefitCreatedPayload
@@ -106,27 +124,9 @@ export const polarWebhook: PaymentsWebhook = async (req, res, context) => {
     switch (polarEvent.type) {
       case 'order.paid':
         await handleOrderCompleted(polarEvent.data, prismaUserDelegate);
-
-        break;
-      case 'subscription.revoked':
-        await handleSubscriptionRevoked(polarEvent.data, prismaUserDelegate);
-
-        break;
-      case 'subscription.uncanceled':
-        await handleSubscriptionUncanceled(polarEvent.data, prismaUserDelegate);
-
         break;
       case 'subscription.updated':
         await handleSubscriptionUpdated(polarEvent.data, prismaUserDelegate);
-
-        break;
-      case 'subscription.canceled':
-        await handleSubscriptionCanceled(polarEvent.data, prismaUserDelegate);
-
-        break;
-      case 'subscription.active':
-        await handleSubscriptionActivated(polarEvent.data, prismaUserDelegate);
-
         break;
       default:
         throw new UnhandledWebhookEventError(`Unhandled Polar webhook event type: ${polarEvent.type}`);
@@ -154,7 +154,7 @@ function constructPolarEvent(request: express.Request): PolarWebhookPayload {
   return validateEvent(request.body, request.headers as Record<string, string>, secret);
 }
 
-function validateAndExtractCustomerData(data: Order | Subscription, eventType: string) {
+function getCustomerData(data: Order | Subscription, eventType: string) {
   const customerId = data.customer.id;
   const userId = data.customer.externalId;
 
@@ -167,51 +167,52 @@ function validateAndExtractCustomerData(data: Order | Subscription, eventType: s
   return { customerId, userId };
 }
 
-async function handleOrderCompleted(data: Order, userDelegate: PrismaClient['user']): Promise<void> {
-  const customerData = validateAndExtractCustomerData(data, 'Order completed');
+async function handleOrderCompleted(order: Order, userDelegate: PrismaClient['user']): Promise<void> {
+  const customerData = getCustomerData(order, 'Order completed');
 
   if (!customerData) return;
 
   const { customerId, userId } = customerData;
-  const paymentMode = data.metadata?.paymentMode;
+  const paymentMode = order.metadata?.paymentMode;
 
   if (paymentMode !== 'payment') {
-    console.log(`Order ${data.id} is not for credits (mode: ${paymentMode})`);
+    console.log(`Order ${order.id} is not for credits (mode: ${paymentMode})`);
     return;
   }
 
-  const creditsAmount = extractCreditsFromPolarOrder(data);
+  const creditsAmount = getCredits(order);
 
-  console.log(`Order completed: ${data.id} for customer: ${customerId}, credits: ${creditsAmount}`);
+  console.log(`Order completed: ${order.id} for customer: ${customerId}, credits: ${creditsAmount}`);
 
   await updateUserPolarPaymentDetails(
     {
       userId,
       polarCustomerId: customerId,
       numOfCreditsPurchased: creditsAmount,
-      datePaid: data.createdAt,
+      datePaid: order.createdAt,
     },
     userDelegate
   );
 }
 
-async function handleSubscriptionStateChange(
-  data: Subscription,
+async function applySubscriptionStateChange(
+  subscription: Subscription,
   userDelegate: PrismaClient['user'],
   eventType: string,
   statusOverride?: OpenSaasSubscriptionStatus,
   includePlanUpdate = false,
   includePaymentDate = false
 ): Promise<void> {
-  const customerData = validateAndExtractCustomerData(data, eventType);
+  const customerData = getCustomerData(subscription, eventType);
 
   if (!customerData) return;
 
   const { customerId, userId } = customerData;
-  const subscriptionStatus = statusOverride || getSubscriptionStatus(data.status);
-  const planId = includePlanUpdate && data.productId ? getPlanIdByProductId(data.productId) : undefined;
+  const subscriptionStatus = statusOverride || getSubscriptionStatus(subscription.status);
+  const planId =
+    includePlanUpdate && subscription.productId ? getPlanIdByProductId(subscription.productId) : undefined;
 
-  console.log(`${eventType}: ${data.id}, customer: ${customerId}, status: ${subscriptionStatus}`);
+  console.log(`${eventType}: ${subscription.id}, customer: ${customerId}, status: ${subscriptionStatus}`);
 
   await updateUserPolarPaymentDetails(
     {
@@ -220,104 +221,163 @@ async function handleSubscriptionStateChange(
       subscriptionStatus,
       ...(planId && { subscriptionPlan: planId }),
       ...(includePaymentDate && { datePaid: new Date() }),
-      ...(data.status === 'active' && eventType === 'Subscription updated' && { datePaid: new Date() }),
+      ...(subscription.status === 'active' &&
+        eventType === 'Subscription updated' && { datePaid: new Date() }),
     },
     userDelegate
   );
 }
 
-async function handleSubscriptionRevoked(
-  data: Subscription,
-  userDelegate: PrismaClient['user']
-): Promise<void> {
-  await handleSubscriptionStateChange(
-    data,
-    userDelegate,
-    'Subscription revoked',
-    OpenSaasSubscriptionStatus.Deleted
-  );
-}
-
-/**
- * Handles subscription.update events, which are triggered for all changes to a subscription.
- *
- * Only updates the user record if the plan changed, otherwise delegates responsibility to the more specific event handlers.
- */
 async function handleSubscriptionUpdated(
-  data: Subscription,
+  subscription: Subscription,
   userDelegate: PrismaClient['user']
 ): Promise<void> {
-  const customerData = validateAndExtractCustomerData(data, 'Subscription updated');
+  const customerData = getCustomerData(subscription, 'Subscription updated');
 
   if (!customerData) return;
 
   const { customerId, userId } = customerData;
 
-  if (!data.productId) {
+  if (!subscription.productId) {
     return;
   }
 
   const currentUser = await userDelegate.findUnique({
     where: { id: userId },
-    select: { subscriptionPlan: true },
+    select: { subscriptionPlan: true, subscriptionStatus: true },
   });
 
-  const newPlanId = getPlanIdByProductId(data.productId);
-  const currentPlanId = currentUser?.subscriptionPlan;
+  const currentPlanId = currentUser?.subscriptionPlan as PaymentPlanId | null | undefined;
+  const currentStatus = currentUser?.subscriptionStatus as OpenSaasSubscriptionStatus | null | undefined;
+  const newPlanId = getPlanIdByProductId(subscription.productId);
+  const newSubscriptionStatus = getSubscriptionStatus(subscription.status);
+  const action = getSubscriptionAction({
+    currentPlanId,
+    currentStatus,
+    newPlanId,
+    newSubscriptionStatus,
+    subscription: subscription,
+  });
 
-  if (!currentPlanId || currentPlanId === newPlanId) {
-    return;
+  switch (action) {
+    case SubscriptionAction.SKIP:
+      console.log(`Subscription unchanged: ${subscription.id}, customer: ${customerId}`);
+
+      return;
+
+    case SubscriptionAction.CREATED:
+      await applySubscriptionStateChange(
+        subscription,
+        userDelegate,
+        'Subscription created',
+        OpenSaasSubscriptionStatus.Active,
+        true,
+        true
+      );
+
+      return;
+
+    case SubscriptionAction.CANCELLED:
+      await applySubscriptionStateChange(
+        subscription,
+        userDelegate,
+        'Subscription cancelled',
+        OpenSaasSubscriptionStatus.CancelAtPeriodEnd
+      );
+
+      return;
+
+    case SubscriptionAction.UNCANCELLED:
+      await applySubscriptionStateChange(
+        subscription,
+        userDelegate,
+        'Subscription uncancelled',
+        undefined,
+        true
+      );
+
+      return;
+
+    case SubscriptionAction.UPDATED:
+      await applySubscriptionStateChange(
+        subscription,
+        userDelegate,
+        'Subscription plan updated',
+        newSubscriptionStatus,
+        true,
+        true
+      );
+      return;
+
+    case SubscriptionAction.REVOKED:
+      await applySubscriptionStateChange(
+        subscription,
+        userDelegate,
+        'Subscription revoked',
+        OpenSaasSubscriptionStatus.Deleted
+      );
+
+      return;
+
+    case SubscriptionAction.PAST_DUE:
+      await applySubscriptionStateChange(
+        subscription,
+        userDelegate,
+        'Subscription past due',
+        OpenSaasSubscriptionStatus.PastDue
+      );
+
+      return;
+
+    default:
+      console.log(`Unexpected action: ${subscription.id}, customer: ${customerId}, action: ${action}`);
+
+      return;
+  }
+}
+
+function getSubscriptionAction(context: SubscriptionActionContext): SubscriptionAction {
+  const { currentPlanId, currentStatus, newPlanId, subscription } = context;
+
+  if (currentStatus === OpenSaasSubscriptionStatus.Deleted && currentPlanId === newPlanId) {
+    return SubscriptionAction.SKIP;
   }
 
-  console.log(
-    `Subscription updated: ${data.id}, customer: ${customerId}, plan changed from ${currentPlanId} to ${newPlanId}`
-  );
+  if (subscription.status === 'active') {
+    if (!currentPlanId || currentStatus === OpenSaasSubscriptionStatus.Deleted) {
+      return SubscriptionAction.CREATED;
+    }
 
-  const subscriptionStatus = getSubscriptionStatus(data.status);
+    if (
+      subscription.canceledAt &&
+      subscription.endsAt &&
+      currentStatus !== OpenSaasSubscriptionStatus.CancelAtPeriodEnd
+    ) {
+      return SubscriptionAction.CANCELLED;
+    }
 
-  await updateUserPolarPaymentDetails(
-    {
-      userId,
-      polarCustomerId: customerId,
-      subscriptionPlan: newPlanId,
-      subscriptionStatus,
-      ...(data.status === 'active' && { datePaid: new Date() }),
-    },
-    userDelegate
-  );
-}
+    if (
+      !subscription.canceledAt &&
+      !subscription.endsAt &&
+      currentStatus === OpenSaasSubscriptionStatus.CancelAtPeriodEnd
+    ) {
+      return SubscriptionAction.UNCANCELLED;
+    }
 
-async function handleSubscriptionUncanceled(
-  data: Subscription,
-  userDelegate: PrismaClient['user']
-): Promise<void> {
-  await handleSubscriptionStateChange(data, userDelegate, 'Subscription uncanceled', undefined, true);
-}
+    if (currentPlanId !== newPlanId) {
+      return SubscriptionAction.UPDATED;
+    }
+  }
 
-async function handleSubscriptionCanceled(
-  data: Subscription,
-  userDelegate: PrismaClient['user']
-): Promise<void> {
-  await handleSubscriptionStateChange(
-    data,
-    userDelegate,
-    'Subscription canceled',
-    OpenSaasSubscriptionStatus.CancelAtPeriodEnd
-  );
-}
+  if (subscription.status === 'canceled') {
+    return SubscriptionAction.REVOKED;
+  }
 
-async function handleSubscriptionActivated(
-  data: Subscription,
-  userDelegate: PrismaClient['user']
-): Promise<void> {
-  await handleSubscriptionStateChange(
-    data,
-    userDelegate,
-    'Subscription activated',
-    OpenSaasSubscriptionStatus.Active,
-    true,
-    true
-  );
+  if (subscription.status === 'past_due' && currentStatus !== OpenSaasSubscriptionStatus.PastDue) {
+    return SubscriptionAction.PAST_DUE;
+  }
+
+  return SubscriptionAction.SKIP;
 }
 
 function getSubscriptionStatus(polarStatus: SubscriptionStatus): OpenSaasSubscriptionStatus {
@@ -334,7 +394,7 @@ function getSubscriptionStatus(polarStatus: SubscriptionStatus): OpenSaasSubscri
   return statusMap[polarStatus] || OpenSaasSubscriptionStatus.PastDue;
 }
 
-function extractCreditsFromPolarOrder(order: Order): number {
+function getCredits(order: Order): number {
   const productId = order.productId;
 
   if (!productId) {
