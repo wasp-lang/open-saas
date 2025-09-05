@@ -67,7 +67,6 @@ import { MiddlewareConfig } from 'wasp/server/middleware';
 import { requireNodeEnvVar } from '../../server/utils';
 import { UnhandledWebhookEventError } from '../errors';
 import { SubscriptionStatus as OpenSaasSubscriptionStatus, PaymentPlanId, paymentPlans } from '../plans';
-import { updateUserPolarPaymentDetails } from './userPaymentDetails';
 
 enum SubscriptionAction {
   CREATED = 'created',
@@ -85,6 +84,14 @@ interface SubscriptionActionContext {
   newPlanId: PaymentPlanId;
   newSubscriptionStatus: OpenSaasSubscriptionStatus;
   subscription: Subscription;
+}
+
+interface UpdateUserPaymentDetailsArgs {
+  polarCustomerId?: string;
+  subscriptionPlan?: PaymentPlanId;
+  subscriptionStatus?: OpenSaasSubscriptionStatus | string;
+  numOfCreditsPurchased?: number;
+  datePaid?: Date;
 }
 
 type PolarWebhookPayload =
@@ -184,9 +191,8 @@ async function handleOrderCompleted(order: Order, userDelegate: PrismaClient['us
 
   console.log(`Order completed: ${order.id} for customer: ${customerId}, credits: ${creditsAmount}`);
 
-  await updateUserPolarPaymentDetails(
+  await updateUserPaymentDetails(
     {
-      userId,
       polarCustomerId: customerId,
       numOfCreditsPurchased: creditsAmount,
       datePaid: order.createdAt,
@@ -214,9 +220,8 @@ async function applySubscriptionStateChange(
 
   console.log(`${eventType}: ${subscription.id}, customer: ${customerId}, status: ${subscriptionStatus}`);
 
-  await updateUserPolarPaymentDetails(
+  await updateUserPaymentDetails(
     {
-      userId,
       polarCustomerId: customerId,
       subscriptionStatus,
       ...(planId && { subscriptionPlan: planId }),
@@ -236,14 +241,14 @@ async function handleSubscriptionUpdated(
 
   if (!customerData) return;
 
-  const { customerId, userId } = customerData;
+  const { customerId } = customerData;
 
   if (!subscription.productId) {
     return;
   }
 
   const currentUser = await userDelegate.findUnique({
-    where: { id: userId },
+    where: { paymentProcessorUserId: customerId },
     select: { subscriptionPlan: true, subscriptionStatus: true },
   });
 
@@ -423,6 +428,25 @@ function getPlanIdByProductId(polarProductId: string): PaymentPlanId {
   }
 
   throw new Error(`Unknown Polar product ID: ${polarProductId}`);
+}
+
+async function updateUserPaymentDetails(
+  args: UpdateUserPaymentDetailsArgs,
+  userDelegate: PrismaClient['user']
+) {
+  const { polarCustomerId, subscriptionPlan, subscriptionStatus, numOfCreditsPurchased, datePaid } = args;
+
+  return await userDelegate.update({
+    where: {
+      paymentProcessorUserId: polarCustomerId,
+    },
+    data: {
+      subscriptionPlan,
+      subscriptionStatus,
+      datePaid,
+      credits: numOfCreditsPurchased !== undefined ? { increment: numOfCreditsPurchased } : undefined,
+    },
+  });
 }
 
 export const polarMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig: MiddlewareConfig) => {
