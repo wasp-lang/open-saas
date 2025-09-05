@@ -4,23 +4,12 @@ import { Polar } from '@polar-sh/sdk';
 import { Customer } from '@polar-sh/sdk/models/components/customer.js';
 import { env } from 'wasp/server';
 import { requireNodeEnvVar } from '../../server/utils';
-import { PolarMode } from './paymentProcessor';
+import type { CreatePolarCheckoutSessionArgs, PolarCheckoutSession } from './types';
 
 export const polarClient = new Polar({
   accessToken: requireNodeEnvVar('POLAR_ACCESS_TOKEN'),
   server: requireNodeEnvVar('POLAR_SANDBOX_MODE') === 'true' ? 'sandbox' : 'production',
 });
-
-interface CreatePolarCheckoutSessionArgs {
-  productId: string;
-  customerId: string;
-  mode: PolarMode;
-}
-
-interface PolarCheckoutSession {
-  id: string;
-  url: string;
-}
 
 export async function createPolarCheckoutSession({
   productId,

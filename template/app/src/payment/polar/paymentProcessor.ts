@@ -5,9 +5,8 @@ import {
 } from '../paymentProcessor';
 import type { PaymentPlanEffect } from '../plans';
 import { createPolarCheckoutSession, ensurePolarCustomer, getCustomerPortalUrl } from './polarClient';
+import type { PolarMode } from './types';
 import { polarMiddlewareConfigFn, polarWebhook } from './webhook';
-
-export type PolarMode = 'subscription' | 'payment';
 
 export const polarPaymentProcessor: PaymentProcessor = {
   id: 'polar',
