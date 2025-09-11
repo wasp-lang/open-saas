@@ -301,6 +301,6 @@ page NotFoundPage {
 route AdminMessagesRoute { path: "/admin/messages", to: AdminMessagesPage }
 page AdminMessagesPage {
   authRequired: true,
-  component: import AdminMessages from "@src/messages/MessagesPage"
+  component: import AdminMessages from "@src/admin/dashboards/messages/MessagesPage"
 }
 //#endregion
