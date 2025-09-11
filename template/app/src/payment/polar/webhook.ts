@@ -1,10 +1,6 @@
-// @ts-ignore
 import { Order } from '@polar-sh/sdk/models/components/order.js';
-// @ts-ignore
 import { Subscription } from '@polar-sh/sdk/models/components/subscription.js';
-// @ts-ignore
 import { SubscriptionStatus } from '@polar-sh/sdk/models/components/subscriptionstatus.js';
-// @ts-ignore
 import { validateEvent, WebhookVerificationError } from '@polar-sh/sdk/webhooks';
 import express from 'express';
 import type { MiddlewareConfigFn, PrismaClient } from 'wasp/server';

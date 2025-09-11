@@ -1,6 +1,4 @@
-// @ts-ignore
 import { Polar } from '@polar-sh/sdk';
-// @ts-ignore
 import { Customer } from '@polar-sh/sdk/models/components/customer.js';
 import { env } from 'wasp/server';
 import { requireNodeEnvVar } from '../../server/utils';
