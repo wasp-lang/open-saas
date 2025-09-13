@@ -4,7 +4,7 @@ import {
   type PaymentProcessor,
 } from '../paymentProcessor';
 import type { PaymentPlanEffect } from '../plans';
-import { createPolarCheckoutSession, ensurePolarCustomer, getCustomerPortalUrl } from './polarClient';
+import { createPolarCheckoutSession, ensurePolarCustomer, getCustomerPortalUrl } from './checkoutUtils';
 import type { PolarMode } from './types';
 import { polarMiddlewareConfigFn, polarWebhook } from './webhook';
 
