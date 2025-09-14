@@ -78,36 +78,6 @@ async function handleOrderPaid(order: Order, userDelegate: PrismaClient['user'])
   );
 }
 
-async function applySubscriptionStateChange(
-  subscription: Subscription,
-  userDelegate: PrismaClient['user'],
-  eventType: string,
-  statusOverride?: OpenSaasSubscriptionStatus,
-  includePlanUpdate = false,
-  includePaymentDate = false
-): Promise<void> {
-  assertCustomerExternalIdExists(subscription.customer.externalId);
-
-  const customerId = subscription.customer.id;
-  const subscriptionStatus = statusOverride || mapPolarToOpenSaasSubscriptionStatus(subscription.status);
-  const planId =
-    includePlanUpdate && subscription.productId ? getPlanIdByProductId(subscription.productId) : undefined;
-
-  console.log(`${eventType}: ${subscription.id}, customer: ${customerId}, status: ${subscriptionStatus}`);
-
-  await updateUserPaymentDetails(
-    {
-      polarCustomerId: customerId,
-      subscriptionStatus,
-      ...(planId && { subscriptionPlan: planId }),
-      ...(includePaymentDate && { datePaid: new Date() }),
-      ...(subscription.status === SubscriptionStatus.Active &&
-        eventType === 'Subscription updated' && { datePaid: new Date() }),
-    },
-    userDelegate
-  );
-}
-
 async function handleSubscriptionUpdated(
   subscription: Subscription,
   userDelegate: PrismaClient['user']
@@ -212,6 +182,36 @@ async function handleSubscriptionUpdated(
 
       return;
   }
+}
+
+async function applySubscriptionStateChange(
+  subscription: Subscription,
+  userDelegate: PrismaClient['user'],
+  eventType: string,
+  statusOverride?: OpenSaasSubscriptionStatus,
+  includePlanUpdate = false,
+  includePaymentDate = false
+): Promise<void> {
+  assertCustomerExternalIdExists(subscription.customer.externalId);
+
+  const customerId = subscription.customer.id;
+  const subscriptionStatus = statusOverride || mapPolarToOpenSaasSubscriptionStatus(subscription.status);
+  const planId =
+    includePlanUpdate && subscription.productId ? getPlanIdByProductId(subscription.productId) : undefined;
+
+  console.log(`${eventType}: ${subscription.id}, customer: ${customerId}, status: ${subscriptionStatus}`);
+
+  await updateUserPaymentDetails(
+    {
+      polarCustomerId: customerId,
+      subscriptionStatus,
+      ...(planId && { subscriptionPlan: planId }),
+      ...(includePaymentDate && { datePaid: new Date() }),
+      ...(subscription.status === SubscriptionStatus.Active &&
+        eventType === 'Subscription updated' && { datePaid: new Date() }),
+    },
+    userDelegate
+  );
 }
 
 function getSubscriptionAction({
