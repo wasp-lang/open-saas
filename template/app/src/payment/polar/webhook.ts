@@ -85,16 +85,10 @@ async function handleSubscriptionUpdated(
   assertCustomerExternalIdExists(subscription.customer.externalId);
 
   const customerId = subscription.customer.id;
-
-  if (!subscription.productId) {
-    return;
-  }
-
   const currentUser = await userDelegate.findUnique({
     where: { paymentProcessorUserId: customerId },
     select: { subscriptionPlan: true, subscriptionStatus: true },
   });
-
   const currentPlanId = currentUser?.subscriptionPlan as PaymentPlanId | null | undefined;
   const currentStatus = currentUser?.subscriptionStatus as OpenSaasSubscriptionStatus | null | undefined;
   const newPlanId = getPlanIdByProductId(subscription.productId);
