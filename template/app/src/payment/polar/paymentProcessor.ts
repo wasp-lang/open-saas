@@ -5,9 +5,7 @@ import {
   type FetchCustomerPortalUrlArgs,
   type PaymentProcessor,
 } from '../paymentProcessor';
-import type { PaymentPlanEffect } from '../plans';
 import { createPolarCheckoutSession, ensurePolarCustomer, getCustomerPortalUrl } from './checkoutUtils';
-import type { PolarMode } from './types';
 import { polarWebhook } from './webhook';
 
 export const polarPaymentProcessor: PaymentProcessor = {
@@ -22,7 +20,6 @@ export const polarPaymentProcessor: PaymentProcessor = {
     const session = await createPolarCheckoutSession({
       productId: paymentPlan.getPaymentProcessorPlanId(),
       customerId: customer.id,
-      mode: paymentPlanEffectToPolarMode(paymentPlan.effect),
     });
 
     await prismaUserDelegate.update({
@@ -61,18 +58,9 @@ export const polarPaymentProcessor: PaymentProcessor = {
   webhookMiddlewareConfigFn: polarMiddlewareConfigFn,
 };
 
-function paymentPlanEffectToPolarMode(planEffect: PaymentPlanEffect): PolarMode {
-  const effectToMode: Record<PaymentPlanEffect['kind'], PolarMode> = {
-    subscription: 'subscription',
-    credits: 'payment',
-  };
-
-  return effectToMode[planEffect.kind];
-}
-
 function polarMiddlewareConfigFn(middlewareConfig: MiddlewareConfig): MiddlewareConfig {
   middlewareConfig.delete('express.json');
   middlewareConfig.set('express.raw', express.raw({ type: 'application/json' }));
 
   return middlewareConfig;
-};
+}

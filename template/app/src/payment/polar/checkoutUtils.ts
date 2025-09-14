@@ -6,14 +6,12 @@ import { type CreatePolarCheckoutSessionArgs, type PolarCheckoutSession } from '
 export async function createPolarCheckoutSession({
   productId,
   customerId,
-  mode,
 }: CreatePolarCheckoutSessionArgs): Promise<PolarCheckoutSession> {
   const baseUrl = env.WASP_WEB_CLIENT_URL.replace(/\/+$/, '');
   const checkoutSession = await polarClient.checkouts.create({
     products: [productId],
     successUrl: `${baseUrl}/checkout?success=true`,
     metadata: {
-      paymentMode: mode,
       source: baseUrl,
     },
     customerId,
