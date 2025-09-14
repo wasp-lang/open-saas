@@ -66,32 +66,3 @@ export interface PolarCheckoutSession {
 }
 
 export type PolarMode = 'subscription' | 'payment';
-
-export type PolarWebhookPayload =
-  | WebhookCheckoutCreatedPayload
-  | WebhookBenefitCreatedPayload
-  | WebhookBenefitGrantCreatedPayload
-  | WebhookBenefitGrantRevokedPayload
-  | WebhookBenefitGrantUpdatedPayload
-  | WebhookBenefitGrantCycledPayload
-  | WebhookBenefitUpdatedPayload
-  | WebhookCheckoutUpdatedPayload
-  | WebhookOrderCreatedPayload
-  | WebhookOrderRefundedPayload
-  | WebhookOrderUpdatedPayload
-  | WebhookOrderPaidPayload
-  | WebhookOrganizationUpdatedPayload
-  | WebhookProductCreatedPayload
-  | WebhookProductUpdatedPayload
-  | WebhookRefundCreatedPayload
-  | WebhookRefundUpdatedPayload
-  | WebhookSubscriptionActivePayload
-  | WebhookSubscriptionCanceledPayload
-  | WebhookSubscriptionCreatedPayload
-  | WebhookSubscriptionRevokedPayload
-  | WebhookSubscriptionUncanceledPayload
-  | WebhookSubscriptionUpdatedPayload
-  | WebhookCustomerCreatedPayload
-  | WebhookCustomerUpdatedPayload
-  | WebhookCustomerDeletedPayload
-  | WebhookCustomerStateChangedPayload;

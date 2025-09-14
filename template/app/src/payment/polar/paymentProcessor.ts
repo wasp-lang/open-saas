@@ -1,3 +1,5 @@
+import { MiddlewareConfig } from 'wasp/server/middleware';
+import express from 'express';
 import {
   type CreateCheckoutSessionArgs,
   type FetchCustomerPortalUrlArgs,
@@ -6,7 +8,7 @@ import {
 import type { PaymentPlanEffect } from '../plans';
 import { createPolarCheckoutSession, ensurePolarCustomer, getCustomerPortalUrl } from './checkoutUtils';
 import type { PolarMode } from './types';
-import { polarMiddlewareConfigFn, polarWebhook } from './webhook';
+import { polarWebhook } from './webhook';
 
 export const polarPaymentProcessor: PaymentProcessor = {
   id: 'polar',
@@ -67,3 +69,10 @@ function paymentPlanEffectToPolarMode(planEffect: PaymentPlanEffect): PolarMode 
 
   return effectToMode[planEffect.kind];
 }
+
+function polarMiddlewareConfigFn(middlewareConfig: MiddlewareConfig): MiddlewareConfig {
+  middlewareConfig.delete('express.json');
+  middlewareConfig.set('express.raw', express.raw({ type: 'application/json' }));
+
+  return middlewareConfig;
+};
