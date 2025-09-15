@@ -1,7 +1,7 @@
 import { type AuthUser } from 'wasp/auth';
 import DarkModeSwitcher from '../../client/components/DarkModeSwitcher';
 import { cn } from '../../lib/utils';
-import MessageButton from '../../messages/MessageButton';
+import MessageButton from '../dashboards/messages/MessageButton';
 import { UserDropdown } from '../../user/UserDropdown';
 
 const Header = (props: {

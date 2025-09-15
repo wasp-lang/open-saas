@@ -1,11 +1,8 @@
 import { type AuthUser } from 'wasp/auth';
 import Breadcrumb from '../../layout/Breadcrumb';
 import DefaultLayout from '../../layout/DefaultLayout';
-import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin';
 
 const Calendar = ({ user }: { user: AuthUser }) => {
-  useRedirectHomeUnlessUserIsAdmin({ user });
-
   return (
     <DefaultLayout user={user}>
       <Breadcrumb pageName='Calendar' />
