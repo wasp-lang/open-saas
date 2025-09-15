@@ -20,38 +20,51 @@ import storeId from '@assets/lemon-squeezy/store-id.png';
 This guide will show you how to set up Payments for testing and local development with the following payment processors:
 - Stripe
 - Lemon Squeezy
+- Polar
 
 :::note[Which should I choose?]
 Stripe is the industry standard, is more configurable, and has cheaper fees.
-Lemon Squeezy acts a [Merchant of Record](https://www.lemonsqueezy.com/reporting/merchant-of-record). This means they take care of paying taxes in multiple countries for you, but charge higher fees per transaction. 
+Lemon Squeezy acts a [Merchant of Record](https://www.lemonsqueezy.com/reporting/merchant-of-record). This means they take care of paying taxes in multiple countries for you, but charge higher fees per transaction.
+Polar is an open-source [Merchant of Record](https://docs.polar.sh/merchant-of-record/introduction#merchant-of-record) designed specifically for developers.
 :::
 
 ## Important First Steps
 
-First, go to `/src/payment/paymentProcessor.ts` and choose which payment processor you'd like to use, e.g. Stripe or Lemon Squeezy:
+First, go to `/src/payment/paymentProcessor.ts` and choose which payment processor you'd like to use, e.g. Stripe, Lemon Squeezy, or Polar:
 
 ```ts title="src/payment/paymentProcessor.ts" ins={5, 7}
 import { stripePaymentProcessor } from './stripe/paymentProcessor';
 import { lemonSqueezyPaymentProcessor } from './lemonSqueezy/paymentProcessor';
+import { polarPaymentProcessor } from './polar/paymentProcessor';
 //...
 
 export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
 // or... 
 export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
+// or...
+export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
 ```
 
 At this point, you can delete:
 - the unused payment processor code within the `/src/payment/<unused-provider>` directory, 
 - any unused environment variables from `.env.server` (they will be prefixed with the name of the provider your are not using):
-  - e.g. `STRIPE_API_KEY`, `STRIPE_CUSTOMER_PORTAL_URL`, `LEMONSQUEEZY_API_KEY`, `LEMONSQUEEZY_WEBHOOK_SECRET`
+  - e.g. `STRIPE_API_KEY`, `STRIPE_CUSTOMER_PORTAL_URL`, `LEMONSQUEEZY_API_KEY`, `LEMONSQUEEZY_WEBHOOK_SECRET`, `POLAR_ACCESS_TOKEN`, `POLAR_WEBHOOK_SECRET`, `POLAR_SANDBOX_MODE`
 - Make sure to also uninstall the unused dependencies:
   - `npm uninstall @lemonsqueezy/lemonsqueezy.js`
   - or
   - `npm uninstall stripe`
+  - or
+  - `npm uninstall @polar-sh/sdk`
 - Remove any unused fields from the `User` model in the `schema.prisma` file if they exist:
   - e.g. `lemonSqueezyCustomerPortalUrl`
 
 Now your code is ready to go with your preferred payment processor and it's time to configure your payment processor's API keys, products, and other settings.
+
+Follow the steps for your selected processor:
+
+- [Stripe](#stripe)
+- [Lemon Squeezy](#lemon-squeezy)
+- [Polar](#polar)
 
 ## Stripe
 
@@ -306,6 +319,116 @@ Now go to your [Lemon Squeezy Webhooks Dashboard](https://app.lemonsqueezy.com/s
 
 You're now ready to start consuming Lemon Squeezy webhook events in local development.
 
+## Polar
+
+First, make sure you've defined your payment processor in `src/payment/paymentProcessor.ts`, as described in the [important first steps](#important-first-steps).
+
+Next, you'll need to create a Polar account. You can do that [here](https://polar.sh).
+
+### Configure Sandbox Mode
+
+For local development and testing, you'll want to use Polar's sandbox mode. The Polar sandbox is fully isolated, so there are separate URLs for the [sandbox dashboard](https://sandbox.polar.sh) and [live dashboard](https://sandbox.polar.sh), each with independent products, sales, access tokens, etc. Add the following to your `.env.server` file:
+
+```ts title=".env.server"
+POLAR_SANDBOX_MODE=true
+```
+
+:::note[Going Live]
+When you're ready to go live, change this to `false` or remove the variable entirely.
+:::
+
+### Get your Polar API Access Token
+
+Once you've created your account, you'll need to get your API access token. You can do that by navigating to the `Developers` section under your dashboard settings and creating a new personal access token.
+
+- Click on the `+` button to create a new token
+- Give your token a name (e.g., "Open SaaS Development")
+- Copy the generated token and paste it in your `.env.server` file, e.g. `POLAR_ACCESS_TOKEN=polar_oat_...`
+
+### Create Test Products
+
+To create test products in Polar, go to the `Products` section in your Polar dashboard.
+
+- Click on the `New Product` button to create a new product
+- Fill in the product details:
+  - **Name**: e.g., "Hobby Plan", "Pro Plan", or "10 Credits"
+  - **Description**: Brief description of what the product includes
+  - **Pricing**: Select "Monthly" or "Yearly" for recurring plans or "One-time purchase" for credits, then configure the desired pricing type
+- Configure any remaining optional fields, e.g. **Media**, **Checkout Fields**, **Metadata**, etc
+- Click `Create Product`
+
+After creating each product, you'll need to copy the Product ID from the product page and add it to your `.env.server` file:
+
+```ini title=".env.server"
+PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID=<your-hobby-product-id>
+PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID=<your-pro-product-id>
+PAYMENTS_CREDITS_10_PLAN_ID=<your-credits-product-id>
+```
+
+:::note[Product ID Location]
+The Product ID can be acquired on the product page in your Polar dashboard. Tap the `⠇` icon in the top-right corner, then select `Copy Product ID`.
+:::
+
+### Create and Use the Polar Webhook in Local Development
+
+Polar sends messages/updates to your Wasp app via its webhook, e.g. when a payment is successful. For that to work during development, we need to expose our locally running (via `wasp start`) Wasp app and make it available online, specifically the server part of it. Since the Wasp server runs on port 3001, you should run ngrok on port 3001, which will provide you with a public URL that you can use to configure Polar with.
+
+To do this, first make sure you have installed [ngrok](https://ngrok.com/docs/getting-started/).
+
+Once installed, and with your wasp app running, run:
+
+```sh
+ngrok http 3001
+```
+
+<Image src={ngrok} alt="ngrok" loading="lazy" />
+
+Ngrok will output a forwarding address for you. Copy and paste this address and add `/payments-webhook` to the end (this URL path has been configured for you already in `main.wasp` under the `api paymentsWebhook` definition). It should look something like this: 
+
+```sh title="Callback URL"
+https://89e5-2003-c7-153c-72a5-f837.ngrok-free.app/payments-webhook
+```
+
+Now configure the webhook in your Polar dashboard:
+
+- Go to `Webhooks` page under `Settings`
+- Click `Add Endpoint` to create a new endpoint
+- Paste your ngrok forwarding URL into the **URL** field with `/payments-webhook` appended, e.g. `https://abc123.ngrok-free.app/payments-webhook`
+- Set the `Format` to "Raw"
+- Select the following events to listen for:
+  - `order.paid`
+  - `subscription.updated`
+- Click `Save`
+- Copy the webhook secret and add it to your `.env.server` file:
+
+```ini title=".env.server"
+POLAR_WEBHOOK_SECRET=polar_whs_...
+```
+
+### Testing Payments via the Local Application
+
+Make sure your **ngrok tunnel is running** and the webhook is configured as described above.
+
+You can then test the payment flow:
+
+- Click on a Buy button for any of the products on the homepage
+- You should be redirected to Polar's checkout page
+- Fill in the form with [test payment information](https://docs.polar.sh/integrate/sandbox#testing-payments)
+- Complete the payment
+- You should be redirected back to your success page
+
+Check your terminal for webhook event logs and verify the user's subscription status in your database:
+
+```sh
+wasp db studio
+```
+
+Navigate to `localhost:5555` and check the `users` table to confirm the `subscriptionStatus` is `active` for the user who made the purchase.
+
+:::note[Polar Test Cards]
+Polar uses Stripe's test card numbers for development. Check their [testing documentation](https://docs.stripe.com/testing#cards) for further information.
+:::
+
 ## Deploying
 
-Once you deploy your app, you can follow the same steps, just make sure that you are no longer in test mode within the Stripe or Lemon Squeezy Dashboards. After you've repeated the steps in live mode, add the new API keys and price/variant IDs to your environment variables in your deployed environment.
+Once you deploy your app, you can follow the same steps, just make sure that you are no longer in test/sandbox mode within the Stripe, Lemon Squeezy, or Polar dashboards. After you've repeated the steps in live mode, add the new API keys and price/variant IDs to your environment variables in your deployed environment.
