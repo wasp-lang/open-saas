@@ -1,5 +1,13 @@
 import { PrismaClient } from 'wasp/server';
-import { UpdateUserPaymentDetailsArgs } from './types';
+import { PaymentPlanId, SubscriptionStatus } from '../plans';
+
+export interface UpdateUserPaymentDetailsArgs {
+  polarCustomerId?: string;
+  subscriptionPlan?: PaymentPlanId;
+  subscriptionStatus?: SubscriptionStatus | string;
+  numOfCreditsPurchased?: number;
+  datePaid?: Date;
+}
 
 export async function updateUserPaymentDetails(
   args: UpdateUserPaymentDetailsArgs,

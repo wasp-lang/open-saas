@@ -9,8 +9,7 @@ import { requireNodeEnvVar } from '../../server/utils';
 import { assertUnreachable } from '../../shared/utils';
 import { UnhandledWebhookEventError } from '../errors';
 import { SubscriptionStatus as OpenSaasSubscriptionStatus, PaymentPlanId, paymentPlans } from '../plans';
-import { updateUserPaymentDetails } from './paymentDetails';
-import type { UpdateUserPaymentDetailsArgs } from './types';
+import { updateUserPaymentDetails, type UpdateUserPaymentDetailsArgs } from './paymentDetails';
 
 export const polarWebhook: PaymentsWebhook = async (req, res, context) => {
   try {

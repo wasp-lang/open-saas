@@ -5,8 +5,9 @@ import {
   type FetchCustomerPortalUrlArgs,
   type PaymentProcessor,
 } from '../paymentProcessor';
-import { createPolarCheckoutSession, ensurePolarCustomer, getCustomerPortalUrl } from './checkoutUtils';
+import { createPolarCheckoutSession, ensurePolarCustomer } from './checkoutUtils';
 import { polarWebhook } from './webhook';
+import { polarClient } from './polarClient';
 
 export const polarPaymentProcessor: PaymentProcessor = {
   id: 'polar',
@@ -48,11 +49,15 @@ export const polarPaymentProcessor: PaymentProcessor = {
       },
     });
 
-    if (user?.paymentProcessorUserId) {
-      return await getCustomerPortalUrl(user.paymentProcessorUserId);
+    if (!user?.paymentProcessorUserId) {
+      return null;
     }
 
-    return null;
+    const customerSession = await polarClient.customerSessions.create({
+      customerId: user.paymentProcessorUserId,
+    });
+  
+    return customerSession.customerPortalUrl;
   },
   webhook: polarWebhook,
   webhookMiddlewareConfigFn: polarMiddlewareConfigFn,

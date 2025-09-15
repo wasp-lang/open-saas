@@ -1,7 +1,16 @@
 import { Customer } from '@polar-sh/sdk/models/components/customer.js';
 import { env } from 'wasp/server';
 import { polarClient } from './polarClient';
-import { type CreatePolarCheckoutSessionArgs, type PolarCheckoutSession } from './types';
+
+export interface CreatePolarCheckoutSessionArgs {
+  productId: string;
+  customerId: string;
+}
+
+export interface PolarCheckoutSession {
+  id: string;
+  url: string;
+}
 
 export async function createPolarCheckoutSession({
   productId,
@@ -55,12 +64,4 @@ export async function ensurePolarCustomer(
 
     throw error;
   }
-}
-
-export async function getCustomerPortalUrl(customerId: string) {
-  const customerSession = await polarClient.customerSessions.create({
-    customerId,
-  });
-
-  return customerSession.customerPortalUrl;
 }
