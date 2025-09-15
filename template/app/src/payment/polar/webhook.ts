@@ -9,7 +9,8 @@ import { requireNodeEnvVar } from '../../server/utils';
 import { UnhandledWebhookEventError } from '../errors';
 import { SubscriptionStatus as OpenSaasSubscriptionStatus, PaymentPlanId, paymentPlans } from '../plans';
 import type { UpdateUserPaymentDetailsArgs } from './types';
-import { OrderBillingReason } from '@polar-sh/sdk/models/components/orderbillingreason.js';
+import { assertUnreachable } from '../../shared/utils';
+import { updateUserPaymentDetails } from './paymentDetails';
 
 export const polarWebhook: PaymentsWebhook = async (req, res, context) => {
   try {
@@ -53,17 +54,34 @@ async function handleOrderPaid(order: Order, userDelegate: PrismaClient['user'])
   assertCustomerExternalIdExists(order.customer.externalId);
 
   const polarCustomerId = order.customerId;
-  const numOfCreditsPurchased =
-    order.billingReason === OrderBillingReason.Purchase ? getCredits(order) : undefined;
+  const paymentPlanId = getPaymentPlanIdByProductId(order.productId);
 
-  await updateUserPaymentDetails(
-    {
-      polarCustomerId,
-      numOfCreditsPurchased,
-      datePaid: order.createdAt,
-    },
-    userDelegate
-  );
+  switch (paymentPlanId) {
+    case PaymentPlanId.Credits10:
+      await updateUserPaymentDetails(
+        {
+          polarCustomerId,
+          numOfCreditsPurchased: getCredits(order),
+          datePaid: order.createdAt,
+        },
+        userDelegate
+      );
+      break;
+    case PaymentPlanId.Hobby:
+    case PaymentPlanId.Pro:
+      await updateUserPaymentDetails(
+        {
+          polarCustomerId,
+          subscriptionStatus: OpenSaasSubscriptionStatus.Active,
+          datePaid: order.createdAt,
+        },
+        userDelegate
+      );
+      break;
+    default:
+      assertUnreachable(paymentPlanId);
+  }
+
   console.log(
     `Order completed: ${order.id} for customer: ${polarCustomerId}, product: ${order.product.name}`
   );
@@ -76,35 +94,16 @@ async function handleSubscriptionUpdated(
   assertCustomerExternalIdExists(subscription.customer.externalId);
 
   const polarCustomerId = subscription.customer.id;
-  const waspUser = await userDelegate.findUnique({
-    where: { paymentProcessorUserId: polarCustomerId },
-    select: { subscriptionPlan: true, subscriptionStatus: true },
-  });
-
-  if (!waspUser) {
-    throw new Error(`Subscription ${subscription.id} has no associated user`);
-  }
-
-  const currentPlanId = waspUser.subscriptionPlan as PaymentPlanId | null | undefined;
-  const currentStatus = waspUser.subscriptionStatus as OpenSaasSubscriptionStatus | null | undefined;
-  const newPlanId = getPlanIdByProductId(subscription.productId);
-  const newStatus = mapPolarToOpenSaasSubscriptionStatus(subscription.status);
+  const subscriptionPlan = getPaymentPlanIdByProductId(subscription.productId);
+  const subscriptionStatus = mapPolarToOpenSaasSubscriptionStatus(subscription.status);
   const updateArgs: UpdateUserPaymentDetailsArgs = {
     polarCustomerId,
-    subscriptionStatus: newStatus,
+    subscriptionStatus,
+    subscriptionPlan,
   };
 
-  if (newStatus === OpenSaasSubscriptionStatus.Active && subscription.cancelAtPeriodEnd) {
+  if (subscriptionStatus === OpenSaasSubscriptionStatus.Active && subscription.cancelAtPeriodEnd) {
     updateArgs.subscriptionStatus = OpenSaasSubscriptionStatus.CancelAtPeriodEnd;
-  }
-
-  if (currentPlanId !== newPlanId) {
-    updateArgs.subscriptionPlan = newPlanId;
-  }
-
-  // Avoid updating the user if the subscription is unchanged (due to duplicate webhook events from Polar)
-  if (!updateArgs.hasOwnProperty('subscriptionPlan') && updateArgs.subscriptionStatus === currentStatus) {
-    return;
   }
 
   await updateUserPaymentDetails(updateArgs, userDelegate);
@@ -133,7 +132,7 @@ function mapPolarToOpenSaasSubscriptionStatus(polarStatus: SubscriptionStatus): 
 
 function getCredits(order: Order): number {
   const productId = order.productId;
-  const planId = getPlanIdByProductId(productId);
+  const planId = getPaymentPlanIdByProductId(productId);
   const plan = paymentPlans[planId];
 
   if (plan.effect.kind !== 'credits') {
@@ -143,7 +142,7 @@ function getCredits(order: Order): number {
   return plan.effect.amount;
 }
 
-function getPlanIdByProductId(polarProductId: string): PaymentPlanId {
+function getPaymentPlanIdByProductId(polarProductId: string): PaymentPlanId {
   for (const [planId, plan] of Object.entries(paymentPlans)) {
     if (plan.getPaymentProcessorPlanId() === polarProductId) {
       return planId as PaymentPlanId;
@@ -151,23 +150,4 @@ function getPlanIdByProductId(polarProductId: string): PaymentPlanId {
   }
 
   throw new Error(`Unknown Polar product ID: ${polarProductId}`);
-}
-
-async function updateUserPaymentDetails(
-  args: UpdateUserPaymentDetailsArgs,
-  userDelegate: PrismaClient['user']
-) {
-  const { polarCustomerId, subscriptionPlan, subscriptionStatus, numOfCreditsPurchased, datePaid } = args;
-
-  return await userDelegate.update({
-    where: {
-      paymentProcessorUserId: polarCustomerId,
-    },
-    data: {
-      subscriptionPlan,
-      subscriptionStatus,
-      datePaid,
-      credits: numOfCreditsPurchased !== undefined ? { increment: numOfCreditsPurchased } : undefined,
-    },
-  });
 }
