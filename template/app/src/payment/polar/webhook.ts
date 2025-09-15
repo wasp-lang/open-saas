@@ -49,33 +49,23 @@ function constructPolarEvent(request: express.Request): ReturnType<typeof valida
   return validateEvent(request.body, request.headers as Record<string, string>, secret);
 }
 
-function assertCustomerExternalIdExists(externalId: string | null): asserts externalId is string {
-  if (!externalId) {
-    throw new Error('Customer external ID is required');
-  }
-}
-
 async function handleOrderPaid(order: Order, userDelegate: PrismaClient['user']): Promise<void> {
-  const customerId = order.customerId;
-  const billingReason = order.billingReason;
+  assertCustomerExternalIdExists(order.customer.externalId);
 
-  if (billingReason !== OrderBillingReason.Purchase) {
-    console.log(`Order ${order.id} is not for credits (reason: ${billingReason})`);
-
-    return;
-  }
-
-  const creditsAmount = getCredits(order);
-
-  console.log(`Order completed: ${order.id} for customer: ${customerId}, credits: ${creditsAmount}`);
+  const polarCustomerId = order.customerId;
+  const numOfCreditsPurchased =
+    order.billingReason === OrderBillingReason.Purchase ? getCredits(order) : undefined;
 
   await updateUserPaymentDetails(
     {
-      polarCustomerId: customerId,
-      numOfCreditsPurchased: creditsAmount,
+      polarCustomerId,
+      numOfCreditsPurchased,
       datePaid: order.createdAt,
     },
     userDelegate
+  );
+  console.log(
+    `Order completed: ${order.id} for customer: ${polarCustomerId}, product: ${order.product.name}`
   );
 }
 
@@ -85,55 +75,46 @@ async function handleSubscriptionUpdated(
 ): Promise<void> {
   assertCustomerExternalIdExists(subscription.customer.externalId);
 
-  const customerId = subscription.customer.id;
-  const currentUser = await userDelegate.findUnique({
-    where: { paymentProcessorUserId: customerId },
+  const polarCustomerId = subscription.customer.id;
+  const waspUser = await userDelegate.findUnique({
+    where: { paymentProcessorUserId: polarCustomerId },
     select: { subscriptionPlan: true, subscriptionStatus: true },
   });
-  const currentPlanId = currentUser?.subscriptionPlan as PaymentPlanId | null | undefined;
-  const currentStatus = currentUser?.subscriptionStatus as OpenSaasSubscriptionStatus | null | undefined;
 
-  if (currentStatus === OpenSaasSubscriptionStatus.Deleted) {
-    console.warn(`Subscription ${subscription.id} is already deleted`);
-
-    return;
+  if (!waspUser) {
+    throw new Error(`Subscription ${subscription.id} has no associated user`);
   }
 
+  const currentPlanId = waspUser.subscriptionPlan as PaymentPlanId | null | undefined;
+  const currentStatus = waspUser.subscriptionStatus as OpenSaasSubscriptionStatus | null | undefined;
   const newPlanId = getPlanIdByProductId(subscription.productId);
-  const newSubscriptionStatus = mapPolarToOpenSaasSubscriptionStatus(subscription.status);
-  const updateData: UpdateUserPaymentDetailsArgs = { polarCustomerId: customerId };
+  const newStatus = mapPolarToOpenSaasSubscriptionStatus(subscription.status);
+  const updateArgs: UpdateUserPaymentDetailsArgs = {
+    polarCustomerId,
+    subscriptionStatus: newStatus,
+  };
 
-  if (subscription.status === SubscriptionStatus.Canceled) {
-    updateData.subscriptionStatus = OpenSaasSubscriptionStatus.Deleted;
-  } else if (subscription.cancelAtPeriodEnd) {
-    updateData.subscriptionStatus = OpenSaasSubscriptionStatus.CancelAtPeriodEnd;
-  } else if (currentStatus === OpenSaasSubscriptionStatus.CancelAtPeriodEnd) {
-    updateData.subscriptionStatus = OpenSaasSubscriptionStatus.Active;
-  } else if (currentStatus !== newSubscriptionStatus) {
-    updateData.subscriptionStatus = newSubscriptionStatus;
-  }
-
-  if (newSubscriptionStatus === OpenSaasSubscriptionStatus.Active) {
-    updateData.datePaid = subscription.modifiedAt || new Date();
+  if (newStatus === OpenSaasSubscriptionStatus.Active && subscription.cancelAtPeriodEnd) {
+    updateArgs.subscriptionStatus = OpenSaasSubscriptionStatus.CancelAtPeriodEnd;
   }
 
   if (currentPlanId !== newPlanId) {
-    updateData.subscriptionPlan = newPlanId;
+    updateArgs.subscriptionPlan = newPlanId;
   }
 
-  if (Object.keys(updateData).length === 1) {
-    console.log(`Subscription unchanged: ${subscription.id}, customer: ${customerId}`);
-
+  // Avoid updating the user if the subscription is unchanged (due to duplicate webhook events from Polar)
+  if (!updateArgs.hasOwnProperty('subscriptionPlan') && updateArgs.subscriptionStatus === currentStatus) {
     return;
   }
 
-  await updateUserPaymentDetails(updateData, userDelegate);
+  await updateUserPaymentDetails(updateArgs, userDelegate);
+  console.log(`${subscription.product.name} subscription updated for customer: ${polarCustomerId}}`);
+}
 
-  const changes = Object.keys(updateData).filter((key) => key !== 'polarCustomerId');
-
-  console.log(
-    `Subscription updated: ${subscription.id}, customer: ${customerId}, changes: ${changes.join(', ')}`
-  );
+function assertCustomerExternalIdExists(externalId: string | null): asserts externalId is string {
+  if (!externalId) {
+    throw new Error('Customer external ID is required');
+  }
 }
 
 function mapPolarToOpenSaasSubscriptionStatus(polarStatus: SubscriptionStatus): OpenSaasSubscriptionStatus {
