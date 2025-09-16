@@ -71,6 +71,7 @@ async function handleOrderPaid(order: Order, userDelegate: PrismaClient['user'])
       await updateUserPaymentDetails(
         {
           polarCustomerId,
+          subscriptionPlan: paymentPlanId,
           subscriptionStatus: OpenSaasSubscriptionStatus.Active,
           datePaid: order.createdAt,
         },
