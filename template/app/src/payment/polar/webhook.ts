@@ -3,7 +3,7 @@ import { Subscription } from '@polar-sh/sdk/models/components/subscription.js';
 import { SubscriptionStatus } from '@polar-sh/sdk/models/components/subscriptionstatus.js';
 import { validateEvent, WebhookVerificationError } from '@polar-sh/sdk/webhooks';
 import express from 'express';
-import type { PrismaClient } from 'wasp/server';
+import type { MiddlewareConfigFn, PrismaClient } from 'wasp/server';
 import type { PaymentsWebhook } from 'wasp/server/api';
 import { requireNodeEnvVar } from '../../server/utils';
 import { assertUnreachable } from '../../shared/utils';
@@ -41,6 +41,15 @@ export const polarWebhook: PaymentsWebhook = async (req, res, context) => {
       return res.status(500).json({ error: 'Error processing Polar webhook event' });
     }
   }
+};
+
+export const polarMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig) => {
+  // We need to delete the default 'express.json' middleware and replace it with 'express.raw' middleware
+  // because webhook data is in the body of the request as raw JSON, not as JSON in the body of the request.
+  middlewareConfig.delete('express.json');
+  middlewareConfig.set('express.raw', express.raw({ type: 'application/json' }));
+
+  return middlewareConfig;
 };
 
 function constructPolarEvent(request: express.Request): ReturnType<typeof validateEvent> {
@@ -95,18 +104,13 @@ async function handleSubscriptionUpdated(
 
   const polarCustomerId = subscription.customer.id;
   const subscriptionPlan = getPaymentPlanIdByProductId(subscription.productId);
-  const subscriptionStatus = mapPolarToOpenSaasSubscriptionStatus(subscription.status);
-  const updateArgs: UpdateUserPaymentDetailsArgs = {
-    polarCustomerId,
-    subscriptionStatus,
-    subscriptionPlan,
-  };
+  let subscriptionStatus = mapPolarToOpenSaasSubscriptionStatus(subscription.status);
 
   if (subscriptionStatus === OpenSaasSubscriptionStatus.Active && subscription.cancelAtPeriodEnd) {
-    updateArgs.subscriptionStatus = OpenSaasSubscriptionStatus.CancelAtPeriodEnd;
+    subscriptionStatus = OpenSaasSubscriptionStatus.CancelAtPeriodEnd;
   }
 
-  await updateUserPaymentDetails(updateArgs, userDelegate);
+  await updateUserPaymentDetails({ polarCustomerId, subscriptionStatus, subscriptionPlan }, userDelegate);
   console.log(`${subscription.product.name} subscription updated for customer: ${polarCustomerId}}`);
 }
 

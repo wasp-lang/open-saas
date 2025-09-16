@@ -2,12 +2,12 @@ import { Customer } from '@polar-sh/sdk/models/components/customer.js';
 import { env } from 'wasp/server';
 import { polarClient } from './polarClient';
 
-export interface CreatePolarCheckoutSessionArgs {
+interface CreatePolarCheckoutSessionArgs {
   productId: string;
   customerId: string;
 }
 
-export interface PolarCheckoutSession {
+interface PolarCheckoutSession {
   id: string;
   url: string;
 }
