@@ -1,13 +1,13 @@
-import { MiddlewareConfig } from 'wasp/server/middleware';
 import express from 'express';
+import { MiddlewareConfig } from 'wasp/server/middleware';
 import {
   type CreateCheckoutSessionArgs,
   type FetchCustomerPortalUrlArgs,
   type PaymentProcessor,
 } from '../paymentProcessor';
 import { createPolarCheckoutSession, ensurePolarCustomer } from './checkoutUtils';
-import { polarWebhook } from './webhook';
 import { polarClient } from './polarClient';
+import { polarWebhook } from './webhook';
 
 export const polarPaymentProcessor: PaymentProcessor = {
   id: 'polar',
