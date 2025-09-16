@@ -16,6 +16,10 @@ import variantId from '@assets/lemon-squeezy/variant-id.png';
 import subscriptionVariantIds from '@assets/lemon-squeezy/subscription-variant-ids.png';
 import ngrok from '@assets/lemon-squeezy/ngrok.png';
 import storeId from '@assets/lemon-squeezy/store-id.png';
+import addPolarProduct from '@assets/polar/add-product.png';
+import addPolarToken from '@assets/polar/add-token.png';
+import polarUserTable from '@assets/polar/user-table.png';
+import polarWebhookLogs from '@assets/polar/webhook-log.png';
 
 This guide will show you how to set up Payments for testing and local development with the following payment processors:
 - Stripe
@@ -340,7 +344,7 @@ If you're finding this template and its guides useful, consider giving us [a sta
 
 ### Enable Sandbox Mode
 
-For local development and testing, you'll want to use Polar's sandbox mode. The Polar sandbox is fully isolated, so there are separate URLs for the [sandbox dashboard](https://sandbox.polar.sh) and [live dashboard](https://sandbox.polar.sh), each with independent products, sales, access tokens, etc. Add the following to your `.env.server` file:
+For local development and testing, you'll want to use Polar's sandbox mode. The Polar sandbox is fully isolated, so there are separate URLs for the [sandbox dashboard](https://sandbox.polar.sh/dashboard) and [live dashboard](https://polar.sh/dashboard), each with independent products, sales, access tokens, etc. Add the following to your `.env.server` file:
 
 ```ts title=".env.server"
 POLAR_SANDBOX_MODE=true
@@ -354,7 +358,8 @@ When you're ready to go live, change this to `false`.
 
 Once you've created your account, you'll need to get your API access token. You can do that by navigating to the `Developers` section under your dashboard settings and creating a new personal access token.
 
-- Click on the `+` button to create a new token
+- Click on the `New Token` button to create a new token
+<Image src={addPolarToken} alt="How to create a new access token in Polar dashboard" loading="lazy" />
 - Give your token a name (e.g., "Open SaaS Development")
 - Copy the generated token and paste it in your `.env.server` file, e.g. `POLAR_ACCESS_TOKEN=polar_oat_...`
 
@@ -363,6 +368,7 @@ Once you've created your account, you'll need to get your API access token. You 
 To create test products in Polar, go to the `Products` section in your Polar dashboard.
 
 - Click on the `New Product` button to create a new product
+<Image src={addPolarProduct} alt="How to create a new product in Polar dashboard" loading="lazy" />
 - Fill in the product details:
   - **Name**: e.g., "Hobby Plan", "Pro Plan", or "10 Credits"
   - **Description**: Brief description of what the product includes
@@ -430,13 +436,17 @@ You can then test the payment flow:
 - Complete the payment
 - You should be redirected back to your success page
 
-Check your terminal for webhook event logs and verify the user's subscription status in your database:
+Check the Polar dashboard for webhook event logs and verify the user's subscription status in your database:
+
+<Image src={polarWebhookLogs} alt="How to check webhook logs in Polar dashboard" loading="lazy" />
 
 ```sh
 wasp db studio
 ```
 
-Navigate to `localhost:5555` and check the `users` table to confirm the `subscriptionStatus` is `active` for the user who made the purchase.
+Navigate to `localhost:5555` and check the `User` table to confirm the `subscriptionStatus` is `active` for the user who made the purchase.
+
+<Image src={polarUserTable} alt="User table showing updated user" loading="lazy" />
 
 :::note[Polar Test Cards]
 Polar uses Stripe's test card numbers for development. Check their [testing documentation](https://docs.stripe.com/testing#cards) for further information.
