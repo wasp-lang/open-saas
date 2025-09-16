@@ -32,7 +32,7 @@ Polar is an open-source [Merchant of Record](https://docs.polar.sh/merchant-of-r
 
 First, go to `/src/payment/paymentProcessor.ts` and choose which payment processor you'd like to use, e.g. Stripe, Lemon Squeezy, or Polar:
 
-```ts title="src/payment/paymentProcessor.ts" ins={5, 7}
+```ts title="src/payment/paymentProcessor.ts" ins={6, 8, 10}
 import { stripePaymentProcessor } from './stripe/paymentProcessor';
 import { lemonSqueezyPaymentProcessor } from './lemonSqueezy/paymentProcessor';
 import { polarPaymentProcessor } from './polar/paymentProcessor';
@@ -48,13 +48,20 @@ export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
 At this point, you can delete:
 - the unused payment processor code within the `/src/payment/<unused-provider>` directory, 
 - any unused environment variables from `.env.server` (they will be prefixed with the name of the provider your are not using):
-  - e.g. `STRIPE_API_KEY`, `STRIPE_CUSTOMER_PORTAL_URL`, `LEMONSQUEEZY_API_KEY`, `LEMONSQUEEZY_WEBHOOK_SECRET`, `POLAR_ACCESS_TOKEN`, `POLAR_WEBHOOK_SECRET`, `POLAR_SANDBOX_MODE`
+  - e.g. `STRIPE_API_KEY`, `LEMONSQUEEZY_API_KEY`, `POLAR_ACCESS_TOKEN`
 - Make sure to also uninstall the unused dependencies:
-  - `npm uninstall @lemonsqueezy/lemonsqueezy.js`
-  - or
-  - `npm uninstall stripe`
-  - or
-  - `npm uninstall @polar-sh/sdk`
+  - If using Stripe
+    ```sh
+    npm uninstall @lemonsqueezy/lemonsqueezy.js @polar-sh/sdk
+    ```
+  - If using Lemon Squeezy
+    ```sh
+    npm uninstall stripe @polar-sh/sdk
+    ```
+  - If using Polar
+    ```sh
+    npm uninstall @lemonsqueezy/lemonsqueezy.js stripe
+    ```
 - Remove any unused fields from the `User` model in the `schema.prisma` file if they exist:
   - e.g. `lemonSqueezyCustomerPortalUrl`
 
@@ -331,7 +338,7 @@ We've packed in a ton of features and love into this SaaS starter, and offer it 
 If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
 :::
 
-### Configure Sandbox Mode
+### Enable Sandbox Mode
 
 For local development and testing, you'll want to use Polar's sandbox mode. The Polar sandbox is fully isolated, so there are separate URLs for the [sandbox dashboard](https://sandbox.polar.sh) and [live dashboard](https://sandbox.polar.sh), each with independent products, sales, access tokens, etc. Add the following to your `.env.server` file:
 
@@ -340,7 +347,7 @@ POLAR_SANDBOX_MODE=true
 ```
 
 :::note[Going Live]
-When you're ready to go live, change this to `false` or remove the variable entirely.
+When you're ready to go live, change this to `false`.
 :::
 
 ### Get your Polar API Access Token
