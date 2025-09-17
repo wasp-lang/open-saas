@@ -40,35 +40,30 @@ export async function createStripeCheckoutSession({
   customerId,
   mode,
 }: CreateStripeCheckoutSessionParams): Promise<Stripe.Checkout.Session> {
-  try {
-    return await stripeClient.checkout.sessions.create({
-      customer: customerId,
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ],
-      mode: mode,
-      success_url: `${CLIENT_BASE_URL}/checkout?success=true`,
-      cancel_url: `${CLIENT_BASE_URL}/checkout?canceled=true`,
-      automatic_tax: { enabled: true },
-      allow_promotion_codes: true,
-      customer_update: {
-        address: 'auto',
+  return await stripeClient.checkout.sessions.create({
+    customer: customerId,
+    line_items: [
+      {
+        price: priceId,
+        quantity: 1,
       },
-      // Stripe automatically creates invoices for subscriptions.
-      // For one-time payments, we must enable them manually.
-      // Enabling invoices for subscriptions will cause an error.
-      invoice_creation:
-        mode === 'payment'
-          ? {
-              enabled: true,
-            }
-          : undefined,
-    });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+    ],
+    mode,
+    success_url: `${CLIENT_BASE_URL}/checkout?success=true`,
+    cancel_url: `${CLIENT_BASE_URL}/checkout?canceled=true`,
+    automatic_tax: { enabled: true },
+    allow_promotion_codes: true,
+    customer_update: {
+      address: 'auto',
+    },
+    // Stripe automatically creates invoices for subscriptions.
+    // For one-time payments, we must enable them manually.
+    // However, enabling invoices for subscriptions will throw an error.
+    invoice_creation:
+      mode === 'payment'
+        ? {
+            enabled: true,
+          }
+        : undefined,
+  });
 }

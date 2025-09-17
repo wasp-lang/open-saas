@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import { requireNodeEnvVar } from '../../server/utils';
 import type {
   CreateCheckoutSessionArgs,
   FetchCustomerPortalUrlArgs,
@@ -59,10 +60,10 @@ export const stripePaymentProcessor: PaymentProcessor = {
       return null;
     }
 
-    const CLIENT_BASE_URL = process.env.WASP_WEB_CLIENT_URL || 'http://localhost:3000';
+    const webClientUrl = requireNodeEnvVar('WASP_WEB_CLIENT_URL');
     const session = await stripeClient.billingPortal.sessions.create({
       customer: user.paymentProcessorUserId,
-      return_url: `${CLIENT_BASE_URL}/account`,
+      return_url: `${webClientUrl}/account`,
     });
 
     return session.url;
