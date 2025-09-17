@@ -30,7 +30,7 @@ export default function CheckoutResultPage() {
           {status === 'canceled' && '😢 Payment Canceled.'}
         </h1>
         <span className=''>
-          You are being redirected to your account page in {ACCOUNT_PAGE_REDIRECT_DELAY_MS / 1000} seconds...
+          You will be redirected to your account page in {ACCOUNT_PAGE_REDIRECT_DELAY_MS / 1000} seconds...
         </span>
       </div>
     </div>
