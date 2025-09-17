@@ -1,4 +1,5 @@
 import { getCustomerPortalUrl, useQuery } from 'wasp/client/operations';
+import { Link as WaspRouterLink, routes } from 'wasp/client/router';
 import type { User } from 'wasp/entities';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
@@ -83,6 +84,7 @@ function UserCurrentSubscriptionPlan({ user }: { user: User }) {
       <dd className='mt-1 text-sm text-foreground sm:col-span-1 sm:mt-0'>{subscriptionPlanMessage}</dd>
       <div className='mt-4 sm:mt-0 ml-auto'>
         <CustomerPortalButton />
+        <BuyMoreButton />
       </div>
     </>
   );
@@ -129,5 +131,18 @@ function CustomerPortalButton() {
         Manage Payment Details
       </Button>
     </a>
+  );
+}
+
+function BuyMoreButton() {
+  return (
+    <Button variant='link'>
+      <WaspRouterLink
+        to={routes.PricingPageRoute.to}
+        className='font-medium text-sm text-primary hover:text-primary/80 transition-colors duration-200'
+      >
+        Buy More/Upgrade
+      </WaspRouterLink>
+    </Button>
   );
 }
