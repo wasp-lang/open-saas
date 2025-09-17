@@ -3,11 +3,8 @@ import { type AuthUser } from 'wasp/auth';
 import { Button } from '../../../components/ui/button';
 import Breadcrumb from '../../layout/Breadcrumb';
 import DefaultLayout from '../../layout/DefaultLayout';
-import { useRedirectHomeUnlessUserIsAdmin } from '../../useRedirectHomeUnlessUserIsAdmin';
 
 const Buttons = ({ user }: { user: AuthUser }) => {
-  useRedirectHomeUnlessUserIsAdmin({ user });
-
   return (
     <DefaultLayout user={user}>
       <Breadcrumb pageName='Buttons' />
