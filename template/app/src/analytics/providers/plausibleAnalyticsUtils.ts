@@ -20,7 +20,7 @@ type PageViewSourcesResult = {
     {
       source: string;
       visitors: number;
-    }
+    },
   ];
 };
 
@@ -57,7 +57,9 @@ async function getPrevDayViewsChangePercent() {
   // Calculate today, yesterday, and the day before yesterday's dates
   const today = new Date();
   const yesterday = new Date(today.setDate(today.getDate() - 1)).toISOString().split('T')[0];
-  const dayBeforeYesterday = new Date(new Date().setDate(new Date().getDate() - 2)).toISOString().split('T')[0];
+  const dayBeforeYesterday = new Date(new Date().setDate(new Date().getDate() - 2))
+    .toISOString()
+    .split('T')[0];
 
   // Fetch page views for yesterday and the day before yesterday
   const pageViewsYesterday = await getPageviewsForDate(yesterday);

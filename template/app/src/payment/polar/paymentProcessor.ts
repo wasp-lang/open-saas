@@ -54,7 +54,7 @@ export const polarPaymentProcessor: PaymentProcessor = {
     const customerSession = await polarClient.customerSessions.create({
       customerId: user.paymentProcessorUserId,
     });
-  
+
     return customerSession.customerPortalUrl;
   },
   webhook: polarWebhook,

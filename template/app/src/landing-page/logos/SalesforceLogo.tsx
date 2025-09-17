@@ -23,5 +23,5 @@ export default function SalesforceLogo() {
         />
       </g>
     </svg>
-  )
+  );
 }
