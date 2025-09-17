@@ -45,14 +45,21 @@ export default function AccountPage({ user }: { user: User }) {
             <div className='py-4 px-6'>
               <div className='grid grid-cols-1 sm:grid-cols-3 sm:gap-4'>
                 <dt className='text-sm font-medium text-muted-foreground'>Your Plan</dt>
-                <UserCurrentSubscriptionPlan user={user} />
+                <UserCurrentSubscriptionPlan
+                  subscriptionPlan={user.subscriptionPlan}
+                  subscriptionStatus={user.subscriptionStatus}
+                  datePaid={user.datePaid}
+                />
               </div>
             </div>
             <Separator />
             <div className='py-4 px-6'>
               <div className='grid grid-cols-1 sm:grid-cols-3 sm:gap-4'>
                 <dt className='text-sm font-medium text-muted-foreground'>Credits</dt>
-                <dd className='mt-1 text-sm text-foreground sm:col-span-2 sm:mt-0'>{user.credits}</dd>
+                <dd className='mt-1 text-sm text-foreground sm:col-span-1 sm:mt-0'>{user.credits}</dd>{' '}
+                <div className='mt-4 sm:mt-0 ml-auto'>
+                  <BuyMoreButton subscriptionStatus={user.subscriptionStatus} />
+                </div>
               </div>
             </div>
             <Separator />
@@ -69,13 +76,17 @@ export default function AccountPage({ user }: { user: User }) {
   );
 }
 
-function UserCurrentSubscriptionPlan({ user }: { user: User }) {
+function UserCurrentSubscriptionPlan({
+  subscriptionPlan,
+  subscriptionStatus,
+  datePaid,
+}: Pick<User, 'subscriptionPlan' | 'subscriptionStatus' | 'datePaid'>) {
   let subscriptionPlanMessage = 'Free Plan';
-  if (!!user.subscriptionPlan && !!user.subscriptionStatus && !!user.datePaid) {
+  if (subscriptionPlan !== null && subscriptionStatus !== null && datePaid !== null) {
     subscriptionPlanMessage = formatSubscriptionStatusMessage(
-      parsePaymentPlanId(user.subscriptionPlan),
-      user.datePaid,
-      user.subscriptionStatus as SubscriptionStatus
+      parsePaymentPlanId(subscriptionPlan),
+      datePaid,
+      subscriptionStatus as SubscriptionStatus
     );
   }
 
@@ -84,7 +95,6 @@ function UserCurrentSubscriptionPlan({ user }: { user: User }) {
       <dd className='mt-1 text-sm text-foreground sm:col-span-1 sm:mt-0'>{subscriptionPlanMessage}</dd>
       <div className='mt-4 sm:mt-0 ml-auto'>
         <CustomerPortalButton />
-        <BuyMoreButton />
       </div>
     </>
   );
@@ -96,7 +106,6 @@ function formatSubscriptionStatusMessage(
   subscriptionStatus: SubscriptionStatus
 ): string {
   const paymentPlanName = prettyPaymentPlanName(subscriptionPlan);
-
   const statusToMessage: Record<SubscriptionStatus, string> = {
     active: `${paymentPlanName}`,
     past_due: `Payment for your ${paymentPlanName} plan is past due! Please update your subscription payment information.`,
@@ -105,11 +114,12 @@ function formatSubscriptionStatusMessage(
     )}`,
     deleted: `Your previous subscription has been canceled and is no longer active.`,
   };
-  if (Object.keys(statusToMessage).includes(subscriptionStatus)) {
-    return statusToMessage[subscriptionStatus];
-  } else {
-    throw new Error(`Invalid subscriptionStatus: ${subscriptionStatus}`);
+
+  if (!statusToMessage[subscriptionStatus]) {
+    throw new Error(`Invalid subscription status: ${subscriptionStatus}`);
   }
+
+  return statusToMessage[subscriptionStatus];
 }
 
 function prettyPrintEndOfBillingPeriod(date: Date) {
@@ -134,15 +144,20 @@ function CustomerPortalButton() {
   );
 }
 
-function BuyMoreButton() {
+function BuyMoreButton({ subscriptionStatus }: Pick<User, 'subscriptionStatus'>) {
+  if (
+    subscriptionStatus === SubscriptionStatus.Active ||
+    subscriptionStatus === SubscriptionStatus.CancelAtPeriodEnd
+  ) {
+    return null;
+  }
+
   return (
-    <Button variant='link'>
-      <WaspRouterLink
-        to={routes.PricingPageRoute.to}
-        className='font-medium text-sm text-primary hover:text-primary/80 transition-colors duration-200'
-      >
-        Buy More/Upgrade
-      </WaspRouterLink>
-    </Button>
+    <WaspRouterLink
+      to={routes.PricingPageRoute.to}
+      className='font-medium text-sm text-primary hover:text-primary/80 transition-colors duration-200'
+    >
+      <Button variant='link'>Buy More Credits</Button>
+    </WaspRouterLink>
   );
 }
