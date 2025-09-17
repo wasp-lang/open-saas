@@ -14,15 +14,18 @@ export enum PaymentPlanId {
 }
 
 export interface PaymentPlan {
-  // Returns the id under which this payment plan is identified on your payment processor.
-  // E.g. this might be price id on Stripe, or variant id on LemonSqueezy.
+  /**
+   * Returns the id under which this payment plan is identified on your payment processor.
+   *
+   * E.g. price id on Stripe, or variant id on LemonSqueezy.
+   */
   getPaymentProcessorPlanId: () => string;
   effect: PaymentPlanEffect;
 }
 
 export type PaymentPlanEffect = { kind: 'subscription' } | { kind: 'credits'; amount: number };
 
-export const paymentPlans: Record<PaymentPlanId, PaymentPlan> = {
+export const paymentPlans = {
   [PaymentPlanId.Hobby]: {
     getPaymentProcessorPlanId: () => requireNodeEnvVar('PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID'),
     effect: { kind: 'subscription' },
@@ -35,7 +38,7 @@ export const paymentPlans: Record<PaymentPlanId, PaymentPlan> = {
     getPaymentProcessorPlanId: () => requireNodeEnvVar('PAYMENTS_CREDITS_10_PLAN_ID'),
     effect: { kind: 'credits', amount: 10 },
   },
-};
+} as const satisfies Record<PaymentPlanId, PaymentPlan>;
 
 export function prettyPaymentPlanName(planId: PaymentPlanId): string {
   const planToName: Record<PaymentPlanId, string> = {

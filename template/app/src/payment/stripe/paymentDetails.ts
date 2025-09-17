@@ -1,27 +1,59 @@
+import { PrismaClient } from '@prisma/client';
+import Stripe from 'stripe';
 import type { SubscriptionStatus } from '../plans';
 import { PaymentPlanId } from '../plans';
-import { PrismaClient } from '@prisma/client';
 
-export const updateUserStripePaymentDetails = async (
-  { userStripeId, subscriptionPlan, subscriptionStatus, datePaid, numOfCreditsPurchased }: {
-    userStripeId: string;
-    subscriptionPlan?: PaymentPlanId;
-    subscriptionStatus?: SubscriptionStatus;
-    numOfCreditsPurchased?: number;
-    datePaid?: Date;
-  },
+export async function updateUserStripePaymentDetails(
+  paymentDetails: UpdateUserStripeOneTimePaymentDetails | UpdateUserStripeSubscriptionDetails,
   userDelegate: PrismaClient['user']
-) => {
+) {
+  if ('numOfCreditsPurchased' in paymentDetails) {
+    return updateUserStripeOneTimePaymentDetails(paymentDetails, userDelegate);
+  } else {
+    return updateUserStripeSubscriptionDetails(paymentDetails, userDelegate);
+  }
+}
+
+interface UpdateUserStripeOneTimePaymentDetails {
+  customerId: Stripe.Customer['id'];
+  datePaid: Date;
+  numOfCreditsPurchased: number;
+}
+
+function updateUserStripeOneTimePaymentDetails(
+  { customerId, datePaid, numOfCreditsPurchased }: UpdateUserStripeOneTimePaymentDetails,
+  userDelegate: PrismaClient['user']
+) {
   return userDelegate.update({
     where: {
-      paymentProcessorUserId: userStripeId
+      paymentProcessorUserId: customerId,
     },
     data: {
-      paymentProcessorUserId: userStripeId,
-      subscriptionPlan,
-      subscriptionStatus,
       datePaid,
-      credits: numOfCreditsPurchased !== undefined ? { increment: numOfCreditsPurchased } : undefined,
+      credits: { increment: numOfCreditsPurchased },
     },
   });
-};
+}
+
+interface UpdateUserStripeSubscriptionDetails {
+  customerId: Stripe.Customer['id'];
+  subscriptionStatus: SubscriptionStatus;
+  paymentPlanId?: PaymentPlanId;
+  datePaid?: Date;
+}
+
+function updateUserStripeSubscriptionDetails(
+  { customerId, paymentPlanId, subscriptionStatus, datePaid }: UpdateUserStripeSubscriptionDetails,
+  userDelegate: PrismaClient['user']
+) {
+  return userDelegate.update({
+    where: {
+      paymentProcessorUserId: customerId,
+    },
+    data: {
+      subscriptionPlan: paymentPlanId,
+      subscriptionStatus,
+      datePaid,
+    },
+  });
+}
