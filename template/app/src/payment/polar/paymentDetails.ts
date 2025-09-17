@@ -1,7 +1,7 @@
 import { PrismaClient } from 'wasp/server';
 import { PaymentPlanId, SubscriptionStatus } from '../plans';
 
-export interface UpdateUserPaymentDetailsArgs {
+interface UpdateUserPaymentDetailsArgs {
   polarCustomerId?: string;
   subscriptionPlan?: PaymentPlanId;
   subscriptionStatus?: SubscriptionStatus | string;
