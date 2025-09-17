@@ -344,7 +344,9 @@ If you're finding this template and its guides useful, consider giving us [a sta
 
 ### Enable Sandbox Mode
 
-For local development and testing, you'll want to use Polar's sandbox mode. The Polar sandbox is fully isolated, so there are separate URLs for the [sandbox dashboard](https://sandbox.polar.sh/dashboard) and [live dashboard](https://polar.sh/dashboard), each with independent products, sales, access tokens, etc. Add the following to your `.env.server` file:
+For local development and testing, you'll want to use Polar's sandbox mode. The Polar sandbox is fully isolated, so there are separate URLs for the [sandbox dashboard](https://sandbox.polar.sh/dashboard) and [live dashboard](https://polar.sh/dashboard), each with independent products, sales, access tokens, etc. 
+
+Add the following to your `.env.server` file:
 
 ```ts title=".env.server"
 POLAR_SANDBOX_MODE=true
@@ -392,7 +394,7 @@ The Product ID can be acquired on the product page in your Polar dashboard. Tap 
 
 Polar notifies your Wasp app through a webhook (for example, when a payment succeeds). During development, you need to expose your locally running Wasp server (started with `wasp start`) to the internet. Because the Wasp server runs on port 3001 by default, run `ngrok` on the same port. `ngrok` will generate a public URL that you can give to Polar.
 
-To do this, first make sure you have installed [ngrok](https://ngrok.com/docs/getting-started/).
+To do this, first make sure you have installed [`ngrok`](https://ngrok.com/docs/getting-started/).
 
 Once `ngrok` is installed and your Wasp app is running, run:
 
@@ -412,7 +414,7 @@ Next, configure the webhook in your Polar dashboard:
 
 - Go to `Webhooks` page under `Settings`
 - Click `Add Endpoint` to create a new endpoint
-- In the URL field, paste your ngrok forwarding address and append `/payments-webhook` (for example: `https://abc123.ngrok-free.app/payments-webhook`).
+- In the URL field, paste your `ngrok` forwarding address with `/payments-webhook` appended (for example: `https://abc123.ngrok-free.app/payments-webhook`).
 - Set the `Format` to `"Raw"`
 - Select the following events to listen for:
   - `order.paid`
@@ -426,7 +428,7 @@ POLAR_WEBHOOK_SECRET=polar_whs_...
 
 ### Testing Payments via the Local Application
 
-Make sure that your **ngrok tunnel is running** and that the webhook is configured as described above.
+Make sure that your **`ngrok` tunnel is running** and that the webhook is configured as described above.
 
 You can then test the payment flow:
 
