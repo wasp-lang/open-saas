@@ -11,6 +11,15 @@ import { PaymentPlanId, paymentPlans, SubscriptionStatus } from '../plans';
 import { updateUserStripePaymentDetails } from './paymentDetails';
 import { stripeClient } from './stripeClient';
 
+/**
+ * Stripe requires the raw request to construct the event successfully.
+ */
+export const stripeMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig) => {
+  middlewareConfig.delete('express.json');
+  middlewareConfig.set('express.raw', express.raw({ type: 'application/json' }));
+  return middlewareConfig;
+};
+
 export const stripeWebhook: PaymentsWebhook = async (request, response, context) => {
   const prismaUserDelegate = context.entities.User;
   try {
@@ -37,11 +46,11 @@ export const stripeWebhook: PaymentsWebhook = async (request, response, context)
           throw new UnhandledWebhookEventError(stripeEvent.type);
         }
     }
-    return response.status(204).send(); // any 2xx HTTP response is fine
+    return response.status(204).send();
   } catch (err) {
     if (err instanceof UnhandledWebhookEventError) {
-      console.error('Unhandled Stripe webhook event: ', err.message);
-      return response.status(422).json({ error: err.message });
+      response.status(204).send();
+      throw err;
     }
 
     console.error('Stripe webhook error:', err);
@@ -60,44 +69,26 @@ function constructStripeEvent(request: express.Request): Stripe.Event {
     throw new HttpError(400, 'Stripe webhook signature not provided');
   }
 
-  try {
-    return stripeClient.webhooks.constructEvent(request.body, stripeSignature, stripeWebhookSecret);
-  } catch (err) {
-    throw new HttpError(400, 'Error constructing Stripe webhook event');
-  }
+  return stripeClient.webhooks.constructEvent(request.body, stripeSignature, stripeWebhookSecret);
 }
 
-/**
- * Stripe requires the raw request to construct the event successfully.
- * That is we we delete the Wasp's default 'express.json' middleware
- * and replace it with 'express.raw' middleware.
- */
-export const stripeMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig) => {
-  middlewareConfig.delete('express.json');
-  middlewareConfig.set('express.raw', express.raw({ type: 'application/json' }));
-  return middlewareConfig;
-};
-
-/**
- * We create invoice both for subscriptions and one-time payments.
- * So we can handle all payment scenarios in a unified way.
- *
- * Also provides one-time payment invoices inside of the customer portal.
- */
 async function handleInvoicePaid(
   event: Stripe.InvoicePaidEvent,
   prismaUserDelegate: PrismaClient['user']
 ): Promise<void> {
   const invoice = event.data.object;
   const customerId = getCustomerId(invoice.customer);
-  const datePaid = getInvoicePaidAtDate(invoice);
-  const priceId = getItemsPriceId(invoice.lines.data);
-  const paymentPlanId = getPaymentPlanIdByPriceId(priceId);
+  const invoicePaidAtDate = getInvoicePaidAtDate(invoice);
+  const paymentPlanId = getPaymentPlanIdByPriceId(getInvoicePriceId(invoice));
 
   switch (paymentPlanId) {
     case PaymentPlanId.Credits10:
       updateUserStripePaymentDetails(
-        { customerId, numOfCreditsPurchased: paymentPlans.credits10.effect.amount, datePaid },
+        {
+          customerId,
+          datePaid: invoicePaidAtDate,
+          numOfCreditsPurchased: paymentPlans.credits10.effect.amount,
+        },
         prismaUserDelegate
       );
       break;
@@ -106,7 +97,7 @@ async function handleInvoicePaid(
       updateUserStripePaymentDetails(
         {
           customerId,
-          datePaid,
+          datePaid: invoicePaidAtDate,
           paymentPlanId,
           subscriptionStatus: SubscriptionStatus.Active,
         },
@@ -118,6 +109,23 @@ async function handleInvoicePaid(
   }
 }
 
+/**
+ * We only expect one line item, if your workflow expected more, you should change this function to handle them.
+ */
+function getInvoicePriceId(invoice: Stripe.Invoice): Stripe.Price['id'] {
+  const invoiceLineItems = invoice.lines.data;
+  if (invoiceLineItems.length === 0 || invoiceLineItems.length > 1) {
+    throw new HttpError(400, 'There should be exactly one line item in Stripe invoice');
+  }
+
+  const priceId = invoiceLineItems[0].pricing?.price_details?.price;
+  if (!priceId) {
+    throw new Error('Unable to extract price id from items');
+  }
+
+  return priceId;
+}
+
 async function handleCustomerSubscriptionUpdated(
   event: Stripe.CustomerSubscriptionUpdatedEvent,
   prismaUserDelegate: PrismaClient['user']
@@ -125,8 +133,6 @@ async function handleCustomerSubscriptionUpdated(
   const subscription = event.data.object;
 
   // There are other subscription statuses, such as `trialing` that we are not handling.
-  // If you'd like to handle more statuses, you can add more cases below.
-  // Make sure to update the `SubscriptionStatus` type in `payment/plans.ts` as well.
   let subscriptionStatus: SubscriptionStatus | undefined;
   if (subscription.status === SubscriptionStatus.Active) {
     subscriptionStatus = SubscriptionStatus.Active;
@@ -140,8 +146,7 @@ async function handleCustomerSubscriptionUpdated(
   }
 
   const customerId = getCustomerId(subscription.customer);
-  const priceId = getItemsPriceId(subscription.items.data);
-  const paymentPlanId = getPaymentPlanIdByPriceId(priceId);
+  const paymentPlanId = getPaymentPlanIdByPriceId(getSubscriptionPriceId(subscription));
 
   const user = await updateUserStripePaymentDetails(
     { customerId, paymentPlanId, subscriptionStatus },
@@ -158,6 +163,18 @@ async function handleCustomerSubscriptionUpdated(
       });
     }
   }
+}
+
+/**
+ * We only expect one subscription item, if your workflow expected more, you should change this function to handle them.
+ */
+function getSubscriptionPriceId(subscription: Stripe.Subscription): Stripe.Price['id'] {
+  const subscriptionItems = subscription.items.data;
+  if (subscriptionItems.length === 0 || subscriptionItems.length > 1) {
+    throw new HttpError(400, 'There should be exactly one subscription item in Stripe subscription');
+  }
+
+  return subscriptionItems[0].price.id;
 }
 
 async function handleCustomerSubscriptionDeleted(
@@ -195,41 +212,13 @@ function getInvoicePaidAtDate(invoice: Stripe.Invoice): Date {
   return new Date(invoice.status_transitions.paid_at * 1000);
 }
 
-/**
- * We only expect one line item, but if you set up a product with multiple prices, you should change this function to handle them.
- */
-function getItemsPriceId(items: Stripe.InvoiceLineItem[] | Stripe.SubscriptionItem[]): Stripe.Price['id'] {
-  if (items.length === 0) {
-    throw new HttpError(400, 'No items in stripe event object');
-  }
-  if (items.length > 1) {
-    throw new HttpError(400, 'More than one item in stripe event object');
-  }
-
-  const item = items[0];
-
-  // SubscriptionItem
-  if ('price' in item && item.price?.id) {
-    return item.price.id;
-  }
-
-  // InvoiceLineItem
-  if ('pricing' in item) {
-    const priceId = item.pricing?.price_details?.price;
-    if (priceId) {
-      return priceId;
-    }
-  }
-
-  throw new Error('Unable to extract price id from items');
-}
-
 function getPaymentPlanIdByPriceId(priceId: string): PaymentPlanId {
   const planId = Object.values(PaymentPlanId).find(
-    (planId) => paymentPlans[planId].getPaymentProcessorPlanId() === priceId
+    (paymentPlanId) => paymentPlans[paymentPlanId].getPaymentProcessorPlanId() === priceId
   );
   if (!planId) {
     throw new Error(`No payment plan with Stripe price id ${priceId}`);
   }
+
   return planId;
 }

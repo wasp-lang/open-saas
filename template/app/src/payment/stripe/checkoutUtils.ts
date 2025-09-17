@@ -30,8 +30,8 @@ export async function ensureStripeCustomer(userEmail: string): Promise<Stripe.Cu
 }
 
 interface CreateStripeCheckoutSessionParams {
-  priceId: string;
-  customerId: string;
+  priceId: Stripe.Price['id'];
+  customerId: Stripe.Customer['id'];
   mode: Stripe.Checkout.Session.Mode;
 }
 
