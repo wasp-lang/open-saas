@@ -7,7 +7,7 @@ app_diff/
 
 # Formatting `.md` and `.mdx` can introduce logical changes.
 **/blog/**/*.md
-**/blog/**/*.mdx 
+**/blog/**/*.mdx
 
 # Ignore minified JS files in the public folder.
 **/public/**/*.js

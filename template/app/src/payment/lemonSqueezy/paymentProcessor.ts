@@ -1,19 +1,30 @@
-import type { CreateCheckoutSessionArgs, FetchCustomerPortalUrlArgs, PaymentProcessor } from '../paymentProcessor';
-import { requireNodeEnvVar } from '../../server/utils';
-import { createLemonSqueezyCheckoutSession } from './checkoutUtils';
-import { lemonSqueezyWebhook, lemonSqueezyMiddlewareConfigFn } from './webhook';
-import { lemonSqueezySetup } from '@lemonsqueezy/lemonsqueezy.js';
+import { lemonSqueezySetup } from "@lemonsqueezy/lemonsqueezy.js";
+import { requireNodeEnvVar } from "../../server/utils";
+import type {
+  CreateCheckoutSessionArgs,
+  FetchCustomerPortalUrlArgs,
+  PaymentProcessor,
+} from "../paymentProcessor";
+import { createLemonSqueezyCheckoutSession } from "./checkoutUtils";
+import { lemonSqueezyMiddlewareConfigFn, lemonSqueezyWebhook } from "./webhook";
 
 lemonSqueezySetup({
-  apiKey: requireNodeEnvVar('LEMONSQUEEZY_API_KEY'),
+  apiKey: requireNodeEnvVar("LEMONSQUEEZY_API_KEY"),
 });
 
 export const lemonSqueezyPaymentProcessor: PaymentProcessor = {
-  id: 'lemonsqueezy',
-  createCheckoutSession: async ({ userId, userEmail, paymentPlan }: CreateCheckoutSessionArgs) => {
-    if (!userId) throw new Error('User ID needed to create Lemon Squeezy Checkout Session');
+  id: "lemonsqueezy",
+  createCheckoutSession: async ({
+    userId,
+    userEmail,
+    paymentPlan,
+  }: CreateCheckoutSessionArgs) => {
+    if (!userId)
+      throw new Error(
+        "User ID needed to create Lemon Squeezy Checkout Session",
+      );
     const session = await createLemonSqueezyCheckoutSession({
-      storeId: requireNodeEnvVar('LEMONSQUEEZY_STORE_ID'),
+      storeId: requireNodeEnvVar("LEMONSQUEEZY_STORE_ID"),
       variantId: paymentPlan.getPaymentProcessorPlanId(),
       userEmail,
       userId,
