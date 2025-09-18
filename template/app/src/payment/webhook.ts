@@ -1,4 +1,5 @@
-import { paymentProcessor } from './paymentProcessor';
+import { paymentProcessor } from "./paymentProcessor";
 
 export const paymentsWebhook = paymentProcessor.webhook;
-export const paymentsMiddlewareConfigFn = paymentProcessor.webhookMiddlewareConfigFn;
+export const paymentsMiddlewareConfigFn =
+  paymentProcessor.webhookMiddlewareConfigFn;

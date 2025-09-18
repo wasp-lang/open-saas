@@ -4,6 +4,7 @@ banner:
   content: |
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
 ---
+
 This guide will show you how to integrate analytics for your app. You can choose between [Google Analytics](#google-analytics) and [Plausible](#plausible).
 
 Google Analytics is free, but uses cookies, so you'll probably want/need to implement the [Cookie Consent Modal](/guides/cookie-consent/) when using it.
@@ -15,6 +16,7 @@ If you're looking to add analytics to your blog, you can follow the [Adding Anal
 ## Plausible
 
 ### Hosted Plausible
+
 Sign up for a hosted Plausible account [here](https://plausible.io/).
 
 Once you've signed up, you'll be taken to your dashboard. Create your site by adding your domain. Your domain is also your `PLAUSIBLE_SITE_ID` in your `.env.server` file. Make sure to add it.
@@ -23,7 +25,7 @@ Once you've signed up, you'll be taken to your dashboard. Create your site by ad
 PLAUSIBLE_SITE_ID=<your domain without www>
 ```
 
-After adding your domain, you'll be taken to a page with your Plausible script tag. Copy and paste this script tag into the `main.wasp` file's head section. 
+After adding your domain, you'll be taken to a page with your Plausible script tag. Copy and paste this script tag into the `main.wasp` file's head section.
 
 ```js {7}
 app OpenSaaS {
@@ -47,11 +49,11 @@ Plausible does not use cookies, so you don't need to add it to your [Cookie Cons
 
 Plausible, being an open-source project, allows you to self-host your analytics. This is a great option if you want to keep your data private and not pay for the hosted service.
 
-*coming soon...*
-*until then, check out the [official documentation](https://plausible.io/docs)*
+_coming soon..._
+_until then, check out the [official documentation](https://plausible.io/docs)_
 
-:::tip[Contribute!] 
-If you'd like to help us write this guide, click the "Edit page" button at the bottom of this page 
+:::tip[Contribute!]
+If you'd like to help us write this guide, click the "Edit page" button at the bottom of this page
 
 As a completely free, open-source project, we appreciate any help 🙏
 :::
@@ -62,12 +64,21 @@ First off, head over to `src/analytics/stats.ts` and switch out the Plausible Pr
 
 ```ts ins={3} del={2} title="stats.ts"
 //...
-import { getDailyPageViews, getSources } from './providers/plausibleAnalyticsUtils';
-import { getDailyPageViews, getSources } from './providers/googleAnalyticsUtils';
+import {
+  getDailyPageViews,
+  getSources,
+} from "./providers/plausibleAnalyticsUtils";
+import {
+  getDailyPageViews,
+  getSources,
+} from "./providers/googleAnalyticsUtils";
 
-export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, context) => { 
+export const calculateDailyStats: DailyStatsJob<never, void> = async (
+  _args,
+  context,
+) => {
   //...
-}
+};
 ```
 
 Next, make sure you sign up for [Google analytics](https://analytics.google.com/), then go to your `Admin` panel in the bottom of the left sidebar and then create a "Property" for your app.
@@ -77,6 +88,7 @@ Once you've created a new Property, some Installation Instructions will pop up. 
 ```sh title="<your-google-analytics-id>"
  https://www.googletagmanager.com/gtag/js?id=<your-google-analytics-id>
 ```
+
 and copy and paste the Google Analytics ID into your `.env.client` file to get it working with the [Cookie Consent Modal](/guides/cookie-consent/) provided with this template:
 
 ```sh title=".env.client"
@@ -96,23 +108,22 @@ Then, set up the Google Analytics API access by following these steps:
 
 3. **Create credentials:** Now go to the "Credentials" tab within your Google Cloud project, click on `+ credentials`, and create a new service account key. First, give it a name. Then, under "Grant this service account access to project", choose `viewer`.
 
-4. **Create Credentials:** When you go back to `Credentials` page, you should see a new service account listed under "Service Accounts". It will be a long email address to ends with `@your-project-id.iam.gserviceaccount.com`. Click on the service account name to go to the service account details page. 
+4. **Create Credentials:** When you go back to `Credentials` page, you should see a new service account listed under "Service Accounts". It will be a long email address to ends with `@your-project-id.iam.gserviceaccount.com`. Click on the service account name to go to the service account details page.
 
-    - Under "Keys" in the service account details page, click "Add Key" and choose `Create new key`.
-  
-    - Select "JSON", then click "Create" to download your new service account's JSON key file. Keep this file secure and don't add it to your git repo as it grants access to your Google Analytics data.  
+   - Under "Keys" in the service account details page, click "Add Key" and choose `Create new key`.
+   - Select "JSON", then click "Create" to download your new service account's JSON key file. Keep this file secure and don't add it to your git repo as it grants access to your Google Analytics data.
+
 5. **Update your Google Anayltics Settings:** Go back to your Google Analytics dashboard, and click on the `Admin` section in the left sidebar. Under `Property Settings > Property > Property Access Management` Add the service account email address (the one that ends with `@your-project-id.iam.gserviceaccount.com`) and give it `Viewer` permissions.
 
 6. **Encode and add the Credentials:** Add the `client_email` and the `private_key` from your JSON Key file into your `.env.server` file. But be careful! Because Google uses a special PEM private key, you need to first convert the key to base64, otherwise you will run into errors parsing the key. To do this, in a terminal window, run the command below and paste the output into your `.env.server` file under the `GOOGLE_ANALYTICS_PRIVATE_KEY` variable:
-    ```sh 
-    echo -n "-----BEGIN PRIVATE KEY-----\nMI...A++eK\n-----END PRIVATE KEY-----\n" | base64
-    ```
-    
+   ```sh
+   echo -n "-----BEGIN PRIVATE KEY-----\nMI...A++eK\n-----END PRIVATE KEY-----\n" | base64
+   ```
 7. **Add your Google Analytics Property ID:** You will find the Property ID in your Google Analytics dashboard in the `Admin > Property > Property Settings > Property Details` section of your Google Analytics property (**not** your Google Cloud console). Add this 9-digit number to your `.env.server` file under the `GOOGLE_ANALYTICS_PROPERTY_ID` variable.
 
 ## Adding Analytics to your Blog
 
-To add your analytics script to your Astro Starlight blog, all you need to do is modify the `head` property in your `blog/astro.config.mjs` file. 
+To add your analytics script to your Astro Starlight blog, all you need to do is modify the `head` property in your `blog/astro.config.mjs` file.
 
 Below is an example of how to add Google Analytics to your blog:
 
@@ -120,7 +131,7 @@ Below is an example of how to add Google Analytics to your blog:
 export default defineConfig({
   site: 'https://opensaas.sh',
   integrations: [
-    starlightBlog({ 
+    starlightBlog({
       // ...
     }),
     starlight({
@@ -138,7 +149,7 @@ export default defineConfig({
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-        
+
           gtag('config', '<YOUR-GOOGLE-ANALYTICS-ID>');
           `,
         },

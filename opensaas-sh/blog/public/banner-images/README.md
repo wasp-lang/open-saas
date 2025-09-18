@@ -8,7 +8,7 @@ This is because OG Image URLs and Banner Images are automatically generated for 
 
 ```tsx
 const ogImageUrl = new URL(
-  `/banner-images/${Astro.props.id.replace(/blog\//, '').replace(/\.\w+$/, '.webp')}`,
+  `/banner-images/${Astro.props.id.replace(/blog\//, "").replace(/\.\w+$/, ".webp")}`,
   Astro.site,
-)
+);
 ```

@@ -4,8 +4,9 @@ banner:
   content: |
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
 ---
-import { Image } from 'astro:assets';
-import openSaaSGoogle from '@assets/seo/open-saas-google.png';
+
+import { Image } from "astro:assets";
+import openSaaSGoogle from "@assets/seo/open-saas-google.png";
 
 This guides explains how to improve SEO for of your app
 
@@ -46,13 +47,13 @@ Astro, being a static-site generator, will automatically inject relevant informa
 
 ```yaml
 ---
-title: 'My First Blog Post'
+title: "My First Blog Post"
 pubDate: 2022-07-01
-description: 'This is the first post of my new Astro blog.'
-author: 'Astro Learner'
+description: "This is the first post of my new Astro blog."
+author: "Astro Learner"
 image:
-    url: 'https://docs.astro.build/assets/full-logo-light.png'
-    alt: 'The full Astro logo.'
+  url: "https://docs.astro.build/assets/full-logo-light.png"
+  alt: "The full Astro logo."
 tags: ["astro", "blogging", "learning in public"]
 ---
 ```
@@ -63,7 +64,8 @@ Improving your SEO is as simple as adding these properties to your docs and blog
 
 Open SaaS and Wasp do not currently have a SSR option (although it is coming soon!), but that does not mean that Open SaaS apps are at a disadvantage with regards to SEO.
 
-That's because the meta tags for the landing page (described above), plus the Astro docs/blog provided with Open SaaS are more than enough! Not to mention, Google is also able to crawl websites with JavaScript activated, making SSR unnecessary. 
+That's because the meta tags for the landing page (described above), plus the Astro docs/blog provided with Open SaaS are more than enough! Not to mention, Google is also able to crawl websites with JavaScript activated, making SSR unnecessary.
 
-For example, try searching "Open SaaS" on Google and you'll see this App, which was built with this template, as the first result! 
+For example, try searching "Open SaaS" on Google and you'll see this App, which was built with this template, as the first result!
+
 <Image src={openSaaSGoogle} alt="open-saas-google" loading="lazy" />

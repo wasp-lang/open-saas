@@ -4,7 +4,8 @@ banner:
   content: |
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
 ---
-import VideoPlayer from '../../../components/VideoPlayer.astro';
+
+import VideoPlayer from "../../../components/VideoPlayer.astro";
 
 This guide will help you get your new SaaS app up and running.
 
@@ -22,6 +23,7 @@ Your version of Node.js must be >= 22.12.
 To switch easily between Node.js versions, we recommend using [nvm](https://github.com/nvm-sh/nvm).
 
 :::note[Installing and using nvm]
+
 <details aria-label="Installing and using nvm">
   <summary aria-label="Need help with nvm?">
     Need help with nvm?
@@ -52,6 +54,7 @@ To switch easily between Node.js versions, we recommend using [nvm](https://gith
     to check the version of Node.js currently being used in this shell session.
 
     Check NVM repo for more details: [https://github.com/nvm-sh/nvm](https://github.com/nvm-sh/nvm).
+
   </div>
 </details>
 :::
@@ -65,6 +68,7 @@ curl -sSL https://get.wasp.sh/installer.sh | sh
 ```
 
 :::caution[Bad CPU type in executable]
+
 <details aria-label="Bad CPU type in executable">
   <summary aria-label="Are you getting this error on a Mac (Apple Silicon)?">
     Are you getting this error on a Mac (Apple Silicon)?
@@ -74,6 +78,7 @@ Given that the wasp binary is built for x86 and not for arm64 (Apple Silicon), y
 ```bash
 softwareupdate --install-rosetta
 ```
+
 Once Rosetta is installed, you should be able to run Wasp without any issues.
 
 </details>
@@ -114,18 +119,22 @@ su -s $USER
 </details>
 :::
 
-
 Once in WSL2, run the following command in your **WSL2 environment**:
+
 ```sh
 curl -sSL https://get.wasp.sh/installer.sh | sh
 ```
 
 :::caution[WSL2 and file system issues]
+
 <details aria-label="Are you getting file system issues using WSL2?">
   <summary aria-label="Are you getting file system issues using WSL2?">
     Are you getting file system issues using WSL2?
   </summary>
-If you are using WSL2, make sure that your Wasp project is not on the Windows file system, <b>but instead on the Linux file system</b>. Otherwise, Wasp won't be able to detect file changes, due to this <a href='https://github.com/microsoft/WSL/issues/4739'>issue in WSL2</a>.
+  If you are using WSL2, make sure that your Wasp project is not on the Windows
+  file system, <b>but instead on the Linux file system</b>. Otherwise, Wasp
+  won't be able to detect file changes, due to this{" "}
+  <a href="https://github.com/microsoft/WSL/issues/4739">issue in WSL2</a>.
 </details>
 :::
 
@@ -148,6 +157,7 @@ You can install the Wasp VSCode extension by searching for "Wasp" in the Extensi
 ### Cloning the OpenSaaS template
 
 From the directory where you'd like to create your new project run:
+
 ```sh
 wasp new
 ```
@@ -218,8 +228,9 @@ This will install all the dependencies and start the app (client and server) for
 If the app doesn't open automatically in your browser, you can open it manually by visiting `http://localhost:3000` in your browser.
 
 At this point, you should have:
- - your database running in one terminal session, likely on port `5432`.
- - your app running in another terminal session, the client likely on port `3000`, and the server likely on port `3001`.
+
+- your database running in one terminal session, likely on port `5432`.
+- your app running in another terminal session, the client likely on port `3000`, and the server likely on port `3001`.
 
 #### Run Blog and Docs
 

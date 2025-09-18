@@ -25,6 +25,7 @@ In the root of your project, you'll find an `e2e-tests` directory which contains
 To run the tests locally, or in a CI pipeline, follow the instructions in the `README.md` file in the `e2e-tests` directory.
 
 ## Using Tests in CI with GitHub Actions
+
 Although the Open SaaS template does not come with an example workflow, you can find one at `.github/workflows/e2e-tests.yml` of the [remote repo](https://github.com/wasp-lang/open-saas).
 
 You can copy and paste the `.github/` directory containing the `e2e-tests.yml` workflow into the root of your own repository to run the tests as part of your CI pipeline.

@@ -1,7 +1,7 @@
 ---
 title: How I Built & Grew CoverLetterGPT to 5,000 Users and $200 MRR
 date: 2023-11-21
-tags: ["indiehacker", "saas", "sideproject"] 
+tags: ["indiehacker", "saas", "sideproject"]
 subtitle: A guide to building a profitable, open-source side-project
 hideBannerImage: false # Banner images stored in public/banner-images/ are automatically used as cover images and social media preview images (og:image) for each blog post.
 authors:
@@ -9,13 +9,16 @@ authors:
     title: Dev Rel @ Wasp
     url: https://wasp.sh
 ---
+
 ## Hey, I’m Vince…
 
 ![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/az8xf61b2qxx1msfo4t5.png)
 
 I’m a self-taught developer that changed careers during the Covid Pandemic. I did it because I wanted a better career, enjoyed programming, and at the same time, had a keen interest in IndieHacking.
+
 <!--truncate-->
-If you’re not aware, IndieHacking is the movement of developers who build potentially profitable side-projects in their spare time. And there are some very successful examples of IndieHackers and “solopreneurs” out there inspiring others, such as [levels.io](http://levels.io) and [Marc Lou](https://twitter.com/marc_louvion). 
+
+If you’re not aware, IndieHacking is the movement of developers who build potentially profitable side-projects in their spare time. And there are some very successful examples of IndieHackers and “solopreneurs” out there inspiring others, such as [levels.io](http://levels.io) and [Marc Lou](https://twitter.com/marc_louvion).
 
 This thought of being able to build my own side-project that could generate profit while I slept was always attractive to me.
 
@@ -23,7 +26,7 @@ This thought of being able to build my own side-project that could generate prof
 
 So I’m happy to report that I’ve finally done it with my first software-as-a-service (SaaS) app, [CoverLetterGPT.xyz](http://CoverLetterGPT.xyz), which I launched in March 2023!
 
-I’ll be the first to admit that the results aren’t spectacular, but they’re still something I’m very proud of: 
+I’ll be the first to admit that the results aren’t spectacular, but they’re still something I’m very proud of:
 
 - over 5,000 registered users
 - $203 monthly recurring revenue (MRR)
@@ -36,7 +39,7 @@ Below, I’m going to share with you how I built it (yes, it’s [open-source](h
 
 {% embed https://youtu.be/ZhcFRD9cVrI %}
 
-It also lets you save and manage your cover letters per each job, making it easy to make and apply to multiple jobs without having to keep copy and pasting all your important info into ChatGPT! 
+It also lets you save and manage your cover letters per each job, making it easy to make and apply to multiple jobs without having to keep copy and pasting all your important info into ChatGPT!
 
 ## What’s the Tech Stack?
 
@@ -44,29 +47,29 @@ It also lets you save and manage your cover letters per each job, making it easy
 
 CoverLetterGPT is entirely open-source, so you can [check out the code](https://github.com/vincanger/coverlettergpt), fork it, learn from it, make your own, submit a PR (I’d love you forever if you did 🙂)… whatever!
 
-I built it using the [Wasp full-stack framework](https://wasp.sh) which allowed me to ship it about 10x faster. 
+I built it using the [Wasp full-stack framework](https://wasp.sh) which allowed me to ship it about 10x faster.
 
-Why? 
+Why?
 
-Because [Wasp](https://wasp.sh) as a framework allows you to describe your app’s core features in a `main.wasp` config file. Then it continually compiles and “glues” these features into a React-ExpressJS-Prisma full-stack app for you. 
+Because [Wasp](https://wasp.sh) as a framework allows you to describe your app’s core features in a `main.wasp` config file. Then it continually compiles and “glues” these features into a React-ExpressJS-Prisma full-stack app for you.
 
-All you have to focus on is writing the client and server-side logic, and Wasp will do the boring stuff for you, like authentication & authorization, server config, email sending, and cron jobs. 
+All you have to focus on is writing the client and server-side logic, and Wasp will do the boring stuff for you, like authentication & authorization, server config, email sending, and cron jobs.
 
 BTW, [Wasp](https://wasp.sh) is open-source and free and you can help the project out a ton by starring the repo on GitHub: [https://www.github.com/wasp-lang/wasp](https://www.github.com/wasp-lang/wasp) 🙏
 
 ![https://media1.giphy.com/media/ZfK4cXKJTTay1Ava29/giphy.gif?cid=7941fdc6pmqo30ll0e4rzdiisbtagx97sx5t0znx4lk0auju&ep=v1_gifs_search&rid=giphy.gif&ct=g](https://media1.giphy.com/media/ZfK4cXKJTTay1Ava29/giphy.gif?cid=7941fdc6pmqo30ll0e4rzdiisbtagx97sx5t0znx4lk0auju&ep=v1_gifs_search&rid=giphy.gif&ct=g)
 
-{% cta [https://www.github.com/wasp-lang/wasp](https://www.github.com/wasp-lang/wasp) %} ⭐️ Thanks For Your Support 🙏  {% endcta %}
+{% cta [https://www.github.com/wasp-lang/wasp](https://www.github.com/wasp-lang/wasp) %} ⭐️ Thanks For Your Support 🙏 {% endcta %}
 
 For the UI, I used [Chakra UI](https://chakra-ui.com/), as I always do. I like that it’s a component-based UI library. This helps me build UI’s a lot faster than I would with Tailwind or vanilla CSS.
 
-For payments, I used [Stripe](https://www.notion.so/How-I-Built-and-Open-Sourced-CoverLetterGPT-5-000-users-200-MRR-0d32f13fa00a440fb8e08c8dbf2b8a27?pvs=21), (I’ll go into the details of monetization below). 
+For payments, I used [Stripe](https://www.notion.so/How-I-Built-and-Open-Sourced-CoverLetterGPT-5-000-users-200-MRR-0d32f13fa00a440fb8e08c8dbf2b8a27?pvs=21), (I’ll go into the details of monetization below).
 
 The Server and Postgres Database are hosted on [https://railway.app](https://railway.app/), with the client on [Netlify.com](http://Netlify.com)’s free tier.
 
 ![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/09ca1yaqodkb7b2vnwr9.png)
 
-By the way, If you’re interested in building your own SaaS with almost the same stack as above, I also built a [free SaaS template](https://github.com/wasp-lang/SaaS-Template-GPT) you can use that will save you days of work!  
+By the way, If you’re interested in building your own SaaS with almost the same stack as above, I also built a [free SaaS template](https://github.com/wasp-lang/SaaS-Template-GPT) you can use that will save you days of work!
 
 ## How I Marketed It
 
@@ -78,7 +81,7 @@ Well, not quite.
 
 First of all, the number of people who will realistically spend the time and energy launching a direct competitor is low. Also, most people interested in your open-source code want to learn some aspect of it and apply it to their own ideas, not just copy yours directly.
 
-Secondly, and most importantly, the fact that it’s open-source makes people a lot more receptive to you talking about it. 
+Secondly, and most importantly, the fact that it’s open-source makes people a lot more receptive to you talking about it.
 
 ![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/q79djej6doj2yq10l2og.png)
 
@@ -150,8 +153,8 @@ Here are also the most important links from this article along with some further
 - 🪓 [IndieHackers Feature](https://www.indiehackers.com/post/whats-new-don-t-build-things-no-one-wants-833ee752ba?utm_source=indie-hackers-emails&utm_campaign=ih-newsletter&utm_medium=email)
 - 💸 [Great Video on how to use Stripe CLI & Webhooks](https://www.youtube.com/watch?v=Psq5N5C-FGo&t=1041s)
 
-Oh, and if you found these resources useful, don't forget to support Wasp by [starring the repo on GitHub](https://github.com/wasp-lang/wasp)! 
+Oh, and if you found these resources useful, don't forget to support Wasp by [starring the repo on GitHub](https://github.com/wasp-lang/wasp)!
 
 ![https://res.cloudinary.com/practicaldev/image/fetch/s--OCpry2p9--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_800/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/bky8z46ii7ayejprrqw3.gif](https://res.cloudinary.com/practicaldev/image/fetch/s--OCpry2p9--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_800/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/bky8z46ii7ayejprrqw3.gif)
 
-{% cta [https://www.github.com/wasp-lang/wasp](https://www.github.com/wasp-lang/wasp) %} ⭐️ Thanks For Your Support 🙏  {% endcta %}
+{% cta [https://www.github.com/wasp-lang/wasp](https://www.github.com/wasp-lang/wasp) %} ⭐️ Thanks For Your Support 🙏 {% endcta %}

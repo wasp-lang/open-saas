@@ -5,13 +5,13 @@ banner:
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
 ---
 
-Setting up your app's authentication is easy with Wasp. In fact, it's already set up for you in the `main.wasp` file: 
+Setting up your app's authentication is easy with Wasp. In fact, it's already set up for you in the `main.wasp` file:
 
 ```tsx title="main.wasp"
   auth: {
     userEntity: User,
     methods: {
-      email: {}, 
+      email: {},
       google: {},
       gitHub: {},
       discord: {}
@@ -38,19 +38,20 @@ You can then follow these links to verify the user and continue with the sign-up
     provider: Dummy, // logs all email verification links/tokens to the server's console
     defaultFrom: {
       name: "Open SaaS App",
-      email: "me@example.com" 
+      email: "me@example.com"
     },
   },
 ```
 
-You **can not use the Dummy provider in production** and your app **will not build** until you move to a production-ready provider, such as SendGrid. We outline the process of migrating to SendGrid below. 
+You **can not use the Dummy provider in production** and your app **will not build** until you move to a production-ready provider, such as SendGrid. We outline the process of migrating to SendGrid below.
 :::
 
-In order to use the `email` auth method in production, you'll need to switch from the `Dummy` "email sender" provider to a production-ready provider like SendGrid: 
+In order to use the `email` auth method in production, you'll need to switch from the `Dummy` "email sender" provider to a production-ready provider like SendGrid:
 
-1. First, set up your app's `emailSender` in the `main.wasp` file by following [this guide](/guides/email-sending/#integrate-your-email-sender). 
+1. First, set up your app's `emailSender` in the `main.wasp` file by following [this guide](/guides/email-sending/#integrate-your-email-sender).
 2. Add your `SENDGRID_API_KEY` to the `.env.server` file.
-3. Make sure the email address you use in the `fromField` object is the same email address that you configured your SendGrid account to send out emails with. In the end, your `main.wasp` file should look something like this: 
+3. Make sure the email address you use in the `fromField` object is the same email address that you configured your SendGrid account to send out emails with. In the end, your `main.wasp` file should look something like this:
+
 ```ts title="main.wasp" {6,7} del={15} ins={16}
   auth: {
     methods: {
@@ -58,10 +59,10 @@ In order to use the `email` auth method in production, you'll need to switch fro
         fromField: {
           name: "Open SaaS App",
           // When using SendGrid, you must use the same email address that you configured your account to send out emails with!
-          email: "me@example.com" 
+          email: "me@example.com"
         },
         //...
-      }, 
+      },
     }
   },
   //...
@@ -71,19 +72,18 @@ In order to use the `email` auth method in production, you'll need to switch fro
     defaultFrom: {
       name: "Open SaaS App",
       // When using SendGrid, you must use the same email address that you configured your account to send out emails with!
-      email: "me@example.com" 
+      email: "me@example.com"
     },
   },
-  ```
-
+```
 
 And that's it. Wasp will take care of the rest and update your AuthUI components accordingly.
 
-Check out the  [Wasp Auth docs](https://wasp.sh/docs/auth/overview) for more info.
+Check out the [Wasp Auth docs](https://wasp.sh/docs/auth/overview) for more info.
 
 ## Google, GitHub, & Discord Auth
 
-We've also customized and pre-built the Google and GitHub auth flow for you. To start using them, you just need to uncomment out the methods you want in your `main.wasp` file and obtain the proper API keys to add to your `.env.server` file. 
+We've also customized and pre-built the Google and GitHub auth flow for you. To start using them, you just need to uncomment out the methods you want in your `main.wasp` file and obtain the proper API keys to add to your `.env.server` file.
 
 To create a Google OAuth app and get your Google API keys, follow the instructions in [Wasp's Google Auth docs](https://wasp.sh/docs/auth/social-auth/google#3-creating-a-google-oauth-app).
 

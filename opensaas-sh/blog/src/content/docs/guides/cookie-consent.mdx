@@ -4,19 +4,21 @@ banner:
   content: |
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
 ---
-import { Image } from 'astro:assets';
-import cookieBanner from '@assets/cookie-consent/cookiebanner.png';
-import preferences from '@assets/cookie-consent/preferences.png';
+
+import { Image } from "astro:assets";
+import cookieBanner from "@assets/cookie-consent/cookiebanner.png";
+import preferences from "@assets/cookie-consent/preferences.png";
 
 <Image src={cookieBanner} alt="cookie banner" width="400px" />
 
 Cookie consent banners are annoying, we know. But they are legally required in many countries, so we have to deal with them.
 
-This guide will help you dynamically add or remove cookies from your app via the Cookie Consent modal that comes with this template. 
+This guide will help you dynamically add or remove cookies from your app via the Cookie Consent modal that comes with this template.
 
-This is needed for *non-essential cookies* that are not necessary for the basic functionality of your app, such as analytics cookies or marketing cookies.
+This is needed for _non-essential cookies_ that are not necessary for the basic functionality of your app, such as analytics cookies or marketing cookies.
 
 The Modal can be found at `app/src/client/components/cookie-consent/` and contains two main files:
+
 1. `Banner.tsx` - the component that displays the banner at the bottom of the page.
 2. `Config.ts` - the configuration file that contains the cookies/scripts that will be dynamically added.
 
@@ -33,7 +35,7 @@ Below, we will guide you through the necessary steps to get the cookie consent m
 What's impotant to note for this template is that we are simply using the `onAccept` callbacks to dynamically add or remove our [Google Analytics](/guides/analytics/#google-analytics) cookies from the page. In order for it to work correctly with your app, you need to add your [Google Analytics ID](/guides/analytics/#google-analytics) to your `.env.client` file.
 
 ```sh title=".env.client"
- REACT_APP_GOOGLE_ANALYTICS_ID=G-1234567890
+REACT_APP_GOOGLE_ANALYTICS_ID=G-1234567890
 ```
 
 And that's it! The cookie consent modal will now dynamically add or remove the Google Analytics cookies based on the user's choice.
@@ -42,7 +44,7 @@ To check if it's working correctly, you can open the browser's developer tools a
 
 ```sh
 _ga
-_ga... # Google Analytics cookies.
+_ga...    # Google Analytics cookies.
 cc_cookie # Cookie Consent cookie. The name of this cookie can be changed in the config file.
 ```
 
@@ -81,7 +83,7 @@ If you've added more than just Google Analytics cookies to your app, you can all
 
 <Image src={preferences} alt="fine-grained cookie control" loading="lazy" />
 
-To do that, you can change the `preferencesModal.sections` property in `config.language`. Any section that you add to `preferencesModal.sections` must match a `linkedCategory` in the `config.categories` property. Make sure you also add a `showPreferencesBtn` property to `consentModal` (highlighted below). 
+To do that, you can change the `preferencesModal.sections` property in `config.language`. Any section that you add to `preferencesModal.sections` must match a `linkedCategory` in the `config.categories` property. Make sure you also add a `showPreferencesBtn` property to `consentModal` (highlighted below).
 
 Below is an example of what your config might look like if you want to give users the option to control over multiple cookie preferences:
 
@@ -142,7 +144,7 @@ Below is an example of what your config might look like if you want to give user
                 title: 'YouTube',
                 description: 'This service is used to display video content on the website.',
                 linkedCategory: 'youtube',
-                cookieTable: { 
+                cookieTable: {
                   // ...
                 }
               },
