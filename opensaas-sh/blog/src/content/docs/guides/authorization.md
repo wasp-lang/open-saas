@@ -5,7 +5,7 @@ banner:
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
 ---
 
-This guide will help you get started with authorization in your SaaS app.
+This guide will help you get started with authorization in your SaaS app. 
 
 Authorization refers to what users can access in your app. This is useful for differentiating between users who have paid for different subscription tiers (e.g. "hobby" vs "pro"), or between users who have admin privileges and those who do not.
 
@@ -38,26 +38,23 @@ Actually ensuring they don't have access to the data, that is on the server to e
 :::
 
 If you want more fine-grained control over what users can access, there are two Wasp-specific options:
-
 1. When you define the `authRequired: true` property on the `page` definition, Wasp automatically passes the User object to the page component. Here you can check for certain user properties before authorizing access:
 
 ```tsx title="ExamplePage.tsx" "{ user }: { user: User }"
 import { type User } from "wasp/entities";
 
 export default function Example({ user }: { user: User }) {
-  if (user.subscriptionStatus === "past_due") {
-    return (
-      <span>
-        Your subscription is past due. Please update your payment information.
-      </span>
-    );
+
+  if (user.subscriptionStatus === 'past_due') {
+    return (<span>Your subscription is past due. Please update your payment information.</span>)
   }
-  if (user.subscriptionStatus === "cancel_at_period_end") {
-    return <span>Your susbscription will end on 01.01.2024</span>;
+  if (user.subscriptionStatus === 'cancel_at_period_end') {
+    return (<span>Your susbscription will end on 01.01.2024</span>)
   }
-  if (user.subscriptionStatus === "active") {
-    return <span>Thanks so much for your support!</span>;
+  if (user.subscriptionStatus === 'active') {
+    return (<span>Thanks so much for your support!</span>)
   }
+
 }
 ```
 
@@ -69,7 +66,9 @@ import { useAuth } from "wasp/client/auth";
 export default function ExampleHomePage() {
   const { data: user } = useAuth();
 
-  return <h1> Hi {user.email || "there"} 👋 </h1>;
+  return (
+    <h1> Hi {user.email || 'there'} 👋 </h1>
+  )
 }
 ```
 
@@ -79,7 +78,7 @@ Authorization on the server-side is the core of your access control logic, and d
 
 You can authorize access to server-side operations by adding a check for a logged-in user on the `context.user` object which is passed to all operations in Wasp:
 
-```tsx title="src/server/actions.ts"
+```tsx title="src/server/actions.ts" 
 export const someServerAction: SomeServerAction<...> = async (args, context) => {
   if (!context.user) {
     throw new HttpError(401); // throw an error if user is not logged in
@@ -91,3 +90,5 @@ export const someServerAction: SomeServerAction<...> = async (args, context) => 
   //...
 }
 ```
+
+

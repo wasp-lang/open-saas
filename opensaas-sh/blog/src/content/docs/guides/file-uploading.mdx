@@ -4,25 +4,23 @@ banner:
   content: |
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
 ---
-
-import { Image } from "astro:assets";
-import findS3 from "@assets/file-uploads/find-s3.png";
-import createBucket from "@assets/file-uploads/create-bucket.png";
-import defaultSettings from "@assets/file-uploads/default-settings.png";
-import newBucket from "@assets/file-uploads/new-bucket.png";
-import permissions from "@assets/file-uploads/permissions.png";
-import cors from "@assets/file-uploads/cors.png";
-import username from "@assets/file-uploads/username.png";
-import keys from "@assets/file-uploads/keys.png";
+import { Image } from 'astro:assets';
+import findS3 from '@assets/file-uploads/find-s3.png';
+import createBucket from '@assets/file-uploads/create-bucket.png';
+import defaultSettings from '@assets/file-uploads/default-settings.png';
+import newBucket from '@assets/file-uploads/new-bucket.png';
+import permissions from '@assets/file-uploads/permissions.png';
+import cors from '@assets/file-uploads/cors.png';
+import username from '@assets/file-uploads/username.png';
+import keys from '@assets/file-uploads/keys.png';
 
 This guide will show you how to set up file uploading in your SaaS app.
 
 There are two options we recommend:
-
 1. Using [AWS S3](https://aws.amazon.com/s3/) with presigned URLS for secure file storage
 2. Using Multer middleware to upload files to your own server
 
-**We recommend using AWS S3 as it's a scalable, secure option, that can handle a large amount of storage.**
+**We recommend using AWS S3 as it's a scalable, secure option, that can handle a large amount of storage.** 
 
 If you're just looking to upload small files and don't expect your app to grow to a large scale, you can use Multer to upload files to your app's server.
 
@@ -39,7 +37,6 @@ If you're finding this template and its guides useful, consider giving us [a sta
 Presigned URLs are URLs that have been signed with your AWS credentials and can be used to upload files to your S3 bucket. They are time-limited and can be generated on the server and sent to the client to upload files directly to S3.
 
 The process of generating a presigned URL is as follows:
-
 1. The client sends a request to the server to upload a file
 2. The server generates a presigned URL using its AWS credentials
 3. The server sends the presigned URL to the client
@@ -52,7 +49,6 @@ To use presigned URLs, we'll need to set up an S3 bucket and get our AWS credent
 ### Create an AWS Account
 
 Before you begin, you'll need to create an AWS account. AWS accounts are free to create and are split up into:
-
 1. Root account
 2. IAM users
 
@@ -65,24 +61,24 @@ To do so, follow the steps in this external guide: [Creating IAM users and S3 bu
 Once you are logged in with your IAM user, you'll need to create an S3 bucket to store your files.
 
 1. Navigate to the S3 service in the AWS console
-   <Image src={findS3} alt="find s3" loading="lazy" />
+    <Image src={findS3} alt="find s3" loading="lazy" />
 2. Click on the `Create bucket` button
-   <Image src={createBucket} alt="create bucket" loading="lazy" />
+    <Image src={createBucket} alt="create bucket" loading="lazy" />
 3. Fill in the bucket name and region
 4. **Leave all the settings as default** and click `Create bucket`
-   <Image src={defaultSettings} alt="bucket settings" loading="lazy" />
+    <Image src={defaultSettings} alt="bucket settings" loading="lazy" />
 
 ### Change the CORS settings
 
 Now we need to change some permissions on the bucket to allow for file uploads from your app.
 
 1. Click on the bucket you just created
-   <Image src={newBucket} alt="new bucket" loading="lazy" />
+    <Image src={newBucket} alt="new bucket" loading="lazy" />
 2. Click on the `Permissions` tab
-   <Image src={permissions} alt="permissions" loading="lazy" />
+    <Image src={permissions} alt="permissions" loading="lazy" />
 3. Scroll down to the `Cross-origin resource sharing (CORS)` section and click `Edit`
-   <Image src={cors} alt="cors" loading="lazy" />
-4. Insert the correct CORS configuration and click `Save changes`. You can
+    <Image src={cors} alt="cors" loading="lazy" />
+5. Insert the correct CORS configuration and click `Save changes`. You can
    copy-paste most of the config below, but **you must edit the
    `AllowedOrigins` field** to fit your app. Include `http://localhost:3000` for
    local development, and `https://<your domain>` for production.
@@ -90,15 +86,22 @@ Now we need to change some permissions on the bucket to allow for file uploads f
    If you don't yet have a domain name, just list `http://localhost:3000` for
    now. We'll remind you to add your domain before deploying to production in
    the [Deployment docs](/guides/deploying/#aws-s3-cors-configuration).
-
    ```json {11,12}
    [
-     {
-       "AllowedHeaders": ["*"],
-       "AllowedMethods": ["POST", "GET"],
-       "AllowedOrigins": ["http://localhost:3000", "https://<your-domain>"],
-       "ExposeHeaders": []
-     }
+       {
+           "AllowedHeaders": [
+               "*"
+           ],
+           "AllowedMethods": [
+               "POST",
+               "GET"
+           ],
+           "AllowedOrigins": [
+               "http://localhost:3000",
+               "https://<your-domain>"
+           ],
+           "ExposeHeaders": []
+       }
    ]
    ```
 
@@ -107,13 +110,12 @@ Now we need to change some permissions on the bucket to allow for file uploads f
 Now that you have your S3 bucket set up, you'll need to get your S3 credentials to use in your app.
 
 1. Click on your username in the top right corner of the AWS console and select `Security Credentials`
-   <Image src={username} alt="username" loading="lazy" />
+    <Image src={username} alt="username" loading="lazy" />
 2. Scroll down to the `Access keys` section
 3. Click on `Create Access Key`
 4. Select the `Application running on an AWS service` option and create the access key
-   <Image src={keys} alt="keys" loading="lazy" />
-5. Copy the `Access key ID` and `Secret access key` and paste them in your `src/app/.env.server` file:
-
+    <Image src={keys} alt="keys" loading="lazy" />
+5. Copy the `Access key ID` and `Secret access key` and paste them in your `src/app/.env.server` file: 
 ```sh
   AWS_S3_IAM_ACCESS_KEY=ACK...
   AWS_S3_IAM_SECRET_KEY=t+33a...
@@ -132,7 +134,6 @@ If you're finding this template and its guides useful, consider giving us [a sta
 With your S3 bucket set up and your AWS credentials in place, you can now start uploading files in your app using presigned URLs by navigating to `localhost:3000/file-upload` and uploading a file.
 
 To begin customizing file uploads, is important to know where everything lives in your app. Here's a quick overview:
-
 - `main.wasp`:
   - The `File entity` can be found here. Here you can modify the fields to suit your needs.
 - `src/file-upload/FileUploadPage.tsx`:

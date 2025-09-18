@@ -7,8 +7,7 @@ banner:
 
 Awesome, you now have your very own SaaS app up and running! But, first, here are some important things you need to know about your app in its current state:
 
-1. When signing up with a new user, you will get a message to check your email for a verification link. But, in development, these emails are simply written to your terminal. **So, to continue with the registration process, check your server logs after sign up**!
-
+1. When signing up with a new user, you will get a message to check your email for a verification link. But, in development, these emails are simply written to your terminal. **So, to continue with the registration process, check your server logs after sign up**! 
 ```sh title="server logs"
 [ Server ] ╔═══════════════════════╗
 [ Server ] ║ Dummy email sender ✉️  ║
@@ -20,23 +19,20 @@ Awesome, you now have your very own SaaS app up and running! But, first, here ar
 [ Server ] Click the link below to verify your email: http://localhost:3000/email-verification?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZpbm55QHdhc3Auc2giLCJleHAiOjE3MTg5NjUyNTB9.PkRGrmuDPuYFXkTprf7QpAye0e_O9a70xbER6LfxGJw
 [ Server ] ═════════ HTML ═════════
 [ Server ] <p>Click the link below to verify your email</p>
-[ Server ] <a href="http://localhost:3000/email-verification?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZpbm55QHdhc3Auc2giLCJleHAiOjE3MTg5NjUyNTB9.PkRGrmuDPuYFXkTprf7QpAye0e_O9a70xbER6LfxGJw">Verify email</a>
+[ Server ] <a href="http://localhost:3000/email-verification?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZpbm55QHdhc3Auc2giLCJleHAiOjE3MTg5NjUyNTB9.PkRGrmuDPuYFXkTprf7QpAye0e_O9a70xbER6LfxGJw">Verify email</a> 
 [ Server ] ════════════════════════
 ```
-
 2. Your app is still missing some key configurations (e.g. API keys for Payment Processors, OpenAI, AWS S3, Auth, Analytics). These services won't work at the moment, but don't fear, because **we've provided detailed guides in these docs to help you set up all the services in this template**.
 3. If you want to get a feel for what your SaaS could look like when finished, **check out [OpenSaaS.sh](https://opensaas.sh) in your browser. It was built using this template!** So make sure to log in, play around with the demo app, make a test payment, and check out the admin dashboard.
 
-In the sections below, we will take a short guide through the codebase and the app's main features. Then at the end of this tour, we also prepared a checklist of likely changes you will want to make to the app to make it your own.
+In the sections below, we will take a short guide through the codebase and the app's main features. Then at the end of this tour, we also prepared a checklist of likely changes you will want to make to the app to make it your own. 
 
 We're looking forward to seeing what you build!
 
 ## Getting acquainted with the codebase
-
 Now that you've gotten a first look at the app, let's dive into the codebase.
 
 At the root of our project, you will see three folders:
-
 ```sh
 .
 ├── app
@@ -46,13 +42,13 @@ At the root of our project, you will see three folders:
 
 `app` contains the Wasp project files, which is your full-stack React + NodeJS + Prisma app along with a Wasp config file, `main.wasp`, which will be explained in more detail below.
 
-`blog` contains the [Astro Starlight template](https://starlight.astro.build/) for the blog and documentation section.
+`blog` contains the [Astro Starlight template](https://starlight.astro.build/) for the blog and documentation section. 
 
 `e2e-tests` contains the end-to-end tests using Playwright, which you can run to test your app's functionality.
 
 ### App File Structure
 
-We've structured this full-stack app template vertically (by feature). That means that most directories within `app/src` contain both the React client code and NodeJS server code necessary for implementing its logic.
+We've structured this full-stack app template vertically (by feature). That means that most directories within `app/src` contain both the React client code and NodeJS server code necessary for implementing its logic. 
 
 Let's check out what's in the `app` folder in more detail:
 
@@ -62,26 +58,26 @@ If you are using an older version of the OpenSaaS template with Wasp `v0.13.x` o
 
 ```sh
 .
-├── main.wasp          # Wasp Config file. You define your app structure here.
-├── .wasp/             # Output dir for Wasp. DON'T MODIFY THESE FILES!
-├── public/            # Public assets dir, e.g. www.yourdomain.com/public-banner.webp
-├── src/               # Your code goes here.
-│   ├── admin/         # Admin dashboard related pages and components.
-│   ├── analytics/     # Logic and background jobs for processing analytics.
-│   ├── auth/          # All auth-related pages/components and logic.
-│   ├── client/        # Shared components, hooks, landing page, and other client code (React).
-│   ├── demo-ai-app/   # Logic for the example AI-powered demo app.
-│   ├── file-upload/   # Logic for uploading files to S3.
-│   ├── landing-page   # Landing page related code
-│   ├── messages       # Logic for app user messages.
-│   ├── payment/       # Logic for handling payments and webhooks.
-│   ├── server/        # Scripts, shared server utils, and other server-specific code (NodeJS).
-│   ├── shared/        # Shared constants and util functions.
-│   └── user/          # Logic related to users and their accounts.
-├── .env.server        # Dev environment variables for your server code.
-├── .env.client        # Dev environment variables for your client code.
-├── .prettierrc        # Prettier configuration.
-├── tailwind.config.js # TailwindCSS configuration.
+├── main.wasp              # Wasp Config file. You define your app structure here.
+├── .wasp/                 # Output dir for Wasp. DON'T MODIFY THESE FILES!
+├── public/                # Public assets dir, e.g. www.yourdomain.com/public-banner.webp
+├── src/                   # Your code goes here.
+│   ├── admin/             # Admin dashboard related pages and components.
+│   ├── analytics/         # Logic and background jobs for processing analytics.
+│   ├── auth/              # All auth-related pages/components and logic.
+│   ├── client/            # Shared components, hooks, landing page, and other client code (React).
+│   ├── demo-ai-app/       # Logic for the example AI-powered demo app.
+│   ├── file-upload/       # Logic for uploading files to S3.
+│   ├── landing-page       # Landing page related code
+│   ├── messages           # Logic for app user messages.
+│   ├── payment/           # Logic for handling payments and webhooks.
+│   ├── server/            # Scripts, shared server utils, and other server-specific code (NodeJS).
+│   ├── shared/            # Shared constants and util functions.
+│   └── user/              # Logic related to users and their accounts.
+├── .env.server            # Dev environment variables for your server code.
+├── .env.client            # Dev environment variables for your client code.
+├── .prettierrc            # Prettier configuration.
+├── tailwind.config.js     # TailwindCSS configuration.
 ├── package.json
 ├── package-lock.json
 └── .wasproot
@@ -91,7 +87,7 @@ If you are using an older version of the OpenSaaS template with Wasp `v0.13.x` o
 
 This template at its core is a Wasp project, where [Wasp](https://wasp.sh) is a full-stack web app framework that let's you write your app in React, NodeJS, and Prisma and will manage the "boilerplatey" work for you, allowing you to just take care of the fun stuff!
 
-[Wasp's secret sauce](https://wasp.sh/docs) is its use of a config file (`main.wasp`) and compiler which takes your code and outputs the client app, server app and deployment code for you.
+[Wasp's secret sauce](https://wasp.sh/docs) is its use of a config file (`main.wasp`) and compiler which takes your code and outputs the client app, server app and deployment code for you. 
 
 In this template, we've already defined a number of things in the `main.wasp` config file, including:
 
@@ -117,24 +113,25 @@ The `src/client` folder contains any additional client-side code that doesn't be
 ```sh
 .
 └── client
-├── components # Your shared React components.
-├── fonts      # Extra fonts
-├── hooks      # Your shared React hooks.
-├── icons      # Your shared SVG icons.
-├── static     # Assets that you need access to in your code, e.g. import logo from 'static/logo.png'
-├── App.tsx    # Main app component to wrap all child components. Useful for global state, navbars, etc.
-├── cn.ts      # Helper function for dynamic and conditional Tailwind CSS classes.
-└── Main.css
+    ├── components         # Your shared React components.
+    ├── fonts              # Extra fonts
+    ├── hooks              # Your shared React hooks.
+    ├── icons              # Your shared SVG icons.
+    ├── static             # Assets that you need access to in your code, e.g. import logo from 'static/logo.png'
+    ├── App.tsx            # Main app component to wrap all child components. Useful for global state, navbars, etc.
+    ├── cn.ts              # Helper function for dynamic and conditional Tailwind CSS classes.
+    └── Main.css
+
 ```
 
 ### Server
 
-The `src/server` folder contains any additional server-side code that does not belong to a specific feature:
+The `src/server` folder contains any additional server-side code that does not belong to a specific feature: 
 
 ```sh
 └── server
-├── scripts # Scripts to run via Wasp, e.g. database seeding.
-└── utils.ts
+    ├── scripts            # Scripts to run via Wasp, e.g. database seeding.
+    └── utils.ts
 ```
 
 ## Main Features
@@ -147,7 +144,7 @@ This template comes with a fully functional auth flow out of the box. It takes a
   auth: {
     userEntity: User,
     methods: {
-      email: {
+      email: { 
         //...
       },
       google: {},
@@ -159,41 +156,39 @@ This template comes with a fully functional auth flow out of the box. It takes a
 ```
 
 By defining the auth structure in your `main.wasp` file, Wasp manages all the necessary code for you, including:
-
 - Email verified login with reset password
 - Social login with Google and/or GitHub
-- Auth-related database entities for user credentials, sessions, and social logins
+- Auth-related database entities for user credentials, sessions, and social logins 
 - Custom-generated AuthUI components for login, signup, and reset password
 - Auth hooks for fetching user data
 
 <!-- TODO: add pic of AuthUI components -->
 
-We've set the template up with Wasp's `email`, `google`, and `gitHub` methods, which are all battle-tested and suitable for production.
+We've set the template up with Wasp's `email`, `google`, and `gitHub` methods, which are all battle-tested and suitable for production. 
 
-You can get started developing your app with the `email` method right away!
+You can get started developing your app with the `email` method right away! 
 
 :::caution[Dummy Email Provider]
-Note that the `email` method relies on an `emailSender` (configured at `app.emailSender` in the `main.wasp` file), a service which sends emails to verify users and reset passwords.
+Note that the `email` method relies on an `emailSender` (configured at `app.emailSender` in the `main.wasp` file), a service which sends emails to verify users and reset passwords. 
 
-For development purposes, Wasp provides a `Dummy` email sender which Open SaaS comes with as the default. This provider _does not_ actually send any confirmation emails to the specified email address, but instead logs all email verification links/tokens to the console! You can then follow these links to verify the user and continue with the sign-up process.
+For development purposes, Wasp provides a `Dummy` email sender which Open SaaS comes with as the default. This provider *does not* actually send any confirmation emails to the specified email address, but instead logs all email verification links/tokens to the console! You can then follow these links to verify the user and continue with the sign-up process.
 
-```tsx title="main.wasp"
+```tsx title="main.wasp" 
   emailSender: {
     provider: Dummy, // logs all email verification links/tokens to the server's console
     defaultFrom: {
       name: "Open SaaS App",
-      email: "me@example.com"
+      email: "me@example.com" 
     },
   },
 ```
-
 :::
 
 We will explain more about these auth methods, and how to properly integrate them into your app, in the [Authentication Guide](/guides/authentication/).
 
 ### Subscription Payments with Stripe or Lemon Squeezy
 
-No SaaS is complete without payments, specifically subscription payments. That's why this template comes with a fully functional Stripe or Lemon Squeezy integration.
+No SaaS is complete without payments, specifically subscription payments. That's why this template comes with a fully functional Stripe or Lemon Squeezy integration. 
 
 Let's take a quick look at how payments are handled in this template.
 
@@ -208,7 +203,6 @@ The payment processor you choose (Stripe or Lemon Squeezy) and its related funct
 The logic for creating the Checkout session is defined in the `src/payment/operation.ts` file. [Actions](https://wasp.sh/docs/data-model/operations/actions) are a type of Wasp Operation, specifically your server-side functions that are used to **write** or **update** data to the database. Once they're defined in the `main.wasp` file, you can easily call them on the client-side:
 
 a) define the action in the `main.wasp` file
-
 ```js title="main.wasp"
 action generateCheckoutSession {
   fn: import { generateCheckoutSession } from "@src/payment/operations",
@@ -217,15 +211,13 @@ action generateCheckoutSession {
 ```
 
 b) implement the action in the `src/payment/operations` file
-
 ```js title="src/server/actions.ts"
-export const generateCheckoutSession = async (paymentPlanId, context) => {
+export const generateCheckoutSession = async (paymentPlanId, context) => { 
   //...
-};
+ }
 ```
 
 c) call the action on the client-side
-
 ```js title="src/client/app/SubscriptionPage.tsx"
 import { generateCheckoutSession } from "wasp/client/operations";
 
@@ -239,7 +231,7 @@ The webhook handler is defined in the `src/payment/webhook.ts` file. Unlike Acti
 ```js title="main.wasp"
 api paymentsWebhook {
   fn: import { paymentsWebhook } from "@src/payment/webhook",
-  httpRoute: (POST, "/payments-webhook")
+  httpRoute: (POST, "/payments-webhook") 
   entities: [User],
 }
 ```
@@ -253,6 +245,7 @@ We've packed in a ton of features and love into this SaaS starter, and offer it 
 
 If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
 :::
+
 
 ### Analytics and Admin Dashboard
 
@@ -286,7 +279,7 @@ When you first start your Open SaaS app straight from the template, it will run,
 - Auth Methods (Google, GitHub)
 - Stripe or Lemon Squeezy
 - OpenAI (Chat GPT API)
-- Email Sending (Sendgrid) -- you must set this up if you're using the `email` Auth method
+- Email Sending (Sendgrid) -- you must set this up if you're using the `email` Auth method 
 - Analytics (Plausible or Google Analytics)
 - File Uploading (AWS S3)
 
@@ -301,24 +294,19 @@ Remember, this template is built on the Wasp framework. If, at any time, these d
 But before you start setting up the main features, let's walk through the customizations you will likely want to make to the template to make it your own.
 
 ### Customizations Checklist
-
 #### `main.wasp` Config File
-
 - [ ] Change the app name and title:
-
   ```ts title="main.wasp" {1, 6}
-    app YourAppName {
+    app YourAppName { 
       wasp: {
         version: "^0.13.2"
       },
 
       title: "Your App Name",
   ```
-
   :::caution[Restart Your App]
   Upon changing the app name, new, empty development database will be assigned to your app. This means you'll need to rerun `wasp db start`, `wasp db migrate-dev` and `wasp start`.
   :::
-
 - [ ] Update meta tags in `app.head` (even if you don't have a custom domain yet, put one you would like to have, as this won't affect development).
 - [ ] Update `app.emailSender.defaultFrom.name` with the name of your app/company/whatever you want your users to see in their inbox, if you're using the `emailSender` feature and/or `email` Auth method.
 - [ ] Remove any features you might not use or need:
@@ -330,7 +318,6 @@ But before you start setting up the main features, let's walk through the custom
 - [ ] Rename Entites and their properties, Routes/Pages, & Operations, if you wish.
 
 #### Customizing the Look / Style of the App
-
 - [ ] Update your favicon at `public/favicon.ico`.
 - [ ] Update the banner image used when posting links to your site at `public/public-banner.webp`.
   - [ ] Update the URL for this banner at `og:image` and `twitter:image` in `app.head` of the `main.wasp` file.
@@ -340,19 +327,16 @@ But before you start setting up the main features, let's walk through the custom
 - [ ] If you want to make changes to the global styles of the app, you can do so in `tailwind.config.cjs`. **Be aware that the current custom global styles defined already are mostly used in the app's Admin Dashboard!**
 
 #### Customizing the Analytics & Admin Dashboard
-
 - [ ] If you're using Plausible, update the `app.head` with your Plausible domain.
 - [ ] Update the `calculateDailyStats` function in `src/server/workers/calculateDailyStats.ts` to pull the stats from the analytics provider you've chosen (Plausible or Google Analytics).
 - [ ] Change the cron schedule in the `dailyStatsJob` in the `main.wasp` file to match how often you want your stats to be calculated.
 - [ ] Update the `AdminDashboard` components to display the stats you do/don't want to see.
 
 #### `.env.server` and `.env.client` Files
-
 - [ ] After you've followed the `Guides` in the next section, you'll need to update the `.env.server` and `.env.client` files with your API keys and other environment variables for the services you've decided to use.
 - [ ] Delete any redundant environment variables that you're not using, from the `.env.*` files as well as the `.env.*.example` files.
 
 #### Other Customizations
-
 - [ ] Make a new GitHub Repo for your app.
 - [ ] Deploy your app to a hosting provider.
 - [ ] Buy a domain name for your app and get it set up with your hosting provider.

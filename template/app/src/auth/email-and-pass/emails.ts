@@ -1,12 +1,7 @@
-import {
-  type GetPasswordResetEmailContentFn,
-  type GetVerificationEmailContentFn,
-} from "wasp/server/auth";
+import { type GetVerificationEmailContentFn, type GetPasswordResetEmailContentFn } from 'wasp/server/auth';
 
-export const getVerificationEmailContent: GetVerificationEmailContentFn = ({
-  verificationLink,
-}) => ({
-  subject: "Verify your email",
+export const getVerificationEmailContent: GetVerificationEmailContentFn = ({ verificationLink }) => ({
+  subject: 'Verify your email',
   text: `Click the link below to verify your email: ${verificationLink}`,
   html: `
         <p>Click the link below to verify your email</p>
@@ -14,10 +9,8 @@ export const getVerificationEmailContent: GetVerificationEmailContentFn = ({
     `,
 });
 
-export const getPasswordResetEmailContent: GetPasswordResetEmailContentFn = ({
-  passwordResetLink,
-}) => ({
-  subject: "Password reset",
+export const getPasswordResetEmailContent: GetPasswordResetEmailContentFn = ({ passwordResetLink }) => ({
+  subject: 'Password reset',
   text: `Click the link below to reset your password: ${passwordResetLink}`,
   html: `
         <p>Click the link below to reset your password</p>

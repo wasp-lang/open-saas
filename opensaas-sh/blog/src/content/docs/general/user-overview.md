@@ -16,7 +16,7 @@ The `User` entity within your app is defined in the `schema.prisma` file:
 model User {
   id                        Int             @id @default(autoincrement())
   email                     String?         @unique
-  username                  String?
+  username                  String?         
   createdAt                 DateTime        @default(now())
   isAdmin                   Boolean         @default(false)
   paymentProcessorUserId    String?         @unique
@@ -29,7 +29,7 @@ model User {
   gptResponses              GptResponse[]
   contactFormMessages       ContactFormMessage[]
   tasks                     Task[]
-  files                     File[]
+  files                     File[] 
 }
 ```
 
@@ -61,34 +61,33 @@ model User {
 
 In general, we determine if a user has paid for an initial subscription by checking if the `subscriptionStatus` field is set. This field is set by Stripe within your webhook handler and is used to signify more detailed information on the user's current status. By default, the template handles four statuses: `active`, `past_due`, `cancel_at_period_end`, and `deleted`.
 
-- When `active` the user has paid for a subscription and has full access to the app.
+- When `active` the user has paid for a subscription and has full access to the app. 
 
-- When `cancel_at_period_end`, the user has canceled their subscription and has access to the app until the end of their billing period.
+- When `cancel_at_period_end`, the user has canceled their subscription and has access to the app until the end of their billing period. 
 
 - When `deleted`, the user has reached the end of their subscription period after canceling and no longer has access to the app.
 
 - When `past_due`, the user's automatic subscription renewal payment was declined (e.g. their credit card expired). You can choose how to handle this status within your app. For example, you can send the user an email to update their payment information:
-
-```tsx title="src/payment/stripe/webhook.ts"
+```tsx title="src/payment/stripe/webhook.ts" 
 import { emailSender } from "wasp/server/email";
 //...
 
-if (subscription.status === "past_due") {
+if (subscription.status === 'past_due') {
   const updatedCustomer = await context.entities.User.update({
     where: {
       id: customer.id,
     },
     data: {
-      subscriptionStatus: "past_due",
+      subscriptionStatus: 'past_due',
     },
   });
 
   if (updatedCustomer.email) {
     await emailSender.send({
       to: updatedCustomer.email,
-      subject: "Your Payment is Past Due",
-      text: "Please update your payment information to continue using our service.",
-      html: "...",
+      subject: 'Your Payment is Past Due',
+      text: 'Please update your payment information to continue using our service.',
+      html: '...',
     });
   }
 }
@@ -98,9 +97,9 @@ See the client-side [authorization section](/guides/authorization/) below for mo
 
 ### Subscription Plans
 
-The `subscriptionPlan` field is used to determine what features the user has access to.
+The `subscriptionPlan` field is used to determine what features the user has access to. 
 
-By default, we have three plans: `hobby` and `pro` subscription plans, as well as a `credits10` one-time purchase plan.
+By default, we have three plans: `hobby` and `pro` subscription plans, as well as a `credits10` one-time purchase plan. 
 
 You can add more plans by adding more products and price IDs to your Stripe product and updating environment variables in your `.env.server` file as well as the relevant code in your app.
 

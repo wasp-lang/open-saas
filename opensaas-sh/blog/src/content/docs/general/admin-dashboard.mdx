@@ -4,10 +4,9 @@ banner:
   content: |
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
 ---
-
-import { Image } from "astro:assets";
-import dbStudio from "@assets/stripe/db-studio.png";
-import adminDashboard from "@assets/admin/admin-dashboard.png";
+import { Image } from 'astro:assets';
+import dbStudio from '@assets/stripe/db-studio.png';
+import adminDashboard from '@assets/admin/admin-dashboard.png';
 
 This is a reference on how the Admin dashboard, available at `/admin`, is set up.
 
@@ -27,7 +26,6 @@ model User {
 ```
 
 To give yourself administrator priveledges, make sure you add your email addresses to the `ADMIN_EMAILS` environment variable in `.env.server` file before registering/logging in with that email address:
-
 ```sh title=".env.server"
 ADMIN_EMAILS=me@example.com
 
@@ -55,19 +53,18 @@ If you're finding this template and its guides useful, consider giving us [a sta
 ## Admin Dashboard Pages
 
 ### Analytics Dashboard
-
 The Admin analytics dashboard is a single place for you to view your most important metrics and perform some admin tasks. At the moment, it pulls data from:
 
 - [Payments Processor](/guides/payments-integration/):
   - total revenue
   - revenue for each day of the past week
-- [Google or Plausible](/guides/analytics/):
+- [Google or Plausible](/guides/analytics/): 
   - total number of page views (non-unique)
   - percentage change in page views from the previous day
   - top sources/referrers with unique visitor count (i.e. how many people came from that source to your app)
 - Database:
   - total number of registered users
-  - daily change in number of registered users
+  - daily change in number of registered users 
   - total number of paying users
   - daily change in number of paying users
 
@@ -86,7 +83,6 @@ job dailyStatsJob {
   entities: [User, DailyStats, Logs, PageViewSource]
 }
 ```
-
 For more info on Wasp's recurring background jobs, check out the [Wasp Jobs docs](https://wasp.sh/docs/advanced/jobs).
 
 For a guide on how to integrate these services so that you can view your analytics via the dashboard, check out the [Payments Integration](/guides/payments-integration/) and [Analytics guide](/guides/analytics/) of the docs.
@@ -96,9 +92,7 @@ We're always looking to improve the Admin dashboard. If you feel something is mi
 :::
 
 ### Users
-
 The Users page is where you can view all your users and their most important details. You can also search and filter users by:
-
 - email address
 - subscription/payment status
 - admin status

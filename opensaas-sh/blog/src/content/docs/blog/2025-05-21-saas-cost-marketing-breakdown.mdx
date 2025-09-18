@@ -13,89 +13,25 @@ tags:
 authors: vince
 ---
 
-import { Image } from "astro:assets";
-import VideoPlayer from "../../../components/VideoPlayer.astro";
-import demoVideo from "../../../assets/cover-letter-gpt/demo-video.mp4";
-import Tweet from "../../../components/Tweet.astro";
-import landingPage from "../../../assets/cover-letter-gpt/coverlettergpt-may2025.png";
-import mrrRevenue from "../../../assets/cover-letter-gpt/mrr-revenue.png";
-import StarOpenSaaSCTA from "../../../components/StarOpenSaaSCTA.astro";
-import redditPost from "../../../assets/cover-letter-gpt/coverlettergpt-reddit.png";
-import coverlettergptPricing from "../../../assets/cover-letter-gpt/coverlettergpt-plans.png";
-import openAiCost from "../../../assets/cover-letter-gpt/openai-cost.png";
-import openAiRequests from "../../../assets/cover-letter-gpt/openai-requests.png";
-import jeep from "../../../assets/cover-letter-gpt/jeep.png";
-import coverlettergptPhLaunch from "../../../assets/cover-letter-gpt/coverlettergpt-ph-launch.png";
-import coverlettergptIndieHackers from "../../../assets/cover-letter-gpt/coverlettergpt-indiehackers.png";
+import { Image } from 'astro:assets';
+import VideoPlayer from '../../../components/VideoPlayer.astro';
+import demoVideo from '../../../assets/cover-letter-gpt/demo-video.mp4';
+import Tweet from '../../../components/Tweet.astro';
+import landingPage from '../../../assets/cover-letter-gpt/coverlettergpt-may2025.png';
+import mrrRevenue from '../../../assets/cover-letter-gpt/mrr-revenue.png';
+import StarOpenSaaSCTA from '../../../components/StarOpenSaaSCTA.astro';
+import redditPost from '../../../assets/cover-letter-gpt/coverlettergpt-reddit.png';
+import coverlettergptPricing from '../../../assets/cover-letter-gpt/coverlettergpt-plans.png';
+import openAiCost from '../../../assets/cover-letter-gpt/openai-cost.png';
+import openAiRequests from '../../../assets/cover-letter-gpt/openai-requests.png';
+import jeep from '../../../assets/cover-letter-gpt/jeep.png';
+import coverlettergptPhLaunch from '../../../assets/cover-letter-gpt/coverlettergpt-ph-launch.png';
+import coverlettergptIndieHackers from '../../../assets/cover-letter-gpt/coverlettergpt-indiehackers.png';
 
 Hey builders,
 
 I wanted to share my journey building a micro SaaS, [CoverLetterGPT](https://coverlettergpt.xyz/), which earns **$550/month in recurring revenue (MRR)**, while requiring **minimal effort and maintenance**. Here's a breakdown of overall costs, profit, how I got customers, and why I believe small, simple SaaS apps are an underrated way to start as an indie maker.
-
-<blockquote
-  class="tiktok-embed"
-  cite="https://www.tiktok.com/@hot_town_/video/7504744778689449239"
-  data-video-id="7504744778689449239"
-  style="max-width: 605px;min-width: 325px;"
->
-  {" "}
-  <section>
-    {" "}
-    <a
-      target="_blank"
-      title="@hot_town_"
-      href="https://www.tiktok.com/@hot_town_?refer=embed"
-    >
-      @hot_town_
-    </a>{" "}
-    Here’s a down of how much it cost me to run my SaaS app which is a simple
-    GPT wrapper for generating cover letters. Overall, it’s been a decent little
-    profit because the app doesn’t cost me much to run.{" "}
-    <a
-      title="webdevelopment"
-      target="_blank"
-      href="https://www.tiktok.com/tag/webdevelopment?refer=embed"
-    >
-      #webdevelopment
-    </a>{" "}
-    <a
-      title="sideproject"
-      target="_blank"
-      href="https://www.tiktok.com/tag/sideproject?refer=embed"
-    >
-      #sideproject
-    </a>{" "}
-    <a
-      title="indiehackers"
-      target="_blank"
-      href="https://www.tiktok.com/tag/indiehackers?refer=embed"
-    >
-      #indiehackers
-    </a>{" "}
-    <a
-      title="saas"
-      target="_blank"
-      href="https://www.tiktok.com/tag/saas?refer=embed"
-    >
-      #saas
-    </a>{" "}
-    <a
-      title="ai"
-      target="_blank"
-      href="https://www.tiktok.com/tag/ai?refer=embed"
-    >
-      #ai
-    </a>{" "}
-    <a
-      target="_blank"
-      title="♬ original sound - Vinny"
-      href="https://www.tiktok.com/music/original-sound-7504744764698856214?refer=embed"
-    >
-      ♬ original sound - Vinny
-    </a>{" "}
-  </section>{" "}
-</blockquote>
-<script async src="https://www.tiktok.com/embed.js"></script>
+<blockquote class="tiktok-embed" cite="https://www.tiktok.com/@hot_town_/video/7504744778689449239" data-video-id="7504744778689449239" style="max-width: 605px;min-width: 325px;" > <section> <a target="_blank" title="@hot_town_" href="https://www.tiktok.com/@hot_town_?refer=embed">@hot_town_</a> Here’s a down of how much it cost me to run my SaaS app which is a simple GPT wrapper for generating cover letters. Overall, it’s been a decent little profit because the app doesn’t cost me much to run. <a title="webdevelopment" target="_blank" href="https://www.tiktok.com/tag/webdevelopment?refer=embed">#webdevelopment</a> <a title="sideproject" target="_blank" href="https://www.tiktok.com/tag/sideproject?refer=embed">#sideproject</a> <a title="indiehackers" target="_blank" href="https://www.tiktok.com/tag/indiehackers?refer=embed">#indiehackers</a> <a title="saas" target="_blank" href="https://www.tiktok.com/tag/saas?refer=embed">#saas</a> <a title="ai" target="_blank" href="https://www.tiktok.com/tag/ai?refer=embed">#ai</a> <a target="_blank" title="♬ original sound - Vinny" href="https://www.tiktok.com/music/original-sound-7504744764698856214?refer=embed">♬ original sound - Vinny</a> </section> </blockquote> <script async src="https://www.tiktok.com/embed.js"></script>
 
 ### At a glance
 
@@ -104,8 +40,7 @@ I wanted to share my journey building a micro SaaS, [CoverLetterGPT](https://cov
 <VideoPlayer src={demoVideo} lgWidth="80%" />
 
 Here are some quick numbers:
-
-- **Built in 1 week**
+- **Built in 1 week** 
   - using [Open SaaS](https://opensaas.sh/), a free, open-source React, NodeJS, SaaS boilerplate template with tons of features.
 - **Runs on autopilot**
   - ~1hr/month of maintenance
@@ -123,14 +58,14 @@ Here are some quick numbers:
 
 ### Costs Breakdown
 
-| Cost Type   | Monthly Cost | Notes                                           |
-| ----------- | ------------ | ----------------------------------------------- |
-| App Hosting | $12          | Railway.com                                     |
-| OpenAI API  | $3           | ~1,500 requests / 1.5m tokens                   |
-| Domain      | $0.98        | $11.82/year via Porkbun                         |
-| Stripe Fees | ~$45         | ~3% + 30¢/transaction + ~2% currency conversion |
+| Cost Type      | Monthly Cost | Notes                                              |
+|----------------|--------------|----------------------------------------------------|
+| App Hosting    | $12          | Railway.com                                        |
+| OpenAI API     | $3           | ~1,500 requests / 1.5m tokens                      |
+| Domain         | $0.98        | $11.82/year via Porkbun                            |
+| Stripe Fees    | ~$45         | ~3% + 30¢/transaction + ~2% currency conversion|
 
-As you can see, Stripe fees are the biggest "cost" in the end, becuase most of my customers are abroad, so I get hit with extra cross-border fees. But that's just the cost of doing business. Plus, I don't really see these fees, so they dont bother me much.
+As you can see, Stripe fees are the biggest "cost" in the end, becuase most of my customers are abroad, so I get hit with extra cross-border fees. But that's just the cost of doing business. Plus, I don't really see these fees, so they dont bother me much. 
 
 Meanwhile, using the OpenAI API isn't as expensive as you might think, and the models keep getting cheaper and better. I'm currently using the `gpt-4o-mini` model for the standard plan, and `gpt-4.1` for the pro plan.
 
@@ -146,30 +81,27 @@ Besides that, my hosting bill is about $12/month on [Railway](https://railway.co
 
 ### Revenue & Profit Breakdown
 
-| Metric                      | Value      | Notes                              |
-| --------------------------- | ---------- | ---------------------------------- |
-| Avg. Monthly Revenue        | $615       | Past 8 months, converted from €543 |
-| Total Net Revenue           | $9,912     | Since launch, after Stripe fees    |
-| Total Costs to Date         | $345       | $15/month × 23 months              |
-| Avg. Monthly Profit         | $416       | $9,567 ÷ 23 months                 |
-| **Total Profit to Date 🎉** | **$9,567** | **Net revenue minus costs**        |
+| Metric                    | Value                | Notes                                      |
+|---------------------------|----------------------|--------------------------------------------|
+| Avg. Monthly Revenue      | $615                 | Past 8 months, converted from €543         |
+| Total Net Revenue         | $9,912               | Since launch, after Stripe fees            |
+| Total Costs to Date       | $345                 | $15/month × 23 months                      |
+| Avg. Monthly Profit       | $416                 | $9,567 ÷ 23 months                         |
+| **Total Profit to Date 🎉**      | **$9,567**               | **Net revenue minus costs**                    |
+
 
 At current exchange rates, my average monthly recurring revenue of €543 over the past 8 months equals
-
 - **an average of $615 MRR for the past 8 months**
 
 My total revenue, minus ~$45/month Stripe fees, disputes, and refunds, since launch has been €8756. At current exchange rates, this equals
-
 - **$9,912 total net revenue**
 
-My costs since launch 23 months ago have been ~$15/month. So 15 \* 23 equals
-
+My costs since launch 23 months ago have been ~$15/month. So 15 * 23 equals
 - **$345** monthly costs
 
 This brings my total profit since launch to
-
 - **$9,567** total profit
-  or
+  or 
 - **$416/month** average profit
 
 That's enough to afford a lease on a nice Jeep Wrangler.
@@ -180,14 +112,14 @@ Not bad for a side project that I built in 1 week!
 
 ### Marketing Breakdown
 
-| Channel       | Effort Level     | Return | Result / Notes                                                         |
-| ------------- | ---------------- | ------ | ---------------------------------------------------------------------- |
-| Product Hunt  | High             | Medium | Initial launch, created marketing assets, got early traction           |
-| Reddit        | Medium-High      | High   | Posted in dev/entrepreneur/job subreddits, boosted SEO, some bans risk |
-| Indie Hackers | Easy             | Medium | Shared open-source story, featured in newsletter, good feedback        |
-| Twitter       | Hard             | Low    | Shared updates, videos, and journey.                                   |
-| TikTok        | Medium (Ongoing) | High   | Shared updates, videos, and journey, helps maintain MRR.               |
-| Paid Ads      | None             | --     | Did not run any paid ads                                               |
+| Channel           | Effort Level   | Return                        | Result / Notes                                      |
+|-------------------|---------------|-------------------------------|-----------------------------------------------------|
+| Product Hunt      | High          | Medium                        | Initial launch, created marketing assets, got early traction |
+| Reddit            | Medium-High   | High                          | Posted in dev/entrepreneur/job subreddits, boosted SEO, some bans risk |
+| Indie Hackers     | Easy          | Medium                        | Shared open-source story, featured in newsletter, good feedback |
+| Twitter           | Hard          | Low                           | Shared updates, videos, and journey. |
+| TikTok            | Medium (Ongoing) | High | Shared updates, videos, and journey, helps maintain MRR. |
+| Paid Ads          | None          | --                          | Did not run any paid ads                            |
 
 By far the question I get asked the most by other curious builders is how I got customers. Many ask if I paid for ads, and I didn't.
 
@@ -211,7 +143,7 @@ This all lead to giving me a jump start on spreading the word about the app. It 
 
 <Image src={redditPost} alt="CoverLetterGPT Reddit Post" />
 
-Posting on Reddit can be tricky. If you're too forward, it gets seen as spam and you can get banned.
+Posting on Reddit can be tricky. If you're too forward, it gets seen as spam and you can get banned. 
 
 Luckily, I left the app open-source because I wasn't anticipating much success from it, and a good side effect of this was that I was able to openly post about it on developer and entrepreneur subreddits. To this day, I think this had a good effect on SEO, but I'm not certain.
 
@@ -227,7 +159,7 @@ This led to a getting featured in their newsletter--again, thanks to the app bei
 
 #### Twitter & tiktok
 
-I also took to twitter and tiktok to share fun videos about the app, my journey building it, and my thoughts about it.
+I also took to twitter and tiktok to share fun videos about the app, my journey building it, and my thoughts about it. 
 
 Doing this periodically and consistently throughout the past couple years has probably helped keep MRR consistent
 
@@ -257,14 +189,14 @@ The most important lesson I've learned: **speed is everything.** The faster you 
 
 1. **Avoid long, drawn-out failures:** Build small, execute early.
 2. **Use the fastest tools available:** I used [Open SaaS](https://opensaas.sh/) because it gives me all the building blocks already set up (auth, Stripe payments, OpenAI API examples, email sending, etc), letting me focus on the business logic of the app.
-3. **Forget perfection:** I didn't worry about making it pretty or perfect—-it just had to work.
+3. **Forget perfection:** I didn't worry about making it pretty or perfect—-it just had to work. 
 
 #### Keep It Simple
 
 The beauty of a simple, "micro SaaS" is in its simplicity. Here's why:
 
 - My app does **one thing well**: generating cover letters based on résumés and job descriptions and allows users to edit them inline with AI assistance.
-- There's no need for a fancy landing page or marketing gimmicks. This is my 🌶 hot take. I mean, my landing page _is_ my app! Users land on it and can instantly try it out.
+- There's no need for a fancy landing page or marketing gimmicks. This is my 🌶 hot take. I mean, my landing page *is* my app! Users land on it and can instantly try it out.
 - Users get **3 trial credits**-—enough to try the app and see value before paying.
 
 <Image src={landingPage} alt="CoverLetterGPT landing page" />
