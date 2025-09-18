@@ -1,9 +1,9 @@
-# Build outputs
+# Build outputs.
 .wasp/
 dist/
 
 # OpenSaaS app diff folder.
 app_diff/
 
-# Ignore minified JS files in the public folder
+# Ignore minified JS files in the public folder.
 **/public/**/*.js
