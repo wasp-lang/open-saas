@@ -1,24 +1,18 @@
-# build output
-dist/
-# generated types
-.astro/
-
-# deployment
-.netlify/
-
-# dependencies
+# Dependencies
 node_modules/
 
-# logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+# Build outputs
+.astro/
+dist/
 
+# Deployment
+.netlify/
 
-# environment variables
+# Ignore all dotenv files by default to prevent accidentally committing any secrets.
+# To include specific dotenv files, use the `!` operator or adjust these rules.
 .env
-.env.production
+.env.*
 
-# macOS-specific files
-.DS_Store
+# Don't ignore example dotenv files.
+!.env.example
+!.env.*.example
