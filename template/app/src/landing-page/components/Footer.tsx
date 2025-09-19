@@ -1,13 +1,15 @@
 interface NavigationItem {
   name: string;
   href: string;
-};
+}
 
-export default function Footer({ footerNavigation }: {
+export default function Footer({
+  footerNavigation,
+}: {
   footerNavigation: {
-    app: NavigationItem[]
-    company: NavigationItem[]
-  }
+    app: NavigationItem[];
+    company: NavigationItem[];
+  };
 }) {
   return (
     <div className='mx-auto mt-6 max-w-7xl px-6 lg:px-8 dark:bg-boxdark-2'>
@@ -24,7 +26,10 @@ export default function Footer({ footerNavigation }: {
             <ul role='list' className='mt-6 space-y-4'>
               {footerNavigation.app.map((item) => (
                 <li key={item.name}>
-                  <a href={item.href} className='text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-white'>
+                  <a
+                    href={item.href}
+                    className='text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-white'
+                  >
                     {item.name}
                   </a>
                 </li>
@@ -36,7 +41,10 @@ export default function Footer({ footerNavigation }: {
             <ul role='list' className='mt-6 space-y-4'>
               {footerNavigation.company.map((item) => (
                 <li key={item.name}>
-                  <a href={item.href} className='text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-white'>
+                  <a
+                    href={item.href}
+                    className='text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-white'
+                  >
                     {item.name}
                   </a>
                 </li>
@@ -46,5 +54,5 @@ export default function Footer({ footerNavigation }: {
         </div>
       </footer>
     </div>
-  )
+  );
 }

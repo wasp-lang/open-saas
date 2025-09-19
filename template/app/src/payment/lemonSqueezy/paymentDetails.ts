@@ -3,7 +3,15 @@ import { PaymentPlanId } from '../plans';
 import { PrismaClient } from '@prisma/client';
 
 export const updateUserLemonSqueezyPaymentDetails = async (
-  { lemonSqueezyId, userId, subscriptionPlan, subscriptionStatus, datePaid, numOfCreditsPurchased, lemonSqueezyCustomerPortalUrl }: {
+  {
+    lemonSqueezyId,
+    userId,
+    subscriptionPlan,
+    subscriptionStatus,
+    datePaid,
+    numOfCreditsPurchased,
+    lemonSqueezyCustomerPortalUrl,
+  }: {
     lemonSqueezyId: string;
     userId: string;
     subscriptionPlan?: PaymentPlanId;

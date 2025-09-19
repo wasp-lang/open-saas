@@ -199,6 +199,20 @@ With the webhook url ready, go to your [Lemon Squeezy Webhooks Dashboard](https:
   - subscription_cancelled
 - click `save`
 
+### Setting up your Production Polar Webhook
+
+To set up your Polar webhook, you'll need the URL of you newly deployed server + `/payments-webhook`, e.g. `https://open-saas-wasp-sh-server.fly.dev/payments-webhook`. 
+
+With the webhook URL ready, go to `Settings` > `Webhooks` in your [Polar Dashboard](https://polar.sh/dashboard):
+- click the `Add Endpoint` button.
+- paste the webhook forwarding URL in the `URL` field.
+- set the `Format` to `"Raw"`
+- select at least the following events to be sent:
+  - order.paid
+  - subscription.updated
+- click `Save`
+- copy the generated webhook secret (a long, random string starting with `polar_whs_`).
+- add this signing secret to your server's production environment variables under `POLAR_WEBHOOK_SECRET=`
 
 ## Deploying your Blog
 
