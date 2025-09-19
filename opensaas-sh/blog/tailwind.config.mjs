@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        accent: tailwindColors.yellow
+        accent: tailwindColors.yellow,
       },
     },
   },
