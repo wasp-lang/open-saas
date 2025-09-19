@@ -5,7 +5,7 @@ dist/
 # OpenSaaS app diff folder.
 app_diff/
 
-# Formatting `.md` and `.mdx` can introduce logical changes.
+# Formatting `.md` and `.mdx` files can introduce logical changes.
 **/blog/**/*.md
 **/blog/**/*.mdx
 
