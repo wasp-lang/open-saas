@@ -1,11 +1,11 @@
 --- template/app/src/payment/stripe/paymentDetails.ts
 +++ opensaas-sh/app/src/payment/stripe/paymentDetails.ts
-@@ -14,10 +14,10 @@
+@@ -20,10 +20,10 @@
  ) => {
    return userDelegate.update({
      where: {
--      paymentProcessorUserId: userStripeId
-+      stripeId: userStripeId
+-      paymentProcessorUserId: userStripeId,
++      stripeId: userStripeId,
      },
      data: {
 -      paymentProcessorUserId: userStripeId,
