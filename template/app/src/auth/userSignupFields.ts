@@ -1,7 +1,7 @@
-import { z } from 'zod';
-import { defineUserSignupFields } from 'wasp/auth/providers/types';
+import { defineUserSignupFields } from "wasp/auth/providers/types";
+import { z } from "zod";
 
-const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
+const adminEmails = process.env.ADMIN_EMAILS?.split(",") || [];
 
 const emailDataSchema = z.object({
   email: z.string(),
@@ -29,9 +29,12 @@ const githubDataSchema = z.object({
         z.object({
           email: z.string(),
           verified: z.boolean(),
-        })
+        }),
       )
-      .min(1, 'You need to have an email address associated with your GitHub account to sign up.'),
+      .min(
+        1,
+        "You need to have an email address associated with your GitHub account to sign up.",
+      ),
     login: z.string(),
   }),
 });
@@ -65,7 +68,7 @@ function getGithubEmailInfo(githubData: z.infer<typeof githubDataSchema>) {
 // instead of ["user"] and access args.profile.username instead
 export function getGitHubAuthConfig() {
   return {
-    scopes: ['user'],
+    scopes: ["user"],
   };
 }
 
@@ -96,7 +99,7 @@ export const getGoogleUserFields = defineUserSignupFields({
 
 export function getGoogleAuthConfig() {
   return {
-    scopes: ['profile', 'email'], // must include at least 'profile' for Google
+    scopes: ["profile", "email"], // must include at least 'profile' for Google
   };
 }
 
@@ -113,7 +116,9 @@ export const getDiscordUserFields = defineUserSignupFields({
     const discordData = discordDataSchema.parse(data);
     // Users need to have an email for payment processing.
     if (!discordData.profile.email) {
-      throw new Error('You need to have an email address associated with your Discord account to sign up.');
+      throw new Error(
+        "You need to have an email address associated with your Discord account to sign up.",
+      );
     }
     return discordData.profile.email;
   },
@@ -132,6 +137,6 @@ export const getDiscordUserFields = defineUserSignupFields({
 
 export function getDiscordAuthConfig() {
   return {
-    scopes: ['identify', 'email'],
+    scopes: ["identify", "email"],
   };
 }

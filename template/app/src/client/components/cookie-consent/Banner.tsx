@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
-import * as CookieConsent from 'vanilla-cookieconsent';
-import 'vanilla-cookieconsent/dist/cookieconsent.css';
-import getConfig from './Config';
+import { useEffect } from "react";
+import * as CookieConsent from "vanilla-cookieconsent";
+import "vanilla-cookieconsent/dist/cookieconsent.css";
+import getConfig from "./Config";
 
 /**
  * NOTE: if you do not want to use the cookie consent banner, you should
@@ -13,7 +13,7 @@ const CookieConsentBanner = () => {
     CookieConsent.run(getConfig());
   }, []);
 
-  return <div id='cookieconsent'></div>;
+  return <div id="cookieconsent"></div>;
 };
 
 export default CookieConsentBanner;

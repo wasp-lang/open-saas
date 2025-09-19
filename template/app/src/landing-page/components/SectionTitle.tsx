@@ -7,20 +7,24 @@ export default function SectionTitle({
   titleComponent?: React.ReactNode;
 }) {
   const titleElement =
-    typeof title === 'string' ? (
-      <h3 className='mt-2 text-4xl font-bold tracking-tight text-foreground sm:text-5xl'>{title}</h3>
+    typeof title === "string" ? (
+      <h3 className="text-foreground mt-2 text-4xl font-bold tracking-tight sm:text-5xl">
+        {title}
+      </h3>
     ) : (
       title
     );
   const descriptionElement =
-    typeof description === 'string' ? (
-      <p className='mt-4 text-lg leading-8 text-muted-foreground'>{description}</p>
+    typeof description === "string" ? (
+      <p className="text-muted-foreground mt-4 text-lg leading-8">
+        {description}
+      </p>
     ) : (
       description
     );
 
   return (
-    <div className='mx-auto max-w-2xl text-center mb-8'>
+    <div className="mx-auto mb-8 max-w-2xl text-center">
       {titleElement}
       {descriptionElement}
     </div>

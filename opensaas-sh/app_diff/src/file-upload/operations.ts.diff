@@ -1,26 +1,8 @@
 --- template/app/src/file-upload/operations.ts
 +++ opensaas-sh/app/src/file-upload/operations.ts
-@@ -1,14 +1,14 @@
--import * as z from 'zod';
--import { HttpError } from 'wasp/server';
- import { type File } from 'wasp/entities';
-+import { HttpError } from 'wasp/server';
- import {
-   type CreateFile,
-   type GetAllFilesByUser,
-   type GetDownloadFileSignedURL,
- } from 'wasp/server/operations';
-+import * as z from 'zod';
- 
--import { getUploadFileSignedURLFromS3, getDownloadFileSignedURLFromS3 } from './s3Utils';
- import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
-+import { getDownloadFileSignedURLFromS3, getUploadFileSignedURLFromS3 } from './s3Utils';
- import { ALLOWED_FILE_TYPES } from './validation';
- 
- const createFileInputSchema = z.object({
-@@ -37,6 +37,18 @@
-     userId: context.user.id,
-   });
+@@ -44,6 +44,21 @@
+       userId: context.user.id,
+     });
  
 +  const numberOfFilesByUser = await context.entities.File.count({
 +    where: {
@@ -31,7 +13,10 @@
 +  });
 +
 +  if (numberOfFilesByUser >= 2) {
-+    throw new HttpError(403, 'Thanks for trying Open SaaS. This demo only allows 2 file uploads per user.');
++    throw new HttpError(
++      403,
++      "Thanks for trying Open SaaS. This demo only allows 2 file uploads per user.",
++    );
 +  }
 +
    await context.entities.File.create({

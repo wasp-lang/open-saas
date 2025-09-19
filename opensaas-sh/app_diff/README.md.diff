@@ -11,22 +11,24 @@
  
  ## UI Components
  
-@@ -8,9 +10,20 @@
+@@ -8,9 +10,22 @@
  
  ## Development
  
 +### .env files
++
 +`.env.client` file is versioned, but `.env.server` file you have to obtain by running `npm run env:pull`, since it has secrets in it.
 +This will generate `.env.server` based on the `.env.vault`.
 +We are using https://vault.dotenv.org to power this and have an account/organization up there.
 +If you modify .env.server and want to persist the changes (for yourself and for the other team members), do `npm run env:push`.
 +
  ### Running locally
-  - Make sure you have the `.env.client` and `.env.server` files with correct dev values in the root of the project.
-  - Run the database with `wasp start db` and leave it running.
-  - Run `wasp start` and leave it running.
-  - [OPTIONAL]: If this is the first time starting the app, or you've just made changes to your entities/prisma schema, also run `wasp db migrate-dev`.
  
+ - Make sure you have the `.env.client` and `.env.server` files with correct dev values in the root of the project.
+ - Run the database with `wasp start db` and leave it running.
+ - Run `wasp start` and leave it running.
+ - [OPTIONAL]: If this is the first time starting the app, or you've just made changes to your entities/prisma schema, also run `wasp db migrate-dev`.
++
 +## Deployment
 +
 +This app is deployed to fly.io, Wasp org, via `wasp deploy fly deploy`.

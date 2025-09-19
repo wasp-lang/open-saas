@@ -5,12 +5,12 @@ on:
     branches:
       - main
     paths:
-      - 'opensaas-sh/blog/**'
+      - "opensaas-sh/blog/**"
   pull_request:
     branches:
       - main
     paths:
-      - 'opensaas-sh/blog/**'
+      - "opensaas-sh/blog/**"
 
 jobs:
   build:
@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 'lts/*'
+          node-version: "lts/*"
 
       - name: Install dependencies
         working-directory: ./opensaas-sh/blog
@@ -47,7 +47,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 'lts/*'
+          node-version: "lts/*"
 
       - name: Install dependencies
         working-directory: ./opensaas-sh/blog
@@ -64,10 +64,10 @@ jobs:
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v2
         with:
-          publish-dir: './opensaas-sh/blog/dist'
+          publish-dir: "./opensaas-sh/blog/dist"
           production-branch: main
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: 'Deploy from GitHub Actions'
+          deploy-message: "Deploy from GitHub Actions"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}

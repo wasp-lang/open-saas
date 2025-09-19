@@ -1,7 +1,10 @@
-import { BetaAnalyticsDataClient } from '@google-analytics/data';
+import { BetaAnalyticsDataClient } from "@google-analytics/data";
 
 const CLIENT_EMAIL = process.env.GOOGLE_ANALYTICS_CLIENT_EMAIL;
-const PRIVATE_KEY = Buffer.from(process.env.GOOGLE_ANALYTICS_PRIVATE_KEY!, 'base64').toString('utf-8');
+const PRIVATE_KEY = Buffer.from(
+  process.env.GOOGLE_ANALYTICS_PRIVATE_KEY!,
+  "base64",
+).toString("utf-8");
 const PROPERTY_ID = process.env.GOOGLE_ANALYTICS_PROPERTY_ID;
 
 const analyticsDataClient = new BetaAnalyticsDataClient({
@@ -16,19 +19,19 @@ export async function getSources() {
     property: `properties/${PROPERTY_ID}`,
     dateRanges: [
       {
-        startDate: '2020-01-01',
-        endDate: 'today',
+        startDate: "2020-01-01",
+        endDate: "today",
       },
     ],
     // for a list of dimensions and metrics see https://developers.google.com/analytics/devguides/reporting/data/v1/api-schema
     dimensions: [
       {
-        name: 'source',
+        name: "source",
       },
     ],
     metrics: [
       {
-        name: 'activeUsers',
+        name: "activeUsers",
       },
     ],
   });
@@ -44,7 +47,7 @@ export async function getSources() {
       }
     });
   } else {
-    throw new Error('No response from Google Analytics');
+    throw new Error("No response from Google Analytics");
   }
 
   return activeUsersPerReferrer;
@@ -65,13 +68,13 @@ async function getTotalPageViews() {
     property: `properties/${PROPERTY_ID}`,
     dateRanges: [
       {
-        startDate: '2020-01-01', // go back to earliest date of your app
-        endDate: 'today',
+        startDate: "2020-01-01", // go back to earliest date of your app
+        endDate: "today",
       },
     ],
     metrics: [
       {
-        name: 'screenPageViews',
+        name: "screenPageViews",
       },
     ],
   });
@@ -80,7 +83,7 @@ async function getTotalPageViews() {
     // @ts-ignore
     totalViews = parseInt(response.rows[0].metricValues[0].value);
   } else {
-    throw new Error('No response from Google Analytics');
+    throw new Error("No response from Google Analytics");
   }
   return totalViews;
 }
@@ -91,26 +94,26 @@ async function getPrevDayViewsChangePercent() {
 
     dateRanges: [
       {
-        startDate: '2daysAgo',
-        endDate: 'yesterday',
+        startDate: "2daysAgo",
+        endDate: "yesterday",
       },
     ],
     orderBys: [
       {
         dimension: {
-          dimensionName: 'date',
+          dimensionName: "date",
         },
         desc: true,
       },
     ],
     dimensions: [
       {
-        name: 'date',
+        name: "date",
       },
     ],
     metrics: [
       {
-        name: 'screenPageViews',
+        name: "screenPageViews",
       },
     ],
   });
@@ -128,14 +131,17 @@ async function getPrevDayViewsChangePercent() {
       viewsFromYesterday = parseInt(viewsFromYesterday);
       viewsFromDayBeforeYesterday = parseInt(viewsFromDayBeforeYesterday);
       if (viewsFromYesterday === 0 || viewsFromDayBeforeYesterday === 0) {
-        return '0';
+        return "0";
       }
       console.table({ viewsFromYesterday, viewsFromDayBeforeYesterday });
 
-      const change = ((viewsFromYesterday - viewsFromDayBeforeYesterday) / viewsFromDayBeforeYesterday) * 100;
+      const change =
+        ((viewsFromYesterday - viewsFromDayBeforeYesterday) /
+          viewsFromDayBeforeYesterday) *
+        100;
       return change.toFixed(0);
     }
   } else {
-    return '0';
+    return "0";
   }
 }

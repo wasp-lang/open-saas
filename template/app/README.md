@@ -9,8 +9,8 @@ This template includes [ShadCN UI](https://ui.shadcn.com/) v2 for beautiful, acc
 ## Development
 
 ### Running locally
- - Make sure you have the `.env.client` and `.env.server` files with correct dev values in the root of the project.
- - Run the database with `wasp start db` and leave it running.
- - Run `wasp start` and leave it running.
- - [OPTIONAL]: If this is the first time starting the app, or you've just made changes to your entities/prisma schema, also run `wasp db migrate-dev`.
 
+- Make sure you have the `.env.client` and `.env.server` files with correct dev values in the root of the project.
+- Run the database with `wasp start db` and leave it running.
+- Run `wasp start` and leave it running.
+- [OPTIONAL]: If this is the first time starting the app, or you've just made changes to your entities/prisma schema, also run `wasp db migrate-dev`.

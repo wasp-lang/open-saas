@@ -1,9 +1,10 @@
 ## Welcome to your new SaaS App! 🎉
+
 <a href="https://www.producthunt.com/products/open-saas?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-open&#0045;saas&#0045;2" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=991058&theme=neutral&t=1753776395137" alt="Open&#0032;SaaS - The&#0032;open&#0045;source&#0032;SaaS&#0032;boilerplate&#0032;with&#0032;superpowers&#0033; | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 
 https://github.com/user-attachments/assets/3856276b-23e9-455e-a564-b5f26f4f0e98
 
-You've decided to build a SaaS app with the Open SaaS template. Great choice! 
+You've decided to build a SaaS app with the Open SaaS template. Great choice!
 
 This template is:
 
@@ -38,6 +39,7 @@ Because we're using Wasp as the full-stack framework, we can leverage a lot of i
 - 🚀 [One-command Deploy](https://wasp.sh/docs/advanced/deployment/overview) - Easily deploy your DB, Server, & Client with one commaned to [Railway](https://railway.app) or [Fly.io](https://fly.io) via the CLI. Or deploy manually to any other hosting serivce of your choice.
 
 You also get access to Wasp's diverse, helpful community if you get stuck or need help.
+
 - 🤝 [Wasp Discord](https://discord.gg/aCamt5wCpS)
 
 ## Getting Started
@@ -45,6 +47,7 @@ You also get access to Wasp's diverse, helpful community if you get stuck or nee
 ### Simple Instructions
 
 First, to install the latest version of [Wasp](https://wasp.sh/) on macOS, Linux, or Windows with WSL, run the following command:
+
 ```bash
 curl -sSL https://get.wasp.sh/installer.sh | sh
 ```
@@ -66,6 +69,7 @@ We've documented everything in great detail, including installation instructions
 ## Getting Help & Providing Feedback
 
 There are two ways to get help or provide feedback (and we try to always respond quickly!):
+
 1. [Open an issue](https://github.com/wasp-lang/open-saas/issues)
 2. [Wasp Discord](https://discord.gg/aCamt5wCpS) -- please direct questions to the #🙋questions forum channel
 
@@ -74,4 +78,3 @@ There are two ways to get help or provide feedback (and we try to always respond
 Note that we've tried to get as many of the core features of a SaaS app into this template as possible, but there still might be some missing features or functionality.
 
 We could always use some help tying up loose ends: contributions are welcome! Check out [CONTRIBUTING.md](/CONTRIBUTING.md) for more details.
-

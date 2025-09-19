@@ -4,7 +4,7 @@
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function assertUnreachable(x: never): never {
-  throw Error('This code should be unreachable');
+  throw Error("This code should be unreachable");
 }
 
 /**
@@ -12,7 +12,7 @@ export function assertUnreachable(x: never): never {
  */
 export function throttleWithTrailingInvocation(
   fn: () => void,
-  delayInMilliseconds: number
+  delayInMilliseconds: number,
 ): ((...args: any[]) => void) & { cancel: () => void } {
   let fnLastCallTime: number | null = null;
   let trailingInvocationTimeoutId: ReturnType<typeof setTimeout> | null = null;
@@ -25,9 +25,12 @@ export function throttleWithTrailingInvocation(
 
   const throttledFn = () => {
     const currentTime = Date.now();
-    const timeSinceLastExecution = fnLastCallTime ? currentTime - fnLastCallTime : 0;
+    const timeSinceLastExecution = fnLastCallTime
+      ? currentTime - fnLastCallTime
+      : 0;
 
-    const shouldCallImmediately = fnLastCallTime === null || timeSinceLastExecution >= delayInMilliseconds;
+    const shouldCallImmediately =
+      fnLastCallTime === null || timeSinceLastExecution >= delayInMilliseconds;
 
     if (shouldCallImmediately) {
       callFn();
@@ -36,7 +39,10 @@ export function throttleWithTrailingInvocation(
 
     if (!isTrailingInvocationPending) {
       isTrailingInvocationPending = true;
-      const remainingDelayTime = Math.max(delayInMilliseconds - timeSinceLastExecution, 0);
+      const remainingDelayTime = Math.max(
+        delayInMilliseconds - timeSinceLastExecution,
+        0,
+      );
 
       trailingInvocationTimeoutId = setTimeout(() => {
         callFn();

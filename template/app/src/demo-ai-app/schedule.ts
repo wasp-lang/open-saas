@@ -1,4 +1,4 @@
-export type TaskPriority = 'low' | 'medium' | 'high';
+export type TaskPriority = "low" | "medium" | "high";
 
 export type GeneratedSchedule = {
   tasks: Task[]; // Main tasks provided by user, ordered by priority

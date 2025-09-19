@@ -3,7 +3,7 @@ const PLAUSIBLE_SITE_ID = process.env.PLAUSIBLE_SITE_ID!;
 const PLAUSIBLE_BASE_URL = process.env.PLAUSIBLE_BASE_URL;
 
 const headers = {
-  'Content-Type': 'application/json',
+  "Content-Type": "application/json",
   Authorization: `Bearer ${PLAUSIBLE_API_KEY}`,
 };
 
@@ -20,7 +20,7 @@ type PageViewSourcesResult = {
     {
       source: string;
       visitors: number;
-    }
+    },
   ];
 };
 
@@ -38,12 +38,12 @@ async function getTotalPageViews() {
   const response = await fetch(
     `${PLAUSIBLE_BASE_URL}/v1/stats/aggregate?site_id=${PLAUSIBLE_SITE_ID}&metrics=pageviews`,
     {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${PLAUSIBLE_API_KEY}`,
       },
-    }
+    },
   );
   if (!response.ok) {
     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -56,12 +56,19 @@ async function getTotalPageViews() {
 async function getPrevDayViewsChangePercent() {
   // Calculate today, yesterday, and the day before yesterday's dates
   const today = new Date();
-  const yesterday = new Date(today.setDate(today.getDate() - 1)).toISOString().split('T')[0];
-  const dayBeforeYesterday = new Date(new Date().setDate(new Date().getDate() - 2)).toISOString().split('T')[0];
+  const yesterday = new Date(today.setDate(today.getDate() - 1))
+    .toISOString()
+    .split("T")[0];
+  const dayBeforeYesterday = new Date(
+    new Date().setDate(new Date().getDate() - 2),
+  )
+    .toISOString()
+    .split("T")[0];
 
   // Fetch page views for yesterday and the day before yesterday
   const pageViewsYesterday = await getPageviewsForDate(yesterday);
-  const pageViewsDayBeforeYesterday = await getPageviewsForDate(dayBeforeYesterday);
+  const pageViewsDayBeforeYesterday =
+    await getPageviewsForDate(dayBeforeYesterday);
 
   console.table({
     pageViewsYesterday,
@@ -72,9 +79,12 @@ async function getPrevDayViewsChangePercent() {
 
   let change = 0;
   if (pageViewsYesterday === 0 || pageViewsDayBeforeYesterday === 0) {
-    return '0';
+    return "0";
   } else {
-    change = ((pageViewsYesterday - pageViewsDayBeforeYesterday) / pageViewsDayBeforeYesterday) * 100;
+    change =
+      ((pageViewsYesterday - pageViewsDayBeforeYesterday) /
+        pageViewsDayBeforeYesterday) *
+      100;
   }
   return change.toFixed(0);
 }
@@ -82,7 +92,7 @@ async function getPrevDayViewsChangePercent() {
 async function getPageviewsForDate(date: string) {
   const url = `${PLAUSIBLE_BASE_URL}/v1/stats/aggregate?site_id=${PLAUSIBLE_SITE_ID}&period=day&date=${date}&metrics=pageviews`;
   const response = await fetch(url, {
-    method: 'GET',
+    method: "GET",
     headers: headers,
   });
   if (!response.ok) {
@@ -95,7 +105,7 @@ async function getPageviewsForDate(date: string) {
 export async function getSources() {
   const url = `${PLAUSIBLE_BASE_URL}/v1/stats/breakdown?site_id=${PLAUSIBLE_SITE_ID}&property=visit:source&metrics=visitors`;
   const response = await fetch(url, {
-    method: 'GET',
+    method: "GET",
     headers: headers,
   });
   if (!response.ok) {
