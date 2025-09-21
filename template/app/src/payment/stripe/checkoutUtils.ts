@@ -9,23 +9,18 @@ const CLIENT_BASE_URL = process.env.WASP_WEB_CLIENT_URL || 'http://localhost:300
  * Implements email uniqueness logic since Stripe doesn't enforce unique emails.
  */
 export async function ensureStripeCustomer(userEmail: string): Promise<Stripe.Customer> {
-  try {
-    const stripeCustomers = await stripeClient.customers.list({
+  const stripeCustomers = await stripeClient.customers.list({
+    email: userEmail,
+  });
+
+  if (stripeCustomers.data.length === 0) {
+    console.log('Creating a new Stripe customer');
+    return stripeClient.customers.create({
       email: userEmail,
     });
-
-    if (stripeCustomers.data.length === 0) {
-      console.log('Creating a new Stripe customer');
-      return stripeClient.customers.create({
-        email: userEmail,
-      });
-    } else {
-      console.log('Using an existing Stripe customer');
-      return stripeCustomers.data[0];
-    }
-  } catch (error) {
-    console.error(error);
-    throw error;
+  } else {
+    console.log('Using an existing Stripe customer');
+    return stripeCustomers.data[0];
   }
 }
 
