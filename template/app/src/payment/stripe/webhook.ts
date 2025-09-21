@@ -83,7 +83,7 @@ async function handleInvoicePaid(
 
   switch (paymentPlanId) {
     case PaymentPlanId.Credits10:
-      updateUserStripeOneTimePaymentDetails(
+      await updateUserStripeOneTimePaymentDetails(
         {
           customerId,
           datePaid: invoicePaidAtDate,
@@ -94,7 +94,7 @@ async function handleInvoicePaid(
       break;
     case PaymentPlanId.Pro:
     case PaymentPlanId.Hobby:
-      updateUserStripeSubscriptionDetails(
+      await updateUserStripeSubscriptionDetails(
         {
           customerId,
           datePaid: invoicePaidAtDate,
@@ -184,7 +184,7 @@ async function handleCustomerSubscriptionDeleted(
   const subscription = event.data.object;
   const customerId = getCustomerId(subscription.customer);
 
-  updateUserStripeSubscriptionDetails(
+  await updateUserStripeSubscriptionDetails(
     { customerId, subscriptionStatus: SubscriptionStatus.Deleted },
     prismaUserDelegate
   );
