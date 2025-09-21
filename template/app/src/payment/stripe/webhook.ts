@@ -8,7 +8,7 @@ import { requireNodeEnvVar } from '../../server/utils';
 import { assertUnreachable } from '../../shared/utils';
 import { UnhandledWebhookEventError } from '../errors';
 import { PaymentPlanId, paymentPlans, SubscriptionStatus } from '../plans';
-import { updateUserStripePaymentDetails } from './paymentDetails';
+import { updateUserStripeOneTimePaymentDetails, updateUserStripeSubscriptionDetails } from './paymentDetails';
 import { stripeClient } from './stripeClient';
 
 /**
@@ -83,7 +83,7 @@ async function handleInvoicePaid(
 
   switch (paymentPlanId) {
     case PaymentPlanId.Credits10:
-      updateUserStripePaymentDetails(
+      updateUserStripeOneTimePaymentDetails(
         {
           customerId,
           datePaid: invoicePaidAtDate,
@@ -94,7 +94,7 @@ async function handleInvoicePaid(
       break;
     case PaymentPlanId.Pro:
     case PaymentPlanId.Hobby:
-      updateUserStripePaymentDetails(
+      updateUserStripeSubscriptionDetails(
         {
           customerId,
           datePaid: invoicePaidAtDate,
@@ -148,7 +148,7 @@ async function handleCustomerSubscriptionUpdated(
   const customerId = getCustomerId(subscription.customer);
   const paymentPlanId = getPaymentPlanIdByPriceId(getSubscriptionPriceId(subscription));
 
-  const user = await updateUserStripePaymentDetails(
+  const user = await updateUserStripeSubscriptionDetails(
     { customerId, paymentPlanId, subscriptionStatus },
     prismaUserDelegate
   );
@@ -184,7 +184,7 @@ async function handleCustomerSubscriptionDeleted(
   const subscription = event.data.object;
   const customerId = getCustomerId(subscription.customer);
 
-  updateUserStripePaymentDetails(
+  updateUserStripeSubscriptionDetails(
     { customerId, subscriptionStatus: SubscriptionStatus.Deleted },
     prismaUserDelegate
   );
