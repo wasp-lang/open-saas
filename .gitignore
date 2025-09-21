@@ -1,6 +1,10 @@
-/template/app/migrations
-/template/app/package-lock.json
+# Dependencies
+node_modules/
+
+# MacOS-specific files.
 .DS_Store
 
-# Local Netlify folder
-.netlify
+# We want to keep the template clean from the usual build artifacts.
+# We also don't want to ship these ignore rules to the users.
+template/app/migrations
+template/app/package-lock.json

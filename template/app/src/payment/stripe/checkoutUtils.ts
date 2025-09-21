@@ -1,8 +1,9 @@
-import Stripe from 'stripe';
-import { stripeClient } from './stripeClient';
+import Stripe from "stripe";
+import { stripeClient } from "./stripeClient";
 
 // WASP_WEB_CLIENT_URL will be set up by Wasp when deploying to production: https://wasp.sh/docs/deploying
-const CLIENT_BASE_URL = process.env.WASP_WEB_CLIENT_URL || 'http://localhost:3000';
+const CLIENT_BASE_URL =
+  process.env.WASP_WEB_CLIENT_URL || "http://localhost:3000";
 
 /**
  * Returns a Stripe customer for the given User email, creating a customer if none exist.
@@ -14,19 +15,19 @@ export async function ensureStripeCustomer(userEmail: string): Promise<Stripe.Cu
   });
 
   if (stripeCustomers.data.length === 0) {
-    console.log('Creating a new Stripe customer');
+    console.log("Creating a new Stripe customer");
     return stripeClient.customers.create({
       email: userEmail,
     });
   } else {
-    console.log('Using an existing Stripe customer');
+    console.log("Using an existing Stripe customer");
     return stripeCustomers.data[0];
   }
 }
 
 interface CreateStripeCheckoutSessionParams {
-  priceId: Stripe.Price['id'];
-  customerId: Stripe.Customer['id'];
+  priceId: Stripe.Price["id"];
+  customerId: Stripe.Customer["id"];
   mode: Stripe.Checkout.Session.Mode;
 }
 
@@ -44,18 +45,18 @@ export async function createStripeCheckoutSession({
       },
     ],
     mode,
-    success_url: `${CLIENT_BASE_URL}/checkout?success=true`,
-    cancel_url: `${CLIENT_BASE_URL}/checkout?canceled=true`,
+    success_url: `${CLIENT_BASE_URL}/checkout?status=success`,
+    cancel_url: `${CLIENT_BASE_URL}/checkout?status=cancel`,
     automatic_tax: { enabled: true },
     allow_promotion_codes: true,
     customer_update: {
-      address: 'auto',
+      address: "auto",
     },
     // Stripe automatically creates invoices for subscriptions.
     // For one-time payments, we must enable them manually.
     // However, enabling invoices for subscriptions will throw an error.
     invoice_creation:
-      mode === 'payment'
+      mode === "payment"
         ? {
             enabled: true,
           }
