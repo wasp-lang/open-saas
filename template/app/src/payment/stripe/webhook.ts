@@ -134,7 +134,7 @@ async function handleInvoicePaid(
 }
 
 /**
- * We only expect one line item, if your workflow expected more, you should change this function to handle them.
+ * We only expect one line item, if your workflow expects more, you should change this function to handle them.
  */
 function getInvoicePriceId(invoice: Stripe.Invoice): Stripe.Price["id"] {
   const invoiceLineItems = invoice.lines.data;
@@ -195,7 +195,7 @@ async function handleCustomerSubscriptionUpdated(
 }
 
 /**
- * We only expect one subscription item, if your workflow expected more, you should change this function to handle them.
+ * We only expect one subscription item, if your workflow expects more, you should change this function to handle them.
  */
 function getSubscriptionPriceId(
   subscription: Stripe.Subscription,
