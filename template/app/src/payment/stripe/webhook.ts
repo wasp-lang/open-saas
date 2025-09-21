@@ -1,39 +1,57 @@
-import { type PrismaClient } from '@prisma/client';
-import express from 'express';
-import type { Stripe } from 'stripe';
-import { HttpError, type MiddlewareConfigFn } from 'wasp/server';
-import { type PaymentsWebhook } from 'wasp/server/api';
-import { emailSender } from 'wasp/server/email';
-import { requireNodeEnvVar } from '../../server/utils';
-import { assertUnreachable } from '../../shared/utils';
-import { UnhandledWebhookEventError } from '../errors';
-import { PaymentPlanId, paymentPlans, SubscriptionStatus } from '../plans';
-import { updateUserStripeOneTimePaymentDetails, updateUserStripeSubscriptionDetails } from './paymentDetails';
-import { stripeClient } from './stripeClient';
+import { type PrismaClient } from "@prisma/client";
+import express from "express";
+import type { Stripe } from "stripe";
+import { HttpError, type MiddlewareConfigFn } from "wasp/server";
+import { type PaymentsWebhook } from "wasp/server/api";
+import { emailSender } from "wasp/server/email";
+import { requireNodeEnvVar } from "../../server/utils";
+import { assertUnreachable } from "../../shared/utils";
+import { UnhandledWebhookEventError } from "../errors";
+import { PaymentPlanId, paymentPlans, SubscriptionStatus } from "../plans";
+import {
+  updateUserStripeOneTimePaymentDetails,
+  updateUserStripeSubscriptionDetails,
+} from "./paymentDetails";
+import { stripeClient } from "./stripeClient";
 
 /**
  * Stripe requires the raw request to construct the event successfully.
  */
-export const stripeMiddlewareConfigFn: MiddlewareConfigFn = (middlewareConfig) => {
-  middlewareConfig.delete('express.json');
-  middlewareConfig.set('express.raw', express.raw({ type: 'application/json' }));
+export const stripeMiddlewareConfigFn: MiddlewareConfigFn = (
+  middlewareConfig,
+) => {
+  middlewareConfig.delete("express.json");
+  middlewareConfig.set(
+    "express.raw",
+    express.raw({ type: "application/json" }),
+  );
   return middlewareConfig;
 };
 
-export const stripeWebhook: PaymentsWebhook = async (request, response, context) => {
+export const stripeWebhook: PaymentsWebhook = async (
+  request,
+  response,
+  context,
+) => {
   const prismaUserDelegate = context.entities.User;
   try {
     const stripeEvent = constructStripeEvent(request);
 
     switch (stripeEvent.type) {
-      case 'invoice.paid':
+      case "invoice.paid":
         await handleInvoicePaid(stripeEvent, prismaUserDelegate);
         break;
-      case 'customer.subscription.updated':
-        await handleCustomerSubscriptionUpdated(stripeEvent, prismaUserDelegate);
+      case "customer.subscription.updated":
+        await handleCustomerSubscriptionUpdated(
+          stripeEvent,
+          prismaUserDelegate,
+        );
         break;
-      case 'customer.subscription.deleted':
-        await handleCustomerSubscriptionDeleted(stripeEvent, prismaUserDelegate);
+      case "customer.subscription.deleted":
+        await handleCustomerSubscriptionDeleted(
+          stripeEvent,
+          prismaUserDelegate,
+        );
         break;
       default:
         // If you'd like to handle more events, you can add more cases above.
@@ -42,7 +60,7 @@ export const stripeWebhook: PaymentsWebhook = async (request, response, context)
         // See: https://docs.opensaas.sh/guides/deploying/#setting-up-your-stripe-webhook
         // In development, it is likely that you will receive other events that you are not handling.
         // These can be ignored without any issues.
-        if (process.env.NODE_ENV === 'production') {
+        if (process.env.NODE_ENV === "production") {
           throw new UnhandledWebhookEventError(stripeEvent.type);
         }
     }
@@ -53,28 +71,34 @@ export const stripeWebhook: PaymentsWebhook = async (request, response, context)
       throw err;
     }
 
-    console.error('Stripe webhook error:', err);
+    console.error("Stripe webhook error:", err);
     if (err instanceof HttpError) {
       return response.status(err.statusCode).json({ error: err.message });
     } else {
-      return response.status(400).json({ error: 'Error processing Stripe webhook event' });
+      return response
+        .status(400)
+        .json({ error: "Error processing Stripe webhook event" });
     }
   }
 };
 
 function constructStripeEvent(request: express.Request): Stripe.Event {
-  const stripeWebhookSecret = requireNodeEnvVar('STRIPE_WEBHOOK_SECRET');
-  const stripeSignature = request.headers['stripe-signature'];
+  const stripeWebhookSecret = requireNodeEnvVar("STRIPE_WEBHOOK_SECRET");
+  const stripeSignature = request.headers["stripe-signature"];
   if (!stripeSignature) {
-    throw new HttpError(400, 'Stripe webhook signature not provided');
+    throw new HttpError(400, "Stripe webhook signature not provided");
   }
 
-  return stripeClient.webhooks.constructEvent(request.body, stripeSignature, stripeWebhookSecret);
+  return stripeClient.webhooks.constructEvent(
+    request.body,
+    stripeSignature,
+    stripeWebhookSecret,
+  );
 }
 
 async function handleInvoicePaid(
   event: Stripe.InvoicePaidEvent,
-  prismaUserDelegate: PrismaClient['user']
+  prismaUserDelegate: PrismaClient["user"],
 ): Promise<void> {
   const invoice = event.data.object;
   const customerId = getCustomerId(invoice.customer);
@@ -89,7 +113,7 @@ async function handleInvoicePaid(
           datePaid: invoicePaidAtDate,
           numOfCreditsPurchased: paymentPlans.credits10.effect.amount,
         },
-        prismaUserDelegate
+        prismaUserDelegate,
       );
       break;
     case PaymentPlanId.Pro:
@@ -101,7 +125,7 @@ async function handleInvoicePaid(
           paymentPlanId,
           subscriptionStatus: SubscriptionStatus.Active,
         },
-        prismaUserDelegate
+        prismaUserDelegate,
       );
       break;
     default:
@@ -112,15 +136,18 @@ async function handleInvoicePaid(
 /**
  * We only expect one line item, if your workflow expected more, you should change this function to handle them.
  */
-function getInvoicePriceId(invoice: Stripe.Invoice): Stripe.Price['id'] {
+function getInvoicePriceId(invoice: Stripe.Invoice): Stripe.Price["id"] {
   const invoiceLineItems = invoice.lines.data;
   if (invoiceLineItems.length === 0 || invoiceLineItems.length > 1) {
-    throw new HttpError(400, 'There should be exactly one line item in Stripe invoice');
+    throw new HttpError(
+      400,
+      "There should be exactly one line item in Stripe invoice",
+    );
   }
 
   const priceId = invoiceLineItems[0].pricing?.price_details?.price;
   if (!priceId) {
-    throw new Error('Unable to extract price id from items');
+    throw new Error("Unable to extract price id from items");
   }
 
   return priceId;
@@ -128,7 +155,7 @@ function getInvoicePriceId(invoice: Stripe.Invoice): Stripe.Price['id'] {
 
 async function handleCustomerSubscriptionUpdated(
   event: Stripe.CustomerSubscriptionUpdatedEvent,
-  prismaUserDelegate: PrismaClient['user']
+  prismaUserDelegate: PrismaClient["user"],
 ): Promise<void> {
   const subscription = event.data.object;
 
@@ -146,20 +173,22 @@ async function handleCustomerSubscriptionUpdated(
   }
 
   const customerId = getCustomerId(subscription.customer);
-  const paymentPlanId = getPaymentPlanIdByPriceId(getSubscriptionPriceId(subscription));
+  const paymentPlanId = getPaymentPlanIdByPriceId(
+    getSubscriptionPriceId(subscription),
+  );
 
   const user = await updateUserStripeSubscriptionDetails(
     { customerId, paymentPlanId, subscriptionStatus },
-    prismaUserDelegate
+    prismaUserDelegate,
   );
 
   if (subscription.cancel_at_period_end) {
     if (user.email) {
       await emailSender.send({
         to: user.email,
-        subject: 'We hate to see you go :(',
-        text: 'We hate to see you go. Here is a sweet offer...',
-        html: 'We hate to see you go. Here is a sweet offer...',
+        subject: "We hate to see you go :(",
+        text: "We hate to see you go. Here is a sweet offer...",
+        html: "We hate to see you go. Here is a sweet offer...",
       });
     }
   }
@@ -168,10 +197,15 @@ async function handleCustomerSubscriptionUpdated(
 /**
  * We only expect one subscription item, if your workflow expected more, you should change this function to handle them.
  */
-function getSubscriptionPriceId(subscription: Stripe.Subscription): Stripe.Price['id'] {
+function getSubscriptionPriceId(
+  subscription: Stripe.Subscription,
+): Stripe.Price["id"] {
   const subscriptionItems = subscription.items.data;
   if (subscriptionItems.length === 0 || subscriptionItems.length > 1) {
-    throw new HttpError(400, 'There should be exactly one subscription item in Stripe subscription');
+    throw new HttpError(
+      400,
+      "There should be exactly one subscription item in Stripe subscription",
+    );
   }
 
   return subscriptionItems[0].price.id;
@@ -179,23 +213,23 @@ function getSubscriptionPriceId(subscription: Stripe.Subscription): Stripe.Price
 
 async function handleCustomerSubscriptionDeleted(
   event: Stripe.CustomerSubscriptionDeletedEvent,
-  prismaUserDelegate: PrismaClient['user']
+  prismaUserDelegate: PrismaClient["user"],
 ): Promise<void> {
   const subscription = event.data.object;
   const customerId = getCustomerId(subscription.customer);
 
   await updateUserStripeSubscriptionDetails(
     { customerId, subscriptionStatus: SubscriptionStatus.Deleted },
-    prismaUserDelegate
+    prismaUserDelegate,
   );
 }
 
 function getCustomerId(
-  customer: string | Stripe.Customer | Stripe.DeletedCustomer | null
-): Stripe.Customer['id'] {
+  customer: string | Stripe.Customer | Stripe.DeletedCustomer | null,
+): Stripe.Customer["id"] {
   if (!customer) {
-    throw new Error('Customer is missing');
-  } else if (typeof customer === 'string') {
+    throw new Error("Customer is missing");
+  } else if (typeof customer === "string") {
     return customer;
   } else {
     return customer.id;
@@ -204,7 +238,7 @@ function getCustomerId(
 
 function getInvoicePaidAtDate(invoice: Stripe.Invoice): Date {
   if (!invoice.status_transitions.paid_at) {
-    throw new Error('Invoice has not been paid yet');
+    throw new Error("Invoice has not been paid yet");
   }
 
   // Stripe returns timestamps in seconds (Unix time),
@@ -214,7 +248,8 @@ function getInvoicePaidAtDate(invoice: Stripe.Invoice): Date {
 
 function getPaymentPlanIdByPriceId(priceId: string): PaymentPlanId {
   const planId = Object.values(PaymentPlanId).find(
-    (paymentPlanId) => paymentPlans[paymentPlanId].getPaymentProcessorPlanId() === priceId
+    (paymentPlanId) =>
+      paymentPlans[paymentPlanId].getPaymentProcessorPlanId() === priceId,
   );
   if (!planId) {
     throw new Error(`No payment plan with Stripe price id ${priceId}`);

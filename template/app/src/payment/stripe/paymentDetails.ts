@@ -1,17 +1,21 @@
-import { PrismaClient } from '@prisma/client';
-import Stripe from 'stripe';
-import type { SubscriptionStatus } from '../plans';
-import { PaymentPlanId } from '../plans';
+import { PrismaClient } from "@prisma/client";
+import Stripe from "stripe";
+import type { SubscriptionStatus } from "../plans";
+import { PaymentPlanId } from "../plans";
 
 interface UpdateUserStripeOneTimePaymentDetails {
-  customerId: Stripe.Customer['id'];
+  customerId: Stripe.Customer["id"];
   datePaid: Date;
   numOfCreditsPurchased: number;
 }
 
 export function updateUserStripeOneTimePaymentDetails(
-  { customerId, datePaid, numOfCreditsPurchased }: UpdateUserStripeOneTimePaymentDetails,
-  userDelegate: PrismaClient['user']
+  {
+    customerId,
+    datePaid,
+    numOfCreditsPurchased,
+  }: UpdateUserStripeOneTimePaymentDetails,
+  userDelegate: PrismaClient["user"],
 ) {
   return userDelegate.update({
     where: {
@@ -25,15 +29,20 @@ export function updateUserStripeOneTimePaymentDetails(
 }
 
 interface UpdateUserStripeSubscriptionDetails {
-  customerId: Stripe.Customer['id'];
+  customerId: Stripe.Customer["id"];
   datePaid?: Date;
   subscriptionStatus: SubscriptionStatus;
   paymentPlanId?: PaymentPlanId;
 }
 
 export function updateUserStripeSubscriptionDetails(
-  { customerId, paymentPlanId, subscriptionStatus, datePaid }: UpdateUserStripeSubscriptionDetails,
-  userDelegate: PrismaClient['user']
+  {
+    customerId,
+    paymentPlanId,
+    subscriptionStatus,
+    datePaid,
+  }: UpdateUserStripeSubscriptionDetails,
+  userDelegate: PrismaClient["user"],
 ) {
   return userDelegate.update({
     where: {

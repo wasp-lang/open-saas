@@ -9,7 +9,9 @@ const CLIENT_BASE_URL =
  * Returns a Stripe customer for the given User email, creating a customer if none exist.
  * Implements email uniqueness logic since Stripe doesn't enforce unique emails.
  */
-export async function ensureStripeCustomer(userEmail: string): Promise<Stripe.Customer> {
+export async function ensureStripeCustomer(
+  userEmail: string,
+): Promise<Stripe.Customer> {
   const stripeCustomers = await stripeClient.customers.list({
     email: userEmail,
   });

@@ -1,17 +1,20 @@
-import Stripe from 'stripe';
-import { requireNodeEnvVar } from '../../server/utils';
+import Stripe from "stripe";
+import { requireNodeEnvVar } from "../../server/utils";
 import type {
   CreateCheckoutSessionArgs,
   FetchCustomerPortalUrlArgs,
   PaymentProcessor,
-} from '../paymentProcessor';
-import type { PaymentPlanEffect } from '../plans';
-import { createStripeCheckoutSession, ensureStripeCustomer } from './checkoutUtils';
-import { stripeClient } from './stripeClient';
-import { stripeMiddlewareConfigFn, stripeWebhook } from './webhook';
+} from "../paymentProcessor";
+import type { PaymentPlanEffect } from "../plans";
+import {
+  createStripeCheckoutSession,
+  ensureStripeCustomer,
+} from "./checkoutUtils";
+import { stripeClient } from "./stripeClient";
+import { stripeMiddlewareConfigFn, stripeWebhook } from "./webhook";
 
 export const stripePaymentProcessor: PaymentProcessor = {
-  id: 'stripe',
+  id: "stripe",
   createCheckoutSession: async ({
     userId,
     userEmail,
@@ -36,7 +39,9 @@ export const stripePaymentProcessor: PaymentProcessor = {
     });
 
     if (!stripeSession.url) {
-      throw new Error('Stripe checkout session URL is missing. Checkout session might not be active.');
+      throw new Error(
+        "Stripe checkout session URL is missing. Checkout session might not be active.",
+      );
     }
 
     return {
@@ -60,7 +65,7 @@ export const stripePaymentProcessor: PaymentProcessor = {
       return null;
     }
 
-    const webClientUrl = requireNodeEnvVar('WASP_WEB_CLIENT_URL');
+    const webClientUrl = requireNodeEnvVar("WASP_WEB_CLIENT_URL");
     const session = await stripeClient.billingPortal.sessions.create({
       customer: user.paymentProcessorUserId,
       return_url: `${webClientUrl}/account`,
@@ -73,11 +78,11 @@ export const stripePaymentProcessor: PaymentProcessor = {
 };
 
 function paymentPlanEffectToStripeCheckoutSessionMode(
-  planEffect: PaymentPlanEffect
+  planEffect: PaymentPlanEffect,
 ): Stripe.Checkout.Session.Mode {
-  const effectToMode: Record<PaymentPlanEffect['kind'], Stripe.Checkout.Session.Mode> = {
-    subscription: 'subscription',
-    credits: 'payment',
+  const effectToMode: Record = {
+    subscription: "subscription",
+    credits: "payment",
   };
   return effectToMode[planEffect.kind];
 }
