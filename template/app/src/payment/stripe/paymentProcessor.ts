@@ -80,7 +80,10 @@ export const stripePaymentProcessor: PaymentProcessor = {
 function paymentPlanEffectToStripeCheckoutSessionMode(
   planEffect: PaymentPlanEffect,
 ): Stripe.Checkout.Session.Mode {
-  const effectToMode: Record = {
+  const effectToMode: Record<
+    PaymentPlanEffect["kind"],
+    Stripe.Checkout.Session.Mode
+  > = {
     subscription: "subscription",
     credits: "payment",
   };
