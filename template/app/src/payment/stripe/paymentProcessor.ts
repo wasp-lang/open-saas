@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import { requireNodeEnvVar } from "../../server/utils";
+import { assertUnreachable } from "../../shared/utils";
 import type {
   CreateCheckoutSessionArgs,
   FetchCustomerPortalUrlArgs,
@@ -77,15 +78,15 @@ export const stripePaymentProcessor: PaymentProcessor = {
   webhookMiddlewareConfigFn: stripeMiddlewareConfigFn,
 };
 
-function paymentPlanEffectToStripeCheckoutSessionMode(
-  planEffect: PaymentPlanEffect,
-): Stripe.Checkout.Session.Mode {
-  const effectToMode: Record<
-    PaymentPlanEffect["kind"],
-    Stripe.Checkout.Session.Mode
-  > = {
-    subscription: "subscription",
-    credits: "payment",
-  };
-  return effectToMode[planEffect.kind];
+function paymentPlanEffectToStripeCheckoutSessionMode({
+  kind,
+}: PaymentPlanEffect): Stripe.Checkout.Session.Mode {
+  switch (kind) {
+    case "subscription":
+      return "subscription";
+    case "credits":
+      return "payment";
+    default:
+      assertUnreachable(kind);
+  }
 }
