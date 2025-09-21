@@ -15,7 +15,7 @@ import {
 import { stripeClient } from "./stripeClient";
 
 /**
- * Stripe requires the raw request to construct the event successfully.
+ * Stripe requires a raw request to construct events successfully.
  */
 export const stripeMiddlewareConfigFn: MiddlewareConfigFn = (
   middlewareConfig,
