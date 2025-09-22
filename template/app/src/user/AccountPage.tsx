@@ -56,7 +56,9 @@ export default function AccountPage({ user }: { user: User }) {
             <div className='py-4 px-6'>
               <div className='grid grid-cols-1 sm:grid-cols-3 sm:gap-4'>
                 <dt className='text-sm font-medium text-muted-foreground'>Credits</dt>
-                <dd className='mt-1 text-sm text-foreground sm:col-span-1 sm:mt-0'>{user.credits}</dd>{' '}
+                <dd className='mt-1 text-sm text-foreground sm:col-span-1 sm:mt-0'>
+                  {user.credits + ' credits'}
+                </dd>
                 <div className='mt-4 sm:mt-0 ml-auto'>
                   <BuyMoreButton subscriptionStatus={user.subscriptionStatus} />
                 </div>
