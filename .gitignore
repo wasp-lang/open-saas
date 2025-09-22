@@ -8,3 +8,6 @@ node_modules/
 # We also don't want to ship these ignore rules to the users.
 template/app/migrations
 template/app/package-lock.json
+
+# Template release archives
+open-saas-template-*.tar.gz
