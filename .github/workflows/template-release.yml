@@ -1,0 +1,79 @@
+---
+name: Template Release
+
+'on':
+  push:
+    tags:
+      - 'wasp-v*-template'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get tag name
+        id: tag
+        run: |
+          echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          echo "release_name=Open SaaS Template ${GITHUB_REF#refs/tags/}" \
+            >> $GITHUB_OUTPUT
+
+      - name: Create template archive
+        run: |
+          cd template
+          tar -czf \
+            ../open-saas-template-${{ steps.tag.outputs.tag_name }}.tar.gz .
+          cd ..
+          ls -la open-saas-template-${{ steps.tag.outputs.tag_name }}.tar.gz
+
+      - name: Create or update release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.tag.outputs.tag_name }}
+          name: ${{ steps.tag.outputs.release_name }}
+          body: |
+            # Open SaaS Template Release
+
+            This release contains the Open SaaS template for Wasp version
+            `${{ steps.tag.outputs.tag_name }}`.
+
+            ## Template Contents
+            The attached
+            `open-saas-template-${{ steps.tag.outputs.tag_name }}.tar.gz`
+            file contains the complete Open SaaS template that can be used with:
+            ```
+            wasp new -t saas my-saas-app
+            ```
+
+            ## What's included:
+            - Complete SaaS application template
+            - Authentication and user management
+            - Stripe payment integration
+            - Email functionality
+            - File upload capabilities
+            - End-to-end tests
+            - Documentation and examples
+
+            ## Getting Started
+            To use this template, make sure you have [Wasp](https://wasp.sh)
+            installed and run:
+            ```bash
+            wasp new -t saas my-app-name
+            ```
+
+            For more information, visit the
+            [Open SaaS documentation](https://docs.opensaas.sh).
+          files: |
+            open-saas-template-${{ steps.tag.outputs.tag_name }}.tar.gz
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
