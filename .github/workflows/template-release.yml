@@ -21,7 +21,15 @@ jobs:
         working-directory: template
         run: tar -czf ../template.tar.gz .
 
+      - name: Create draft release if it doesn't exist
+        run: |
+          if ! gh release view "${GITHUB_REF_NAME}"; then
+            gh release create "${GITHUB_REF_NAME}" --draft
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Upload release asset
-        run: gh release upload ${GITHUB_REF_NAME} template.tar.gz
+        run: gh release upload "${GITHUB_REF_NAME}" template.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
