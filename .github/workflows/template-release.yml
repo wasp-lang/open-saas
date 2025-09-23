@@ -15,16 +15,15 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Create template archive
         run: |
           cd template
-          tar -czf ../open-saas-template-${GITHUB_REF_NAME}.tar.gz .
+          tar -czf ../template.tar.gz .
 
       - name: Upload release asset
         run: |
-          gh release upload ${GITHUB_REF_NAME} \
-            open-saas-template-${GITHUB_REF_NAME}.tar.gz
+          gh release upload ${GITHUB_REF_NAME} template.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
