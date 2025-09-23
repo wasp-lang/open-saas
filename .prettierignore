@@ -1,0 +1,13 @@
+# Build outputs.
+.wasp/
+dist/
+
+# OpenSaaS app diff folder.
+app_diff/
+
+# Formatting `.md` and `.mdx` files can introduce logical changes.
+**/blog/**/*.md
+**/blog/**/*.mdx
+
+# Ignore minified JS files in the public folder.
+**/public/**/*.js

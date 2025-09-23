@@ -3,5 +3,5 @@
 @@ -1,2 +1,4 @@
  export const DocsUrl = 'https://docs.opensaas.sh';
  export const BlogUrl = 'https://docs.opensaas.sh/blog';
-+export const GithubUrl = 'https://github.com/wasp-lang/opensaas';
++export const GithubUrl = 'https://github.com/wasp-lang/open-saas';
 +export const WaspUrl = 'https://wasp.sh';
