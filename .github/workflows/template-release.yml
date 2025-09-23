@@ -18,12 +18,10 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Create template archive
-        run: |
-          cd template
-          tar -czf ../template.tar.gz .
+        working-directory: template
+        run: tar -czf ../template.tar.gz .
 
       - name: Upload release asset
-        run: |
-          gh release upload ${GITHUB_REF_NAME} template.tar.gz
+        run: gh release upload ${GITHUB_REF_NAME} template.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
