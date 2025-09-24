@@ -1,6 +1,6 @@
 --- template/app/src/payment/stripe/paymentProcessor.ts
 +++ opensaas-sh/app/src/payment/stripe/paymentProcessor.ts
-@@ -24,7 +24,7 @@
+@@ -32,7 +32,7 @@
          id: userId,
        },
        data: {

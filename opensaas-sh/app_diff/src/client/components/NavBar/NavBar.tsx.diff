@@ -1,57 +1,52 @@
 --- template/app/src/client/components/NavBar/NavBar.tsx
 +++ opensaas-sh/app/src/client/components/NavBar/NavBar.tsx
 @@ -3,6 +3,7 @@
- import { Link as ReactRouterLink } from 'react-router-dom';
- import { useAuth } from 'wasp/client/auth';
- import { Link as WaspRouterLink, routes } from 'wasp/client/router';
-+import { Button } from '../../../components/ui/button';
- import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../../../components/ui/sheet';
- import { cn } from '../../../lib/utils';
- import { throttleWithTrailingInvocation } from '../../../shared/utils';
-@@ -11,6 +12,7 @@
- import { useIsLandingPage } from '../../hooks/useIsLandingPage';
- import logo from '../../static/logo.webp';
- import DarkModeSwitcher from '../DarkModeSwitcher';
-+import RepoInfo from '../RepoInfo';
- import { Announcement } from './Announcement';
+ import { Link as ReactRouterLink } from "react-router-dom";
+ import { useAuth } from "wasp/client/auth";
+ import { Link as WaspRouterLink, routes } from "wasp/client/router";
++import { Button } from "../../../components/ui/button";
+ import {
+   Sheet,
+   SheetContent,
+@@ -17,6 +18,7 @@
+ import { useIsLandingPage } from "../../hooks/useIsLandingPage";
+ import logo from "../../static/logo.webp";
+ import DarkModeSwitcher from "../DarkModeSwitcher";
++import RepoInfo from "../RepoInfo";
+ import { Announcement } from "./Announcement";
  
  export interface NavigationItem {
-@@ -38,7 +40,12 @@
-   return (
-     <>
-       {isLandingPage && <Announcement />}
--      <header className={cn('sticky top-0 z-50 transition-all duration-300', isScrolled && 'top-4')}>
-+      <header
-+        className={cn(
-+          'sticky top-0 z-50 transition-all duration-300',
-+          isScrolled && 'top-4 mx-4 xl:mx-30 lg:mx-10'
-+        )}
-+      >
+@@ -51,7 +53,7 @@
+       <header
+         className={cn(
+           "sticky top-0 z-50 transition-all duration-300",
+-          isScrolled && "top-4",
++          isScrolled && "xl:mx-30 top-4 mx-4 lg:mx-10",
+         )}
+       >
          <div
-           className={cn('transition-all duration-300', {
-             'mx-4 md:mx-20 pr-2 lg:pr-0 rounded-full shadow-lg bg-background/90 backdrop-blur-lg border border-border':
-@@ -48,7 +55,7 @@
-         >
-           <nav
-             className={cn('flex items-center justify-between transition-all duration-300', {
--              'p-3 lg:px-6': isScrolled,
-+              'p-3 px-4 lg:p-4 lg:px-5': isScrolled,
-               'p-6 lg:px-8': !isScrolled,
-             })}
-             aria-label='Global'
-@@ -65,7 +72,7 @@
-                     'ml-2 text-xs': isScrolled,
-                   })}
+@@ -66,7 +68,7 @@
+             className={cn(
+               "flex items-center justify-between transition-all duration-300",
+               {
+-                "p-3 lg:px-6": isScrolled,
++                "p-3 px-4 lg:p-4 lg:px-5": isScrolled,
+                 "p-6 lg:px-8": !isScrolled,
+               },
+             )}
+@@ -87,7 +89,7 @@
+                     },
+                   )}
                  >
 -                  Your SaaS
 +                  Open SaaS
                  </span>
                </WaspRouterLink>
  
-@@ -88,7 +95,12 @@
+@@ -113,7 +115,12 @@
    return (
-     <div className='hidden lg:flex lg:flex-1 gap-3 justify-end items-center'>
-       <ul className='flex justify-center items-center gap-2 sm:gap-4'>
+     <div className="hidden items-center justify-end gap-3 lg:flex lg:flex-1">
+       <ul className="flex items-center justify-center gap-2 sm:gap-4">
 -        <DarkModeSwitcher />
 +        <li>
 +          <RepoInfo />
@@ -62,48 +57,48 @@
        </ul>
        {isUserLoading ? null : !user ? (
          <WaspRouterLink
-@@ -98,10 +110,11 @@
-             'text-xs': isScrolled,
-           })}
+@@ -126,10 +133,11 @@
+             },
+           )}
          >
--          <div className='flex items-center duration-300 ease-in-out text-foreground hover:text-primary transition-colors'>
-+          <div className='flex items-center duration-300 gap-1 ease-in-out text-foreground hover:text-primary transition-colors'>
+-          <div className="text-foreground hover:text-primary flex items-center transition-colors duration-300 ease-in-out">
++          <div className="text-foreground hover:text-primary flex items-center gap-1 transition-colors duration-300 ease-in-out">
 +            <span>Demo App</span>
-             Log in{' '}
+             Log in{" "}
              <LogIn
--              size={isScrolled ? '1rem' : '1.1rem'}
-+              size='1rem'
-               className={cn('transition-all duration-300', {
-                 'ml-1 mt-[0.1rem]': !isScrolled,
-                 'ml-1': isScrolled,
-@@ -152,7 +165,7 @@
+-              size={isScrolled ? "1rem" : "1.1rem"}
++              size="1rem"
+               className={cn("transition-all duration-300", {
+                 "ml-1 mt-[0.1rem]": !isScrolled,
+                 "ml-1": isScrolled,
+@@ -180,7 +188,7 @@
            <SheetHeader>
-             <SheetTitle className='flex items-center'>
+             <SheetTitle className="flex items-center">
                <WaspRouterLink to={routes.LandingPageRoute.to}>
--                <span className='sr-only'>Your SaaS</span>
-+                <span className='sr-only'>Open SaaS</span>
+-                <span className="sr-only">Your SaaS</span>
++                <span className="sr-only">Open SaaS</span>
                  <NavLogo isScrolled={false} />
                </WaspRouterLink>
              </SheetTitle>
-@@ -163,9 +176,9 @@
-               <div className='py-6'>
+@@ -193,9 +201,9 @@
+               <div className="py-6">
                  {isUserLoading ? null : !user ? (
                    <WaspRouterLink to={routes.LoginRoute.to}>
--                    <div className='flex justify-end items-center duration-300 ease-in-out text-foreground hover:text-primary transition-colors'>
--                      Log in <LogIn size='1.1rem' className='ml-1' />
+-                    <div className="text-foreground hover:text-primary flex items-center justify-end transition-colors duration-300 ease-in-out">
+-                      Log in <LogIn size="1.1rem" className="ml-1" />
 -                    </div>
-+                    <Button variant='outline'>
-+                      <span>Demo App</span> <LogIn className='ml-1' />
++                    <Button variant="outline">
++                      <span>Demo App</span> <LogIn className="ml-1" />
 +                    </Button>
                    </WaspRouterLink>
                  ) : (
-                   <ul className='space-y-2'>
-@@ -174,7 +187,14 @@
+                   <ul className="space-y-2">
+@@ -207,7 +215,14 @@
                  )}
                </div>
-               <div className='py-6'>
+               <div className="py-6">
 -                <DarkModeSwitcher />
-+                <ul className='flex items-center justify-between gap-4'>
++                <ul className="flex items-center justify-between gap-4">
 +                  <li>
 +                    <DarkModeSwitcher />
 +                  </li>
@@ -114,11 +109,11 @@
                </div>
              </div>
            </div>
-@@ -218,6 +238,6 @@
-       'size-7': isScrolled,
+@@ -251,6 +266,6 @@
+       "size-7": isScrolled,
      })}
      src={logo}
--    alt='Your SaaS App'
-+    alt='Open SaaS App'
+-    alt="Your SaaS App"
++    alt="Open SaaS App"
    />
  );
