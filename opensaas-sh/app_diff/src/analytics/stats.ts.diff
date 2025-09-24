@@ -38,7 +38,7 @@
  
      const { totalViews, prevDayViewsChangePercent } = await getDailyPageViews();
  
-@@ -176,38 +162,3 @@
+@@ -177,38 +163,3 @@
    // Revenue is in cents so we convert to dollars (or your main currency unit)
    return totalRevenue / 100;
  }
