@@ -1288,7 +1288,7 @@ export const stripe = new Stripe(process.env.STRIPE_KEY!, {
 2. click on `+ add endpoint`
 3. enter your endpoint url, which will be the url of your deployed server + `/payments-webhook`, e.g. `https://open-saas-wasp-sh-server.fly.dev/payments-webhook`
 
-4. select the events you want to listen to. These should be the same events you're consuming in your webhook which you can find listed in [`src/payment/stripe/webhookPayload.ts`](https://github.com/wasp-lang/open-saas/blob/main/template/app/src/payment/stripe/webhookPayload.ts):
+4. select the events you want to listen to. These should be the same events you're consuming in your webhook which you can find handled in [`src/payment/stripe/webhook.ts`](https://github.com/wasp-lang/open-saas/blob/main/template/app/src/payment/stripe/webhook.ts):
 
 5. after that, go to the webhook you just created and `reveal` the new signing secret.
 6. add this secret to your deployed server's `STRIPE_WEBHOOK_SECRET=` environment variable. <br/>If you've deployed to Fly.io, you can do that easily with the following command:
@@ -1665,7 +1665,7 @@ You can create a test customer directly in the [Stripe Dashboard](https://dashbo
 
 - Click on the `Add a customer` button and fill in the relevant information for your test customer.
 
-Alternatively, OpenSasS will automatically create a test customer the first time a user starts a checkout session. 
+Alternatively, Open SasS will automatically create a test customer the first time a user starts a checkout session. 
 This customer is linked to the email address associated with your app's user.
 
 ### Set up the Customer Portal
