@@ -1,4 +1,4 @@
-# OpenSaaS Docs and Blog
+# Open SaaS Docs and Blog
 
 This is the docs and blog for the [OpenSaaS.sh](https://opensaas.sh/) website, [![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
 
