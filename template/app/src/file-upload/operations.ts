@@ -1,15 +1,18 @@
-import * as z from 'zod';
-import { HttpError } from 'wasp/server';
-import { type File } from 'wasp/entities';
+import { type File } from "wasp/entities";
+import { HttpError } from "wasp/server";
 import {
   type CreateFile,
   type GetAllFilesByUser,
   type GetDownloadFileSignedURL,
-} from 'wasp/server/operations';
+} from "wasp/server/operations";
+import * as z from "zod";
 
-import { getUploadFileSignedURLFromS3, getDownloadFileSignedURLFromS3 } from './s3Utils';
-import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
-import { ALLOWED_FILE_TYPES } from './validation';
+import { ensureArgsSchemaOrThrowHttpError } from "../server/validation";
+import {
+  getDownloadFileSignedURLFromS3,
+  getUploadFileSignedURLFromS3,
+} from "./s3Utils";
+import { ALLOWED_FILE_TYPES } from "./validation";
 
 const createFileInputSchema = z.object({
   fileType: z.enum(ALLOWED_FILE_TYPES),
@@ -29,13 +32,17 @@ export const createFile: CreateFile<
     throw new HttpError(401);
   }
 
-  const { fileType, fileName } = ensureArgsSchemaOrThrowHttpError(createFileInputSchema, rawArgs);
+  const { fileType, fileName } = ensureArgsSchemaOrThrowHttpError(
+    createFileInputSchema,
+    rawArgs,
+  );
 
-  const { s3UploadUrl, s3UploadFields, key } = await getUploadFileSignedURLFromS3({
-    fileType,
-    fileName,
-    userId: context.user.id,
-  });
+  const { s3UploadUrl, s3UploadFields, key } =
+    await getUploadFileSignedURLFromS3({
+      fileType,
+      fileName,
+      userId: context.user.id,
+    });
 
   await context.entities.File.create({
     data: {
@@ -53,7 +60,10 @@ export const createFile: CreateFile<
   };
 };
 
-export const getAllFilesByUser: GetAllFilesByUser<void, File[]> = async (_args, context) => {
+export const getAllFilesByUser: GetAllFilesByUser<void, File[]> = async (
+  _args,
+  context,
+) => {
   if (!context.user) {
     throw new HttpError(401);
   }
@@ -64,19 +74,26 @@ export const getAllFilesByUser: GetAllFilesByUser<void, File[]> = async (_args, 
       },
     },
     orderBy: {
-      createdAt: 'desc',
+      createdAt: "desc",
     },
   });
 };
 
-const getDownloadFileSignedURLInputSchema = z.object({ key: z.string().nonempty() });
+const getDownloadFileSignedURLInputSchema = z.object({
+  key: z.string().nonempty(),
+});
 
-type GetDownloadFileSignedURLInput = z.infer<typeof getDownloadFileSignedURLInputSchema>;
+type GetDownloadFileSignedURLInput = z.infer<
+  typeof getDownloadFileSignedURLInputSchema
+>;
 
 export const getDownloadFileSignedURL: GetDownloadFileSignedURL<
   GetDownloadFileSignedURLInput,
   string
 > = async (rawArgs, _context) => {
-  const { key } = ensureArgsSchemaOrThrowHttpError(getDownloadFileSignedURLInputSchema, rawArgs);
+  const { key } = ensureArgsSchemaOrThrowHttpError(
+    getDownloadFileSignedURLInputSchema,
+    rawArgs,
+  );
   return await getDownloadFileSignedURLFromS3({ key });
 };

@@ -1,15 +1,15 @@
-import { ChevronDown, LogOut, User } from 'lucide-react';
-import { useState } from 'react';
-import { logout } from 'wasp/client/auth';
-import { Link as WaspRouterLink } from 'wasp/client/router';
-import { type User as UserEntity } from 'wasp/entities';
+import { ChevronDown, LogOut, User } from "lucide-react";
+import { useState } from "react";
+import { logout } from "wasp/client/auth";
+import { Link as WaspRouterLink } from "wasp/client/router";
+import { type User as UserEntity } from "wasp/entities";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '../components/ui/dropdown-menu';
-import { userMenuItems } from './constants';
+} from "../components/ui/dropdown-menu";
+import { userMenuItems } from "./constants";
 
 export function UserDropdown({ user }: { user: Partial<UserEntity> }) {
   const [open, setOpen] = useState(false);
@@ -17,12 +17,12 @@ export function UserDropdown({ user }: { user: Partial<UserEntity> }) {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <button className='flex items-center duration-300 ease-in-out text-foreground hover:text-primary transition-colors'>
-          <span className='hidden mr-2 text-right lg:block text-sm font-medium text-foreground'>
+        <button className="text-foreground hover:text-primary flex items-center transition-colors duration-300 ease-in-out">
+          <span className="text-foreground mr-2 hidden text-right text-sm font-medium lg:block">
             {user.username}
           </span>
-          <User className='size-5' />
-          <ChevronDown className='size-4' />
+          <User className="size-5" />
+          <ChevronDown className="size-4" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
@@ -37,17 +37,21 @@ export function UserDropdown({ user }: { user: Partial<UserEntity> }) {
                 onClick={() => {
                   setOpen(false);
                 }}
-                className='flex items-center gap-3 w-full'
+                className="flex w-full items-center gap-3"
               >
-                <item.icon size='1.1rem' />
+                <item.icon size="1.1rem" />
                 {item.name}
               </WaspRouterLink>
             </DropdownMenuItem>
           );
         })}
         <DropdownMenuItem>
-          <button type='button' onClick={() => logout()} className='flex items-center gap-3 w-full'>
-            <LogOut size='1.1rem' />
+          <button
+            type="button"
+            onClick={() => logout()}
+            className="flex w-full items-center gap-3"
+          >
+            <LogOut size="1.1rem" />
             Log Out
           </button>
         </DropdownMenuItem>

@@ -13,30 +13,38 @@ import {
 
 export default function AccountPage({ user }: { user: User }) {
   return (
-    <div className='mt-10 px-6'>
-      <Card className='mb-4 lg:m-8'>
+    <div className="mt-10 px-6">
+      <Card className="mb-4 lg:m-8">
         <CardHeader>
-          <CardTitle className='text-base font-semibold leading-6 text-foreground'>
+          <CardTitle className="text-foreground text-base font-semibold leading-6">
             Account Information
           </CardTitle>
         </CardHeader>
-        <CardContent className='p-0'>
-          <div className='space-y-0'>
+        <CardContent className="p-0">
+          <div className="space-y-0">
             {!!user.email && (
-              <div className='py-4 px-6'>
-                <div className='grid grid-cols-1 sm:grid-cols-3 sm:gap-4'>
-                  <dt className='text-sm font-medium text-muted-foreground'>Email address</dt>
-                  <dd className='mt-1 text-sm text-foreground sm:col-span-2 sm:mt-0'>{user.email}</dd>
+              <div className="px-6 py-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 sm:gap-4">
+                  <dt className="text-muted-foreground text-sm font-medium">
+                    Email address
+                  </dt>
+                  <dd className="text-foreground mt-1 text-sm sm:col-span-2 sm:mt-0">
+                    {user.email}
+                  </dd>
                 </div>
               </div>
             )}
             {!!user.username && (
               <>
                 <Separator />
-                <div className='py-4 px-6'>
-                  <div className='grid grid-cols-1 sm:grid-cols-3 sm:gap-4'>
-                    <dt className='text-sm font-medium text-muted-foreground'>Username</dt>
-                    <dd className='mt-1 text-sm text-foreground sm:col-span-2 sm:mt-0'>{user.username}</dd>
+                <div className="px-6 py-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 sm:gap-4">
+                    <dt className="text-muted-foreground text-sm font-medium">
+                      Username
+                    </dt>
+                    <dd className="text-foreground mt-1 text-sm sm:col-span-2 sm:mt-0">
+                      {user.username}
+                    </dd>
                   </div>
                 </div>
               </>

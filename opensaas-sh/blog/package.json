@@ -1,14 +1,14 @@
 {
   "name": "docs",
-  "type": "module",
   "version": "0.0.1",
+  "type": "module",
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro check && astro build",
-    "preview": "astro preview",
     "astro": "astro",
-    "generate-llm-files": "node ./scripts/generate-llm-files.mjs"
+    "build": "astro check && astro build",
+    "dev": "astro dev",
+    "generate-llm-files": "node ./scripts/generate-llm-files.mjs",
+    "preview": "astro preview",
+    "start": "astro dev"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",

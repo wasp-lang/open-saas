@@ -22,14 +22,22 @@
 
   /* Text gradient utilities */
   .text-gradient-primary {
-    background: linear-gradient(to right, hsl(var(--secondary-muted)), hsl(var(--secondary)));
+    background: linear-gradient(
+      to right,
+      hsl(var(--secondary-muted)),
+      hsl(var(--secondary))
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .text-gradient-primary-diagonal {
-    background: linear-gradient(135deg, hsl(var(--secondary-muted)), hsl(var(--secondary)));
+    background: linear-gradient(
+      135deg,
+      hsl(var(--secondary-muted)),
+      hsl(var(--secondary))
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -37,7 +45,11 @@
 
   /* Border gradient utilities */
   .border-gradient-primary {
-    background: linear-gradient(to right, hsl(var(--secondary-muted)), hsl(var(--secondary)));
+    background: linear-gradient(
+      to right,
+      hsl(var(--secondary-muted)),
+      hsl(var(--secondary))
+    );
     padding: 1px;
   }
 
@@ -52,8 +64,8 @@
 * under `theme.extend.fontFamily`, and then can be used as a tailwind class, e.g. className='font-satoshi'.
 */
 @font-face {
-  font-family: 'Satoshi';
-  src: url('/fonts/Satoshi-Regular.woff2') format('woff2');
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Regular.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
