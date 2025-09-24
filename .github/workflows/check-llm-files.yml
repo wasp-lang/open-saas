@@ -33,18 +33,16 @@ jobs:
       - name: Check for unstaged changes in LLM files
         run: |
           # Check if there are any changes to the LLM files
-          if git diff --exit-code -- opensaas-sh/blog/public/llms.txt opensaas-sh/blog/public/llms-full.txt; then
+          if git diff --quiet -- opensaas-sh/blog/public/llms.txt opensaas-sh/blog/public/llms-full.txt; then
             echo "✅ LLM files are up to date"
           else
             echo "❌ LLM files are out of date!"
-            echo ""
+            echo
             echo "The following LLM files have changes after regeneration:"
             git diff --name-only -- opensaas-sh/blog/public/llms.txt opensaas-sh/blog/public/llms-full.txt
-            echo ""
+            echo
             echo "This means the documentation was changed but the LLM files were not regenerated."
             echo "Please run 'npm run generate-llm-files' in the opensaas-sh/blog directory"
             echo "and commit the updated LLM files."
-            echo ""
-            echo "Changes detected:"
             exit 1
           fi
