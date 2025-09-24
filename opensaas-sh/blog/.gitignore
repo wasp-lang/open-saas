@@ -21,3 +21,7 @@ pnpm-debug.log*
 
 # Local Netlify folder
 .netlify
+
+# LLM files
+llms.txt
+llms-full.txt
