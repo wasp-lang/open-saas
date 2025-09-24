@@ -1,15 +1,20 @@
-import { getCustomerPortalUrl, useQuery } from 'wasp/client/operations';
-import { Link as WaspRouterLink, routes } from 'wasp/client/router';
-import type { User } from 'wasp/entities';
-import { Button } from '../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { Separator } from '../components/ui/separator';
+import { getCustomerPortalUrl, useQuery } from "wasp/client/operations";
+import { Link as WaspRouterLink, routes } from "wasp/client/router";
+import type { User } from "wasp/entities";
+import { Button } from "../components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import { Separator } from "../components/ui/separator";
 import {
   PaymentPlanId,
   SubscriptionStatus,
   parsePaymentPlanId,
   prettyPaymentPlanName,
-} from '../payment/plans';
+} from "../payment/plans";
 
 export default function AccountPage({ user }: { user: User }) {
   return (
@@ -50,9 +55,11 @@ export default function AccountPage({ user }: { user: User }) {
               </>
             )}
             <Separator />
-            <div className='py-4 px-6'>
-              <div className='grid grid-cols-1 sm:grid-cols-3 sm:gap-4'>
-                <dt className='text-sm font-medium text-muted-foreground'>Your Plan</dt>
+            <div className="px-6 py-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 sm:gap-4">
+                <dt className="text-muted-foreground text-sm font-medium">
+                  Your Plan
+                </dt>
                 <UserCurrentSubscriptionPlan
                   subscriptionPlan={user.subscriptionPlan}
                   subscriptionStatus={user.subscriptionStatus}
@@ -61,22 +68,28 @@ export default function AccountPage({ user }: { user: User }) {
               </div>
             </div>
             <Separator />
-            <div className='py-4 px-6'>
-              <div className='grid grid-cols-1 sm:grid-cols-3 sm:gap-4'>
-                <dt className='text-sm font-medium text-muted-foreground'>Credits</dt>
-                <dd className='mt-1 text-sm text-foreground sm:col-span-1 sm:mt-0'>
-                  {user.credits + ' credits'}
+            <div className="px-6 py-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 sm:gap-4">
+                <dt className="text-muted-foreground text-sm font-medium">
+                  Credits
+                </dt>
+                <dd className="text-foreground mt-1 text-sm sm:col-span-1 sm:mt-0">
+                  {user.credits + " credits"}
                 </dd>
-                <div className='mt-4 sm:mt-0 ml-auto'>
+                <div className="ml-auto mt-4 sm:mt-0">
                   <BuyMoreButton subscriptionStatus={user.subscriptionStatus} />
                 </div>
               </div>
             </div>
             <Separator />
-            <div className='py-4 px-6'>
-              <div className='grid grid-cols-1 sm:grid-cols-3 sm:gap-4'>
-                <dt className='text-sm font-medium text-muted-foreground'>About</dt>
-                <dd className='mt-1 text-sm text-foreground sm:col-span-2 sm:mt-0'>I'm a cool customer.</dd>
+            <div className="px-6 py-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 sm:gap-4">
+                <dt className="text-muted-foreground text-sm font-medium">
+                  About
+                </dt>
+                <dd className="text-foreground mt-1 text-sm sm:col-span-2 sm:mt-0">
+                  I'm a cool customer.
+                </dd>
               </div>
             </div>
           </div>
@@ -90,20 +103,26 @@ function UserCurrentSubscriptionPlan({
   subscriptionPlan,
   subscriptionStatus,
   datePaid,
-}: Pick<User, 'subscriptionPlan' | 'subscriptionStatus' | 'datePaid'>) {
-  let subscriptionPlanMessage = 'Free Plan';
-  if (subscriptionPlan !== null && subscriptionStatus !== null && datePaid !== null) {
+}: Pick<User, "subscriptionPlan" | "subscriptionStatus" | "datePaid">) {
+  let subscriptionPlanMessage = "Free Plan";
+  if (
+    subscriptionPlan !== null &&
+    subscriptionStatus !== null &&
+    datePaid !== null
+  ) {
     subscriptionPlanMessage = formatSubscriptionStatusMessage(
       parsePaymentPlanId(subscriptionPlan),
       datePaid,
-      subscriptionStatus as SubscriptionStatus
+      subscriptionStatus as SubscriptionStatus,
     );
   }
 
   return (
     <>
-      <dd className='mt-1 text-sm text-foreground sm:col-span-1 sm:mt-0'>{subscriptionPlanMessage}</dd>
-      <div className='mt-4 sm:mt-0 ml-auto'>
+      <dd className="text-foreground mt-1 text-sm sm:col-span-1 sm:mt-0">
+        {subscriptionPlanMessage}
+      </dd>
+      <div className="ml-auto mt-4 sm:mt-0">
         <CustomerPortalButton />
       </div>
     </>
@@ -113,14 +132,14 @@ function UserCurrentSubscriptionPlan({
 function formatSubscriptionStatusMessage(
   subscriptionPlan: PaymentPlanId,
   datePaid: Date,
-  subscriptionStatus: SubscriptionStatus
+  subscriptionStatus: SubscriptionStatus,
 ): string {
   const paymentPlanName = prettyPaymentPlanName(subscriptionPlan);
   const statusToMessage: Record<SubscriptionStatus, string> = {
     active: `${paymentPlanName}`,
     past_due: `Payment for your ${paymentPlanName} plan is past due! Please update your subscription payment information.`,
     cancel_at_period_end: `Your ${paymentPlanName} plan subscription has been canceled, but remains active until the end of the current billing period: ${prettyPrintEndOfBillingPeriod(
-      datePaid
+      datePaid,
     )}`,
     deleted: `Your previous subscription has been canceled and is no longer active.`,
   };
@@ -139,22 +158,25 @@ function prettyPrintEndOfBillingPeriod(date: Date) {
 }
 
 function CustomerPortalButton() {
-  const { data: customerPortalUrl, isLoading: isCustomerPortalUrlLoading } = useQuery(getCustomerPortalUrl);
+  const { data: customerPortalUrl, isLoading: isCustomerPortalUrlLoading } =
+    useQuery(getCustomerPortalUrl);
 
   if (!customerPortalUrl) {
     return null;
   }
 
   return (
-    <a href={customerPortalUrl} target='_blank' rel='noopener noreferrer'>
-      <Button disabled={isCustomerPortalUrlLoading} variant='link'>
+    <a href={customerPortalUrl} target="_blank" rel="noopener noreferrer">
+      <Button disabled={isCustomerPortalUrlLoading} variant="link">
         Manage Payment Details
       </Button>
     </a>
   );
 }
 
-function BuyMoreButton({ subscriptionStatus }: Pick<User, 'subscriptionStatus'>) {
+function BuyMoreButton({
+  subscriptionStatus,
+}: Pick<User, "subscriptionStatus">) {
   if (
     subscriptionStatus === SubscriptionStatus.Active ||
     subscriptionStatus === SubscriptionStatus.CancelAtPeriodEnd
@@ -165,9 +187,9 @@ function BuyMoreButton({ subscriptionStatus }: Pick<User, 'subscriptionStatus'>)
   return (
     <WaspRouterLink
       to={routes.PricingPageRoute.to}
-      className='font-medium text-sm text-primary hover:text-primary/80 transition-colors duration-200'
+      className="text-primary hover:text-primary/80 text-sm font-medium transition-colors duration-200"
     >
-      <Button variant='link'>Buy More Credits</Button>
+      <Button variant="link">Buy More Credits</Button>
     </WaspRouterLink>
   );
 }
