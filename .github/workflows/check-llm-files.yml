@@ -1,0 +1,50 @@
+name: Check LLM Files are Up to Date
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "opensaas-sh/blog/src/content/docs/**"
+      - "opensaas-sh/blog/scripts/generate-llm-files.mjs"
+
+jobs:
+  check-llm-files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          cache: "npm"
+          cache-dependency-path: "./opensaas-sh/blog/package-lock.json"
+
+      - name: Install dependencies
+        working-directory: ./opensaas-sh/blog
+        run: npm ci
+
+      - name: Generate LLM files
+        working-directory: ./opensaas-sh/blog
+        run: npm run generate-llm-files
+
+      - name: Check for unstaged changes in LLM files
+        run: |
+          # Check if there are any changes to the LLM files
+          if git diff --exit-code -- opensaas-sh/blog/public/llms.txt opensaas-sh/blog/public/llms-full.txt; then
+            echo "✅ LLM files are up to date"
+          else
+            echo "❌ LLM files are out of date!"
+            echo ""
+            echo "The following LLM files have changes after regeneration:"
+            git diff --name-only -- opensaas-sh/blog/public/llms.txt opensaas-sh/blog/public/llms-full.txt
+            echo ""
+            echo "This means the documentation was changed but the LLM files were not regenerated."
+            echo "Please run 'npm run generate-llm-files' in the opensaas-sh/blog directory"
+            echo "and commit the updated LLM files."
+            echo ""
+            echo "Changes detected:"
+            exit 1
+          fi
