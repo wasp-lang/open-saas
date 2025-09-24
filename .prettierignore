@@ -2,7 +2,7 @@
 .wasp/
 dist/
 
-# OpenSaaS app diff folder.
+# Open SaaS app diff folder.
 app_diff/
 
 # Formatting `.md` and `.mdx` files can introduce logical changes.
