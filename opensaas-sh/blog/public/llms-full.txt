@@ -23,7 +23,8 @@ If you find this template useful, consider giving us [a star on GitHub](https://
 ## What's inside?
 
 The template itself is built on top of some very powerful tools and frameworks, including:
-  -  [Wasp](https://wasp.sh) - a full-stack React, NodeJS, Prisma framework with superpowers-  [Astro](https://starlight.astro.build/) - Astro's lightweight "Starlight" template for documentation and blog
+  -  [Wasp](https://wasp.sh) - a full-stack React, NodeJS, Prisma framework with superpowers
+  -  [Astro](https://starlight.astro.build/) - Astro's lightweight "Starlight" template for documentation and blog
   -  [Stripe](https://stripe.com) or [Lemon Squeezy](https://lemonsqueezy.com/) - for products and payments
   -  [Plausible](https://plausible.io) or [Google](https://analytics.google.com/) Analytics
   -  [OpenAI](https://openai.com) - OpenAI API integrated into the app or [Replicate](https://replicate.com/) (coming soon )
@@ -64,7 +65,7 @@ If you prefer video tutorials, you can watch this walkthrough below which will g
 ### Pre-requisites
 
 You must have Node.js (and NPM) installed on your machine and available in `PATH` to use Wasp.
-Your version of Node.js must be >= 20.
+Your version of Node.js must be >= 22.12.
 
 To switch easily between Node.js versions, we recommend using [nvm](https://github.com/nvm-sh/nvm).
 
@@ -128,7 +129,7 @@ Once Rosetta is installed, you should be able to run Wasp without any issues.
 
 ### Windows
 
-In order to use Wasp on Windows, you need to install WSL2 (Windows Subsystem for Linux) and a Linux distribution of your choice. We recommend using Ubuntu. 
+In order to use Wasp on Windows, you need to install WSL2 (Windows Subsystem for Linux) and a Linux distribution of your choice. We recommend using Ubuntu.
 
 **You can refer to this [article](https://wasp.sh/blog/2023/11/21/guide-windows-development-wasp-wsl) for a step by step guide to using Wasp in the WSL environment.** If you need further help, reach out to us on [Discord](https://discord.gg/rzdnErX).
 
@@ -173,7 +174,7 @@ curl -sSL https://get.wasp.sh/installer.sh | sh
   </summary>
 If you are using WSL2, make sure that your Wasp project is not on the Windows file system, <b>but instead on the Linux file system</b>. Otherwise, Wasp won't be able to detect file changes, due to this <a href='https://github.com/microsoft/WSL/issues/4739'>issue in WSL2</a>.
 </details>
-:::  
+:::
 
 ### Finalize Installation
 
@@ -191,7 +192,7 @@ You can install the Wasp VSCode extension by searching for "Wasp" in the Extensi
 
 ## Setting up your SaaS app
 
-### Cloning the OpenSaaS template
+### Cloning the Open SaaS template
 
 From the directory where you'd like to create your new project run:
 ```sh
@@ -355,7 +356,7 @@ We've structured this full-stack app template vertically (by feature). That mean
 Let's check out what's in the `app` folder in more detail:
 
 :::caution[v0.13 and below]
-If you are using an older version of the OpenSaaS template with Wasp `v0.13.x` or below, you may see a slightly different file structure. But don't worry, the vast majority of the code and features are the same! 
+If you are using an older version of the Open SaaS template with Wasp `v0.13.x` or below, you may see a slightly different file structure. But don't worry, the vast majority of the code and features are the same! 
 :::
 
 ```sh
@@ -874,7 +875,7 @@ To create a Google OAuth app and get your Google API keys, follow the instructio
 
 To create a GitHub OAuth app and get your GitHub API keys, follow the instructions in [Wasp's GitHub Auth docs](https://wasp.sh/docs/auth/social-auth/github#3-creating-a-github-oauth-app).
 
-To create a Discord OAuth app and get your Discord API keys, follow the instructions in [Wasp's Discord Auth docs](docs/auth/social-auth/google#3-creating-a-google-oauth-app)
+To create a Discord OAuth app and get your Discord API keys, follow the instructions in [Wasp's Discord Auth docs](https://wasp.sh/docs/auth/social-auth/discord#3-creating-a-discord-app)
 
 Again, Wasp will take care of the rest and update your AuthUI components accordingly.
 
@@ -1287,13 +1288,7 @@ export const stripe = new Stripe(process.env.STRIPE_KEY!, {
 2. click on `+ add endpoint`
 3. enter your endpoint url, which will be the url of your deployed server + `/payments-webhook`, e.g. `https://open-saas-wasp-sh-server.fly.dev/payments-webhook`
 
-4. select the events you want to listen to. These should be the same events you're consuming in your webhook. For example, if you haven't added any additional events to the webhook and are using the defaults that came with this template, then you'll need to add:
-  <br/>- `account.updated`
-  <br/>- `checkout.session.completed`
-  <br/>- `customer.subscription.deleted`
-  <br/>- `customer.subscription.updated`
-  <br/>- `invoice.paid`
-  <br/>- `payment_intent.succeeded`
+4. select the events you want to listen to. These should be the same events you're consuming in your webhook which you can find listed in [`src/payment/stripe/webhookPayload.ts`](https://github.com/wasp-lang/open-saas/blob/main/template/app/src/payment/stripe/webhookPayload.ts):
 
 5. after that, go to the webhook you just created and `reveal` the new signing secret.
 6. add this secret to your deployed server's `STRIPE_WEBHOOK_SECRET=` environment variable. <br/>If you've deployed to Fly.io, you can do that easily with the following command:
@@ -2012,6 +2007,43 @@ To do this, you should can either 1) merge new Open SaaS template changes into y
 - and then copying over the logic from your existing project that you want to keep.
 
 The method you choose is up to you and will largely depend on the complexity of the changes you need to make.
+
+---
+
+# Vibe Coding with Open SaaS
+
+If you're looking to use AI to help build (or "vibe code") your SaaS app, this guide is for you.
+
+## Coding with AI, Open SaaS, & Wasp
+
+Wasp is particularly well suited to coding with AI due to its central config file which gives LLMs context about the entire full-stack app, and its ability to manage boilerplate code so AI doesn't have to. 
+
+Regardless, there are still some shortcomings to using AI to code with Wasp, as well as a learning curve to using it effectively.
+
+Luckily, we did the work for you and put together a bunch of resources to help you use Wasp & Open SaaS with AI as effectively as possible.
+
+### AI Resources in the Template
+
+The template comes with:
+- A full set of rules files, `app/.cursor/rules`, to be used with Cursor or adapted to your coding tool of choice (Windsurf, Claude Code, etc.).
+- A set of example prompts, `app/.cursor/example-prompts.md`, to help you get started.
+
+### LLM-Friendly Documentation
+
+We've also created a bunch of LLM-friendly documentation:
+- [Open SaaS Docs - LLMs.txt](https://docs.opensaas.sh/llms.txt) - Links to the raw text docs.
+- **[Open SaaS Docs - LLMs-full.txt](https://docs.opensaas.sh/llms-full.txt) - Complete docs as one text file.** 
+- Coming Soon! ~~[Wasp Docs - LLMs.txt](https://wasp.sh/llms.txt)~~ - Links to the raw text docs.
+- Coming Soon! ~~[Wasp Docs - LLMs-full.txt](https://wasp.sh/llms-full.txt)~~ - Complete docs as one text file.
+
+Add these to your AI-assisted IDE settings so you can easily reference them in your chat sessions with the LLM.
+**In most cases, you'll want to pass the `llms-full.txt` to the LLM and ask it to help you with a specific task.**
+
+### More AI-assisted Coding Learning Resources
+
+Here's a list of articles and tutorials we've made:
+- [3hr YouTube tutorial: Vibe Coding a Personal Finance App w/ Wasp & Cursor](https://www.youtube.com/watch?v=WYzEROo7reY)
+- [Article: A Structured Workflow for "Vibe Coding" Full-Stack Apps](https://dev.to/wasp/a-structured-workflow-for-vibe-coding-full-stack-apps-352l)
 
 ---
 
