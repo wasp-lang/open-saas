@@ -1,10 +1,10 @@
-import type { StripeMode } from './paymentProcessor';
+import type { StripeMode } from "./paymentProcessor";
 
-import Stripe from 'stripe';
-import { stripe } from './stripeClient';
+import Stripe from "stripe";
+import { stripe } from "./stripeClient";
 
 // WASP_WEB_CLIENT_URL will be set up by Wasp when deploying to production: https://wasp.sh/docs/deploying
-const DOMAIN = process.env.WASP_WEB_CLIENT_URL || 'http://localhost:3000';
+const DOMAIN = process.env.WASP_WEB_CLIENT_URL || "http://localhost:3000";
 
 export async function fetchStripeCustomer(customerEmail: string) {
   let customer: Stripe.Customer;
@@ -13,12 +13,12 @@ export async function fetchStripeCustomer(customerEmail: string) {
       email: customerEmail,
     });
     if (!stripeCustomers.data.length) {
-      console.log('creating customer');
+      console.log("creating customer");
       customer = await stripe.customers.create({
         email: customerEmail,
       });
     } else {
-      console.log('using existing customer');
+      console.log("using existing customer");
       customer = stripeCustomers.data[0];
     }
     return customer;
@@ -53,7 +53,7 @@ export async function createStripeCheckoutSession({
       automatic_tax: { enabled: true },
       allow_promotion_codes: true,
       customer_update: {
-        address: 'auto',
+        address: "auto",
       },
       customer: customerId,
     });

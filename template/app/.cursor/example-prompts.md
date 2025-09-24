@@ -2,10 +2,11 @@
 
 ### PRD / initial prompt
 
-I want to create a `<insert-type-of-app-here>` app with the current SaaS boilerplate template project I'm in which uses Wasp and already has payment processing, AWS S3 file upload, a landing page, an admin dashboard, and authentication already setup. Leveraging Wasp's full-stack features (such as Auth), let's build the app based on the following spec: 
-  - `<insert-feature-spec-here>` 
-  - `<insert-feature-spec-here>` 
-  - `<insert-feature-spec-here>` 
+I want to create a `<insert-type-of-app-here>` app with the current SaaS boilerplate template project I'm in which uses Wasp and already has payment processing, AWS S3 file upload, a landing page, an admin dashboard, and authentication already setup. Leveraging Wasp's full-stack features (such as Auth), let's build the app based on the following spec:
+
+- `<insert-feature-spec-here>`
+- `<insert-feature-spec-here>`
+- `<insert-feature-spec-here>`
 
 With this in mind, I want you to first evaluate the project template and think about a few possible PRD approaches before landing on the best one. Provide reasoning why this would be the best approach. Remember we're using Wasp, a full-stack framework with batteries included, that can do some of the heavy lifting for us, and we want to use a modified vertical slice implementation approach for LLM-assisted coding so we can start with basic implementations of features first, and add on complexity from there.
 
