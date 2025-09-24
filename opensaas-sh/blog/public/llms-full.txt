@@ -192,7 +192,7 @@ You can install the Wasp VSCode extension by searching for "Wasp" in the Extensi
 
 ## Setting up your SaaS app
 
-### Cloning the OpenSaaS template
+### Cloning the Open SaaS template
 
 From the directory where you'd like to create your new project run:
 ```sh
@@ -356,7 +356,7 @@ We've structured this full-stack app template vertically (by feature). That mean
 Let's check out what's in the `app` folder in more detail:
 
 :::caution[v0.13 and below]
-If you are using an older version of the OpenSaaS template with Wasp `v0.13.x` or below, you may see a slightly different file structure. But don't worry, the vast majority of the code and features are the same! 
+If you are using an older version of the Open SaaS template with Wasp `v0.13.x` or below, you may see a slightly different file structure. But don't worry, the vast majority of the code and features are the same! 
 :::
 
 ```sh
