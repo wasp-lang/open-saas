@@ -3,7 +3,7 @@
  * will never execute. See https://stackoverflow.com/a/39419171.
  */
 export function assertUnreachable(_: never): never {
-  throw Error('This code should be unreachable');
+  throw Error("This code should be unreachable");
 }
 
 /**

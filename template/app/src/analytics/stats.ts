@@ -1,9 +1,12 @@
-import { listOrders } from '@lemonsqueezy/lemonsqueezy.js';
-import Stripe from 'stripe';
-import { type DailyStats } from 'wasp/entities';
-import { type DailyStatsJob } from 'wasp/server/jobs';
-import { stripeClient } from '../payment/stripe/stripeClient';
-import { getDailyPageViews, getSources } from './providers/plausibleAnalyticsUtils';
+import { listOrders } from "@lemonsqueezy/lemonsqueezy.js";
+import Stripe from "stripe";
+import { type DailyStats } from "wasp/entities";
+import { type DailyStatsJob } from "wasp/server/jobs";
+import { stripeClient } from "../payment/stripe/stripeClient";
+import {
+  getDailyPageViews,
+  getSources,
+} from "./providers/plausibleAnalyticsUtils";
 // import { getDailyPageViews, getSources } from './providers/googleAnalyticsUtils';
 import { paymentProcessor } from "../payment/paymentProcessor";
 import { SubscriptionStatus } from "../payment/plans";
@@ -153,7 +156,8 @@ async function fetchTotalStripeRevenue() {
 
   let hasMore = true;
   while (hasMore) {
-    const balanceTransactions = await stripeClient.balanceTransactions.list(params);
+    const balanceTransactions =
+      await stripeClient.balanceTransactions.list(params);
 
     for (const transaction of balanceTransactions.data) {
       if (transaction.type === "charge") {
