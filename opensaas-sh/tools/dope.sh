@@ -140,7 +140,7 @@ recreate_derived_dir() {
 
   echo "DONE: generated ${DERIVED_DIR}/"
 
-  (cd "${DERIVED_DIR}" && git init -b main)
+  (cd "${DERIVED_DIR}" && git init -b main -q)
 
   if [ ${num_patches_failed} -gt 0 ]; then
     echo -e "${RED_COLOR}${num_patches_failed} patches failed, look into generated files for merge conflicts.${RESET_COLOR}"
