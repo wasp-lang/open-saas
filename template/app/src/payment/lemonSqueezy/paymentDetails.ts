@@ -1,6 +1,6 @@
-import type { SubscriptionStatus } from '../plans';
-import { PaymentPlanId } from '../plans';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
+import type { SubscriptionStatus } from "../plans";
+import { PaymentPlanId } from "../plans";
 
 export const updateUserLemonSqueezyPaymentDetails = async (
   {
@@ -20,7 +20,7 @@ export const updateUserLemonSqueezyPaymentDetails = async (
     lemonSqueezyCustomerPortalUrl?: string;
     datePaid?: Date;
   },
-  prismaUserDelegate: PrismaClient['user']
+  prismaUserDelegate: PrismaClient["user"],
 ) => {
   return prismaUserDelegate.update({
     where: {
@@ -32,7 +32,10 @@ export const updateUserLemonSqueezyPaymentDetails = async (
       subscriptionPlan,
       subscriptionStatus,
       datePaid,
-      credits: numOfCreditsPurchased !== undefined ? { increment: numOfCreditsPurchased } : undefined,
+      credits:
+        numOfCreditsPurchased !== undefined
+          ? { increment: numOfCreditsPurchased }
+          : undefined,
     },
   });
 };

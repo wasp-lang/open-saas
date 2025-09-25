@@ -1,17 +1,20 @@
-import type { PaymentPlanEffect } from '../plans';
+import { requireNodeEnvVar } from "../../server/utils";
 import type {
   CreateCheckoutSessionArgs,
   FetchCustomerPortalUrlArgs,
   PaymentProcessor,
-} from '../paymentProcessor';
-import { fetchStripeCustomer, createStripeCheckoutSession } from './checkoutUtils';
-import { requireNodeEnvVar } from '../../server/utils';
-import { stripeWebhook, stripeMiddlewareConfigFn } from './webhook';
+} from "../paymentProcessor";
+import type { PaymentPlanEffect } from "../plans";
+import {
+  createStripeCheckoutSession,
+  fetchStripeCustomer,
+} from "./checkoutUtils";
+import { stripeMiddlewareConfigFn, stripeWebhook } from "./webhook";
 
-export type StripeMode = 'subscription' | 'payment';
+export type StripeMode = "subscription" | "payment";
 
 export const stripePaymentProcessor: PaymentProcessor = {
-  id: 'stripe',
+  id: "stripe",
   createCheckoutSession: async ({
     userId,
     userEmail,
@@ -32,7 +35,8 @@ export const stripePaymentProcessor: PaymentProcessor = {
         paymentProcessorUserId: customer.id,
       },
     });
-    if (!stripeSession.url) throw new Error('Error creating Stripe Checkout Session');
+    if (!stripeSession.url)
+      throw new Error("Error creating Stripe Checkout Session");
     const session = {
       url: stripeSession.url,
       id: stripeSession.id,
@@ -40,15 +44,17 @@ export const stripePaymentProcessor: PaymentProcessor = {
     return { session };
   },
   fetchCustomerPortalUrl: async (_args: FetchCustomerPortalUrlArgs) =>
-    requireNodeEnvVar('STRIPE_CUSTOMER_PORTAL_URL'),
+    requireNodeEnvVar("STRIPE_CUSTOMER_PORTAL_URL"),
   webhook: stripeWebhook,
   webhookMiddlewareConfigFn: stripeMiddlewareConfigFn,
 };
 
-function paymentPlanEffectToStripeMode(planEffect: PaymentPlanEffect): StripeMode {
-  const effectToMode: Record<PaymentPlanEffect['kind'], StripeMode> = {
-    subscription: 'subscription',
-    credits: 'payment',
+function paymentPlanEffectToStripeMode(
+  planEffect: PaymentPlanEffect,
+): StripeMode {
+  const effectToMode: Record<PaymentPlanEffect["kind"], StripeMode> = {
+    subscription: "subscription",
+    credits: "payment",
   };
   return effectToMode[planEffect.kind];
 }

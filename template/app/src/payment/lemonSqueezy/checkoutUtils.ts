@@ -1,4 +1,4 @@
-import { createCheckout } from '@lemonsqueezy/lemonsqueezy.js';
+import { createCheckout } from "@lemonsqueezy/lemonsqueezy.js";
 
 interface LemonSqueezyCheckoutSessionParams {
   storeId: string;
@@ -25,7 +25,7 @@ export async function createLemonSqueezyCheckoutSession({
     throw error;
   }
   if (!session) {
-    throw new Error('Checkout not found');
+    throw new Error("Checkout not found");
   }
   return {
     url: session.data.attributes.url,

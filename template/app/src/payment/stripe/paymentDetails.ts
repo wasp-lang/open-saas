@@ -1,6 +1,6 @@
-import type { SubscriptionStatus } from '../plans';
-import { PaymentPlanId } from '../plans';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
+import type { SubscriptionStatus } from "../plans";
+import { PaymentPlanId } from "../plans";
 
 export const updateUserStripePaymentDetails = async (
   {
@@ -16,7 +16,7 @@ export const updateUserStripePaymentDetails = async (
     numOfCreditsPurchased?: number;
     datePaid?: Date;
   },
-  userDelegate: PrismaClient['user']
+  userDelegate: PrismaClient["user"],
 ) => {
   return userDelegate.update({
     where: {
@@ -27,7 +27,10 @@ export const updateUserStripePaymentDetails = async (
       subscriptionPlan,
       subscriptionStatus,
       datePaid,
-      credits: numOfCreditsPurchased !== undefined ? { increment: numOfCreditsPurchased } : undefined,
+      credits:
+        numOfCreditsPurchased !== undefined
+          ? { increment: numOfCreditsPurchased }
+          : undefined,
     },
   });
 };

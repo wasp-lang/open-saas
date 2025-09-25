@@ -2,13 +2,16 @@ import {
   type CreateCheckoutSessionArgs,
   type FetchCustomerPortalUrlArgs,
   type PaymentProcessor,
-} from '../paymentProcessor';
-import { createPolarCheckoutSession, ensurePolarCustomer } from './checkoutUtils';
-import { polarClient } from './polarClient';
-import { polarMiddlewareConfigFn, polarWebhook } from './webhook';
+} from "../paymentProcessor";
+import {
+  createPolarCheckoutSession,
+  ensurePolarCustomer,
+} from "./checkoutUtils";
+import { polarClient } from "./polarClient";
+import { polarMiddlewareConfigFn, polarWebhook } from "./webhook";
 
 export const polarPaymentProcessor: PaymentProcessor = {
-  id: 'polar',
+  id: "polar",
   createCheckoutSession: async ({
     userId,
     userEmail,
