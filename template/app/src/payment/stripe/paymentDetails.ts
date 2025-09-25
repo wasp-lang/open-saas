@@ -3,7 +3,13 @@ import { PaymentPlanId } from '../plans';
 import { PrismaClient } from '@prisma/client';
 
 export const updateUserStripePaymentDetails = async (
-  { userStripeId, subscriptionPlan, subscriptionStatus, datePaid, numOfCreditsPurchased }: {
+  {
+    userStripeId,
+    subscriptionPlan,
+    subscriptionStatus,
+    datePaid,
+    numOfCreditsPurchased,
+  }: {
     userStripeId: string;
     subscriptionPlan?: PaymentPlanId;
     subscriptionStatus?: SubscriptionStatus;
@@ -14,7 +20,7 @@ export const updateUserStripePaymentDetails = async (
 ) => {
   return userDelegate.update({
     where: {
-      paymentProcessorUserId: userStripeId
+      paymentProcessorUserId: userStripeId,
     },
     data: {
       paymentProcessorUserId: userStripeId,
