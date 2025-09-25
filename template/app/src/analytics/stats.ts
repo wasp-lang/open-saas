@@ -8,7 +8,6 @@ import {
   getSources,
 } from "./providers/plausibleAnalyticsUtils";
 // import { getDailyPageViews, getSources } from './providers/googleAnalyticsUtils';
-// @ts-ignore
 import { OrderStatus } from "@polar-sh/sdk/models/components/orderstatus.js";
 import { paymentProcessor } from "../payment/paymentProcessor";
 import { SubscriptionStatus } from "../payment/plans";

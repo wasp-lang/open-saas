@@ -53,7 +53,7 @@ We've structured this full-stack app template vertically (by feature). That mean
 Let's check out what's in the `app` folder in more detail:
 
 :::caution[v0.13 and below]
-If you are using an older version of the OpenSaaS template with Wasp `v0.13.x` or below, you may see a slightly different file structure. But don't worry, the vast majority of the code and features are the same! 😅
+If you are using an older version of the Open SaaS template with Wasp `v0.13.x` or below, you may see a slightly different file structure. But don't worry, the vast majority of the code and features are the same! 😅
 :::
 
 ```sh

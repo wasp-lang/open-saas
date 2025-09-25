@@ -1,8 +1,5 @@
 import starlightPlugin from "@astrojs/starlight-tailwind";
-import colors from "tailwindcss/colors";
-
-const yellow = colors.yellow
-const gray = colors.gray
+import tailwindColors from "tailwindcss/colors";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -10,7 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        accent: yellow, gray
+        accent: tailwindColors.yellow,
       },
     },
   },
