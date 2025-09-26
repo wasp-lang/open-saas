@@ -33,10 +33,10 @@ jobs:
         working-directory: template
         run: tar -czf "../$archive_name" .
 
-      - name: Create draft release if it doesn't exist
+      - name: Create release if it doesn't exist
         run: |
           if ! gh release view "$tag_name"; then
-            gh release create "$tag_name" --draft
+            gh release create "$tag_name"
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
