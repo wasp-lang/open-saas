@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "astro": "astro",
-    "build": "astro check && astro build",
+    "build": "npm run generate-llm-files && astro check && astro build",
     "dev": "astro dev",
     "generate-llm-files": "node ./scripts/generate-llm-files.mjs",
     "preview": "astro preview",
