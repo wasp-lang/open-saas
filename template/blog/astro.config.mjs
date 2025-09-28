@@ -76,9 +76,9 @@ export default defineConfig({
           customCss: ["./src/styles/tailwind.css"],
           authors: {
             Dev: {
-              name: "Dev",
+              name: "Dev", 
               title: "Dev @ Your SaaS",
-              picture: "/CRAIG_ROCK.png", // Images in the `public` directory are supported.
+              // Removed large profile picture to reduce template size
               url: "https://your-site.com",
             },
           },

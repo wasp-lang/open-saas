@@ -11,7 +11,7 @@ const options: ApexOptions = {
   },
   colors: ["#3C50E0", "#80CAEE"],
   chart: {
-    fontFamily: "Satoshi, sans-serif",
+    fontFamily: "system-ui, -apple-system, sans-serif",
     height: 335,
     type: "area",
     dropShadow: {

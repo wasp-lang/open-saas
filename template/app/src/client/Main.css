@@ -58,18 +58,7 @@
   }
 }
 
-/* Here is an example of how to add a custom font. 
-* Fonts are stored in the public/fonts folder.
-* They are defined first here, then need to be referenced in the tailwind.config.js file
-* under `theme.extend.fontFamily`, and then can be used as a tailwind class, e.g. className='font-satoshi'.
-*/
-@font-face {
-  font-family: "Satoshi";
-  src: url("/fonts/Satoshi-Regular.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
+/* Custom font removed to reduce template size - using system fonts instead */
 
 /* third-party libraries CSS */
 

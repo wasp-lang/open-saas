@@ -13,7 +13,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        satoshi: ["Satoshi", "system-ui", "sans-serif"],
+        // satoshi: ["Satoshi", "system-ui", "sans-serif"], // Removed to reduce template size
       },
       colors: {
         current: "currentColor",
