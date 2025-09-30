@@ -1,0 +1,44 @@
+# Stage 1: Builder
+# Bu aşama, projenin bağımlılıklarını kurar ve derleme işlemini yapar.
+FROM node:22-alpine AS builder
+WORKDIR /app
+
+# Sadece proje kodlarını kopyala (gereksiz dosyaları alma)
+COPY ./template/app /app
+
+# Wasp'ı kur
+RUN curl -sSL https://get.wasp-lang.dev/installer.sh | sh
+
+# Projeyi derle
+RUN wasp build
+
+# Sunucu bağımlılıklarını kur
+RUN cd .wasp/build/server && npm install
+
+# Prisma Client'ı oluştur
+RUN cd .wasp/build/server && npx prisma generate --schema='../db/schema.prisma'
+
+# Stage 2: Production
+# Bu aşama, sadece çalışmak için gerekli olan dosyaları alır ve küçük bir imaj oluşturur.
+FROM node:22-alpine AS production
+WORKDIR /app
+
+# Sadece gerekli node_modules'ları builder aşamasından kopyala
+COPY --from=builder /app/.wasp/build/server/node_modules ./node_modules
+COPY --from=builder /app/.wasp/build/node_modules ./node_modules
+
+# Derlenmiş sunucu kodunu kopyala
+COPY --from=builder /app/.wasp/build/server/src ./src
+
+# Gerekli diğer dosyaları kopyala
+COPY --from=builder /app/.wasp/build/server/package.json .
+COPY --from=builder /app/.wasp/build/server/package-lock.json .
+COPY --from=builder /app/.wasp/build/db ./db
+
+ENV NODE_ENV=production
+ENV PORT=3001
+
+EXPOSE 3001
+
+# Uygulamayı başlat
+CMD ["node", "src/index.js"]
