@@ -35,7 +35,6 @@ jobs:
           push: true
           tags: ghcr.io/hemidzada/opensaas-server:main
 
-      # YENİ EKLENEN ADIM BURASI
       - name: Install dependencies for client build
         working-directory: ./template/app
         run: npm install
@@ -43,7 +42,6 @@ jobs:
       - name: Build Wasp app for client
         working-directory: ./template/app
         run: |
-          # Node.js zaten kurulu, sadece wasp'ı kuruyoruz
           curl -sSL https://get.wasp-lang.dev/installer.sh | sh
           wasp build
           
@@ -51,10 +49,11 @@ jobs:
         run: |
           cat > client.Dockerfile <<EOF
           FROM nginx:alpine
-          COPY ./template/app/.wasp/build/web-app/build /usr/share/nginx/html
+          # YOLU DÜZELTTİK: ./template/app kısmını kaldırdık
+          COPY ./.wasp/build/web-app/build /usr/share/nginx/html
           EOF
           
-      - name: Build and push client Docker image
+      - name: Build and push client Dockerfile
         uses: docker/build-push-action@v4
         with:
           context: .
