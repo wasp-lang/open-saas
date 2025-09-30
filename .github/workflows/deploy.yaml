@@ -38,18 +38,17 @@ jobs:
       # --- 2. Sunucu (Server) İmajını Oluştur ve Yükle ---
       - name: Build and Push Server Image
         run: |
-          # Sunucu için Dockerfile'ı anlık olarak oluşturuyoruz
           cat > Dockerfile.server <<EOF
           FROM node:22-slim
           WORKDIR /app
-          COPY ./template/app/.wasp/build/server/ ./
+          # NIHAI DÜZELTME: Kopyalama yolunun başındaki nokta kaldırıldı.
+          COPY template/app/.wasp/build/server/ ./
           ENV NODE_ENV=production
           ENV PORT=3001
           EXPOSE 3001
           CMD ["node", "src/index.js"]
           EOF
 
-          # İmajı oluşturup GitHub'a yüklüyoruz
           docker buildx build \
             --file ./Dockerfile.server \
             --tag ghcr.io/hemidzada/opensaas-server:main \
@@ -58,13 +57,11 @@ jobs:
       # --- 3. İstemci (Client) İmajını Oluştur ve Yükle ---
       - name: Build and Push Client Image
         run: |
-          # İstemci için Dockerfile'ı anlık olarak oluşturuyoruz
           cat > Dockerfile.client <<EOF
           FROM nginx:alpine
           COPY ./template/app/.wasp/build/web-app /usr/share/nginx/html
           EOF
 
-          # İstemci imajını oluşturup GitHub'a yüklüyoruz
           docker buildx build \
             --file ./Dockerfile.client \
             --tag ghcr.io/hemidzada/opensaas-client:main \
