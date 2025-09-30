@@ -1,4 +1,4 @@
-name: Deploy OpenSaaS to Coolify
+name: FINAL DEBUG - Show File Structure
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  deploy:
+  debug:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -16,49 +16,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      # --- 1. Sunucu (Server) Kurulumu ---
-      # Bu bölüm zaten çalışıyor ve stabildir.
-      - name: Build and push server Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: ./Dockerfile.server
-          push: true
-          tags: ghcr.io/hemidzada/opensaas-server:main
-
-      # --- 2. İstemci (Client) Kurulumu ---
-      # Tüm adımları tek bir blokta birleştirerek ve doğru yolları kullanarak.
-      - name: Build and push client Docker image
+      
+      - name: Install, Build, and LIST ALL FILES
         run: |
-          echo "--> 1. Navigating to the app directory..."
           cd ./template/app
-
-          echo "--> 2. Installing npm dependencies..."
           npm install
-
-          echo "--> 3. Installing Wasp and building the client..."
           curl -sSL https://get.wasp-lang.dev/installer.sh | sh
           /home/runner/.local/bin/wasp build
           
-          echo "--> 4. Creating the client Dockerfile in the SAME directory..."
-          # Dockerfile'ı, build dosyalarıyla aynı yerde oluşturuyoruz.
-          cat > ./.wasp/build/web-app/build/client.Dockerfile <<EOF
-          FROM nginx:alpine
-          COPY . /usr/share/nginx/html
-          EOF
-          
-          echo "--> 5. Building and pushing the client image from the correct context..."
-          # Build komutunu, dosyaların olduğu yerden çalıştırıyoruz.
-          docker buildx build \
-            --file
+          echo "
+          ################################################################
+          ### LÜTFEN BU BAŞLIĞIN ALTINDAKİ DOSYA LİSTESİNİN TAMAMINI KOPYALAYIN ###
+          ################################################################
+          "
+          # Ana dizine geri dönüp her şeyi listeliyoruz.
+          cd ../../
+          ls -R
