@@ -18,7 +18,7 @@ jobs:
           node-version: '22'
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2 # <--- DEĞİŞİKLİK BURADA
+        uses: docker/setup-buildx-action@v3
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
@@ -35,33 +35,41 @@ jobs:
           push: true
           tags: ghcr.io/hemidzada/opensaas-server:main
 
-      - name: Install dependencies for client build
-        working-directory: ./template/app
-        run: npm install
+      # --- İSTEMCİ (CLIENT) İÇİN TÜM ADIMLARI BURADA BİRLEŞTİRİYORUZ ---
+      - name: Build client and list files for debugging
+        run: |
+          # 1. Gerekli klasöre git
+          cd ./template/app
 
-      - name: Build Wasp app for client
-        working-directory: ./template/app
-        run: |
+          # 2. Bağımlılıkları kur
+          npm install
+
+          # 3. Wasp'ı kur ve projeyi derle
+          echo ">>> Installing Wasp and running build..."
           curl -sSL https://get.wasp-lang.dev/installer.sh | sh
-          wasp build
+          /home/runner/.local/bin/wasp build
           
-      - name: Create client Dockerfile
+          # 4. HATA AYIKLAMA: Derlemeden sonra oluşan tüm dosyaları listele
+          echo "
+          ####################################################
+          ### DEBUG: Listing all files after 'wasp build'  ###
+          ####################################################
+          "
+          ls -R ../../
+
+      - name: Create and push client Docker image
         run: |
+          # 1. Client için Dockerfile oluştur
           cat > client.Dockerfile <<EOF
           FROM nginx:alpine
           COPY ./template/app/.wasp/build/web-app/build /usr/share/nginx/html
           EOF
-          
-      - name: Build and push client Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: client.Dockerfile
-          push: true
-          tags: ghcr.io/hemidzada/opensaas-client:main
 
+          # 2. Docker imajını build et ve pushla
+          docker buildx build --file ./client.Dockerfile --tag ghcr.io/hemidzada/opensaas-client:main --push .
+          
       - name: Trigger Coolify server deploy
         run: curl -X POST ${{ secrets.SERVER_COOLIFY_WEBHOOK }}
 
       - name: Trigger Coolify client deploy
-        run: curl -X POST ${{ secrets.CLIENT_COOLIFY_WEBHOOK }}
+        run: curl -X POST ${{ secrets.CLIENT_COOL_WEBHOOK }}
