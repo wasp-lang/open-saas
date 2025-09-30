@@ -1,4 +1,4 @@
-name: FINAL DEBUG - Show File Structure
+name: Deploy OpenSaaS to Coolify
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  debug:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -16,19 +16,54 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-      
-      - name: Install, Build, and LIST ALL FILES
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # --- 1. Sunucu (Server) Kurulumu ---
+      - name: Build and push server Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile.server
+          push: true
+          tags: ghcr.io/hemidzada/opensaas-server:main
+
+      # --- 2. İstemci (Client) Kurulumu ---
+      - name: Build and push client Docker image
         run: |
+          echo "--> 1. Navigating to the app directory..."
           cd ./template/app
+
+          echo "--> 2. Installing npm dependencies..."
           npm install
+
+          echo "--> 3. Installing Wasp and building the client..."
           curl -sSL https://get.wasp-lang.dev/installer.sh | sh
           /home/runner/.local/bin/wasp build
           
-          echo "
-          ################################################################
-          ### LÜTFEN BU BAŞLIĞIN ALTINDAKİ DOSYA LİSTESİNİN TAMAMINI KOPYALAYIN ###
-          ################################################################
-          "
-          # Ana dizine geri dönüp her şeyi listeliyoruz.
+          echo "--> 4. Creating the client Dockerfile..."
+          # Dockerfile'ı ana dizinde oluşturuyoruz.
+          cat > ../../client.Dockerfile <<EOF
+          FROM nginx:alpine
+          # Gördüğümüz doğru yola göre kopyalama yapıyoruz.
+          COPY ./template/app/.wasp/build/web-app /usr/share/nginx/html
+          EOF
+          
+          echo "--> 5. Building and pushing the client image..."
           cd ../../
-          ls -R
+          docker buildx build --file ./client.Dockerfile --tag ghcr.io/hemidzada/opensaas-client:main --push .
+      
+      # --- 3. Coolify'i Tetikleme ---
+      - name: Trigger Coolify server deploy
+        run: curl -X POST ${{ secrets.SERVER_COOLIFY_WEBHOOK }}
+
+      - name: Trigger Coolify client deploy
+        run: curl -X POST ${{ secrets.CLIENT_COOLIFY_WEBHOOK }}
