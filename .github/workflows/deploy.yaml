@@ -35,29 +35,30 @@ jobs:
           push: true
           tags: ghcr.io/hemidzada/opensaas-server:main
 
-      - name: Install dependencies for client build
-        working-directory: ./template/app
-        run: npm install
+      # --- İSTEMCİ (CLIENT) İÇİN TÜM ADIMLARI BURADA BİRLEŞTİRDİK ---
+      - name: Build and push client image
+        run: |
+          # 1. Adım: Gerekli klasöre git
+          cd ./template/app
 
-      - name: Build Wasp app for client
-        working-directory: ./template/app
-        run: |
+          # 2. Adım: Bağımlılıkları kur
+          npm install
+
+          # 3. Adım: Wasp'ı kur ve projeyi derle
           curl -sSL https://get.wasp-lang.dev/installer.sh | sh
-          wasp build
-          
-      - name: Create client Dockerfile
-        run: |
-          cat > client.Dockerfile <<EOF
+          /home/runner/.local/bin/wasp build
+
+          # 4. Adım: Client için Dockerfile oluştur (Doğru yolda olduğumuzdan emin olarak)
+          cat > ../../client.Dockerfile <<EOF
           FROM nginx:alpine
-          # YOLU DÜZELTTİK: Eksik olan ./template/app kısmını geri ekledik
           COPY ./template/app/.wasp/build/web-app/build /usr/share/nginx/html
           EOF
-          
-      - name: Build and push client Docker image
+
+      - name: Push client Docker image
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: client.Dockerfile
+          file: ./client.Dockerfile
           push: true
           tags: ghcr.io/hemidzada/opensaas-client:main
 
