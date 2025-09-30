@@ -2,7 +2,7 @@
 # Bu aşama, projenin bağımlılıklarını kurar ve derleme işlemini yapar.
 FROM node:22-alpine AS builder
 
-# YENİ EKLENEN SATIR BURASI
+# Gerekli araçları en başta kuruyoruz.
 RUN apk add --no-cache curl
 
 WORKDIR /app
@@ -10,13 +10,17 @@ WORKDIR /app
 # Sadece proje kodlarını kopyala (gereksiz dosyaları alma)
 COPY ./template/app /app
 
-# Wasp'ı kur
-RUN curl -sSL https://get.wasp-lang.dev/installer.sh | sh
+# --- YENİ VE DOĞRU SIRALAMA ---
+# ÖNCE projenin ana bağımlılıklarını kuruyoruz.
+RUN npm install
 
-# Projeyi derle
-# PATH'e wasp'ı ekleyerek komutun bulunmasını sağlıyoruz
+# SONRA Wasp'ı kuruyoruz.
+RUN curl -sSL https://get.wasp-lang.dev/installer.sh | sh
 ENV PATH="/root/.local/bin:${PATH}"
+
+# EN SON projeyi derliyoruz.
 RUN wasp build
+# --------------------------------
 
 # Sunucu bağımlılıklarını kur
 RUN cd .wasp/build/server && npm install
@@ -31,7 +35,7 @@ WORKDIR /app
 
 # Sadece gerekli node_modules'ları builder aşamasından kopyala
 COPY --from=builder /app/.wasp/build/server/node_modules ./node_modules
-COPY --from=builder /app/.wasp/build/node_modules ./node_modules
+COPY --from=builder /app/node_modules ./node_modules
 
 # Derlenmiş sunucu kodunu kopyala
 COPY --from=builder /app/.wasp/build/server/src ./src
