@@ -27,6 +27,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # --- 1. Sunucu (Server) Kurulumu ---
+      # Bu bölüm zaten çalışıyor ve stabildir.
       - name: Build and push server Docker image
         uses: docker/build-push-action@v4
         with:
@@ -35,41 +37,35 @@ jobs:
           push: true
           tags: ghcr.io/hemidzada/opensaas-server:main
 
-      # --- İSTEMCİ (CLIENT) İÇİN TÜM ADIMLARI BURADA BİRLEŞTİRİYORUZ ---
-      - name: Build client and list files for debugging
+      # --- 2. İstemci (Client) Kurulumu ---
+      # Tüm adımları tek bir blokta birleştirerek klasör sorunlarını kökünden çözüyoruz.
+      - name: Build and push client Docker image
         run: |
-          # 1. Gerekli klasöre git
+          echo "--> 1. Navigating to the app directory..."
           cd ./template/app
 
-          # 2. Bağımlılıkları kur
+          echo "--> 2. Installing npm dependencies..."
           npm install
 
-          # 3. Wasp'ı kur ve projeyi derle
-          echo ">>> Installing Wasp and running build..."
+          echo "--> 3. Installing Wasp and building the client..."
           curl -sSL https://get.wasp-lang.dev/installer.sh | sh
           /home/runner/.local/bin/wasp build
           
-          # 4. HATA AYIKLAMA: Derlemeden sonra oluşan tüm dosyaları listele
-          echo "
-          ####################################################
-          ### DEBUG: Listing all files after 'wasp build'  ###
-          ####################################################
-          "
-          ls -R ../../
-
-      - name: Create and push client Docker image
-        run: |
-          # 1. Client için Dockerfile oluştur
-          cat > client.Dockerfile <<EOF
+          echo "--> 4. Creating the client Dockerfile in the root..."
+          # Dockerfile'ı projenin ana dizininde oluşturuyoruz.
+          cat > ../../client.Dockerfile <<EOF
           FROM nginx:alpine
           COPY ./template/app/.wasp/build/web-app/build /usr/share/nginx/html
           EOF
-
-          # 2. Docker imajını build et ve pushla
-          docker buildx build --file ./client.Dockerfile --tag ghcr.io/hemidzada/opensaas-client:main --push .
           
+          echo "--> 5. Building and pushing the client image from the root..."
+          # Ana dizine geri dönüp, build komutunu oradan çalıştırıyoruz.
+          cd ../../
+          docker buildx build --file ./client.Dockerfile --tag ghcr.io/hemidzada/opensaas-client:main --push .
+      
+      # --- 3. Coolify'i Tetikleme ---
       - name: Trigger Coolify server deploy
         run: curl -X POST ${{ secrets.SERVER_COOLIFY_WEBHOOK }}
 
       - name: Trigger Coolify client deploy
-        run: curl -X POST ${{ secrets.CLIENT_COOL_WEBHOOK }}
+        run: curl -X POST ${{ secrets.CLIENT_COOLIFY_WEBHOOK }}
