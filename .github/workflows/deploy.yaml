@@ -1,4 +1,4 @@
-name: Deploy OpenSaaS to Coolify
+name: TEMPORARY DEBUG - PLEASE RUN THIS
 
 on:
   push:
@@ -6,63 +6,25 @@ on:
       - main
 
 jobs:
-  deploy:
+  debug:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      # --- 1. Sunucu (Server) İmajını Build Et ve Pushla ---
-      # Bu adım aynı zamanda client dosyalarını da oluşturuyor.
-      - name: Build and push server Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: ./Dockerfile.server
-          push: true
-          tags: ghcr.io/hemidzada/opensaas-server:main
-
-      # --- 2. Build Artifact'larını Çıkart ---
-      # Sunucu build'inin "builder" aşamasında oluşan dosyaları alıyoruz.
-      # Bu dosyaların içinde aradığımız client dosyaları da var.
-      - name: Extract build artifacts
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: ./Dockerfile.server
-          target: builder
-          outputs: type=local,dest=./build_output
-
-      # --- 3. İstemci (Client) İmajını Oluştur ve Pushla ---
-      # Artık ayrı bir "wasp build" adımımız yok.
-      - name: Build and push client Docker image
-        run: |
-          # Client için Dockerfile'ı oluşturuyoruz.
-          # Yolu, çıkarttığımız dosyalara göre ayarlıyoruz.
-          cat > client.Dockerfile <<EOF
-          FROM nginx:alpine
-          COPY ./app/.wasp/build/web-app/build /usr/share/nginx/html
-          EOF
-
-          # Client imajını, çıkarttığımız dosyaları kullanarak build ediyoruz.
-          docker buildx build \
-            --file ./client.Dockerfile \
-            --tag ghcr.io/hemidzada/opensaas-client:main \
-            --push ./build_output
+          node-version: '22'
       
-      # --- 4. Coolify'i Tetikleme ---
-      - name: Trigger Coolify server deploy
-        run: curl -X POST ${{ secrets.SERVER_COOLIFY_WEBHOOK }}
-
-      - name: Trigger Coolify client deploy
-        run: curl -X POST ${{ secrets.CLIENT_COOLIFY_WEBHOOK }}
+      - name: ‼️‼️ FIND AND COPY THE OUTPUT OF THIS STEP ‼️‼️
+        run: |
+          cd ./template/app
+          npm install
+          curl -sSL https://get.wasp-lang.dev/installer.sh | sh
+          /home/runner/.local/bin/wasp build
+          echo "############################################################"
+          echo "### LÜTFEN BU BAŞLIKTAN SONRAKİ LİSTENİN TAMAMINI KOPYALAYIN ###"
+          echo "############################################################"
+          cd ../../
+          ls -R
