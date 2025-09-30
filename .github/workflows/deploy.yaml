@@ -1,4 +1,4 @@
-name: Deploy OpenSaaS to Coolify
+name: Deploy OpenSaaS to Coolify (All-in-One)
 
 on:
   push:
@@ -12,6 +12,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Set up Node.js v22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -22,43 +27,35 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # --- TÜM DERLEME İŞLEMLERİNİ TEK BİR ADIMDA YAPIYORUZ ---
-      - name: Build Project
+      # --- 1. Projeyi Derle ---
+      - name: Install Dependencies and Build Project
         run: |
           cd ./template/app
           npm install
           curl -sSL https://get.wasp-lang.dev/installer.sh | sh
           /home/runner/.local/bin/wasp build
 
-      # --- SUNUCU (SERVER) İMAJINI OLUŞTURUYORUZ ---
+      # --- 2. Sunucu (Server) İmajını Oluştur ve Yükle ---
       - name: Build and Push Server Image
         run: |
           # Sunucu için Dockerfile'ı anlık olarak oluşturuyoruz
           cat > Dockerfile.server <<EOF
           FROM node:22-slim
           WORKDIR /app
-          COPY --from=builder /app/.wasp/build/server/ ./
+          COPY ./template/app/.wasp/build/server/ ./
           ENV NODE_ENV=production
           ENV PORT=3001
           EXPOSE 3001
           CMD ["node", "src/index.js"]
           EOF
 
-          # Dockerfile'ın builder aşamasını çalıştırıp dosyaları hazırlıyoruz
-          docker build \
-            --target builder \
-            -f ./Dockerfile.server \
-            -t server-builder-stage .
-          
-          # Hazırlanan dosyalarla son imajı oluşturup pushluyoruz
-          docker build \
-            --build-arg BUILDKIT_INLINE_CACHE=1 \
-            --cache-from=server-builder-stage \
-            -f ./Dockerfile.server \
-            -t ghcr.io/hemidzada/opensaas-server:main \
+          # İmajı oluşturup GitHub'a yüklüyoruz
+          docker buildx build \
+            --file ./Dockerfile.server \
+            --tag ghcr.io/hemidzada/opensaas-server:main \
             --push .
 
-      # --- İSTEMCİ (CLIENT) İMAJINI OLUŞTURUYORUZ ---
+      # --- 3. İstemci (Client) İmajını Oluştur ve Yükle ---
       - name: Build and Push Client Image
         run: |
           # İstemci için Dockerfile'ı anlık olarak oluşturuyoruz
@@ -67,13 +64,13 @@ jobs:
           COPY ./template/app/.wasp/build/web-app /usr/share/nginx/html
           EOF
 
-          # İstemci imajını oluşturup pushluyoruz
-          docker build \
-            -f ./Dockerfile.client \
-            -t ghcr.io/hemidzada/opensaas-client:main \
+          # İstemci imajını oluşturup GitHub'a yüklüyoruz
+          docker buildx build \
+            --file ./Dockerfile.client \
+            --tag ghcr.io/hemidzada/opensaas-client:main \
             --push .
       
-      # --- COOLIFY'İ TETİKLİYORUZ ---
+      # --- 4. Coolify'i Tetikle ---
       - name: Trigger Coolify Deploys
         run: |
           curl -X POST ${{ secrets.SERVER_COOLIFY_WEBHOOK }}
