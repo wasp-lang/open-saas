@@ -12,7 +12,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # GÖZDEN KAÇAN VE GERİ EKLEDİĞİMİZ ADIM
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -36,9 +35,15 @@ jobs:
           push: true
           tags: ghcr.io/hemidzada/opensaas-server:main
 
+      # YENİ EKLENEN ADIM BURASI
+      - name: Install dependencies for client build
+        working-directory: ./template/app
+        run: npm install
+
       - name: Build Wasp app for client
         working-directory: ./template/app
         run: |
+          # Node.js zaten kurulu, sadece wasp'ı kuruyoruz
           curl -sSL https://get.wasp-lang.dev/installer.sh | sh
           wasp build
           
