@@ -1,0 +1,54 @@
+name: Deploy OpenSaaS to Coolify
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Wasp app
+        run: |
+          curl -sSL https://get.wasp-lang.dev/installer.sh | sh
+          wasp build
+
+      - name: Build and push server Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: .wasp/build/Dockerfile
+          push: true
+          tags: ghcr.io/hemidzada/opensaas-server:main
+
+      - name: Create client Dockerfile
+        run: |
+          cat > client.Dockerfile <<EOF
+          FROM nginx:alpine
+          COPY .wasp/build/web-app/build /usr/share/nginx/html
+          EOF
+          
+      - name: Build and push client Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: client.Dockerfile
+          push: true
+          tags: ghcr.io/hemidzada/opensaas-client:main
+
+      - name: Trigger Coolify server deploy
+        run: curl -X POST ${{ secrets.SERVER_COOLIFY_WEBHOOK }}
+
+      - name: Trigger Coolify client deploy
+        run: curl -X POST ${{ secrets.CLIENT_COOLIFY_WEBHOOK }}
