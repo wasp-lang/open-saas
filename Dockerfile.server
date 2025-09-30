@@ -20,18 +20,16 @@ RUN cd .wasp/build/server && npx prisma generate --schema='../db/schema.prisma'
 # Stage 2: Production
 FROM node:22-slim AS production
 
-# --- YENİ VE DAHA BASİT YÖNTEM ---
-
-# Derlenmiş sunucunun tamamını /app klasörüne kopyala
-COPY --from=builder /app/.wasp/build/server /app
-
-# Çalışma dizinini bu yeni klasör olarak ayarla
+# Çalışma dizinini /app olarak ayarla
 WORKDIR /app
+
+# Derlenmiş sunucu klasörünün İÇERİĞİNİ kopyala
+COPY --from=builder /app/.wasp/build/server/ ./
 
 ENV NODE_ENV=production
 ENV PORT=3001
 
 EXPOSE 3001
 
-# Uygulamayı src klasörünün içindeki index.js dosyasından başlat
-CMD ["node", "src/index.js"]
+# NIHAI DÜZELTME: Başlatılacak dosyanın tam yolunu veriyoruz.
+CMD ["node", "/app/src/index.js"]
