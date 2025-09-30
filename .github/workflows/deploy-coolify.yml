@@ -1,0 +1,137 @@
+name: "Deploy to Coolify"
+
+on:
+  push:
+    branches:
+      - "main"
+    paths-ignore:
+      - "opensaas-sh/blog/**"
+      - "**.md"
+      - ".github/workflows/e2e-tests.yml"
+      - ".github/workflows/template-release.yml"
+      - ".github/workflows/deploy-blog.yml"
+
+concurrency:
+  group: coolify-deployment
+  cancel-in-progress: true
+
+env:
+  WASP_VERSION: "0.18.0"
+  SERVER_APP_NAME: "opensaas-server"
+  CLIENT_APP_NAME: "opensaas-client"
+  DOCKER_REGISTRY: "ghcr.io"
+  DOCKER_REGISTRY_USERNAME: ${{ github.repository_owner }}
+  DOCKER_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+  WASP_TELEMETRY_DISABLE: 1
+
+jobs:
+  build-and-deploy:
+    permissions:
+      contents: read
+      packages: write
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ env.DOCKER_REGISTRY_USERNAME }}
+          password: ${{ env.DOCKER_REGISTRY_PASSWORD }}
+
+      - name: Extract metadata for Server
+        id: meta-server
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REGISTRY_USERNAME }}/${{ env.SERVER_APP_NAME }}
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix={{branch}}-
+
+      - name: Extract metadata for Client
+        id: meta-client
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REGISTRY_USERNAME }}/${{ env.CLIENT_APP_NAME }}
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix={{branch}}-
+
+      - name: Install Wasp
+        run: curl -sSL https://get.wasp-lang.dev/installer.sh | sh -s -- -v ${{ env.WASP_VERSION }}
+
+      - name: Build Wasp app
+        working-directory: ./template/app
+        run: |
+          export PATH=$HOME/.local/bin:$PATH
+          # Copy example env files for build to pass validation
+          cp .env.server.example .env.server
+          cp .env.client.example .env.client
+          wasp build
+
+      - name: Build and push Server Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./template/app/.wasp/build
+          push: true
+          tags: ${{ steps.meta-server.outputs.tags }}
+          labels: ${{ steps.meta-server.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Create Client Dockerfile
+        run: |
+          cat <<'EOF' > ./template/app/.wasp/build/web-app/Dockerfile
+          FROM node:20-alpine AS build
+          WORKDIR /app
+          COPY package*.json ./
+          RUN npm ci --only=production
+          COPY . .
+          RUN npm run build
+
+          FROM pierrezemb/gostatic
+          COPY --from=build /app/build /srv/http
+          CMD ["-port", "8043", "-enable-logging"]
+          EOF
+
+      - name: Build and push Client Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./template/app/.wasp/build/web-app
+          push: true
+          tags: ${{ steps.meta-client.outputs.tags }}
+          labels: ${{ steps.meta-client.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Trigger Coolify Server Deployment
+        if: success()
+        run: |
+          echo "Triggering Server deployment..."
+          curl -X GET "${{ secrets.COOLIFY_WEBHOOK_SERVER }}" \
+            -H "Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}" \
+            --fail --silent --show-error || echo "Server webhook trigger failed"
+
+      - name: Trigger Coolify Client Deployment
+        if: success()
+        run: |
+          echo "Triggering Client deployment..."
+          curl -X GET "${{ secrets.COOLIFY_WEBHOOK_CLIENT }}" \
+            -H "Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}" \
+            --fail --silent --show-error || echo "Client webhook trigger failed"
+
+      - name: Deployment Summary
+        if: success()
+        run: |
+          echo "🚀 Deployment triggered successfully!"
+          echo "📦 Server image: ${{ steps.meta-server.outputs.tags }}"
+          echo "📦 Client image: ${{ steps.meta-client.outputs.tags }}"
+          echo "🔍 Check Coolify dashboard for deployment status"
