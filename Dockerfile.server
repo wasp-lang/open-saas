@@ -1,6 +1,10 @@
 # Stage 1: Builder
 # Bu aşama, projenin bağımlılıklarını kurar ve derleme işlemini yapar.
 FROM node:22-alpine AS builder
+
+# YENİ EKLENEN SATIR BURASI
+RUN apk add --no-cache curl
+
 WORKDIR /app
 
 # Sadece proje kodlarını kopyala (gereksiz dosyaları alma)
@@ -10,6 +14,8 @@ COPY ./template/app /app
 RUN curl -sSL https://get.wasp-lang.dev/installer.sh | sh
 
 # Projeyi derle
+# PATH'e wasp'ı ekleyerek komutun bulunmasını sağlıyoruz
+ENV PATH="/root/.local/bin:${PATH}"
 RUN wasp build
 
 # Sunucu bağımlılıklarını kur
