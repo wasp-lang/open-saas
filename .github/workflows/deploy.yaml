@@ -33,11 +33,16 @@ jobs:
           curl -sSL https://get.wasp-lang.dev/installer.sh | sh
           wasp build
 
-      # YENİ EKLENEN ADIM BURASI
-      - name: Prepare files for Docker build
+      # YENİ EKLENEN ADIM BURASI GÜNCELLENDİ
+      - name: Prepare files for Docker build (Workaround)
         run: |
           mkdir -p ./template/app/db
-          mv ./template/app/schema.prisma ./template/app/db/schema.prisma
+          # schema.prisma dosyası yoksa hata vermemesi için kontrol ekliyoruz
+          if [ -f ./template/app/schema.prisma ]; then
+            mv ./template/app/schema.prisma ./template/app/db/schema.prisma
+          fi
+          mkdir -p ./template/app/server
+          mkdir -p ./template/app/sdk
 
       - name: Build and push server Docker image
         uses: docker/build-push-action@v4
