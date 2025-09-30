@@ -49,11 +49,11 @@ jobs:
         run: |
           cat > client.Dockerfile <<EOF
           FROM nginx:alpine
-          # YOLU DÜZELTTİK: ./template/app kısmını kaldırdık
-          COPY ./.wasp/build/web-app/build /usr/share/nginx/html
+          # YOLU DÜZELTTİK: Eksik olan ./template/app kısmını geri ekledik
+          COPY ./template/app/.wasp/build/web-app/build /usr/share/nginx/html
           EOF
           
-      - name: Build and push client Dockerfile
+      - name: Build and push client Docker image
         uses: docker/build-push-action@v4
         with:
           context: .
