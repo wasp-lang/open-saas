@@ -1,21 +1,17 @@
 name: Deploy OpenSaaS to Coolify
 
-# This workflow runs only when you push to the 'main' branch
 on:
   push:
     branches:
       - main
 
 jobs:
-  # This is the only job: build and deploy
   deploy:
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Get your code from the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Log in to GitHub's container registry to store the Docker images
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -23,30 +19,30 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Step 3: Install and build the Wasp application
       - name: Build Wasp app
+        # Proje template/app içinde olduğu için o klasöre gidiyoruz.
+        working-directory: ./template/app
         run: |
           curl -sSL https://get.wasp-lang.dev/installer.sh | sh
           wasp build
 
-      # Step 4: Build the server's Docker image and push it to the registry
       - name: Build and push server Docker image
         uses: docker/build-push-action@v4
         with:
-          context: .
-          file: .wasp/build/Dockerfile
+          # Context'i ve Dockerfile yolunu yeni yola göre güncelliyoruz.
+          context: ./template/app
+          file: ./template/app/.wasp/build/Dockerfile
           push: true
           tags: ghcr.io/hemidzada/opensaas-server:main
 
-      # Step 5: Create a simple Dockerfile for the client
       - name: Create client Dockerfile
         run: |
+          # Client dosyalarının yeni yolunu belirtiyoruz.
           cat > client.Dockerfile <<EOF
           FROM nginx:alpine
-          COPY .wasp/build/web-app/build /usr/share/nginx/html
+          COPY ./template/app/.wasp/build/web-app/build /usr/share/nginx/html
           EOF
           
-      # Step 6: Build the client's Docker image and push it to the registry
       - name: Build and push client Docker image
         uses: docker/build-push-action@v4
         with:
@@ -55,10 +51,8 @@ jobs:
           push: true
           tags: ghcr.io/hemidzada/opensaas-client:main
 
-      # Step 7: Tell Coolify to update the server with the new image
       - name: Trigger Coolify server deploy
         run: curl -X POST ${{ secrets.SERVER_COOLIFY_WEBHOOK }}
 
-      # Step 8: Tell Coolify to update the client with the new image
       - name: Trigger Coolify client deploy
         run: curl -X POST ${{ secrets.CLIENT_COOLIFY_WEBHOOK }}
