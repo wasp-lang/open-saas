@@ -19,8 +19,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # YENİ EKLENEN ADIM BURASI
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Build Wasp app
-        # Proje template/app içinde olduğu için o klasöre gidiyoruz.
         working-directory: ./template/app
         run: |
           curl -sSL https://get.wasp-lang.dev/installer.sh | sh
@@ -29,7 +32,6 @@ jobs:
       - name: Build and push server Docker image
         uses: docker/build-push-action@v4
         with:
-          # Context'i ve Dockerfile yolunu yeni yola göre güncelliyoruz.
           context: ./template/app
           file: ./template/app/.wasp/build/Dockerfile
           push: true
@@ -37,7 +39,6 @@ jobs:
 
       - name: Create client Dockerfile
         run: |
-          # Client dosyalarının yeni yolunu belirtiyoruz.
           cat > client.Dockerfile <<EOF
           FROM nginx:alpine
           COPY ./template/app/.wasp/build/web-app/build /usr/share/nginx/html
