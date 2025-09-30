@@ -38,34 +38,39 @@ jobs:
       # --- 2. Sunucu (Server) İmajını Oluştur ve Yükle ---
       - name: Build and Push Server Image
         run: |
+          # Sunucu için Dockerfile'ı anlık olarak oluşturuyoruz
           cat > Dockerfile.server <<EOF
           FROM node:22-slim
           WORKDIR /app
-          # NIHAI DÜZELTME: Kopyalama yolunun başındaki nokta kaldırıldı.
-          COPY template/app/.wasp/build/server/ ./
+          COPY ./.wasp/build/server/ ./
           ENV NODE_ENV=production
           ENV PORT=3001
           EXPOSE 3001
           CMD ["node", "src/index.js"]
           EOF
 
+          # İmajı oluşturup GitHub'a yüklüyoruz
+          # DÜZELTME: Build context'ini doğru klasör olarak veriyoruz
           docker buildx build \
             --file ./Dockerfile.server \
             --tag ghcr.io/hemidzada/opensaas-server:main \
-            --push .
+            --push ./template/app
 
       # --- 3. İstemci (Client) İmajını Oluştur ve Yükle ---
       - name: Build and Push Client Image
         run: |
+          # İstemci için Dockerfile'ı anlık olarak oluşturuyoruz
           cat > Dockerfile.client <<EOF
           FROM nginx:alpine
-          COPY ./template/app/.wasp/build/web-app /usr/share/nginx/html
+          COPY ./.wasp/build/web-app /usr/share/nginx/html
           EOF
 
+          # İstemci imajını oluşturup GitHub'a yüklüyoruz
+          # DÜZELTME: Build context'ini doğru klasör olarak veriyoruz
           docker buildx build \
             --file ./Dockerfile.client \
             --tag ghcr.io/hemidzada/opensaas-client:main \
-            --push .
+            --push ./template/app
       
       # --- 4. Coolify'i Tetikle ---
       - name: Trigger Coolify Deploys
