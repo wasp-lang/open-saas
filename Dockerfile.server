@@ -5,31 +5,27 @@ RUN apt-get update && apt-get install -y curl
 
 WORKDIR /app
 
-COPY ./template/app /app
+COPY ./template/app .
 
 RUN npm install
 
-# Wasp'ı kurup projeyi tek adımda derliyoruz.
-# Bu, PATH ve Node versiyonu sorunlarını kökünden çözer.
-RUN curl -sSL https://get.wasp-lang.dev/installer.sh | sh -s -- \
-    && /root/.local/bin/wasp build
+RUN curl -sSL https://get.wasp-lang.dev/installer.sh | sh
+ENV PATH="/root/.local/bin:${PATH}"
 
-# Sunucu bağımlılıklarını kur
+RUN wasp build
+
 RUN cd .wasp/build/server && npm install
-
-# Prisma Client'ı oluştur
 RUN cd .wasp/build/server && npx prisma generate --schema='../db/schema.prisma'
 
 # Stage 2: Production
 FROM node:22-slim AS production
 WORKDIR /app
 
-# Sadece gerekli node_modules'ları builder aşamasından kopyala
 COPY --from=builder /app/.wasp/build/server/node_modules ./node_modules
 COPY --from=builder /app/node_modules ./node_modules
 
-# Derlenmiş sunucu kodunu kopyala
-COPY --from=builder /app/.wasp/build/server/src ./src
+# DÜZELTME 1: Derlenmiş sunucu kodunu doğru yere kopyalıyoruz
+COPY --from=builder /app/.wasp/build/server/src .
 
 # Gerekli diğer dosyaları kopyala
 COPY --from=builder /app/.wasp/build/server/package.json .
@@ -41,4 +37,5 @@ ENV PORT=3001
 
 EXPOSE 3001
 
-CMD ["node", "src/index.js"]
+# DÜZELTME 2: Doğru başlangıç komutunu veriyoruz
+CMD ["node", "index.js"]
