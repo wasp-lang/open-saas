@@ -1,6 +1,6 @@
 # Stage 1: Builder
 # Bu aşama, projenin bağımlılıklarını kurar ve derleme işlemini yapar.
-FROM node:22-slim AS builder # <--- ALPINE yerine SLIM kullanıyoruz.
+FROM node:22-slim AS builder
 
 # Gerekli araçları en başta kuruyoruz. (apk yerine apt-get)
 RUN apt-get update && apt-get install -y curl
@@ -28,7 +28,7 @@ RUN cd .wasp/build/server && npx prisma generate --schema='../db/schema.prisma'
 
 # Stage 2: Production
 # Bu aşama, sadece çalışmak için gerekli olan dosyaları alır ve küçük bir imaj oluşturur.
-FROM node:22-slim AS production # <--- ALPINE yerine SLIM kullanıyoruz.
+FROM node:22-slim AS production
 WORKDIR /app
 
 # Sadece gerekli node_modules'ları builder aşamasından kopyala
