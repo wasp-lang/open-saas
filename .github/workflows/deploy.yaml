@@ -12,11 +12,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # YENİ EKLENEN ADIM BURASI
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22' # Wasp'ın istediği 22.12.0 veya üstü bir versiyonu kuruyoruz.
+          node-version: '22'
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
@@ -33,6 +32,12 @@ jobs:
         run: |
           curl -sSL https://get.wasp-lang.dev/installer.sh | sh
           wasp build
+
+      # YENİ EKLENEN ADIM BURASI
+      - name: Prepare files for Docker build
+        run: |
+          mkdir -p ./template/app/db
+          mv ./template/app/schema.prisma ./template/app/db/schema.prisma
 
       - name: Build and push server Docker image
         uses: docker/build-push-action@v4
