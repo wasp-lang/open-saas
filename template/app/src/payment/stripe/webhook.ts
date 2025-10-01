@@ -66,8 +66,8 @@ export const stripeWebhook: PaymentsWebhook = async (
       // We must return a 2XX status code, otherwise Stripe will keep retrying the event.
       response.status(202).send();
 
-      // In development, it is likely that you will receive other events that you are not handling.
-      // E.g. via `stripe trigger` command.
+      // In development, it is likely that we will receive events that we are not handling.
+      // E.g. via the `stripe trigger` command.
       // These can be ignored without any issues.
       if (process.env.NODE_ENV === "production") {
         throw err;
