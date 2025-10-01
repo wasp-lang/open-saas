@@ -37,6 +37,10 @@ export const stripeWebhook: PaymentsWebhook = async (
   try {
     const stripeEvent = constructStripeEvent(request);
 
+    // If you'd like to handle more events, you can add more cases below.
+    // When deploying your app, you configure your webhook in the Stripe dashboard
+    // to only send the events that you're handling above.
+    // See: https://docs.opensaas.sh/guides/deploying/#setting-up-your-stripe-webhook
     switch (stripeEvent.type) {
       case "invoice.paid":
         await handleInvoicePaid(stripeEvent, prismaUserDelegate);
@@ -54,21 +58,20 @@ export const stripeWebhook: PaymentsWebhook = async (
         );
         break;
       default:
-        // If you'd like to handle more events, you can add more cases above.
-        // When deploying your app, you configure your webhook in the Stripe dashboard
-        // to only send the events that you're handling above.
-        // See: https://docs.opensaas.sh/guides/deploying/#setting-up-your-stripe-webhook
-        // In development, it is likely that you will receive other events that you are not handling.
-        // These can be ignored without any issues.
-        if (process.env.NODE_ENV === "production") {
-          throw new UnhandledWebhookEventError(stripeEvent.type);
-        }
+        throw new UnhandledWebhookEventError(stripeEvent.type);
     }
     return response.status(204).send();
   } catch (err) {
     if (err instanceof UnhandledWebhookEventError) {
-      response.status(204).send();
-      throw err;
+      // We must return a 2XX status code, otherwise Stripe will keep retrying the webhook.
+      response.status(202).send();
+
+      // In development, it is likely that you will receive other events that you are not handling.
+      // E.g. via `stripe trigger` command.
+      // These can be ignored without any issues.
+      if (process.env.NODE_ENV === "production") {
+        throw err;
+      }
     }
 
     console.error("Stripe webhook error:", err);
