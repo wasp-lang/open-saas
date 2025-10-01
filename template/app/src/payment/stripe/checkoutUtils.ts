@@ -48,7 +48,7 @@ export async function createStripeCheckoutSession({
     ],
     mode,
     success_url: `${CLIENT_BASE_URL}/checkout?status=success`,
-    cancel_url: `${CLIENT_BASE_URL}/checkout?status=cancel`,
+    cancel_url: `${CLIENT_BASE_URL}/checkout?status=canceled`,
     automatic_tax: { enabled: true },
     allow_promotion_codes: true,
     customer_update: {
