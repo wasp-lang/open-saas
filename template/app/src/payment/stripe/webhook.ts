@@ -64,7 +64,7 @@ export const stripeWebhook: PaymentsWebhook = async (
   } catch (err) {
     if (err instanceof UnhandledWebhookEventError) {
       // We must return a 2XX status code, otherwise Stripe will keep retrying the event.
-      response.status(202).send();
+      response.status(204).send();
 
       // In development, it is likely that we will receive events that we are not handling.
       // E.g. via the `stripe trigger` command.
