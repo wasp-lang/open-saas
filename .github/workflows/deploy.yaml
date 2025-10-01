@@ -39,18 +39,25 @@ jobs:
           cd ./.wasp/build/web-app
           REACT_APP_API_URL=https://api.vidhub.ai npm run build
 
-      # --- 2. Sunucu Dockerfile'ını Düzelt ve İmajı Oluştur ---
-      - name: Fix Dockerfile, Build and Push Server Image
+      # --- 2. Sunucu Dockerfile'ını Son Hatalara Karşı Düzelt ---
+      - name: Prepare Server Build Environment
         run: |
-          # NIHAI DÜZELTME: Dockerfile'a veritabanı migrate komutunu ekliyoruz
-          sed -i '/CMD \["npm", "run", "start-production"\]/i RUN npx prisma migrate deploy --schema=../db/schema.prisma' ./template/app/.wasp/build/Dockerfile
+          # "/db: not found" hatası için eksik klasörü oluşturuyoruz
+          mkdir -p ./template/app/.wasp/build/db
           
-          docker buildx build \
-            --file ./template/app/.wasp/build/Dockerfile \
-            --tag ghcr.io/hemidzada/opensaas-server:main \
-            --push ./template/app
-            
-      # --- 3. İstemci (Client) İmajını Oluştur ve Yükle ---
+          # "Table not found" hatası için veritabanı migrate komutunu Dockerfile'a ekliyoruz
+          sed -i '/CMD \["npm", "run", "start-production"\]/i RUN npx prisma migrate deploy --schema=../db/schema.prisma' ./template/app/.wasp/build/Dockerfile
+
+      # --- 3. Sunucu (Server) İmajını Oluştur ve Yükle ---
+      - name: Build and Push Server Image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./template/app/.wasp/build
+          file: ./template/app/.wasp/build/Dockerfile
+          push: true
+          tags: ghcr.io/hemidzada/opensaas-server:main
+
+      # --- 4. İstemci (Client) İmajını Oluştur ve Yükle ---
       - name: Build and Push Client Image
         run: |
           cat > Dockerfile.client <<EOF
@@ -64,7 +71,7 @@ jobs:
             --tag ghcr.io/hemidzada/opensaas-client:main \
             --push ./template/app/.wasp/build/web-app
       
-      # --- 4. Coolify'i Tetikle ---
+      # --- 5. Coolify'i Tetikle ---
       - name: Trigger Coolify Deploys
         run: |
           curl -X POST ${{ secrets.SERVER_COOLIFY_WEBHOOK }}
