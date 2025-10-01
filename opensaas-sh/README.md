@@ -32,8 +32,6 @@ brew install gpatch
 brew install diffutils
 ```
 
-Make sure not to commit `app/` to git. It is currently (until we resolve this) not added to .gitignore because that messes up diffing for us.
-
 ### Blog (blog/)
 
 Blog (and docs in it) is currently tracked in whole, as it has quite some content, so updating it to the latest version of Open Saas is done manually, but it might be interesting to also move it to the `diff` approach, as we use for the demo app, if it turns out to be a good match.
