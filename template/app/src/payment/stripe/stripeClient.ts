@@ -2,7 +2,7 @@ import Stripe from "stripe";
 import { requireNodeEnvVar } from "../../server/utils";
 
 /**
- * Stripe API version to use for this client.
+ * The Stripe client API version.
  *
  * By default, Stripe uses the API version set in your Dashboard.
  *
