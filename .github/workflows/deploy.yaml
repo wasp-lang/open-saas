@@ -27,27 +27,28 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # --- 1. Projeyi Derle (Hem Sunucu hem İstemci için) ---
-      - name: Install Dependencies and Build Project
+      # --- 1. Projeyi Derle ve Veritabanını Hazırla ---
+      - name: Install, Build, and Prepare Database
         run: |
           cd ./template/app
           npm install
           curl -sSL https://get.wasp-lang.dev/installer.sh | sh
+          
+          # Veritabanı "migration" dosyalarını oluşturuyoruz
+          echo "init" | /home/runner/.local/bin/wasp db migrate-dev
+          
+          # Projeyi derliyoruz
           /home/runner/.local/bin/wasp build
           
           echo "Building client for production..."
           cd ./.wasp/build/web-app
           REACT_APP_API_URL=https://api.vidhub.ai npm run build
 
-      # --- SON DÜZELTME: Docker'ın aradığı 'db' klasörünü oluşturuyoruz ---
-      - name: Create missing 'db' directory before server build
-        run: mkdir -p ./template/app/.wasp/build/db
-
       # --- 2. Sunucu (Server) İmajını Oluştur ve Yükle ---
       - name: Build and Push Server Image
         uses: docker/build-push-action@v4
         with:
-          context: ./template/app/.wasp/build
+          context: ./template/app
           file: ./template/app/.wasp/build/Dockerfile
           push: true
           tags: ghcr.io/hemidzada/opensaas-server:main
