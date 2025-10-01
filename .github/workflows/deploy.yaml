@@ -1,4 +1,4 @@
-name: Deploy OpenSaaS to Coolify (All-in-One)
+name: Deploy OpenSaaS to Coolify
 
 on:
   push:
@@ -27,49 +27,41 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # --- 1. Projeyi Derle ---
+      # --- 1. Projeyi Derle (Hem Sunucu hem İstemci için) ---
       - name: Install Dependencies and Build Project
         run: |
           cd ./template/app
           npm install
           curl -sSL https://get.wasp-lang.dev/installer.sh | sh
           /home/runner/.local/bin/wasp build
+          
+          echo "Building client for production..."
+          cd ./.wasp/build/web-app
+          REACT_APP_API_URL=https://api.vidhub.ai npm run build
 
       # --- 2. Sunucu (Server) İmajını Oluştur ve Yükle ---
       - name: Build and Push Server Image
-        run: |
-          # Sunucu için Dockerfile'ı anlık olarak oluşturuyoruz
-          cat > Dockerfile.server <<EOF
-          FROM node:22-slim
-          WORKDIR /app
-          # NIHAI DÜZELTME: Kopyalama yolunun başındaki nokta kaldırıldı.
-          COPY template/app/.wasp/build/server/ ./
-          ENV NODE_ENV=production
-          ENV PORT=3001
-          EXPOSE 3001
-          CMD ["node", "src/index.js"]
-          EOF
-
-          # İmajı oluşturup GitHub'a yüklüyoruz
-          docker buildx build \
-            --file ./Dockerfile.server \
-            --tag ghcr.io/hemidzada/opensaas-server:main \
-            --push .
+        uses: docker/build-push-action@v4
+        with:
+          # NIHAI DÜZELTME: Context yolunu bir üst klasör olarak düzeltiyoruz.
+          context: ./template/app
+          file: ./template/app/.wasp/build/Dockerfile
+          push: true
+          tags: ghcr.io/hemidzada/opensaas-server:main
 
       # --- 3. İstemci (Client) İmajını Oluştur ve Yükle ---
       - name: Build and Push Client Image
         run: |
-          # İstemci için Dockerfile'ı anlık olarak oluşturuyoruz
           cat > Dockerfile.client <<EOF
-          FROM nginx:alpine
-          COPY ./template/app/.wasp/build/web-app /usr/share/nginx/html
+          FROM pierrezemb/gostatic
+          CMD ["-fallback", "index.html"]
+          COPY ./build /srv/http
           EOF
 
-          # İstemci imajını oluşturup GitHub'a yüklüyoruz
           docker buildx build \
             --file ./Dockerfile.client \
             --tag ghcr.io/hemidzada/opensaas-client:main \
-            --push .
+            --push ./template/app/.wasp/build/web-app
       
       # --- 4. Coolify'i Tetikle ---
       - name: Trigger Coolify Deploys
