@@ -29,6 +29,9 @@ jobs:
 
       # --- 1. Projeyi Derle ve Veritabanını Hazırla ---
       - name: Install, Build, and Prepare Database
+        # Veritabanı URL'sini GitHub Secrets'tan alıyoruz.
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           cd ./template/app
           npm install
