@@ -12,9 +12,6 @@ export default {
   darkMode: "class",
   theme: {
     extend: {
-      fontFamily: {
-        satoshi: ["Satoshi", "system-ui", "sans-serif"],
-      },
       colors: {
         current: "currentColor",
         transparent: "transparent",
