@@ -62,12 +62,31 @@ recreate_diff_dir() {
       filepathToBeUsedAsBase="/dev/null"
     fi
 
-    local DIFF_OUTPUT
-    DIFF_OUTPUT=$(diff -Nu --label "${baseFilepath}" --label "${derivedFilepath}" "${filepathToBeUsedAsBase}" "${derivedFilepath}")
-    if [ $? -eq 1 ]; then
-      mkdir -p "${DIFF_DIR}/$(dirname "${filepath}")"
-      echo "${DIFF_OUTPUT}" > "${DIFF_DIR}/${filepath}.diff"
-      echo "Generated ${DIFF_DIR}/${filepath}.diff"
+    # Check if the file is binary
+    if file --mime "${derivedFilepath}" | grep -q "charset=binary"; then
+      # For binary files, check if they differ from the base file
+      local files_differ=1
+      if [ -f "${filepathToBeUsedAsBase}" ] && [ "${filepathToBeUsedAsBase}" != "/dev/null" ]; then
+        if cmp -s "${filepathToBeUsedAsBase}" "${derivedFilepath}"; then
+          files_differ=0
+        fi
+      fi
+
+      if [ ${files_differ} -eq 1 ]; then
+        # Only copy if files differ or base file doesn't exist
+        mkdir -p "${DIFF_DIR}/$(dirname "${filepath}")"
+        cp "${derivedFilepath}" "${DIFF_DIR}/${filepath}.copy"
+        echo "Generated ${DIFF_DIR}/${filepath}.copy (binary)"
+      fi
+    else
+      # For text files, generate a diff
+      local DIFF_OUTPUT
+      DIFF_OUTPUT=$(diff -Nu --label "${baseFilepath}" --label "${derivedFilepath}" "${filepathToBeUsedAsBase}" "${derivedFilepath}")
+      if [ $? -eq 1 ]; then
+        mkdir -p "${DIFF_DIR}/$(dirname "${filepath}")"
+        echo "${DIFF_OUTPUT}" > "${DIFF_DIR}/${filepath}.diff"
+        echo "Generated ${DIFF_DIR}/${filepath}.diff"
+      fi
     fi
   done <<< "${DERIVED_FILES}"
 
@@ -117,6 +136,19 @@ recreate_derived_dir() {
     fi
     echo ""
   done < <(find "${DIFF_DIR}" -name "*.diff")
+
+  # For each .copy file in diff dir, copy it to the corresponding location in the derived dir.
+  while IFS= read -r copy_filepath; do
+    local derived_filepath
+    derived_filepath="${copy_filepath#"${DIFF_DIR}"/}"
+    derived_filepath="${derived_filepath%.copy}"
+
+    mkdir -p "${DERIVED_DIR}/$(dirname "${derived_filepath}")"
+    cp "${copy_filepath}" "${DERIVED_DIR}/${derived_filepath}"
+    echo "Copied ${copy_filepath} to ${DERIVED_DIR}/${derived_filepath}"
+    echo -e "${GREEN_COLOR}[OK]${RESET_COLOR}"
+    echo ""
+  done < <(find "${DIFF_DIR}" -name "*.copy")
 
   # Delete any files that exist in the base dir but shouldn't exist in the derived dir.
   # TODO: also allow deletion of dirs.
