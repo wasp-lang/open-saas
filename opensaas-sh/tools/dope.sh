@@ -91,7 +91,7 @@ recreate_derived_dir() {
 
   # Copy all the source files from the base dir over to the derived dir.
   while IFS= read -r filepath; do
-    mkdir -p "${DERIVED_DIR}/$(dirname ${filepath})"
+    mkdir -p "${DERIVED_DIR}/$(dirname "${filepath}")"
     cp "${BASE_DIR}/${filepath}" "${DERIVED_DIR}/${filepath}"
   done <<< "${BASE_FILES}"
 
@@ -100,7 +100,7 @@ recreate_derived_dir() {
   local num_patches_failed=0
   while IFS= read -r diff_filepath; do
     local derived_filepath
-    derived_filepath="${diff_filepath#${DIFF_DIR}/}"
+    derived_filepath="${diff_filepath#"${DIFF_DIR}"/}"
     derived_filepath="${derived_filepath%.diff}"
 
     local patch_output
