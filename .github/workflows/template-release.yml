@@ -30,7 +30,7 @@ jobs:
           ref: ${{ env.tag_name}}
 
       - name: Create template archive
-        # The Wasp CLI expects the template contents to be straight in the root of the archive.
+        # The Wasp CLI expects the template contents to be in the root of the archive.
         working-directory: template
         run: tar -czf "../$archive_name" .
 
