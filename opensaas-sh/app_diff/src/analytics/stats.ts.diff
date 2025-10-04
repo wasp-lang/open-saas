@@ -6,7 +6,7 @@
  import { type DailyStats } from "wasp/entities";
  import { type DailyStatsJob } from "wasp/server/jobs";
 +import { SubscriptionStatus } from "../payment/plans";
- import { stripe } from "../payment/stripe/stripeClient";
+ import { stripeClient } from "../payment/stripe/stripeClient";
  import {
    getDailyPageViews,
    getSources,
@@ -38,7 +38,7 @@
  
      const { totalViews, prevDayViewsChangePercent } = await getDailyPageViews();
  
-@@ -176,38 +162,3 @@
+@@ -177,38 +163,3 @@
    // Revenue is in cents so we convert to dollars (or your main currency unit)
    return totalRevenue / 100;
  }
