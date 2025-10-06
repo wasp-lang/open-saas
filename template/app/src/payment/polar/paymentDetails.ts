@@ -1,25 +1,25 @@
 import { PrismaClient } from "wasp/server";
 import { PaymentPlanId, SubscriptionStatus } from "../plans";
 
-interface UpdateUserPaymentDetailsArgs {
-  polarCustomerId?: string;
-  subscriptionPlan?: PaymentPlanId;
-  subscriptionStatus?: SubscriptionStatus | string;
-  numOfCreditsPurchased?: number;
+interface UpdateUserSubscriptionDetailsArgs {
+  polarCustomerId: string;
+  subscriptionPlan: PaymentPlanId;
+  subscriptionStatus: SubscriptionStatus | string;
   datePaid?: Date;
 }
 
-export async function updateUserPaymentDetails(
-  args: UpdateUserPaymentDetailsArgs,
+interface UpdateUserCreditsDetailsArgs {
+  polarCustomerId: string;
+  numOfCreditsPurchased: number;
+  datePaid: Date;
+}
+
+export async function updateUserSubscription(
+  args: UpdateUserSubscriptionDetailsArgs,
   userDelegate: PrismaClient["user"],
 ) {
-  const {
-    polarCustomerId,
-    subscriptionPlan,
-    subscriptionStatus,
-    numOfCreditsPurchased,
-    datePaid,
-  } = args;
+  const { polarCustomerId, subscriptionPlan, subscriptionStatus, datePaid } =
+    args;
 
   return await userDelegate.update({
     where: {
@@ -29,10 +29,23 @@ export async function updateUserPaymentDetails(
       subscriptionPlan,
       subscriptionStatus,
       datePaid,
-      credits:
-        numOfCreditsPurchased !== undefined
-          ? { increment: numOfCreditsPurchased }
-          : undefined,
+    },
+  });
+}
+
+export async function updateUserCredits(
+  args: UpdateUserCreditsDetailsArgs,
+  userDelegate: PrismaClient["user"],
+) {
+  const { polarCustomerId, numOfCreditsPurchased, datePaid } = args;
+
+  return await userDelegate.update({
+    where: {
+      paymentProcessorUserId: polarCustomerId,
+    },
+    data: {
+      credits: { increment: numOfCreditsPurchased },
+      datePaid,
     },
   });
 }

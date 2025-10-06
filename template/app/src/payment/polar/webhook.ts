@@ -16,7 +16,7 @@ import {
   PaymentPlanId,
   paymentPlans,
 } from "../plans";
-import { updateUserPaymentDetails } from "./paymentDetails";
+import { updateUserSubscription, updateUserCredits } from "./paymentDetails";
 
 export const polarWebhook: PaymentsWebhook = async (req, res, context) => {
   try {
@@ -38,7 +38,7 @@ export const polarWebhook: PaymentsWebhook = async (req, res, context) => {
   } catch (err) {
     if (err instanceof UnhandledWebhookEventError) {
       console.error(err.message);
-      return res.status(422).json({ error: err.message });
+      return res.status(204).json({ error: err.message });
     }
 
     console.error("Webhook error:", err);
@@ -89,10 +89,10 @@ async function handleOrderPaid(
 
   switch (paymentPlanId) {
     case PaymentPlanId.Credits10:
-      await updateUserPaymentDetails(
+      await updateUserCredits(
         {
           polarCustomerId,
-          numOfCreditsPurchased: getCredits(order),
+          numOfCreditsPurchased: getProductIdCreditsAmount(order.productId),
           datePaid: order.createdAt,
         },
         userDelegate,
@@ -100,7 +100,7 @@ async function handleOrderPaid(
       break;
     case PaymentPlanId.Hobby:
     case PaymentPlanId.Pro:
-      await updateUserPaymentDetails(
+      await updateUserSubscription(
         {
           polarCustomerId,
           subscriptionPlan: paymentPlanId,
@@ -138,7 +138,7 @@ async function handleSubscriptionUpdated(
     subscriptionStatus = OpenSaasSubscriptionStatus.CancelAtPeriodEnd;
   }
 
-  await updateUserPaymentDetails(
+  await updateUserSubscription(
     { polarCustomerId, subscriptionStatus, subscriptionPlan },
     userDelegate,
   );
@@ -171,14 +171,13 @@ function mapPolarToOpenSaasSubscriptionStatus(
   return statusMap[polarStatus];
 }
 
-function getCredits(order: Order): number {
-  const productId = order.productId;
+function getProductIdCreditsAmount(productId: string): number {
   const planId = getPaymentPlanIdByProductId(productId);
   const plan = paymentPlans[planId];
 
   if (plan.effect.kind !== "credits") {
     throw new Error(
-      `Order ${order.id} product ${productId} is not a credit product (plan: ${planId})`,
+      `Product ${productId} is not a credit product (plan: ${planId})`,
     );
   }
 

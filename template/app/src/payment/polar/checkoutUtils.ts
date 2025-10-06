@@ -52,18 +52,12 @@ export async function ensurePolarCustomer(
     );
   }
 
-  try {
-    console.log("Creating new Polar customer");
+  console.log("Creating new Polar customer");
 
-    const newCustomer = await polarClient.customers.create({
-      externalId: externalUserId,
-      email: externalUserEmail,
-    });
+  const newCustomer = await polarClient.customers.create({
+    externalId: externalUserId,
+    email: externalUserEmail,
+  });
 
-    return newCustomer;
-  } catch (error) {
-    console.error("Error creating Polar customer:", error);
-
-    throw error;
-  }
+  return newCustomer;
 }
