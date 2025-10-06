@@ -62,7 +62,7 @@ recreate_diff_dir() {
       filepathToBeUsedAsBase="/dev/null"
     fi
 
-    # Check if the file is binary
+    # Check if the file is binary.
     if file --mime "${derivedFilepath}" | grep -q "charset=binary"; then
       # For binary files, check if they differ from the base file
       local files_differ=1
