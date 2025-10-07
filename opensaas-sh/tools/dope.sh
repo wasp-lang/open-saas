@@ -88,11 +88,11 @@ recreate_diff_dir() {
     mkdir -p "${DIFF_DIR}/$(dirname "${filepath}")"
 
     if file_is_binary "${derivedFilepath}"; then
-      # Generate a .copy file
+      # Generate a .copy file.
       cp "${derivedFilepath}" "${DIFF_DIR}/${filepath}.copy"
       echo "Generated ${DIFF_DIR}/${filepath}.copy"
     else
-      # Generate a .diff file
+      # Generate a .diff file.
       diff -Nu --label "${baseFilepath}" --label "${derivedFilepath}" "${filepathToBeUsedAsBase}" "${derivedFilepath}" > "${DIFF_DIR}/${filepath}.diff"
       echo "Generated ${DIFF_DIR}/${filepath}.diff"
     fi
