@@ -1,6 +1,16 @@
 --- template/app/tailwind.config.js
 +++ opensaas-sh/app/tailwind.config.js
-@@ -254,6 +254,10 @@
+@@ -12,6 +12,9 @@
+   darkMode: "class",
+   theme: {
+     extend: {
++      fontFamily: {
++        satoshi: ["Satoshi", "system-ui", "sans-serif"],
++      },
+       colors: {
+         current: "currentColor",
+         transparent: "transparent",
+@@ -251,6 +254,10 @@
          7: "-5px 0 0 #313D4A, 5px 0 0 #313D4A",
          8: "1px 0 0 #313D4A, -1px 0 0 #313D4A, 0 1px 0 #313D4A, 0 -1px 0 #313D4A, 0 3px 13px rgb(0 0 0 / 8%)",
          default: "0px 8px 13px -3px rgba(0, 0, 0, 0.07)",
