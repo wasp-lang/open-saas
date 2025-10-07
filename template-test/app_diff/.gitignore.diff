@@ -1,0 +1,12 @@
+--- /Users/ilakovac/dev/open-saas/template-test/tools/../../template-test/base-app/app/.gitignore
++++ template-test/app/.gitignore
+@@ -9,3 +9,8 @@
+ # Don't ignore example dotenv files.
+ !.env.example
+ !.env.*.example
++
++.env*
++.flaskenv*
++!.env.project
++!.env.vault
+\ No newline at end of file
