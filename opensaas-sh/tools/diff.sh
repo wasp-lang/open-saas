@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-TOOLS_DIR=$(dirname "$(realpath "$0")") # Assumes this script is in `tools/`.
-cd "${TOOLS_DIR}" && cd ../..
+SCRIPT_DIR=$(dirname "$(realpath "$0")") # Assumes this script is in `opensaas-sh/tools/`.
+ROOT_DIR="${SCRIPT_DIR}/../.."
+
+cd "${ROOT_DIR}"
 
 rm -rf opensaas-sh/app_diff
-"${TOOLS_DIR}/dope.sh" template/app opensaas-sh/app diff
+"${ROOT_DIR}/tools/dope.sh" template/app opensaas-sh/app diff
