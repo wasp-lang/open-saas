@@ -39,6 +39,25 @@ ACTION=$3
 DIFF_DIR="${DERIVED_DIR}_diff"
 DIFF_DIR_DELETIONS="${DIFF_DIR}/deletions"
 
+file_is_binary() {
+  local file=$1
+  if file --mime "$file" | grep -q "charset=binary"; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+files_are_equal() {
+  local file1=$1
+  local file2=$2
+  if cmp -s "$file1" "$file2"; then
+    return 0
+  else
+    return 1
+  fi
+}
+
 # Based on base dir and derived dir, creates a diff dir that contains the diff between the two dirs.
 recreate_diff_dir() {
   mkdir -p "${DIFF_DIR}"
@@ -62,31 +81,20 @@ recreate_diff_dir() {
       filepathToBeUsedAsBase="/dev/null"
     fi
 
-    # Check if the file is binary.
-    if file --mime "${derivedFilepath}" | grep -q "charset=binary"; then
-      # For binary files, check if they differ from the base file
-      local files_differ=1
-      if [ -f "${filepathToBeUsedAsBase}" ] && [ "${filepathToBeUsedAsBase}" != "/dev/null" ]; then
-        if cmp -s "${filepathToBeUsedAsBase}" "${derivedFilepath}"; then
-          files_differ=0
-        fi
-      fi
+    if files_are_equal "${filepathToBeUsedAsBase}" "${derivedFilepath}"; then
+      continue
+    fi
 
-      if [ ${files_differ} -eq 1 ]; then
-        # Only copy if files differ or base file doesn't exist
-        mkdir -p "${DIFF_DIR}/$(dirname "${filepath}")"
-        cp "${derivedFilepath}" "${DIFF_DIR}/${filepath}.copy"
-        echo "Generated ${DIFF_DIR}/${filepath}.copy (binary)"
-      fi
+    mkdir -p "${DIFF_DIR}/$(dirname "${filepath}")"
+
+    if file_is_binary "${derivedFilepath}"; then
+      # Generate a .copy file
+      cp "${derivedFilepath}" "${DIFF_DIR}/${filepath}.copy"
+      echo "Generated ${DIFF_DIR}/${filepath}.copy"
     else
-      # For text files, generate a diff
-      local DIFF_OUTPUT
-      DIFF_OUTPUT=$(diff -Nu --label "${baseFilepath}" --label "${derivedFilepath}" "${filepathToBeUsedAsBase}" "${derivedFilepath}")
-      if [ $? -eq 1 ]; then
-        mkdir -p "${DIFF_DIR}/$(dirname "${filepath}")"
-        echo "${DIFF_OUTPUT}" > "${DIFF_DIR}/${filepath}.diff"
-        echo "Generated ${DIFF_DIR}/${filepath}.diff"
-      fi
+      # Generate a .diff file
+      diff -Nu --label "${baseFilepath}" --label "${derivedFilepath}" "${filepathToBeUsedAsBase}" "${derivedFilepath}" > "${DIFF_DIR}/${filepath}.diff"
+      echo "Generated ${DIFF_DIR}/${filepath}.diff"
     fi
   done <<< "${DERIVED_FILES}"
 
