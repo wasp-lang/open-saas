@@ -1,38 +1,33 @@
 # Template Testing
 
-Tests the production version of the Open SaaS template that users get from `wasp new -t saas`.
+Tests the production version of the Open SaaS template that users get from `wasp new app -t saas`.
 
-**Why this exists:** opensaas-sh tests `template/app` (current repo state), but `main` branch may differ from the last released template. This tests what users actually get from `wasp new -t saas`.
+**Why this exists:** As a part of our release checklist, we want to test that the production version of the Open SaaS template works.
 
-**How it works:** Scripts run `wasp new -t saas` to get a fresh template, then apply minimal production patches (Dummy→SendGrid email, dotenv-vault for secrets). Tests that the template builds and runs with production email provider.
+**How it works:** We create a new Wasp app from the production Open SaaS template, and then modify the app to be production-ready (e.g. replace `Dummy` email service with `SMTP`, add Dotenv Vault with real credentials, etc.). 
 
-## Regular Usage
+## Testing a new Wasp release
 
 When testing a new Wasp release:
 
 ```bash
 cd template-test
+# Create a new Wasp app and apply our patches to it.
 ./tools/patch.sh
-cd app && npm run env:pull
-wasp start  # or wasp build
+
+cd app
+
+# Get the environment variables from Dotenv Vault.
+npm run env:pull
+
+wasp db start
+wasp db migrate-dev
+wasp start
 ```
 
-## Initial Setup
+### Workflow
 
-Only needed once to create the initial patches:
+- Generate `app/` from template and diffs: `./tools/patch.sh`
+- Update diffs after modifying `app/`: `./tools/diff.sh`
 
-```bash
-cd template-test
-wasp new -t saas temp && cp -r temp/app/* app/ && rm -rf temp
-cd app && git init && git add .
-
-# Edit main.wasp: change Dummy→SendGrid
-# Setup dotenv-vault with working credentials
-
-cd .. && ./tools/diff.sh
-git add app_diff/ && git commit -m "Add template-test patches"
-```
-
-## Requirements
-
-MacOS users need: `brew install coreutils gpatch diffutils`
+For detailed information about the diff/patch workflow and MacOS setup requirements, see [../tools/README.md](../tools/README.md).
