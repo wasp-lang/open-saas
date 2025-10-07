@@ -39,6 +39,14 @@ ACTION=$3
 DIFF_DIR="${DERIVED_DIR}_diff"
 DIFF_DIR_DELETIONS="${DIFF_DIR}/deletions"
 
+file_is_binary() {
+  file --mime "$1" | grep -q "charset=binary"
+}
+
+files_are_equal() {
+  cmp -s "$1" "$2"
+}
+
 # Based on base dir and derived dir, creates a diff dir that contains the diff between the two dirs.
 recreate_diff_dir() {
   mkdir -p "${DIFF_DIR}"
@@ -62,11 +70,17 @@ recreate_diff_dir() {
       filepathToBeUsedAsBase="/dev/null"
     fi
 
-    local DIFF_OUTPUT
-    DIFF_OUTPUT=$(diff -Nu --label "${baseFilepath}" --label "${derivedFilepath}" "${filepathToBeUsedAsBase}" "${derivedFilepath}")
-    if [ $? -eq 1 ]; then
-      mkdir -p "${DIFF_DIR}/$(dirname "${filepath}")"
-      echo "${DIFF_OUTPUT}" > "${DIFF_DIR}/${filepath}.diff"
+    if files_are_equal "${filepathToBeUsedAsBase}" "${derivedFilepath}"; then
+      continue
+    fi
+
+    mkdir -p "${DIFF_DIR}/$(dirname "${filepath}")"
+
+    if file_is_binary "${derivedFilepath}"; then
+      cp "${derivedFilepath}" "${DIFF_DIR}/${filepath}.copy"
+      echo "Generated ${DIFF_DIR}/${filepath}.copy"
+    else
+      diff -Nu --label "${baseFilepath}" --label "${derivedFilepath}" "${filepathToBeUsedAsBase}" "${derivedFilepath}" > "${DIFF_DIR}/${filepath}.diff"
       echo "Generated ${DIFF_DIR}/${filepath}.diff"
     fi
   done <<< "${DERIVED_FILES}"
@@ -91,7 +105,7 @@ recreate_derived_dir() {
 
   # Copy all the source files from the base dir over to the derived dir.
   while IFS= read -r filepath; do
-    mkdir -p "${DERIVED_DIR}/$(dirname ${filepath})"
+    mkdir -p "${DERIVED_DIR}/$(dirname "${filepath}")"
     cp "${BASE_DIR}/${filepath}" "${DERIVED_DIR}/${filepath}"
   done <<< "${BASE_FILES}"
 
@@ -100,7 +114,7 @@ recreate_derived_dir() {
   local num_patches_failed=0
   while IFS= read -r diff_filepath; do
     local derived_filepath
-    derived_filepath="${diff_filepath#${DIFF_DIR}/}"
+    derived_filepath="${diff_filepath#"${DIFF_DIR}"/}"
     derived_filepath="${derived_filepath%.diff}"
 
     local patch_output
@@ -117,6 +131,19 @@ recreate_derived_dir() {
     fi
     echo ""
   done < <(find "${DIFF_DIR}" -name "*.diff")
+
+  # For each .copy file in diff dir, copy it to the corresponding location in the derived dir.
+  while IFS= read -r copy_filepath; do
+    local derived_filepath
+    derived_filepath="${copy_filepath#"${DIFF_DIR}"/}"
+    derived_filepath="${derived_filepath%.copy}"
+
+    mkdir -p "${DERIVED_DIR}/$(dirname "${derived_filepath}")"
+    cp "${copy_filepath}" "${DERIVED_DIR}/${derived_filepath}"
+    echo "Copied ${copy_filepath} to ${DERIVED_DIR}/${derived_filepath}"
+    echo -e "${GREEN_COLOR}[OK]${RESET_COLOR}"
+    echo ""
+  done < <(find "${DIFF_DIR}" -name "*.copy")
 
   # Delete any files that exist in the base dir but shouldn't exist in the derived dir.
   # TODO: also allow deletion of dirs.
