@@ -20,9 +20,9 @@ cd app
 # Get the environment variables from Dotenv Vault.
 npm run env:pull
 
-wasp db start
-wasp db migrate-dev
-wasp start
+# Test that the app works in dev and prod modes.
+npx @wasp.sh/wasp-app-runner dev
+npx @wasp.sh/wasp-app-runner build
 ```
 
 ### Workflow
