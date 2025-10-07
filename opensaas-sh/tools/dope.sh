@@ -40,22 +40,11 @@ DIFF_DIR="${DERIVED_DIR}_diff"
 DIFF_DIR_DELETIONS="${DIFF_DIR}/deletions"
 
 file_is_binary() {
-  local file=$1
-  if file --mime "$file" | grep -q "charset=binary"; then
-    return 0
-  else
-    return 1
-  fi
+  file --mime "$1" | grep -q "charset=binary"
 }
 
 files_are_equal() {
-  local file1=$1
-  local file2=$2
-  if cmp -s "$file1" "$file2"; then
-    return 0
-  else
-    return 1
-  fi
+  cmp -s "$1" "$2"
 }
 
 # Based on base dir and derived dir, creates a diff dir that contains the diff between the two dirs.
@@ -88,11 +77,9 @@ recreate_diff_dir() {
     mkdir -p "${DIFF_DIR}/$(dirname "${filepath}")"
 
     if file_is_binary "${derivedFilepath}"; then
-      # Generate a .copy file.
       cp "${derivedFilepath}" "${DIFF_DIR}/${filepath}.copy"
       echo "Generated ${DIFF_DIR}/${filepath}.copy"
     else
-      # Generate a .diff file.
       diff -Nu --label "${baseFilepath}" --label "${derivedFilepath}" "${filepathToBeUsedAsBase}" "${derivedFilepath}" > "${DIFF_DIR}/${filepath}.diff"
       echo "Generated ${DIFF_DIR}/${filepath}.diff"
     fi
