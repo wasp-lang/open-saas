@@ -30,12 +30,12 @@ export default function AccountPage({ user }: { user: User }) {
             {!!user.email && (
               <div className="px-6 py-4">
                 <div className="grid grid-cols-1 sm:grid-cols-3 sm:gap-4">
-                  <dt className="text-muted-foreground text-sm font-medium">
+                  <div className="text-muted-foreground text-sm font-medium">
                     Email address
-                  </dt>
-                  <dd className="text-foreground mt-1 text-sm sm:col-span-2 sm:mt-0">
+                  </div>
+                  <div className="text-foreground mt-1 text-sm sm:col-span-2 sm:mt-0">
                     {user.email}
-                  </dd>
+                  </div>
                 </div>
               </div>
             )}
@@ -44,12 +44,12 @@ export default function AccountPage({ user }: { user: User }) {
                 <Separator />
                 <div className="px-6 py-4">
                   <div className="grid grid-cols-1 sm:grid-cols-3 sm:gap-4">
-                    <dt className="text-muted-foreground text-sm font-medium">
+                    <div className="text-muted-foreground text-sm font-medium">
                       Username
-                    </dt>
-                    <dd className="text-foreground mt-1 text-sm sm:col-span-2 sm:mt-0">
+                    </div>
+                    <div className="text-foreground mt-1 text-sm sm:col-span-2 sm:mt-0">
                       {user.username}
-                    </dd>
+                    </div>
                   </div>
                 </div>
               </>
@@ -57,9 +57,9 @@ export default function AccountPage({ user }: { user: User }) {
             <Separator />
             <div className="px-6 py-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 sm:gap-4">
-                <dt className="text-muted-foreground text-sm font-medium">
+                <div className="text-muted-foreground text-sm font-medium">
                   Your Plan
-                </dt>
+                </div>
                 <UserCurrentSubscriptionPlan
                   subscriptionPlan={user.subscriptionPlan}
                   subscriptionStatus={user.subscriptionStatus}
@@ -70,12 +70,12 @@ export default function AccountPage({ user }: { user: User }) {
             <Separator />
             <div className="px-6 py-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 sm:gap-4">
-                <dt className="text-muted-foreground text-sm font-medium">
+                <div className="text-muted-foreground text-sm font-medium">
                   Credits
-                </dt>
-                <dd className="text-foreground mt-1 text-sm sm:col-span-1 sm:mt-0">
+                </div>
+                <div className="text-foreground mt-1 text-sm sm:col-span-1 sm:mt-0">
                   {user.credits + " credits"}
-                </dd>
+                </div>
                 <div className="ml-auto mt-4 sm:mt-0">
                   <BuyMoreButton subscriptionStatus={user.subscriptionStatus} />
                 </div>
@@ -84,12 +84,12 @@ export default function AccountPage({ user }: { user: User }) {
             <Separator />
             <div className="px-6 py-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 sm:gap-4">
-                <dt className="text-muted-foreground text-sm font-medium">
+                <div className="text-muted-foreground text-sm font-medium">
                   About
-                </dt>
-                <dd className="text-foreground mt-1 text-sm sm:col-span-2 sm:mt-0">
+                </div>
+                <div className="text-foreground mt-1 text-sm sm:col-span-2 sm:mt-0">
                   I'm a cool customer.
-                </dd>
+                </div>
               </div>
             </div>
           </div>
@@ -119,9 +119,9 @@ function UserCurrentSubscriptionPlan({
 
   return (
     <>
-      <dd className="text-foreground mt-1 text-sm sm:col-span-1 sm:mt-0">
+      <div className="text-foreground mt-1 text-sm sm:col-span-1 sm:mt-0">
         {subscriptionPlanMessage}
-      </dd>
+      </div>
       <div className="ml-auto mt-4 sm:mt-0">
         <CustomerPortalButton />
       </div>
