@@ -1,21 +1,21 @@
 import { PrismaClient } from "wasp/server";
 import { PaymentPlanId, SubscriptionStatus } from "../plans";
 
-interface UpdateUserSubscriptionDetailsArgs {
-  polarCustomerId: string;
-  subscriptionPlan: PaymentPlanId;
-  subscriptionStatus: SubscriptionStatus | string;
-  datePaid?: Date;
-}
-
-interface UpdateUserCreditsDetailsArgs {
+interface UpdateUserCreditsArgs {
   polarCustomerId: string;
   numOfCreditsPurchased: number;
   datePaid: Date;
 }
 
+interface UpdateUserSubscriptionArgs {
+  polarCustomerId: string;
+  subscriptionPlan: PaymentPlanId;
+  subscriptionStatus: SubscriptionStatus;
+  datePaid?: Date;
+}
+
 export async function updateUserSubscription(
-  args: UpdateUserSubscriptionDetailsArgs,
+  args: UpdateUserSubscriptionArgs,
   userDelegate: PrismaClient["user"],
 ) {
   const { polarCustomerId, subscriptionPlan, subscriptionStatus, datePaid } =
@@ -34,7 +34,7 @@ export async function updateUserSubscription(
 }
 
 export async function updateUserCredits(
-  args: UpdateUserCreditsDetailsArgs,
+  args: UpdateUserCreditsArgs,
   userDelegate: PrismaClient["user"],
 ) {
   const { polarCustomerId, numOfCreditsPurchased, datePaid } = args;
