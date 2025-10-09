@@ -1,6 +1,6 @@
 --- template/app/src/client/Main.css
 +++ opensaas-sh/app/src/client/Main.css
-@@ -56,6 +56,23 @@
+@@ -56,6 +56,64 @@
    .border-gradient-primary > * {
      background: hsl(var(--background));
    }
@@ -21,13 +21,7 @@
 +      hsl(var(--card)) 100%
 +    );
 +  }
- }
- 
- /* Here is an example of how to add a custom font. 
-@@ -63,6 +80,16 @@
- * They are defined first here, then need to be referenced in the tailwind.config.js file
- * under `theme.extend.fontFamily`, and then can be used as a tailwind class, e.g. className='font-satoshi'.
- */
++}
 +
 +/* Satoshi Font Family */
 +@font-face {
@@ -38,13 +32,14 @@
 +  font-display: swap;
 +}
 +
- @font-face {
-   font-family: "Satoshi";
-   src: url("/fonts/Satoshi-Regular.woff2") format("woff2");
-@@ -71,6 +98,30 @@
-   font-display: swap;
- }
- 
++@font-face {
++  font-family: "Satoshi";
++  src: url("/fonts/Satoshi-Regular.woff2") format("woff2");
++  font-weight: normal;
++  font-style: normal;
++  font-display: swap;
++}
++
 +@font-face {
 +  font-family: "Satoshi";
 +  src: url("/fonts/Satoshi-Medium.woff2") format("woff2");
@@ -67,12 +62,10 @@
 +  font-weight: 900;
 +  font-style: normal;
 +  font-display: swap;
-+}
-+
- /* third-party libraries CSS */
+ }
  
- .tableCheckbox:checked ~ div span {
-@@ -189,4 +240,22 @@
+ /* third-party libraries CSS */
+@@ -176,4 +234,22 @@
    body {
      @apply bg-background text-foreground;
    }

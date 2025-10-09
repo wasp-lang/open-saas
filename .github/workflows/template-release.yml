@@ -1,15 +1,15 @@
 ---
 name: Template Release
 
-'on':
+"on":
   push:
     tags:
-      - 'wasp-v*-template'
+      - "wasp-v*-template"
 
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag to release (e.g., wasp-v0.18-template)'
+        description: "Tag to release (e.g., wasp-v0.18-template)"
         required: true
 
 permissions:
@@ -30,6 +30,7 @@ jobs:
           ref: ${{ env.tag_name}}
 
       - name: Create template archive
+        # The Wasp CLI expects the template contents to be in the root of the archive.
         working-directory: template
         run: tar -czf "../$archive_name" .
 
