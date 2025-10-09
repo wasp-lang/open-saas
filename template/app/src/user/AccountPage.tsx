@@ -10,6 +10,7 @@ import {
 } from "../components/ui/card";
 import { Separator } from "../components/ui/separator";
 import {
+  PaymentPlanId,
   SubscriptionStatus,
   parsePaymentPlanId,
   prettyPaymentPlanName,
@@ -29,12 +30,12 @@ export default function AccountPage({ user }: { user: User }) {
             {!!user.email && (
               <div className="px-6 py-4">
                 <div className="grid grid-cols-1 sm:grid-cols-3 sm:gap-4">
-                  <dt className="text-muted-foreground text-sm font-medium">
+                  <div className="text-muted-foreground text-sm font-medium">
                     Email address
-                  </dt>
-                  <dd className="text-foreground mt-1 text-sm sm:col-span-2 sm:mt-0">
+                  </div>
+                  <div className="text-foreground mt-1 text-sm sm:col-span-2 sm:mt-0">
                     {user.email}
-                  </dd>
+                  </div>
                 </div>
               </div>
             )}
@@ -43,12 +44,12 @@ export default function AccountPage({ user }: { user: User }) {
                 <Separator />
                 <div className="px-6 py-4">
                   <div className="grid grid-cols-1 sm:grid-cols-3 sm:gap-4">
-                    <dt className="text-muted-foreground text-sm font-medium">
+                    <div className="text-muted-foreground text-sm font-medium">
                       Username
-                    </dt>
-                    <dd className="text-foreground mt-1 text-sm sm:col-span-2 sm:mt-0">
+                    </div>
+                    <div className="text-foreground mt-1 text-sm sm:col-span-2 sm:mt-0">
                       {user.username}
-                    </dd>
+                    </div>
                   </div>
                 </div>
               </>
@@ -56,28 +57,39 @@ export default function AccountPage({ user }: { user: User }) {
             <Separator />
             <div className="px-6 py-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 sm:gap-4">
-                <dt className="text-muted-foreground text-sm font-medium">
+                <div className="text-muted-foreground text-sm font-medium">
                   Your Plan
-                </dt>
-                <UserCurrentPaymentPlan
-                  subscriptionStatus={
-                    user.subscriptionStatus as SubscriptionStatus
-                  }
+                </div>
+                <UserCurrentSubscriptionPlan
                   subscriptionPlan={user.subscriptionPlan}
+                  subscriptionStatus={user.subscriptionStatus}
                   datePaid={user.datePaid}
-                  credits={user.credits}
                 />
               </div>
             </div>
             <Separator />
             <div className="px-6 py-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 sm:gap-4">
-                <dt className="text-muted-foreground text-sm font-medium">
+                <div className="text-muted-foreground text-sm font-medium">
+                  Credits
+                </div>
+                <div className="text-foreground mt-1 text-sm sm:col-span-1 sm:mt-0">
+                  {user.credits} credits
+                </div>
+                <div className="ml-auto mt-4 sm:mt-0">
+                  <BuyMoreButton subscriptionStatus={user.subscriptionStatus} />
+                </div>
+              </div>
+            </div>
+            <Separator />
+            <div className="px-6 py-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 sm:gap-4">
+                <div className="text-muted-foreground text-sm font-medium">
                   About
-                </dt>
-                <dd className="text-foreground mt-1 text-sm sm:col-span-2 sm:mt-0">
+                </div>
+                <div className="text-foreground mt-1 text-sm sm:col-span-2 sm:mt-0">
                   I'm a cool customer.
-                </dd>
+                </div>
               </div>
             </div>
           </div>
@@ -87,129 +99,97 @@ export default function AccountPage({ user }: { user: User }) {
   );
 }
 
-type UserCurrentPaymentPlanProps = {
-  subscriptionPlan: string | null;
-  subscriptionStatus: SubscriptionStatus | null;
-  datePaid: Date | null;
-  credits: number;
-};
-
-function UserCurrentPaymentPlan({
+function UserCurrentSubscriptionPlan({
   subscriptionPlan,
   subscriptionStatus,
   datePaid,
-  credits,
-}: UserCurrentPaymentPlanProps) {
-  if (subscriptionStatus && subscriptionPlan && datePaid) {
-    return (
-      <>
-        <dd className="text-foreground mt-1 text-sm sm:col-span-1 sm:mt-0">
-          {getUserSubscriptionStatusDescription({
-            subscriptionPlan,
-            subscriptionStatus,
-            datePaid,
-          })}
-        </dd>
-        {subscriptionStatus !== SubscriptionStatus.Deleted ? (
-          <CustomerPortalButton />
-        ) : (
-          <BuyMoreButton />
-        )}
-      </>
+}: Pick<User, "subscriptionPlan" | "subscriptionStatus" | "datePaid">) {
+  let subscriptionPlanMessage = "Free Plan";
+  if (
+    subscriptionPlan !== null &&
+    subscriptionStatus !== null &&
+    datePaid !== null
+  ) {
+    subscriptionPlanMessage = formatSubscriptionStatusMessage(
+      parsePaymentPlanId(subscriptionPlan),
+      datePaid,
+      subscriptionStatus as SubscriptionStatus,
     );
   }
 
   return (
     <>
-      <dd className="text-foreground mt-1 text-sm sm:col-span-1 sm:mt-0">
-        Credits remaining: {credits}
-      </dd>
-      <BuyMoreButton />
+      <div className="text-foreground mt-1 text-sm sm:col-span-1 sm:mt-0">
+        {subscriptionPlanMessage}
+      </div>
+      <div className="ml-auto mt-4 sm:mt-0">
+        <CustomerPortalButton />
+      </div>
     </>
   );
 }
 
-function getUserSubscriptionStatusDescription({
-  subscriptionPlan,
-  subscriptionStatus,
-  datePaid,
-}: {
-  subscriptionPlan: string;
-  subscriptionStatus: SubscriptionStatus;
-  datePaid: Date;
-}) {
-  const planName = prettyPaymentPlanName(parsePaymentPlanId(subscriptionPlan));
-  const endOfBillingPeriod = prettyPrintEndOfBillingPeriod(datePaid);
-  return prettyPrintStatus(planName, subscriptionStatus, endOfBillingPeriod);
-}
-
-function prettyPrintStatus(
-  planName: string,
+function formatSubscriptionStatusMessage(
+  subscriptionPlan: PaymentPlanId,
+  datePaid: Date,
   subscriptionStatus: SubscriptionStatus,
-  endOfBillingPeriod: string,
 ): string {
+  const paymentPlanName = prettyPaymentPlanName(subscriptionPlan);
   const statusToMessage: Record<SubscriptionStatus, string> = {
-    active: `${planName}`,
-    past_due: `Payment for your ${planName} plan is past due! Please update your subscription payment information.`,
-    cancel_at_period_end: `Your ${planName} plan subscription has been canceled, but remains active until the end of the current billing period${endOfBillingPeriod}`,
+    active: `${paymentPlanName}`,
+    past_due: `Payment for your ${paymentPlanName} plan is past due! Please update your subscription payment information.`,
+    cancel_at_period_end: `Your ${paymentPlanName} plan subscription has been canceled, but remains active until the end of the current billing period: ${prettyPrintEndOfBillingPeriod(
+      datePaid,
+    )}`,
     deleted: `Your previous subscription has been canceled and is no longer active.`,
   };
-  if (Object.keys(statusToMessage).includes(subscriptionStatus)) {
-    return statusToMessage[subscriptionStatus];
-  } else {
-    throw new Error(`Invalid subscriptionStatus: ${subscriptionStatus}`);
+
+  if (!statusToMessage[subscriptionStatus]) {
+    throw new Error(`Invalid subscription status: ${subscriptionStatus}`);
   }
+
+  return statusToMessage[subscriptionStatus];
 }
 
 function prettyPrintEndOfBillingPeriod(date: Date) {
   const oneMonthFromNow = new Date(date);
   oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
-  return ": " + oneMonthFromNow.toLocaleDateString();
-}
-
-function BuyMoreButton() {
-  return (
-    <div className="ml-4 flex-shrink-0 sm:col-span-1 sm:mt-0">
-      <WaspRouterLink
-        to={routes.PricingPageRoute.to}
-        className="text-primary hover:text-primary/80 text-sm font-medium transition-colors duration-200"
-      >
-        Buy More/Upgrade
-      </WaspRouterLink>
-    </div>
-  );
+  return oneMonthFromNow.toLocaleDateString();
 }
 
 function CustomerPortalButton() {
-  const {
-    data: customerPortalUrl,
-    isLoading: isCustomerPortalUrlLoading,
-    error: customerPortalUrlError,
-  } = useQuery(getCustomerPortalUrl);
+  const { data: customerPortalUrl, isLoading: isCustomerPortalUrlLoading } =
+    useQuery(getCustomerPortalUrl);
 
-  const handleClick = () => {
-    if (customerPortalUrlError) {
-      console.error("Error fetching customer portal url");
-    }
-
-    if (customerPortalUrl) {
-      window.open(customerPortalUrl, "_blank");
-    } else {
-      console.error("Customer portal URL is not available");
-    }
-  };
+  if (!customerPortalUrl) {
+    return null;
+  }
 
   return (
-    <div className="ml-4 flex-shrink-0 sm:col-span-1 sm:mt-0">
-      <Button
-        onClick={handleClick}
-        disabled={isCustomerPortalUrlLoading}
-        variant="outline"
-        size="sm"
-        className="text-sm font-medium"
-      >
-        Manage Subscription
+    <a href={customerPortalUrl} target="_blank" rel="noopener noreferrer">
+      <Button disabled={isCustomerPortalUrlLoading} variant="link">
+        Manage Payment Details
       </Button>
-    </div>
+    </a>
+  );
+}
+
+function BuyMoreButton({
+  subscriptionStatus,
+}: Pick<User, "subscriptionStatus">) {
+  if (
+    subscriptionStatus === SubscriptionStatus.Active ||
+    subscriptionStatus === SubscriptionStatus.CancelAtPeriodEnd
+  ) {
+    return null;
+  }
+
+  return (
+    <WaspRouterLink
+      to={routes.PricingPageRoute.to}
+      className="text-primary hover:text-primary/80 text-sm font-medium transition-colors duration-200"
+    >
+      <Button variant="link">Buy More Credits</Button>
+    </WaspRouterLink>
   );
 }

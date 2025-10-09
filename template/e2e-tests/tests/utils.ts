@@ -123,7 +123,7 @@ export const makeStripePayment = async ({
   await page.waitForURL("**/checkout?status=success");
   await page.waitForURL("**/account");
   if (planId === "credits10") {
-    await expect(page.getByText("Credits remaining: 13")).toBeVisible();
+    await expect(page.getByText("13 credits")).toBeVisible();
   } else {
     await expect(page.getByText(planId)).toBeVisible();
   }
