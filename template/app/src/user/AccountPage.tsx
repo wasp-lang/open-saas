@@ -74,7 +74,7 @@ export default function AccountPage({ user }: { user: User }) {
                   Credits
                 </div>
                 <div className="text-foreground mt-1 text-sm sm:col-span-1 sm:mt-0">
-                  {user.credits + " credits"}
+                  {user.credits} credits
                 </div>
                 <div className="ml-auto mt-4 sm:mt-0">
                   <BuyMoreButton subscriptionStatus={user.subscriptionStatus} />
