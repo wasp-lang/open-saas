@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-SCRIPT_DIR=$(dirname "$(realpath "$0")") # Assumes this script is in `opensaas-sh/tools/`.
+SCRIPT_DIR=$(dirname "$(realpath "$0")")
+# Assumes this script is in `opensaas-sh/tools/`.
 ROOT_DIR="${SCRIPT_DIR}/../.."
 
 cd "${ROOT_DIR}"

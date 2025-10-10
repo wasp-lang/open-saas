@@ -1,4 +1,4 @@
-# MacOS-specific files.
+# macOS-specific files.
 .DS_Store
 
 # Ignore all dotenv files by default to prevent accidentally committing any secrets.

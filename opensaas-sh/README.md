@@ -17,7 +17,7 @@ Since the demo app is just the open saas template with some small tweaks, and we
 - Generate `app/` from template and diffs: `./tools/patch.sh`
 - Update diffs after modifying `app/`: `./tools/diff.sh`
 
-For detailed information about the diff/patch workflow and MacOS setup requirements, see [../tools/README.md](../tools/README.md).
+For detailed information about the diff/patch workflow and macOS setup requirements, see [../tools/README.md](../tools/README.md).
 
 ### Blog (blog/)
 

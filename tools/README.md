@@ -1,10 +1,15 @@
 # Open SaaS Tools
 
-This directory contains utilities for managing derived projects that are built on top of the Open SaaS template.
-
 ## dope.sh - Diff Or Patch Executor
 
-The `dope.sh` script allows you to easily create a diff between two projects (base and derived), or to patch those diffs onto the base project to get the derived one. This is useful when a derived project has only small changes on top of the base project and you want to keep it in a directory in the same repo as the main project.
+The `dope.sh` script allows you to easily create a diff between two projects (base and derived),
+or to patch those diffs onto the base project to get the derived one. This is useful when a derived
+project has only small changes on top of the base project and you want to keep it in a directory
+in the same repo as the main project.
+
+Since derived apps (like opensaas-sh) are just the Open SaaS template with some small tweaks, and
+we want to keep them up to date as the template changes, we don't version the actual app code in git.
+Instead, we version the diffs between it and the template in an `app_diff/` directory.
 
 ### Usage
 
@@ -18,27 +23,35 @@ The `dope.sh` script allows you to easily create a diff between two projects (ba
   - `diff`: Creates a diff between the base and derived directories
   - `patch`: Applies existing diffs onto the base directory to recreate the derived directory
 
-### Workflow
+The diffs are stored in a directory named `<DERIVED_DIR>_diff/` (e.g., `app_diff/`).
 
-Since derived apps (like opensaas-sh) are just the Open SaaS template with some small tweaks, and we want to keep them up to date as the template changes, we don't version the actual app code in git. Instead, we version the diffs between it and the template in an `app_diff/` directory.
+### Diff structure
+
+The diff directory can contain `.diff` files to patch files from the base directory,
+and `.copy` files to copy files directly from the diff directory to the derived directory
+(useful for binary files).
+
+### Workflow
 
 The typical workflow is:
 
-1. Run `dope.sh` with `patch` action to generate `app/` from `../template/` and `app_diff/`:
+1. Run `dope.sh` with the `patch` action to generate `app/` from `../template/` and `app_diff/`:
    ```bash
    ./dope.sh ../template app patch
    ```
 
-2. If there are any conflicts (normally due to updates to the template), modify `app/` until you resolve them. Make any additional changes as needed.
+2. If there are any conflicts (usually due to updates to the template), modify `app/` until you resolve them. Make any additional changes as needed.
 
-3. Generate new `app_diff/` based on the current updated `app/` by running:
+3. Generate a new `app_diff/` based on the updated `app/` by running:
    ```bash
    ./dope.sh ../template app diff
    ```
 
-### Running on MacOS
+### Requirements
 
-If you're running the `dope.sh` script on Mac, you need to install:
+#### Running on macOS
+
+If you're running the `dope.sh` script on macOS, install:
 
 - `grealpath` (packaged within `coreutils`)
 - `gpatch`
@@ -50,4 +63,4 @@ brew install gpatch
 brew install diffutils
 ```
 
-The script will automatically detect macOS and use `gpatch` instead of the default `patch` command.
+The script automatically detects macOS and uses `gpatch` instead of the default `patch` command.
