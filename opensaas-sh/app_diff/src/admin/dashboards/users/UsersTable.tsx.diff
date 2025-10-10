@@ -1,11 +1,11 @@
 --- template/app/src/admin/dashboards/users/UsersTable.tsx
 +++ opensaas-sh/app/src/admin/dashboards/users/UsersTable.tsx
-@@ -254,7 +254,7 @@
-                 <p className='text-sm text-foreground'>{user.subscriptionStatus}</p>
+@@ -302,7 +302,7 @@
                </div>
-               <div className='col-span-2 flex items-center'>
--                <p className='text-sm text-muted-foreground'>{user.paymentProcessorUserId}</p>
-+                <p className='text-sm text-muted-foreground'>{user.subscriptionStatus}</p>
+               <div className="col-span-2 flex items-center">
+                 <p className="text-muted-foreground text-sm">
+-                  {user.paymentProcessorUserId}
++                  {user.subscriptionStatus}
+                 </p>
                </div>
-               <div className='col-span-1 flex items-center'>
-                 <div className='text-sm text-foreground'>
+               <div className="col-span-1 flex items-center">

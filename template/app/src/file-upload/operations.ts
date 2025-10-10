@@ -1,6 +1,5 @@
-import * as z from 'zod';
-import { HttpError } from 'wasp/server';
-import { type File } from 'wasp/entities';
+import { type File } from "wasp/entities";
+import { HttpError } from "wasp/server";
 import {
   type GetAllFilesByUser,
   type GetDownloadFileSignedURL,
@@ -17,6 +16,7 @@ import {
 } from './s3Utils';
 import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
 import { ALLOWED_FILE_TYPES } from './validation';
+import * as z from "zod";
 
 const createFileInputSchema = z.object({
   fileType: z.enum(ALLOWED_FILE_TYPES),
@@ -37,7 +37,10 @@ export const createFileUploadUrl: CreateFileUploadUrl<
     throw new HttpError(401);
   }
 
-  const { fileType, fileName } = ensureArgsSchemaOrThrowHttpError(createFileInputSchema, rawArgs);
+  const { fileType, fileName } = ensureArgsSchemaOrThrowHttpError(
+    createFileInputSchema,
+    rawArgs,
+  );
 
   return await getUploadFileSignedURLFromS3({
     fileType,
@@ -74,7 +77,10 @@ export const addFileToDb: AddFileToDb<AddFileToDbInput, File> = async (args, con
   });
 };
 
-export const getAllFilesByUser: GetAllFilesByUser<void, File[]> = async (_args, context) => {
+export const getAllFilesByUser: GetAllFilesByUser<void, File[]> = async (
+  _args,
+  context,
+) => {
   if (!context.user) {
     throw new HttpError(401);
   }
@@ -85,14 +91,18 @@ export const getAllFilesByUser: GetAllFilesByUser<void, File[]> = async (_args, 
       },
     },
     orderBy: {
-      createdAt: 'desc',
+      createdAt: "desc",
     },
   });
 };
 
-const getDownloadFileSignedURLInputSchema = z.object({ s3Key: z.string().nonempty() });
+const getDownloadFileSignedURLInputSchema = z.object({
+  s3Key: z.string().nonempty(),
+});
 
-type GetDownloadFileSignedURLInput = z.infer<typeof getDownloadFileSignedURLInputSchema>;
+type GetDownloadFileSignedURLInput = z.infer<
+  typeof getDownloadFileSignedURLInputSchema
+>;
 
 export const getDownloadFileSignedURL: GetDownloadFileSignedURL<
   GetDownloadFileSignedURLInput,

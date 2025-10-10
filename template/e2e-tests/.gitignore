@@ -1,5 +1,5 @@
-/reports/
-/test-results/
-/.cache/
-/node_modules/
+reports/
+test-results/
+.cache/
+node_modules/
 prisma/

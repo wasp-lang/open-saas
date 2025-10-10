@@ -1,10 +1,13 @@
-import { type Prisma } from '@prisma/client';
-import { type User } from 'wasp/entities';
-import { HttpError, prisma } from 'wasp/server';
-import { type GetPaginatedUsers, type UpdateIsUserAdminById } from 'wasp/server/operations';
-import * as z from 'zod';
-import { SubscriptionStatus } from '../payment/plans';
-import { ensureArgsSchemaOrThrowHttpError } from '../server/validation';
+import { type Prisma } from "@prisma/client";
+import { type User } from "wasp/entities";
+import { HttpError, prisma } from "wasp/server";
+import {
+  type GetPaginatedUsers,
+  type UpdateIsUserAdminById,
+} from "wasp/server/operations";
+import * as z from "zod";
+import { SubscriptionStatus } from "../payment/plans";
+import { ensureArgsSchemaOrThrowHttpError } from "../server/validation";
 
 const updateUserAdminByIdInputSchema = z.object({
   id: z.string().nonempty(),
@@ -13,18 +16,27 @@ const updateUserAdminByIdInputSchema = z.object({
 
 type UpdateUserAdminByIdInput = z.infer<typeof updateUserAdminByIdInputSchema>;
 
-export const updateIsUserAdminById: UpdateIsUserAdminById<UpdateUserAdminByIdInput, User> = async (
-  rawArgs,
-  context
-) => {
-  const { id, isAdmin } = ensureArgsSchemaOrThrowHttpError(updateUserAdminByIdInputSchema, rawArgs);
+export const updateIsUserAdminById: UpdateIsUserAdminById<
+  UpdateUserAdminByIdInput,
+  User
+> = async (rawArgs, context) => {
+  const { id, isAdmin } = ensureArgsSchemaOrThrowHttpError(
+    updateUserAdminByIdInputSchema,
+    rawArgs,
+  );
 
   if (!context.user) {
-    throw new HttpError(401, 'Only authenticated users are allowed to perform this operation');
+    throw new HttpError(
+      401,
+      "Only authenticated users are allowed to perform this operation",
+    );
   }
 
   if (!context.user.isAdmin) {
-    throw new HttpError(403, 'Only admins are allowed to perform this operation');
+    throw new HttpError(
+      403,
+      "Only admins are allowed to perform this operation",
+    );
   }
 
   return context.entities.User.update({
@@ -36,7 +48,12 @@ export const updateIsUserAdminById: UpdateIsUserAdminById<UpdateUserAdminByIdInp
 type GetPaginatedUsersOutput = {
   users: Pick<
     User,
-    'id' | 'email' | 'username' | 'subscriptionStatus' | 'paymentProcessorUserId' | 'isAdmin'
+    | "id"
+    | "email"
+    | "username"
+    | "subscriptionStatus"
+    | "paymentProcessorUserId"
+    | "isAdmin"
   >[];
   totalPages: number;
 };
@@ -46,31 +63,47 @@ const getPaginatorArgsSchema = z.object({
   filter: z.object({
     emailContains: z.string().nonempty().optional(),
     isAdmin: z.boolean().optional(),
-    subscriptionStatusIn: z.array(z.nativeEnum(SubscriptionStatus).nullable()).optional(),
+    subscriptionStatusIn: z
+      .array(z.nativeEnum(SubscriptionStatus).nullable())
+      .optional(),
   }),
 });
 
 type GetPaginatedUsersInput = z.infer<typeof getPaginatorArgsSchema>;
 
-export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPaginatedUsersOutput> = async (
-  rawArgs,
-  context
-) => {
+export const getPaginatedUsers: GetPaginatedUsers<
+  GetPaginatedUsersInput,
+  GetPaginatedUsersOutput
+> = async (rawArgs, context) => {
   if (!context.user) {
-    throw new HttpError(401, 'Only authenticated users are allowed to perform this operation');
+    throw new HttpError(
+      401,
+      "Only authenticated users are allowed to perform this operation",
+    );
   }
 
   if (!context.user.isAdmin) {
-    throw new HttpError(403, 'Only admins are allowed to perform this operation');
+    throw new HttpError(
+      403,
+      "Only admins are allowed to perform this operation",
+    );
   }
 
   const {
     skipPages,
-    filter: { subscriptionStatusIn: subscriptionStatus, emailContains, isAdmin },
+    filter: {
+      subscriptionStatusIn: subscriptionStatus,
+      emailContains,
+      isAdmin,
+    },
   } = ensureArgsSchemaOrThrowHttpError(getPaginatorArgsSchema, rawArgs);
 
-  const includeUnsubscribedUsers = !!subscriptionStatus?.some((status) => status === null);
-  const desiredSubscriptionStatuses = subscriptionStatus?.filter((status) => status !== null);
+  const includeUnsubscribedUsers = !!subscriptionStatus?.some(
+    (status) => status === null,
+  );
+  const desiredSubscriptionStatuses = subscriptionStatus?.filter(
+    (status) => status !== null,
+  );
 
   const pageSize = 10;
 
@@ -82,7 +115,7 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
         {
           email: {
             contains: emailContains,
-            mode: 'insensitive',
+            mode: "insensitive",
           },
           isAdmin,
         },
@@ -109,7 +142,7 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
       paymentProcessorUserId: true,
     },
     orderBy: {
-      username: 'asc',
+      username: "asc",
     },
   };
 

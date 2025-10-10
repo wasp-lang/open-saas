@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from "react";
 import {
   getAllFilesByUser,
   getDownloadFileSignedURL,
@@ -6,11 +6,9 @@ import {
   createFileUploadUrl,
   addFileToDb,
   deleteFile,
-} from 'wasp/client/operations';
-import type { File } from 'wasp/entities';
-import { Alert, AlertDescription } from '../components/ui/alert';
-import { Button } from '../components/ui/button';
-import { Card, CardContent, CardTitle } from '../components/ui/card';
+} from "wasp/client/operations";
+import type { File } from "wasp/entities";
+
 import {
   Dialog,
   DialogContent,
@@ -18,13 +16,19 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '../components/ui/dialog';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { Progress } from '../components/ui/progress';
-import { cn } from '../lib/utils';
-import { uploadFileWithProgress, validateFile } from './fileUploading';
-import { ALLOWED_FILE_TYPES } from './validation';
+} from "../components/ui/dialog";
+import { Alert, AlertDescription } from "../components/ui/alert";
+import { Button } from "../components/ui/button";
+import { Card, CardContent, CardTitle } from "../components/ui/card";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { Progress } from "../components/ui/progress";
+import { cn } from "../lib/utils";
+import {
+  uploadFileWithProgress,
+  validateFile,
+} from "./fileUploading";
+import { ALLOWED_FILE_TYPES } from "./validation";
 import { Trash, Download } from 'lucide-react';
 import { toast } from '../hooks/use-toast';
 
@@ -61,13 +65,13 @@ export default function FileUploadPage() {
                 variant: 'destructive',
               });
               return;
-            case 'success':
-              window.open(urlQuery.data, '_blank');
+            case "success":
+              window.open(urlQuery.data, "_blank");
               return;
           }
         })
         .finally(() => {
-          setFileKeyForS3('');
+          setFileKeyForS3("");
         });
     }
   }, [fileKeyForS3]);
@@ -78,7 +82,7 @@ export default function FileUploadPage() {
 
       const formElement = e.target;
       if (!(formElement instanceof HTMLFormElement)) {
-        throw new Error('Event target is not a form element');
+        throw new Error("Event target is not a form element");
       }
 
       const formData = new FormData(formElement);

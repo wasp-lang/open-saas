@@ -1,20 +1,20 @@
 --- template/app/src/landing-page/components/Hero/Orbit.tsx
 +++ opensaas-sh/app/src/landing-page/components/Hero/Orbit.tsx
-@@ -0,0 +1,217 @@
-+import { useEffect, useState } from 'react';
-+import logo from '../../../client/static/logo.webp';
-+import nodeLogoDark from '../../../client/static/logos/nodejs-dark.webp';
-+import nodeLogo from '../../../client/static/logos/nodejs-light.webp';
-+import stripeLogoDark from '../../../client/static/logos/stripe-dark.webp';
-+import stripeLogo from '../../../client/static/logos/stripe-light.webp';
-+import tailwindLogoDark from '../../../client/static/logos/tailwind-dark.webp';
-+import tailwindLogo from '../../../client/static/logos/tailwind-light.webp';
-+import { cn } from '../../../lib/utils';
-+import AstroLogo from '../../logos/AstroLogo';
-+import OpenAILogo from '../../logos/OpenAILogo';
-+import PrismaLogo from '../../logos/PrismaLogo';
-+import ReactLogo from '../../logos/ReactLogo';
-+import ShadCNLogo from '../../logos/ShadCNLogo';
+@@ -0,0 +1,283 @@
++import { useEffect, useState } from "react";
++import logo from "../../../client/static/logo.webp";
++import nodeLogoDark from "../../../client/static/logos/nodejs-dark.webp";
++import nodeLogo from "../../../client/static/logos/nodejs-light.webp";
++import stripeLogoDark from "../../../client/static/logos/stripe-dark.webp";
++import stripeLogo from "../../../client/static/logos/stripe-light.webp";
++import tailwindLogoDark from "../../../client/static/logos/tailwind-dark.webp";
++import tailwindLogo from "../../../client/static/logos/tailwind-light.webp";
++import { cn } from "../../../lib/utils";
++import AstroLogo from "../../logos/AstroLogo";
++import OpenAILogo from "../../logos/OpenAILogo";
++import PrismaLogo from "../../logos/PrismaLogo";
++import ReactLogo from "../../logos/ReactLogo";
++import ShadCNLogo from "../../logos/ShadCNLogo";
 +
 +interface LogoConfig {
 +  id: string;
@@ -39,58 +39,114 @@
 +    <img
 +      src={src}
 +      alt={alt}
-+      className={cn('w-8 h-8', dark ? 'dark:block hidden' : 'dark:hidden', className)}
++      className={cn(
++        "h-8 w-8",
++        dark ? "hidden dark:block" : "dark:hidden",
++        className,
++      )}
 +    />
 +  );
 +};
 +
 +const logoConfigs: LogoConfig[] = [
 +  {
-+    id: 'wasp',
-+    component: () => <ImageLogo src={logo} alt='Wasp Logo' className='w-8 h-8 dark:block' dark={false} />,
++    id: "wasp",
++    component: () => (
++      <ImageLogo
++        src={logo}
++        alt="Wasp Logo"
++        className="h-8 w-8 dark:block"
++        dark={false}
++      />
++    ),
 +    circleIndex: 1,
 +    position: 0,
 +  },
-+  { id: 'openai', component: OpenAILogo, circleIndex: 1, position: 120, size: 24 },
-+  { id: 'astro', component: AstroLogo, circleIndex: 1, position: 270, size: 24 },
-+  { id: 'prisma', component: PrismaLogo, circleIndex: 2, position: 90, size: 24 },
-+  { id: 'shadcn', component: ShadCNLogo, circleIndex: 2, position: 210, size: 24 },
 +  {
-+    id: 'tailwind-light',
++    id: "openai",
++    component: OpenAILogo,
++    circleIndex: 1,
++    position: 120,
++    size: 24,
++  },
++  {
++    id: "astro",
++    component: AstroLogo,
++    circleIndex: 1,
++    position: 270,
++    size: 24,
++  },
++  {
++    id: "prisma",
++    component: PrismaLogo,
++    circleIndex: 2,
++    position: 90,
++    size: 24,
++  },
++  {
++    id: "shadcn",
++    component: ShadCNLogo,
++    circleIndex: 2,
++    position: 210,
++    size: 24,
++  },
++  {
++    id: "tailwind-light",
 +    component: () => (
-+      <ImageLogo src={tailwindLogo} alt='Tailwind CSS Logo' className='w-8 h-8 dark:hidden' dark={false} />
++      <ImageLogo
++        src={tailwindLogo}
++        alt="Tailwind CSS Logo"
++        className="h-8 w-8 dark:hidden"
++        dark={false}
++      />
 +    ),
 +    circleIndex: 2,
 +    position: 330,
 +  },
 +  {
-+    id: 'tailwind-dark',
-+    component: () => <ImageLogo src={tailwindLogoDark} alt='Tailwind CSS Logo' dark={true} />,
++    id: "tailwind-dark",
++    component: () => (
++      <ImageLogo src={tailwindLogoDark} alt="Tailwind CSS Logo" dark={true} />
++    ),
 +    circleIndex: 2,
 +    position: 330,
 +  },
 +  {
-+    id: 'stripe-light',
-+    component: () => <ImageLogo src={stripeLogo} alt='Stripe Logo' dark={false} />,
++    id: "stripe-light",
++    component: () => (
++      <ImageLogo src={stripeLogo} alt="Stripe Logo" dark={false} />
++    ),
 +    circleIndex: 3,
 +    position: 180,
 +  },
 +  {
-+    id: 'stripe-dark',
-+    component: () => <ImageLogo src={stripeLogoDark} alt='Stripe Logo' dark={true} />,
++    id: "stripe-dark",
++    component: () => (
++      <ImageLogo src={stripeLogoDark} alt="Stripe Logo" dark={true} />
++    ),
 +    circleIndex: 3,
 +    position: 180,
 +  },
-+  { id: 'react', component: ReactLogo, circleIndex: 3, position: 300, size: 32 },
 +  {
-+    id: 'node-light',
-+    component: () => <ImageLogo src={nodeLogo} alt='Node.js Logo' dark={false} />,
++    id: "react",
++    component: ReactLogo,
++    circleIndex: 3,
++    position: 300,
++    size: 32,
++  },
++  {
++    id: "node-light",
++    component: () => (
++      <ImageLogo src={nodeLogo} alt="Node.js Logo" dark={false} />
++    ),
 +    circleIndex: 3,
 +    position: 50,
 +  },
 +  {
-+    id: 'node-dark',
-+    component: () => <ImageLogo src={nodeLogoDark} alt='Node.js Logo' dark={true} />,
++    id: "node-dark",
++    component: () => (
++      <ImageLogo src={nodeLogoDark} alt="Node.js Logo" dark={true} />
++    ),
 +    circleIndex: 3,
 +    position: 50,
 +  },
@@ -117,7 +173,11 @@
 +    return () => clearInterval(interval);
 +  }, []);
 +
-+  const getLogoPosition = (circleIndex: number, position: number, rotation: number) => {
++  const getLogoPosition = (
++    circleIndex: number,
++    position: number,
++    rotation: number,
++  ) => {
 +    const circle = circles[circleIndex];
 +    const totalRotation = rotation * circle.rotationSpeed + position;
 +    const radians = (totalRotation * Math.PI) / 180;
@@ -129,10 +189,12 @@
 +  };
 +
 +  return (
-+    <div className='relative w-[500px] h-[500px] flex items-center justify-center'>
-+      <div className='absolute flex items-center gap-2 flex-col'>
-+        <p className='text-6xl font-black font-sans text-gradient-primary'>100%</p>
-+        <p className='text-lg text-muted-foreground'>Open Source</p>
++    <div className="relative flex h-[500px] w-[500px] items-center justify-center">
++      <div className="absolute flex flex-col items-center gap-2">
++        <p className="text-gradient-primary font-sans text-6xl font-black">
++          100%
++        </p>
++        <p className="text-muted-foreground text-lg">Open Source</p>
 +      </div>
 +
 +      {circles.map((circle, circleIndex) => {
@@ -178,7 +240,7 @@
 +        return (
 +          <div
 +            key={circleIndex}
-+            className='absolute rounded-full'
++            className="absolute rounded-full"
 +            style={{
 +              width: circle.radius * 2,
 +              height: circle.radius * 2,
@@ -195,17 +257,21 @@
 +      })}
 +
 +      {logoConfigs.map((logoConfig) => {
-+        const { x, y } = getLogoPosition(logoConfig.circleIndex, logoConfig.position, rotation);
++        const { x, y } = getLogoPosition(
++          logoConfig.circleIndex,
++          logoConfig.position,
++          rotation,
++        );
 +        const LogoComponent = logoConfig.component;
 +        const logoSize = logoConfig.size || 32;
 +
 +        return (
 +          <div
 +            key={logoConfig.id}
-+            className='absolute z-20'
++            className="absolute z-20"
 +            style={{
-+              left: '50%',
-+              top: '50%',
++              left: "50%",
++              top: "50%",
 +              transform: `translate(calc(${x}px - ${logoSize / 2}px), calc(${y}px - ${logoSize / 2}px))`,
 +              width: logoSize,
 +              height: logoSize,

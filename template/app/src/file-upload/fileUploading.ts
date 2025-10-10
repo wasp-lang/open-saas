@@ -20,19 +20,24 @@ export async function uploadFileWithProgress({
   return axios.post(s3UploadUrl, formData, {
     onUploadProgress: (progressEvent) => {
       if (progressEvent.total) {
-        const percentage = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+        const percentage = Math.round(
+          (progressEvent.loaded / progressEvent.total) * 100,
+        );
         setUploadProgressPercent(percentage);
       }
     },
   });
 }
 
-function getFileUploadFormData(file: File, s3UploadFields: Record<string, string>) {
+function getFileUploadFormData(
+  file: File,
+  s3UploadFields: Record<string, string>,
+) {
   const formData = new FormData();
   Object.entries(s3UploadFields).forEach(([key, value]) => {
     formData.append(key, value);
   });
-  formData.append('file', file);
+  formData.append("file", file);
   return formData;
 }
 

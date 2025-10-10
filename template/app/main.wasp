@@ -1,6 +1,6 @@
 app OpenSaaS {
   wasp: {
-    version: "^0.17.0"
+    version: "^0.18.0"
   },
 
   title: "My Open SaaS App",
@@ -190,10 +190,10 @@ page PricingPage {
   component: import PricingPage from "@src/payment/PricingPage"
 }
 
-route CheckoutRoute { path: "/checkout", to: CheckoutPage }
-page CheckoutPage {
+route CheckoutResultRoute { path: "/checkout", to: CheckoutResultPage }
+page CheckoutResultPage {
   authRequired: true,
-  component: import Checkout from "@src/payment/CheckoutPage"
+  component: import CheckoutResultPage from "@src/payment/CheckoutResultPage"
 }
 
 query getCustomerPortalUrl {
@@ -311,6 +311,6 @@ page NotFoundPage {
 route AdminMessagesRoute { path: "/admin/messages", to: AdminMessagesPage }
 page AdminMessagesPage {
   authRequired: true,
-  component: import AdminMessages from "@src/messages/MessagesPage"
+  component: import AdminMessages from "@src/admin/dashboards/messages/MessagesPage"
 }
 //#endregion

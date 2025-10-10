@@ -1,3 +1,1 @@
-# We can't ignore `app/` because it messes up our patch/diff procedure (check
-# the README for more info on this)
-# app/
+app/
