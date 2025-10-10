@@ -1,7 +1,7 @@
-import { Toaster } from '../components/ui/toaster';
 import { useEffect, useMemo } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { routes } from "wasp/client/router";
+import { Toaster } from "../components/ui/toaster";
 import "./Main.css";
 import NavBar from "./components/NavBar/NavBar";
 import {
@@ -63,7 +63,7 @@ export default function App() {
           </>
         )}
       </div>
-      <Toaster position='bottom-right' />
+      <Toaster position="bottom-right" />
       <CookieConsentBanner />
     </>
   );

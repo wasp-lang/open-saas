@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE_BYTES } from './validation';
+import axios from "axios";
+import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE_BYTES } from "./validation";
 
 type AllowedFileTypes = (typeof ALLOWED_FILE_TYPES)[number];
 export type FileWithValidType = File & { type: AllowedFileTypes };
@@ -43,7 +43,9 @@ function getFileUploadFormData(
 
 export function validateFile(file: File): FileWithValidType {
   if (file.size > MAX_FILE_SIZE_BYTES) {
-    throw new Error(`File size exceeds ${MAX_FILE_SIZE_BYTES / 1024 / 1024}MB limit.`);
+    throw new Error(
+      `File size exceeds ${MAX_FILE_SIZE_BYTES / 1024 / 1024}MB limit.`,
+    );
   }
 
   if (!isFileWithAllowedFileType(file)) {

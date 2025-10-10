@@ -1,4 +1,4 @@
-import { useToast } from "../../hooks/use-toast"
+import { useToast } from "../../hooks/use-toast";
 import {
   Toast,
   ToastClose,
@@ -6,14 +6,20 @@ import {
   ToastProvider,
   ToastTitle,
   ToastViewport,
-} from "./toast"
+} from "./toast";
 
 export function Toaster({
   position,
 }: {
-  position?: "top-left" | "top-center" | "top-right" | "bottom-left" | "bottom-center" | "bottom-right"
+  position?:
+    | "top-left"
+    | "top-center"
+    | "top-right"
+    | "bottom-left"
+    | "bottom-center"
+    | "bottom-right";
 }) {
-  const { toasts } = useToast()
+  const { toasts } = useToast();
 
   return (
     <ToastProvider>
@@ -29,9 +35,9 @@ export function Toaster({
             {action}
             <ToastClose />
           </Toast>
-        )
+        );
       })}
       <ToastViewport position={position} />
     </ToastProvider>
-  )
+  );
 }
