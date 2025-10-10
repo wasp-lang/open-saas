@@ -73,6 +73,10 @@ There are two ways to get help or provide feedback (and we try to always respond
 1. [Open an issue](https://github.com/wasp-lang/open-saas/issues)
 2. [Wasp Discord](https://discord.gg/aCamt5wCpS) -- please direct questions to the #🙋questions forum channel
 
+## Development Tools
+
+For information about the development tools used to maintain derived projects (like opensaas.sh), see [tools/README.md](./tools/README.md).
+
 ## Contributing
 
 Note that we've tried to get as many of the core features of a SaaS app into this template as possible, but there still might be some missing features or functionality.

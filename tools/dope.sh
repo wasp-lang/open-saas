@@ -12,7 +12,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
   if command -v gpatch &> /dev/null; then
     PATCH_CMD="gpatch"
   else
-    echo "Error: GNU patch (gpatch) not found. On MacOS, this script requires GNU patch."
+    echo "Error: GNU patch (gpatch) not found. On macOS, this script requires GNU patch."
     echo "Install it with: brew install gpatch"
     exit 1
   fi

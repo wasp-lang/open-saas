@@ -1,7 +1,7 @@
 # Dependencies
 node_modules/
 
-# MacOS-specific files.
+# macOS-specific files.
 .DS_Store
 
 # We want to keep the template clean from the usual build artifacts.
