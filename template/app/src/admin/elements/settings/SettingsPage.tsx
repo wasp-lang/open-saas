@@ -1,6 +1,5 @@
 import { FileText, Mail, Upload, User } from "lucide-react";
 import { FormEvent } from "react";
-import toast from "react-hot-toast";
 import { type AuthUser } from "wasp/auth";
 import { Button } from "../../../components/ui/button";
 import {
@@ -19,12 +18,7 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     // TODO implement
     event.preventDefault();
-    const confirmed = confirm("Are you sure you want to save the changes?");
-    if (confirmed) {
-      toast.success("Your changes have been saved successfully!");
-    } else {
-      toast.error("Your changes have not been saved!");
-    }
+    alert("Not yet implemented");
   };
 
   return (
