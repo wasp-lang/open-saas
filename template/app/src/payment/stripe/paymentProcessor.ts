@@ -1,5 +1,4 @@
 import Stripe from "stripe";
-import { requireNodeEnvVar } from "../../server/utils";
 import { assertUnreachable } from "../../shared/utils";
 import type {
   CreateCheckoutSessionArgs,
@@ -13,6 +12,10 @@ import {
 } from "./checkoutUtils";
 import { stripeClient } from "./stripeClient";
 import { stripeMiddlewareConfigFn, stripeWebhook } from "./webhook";
+
+// WASP_WEB_CLIENT_URL will be set up by Wasp when deploying to production: https://wasp.sh/docs/deploying
+const CLIENT_BASE_URL =
+  process.env.WASP_WEB_CLIENT_URL || "http://localhost:3000";
 
 export const stripePaymentProcessor: PaymentProcessor = {
   id: "stripe",
@@ -66,10 +69,9 @@ export const stripePaymentProcessor: PaymentProcessor = {
       return null;
     }
 
-    const webClientUrl = requireNodeEnvVar("WASP_WEB_CLIENT_URL");
     const session = await stripeClient.billingPortal.sessions.create({
       customer: user.paymentProcessorUserId,
-      return_url: `${webClientUrl}/account`,
+      return_url: `${CLIENT_BASE_URL}/account`,
     });
 
     return session.url;
