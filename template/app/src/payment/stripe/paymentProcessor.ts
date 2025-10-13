@@ -13,10 +13,6 @@ import {
 import { stripeClient } from "./stripeClient";
 import { stripeMiddlewareConfigFn, stripeWebhook } from "./webhook";
 
-// WASP_WEB_CLIENT_URL will be set up by Wasp when deploying to production: https://wasp.sh/docs/deploying
-const CLIENT_BASE_URL =
-  process.env.WASP_WEB_CLIENT_URL || "http://localhost:3000";
-
 export const stripePaymentProcessor: PaymentProcessor = {
   id: "stripe",
   createCheckoutSession: async ({
@@ -56,6 +52,10 @@ export const stripePaymentProcessor: PaymentProcessor = {
     };
   },
   fetchCustomerPortalUrl: async (args: FetchCustomerPortalUrlArgs) => {
+    // WASP_WEB_CLIENT_URL will be set up by Wasp when deploying to production: https://wasp.sh/docs/deploying
+    const CLIENT_BASE_URL =
+      process.env.WASP_WEB_CLIENT_URL || "http://localhost:3000";
+
     const user = await args.prismaUserDelegate.findUniqueOrThrow({
       where: {
         id: args.userId,

@@ -1,10 +1,6 @@
 import Stripe from "stripe";
 import { stripeClient } from "./stripeClient";
 
-// WASP_WEB_CLIENT_URL will be set up by Wasp when deploying to production: https://wasp.sh/docs/deploying
-const CLIENT_BASE_URL =
-  process.env.WASP_WEB_CLIENT_URL || "http://localhost:3000";
-
 /**
  * Returns a Stripe customer for the given User email, creating a customer if none exist.
  * Implements email uniqueness logic since Stripe doesn't enforce unique emails.
@@ -38,6 +34,10 @@ export async function createStripeCheckoutSession({
   customerId,
   mode,
 }: CreateStripeCheckoutSessionParams): Promise<Stripe.Checkout.Session> {
+  // WASP_WEB_CLIENT_URL will be set up by Wasp when deploying to production: https://wasp.sh/docs/deploying
+  const CLIENT_BASE_URL =
+    process.env.WASP_WEB_CLIENT_URL || "http://localhost:3000";
+
   return await stripeClient.checkout.sessions.create({
     customer: customerId,
     line_items: [

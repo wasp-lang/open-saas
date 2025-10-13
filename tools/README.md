@@ -36,6 +36,7 @@ and `.copy` files to copy files directly from the diff directory to the derived 
 The typical workflow is:
 
 1. Run `dope.sh` with the `patch` action to generate `app/` from `../template/` and `app_diff/`:
+
    ```bash
    ./dope.sh ../template app patch
    ```
@@ -58,7 +59,7 @@ If you're running the `dope.sh` script on macOS, install:
 - `diffutils`
 
 ```sh
-brew install coreutils  # contains grealpath
+brew install coreutils # contains grealpath
 brew install gpatch
 brew install diffutils
 ```
