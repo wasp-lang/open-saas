@@ -16,7 +16,7 @@ export interface FetchCustomerPortalUrlArgs {
 }
 
 export interface PaymentProcessor {
-  id: "stripe" | "lemonsqueezy";
+  id: "stripe" | "lemonsqueezy" | "polar";
   createCheckoutSession: (
     args: CreateCheckoutSessionArgs,
   ) => Promise<{ session: { id: string; url: string } }>;
@@ -32,4 +32,5 @@ export interface PaymentProcessor {
  * other payment processor code that you're not using  from `/src/payment`
  */
 // export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
+// export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
 export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;

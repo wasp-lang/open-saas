@@ -12,7 +12,7 @@
    "dependencies": {
      "@aws-sdk/client-s3": "^3.523.0",
      "@aws-sdk/s3-presigned-post": "^3.750.0",
-@@ -36,6 +41,7 @@
+@@ -38,6 +43,7 @@
      "react-dom": "^18.2.0",
      "react-hook-form": "^7.60.0",
      "react-hot-toast": "^2.4.1",
