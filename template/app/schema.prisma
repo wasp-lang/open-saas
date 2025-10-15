@@ -60,8 +60,7 @@ model File {
 
   name                      String
   type                      String
-  key                       String
-  uploadUrl                 String
+  s3Key                     String
 }
 
 model DailyStats {
