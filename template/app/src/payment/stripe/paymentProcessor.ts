@@ -1,4 +1,5 @@
-import { requireNodeEnvVar } from "../../server/utils";
+import Stripe from "stripe";
+import { assertUnreachable } from "../../shared/utils";
 import type {
   CreateCheckoutSessionArgs,
   FetchCustomerPortalUrlArgs,
@@ -7,11 +8,10 @@ import type {
 import type { PaymentPlanEffect } from "../plans";
 import {
   createStripeCheckoutSession,
-  fetchStripeCustomer,
+  ensureStripeCustomer,
 } from "./checkoutUtils";
+import { stripeClient } from "./stripeClient";
 import { stripeMiddlewareConfigFn, stripeWebhook } from "./webhook";
-
-export type StripeMode = "subscription" | "payment";
 
 export const stripePaymentProcessor: PaymentProcessor = {
   id: "stripe",
@@ -21,12 +21,8 @@ export const stripePaymentProcessor: PaymentProcessor = {
     paymentPlan,
     prismaUserDelegate,
   }: CreateCheckoutSessionArgs) => {
-    const customer = await fetchStripeCustomer(userEmail);
-    const stripeSession = await createStripeCheckoutSession({
-      priceId: paymentPlan.getPaymentProcessorPlanId(),
-      customerId: customer.id,
-      mode: paymentPlanEffectToStripeMode(paymentPlan.effect),
-    });
+    const customer = await ensureStripeCustomer(userEmail);
+
     await prismaUserDelegate.update({
       where: {
         id: userId,
@@ -35,26 +31,64 @@ export const stripePaymentProcessor: PaymentProcessor = {
         paymentProcessorUserId: customer.id,
       },
     });
-    if (!stripeSession.url)
-      throw new Error("Error creating Stripe Checkout Session");
-    const session = {
-      url: stripeSession.url,
-      id: stripeSession.id,
+
+    const stripeSession = await createStripeCheckoutSession({
+      customerId: customer.id,
+      priceId: paymentPlan.getPaymentProcessorPlanId(),
+      mode: paymentPlanEffectToStripeCheckoutSessionMode(paymentPlan.effect),
+    });
+
+    if (!stripeSession.url) {
+      throw new Error(
+        "Stripe checkout session URL is missing. Checkout session might not be active.",
+      );
+    }
+
+    return {
+      session: {
+        url: stripeSession.url,
+        id: stripeSession.id,
+      },
     };
-    return { session };
   },
-  fetchCustomerPortalUrl: async (_args: FetchCustomerPortalUrlArgs) =>
-    requireNodeEnvVar("STRIPE_CUSTOMER_PORTAL_URL"),
+  fetchCustomerPortalUrl: async (args: FetchCustomerPortalUrlArgs) => {
+    // WASP_WEB_CLIENT_URL will be set up by Wasp when deploying to production: https://wasp.sh/docs/deploying
+    const CLIENT_BASE_URL =
+      process.env.WASP_WEB_CLIENT_URL || "http://localhost:3000";
+
+    const user = await args.prismaUserDelegate.findUniqueOrThrow({
+      where: {
+        id: args.userId,
+      },
+      select: {
+        paymentProcessorUserId: true,
+      },
+    });
+
+    if (!user.paymentProcessorUserId) {
+      return null;
+    }
+
+    const session = await stripeClient.billingPortal.sessions.create({
+      customer: user.paymentProcessorUserId,
+      return_url: `${CLIENT_BASE_URL}/account`,
+    });
+
+    return session.url;
+  },
   webhook: stripeWebhook,
   webhookMiddlewareConfigFn: stripeMiddlewareConfigFn,
 };
 
-function paymentPlanEffectToStripeMode(
-  planEffect: PaymentPlanEffect,
-): StripeMode {
-  const effectToMode: Record<PaymentPlanEffect["kind"], StripeMode> = {
-    subscription: "subscription",
-    credits: "payment",
-  };
-  return effectToMode[planEffect.kind];
+function paymentPlanEffectToStripeCheckoutSessionMode({
+  kind,
+}: PaymentPlanEffect): Stripe.Checkout.Session.Mode {
+  switch (kind) {
+    case "subscription":
+      return "subscription";
+    case "credits":
+      return "payment";
+    default:
+      assertUnreachable(kind);
+  }
 }

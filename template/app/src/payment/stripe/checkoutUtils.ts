@@ -1,64 +1,67 @@
-import type { StripeMode } from "./paymentProcessor";
-
 import Stripe from "stripe";
-import { stripe } from "./stripeClient";
+import { stripeClient } from "./stripeClient";
 
-// WASP_WEB_CLIENT_URL will be set up by Wasp when deploying to production: https://wasp.sh/docs/deploying
-const DOMAIN = process.env.WASP_WEB_CLIENT_URL || "http://localhost:3000";
+/**
+ * Returns a Stripe customer for the given User email, creating a customer if none exist.
+ * Implements email uniqueness logic since Stripe doesn't enforce unique emails.
+ */
+export async function ensureStripeCustomer(
+  userEmail: string,
+): Promise<Stripe.Customer> {
+  const stripeCustomers = await stripeClient.customers.list({
+    email: userEmail,
+  });
 
-export async function fetchStripeCustomer(customerEmail: string) {
-  let customer: Stripe.Customer;
-  try {
-    const stripeCustomers = await stripe.customers.list({
-      email: customerEmail,
+  if (stripeCustomers.data.length === 0) {
+    console.log("Creating a new Stripe customer");
+    return stripeClient.customers.create({
+      email: userEmail,
     });
-    if (!stripeCustomers.data.length) {
-      console.log("creating customer");
-      customer = await stripe.customers.create({
-        email: customerEmail,
-      });
-    } else {
-      console.log("using existing customer");
-      customer = stripeCustomers.data[0];
-    }
-    return customer;
-  } catch (error) {
-    console.error(error);
-    throw error;
+  } else {
+    console.log("Using an existing Stripe customer");
+    return stripeCustomers.data[0];
   }
 }
 
 interface CreateStripeCheckoutSessionParams {
-  priceId: string;
-  customerId: string;
-  mode: StripeMode;
+  priceId: Stripe.Price["id"];
+  customerId: Stripe.Customer["id"];
+  mode: Stripe.Checkout.Session.Mode;
 }
 
 export async function createStripeCheckoutSession({
   priceId,
   customerId,
   mode,
-}: CreateStripeCheckoutSessionParams) {
-  try {
-    return await stripe.checkout.sessions.create({
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ],
-      mode: mode,
-      success_url: `${DOMAIN}/checkout?status=success`,
-      cancel_url: `${DOMAIN}/checkout?status=canceled`,
-      automatic_tax: { enabled: true },
-      allow_promotion_codes: true,
-      customer_update: {
-        address: "auto",
+}: CreateStripeCheckoutSessionParams): Promise<Stripe.Checkout.Session> {
+  // WASP_WEB_CLIENT_URL will be set up by Wasp when deploying to production: https://wasp.sh/docs/deploying
+  const CLIENT_BASE_URL =
+    process.env.WASP_WEB_CLIENT_URL || "http://localhost:3000";
+
+  return await stripeClient.checkout.sessions.create({
+    customer: customerId,
+    line_items: [
+      {
+        price: priceId,
+        quantity: 1,
       },
-      customer: customerId,
-    });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+    ],
+    mode,
+    success_url: `${CLIENT_BASE_URL}/checkout?status=success`,
+    cancel_url: `${CLIENT_BASE_URL}/checkout?status=canceled`,
+    automatic_tax: { enabled: true },
+    allow_promotion_codes: true,
+    customer_update: {
+      address: "auto",
+    },
+    // Stripe automatically creates invoices for subscriptions.
+    // For one-time payments, we must enable them manually.
+    // However, enabling invoices for subscriptions will throw an error.
+    invoice_creation:
+      mode === "payment"
+        ? {
+            enabled: true,
+          }
+        : undefined,
+  });
 }
