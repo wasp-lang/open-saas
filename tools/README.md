@@ -7,7 +7,7 @@ or to patch those diffs onto the base project to get the derived one. This is us
 project has only small changes on top of the base project and you want to keep it in a directory
 in the same repo as the main project.
 
-Since derived apps (like opensaas-sh) are just the Open SaaS template with some small tweaks, and
+Since derived apps (like opensaas-sh and template-test) are just the Open SaaS template with some small tweaks, and
 we want to keep them up to date as the template changes, we don't version the actual app code in git.
 Instead, we version the diffs between it and the template in an `app_diff/` directory.
 
