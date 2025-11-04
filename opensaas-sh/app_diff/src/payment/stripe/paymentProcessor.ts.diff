@@ -9,3 +9,24 @@
        },
      });
  
+@@ -58,17 +58,17 @@
+         id: args.userId,
+       },
+       select: {
+-        paymentProcessorUserId: true,
++        stripeId: true,
+       },
+     });
+ 
+-    if (!user.paymentProcessorUserId) {
++    if (!user.stripeId) {
+       return null;
+     }
+ 
+     const billingPortalSession =
+       await stripeClient.billingPortal.sessions.create({
+-        customer: user.paymentProcessorUserId,
++        customer: user.stripeId,
+         return_url: `${env.WASP_WEB_CLIENT_URL}/account`,
+       });
+ 

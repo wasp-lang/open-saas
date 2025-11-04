@@ -5,4 +5,5 @@ src/payment/lemonSqueezy/checkoutUtils.ts
 src/payment/lemonSqueezy/paymentDetails.ts
 src/payment/lemonSqueezy/paymentProcessor.ts
 src/payment/lemonSqueezy/webhook.ts
+src/payment/lemonSqueezy/webhookPayload.ts
 src/payment/webhook.ts
