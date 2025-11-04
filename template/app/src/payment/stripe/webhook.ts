@@ -7,11 +7,7 @@ import { emailSender } from "wasp/server/email";
 import { requireNodeEnvVar } from "../../server/utils";
 import { assertUnreachable } from "../../shared/utils";
 import { UnhandledWebhookEventError } from "../errors";
-import {
-  PaymentPlanId,
-  paymentPlans,
-  SubscriptionStatus
-} from "../plans";
+import { PaymentPlanId, paymentPlans, SubscriptionStatus } from "../plans";
 import {
   updateUserStripeOneTimePaymentDetails,
   updateUserStripeSubscriptionDetails,

@@ -66,12 +66,13 @@ export const stripePaymentProcessor: PaymentProcessor = {
       return null;
     }
 
-    const session = await stripeClient.billingPortal.sessions.create({
-      customer: user.paymentProcessorUserId,
-      return_url: `${env.WASP_WEB_CLIENT_URL}/account`,
-    });
+    const billingPortalSession =
+      await stripeClient.billingPortal.sessions.create({
+        customer: user.paymentProcessorUserId,
+        return_url: `${env.WASP_WEB_CLIENT_URL}/account`,
+      });
 
-    return session.url;
+    return billingPortalSession.url;
   },
   webhook: stripeWebhook,
   webhookMiddlewareConfigFn: stripeMiddlewareConfigFn,
