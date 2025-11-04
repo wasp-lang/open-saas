@@ -1,4 +1,5 @@
 import Stripe from "stripe";
+import { env } from "wasp/server";
 import { assertUnreachable } from "../../shared/utils";
 import type {
   CreateCheckoutSessionArgs,
@@ -52,10 +53,6 @@ export const stripePaymentProcessor: PaymentProcessor = {
     };
   },
   fetchCustomerPortalUrl: async (args: FetchCustomerPortalUrlArgs) => {
-    // WASP_WEB_CLIENT_URL will be set up by Wasp when deploying to production: https://wasp.sh/docs/deploying
-    const CLIENT_BASE_URL =
-      process.env.WASP_WEB_CLIENT_URL || "http://localhost:3000";
-
     const user = await args.prismaUserDelegate.findUniqueOrThrow({
       where: {
         id: args.userId,
@@ -71,7 +68,7 @@ export const stripePaymentProcessor: PaymentProcessor = {
 
     const session = await stripeClient.billingPortal.sessions.create({
       customer: user.paymentProcessorUserId,
-      return_url: `${CLIENT_BASE_URL}/account`,
+      return_url: `${env.WASP_WEB_CLIENT_URL}/account`,
     });
 
     return session.url;

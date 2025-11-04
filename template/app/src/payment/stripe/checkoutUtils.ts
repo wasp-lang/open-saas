@@ -1,4 +1,5 @@
 import Stripe from "stripe";
+import { env } from "wasp/server";
 import { stripeClient } from "./stripeClient";
 
 /**
@@ -29,16 +30,12 @@ interface CreateStripeCheckoutSessionParams {
   mode: Stripe.Checkout.Session.Mode;
 }
 
-export async function createStripeCheckoutSession({
+export function createStripeCheckoutSession({
   priceId,
   customerId,
   mode,
 }: CreateStripeCheckoutSessionParams): Promise<Stripe.Checkout.Session> {
-  // WASP_WEB_CLIENT_URL will be set up by Wasp when deploying to production: https://wasp.sh/docs/deploying
-  const CLIENT_BASE_URL =
-    process.env.WASP_WEB_CLIENT_URL || "http://localhost:3000";
-
-  return await stripeClient.checkout.sessions.create({
+  return stripeClient.checkout.sessions.create({
     customer: customerId,
     line_items: [
       {
@@ -47,21 +44,28 @@ export async function createStripeCheckoutSession({
       },
     ],
     mode,
-    success_url: `${CLIENT_BASE_URL}/checkout?status=success`,
-    cancel_url: `${CLIENT_BASE_URL}/checkout?status=canceled`,
+    success_url: `${env.WASP_WEB_CLIENT_URL}/checkout?status=success`,
+    cancel_url: `${env.WASP_WEB_CLIENT_URL}/checkout?status=canceled`,
     automatic_tax: { enabled: true },
     allow_promotion_codes: true,
     customer_update: {
       address: "auto",
     },
-    // Stripe automatically creates invoices for subscriptions.
-    // For one-time payments, we must enable them manually.
-    // However, enabling invoices for subscriptions will throw an error.
-    invoice_creation:
-      mode === "payment"
-        ? {
-            enabled: true,
-          }
-        : undefined,
+    invoice_creation: getInvoiceCreationConfig(mode),
   });
+}
+
+/**
+ * Stripe automatically creates invoices for subscriptions.
+ * For one-time payments, we must enable them manually.
+ * However, enabling invoices for subscriptions will throw an error.
+ */
+function getInvoiceCreationConfig(
+  mode: Stripe.Checkout.Session.Mode,
+): Stripe.Checkout.SessionCreateParams["invoice_creation"] {
+  return mode === "payment"
+    ? {
+        enabled: true,
+      }
+    : undefined;
 }

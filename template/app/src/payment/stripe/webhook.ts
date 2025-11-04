@@ -1,13 +1,17 @@
 import { type PrismaClient } from "@prisma/client";
 import express from "express";
 import type { Stripe } from "stripe";
-import { HttpError, type MiddlewareConfigFn } from "wasp/server";
+import { type MiddlewareConfigFn } from "wasp/server";
 import { type PaymentsWebhook } from "wasp/server/api";
 import { emailSender } from "wasp/server/email";
 import { requireNodeEnvVar } from "../../server/utils";
 import { assertUnreachable } from "../../shared/utils";
 import { UnhandledWebhookEventError } from "../errors";
-import { PaymentPlanId, paymentPlans, SubscriptionStatus } from "../plans";
+import {
+  PaymentPlanId,
+  paymentPlans,
+  SubscriptionStatus
+} from "../plans";
 import {
   updateUserStripeOneTimePaymentDetails,
   updateUserStripeSubscriptionDetails,
@@ -61,22 +65,25 @@ export const stripeWebhook: PaymentsWebhook = async (
         throw new UnhandledWebhookEventError(stripeEvent.type);
     }
     return response.status(204).send();
-  } catch (err) {
-    if (err instanceof UnhandledWebhookEventError) {
-      // We must return a 2XX status code, otherwise Stripe will keep retrying the event.
-      response.status(204).send();
-
+  } catch (error) {
+    if (error instanceof UnhandledWebhookEventError) {
       // In development, it is likely that we will receive events that we are not handling.
       // E.g. via the `stripe trigger` command.
-      // These can be ignored without any issues.
-      if (process.env.NODE_ENV === "production") {
-        throw err;
+      // While these can be ignored safely in development, it's good to be aware of them.
+      // For production we shouldn't have any extra webhook events.
+      if (process.env.NODE_ENV === "development") {
+        console.info("Unhandled Stripe webhook event in development: ", error);
+      } else if (process.env.NODE_ENV === "production") {
+        console.error("Unhandled Stripe webhook event in production: ", error);
       }
+
+      // We must return a 2XX status code, otherwise Stripe will keep retrying the event.
+      return response.status(204).send();
     }
 
-    console.error("Stripe webhook error:", err);
-    if (err instanceof HttpError) {
-      return response.status(err.statusCode).json({ error: err.message });
+    console.error("Stripe webhook error:", error);
+    if (error instanceof Error) {
+      return response.status(400).json({ error: error.message });
     } else {
       return response
         .status(400)
@@ -89,7 +96,7 @@ function constructStripeEvent(request: express.Request): Stripe.Event {
   const stripeWebhookSecret = requireNodeEnvVar("STRIPE_WEBHOOK_SECRET");
   const stripeSignature = request.headers["stripe-signature"];
   if (!stripeSignature) {
-    throw new HttpError(400, "Stripe webhook signature not provided");
+    throw new Error("Stripe webhook signature not provided");
   }
 
   return stripeClient.webhooks.constructEvent(
@@ -114,7 +121,7 @@ async function handleInvoicePaid(
         {
           customerId,
           datePaid: invoicePaidAtDate,
-          numOfCreditsPurchased: paymentPlans.credits10.effect.amount,
+          numOfCreditsPurchased: paymentPlans[paymentPlanId].effect.amount,
         },
         prismaUserDelegate,
       );
@@ -142,10 +149,7 @@ async function handleInvoicePaid(
 function getInvoicePriceId(invoice: Stripe.Invoice): Stripe.Price["id"] {
   const invoiceLineItems = invoice.lines.data;
   if (invoiceLineItems.length === 0 || invoiceLineItems.length > 1) {
-    throw new HttpError(
-      400,
-      "There should be exactly one line item in Stripe invoice",
-    );
+    throw new Error("There should be exactly one line item in Stripe invoice");
   }
 
   const priceId = invoiceLineItems[0].pricing?.price_details?.price;
@@ -163,15 +167,8 @@ async function handleCustomerSubscriptionUpdated(
   const subscription = event.data.object;
 
   // There are other subscription statuses, such as `trialing` that we are not handling.
-  let subscriptionStatus: SubscriptionStatus | undefined;
-  if (subscription.status === SubscriptionStatus.Active) {
-    subscriptionStatus = SubscriptionStatus.Active;
-    if (subscription.cancel_at_period_end) {
-      subscriptionStatus = SubscriptionStatus.CancelAtPeriodEnd;
-    }
-  } else if (subscription.status === SubscriptionStatus.PastDue) {
-    subscriptionStatus = SubscriptionStatus.PastDue;
-  } else {
+  const subscriptionStatus = getOpenSaasSubscriptionStatus(subscription);
+  if (!subscriptionStatus) {
     return;
   }
 
@@ -197,6 +194,22 @@ async function handleCustomerSubscriptionUpdated(
   }
 }
 
+function getOpenSaasSubscriptionStatus(
+  subscription: Stripe.Subscription,
+): SubscriptionStatus | undefined {
+  let subscriptionStatus: SubscriptionStatus | undefined;
+  if (subscription.status === SubscriptionStatus.Active) {
+    subscriptionStatus = SubscriptionStatus.Active;
+    if (subscription.cancel_at_period_end) {
+      subscriptionStatus = SubscriptionStatus.CancelAtPeriodEnd;
+    }
+  } else if (subscription.status === SubscriptionStatus.PastDue) {
+    subscriptionStatus = SubscriptionStatus.PastDue;
+  }
+
+  return subscriptionStatus;
+}
+
 /**
  * We only expect one subscription item, if your workflow expects more, you should change this function to handle them.
  */
@@ -205,8 +218,7 @@ function getSubscriptionPriceId(
 ): Stripe.Price["id"] {
   const subscriptionItems = subscription.items.data;
   if (subscriptionItems.length === 0 || subscriptionItems.length > 1) {
-    throw new HttpError(
-      400,
+    throw new Error(
       "There should be exactly one subscription item in Stripe subscription",
     );
   }
@@ -250,13 +262,13 @@ function getInvoicePaidAtDate(invoice: Stripe.Invoice): Date {
 }
 
 function getPaymentPlanIdByPriceId(priceId: string): PaymentPlanId {
-  const planId = Object.values(PaymentPlanId).find(
+  const paymentPlanId = Object.values(PaymentPlanId).find(
     (paymentPlanId) =>
       paymentPlans[paymentPlanId].getPaymentProcessorPlanId() === priceId,
   );
-  if (!planId) {
+  if (!paymentPlanId) {
     throw new Error(`No payment plan with Stripe price id ${priceId}`);
   }
 
-  return planId;
+  return paymentPlanId;
 }
