@@ -90,7 +90,7 @@ export const makeStripePayment = async ({
 }) => {
   test.slow(); // Stripe payments take a long time to confirm and can cause tests to fail so we use a longer timeout
 
-  await page.click('text="Pricing"');
+  await page.goto("/pricing");
   await page.waitForURL("**/pricing");
 
   const buyBtn = page.locator(`button[aria-describedby="${planId}"]`);

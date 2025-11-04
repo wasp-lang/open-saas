@@ -1,6 +1,13 @@
 ## Welcome to your new SaaS App! 🎉
 
-<a href="https://www.producthunt.com/products/open-saas?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-open&#0045;saas&#0045;2" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=991058&theme=neutral&t=1753776395137" alt="Open&#0032;SaaS - The&#0032;open&#0045;source&#0032;SaaS&#0032;boilerplate&#0032;with&#0032;superpowers&#0033; | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+<div style="display: flex; gap: 16px; align-items: center;">
+  <a href="https://www.producthunt.com/products/open-saas?embed=true&utm_source=badge-top-post-topic-badge&utm_medium=badge&utm_source=badge-open&#0045;saas&#0045;2&#0045;0" target="_blank">
+    <img src="https://api.producthunt.com/widgets/embed-image/v1/top-post-topic-badge.svg?post_id=1023519&theme=neutral&period=weekly&topic_id=237&t=1760520428563" alt="Open&#0032;SaaS&#0032;2&#0046;0 - Free&#0044;&#0032;open&#0045;source&#0032;SaaS&#0032;starter&#0032;kit&#0032;with&#0032;superpowers | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" />
+  </a>
+  <a href="https://www.producthunt.com/products/open-saas?embed=true&utm_source=badge-top-post-badge&utm_medium=badge&utm_source=badge-open&#0045;saas&#0045;2&#0045;0" target="_blank">
+    <img src="https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=1023519&theme=neutral&period=daily&t=1760520428563" alt="Open&#0032;SaaS&#0032;2&#0046;0 - Free&#0044;&#0032;open&#0045;source&#0032;SaaS&#0032;starter&#0032;kit&#0032;with&#0032;superpowers | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" />
+  </a>
+</div>
 
 https://github.com/user-attachments/assets/3856276b-23e9-455e-a564-b5f26f4f0e98
 

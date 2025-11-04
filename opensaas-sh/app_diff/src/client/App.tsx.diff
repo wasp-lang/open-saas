@@ -1,0 +1,11 @@
+--- template/app/src/client/App.tsx
++++ opensaas-sh/app/src/client/App.tsx
+@@ -18,7 +18,7 @@
+   const location = useLocation();
+   const isMarketingPage = useMemo(() => {
+     return (
+-      location.pathname === "/" || location.pathname.startsWith("/pricing")
++      location.pathname === "/"
+     );
+   }, [location]);
+ 

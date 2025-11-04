@@ -1,24 +1,33 @@
 --- template/app/src/file-upload/operations.ts
 +++ opensaas-sh/app/src/file-upload/operations.ts
-@@ -44,6 +44,21 @@
-       userId: context.user.id,
-     });
+@@ -6,7 +6,8 @@
+   type DeleteFile,
+   type GetAllFilesByUser,
+   type GetDownloadFileSignedURL,
+-} from "wasp/server/operations";
++} from 'wasp/server/operations';
++import { checkIfUserHasReachedFileUploadLimit } from './fileUploading';
  
-+  const numberOfFilesByUser = await context.entities.File.count({
-+    where: {
-+      user: {
-+        id: context.user.id,
-+      },
-+    },
+ import * as z from "zod";
+ import { ensureArgsSchemaOrThrowHttpError } from "../server/validation";
+@@ -37,11 +38,16 @@
+     throw new HttpError(401);
+   }
+ 
+-  const { fileType, fileName } = ensureArgsSchemaOrThrowHttpError(
+-    createFileInputSchema,
+-    rawArgs,
+-  );
++  const userFileLimitReached = await checkIfUserHasReachedFileUploadLimit({
++    userId: context.user.id,
++    prismaFileDelegate: context.entities.File,
 +  });
-+
-+  if (numberOfFilesByUser >= 2) {
-+    throw new HttpError(
-+      403,
-+      "Thanks for trying Open SaaS. This demo only allows 2 file uploads per user.",
-+    );
++  if (userFileLimitReached) {
++    throw new HttpError(403, 'This demo only allows 2 file uploads per user.');
 +  }
+ 
++  const { fileType, fileName } = ensureArgsSchemaOrThrowHttpError(createFileInputSchema, rawArgs);
 +
-   await context.entities.File.create({
-     data: {
-       name: fileName,
+   return await getUploadFileSignedURLFromS3({
+     fileType,
+     fileName,
