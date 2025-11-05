@@ -9,24 +9,35 @@
        },
      });
  
-@@ -58,17 +58,17 @@
-         id: args.userId,
-       },
-       select: {
--        paymentProcessorUserId: true,
-+        stripeId: true,
-       },
-     });
+@@ -53,24 +53,24 @@
+     };
+   },
+   fetchCustomerPortalUrl: async (args: FetchCustomerPortalUrlArgs) => {
+-    const { paymentProcessorUserId } =
++    const { stripeId } =
+       await args.prismaUserDelegate.findUniqueOrThrow({
+         where: {
+           id: args.userId,
+         },
+         select: {
+-          paymentProcessorUserId: true,
+-        },
+-      });
++          stripeId: true,
++      },
++    });
  
--    if (!user.paymentProcessorUserId) {
-+    if (!user.stripeId) {
+-    if (!paymentProcessorUserId) {
++    if (!stripeId) {
        return null;
      }
  
      const billingPortalSession =
        await stripeClient.billingPortal.sessions.create({
--        customer: user.paymentProcessorUserId,
-+        customer: user.stripeId,
-         return_url: `${env.WASP_WEB_CLIENT_URL}/account`,
+-        customer: paymentProcessorUserId,
+-        return_url: `${env.WASP_WEB_CLIENT_URL}account`,
++        customer: stripeId,
++        return_url: `${env.WASP_WEB_CLIENT_URL}/account`,
        });
  
+     return billingPortalSession.url;
