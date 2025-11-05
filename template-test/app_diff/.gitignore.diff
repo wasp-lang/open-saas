@@ -1,10 +1,14 @@
 --- /Users/ilakovac/dev/open-saas/template-test/tools/../../template-test/base-app/app/.gitignore
 +++ template-test/app/.gitignore
-@@ -6,6 +6,12 @@
+@@ -6,6 +6,16 @@
  .env
  .env.*
  
 +# Dotenv Vault entries
++# These are automatically added by Dotenv Vault when running `npm run env:pull`.
++# They're kept in this diff to avoid having to manually revert .gitignore changes
++# each time we test modifications. They don't cause any harm and make the process
++# less annoying.
 +.env*
 +.flaskenv*
 +!.env.project
