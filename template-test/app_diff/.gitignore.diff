@@ -1,6 +1,6 @@
 --- /Users/ilakovac/dev/open-saas/template-test/tools/../../template-test/base-app/app/.gitignore
 +++ template-test/app/.gitignore
-@@ -6,6 +6,16 @@
+@@ -6,6 +6,24 @@
  .env
  .env.*
  
@@ -17,3 +17,12 @@
  # Don't ignore example dotenv files.
  !.env.example
  !.env.*.example
++
++# Ignore migrations dir to avoid including them in the diffs. We want to test
++# generating migrations each time.
++migrations/
++
++# Ignore package-lock.json to avoid including it in the diffs. Our users start
++# new projects without it, and we want to test the template like our users.
++package-lock.json
+\ No newline at end of file
