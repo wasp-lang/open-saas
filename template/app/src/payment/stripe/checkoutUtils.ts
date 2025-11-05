@@ -44,8 +44,8 @@ export function createStripeCheckoutSession({
       },
     ],
     mode,
-    success_url: `${env.WASP_WEB_CLIENT_URL}/checkout?status=success`,
-    cancel_url: `${env.WASP_WEB_CLIENT_URL}/checkout?status=canceled`,
+    success_url: `${env.WASP_WEB_CLIENT_URL}checkout?status=success`,
+    cancel_url: `${env.WASP_WEB_CLIENT_URL}checkout?status=canceled`,
     automatic_tax: { enabled: true },
     allow_promotion_codes: true,
     customer_update: {

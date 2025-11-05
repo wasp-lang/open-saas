@@ -53,23 +53,24 @@ export const stripePaymentProcessor: PaymentProcessor = {
     };
   },
   fetchCustomerPortalUrl: async (args: FetchCustomerPortalUrlArgs) => {
-    const user = await args.prismaUserDelegate.findUniqueOrThrow({
-      where: {
-        id: args.userId,
-      },
-      select: {
-        paymentProcessorUserId: true,
-      },
-    });
+    const { paymentProcessorUserId } =
+      await args.prismaUserDelegate.findUniqueOrThrow({
+        where: {
+          id: args.userId,
+        },
+        select: {
+          paymentProcessorUserId: true,
+        },
+      });
 
-    if (!user.paymentProcessorUserId) {
+    if (!paymentProcessorUserId) {
       return null;
     }
 
     const billingPortalSession =
       await stripeClient.billingPortal.sessions.create({
-        customer: user.paymentProcessorUserId,
-        return_url: `${env.WASP_WEB_CLIENT_URL}/account`,
+        customer: paymentProcessorUserId,
+        return_url: `${env.WASP_WEB_CLIENT_URL}account`,
       });
 
     return billingPortalSession.url;

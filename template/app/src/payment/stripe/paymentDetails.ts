@@ -30,8 +30,8 @@ export function updateUserStripeOneTimePaymentDetails(
 
 interface UpdateUserStripeSubscriptionDetails {
   customerId: Stripe.Customer["id"];
-  datePaid?: Date;
   subscriptionStatus: SubscriptionStatus;
+  datePaid?: Date;
   paymentPlanId?: PaymentPlanId;
 }
 
