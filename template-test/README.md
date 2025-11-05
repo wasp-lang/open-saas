@@ -25,9 +25,9 @@ npx @wasp.sh/wasp-app-runner dev
 npx @wasp.sh/wasp-app-runner build
 ```
 
-### Workflow
+### If you want to update the template test app
 
 - Generate `app/` from template and diffs: `./tools/patch.sh`
-- Update diffs after modifying `app/`: `./tools/diff.sh`
+- Modify the app in `app/` as needed and then update diffs: `./tools/diff.sh`
 
 For detailed information about the diff/patch workflow and MacOS setup requirements, see [../tools/README.md](../tools/README.md).
