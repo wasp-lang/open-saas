@@ -1,0 +1,54 @@
+--- template/app/src/payment/stripe/user.ts
++++ opensaas-sh/app/src/payment/stripe/user.ts
+@@ -12,20 +12,20 @@
+       id: userId,
+     },
+     select: {
+-      paymentProcessorUserId: true,
++      stripeId: true,
+     },
+   });
+ 
+-  return user.paymentProcessorUserId;
++  return user.stripeId;
+ }
+ 
+ interface UpdateUserPaymentProcessorUserIdArgs {
+   userId: User["id"];
+-  paymentProcessorUserId: NonNullable<User["paymentProcessorUserId"]>;
++  stripeId: NonNullable<User["paymentProcessorUserId"]>;
+ }
+ 
+ export function updateUserPaymentProcessorUserId(
+-  { userId, paymentProcessorUserId }: UpdateUserPaymentProcessorUserIdArgs,
++  { userId, stripeId }: UpdateUserPaymentProcessorUserIdArgs,
+   prismaUserDelegate: PrismaClient["user"],
+ ): Promise<User> {
+   return prismaUserDelegate.update({
+@@ -33,7 +33,7 @@
+       id: userId,
+     },
+     data: {
+-      paymentProcessorUserId,
++      stripeId
+     },
+   });
+ }
+@@ -54,7 +54,7 @@
+ ): Promise<User> {
+   return userDelegate.update({
+     where: {
+-      paymentProcessorUserId: customerId,
++      stripeId: customerId,
+     },
+     data: {
+       datePaid,
+@@ -81,7 +81,7 @@
+ ): Promise<User> {
+   return userDelegate.update({
+     where: {
+-      paymentProcessorUserId: customerId,
++      stripeId: customerId,
+     },
+     data: {
+       subscriptionPlan: paymentPlanId,

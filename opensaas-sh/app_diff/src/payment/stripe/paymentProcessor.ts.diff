@@ -1,31 +1,23 @@
 --- template/app/src/payment/stripe/paymentProcessor.ts
 +++ opensaas-sh/app/src/payment/stripe/paymentProcessor.ts
-@@ -29,7 +29,7 @@
-         id: userId,
-       },
-       data: {
+@@ -31,7 +31,7 @@
+     await updateUserPaymentProcessorUserId(
+       {
+         userId,
 -        paymentProcessorUserId: customer.id,
 +        stripeId: customer.id,
        },
-     });
- 
-@@ -53,24 +53,24 @@
-     };
-   },
-   fetchCustomerPortalUrl: async (args: FetchCustomerPortalUrlArgs) => {
--    const { paymentProcessorUserId } =
-+    const { stripeId } =
-       await args.prismaUserDelegate.findUniqueOrThrow({
-         where: {
-           id: args.userId,
-         },
-         select: {
--          paymentProcessorUserId: true,
--        },
--      });
-+          stripeId: true,
-+      },
-+    });
+       prismaUserDelegate,
+     );
+@@ -59,19 +59,19 @@
+     prismaUserDelegate,
+     userId,
+   }: FetchCustomerPortalUrlArgs) => {
+-    const paymentProcessorUserId = await fetchUserPaymentProcessorUserId(
++    const stripeId = await fetchUserPaymentProcessorUserId(
+       userId,
+       prismaUserDelegate,
+     );
  
 -    if (!paymentProcessorUserId) {
 +    if (!stripeId) {
