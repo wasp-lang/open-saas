@@ -1,7 +1,22 @@
 --- template/app/src/payment/stripe/paymentProcessor.ts
 +++ opensaas-sh/app/src/payment/stripe/paymentProcessor.ts
-@@ -31,7 +31,7 @@
-     await updateUserPaymentProcessorUserId(
+@@ -13,8 +13,8 @@
+ } from "./checkoutUtils";
+ import { stripeClient } from "./stripeClient";
+ import {
+-  fetchUserPaymentProcessorUserId,
+-  updateUserPaymentProcessorUserId,
++  fetchUserStripeId,
++  updateUserStripeId
+ } from "./user";
+ import { stripeMiddlewareConfigFn, stripeWebhook } from "./webhook";
+ 
+@@ -28,10 +28,10 @@
+   }: CreateCheckoutSessionArgs) => {
+     const customer = await ensureStripeCustomer(userEmail);
+ 
+-    await updateUserPaymentProcessorUserId(
++    await updateUserStripeId(
        {
          userId,
 -        paymentProcessorUserId: customer.id,
@@ -14,7 +29,7 @@
      userId,
    }: FetchCustomerPortalUrlArgs) => {
 -    const paymentProcessorUserId = await fetchUserPaymentProcessorUserId(
-+    const stripeId = await fetchUserPaymentProcessorUserId(
++    const stripeId = await fetchUserStripeId(
        userId,
        prismaUserDelegate,
      );

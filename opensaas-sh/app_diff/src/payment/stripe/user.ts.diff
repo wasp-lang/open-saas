@@ -1,5 +1,14 @@
 --- template/app/src/payment/stripe/user.ts
 +++ opensaas-sh/app/src/payment/stripe/user.ts
+@@ -3,7 +3,7 @@
+ import type { SubscriptionStatus } from "../plans";
+ import { PaymentPlanId } from "../plans";
+ 
+-export async function fetchUserPaymentProcessorUserId(
++export async function fetchUserStripeId(
+   userId: User["id"],
+   prismaUserDelegate: PrismaClient["user"],
+ ): Promise<string | null> {
 @@ -12,20 +12,20 @@
        id: userId,
      },
@@ -13,15 +22,17 @@
 +  return user.stripeId;
  }
  
- interface UpdateUserPaymentProcessorUserIdArgs {
+-interface UpdateUserPaymentProcessorUserIdArgs {
++interface UpdateUserStripeIdArgs {
    userId: User["id"];
 -  paymentProcessorUserId: NonNullable<User["paymentProcessorUserId"]>;
-+  stripeId: NonNullable<User["paymentProcessorUserId"]>;
++  stripeId: NonNullable<User["stripeId"]>;
  }
  
- export function updateUserPaymentProcessorUserId(
+-export function updateUserPaymentProcessorUserId(
 -  { userId, paymentProcessorUserId }: UpdateUserPaymentProcessorUserIdArgs,
-+  { userId, stripeId }: UpdateUserPaymentProcessorUserIdArgs,
++export function updateUserStripeId(
++  { userId, stripeId }: UpdateUserStripeIdArgs,
    prismaUserDelegate: PrismaClient["user"],
  ): Promise<User> {
    return prismaUserDelegate.update({
