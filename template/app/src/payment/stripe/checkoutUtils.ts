@@ -1,3 +1,4 @@
+import { User } from "@prisma/client";
 import Stripe from "stripe";
 import { env } from "wasp/server";
 import { stripeClient } from "./stripeClient";
@@ -7,7 +8,7 @@ import { stripeClient } from "./stripeClient";
  * Implements email uniqueness logic since Stripe doesn't enforce unique emails.
  */
 export async function ensureStripeCustomer(
-  userEmail: string,
+  userEmail: NonNullable<User["email"]>,
 ): Promise<Stripe.Customer> {
   const stripeCustomers = await stripeClient.customers.list({
     email: userEmail,

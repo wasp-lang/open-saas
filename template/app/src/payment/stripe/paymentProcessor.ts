@@ -12,6 +12,10 @@ import {
   ensureStripeCustomer,
 } from "./checkoutUtils";
 import { stripeClient } from "./stripeClient";
+import {
+  fetchUserPaymentProcessorUserId,
+  updateUserPaymentProcessorUserId,
+} from "./user";
 import { stripeMiddlewareConfigFn, stripeWebhook } from "./webhook";
 
 export const stripePaymentProcessor: PaymentProcessor = {
@@ -24,14 +28,13 @@ export const stripePaymentProcessor: PaymentProcessor = {
   }: CreateCheckoutSessionArgs) => {
     const customer = await ensureStripeCustomer(userEmail);
 
-    await prismaUserDelegate.update({
-      where: {
-        id: userId,
-      },
-      data: {
+    await updateUserPaymentProcessorUserId(
+      {
+        userId,
         paymentProcessorUserId: customer.id,
       },
-    });
+      prismaUserDelegate,
+    );
 
     const stripeSession = await createStripeCheckoutSession({
       customerId: customer.id,
@@ -52,16 +55,14 @@ export const stripePaymentProcessor: PaymentProcessor = {
       },
     };
   },
-  fetchCustomerPortalUrl: async (args: FetchCustomerPortalUrlArgs) => {
-    const { paymentProcessorUserId } =
-      await args.prismaUserDelegate.findUniqueOrThrow({
-        where: {
-          id: args.userId,
-        },
-        select: {
-          paymentProcessorUserId: true,
-        },
-      });
+  fetchCustomerPortalUrl: async ({
+    prismaUserDelegate,
+    userId,
+  }: FetchCustomerPortalUrlArgs) => {
+    const paymentProcessorUserId = await fetchUserPaymentProcessorUserId(
+      userId,
+      prismaUserDelegate,
+    );
 
     if (!paymentProcessorUserId) {
       return null;
