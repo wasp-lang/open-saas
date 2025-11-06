@@ -24,7 +24,7 @@
        },
        prismaUserDelegate,
      );
-@@ -59,19 +59,19 @@
+@@ -59,18 +59,18 @@
      prismaUserDelegate,
      userId,
    }: FetchCustomerPortalUrlArgs) => {
@@ -42,9 +42,7 @@
      const billingPortalSession =
        await stripeClient.billingPortal.sessions.create({
 -        customer: paymentProcessorUserId,
--        return_url: `${env.WASP_WEB_CLIENT_URL}account`,
 +        customer: stripeId,
-+        return_url: `${env.WASP_WEB_CLIENT_URL}/account`,
+         return_url: `${config.frontendUrl}/account`,
        });
  
-     return billingPortalSession.url;

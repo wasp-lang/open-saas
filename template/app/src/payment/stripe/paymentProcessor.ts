@@ -1,5 +1,5 @@
 import Stripe from "stripe";
-import { env } from "wasp/server";
+import { config } from "wasp/server";
 import { assertUnreachable } from "../../shared/utils";
 import type {
   CreateCheckoutSessionArgs,
@@ -71,7 +71,7 @@ export const stripePaymentProcessor: PaymentProcessor = {
     const billingPortalSession =
       await stripeClient.billingPortal.sessions.create({
         customer: paymentProcessorUserId,
-        return_url: `${env.WASP_WEB_CLIENT_URL}account`,
+        return_url: `${config.frontendUrl}/account`,
       });
 
     return billingPortalSession.url;

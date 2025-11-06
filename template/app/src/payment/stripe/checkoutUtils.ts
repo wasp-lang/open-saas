@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
 import Stripe from "stripe";
-import { env } from "wasp/server";
+import { config } from "wasp/server";
 import { stripeClient } from "./stripeClient";
 
 /**
@@ -45,8 +45,8 @@ export function createStripeCheckoutSession({
       },
     ],
     mode,
-    success_url: `${env.WASP_WEB_CLIENT_URL}checkout?status=success`,
-    cancel_url: `${env.WASP_WEB_CLIENT_URL}checkout?status=canceled`,
+    success_url: `${config.frontendUrl}/checkout?status=success`,
+    cancel_url: `${config.frontendUrl}/checkout?status=canceled`,
     automatic_tax: { enabled: true },
     allow_promotion_codes: true,
     customer_update: {
