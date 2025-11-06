@@ -149,9 +149,18 @@ recreate_derived_dir() {
   # TODO: also allow deletion of dirs.
   if [ -f "${DIFF_DIR_DELETIONS}" ]; then
     while IFS= read -r filepath; do
+      # Skip empty lines
+      [[ -z "$filepath" ]] && continue
+
       local derived_dir_filepath
       local rm_exit_code
       derived_dir_filepath="${DERIVED_DIR}/${filepath}"
+
+      # Only delete if it exists and is a file
+      if [[ ! -f "$derived_dir_filepath" ]]; then
+        continue
+      fi
+
       rm "${derived_dir_filepath}"
       rm_exit_code=$?
       if [ ${rm_exit_code} -eq 0 ]; then
