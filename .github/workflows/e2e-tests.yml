@@ -29,11 +29,17 @@ jobs:
       - name: Docker setup
         uses: docker/setup-buildx-action@v3
 
+      - name: Get linked PR branch
+        id: get-linked-pr-branch
+        uses: ./.github/actions/get-linked-pr
+        with:
+          target-repo: wasp-lang/wasp
+
       - name: Download Wasp build artifacts from linked PR
         uses: wasp-lang/wasp/.github/actions/fetch-nightly-cli@main
         with:
           output-dir: ${{ runner.temp }}/wasp-cli
-          branch: main
+          branch: ${{ steps.get-linked-pr-branch.outputs.pr-branch || 'main' }}
 
       - name: Install Wasp
         run: >
