@@ -1,23 +1,20 @@
 import axios from "axios";
-import { createFile } from "wasp/client/operations";
 import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE_BYTES } from "./validation";
 
-export type FileWithValidType = Omit<File, "type"> & { type: AllowedFileType };
-type AllowedFileType = (typeof ALLOWED_FILE_TYPES)[number];
-interface FileUploadProgress {
-  file: FileWithValidType;
-  setUploadProgressPercent: (percentage: number) => void;
-}
+type AllowedFileTypes = (typeof ALLOWED_FILE_TYPES)[number];
+export type FileWithValidType = File & { type: AllowedFileTypes };
 
 export async function uploadFileWithProgress({
   file,
+  s3UploadUrl,
+  s3UploadFields,
   setUploadProgressPercent,
-}: FileUploadProgress) {
-  const { s3UploadUrl, s3UploadFields } = await createFile({
-    fileType: file.type,
-    fileName: file.name,
-  });
-
+}: {
+  file: FileWithValidType;
+  s3UploadUrl: string;
+  s3UploadFields: Record<string, string>;
+  setUploadProgressPercent: (percentage: number) => void;
+}) {
   const formData = getFileUploadFormData(file, s3UploadFields);
 
   return axios.post(s3UploadUrl, formData, {
@@ -44,29 +41,20 @@ function getFileUploadFormData(
   return formData;
 }
 
-export interface FileUploadError {
-  message: string;
-  code: "NO_FILE" | "INVALID_FILE_TYPE" | "FILE_TOO_LARGE" | "UPLOAD_FAILED";
-}
-
-export function validateFile(file: File) {
+export function validateFile(file: File): FileWithValidType {
   if (file.size > MAX_FILE_SIZE_BYTES) {
-    return {
-      message: `File size exceeds ${MAX_FILE_SIZE_BYTES / 1024 / 1024}MB limit.`,
-      code: "FILE_TOO_LARGE" as const,
-    };
+    throw new Error(
+      `File size exceeds ${MAX_FILE_SIZE_BYTES / 1024 / 1024}MB limit.`,
+    );
   }
 
-  if (!isAllowedFileType(file.type)) {
-    return {
-      message: `File type '${file.type}' is not supported.`,
-      code: "INVALID_FILE_TYPE" as const,
-    };
+  if (!isFileWithAllowedFileType(file)) {
+    throw new Error(`File type '${file.type}' is not supported.`);
   }
 
-  return null;
+  return file;
 }
 
-function isAllowedFileType(fileType: string): fileType is AllowedFileType {
-  return (ALLOWED_FILE_TYPES as readonly string[]).includes(fileType);
+function isFileWithAllowedFileType(file: File): file is FileWithValidType {
+  return ALLOWED_FILE_TYPES.includes(file.type as AllowedFileTypes);
 }

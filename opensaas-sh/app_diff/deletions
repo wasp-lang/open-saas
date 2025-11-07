@@ -1,7 +1,6 @@
-src/client/static/open-saas-banner-dark.png
-src/client/static/open-saas-banner-light.png
+src/client/static/open-saas-banner-dark.svg
+src/client/static/open-saas-banner-light.svg
 src/landing-page/components/Hero.tsx
-src/landing-page/contentSections.ts
 src/payment/lemonSqueezy/checkoutUtils.ts
 src/payment/lemonSqueezy/paymentDetails.ts
 src/payment/lemonSqueezy/paymentProcessor.ts

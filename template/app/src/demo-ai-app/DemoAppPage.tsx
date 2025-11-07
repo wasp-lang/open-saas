@@ -8,8 +8,9 @@ import {
   updateTask,
   useQuery,
 } from "wasp/client/operations";
+import { Link, routes } from "wasp/client/router";
 
-import { Loader2, Trash2 } from "lucide-react";
+import { ArrowRight, Loader2, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Button } from "../components/ui/button";
 import {
@@ -21,6 +22,8 @@ import {
 import { Checkbox } from "../components/ui/checkbox";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
+import { ToastAction } from "../components/ui/toast";
+import { toast } from "../hooks/use-toast";
 import { cn } from "../lib/utils";
 import type {
   GeneratedSchedule,
@@ -146,10 +149,33 @@ function NewTaskForm({
         hours: todaysHours,
       });
       if (response) {
-        setResponse(response as unknown as GeneratedSchedule);
+        setResponse(response);
       }
     } catch (err: any) {
-      window.alert("Error: " + (err.message || "Something went wrong"));
+      if (err.statusCode === 402) {
+        toast({
+          title: "⚠️ You are out of credits!",
+          style: {
+            minWidth: "400px",
+          },
+          action: (
+            <ToastAction
+              altText="Go to pricing page to buy credits/subscription"
+              asChild
+            >
+              <Link to={routes.PricingPageRoute.to}>
+                Go to pricing page <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </ToastAction>
+          ),
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: err.message || "Something went wrong",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsPlanGenerating(false);
     }

@@ -92,7 +92,10 @@ export const generateGptResponse: GenerateGptResponse<
       });
       transactions.push(decrementCredit);
     } else {
-      throw new HttpError(402, "User has not paid or is out of credits");
+      throw new HttpError(
+        402,
+        "User has no subscription and is out of credits",
+      );
     }
   }
 
