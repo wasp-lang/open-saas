@@ -8,6 +8,10 @@ import {
   ensurePolarCustomer,
 } from "./checkoutUtils";
 import { polarClient } from "./polarClient";
+import {
+  fetchUserPaymentProcessorUserId,
+  updateUserPaymentProcessorUserId,
+} from "./user";
 import { polarMiddlewareConfigFn, polarWebhook } from "./webhook";
 
 export const polarPaymentProcessor: PaymentProcessor = {
@@ -19,18 +23,15 @@ export const polarPaymentProcessor: PaymentProcessor = {
     prismaUserDelegate,
   }: CreateCheckoutSessionArgs) => {
     const customer = await ensurePolarCustomer(userId, userEmail);
+
+    await updateUserPaymentProcessorUserId(
+      { userId, paymentProcessorUserId: customer.id },
+      prismaUserDelegate,
+    );
+
     const session = await createPolarCheckoutSession({
       productId: paymentPlan.getPaymentProcessorPlanId(),
       customerId: customer.id,
-    });
-
-    await prismaUserDelegate.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        paymentProcessorUserId: customer.id,
-      },
     });
 
     return {
@@ -40,22 +41,21 @@ export const polarPaymentProcessor: PaymentProcessor = {
       },
     };
   },
-  fetchCustomerPortalUrl: async (args: FetchCustomerPortalUrlArgs) => {
-    const user = await args.prismaUserDelegate.findUnique({
-      where: {
-        id: args.userId,
-      },
-      select: {
-        paymentProcessorUserId: true,
-      },
-    });
+  fetchCustomerPortalUrl: async ({
+    userId,
+    prismaUserDelegate,
+  }: FetchCustomerPortalUrlArgs) => {
+    const paymentProcessorUserId = await fetchUserPaymentProcessorUserId(
+      userId,
+      prismaUserDelegate,
+    );
 
-    if (!user?.paymentProcessorUserId) {
+    if (!paymentProcessorUserId) {
       return null;
     }
 
     const customerSession = await polarClient.customerSessions.create({
-      customerId: user.paymentProcessorUserId,
+      customerId: paymentProcessorUserId,
     });
 
     return customerSession.customerPortalUrl;

@@ -1,63 +1,47 @@
+import { Checkout } from "@polar-sh/sdk/models/components/checkout.js";
 import { Customer } from "@polar-sh/sdk/models/components/customer.js";
-import { env } from "wasp/server";
+import { config } from "wasp/server";
 import { polarClient } from "./polarClient";
+
+export async function ensurePolarCustomer(
+  userId: string,
+  userEmail: string,
+): Promise<Customer> {
+  try {
+    const existingCustomer = await polarClient.customers.getExternal({
+      externalId: userId,
+    });
+
+    if (existingCustomer) {
+      console.log("Using an existing Polar customer");
+      return existingCustomer;
+    }
+  } catch (error) {
+    // FIXME: we might create a new customer on other errors too
+  }
+
+  console.log("Creating a new Polar customer");
+  return polarClient.customers.create({
+    externalId: userId,
+    email: userEmail,
+  });
+}
 
 interface CreatePolarCheckoutSessionArgs {
   productId: string;
   customerId: string;
 }
 
-interface PolarCheckoutSession {
-  id: string;
-  url: string;
-}
-
-export async function createPolarCheckoutSession({
+export function createPolarCheckoutSession({
   productId,
   customerId,
-}: CreatePolarCheckoutSessionArgs): Promise<PolarCheckoutSession> {
-  const baseUrl = env.WASP_WEB_CLIENT_URL.replace(/\/+$/, "");
-  const checkoutSession = await polarClient.checkouts.create({
+}: CreatePolarCheckoutSessionArgs): Promise<Checkout> {
+  return polarClient.checkouts.create({
     products: [productId],
-    successUrl: `${baseUrl}/checkout?success=true`,
+    successUrl: `${config.frontendUrl}/checkout?success=true`,
     metadata: {
-      source: baseUrl,
+      source: config.frontendUrl,
     },
     customerId,
   });
-
-  return {
-    id: checkoutSession.id,
-    url: checkoutSession.url,
-  };
-}
-
-export async function ensurePolarCustomer(
-  externalUserId: string,
-  externalUserEmail: string,
-): Promise<Customer> {
-  try {
-    const existingCustomer = await polarClient.customers.getExternal({
-      externalId: externalUserId,
-    });
-
-    if (existingCustomer) {
-      console.log("Using existing Polar customer");
-
-      return existingCustomer;
-    }
-  } catch (error) {
-    console.log(
-      "No existing Polar customer found by external ID, will create new one",
-    );
-  }
-
-  console.log("Creating new Polar customer");
-
-  const newCustomer = await polarClient.customers.create({
-    externalId: externalUserId,
-    email: externalUserEmail,
-  });
-
-  return newCustomer;
 }

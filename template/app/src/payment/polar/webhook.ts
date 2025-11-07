@@ -16,12 +16,31 @@ import {
   PaymentPlanId,
   paymentPlans,
 } from "../plans";
-import { updateUserSubscription, updateUserCredits } from "./paymentDetails";
+import { updateUserCredits, updateUserSubscription } from "./user";
 
-export const polarWebhook: PaymentsWebhook = async (req, res, context) => {
+/**
+ * Polar requires a raw request to construct events successfully.
+ */
+export const polarMiddlewareConfigFn: MiddlewareConfigFn = (
+  middlewareConfig,
+) => {
+  middlewareConfig.delete("express.json");
+  middlewareConfig.set(
+    "express.raw",
+    express.raw({ type: "application/json" }),
+  );
+
+  return middlewareConfig;
+};
+
+export const polarWebhook: PaymentsWebhook = async (
+  request,
+  response,
+  context,
+) => {
+  const prismaUserDelegate = context.entities.User;
   try {
-    const polarEvent = constructPolarEvent(req);
-    const prismaUserDelegate = context.entities.User;
+    const polarEvent = constructPolarEvent(request);
 
     switch (polarEvent.type) {
       case "order.paid":
@@ -33,37 +52,27 @@ export const polarWebhook: PaymentsWebhook = async (req, res, context) => {
       default:
         throw new UnhandledWebhookEventError(polarEvent.type);
     }
+    return response.status(204).send();
+  } catch (error) {
+    if (error instanceof UnhandledWebhookEventError) {
+      if (process.env.NODE_ENV === "development") {
+        console.info("Unhandled Polar webhook event in development: ", error);
+      } else if (process.env.NODE_ENV === "production") {
+        console.error("Unhandled Polar webhook event in production: ", error);
+      }
 
-    return res.status(200).json({ received: true });
-  } catch (err) {
-    if (err instanceof UnhandledWebhookEventError) {
-      console.error(err.message);
-      return res.status(204).json({ error: err.message });
+      return response.status(200).json({ error: error.message });
     }
 
-    console.error("Webhook error:", err);
-    if (err instanceof WebhookVerificationError) {
-      return res.status(400).json({ error: "Invalid signature" });
+    console.error("Polar webhook error: ", error);
+    if (error instanceof WebhookVerificationError) {
+      return response.status(400).json({ error: "Invalid signature" });
     } else {
-      return res
+      return response
         .status(500)
         .json({ error: "Error processing Polar webhook event" });
     }
   }
-};
-
-export const polarMiddlewareConfigFn: MiddlewareConfigFn = (
-  middlewareConfig,
-) => {
-  // We need to delete the default 'express.json' middleware and replace it with 'express.raw' middleware
-  // because webhook data is in the body of the request as raw JSON, not as JSON in the body of the request.
-  middlewareConfig.delete("express.json");
-  middlewareConfig.set(
-    "express.raw",
-    express.raw({ type: "application/json" }),
-  );
-
-  return middlewareConfig;
 };
 
 function constructPolarEvent(
@@ -84,14 +93,12 @@ async function handleOrderPaid(
 ): Promise<void> {
   assertCustomerExternalIdExists(order.customer.externalId);
 
-  const polarCustomerId = order.customerId;
   const paymentPlanId = getPaymentPlanIdByProductId(order.productId);
-
   switch (paymentPlanId) {
     case PaymentPlanId.Credits10:
       await updateUserCredits(
         {
-          polarCustomerId,
+          customerId: order.customerId,
           numOfCreditsPurchased: getProductIdCreditsAmount(order.productId),
           datePaid: order.createdAt,
         },
@@ -102,8 +109,8 @@ async function handleOrderPaid(
     case PaymentPlanId.Pro:
       await updateUserSubscription(
         {
-          polarCustomerId,
-          subscriptionPlan: paymentPlanId,
+          customerId: order.customerId,
+          paymentPlanId,
           subscriptionStatus: OpenSaasSubscriptionStatus.Active,
           datePaid: order.createdAt,
         },
@@ -113,10 +120,6 @@ async function handleOrderPaid(
     default:
       assertUnreachable(paymentPlanId);
   }
-
-  console.log(
-    `Order completed: ${order.id} for customer: ${polarCustomerId}, product: ${order.product.name}`,
-  );
 }
 
 async function handleSubscriptionUpdated(
@@ -125,8 +128,7 @@ async function handleSubscriptionUpdated(
 ): Promise<void> {
   assertCustomerExternalIdExists(subscription.customer.externalId);
 
-  const polarCustomerId = subscription.customer.id;
-  const subscriptionPlan = getPaymentPlanIdByProductId(subscription.productId);
+  const paymentPlanId = getPaymentPlanIdByProductId(subscription.productId);
   let subscriptionStatus = mapPolarToOpenSaasSubscriptionStatus(
     subscription.status,
   );
@@ -139,11 +141,12 @@ async function handleSubscriptionUpdated(
   }
 
   await updateUserSubscription(
-    { polarCustomerId, subscriptionStatus, subscriptionPlan },
+    {
+      customerId: subscription.customer.id,
+      subscriptionStatus,
+      paymentPlanId: paymentPlanId,
+    },
     userDelegate,
-  );
-  console.log(
-    `${subscription.product.name} subscription updated for customer: ${polarCustomerId}}`,
   );
 }
 
@@ -156,7 +159,7 @@ function assertCustomerExternalIdExists(
 }
 
 function mapPolarToOpenSaasSubscriptionStatus(
-  polarStatus: SubscriptionStatus,
+  polarSubscriptionStatus: SubscriptionStatus,
 ): OpenSaasSubscriptionStatus {
   const statusMap: Record<SubscriptionStatus, OpenSaasSubscriptionStatus> = {
     active: OpenSaasSubscriptionStatus.Active,
@@ -168,7 +171,7 @@ function mapPolarToOpenSaasSubscriptionStatus(
     unpaid: OpenSaasSubscriptionStatus.PastDue,
   };
 
-  return statusMap[polarStatus];
+  return statusMap[polarSubscriptionStatus];
 }
 
 function getProductIdCreditsAmount(productId: string): number {
