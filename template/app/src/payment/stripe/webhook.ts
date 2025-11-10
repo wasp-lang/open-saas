@@ -206,14 +206,13 @@ function getOpenSaasSubscriptionStatus(
   return subscriptionStatus;
 }
 
-/**
- * We only expect one subscription item, if your workflow expects more, you should change this function to handle them.
- */
 function getSubscriptionPriceId(
   subscription: Stripe.Subscription,
 ): Stripe.Price["id"] {
   const subscriptionItems = subscription.items.data;
-  if (subscriptionItems.length === 0 || subscriptionItems.length > 1) {
+  // We only expect one subscription item. 
+  // If your workflow expects more, you should change this function to handle them.
+  if (subscriptionItems.length !== 1) {
     throw new Error(
       "There should be exactly one subscription item in Stripe subscription",
     );
