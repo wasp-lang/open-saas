@@ -36,7 +36,7 @@ jobs:
           target-repo: wasp-lang/wasp
 
       - name: Download Wasp build artifacts from linked PR
-        uses: wasp-lang/wasp/.github/actions/fetch-nightly-cli@main
+        uses: wasp-lang/wasp/.github/actions/fetch-nightly-cli@cprecioso/add-error-to-action
         with:
           output-dir: ${{ runner.temp }}/wasp-cli
           branch: ${{ steps.get-linked-pr-branch.outputs.pr-branch || 'main' }}
