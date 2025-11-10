@@ -191,17 +191,14 @@ async function handleCustomerSubscriptionUpdated(
 function getOpenSaasSubscriptionStatus(
   subscription: Stripe.Subscription,
 ): SubscriptionStatus | undefined {
-  let subscriptionStatus: SubscriptionStatus | undefined;
   if (subscription.status === SubscriptionStatus.Active) {
-    subscriptionStatus = SubscriptionStatus.Active;
     if (subscription.cancel_at_period_end) {
-      subscriptionStatus = SubscriptionStatus.CancelAtPeriodEnd;
+      return SubscriptionStatus.CancelAtPeriodEnd;
     }
+    return SubscriptionStatus.Active;
   } else if (subscription.status === SubscriptionStatus.PastDue) {
-    subscriptionStatus = SubscriptionStatus.PastDue;
+    return SubscriptionStatus.PastDue;
   }
-
-  return subscriptionStatus;
 }
 
 function getSubscriptionPriceId(
