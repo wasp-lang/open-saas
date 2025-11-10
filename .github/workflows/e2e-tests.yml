@@ -34,6 +34,7 @@ jobs:
           target-repo: wasp-lang/wasp
 
       - name: Download Wasp build artifacts from linked PR
+        # TODO: Change to `main` branch once https://github.com/wasp-lang/wasp/pull/3335 is merged.
         uses: wasp-lang/wasp/.github/actions/fetch-nightly-cli@cprecioso/add-error-to-action
         with:
           output-dir: ${{ runner.temp }}/wasp-cli
