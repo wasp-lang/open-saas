@@ -69,7 +69,7 @@ app ThaiCopilot {
       // }
     },
     onAuthFailedRedirectTo: "/login",
-    onAuthSucceededRedirectTo: "/waitlist",
+    onAuthSucceededRedirectTo: "/dashboard",
   },
 
   db: {
@@ -161,6 +161,34 @@ query getPaginatedUsers {
 action updateIsUserAdminById {
   fn: import { updateIsUserAdminById } from "@src/user/operations",
   entities: [User]
+}
+//#endregion
+
+//#region ThaiCopilot - Conversations & Translations
+route DashboardRoute { path: "/dashboard", to: DashboardPage }
+page DashboardPage {
+  authRequired: true,
+  component: import DashboardPage from "@src/conversations/DashboardPage"
+}
+
+action createTranslation {
+  fn: import { createTranslation } from "@src/conversations/operations",
+  entities: [User, Conversation, Message]
+}
+
+query getConversations {
+  fn: import { getConversations } from "@src/conversations/operations",
+  entities: [User, Conversation, Message]
+}
+
+query getConversationById {
+  fn: import { getConversationById } from "@src/conversations/operations",
+  entities: [Conversation, Message, Correction]
+}
+
+action deleteConversation {
+  fn: import { deleteConversation } from "@src/conversations/operations",
+  entities: [Conversation, Message]
 }
 //#endregion
 
