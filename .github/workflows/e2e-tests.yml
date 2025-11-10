@@ -132,3 +132,24 @@ jobs:
         run: |
           cd e2e-tests
           npm run e2e:playwright
+
+  check-if-linked-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get linked PR
+        id: get-linked-pr
+        uses: ./.github/actions/get-linked-pr
+        with:
+          target-repo: wasp-lang/wasp
+
+      - name: Block the PR if it is linked to a PR
+        if: steps.get-linked-pr.outputs.pr-url
+        run: |
+          echo "::notice::$MESSAGE"
+          exit 1
+        env:
+          MESSAGE: >
+            This PR is linked to ${{ steps.get-linked-pr.outputs.pr-url }}.
+            Please make sure to review and merge that PR first.
+            If it is already merged, remove the link and re-trigger the CI.
