@@ -137,6 +137,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+
       - name: Get linked PR
         id: get-linked-pr
         uses: ./.github/actions/get-linked-pr
