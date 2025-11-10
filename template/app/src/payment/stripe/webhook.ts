@@ -178,15 +178,13 @@ async function handleCustomerSubscriptionUpdated(
     prismaUserDelegate,
   );
 
-  if (subscription.cancel_at_period_end) {
-    if (user.email) {
-      await emailSender.send({
-        to: user.email,
-        subject: "We hate to see you go :(",
-        text: "We hate to see you go. Here is a sweet offer...",
-        html: "We hate to see you go. Here is a sweet offer...",
-      });
-    }
+  if (subscription.cancel_at_period_end && user.email) {
+    await emailSender.send({
+      to: user.email,
+      subject: "We hate to see you go :(",
+      text: "We hate to see you go. Here is a sweet offer...",
+      html: "We hate to see you go. Here is a sweet offer...",
+    });
   }
 }
 
