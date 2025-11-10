@@ -1,6 +1,9 @@
 {
   "name": "opensaas",
   "type": "module",
+  "scripts": {
+    "generate-qr": "tsx scripts/generate-qr-code.ts"
+  },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.523.0",
     "@aws-sdk/s3-presigned-post": "^3.750.0",
@@ -23,15 +26,18 @@
     "@radix-ui/react-toast": "^1.2.14",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.7",
+    "ai": "^4.0.0",
     "apexcharts": "3.41.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "framer-motion": "^11.11.17",
     "headlessui": "^0.0.0",
     "lucide-react": "^0.525.0",
     "node-fetch": "3.3.0",
     "openai": "^4.55.3",
     "prettier": "3.1.1",
     "prettier-plugin-tailwindcss": "0.5.11",
+    "qrcode": "^1.5.4",
     "react": "^18.2.0",
     "react-apexcharts": "1.4.1",
     "react-dom": "^18.2.0",
@@ -48,8 +54,11 @@
   "devDependencies": {
     "@faker-js/faker": "8.3.1",
     "@types/express": "^5.0.0",
+    "@types/node": "^20.0.0",
+    "@types/qrcode": "^1.5.5",
     "@types/react": "^18.0.37",
     "prisma": "5.19.1",
+    "tsx": "^4.19.0",
     "typescript": "5.8.2",
     "vite": "^7.0.6"
   }

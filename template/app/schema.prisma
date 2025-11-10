@@ -13,19 +13,35 @@ model User {
 
   email                     String?         @unique
   username                  String?         @unique
+  name                      String?
   isAdmin                   Boolean         @default(false)
 
-  paymentProcessorUserId    String?         @unique
-  lemonSqueezyCustomerPortalUrl String?     // You can delete this if you're not using Lemon Squeezy as your payments processor.
-  subscriptionStatus        String?         // 'active', 'cancel_at_period_end', 'past_due', 'deleted'
-  subscriptionPlan          String?         // 'hobby', 'pro'
-  datePaid                  DateTime?
-  credits                   Int             @default(3)
+  // Language preferences
+  nativeLanguages           String[]        @default(["en"])
+  learningLanguages         String[]        @default(["th"])
 
-  gptResponses              GptResponse[]
+  // Payment & Subscription (Polar.sh will be integrated later)
+  paymentProcessorUserId    String?         @unique
+  subscriptionStatus        String          @default("free") // 'free', 'active', 'cancelled', 'past_due'
+  subscriptionPlan          String?         // Will be used for paid tiers
+  datePaid                  DateTime?
+  translationsUsedToday     Int             @default(0)
+  translationsLimit         Int             @default(10) // Free tier: 10 translations/day
+  lastTranslationReset      DateTime        @default(now())
+
+  // Onboarding & Waitlist
+  onboardingStatus          String          @default("waitlisted") // 'waitlisted', 'active', 'completed'
+  waitlistPosition          Int?
+
+  // Relations
+  conversations             Conversation[]
+  flashcards                Flashcard[]
+  corrections               Correction[]
+  flashcardReviews          FlashcardReview[]
+  gptResponses              GptResponse[] // Keep for compatibility
   contactFormMessages       ContactFormMessage[]
-  tasks                     Task[]
-  files                     File[]
+  tasks                     Task[] // Keep for compatibility
+  files                     File[] // Keep for compatibility
 }
 
 model GptResponse {
@@ -108,4 +124,106 @@ model ContactFormMessage {
   content                   String
   isRead                    Boolean         @default(false)
   repliedAt                 DateTime?
+}
+
+// ============================================
+// ThaiCopilot-Specific Models
+// ============================================
+
+// Email signups from landing page
+model EmailSignup {
+  id                        String          @id @default(uuid())
+  email                     String          @unique
+  source                    String?         // UTM parameter (e.g., "condo_poster")
+  createdAt                 DateTime        @default(now())
+}
+
+// Conversations between users (for translations)
+model Conversation {
+  id                        String          @id @default(uuid())
+  userId                    String
+  user                      User            @relation(fields: [userId], references: [id])
+
+  sourceLang                String          // "en"
+  targetLang                String          // "th"
+  createdAt                 DateTime        @default(now())
+
+  messages                  Message[]
+  shares                    ConversationShare[]
+}
+
+// Individual messages within conversations
+model Message {
+  id                        String          @id @default(uuid())
+  conversationId            String
+  conversation              Conversation    @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  sourceText                String          // Original English text
+  targetText                String          // Translated Thai text
+  audioUrl                  String?         // URL to audio file in R2
+  createdAt                 DateTime        @default(now())
+
+  corrections               Correction[]
+}
+
+// Corrections from Thai native speakers
+model Correction {
+  id                        String          @id @default(uuid())
+  messageId                 String
+  message                   Message         @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  correctedBy               String
+  corrector                 User            @relation(fields: [correctedBy], references: [id])
+
+  audioUrl                  String          // URL to corrected audio in R2
+  notes                     String?         // Text notes explaining the correction
+  createdAt                 DateTime        @default(now())
+}
+
+// Magic links to share conversations with Thai friends
+model ConversationShare {
+  id                        String          @id @default(uuid())
+  conversationId            String
+  conversation              Conversation    @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  token                     String          @unique @default(uuid())
+  expiresAt                 DateTime
+  createdAt                 DateTime        @default(now())
+}
+
+// Flashcards generated from conversations
+model Flashcard {
+  id                        String          @id @default(uuid())
+  userId                    String
+  user                      User            @relation(fields: [userId], references: [id])
+
+  conversationId            String?         // Optional: link to source conversation
+
+  frontText                 String          // English
+  backText                  String          // Thai
+  audioUrl                  String?         // URL to audio in R2
+  cardType                  String          // "phrase" | "word"
+
+  // Spaced repetition fields
+  easeFactor                Float           @default(2.5)   // SM-2 algorithm
+  interval                  Int             @default(0)     // Days until next review
+  repetitions               Int             @default(0)     // Number of successful reviews
+  nextReview                DateTime        @default(now()) // When card is due
+
+  createdAt                 DateTime        @default(now())
+
+  reviews                   FlashcardReview[]
+}
+
+// Review history for spaced repetition
+model FlashcardReview {
+  id                        String          @id @default(uuid())
+  flashcardId               String
+  flashcard                 Flashcard       @relation(fields: [flashcardId], references: [id], onDelete: Cascade)
+
+  userId                    String
+  user                      User            @relation(fields: [userId], references: [id])
+
+  rating                    Int             // 1=Again, 2=Hard, 3=Good, 4=Easy
+  reviewedAt                DateTime        @default(now())
 }
