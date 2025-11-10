@@ -1,0 +1,80 @@
+name: Get linked PR
+description: Get the PR linked to this one, if any.
+
+inputs:
+  github-token:
+    description: GitHub token to use for API requests
+    default: ${{ github.token }}
+  target-repo:
+    description: Repository in which the PR should exist (e.g. "wasp-lang/wasp")
+    required: true
+  source-repo:
+    description: Repository in which the current PR exists (e.g. "wasp-lang/open-saas")
+    default: ${{ github.repository }}
+  source-pr:
+    description: Current PR number
+    default: ${{ github.event.pull_request.number }}
+
+runs:
+  using: composite
+  steps:
+    - name: Get source PR
+      id: source-pr
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        SOURCE_REPO: ${{ inputs.source-repo }}
+        SOURCE_PR: ${{ inputs.source-pr }}
+      shell: bash
+      run: |
+        {
+          echo 'pr-body<<EOF'
+          gh pr view "$SOURCE_PR" \
+            --repo "$SOURCE_REPO" \
+            --json body \
+            --jq '.body'
+          echo EOF
+        } >> "$GITHUB_OUTPUT"
+
+    - name: Get linked PR URL
+      id: get-url
+      env:
+        PR_BODY: ${{ steps.source-pr.outputs.pr-body }}
+        TARGET_REPO: ${{ inputs.target-repo }}
+      uses: actions/github-script@v8
+      with:
+        script: |
+          const prBody = process.env.PR_BODY;
+          const targetRepo = process.env.TARGET_REPO;
+
+          const prUrlPrefix = RegExp.escape(`https://github.com/${targetRepo}/pull`);
+
+          // Captures the PR URL in a "link to ..." phrase.
+          const prUrlRegex = new RegExp(`\\blink to (${prUrlPrefix}\/\\d+)\/?`, "i");
+
+          const prUrl = prBody.match(prUrlRegex)?.[1];
+          return prUrl || "";
+        result-encoding: string
+
+    - name: Get linked PR branch
+      if: steps.get-url.outputs.result
+      id: get-branch
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        PR_URL: ${{ steps.get-url.outputs.result }}
+      shell: bash
+      run: |
+        pr_branch=$(
+          gh pr view "$PR_URL" \
+            --json headRefName \
+            --jq '.headRefName'
+        )
+        echo "pr-branch=$pr_branch" >> "$GITHUB_OUTPUT"
+
+outputs:
+  pr-url:
+    description: URL of the linked PR, or empty if none found
+    value: ${{ steps.get-url.outputs.result }}
+
+  pr-branch:
+    description: Branch name of the linked PR, or empty if none found
+    value: ${{ steps.get-branch.outputs.pr-branch }}
