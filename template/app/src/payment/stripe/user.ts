@@ -1,5 +1,6 @@
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import Stripe from "stripe";
+import { User } from "wasp/entities";
 import type { SubscriptionStatus } from "../plans";
 import { PaymentPlanId } from "../plans";
 

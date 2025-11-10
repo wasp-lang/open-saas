@@ -1,5 +1,5 @@
-import { User } from "@prisma/client";
 import Stripe from "stripe";
+import { User } from "wasp/entities";
 import { config } from "wasp/server";
 import { stripeClient } from "./stripeClient";
 
