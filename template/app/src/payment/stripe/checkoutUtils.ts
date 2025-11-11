@@ -15,12 +15,10 @@ export async function ensureStripeCustomer(
   });
 
   if (stripeCustomers.data.length === 0) {
-    console.log("Creating a new Stripe customer");
     return stripeClient.customers.create({
       email: userEmail,
     });
   } else {
-    console.log("Using an existing Stripe customer");
     return stripeCustomers.data[0];
   }
 }
