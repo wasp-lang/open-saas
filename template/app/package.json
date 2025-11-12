@@ -1,6 +1,10 @@
 {
   "name": "opensaas",
   "type": "module",
+  "workspaces": [
+    ".wasp/build/*",
+    ".wasp/out/*"
+  ],
   "dependencies": {
     "@aws-sdk/client-s3": "^3.523.0",
     "@aws-sdk/s3-presigned-post": "^3.750.0",
