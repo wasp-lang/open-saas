@@ -5,12 +5,10 @@ on:
     branches:
       - main
   pull_request:
-    branches:
-      - main
 
 env:
   WASP_TELEMETRY_DISABLE: 1
-  WASP_VERSION: 0.18.0
+  WASP_VERSION: 0.18.1
 
 jobs:
   test:
