@@ -1,6 +1,6 @@
 --- template/app/src/payment/paymentProcessor.ts
 +++ opensaas-sh/app/src/payment/paymentProcessor.ts
-@@ -27,9 +27,4 @@
+@@ -28,9 +28,4 @@
    webhookMiddlewareConfigFn: MiddlewareConfigFn;
  }
  
@@ -8,5 +8,5 @@
 - * Choose which payment processor you'd like to use, then delete the
 - * other payment processor code that you're not using  from `/src/payment`
 - */
--// export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
  export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
+-// export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
