@@ -29,5 +29,6 @@ jobs:
             echo "Error: There are uncommitted diff changes"
             echo "Please run './opensaas-sh/tools/patch.sh' and './opensaas-sh/tools/diff.sh' locally and commit the changes"
             git status
+            git diff
             exit 1
           fi
