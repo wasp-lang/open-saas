@@ -10,7 +10,7 @@ import {
   type FieldValues,
 } from "react-hook-form";
 
-import { cn } from "../../client/utils";
+import { cn } from "../../utils";
 import { Label } from "./label";
 
 const Form = FormProvider;
@@ -173,5 +173,6 @@ export {
   FormItem,
   FormLabel,
   FormMessage,
-  useFormField,
+  useFormField
 };
+

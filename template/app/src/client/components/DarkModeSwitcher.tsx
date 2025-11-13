@@ -1,5 +1,5 @@
 import { Moon, Sun } from "lucide-react";
-import { Label } from "../../components/ui/label";
+import { Label } from "../../client/components/ui/label";
 import useColorMode from "../hooks/useColorMode";
 import { cn } from "../utils";
 

@@ -7,15 +7,15 @@ import {
   getCustomerPortalUrl,
   useQuery,
 } from "wasp/client/operations";
-import { cn } from "../client/utils";
-import { Alert, AlertDescription } from "../components/ui/alert";
-import { Button } from "../components/ui/button";
+import { Alert, AlertDescription } from "../client/components/ui/alert";
+import { Button } from "../client/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardTitle,
-} from "../components/ui/card";
+} from "../client/components/ui/card";
+import { cn } from "../client/utils";
 import {
   PaymentPlanId,
   paymentPlans,

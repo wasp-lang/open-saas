@@ -3,7 +3,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "../../components/ui/accordion";
+} from "../../client/components/ui/accordion";
 
 interface FAQ {
   id: number;
