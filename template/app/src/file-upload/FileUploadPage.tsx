@@ -10,6 +10,7 @@ import {
 import type { File } from "wasp/entities";
 
 import { Download, Trash } from "lucide-react";
+import { cn } from "../client/utils";
 import { Alert, AlertDescription } from "../components/ui/alert";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardTitle } from "../components/ui/card";
@@ -25,7 +26,6 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Progress } from "../components/ui/progress";
 import { toast } from "../hooks/use-toast";
-import { cn } from "../lib/utils";
 import { uploadFileWithProgress, validateFile } from "./fileUploading";
 import { ALLOWED_FILE_TYPES } from "./validation";
 

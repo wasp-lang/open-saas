@@ -1,11 +1,11 @@
 import React from "react";
+import { cn } from "../../client/utils";
 import {
   Card,
   CardContent,
   CardDescription,
   CardTitle,
 } from "../../components/ui/card";
-import { cn } from "../../lib/utils";
 import { Feature } from "./Features";
 import SectionTitle from "./SectionTitle";
 
