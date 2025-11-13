@@ -9,7 +9,7 @@
 +import stripeLogo from "../../../client/static/logos/stripe-light.webp";
 +import tailwindLogoDark from "../../../client/static/logos/tailwind-dark.webp";
 +import tailwindLogo from "../../../client/static/logos/tailwind-light.webp";
-+import { cn } from "../../../lib/utils";
++import { cn } from "../../../client/utils";
 +import AstroLogo from "../../logos/AstroLogo";
 +import OpenAILogo from "../../logos/OpenAILogo";
 +import PrismaLogo from "../../logos/PrismaLogo";

@@ -1,6 +1,6 @@
 --- template/app/src/payment/stripe/user.ts
 +++ opensaas-sh/app/src/payment/stripe/user.ts
-@@ -3,7 +3,7 @@
+@@ -4,7 +4,7 @@
  import type { SubscriptionStatus } from "../plans";
  import { PaymentPlanId } from "../plans";
  
@@ -9,7 +9,7 @@
    userId: User["id"],
    prismaUserDelegate: PrismaClient["user"],
  ): Promise<string | null> {
-@@ -12,20 +12,20 @@
+@@ -13,20 +13,20 @@
        id: userId,
      },
      select: {
@@ -36,7 +36,7 @@
    prismaUserDelegate: PrismaClient["user"],
  ): Promise<User> {
    return prismaUserDelegate.update({
-@@ -33,7 +33,7 @@
+@@ -34,7 +34,7 @@
        id: userId,
      },
      data: {
@@ -45,7 +45,7 @@
      },
    });
  }
-@@ -54,7 +54,7 @@
+@@ -55,7 +55,7 @@
  ): Promise<User> {
    return userDelegate.update({
      where: {
@@ -54,7 +54,7 @@
      },
      data: {
        datePaid,
-@@ -81,7 +81,7 @@
+@@ -82,7 +82,7 @@
  ): Promise<User> {
    return userDelegate.update({
      where: {
