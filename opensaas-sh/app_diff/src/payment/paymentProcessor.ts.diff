@@ -1,6 +1,6 @@
 --- template/app/src/payment/paymentProcessor.ts
 +++ opensaas-sh/app/src/payment/paymentProcessor.ts
-@@ -28,9 +28,4 @@
+@@ -29,10 +29,4 @@
    webhookMiddlewareConfigFn: MiddlewareConfigFn;
  }
  
@@ -10,3 +10,4 @@
 - */
  export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
 -// export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
+-// export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
