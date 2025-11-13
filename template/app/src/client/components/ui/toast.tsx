@@ -145,6 +145,5 @@ export {
   ToastTitle,
   ToastViewport,
   type ToastActionElement,
-  type ToastProps
+  type ToastProps,
 };
-
