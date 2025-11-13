@@ -1,9 +1,9 @@
 --- template/app/package.json
 +++ opensaas-sh/app/package.json
-@@ -1,6 +1,11 @@
- {
-   "name": "opensaas",
-   "type": "module",
+@@ -5,6 +5,11 @@
+     ".wasp/build/*",
+     ".wasp/out/*"
+   ],
 +  "scripts": {
 +    "deploy": "REACT_APP_GOOGLE_ANALYTICS_ID=G-H3LSJCK95H wasp deploy fly deploy",
 +    "env:pull": "npx dotenv-vault@latest pull development .env.server",
@@ -12,7 +12,7 @@
    "dependencies": {
      "@aws-sdk/client-s3": "^3.523.0",
      "@aws-sdk/s3-presigned-post": "^3.750.0",
-@@ -36,6 +41,7 @@
+@@ -40,6 +45,7 @@
      "react-apexcharts": "1.4.1",
      "react-dom": "^18.2.0",
      "react-hook-form": "^7.60.0",
