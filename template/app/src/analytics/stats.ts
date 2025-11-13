@@ -2,7 +2,7 @@ import { listOrders } from "@lemonsqueezy/lemonsqueezy.js";
 import Stripe from "stripe";
 import { type DailyStats } from "wasp/entities";
 import { type DailyStatsJob } from "wasp/server/jobs";
-import { stripe } from "../payment/stripe/stripeClient";
+import { stripeClient } from "../payment/stripe/stripeClient";
 import {
   getDailyPageViews,
   getSources,
@@ -160,7 +160,8 @@ async function fetchTotalStripeRevenue() {
 
   let hasMore = true;
   while (hasMore) {
-    const balanceTransactions = await stripe.balanceTransactions.list(params);
+    const balanceTransactions =
+      await stripeClient.balanceTransactions.list(params);
 
     for (const transaction of balanceTransactions.data) {
       if (transaction.type === "charge") {

@@ -1,17 +1,19 @@
 import { PrismaClient } from "@prisma/client";
+import { User } from "wasp/entities";
 import type { MiddlewareConfigFn } from "wasp/server";
 import type { PaymentsWebhook } from "wasp/server/api";
 import type { PaymentPlan } from "./plans";
 import { stripePaymentProcessor } from "./stripe/paymentProcessor";
 
 export interface CreateCheckoutSessionArgs {
-  userId: string;
-  userEmail: string;
+  userId: User["id"];
+  userEmail: NonNullable<User["email"]>;
   paymentPlan: PaymentPlan;
   prismaUserDelegate: PrismaClient["user"];
 }
+
 export interface FetchCustomerPortalUrlArgs {
-  userId: string;
+  userId: User["id"];
   prismaUserDelegate: PrismaClient["user"];
 }
 

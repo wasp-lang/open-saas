@@ -117,22 +117,21 @@ To create a test product, go to the test products url [https://dashboard.stripe.
 
 ### Create a Test Customer
 
-To create a test customer, go to the test customers url [https://dashboard.stripe.com/test/customers](https://dashboard.stripe.com/test/customers).
+You can create a test customer in the [Stripe Dashboard](https://dashboard.stripe.com/test/customers).
 
 - Click on the `Add a customer` button and fill in the relevant information for your test customer.
-:::note
- When filling in the test customer email address, use an address you have access to and will use when logging into your SaaS app. This is important because the email address is used to identify the customer when creating a subscription and allows you to manage your test user's payments/subscriptions via the test customer portal
-:::
+
+Alternatively, Open SasS automatically creates a test customer the first time a user starts a checkout session. 
+This customer is linked to the email address associated with the user in your app.
 
 ### Set up the Customer Portal
 
-Go to https://dashboard.stripe.com/test/settings/billing/portal in the Stripe Dashboard and activate and copy the `Customer portal link`. Paste it in your `.env.server` file:
+You can set up your customer portal in your [Stripe Dashboard](https://dashboard.stripe.com/test/settings/billing/portal).
 
-```ts title=".env.server"
-STRIPE_CUSTOMER_PORTAL_URL=<your-test-customer-portal-link>
-```
+By default, OpenSaas generates a unique customer portal link for each user on the back end.
+If you'd rather provide a permanent link to the customer portal, activate it and copy the `Portal link`.
 
-If you'd like to give users the ability to switch between different plans, e.g. upgrade from a hobby to a pro subscription, go down to the `Subscriptions` dropdown and select `customers can switch plans`. 
+If you'd like to give users the ability to switch between different plans, e.g., upgrade from a "Hobby" to a "Pro" subscription, go down to the `Subscriptions` dropdown and select `customers can switch plans`. 
 
 <Image src={switchPlans} alt="switch plans" loading="lazy" />
 

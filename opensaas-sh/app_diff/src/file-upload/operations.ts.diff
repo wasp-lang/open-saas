@@ -10,7 +10,7 @@
  
  import * as z from "zod";
  import { ensureArgsSchemaOrThrowHttpError } from "../server/validation";
-@@ -37,11 +38,16 @@
+@@ -37,10 +38,15 @@
      throw new HttpError(401);
    }
  
@@ -25,9 +25,8 @@
 +  if (userFileLimitReached) {
 +    throw new HttpError(403, 'This demo only allows 2 file uploads per user.');
 +  }
- 
-+  const { fileType, fileName } = ensureArgsSchemaOrThrowHttpError(createFileInputSchema, rawArgs);
 +
++  const { fileType, fileName } = ensureArgsSchemaOrThrowHttpError(createFileInputSchema, rawArgs);
+ 
    return await getUploadFileSignedURLFromS3({
      fileType,
-     fileName,
