@@ -1,7 +1,6 @@
-import { Customer } from "@polar-sh/sdk/models/components/customer.js";
 import { User } from "wasp/entities";
 import { PrismaClient } from "wasp/server";
-import { PaymentPlanId, SubscriptionStatus } from "../plans";
+import { PaymentPlanId, SubscriptionStatus } from "./plans";
 
 export async function fetchUserPaymentProcessorUserId(
   userId: User["id"],
@@ -39,15 +38,15 @@ export function updateUserPaymentProcessorUserId(
 }
 
 interface UpdateUserSubscriptionArgs {
-  customerId: Customer["id"];
-  paymentPlanId: PaymentPlanId;
+  paymentProcessorUserId: NonNullable<User["paymentProcessorUserId"]>;
   subscriptionStatus: SubscriptionStatus;
+  paymentPlanId?: PaymentPlanId;
   datePaid?: Date;
 }
 
 export function updateUserSubscription(
   {
-    customerId,
+    paymentProcessorUserId,
     paymentPlanId,
     subscriptionStatus,
     datePaid,
@@ -56,7 +55,7 @@ export function updateUserSubscription(
 ) {
   return userDelegate.update({
     where: {
-      paymentProcessorUserId: customerId,
+      paymentProcessorUserId,
     },
     data: {
       subscriptionPlan: paymentPlanId,
@@ -67,18 +66,22 @@ export function updateUserSubscription(
 }
 
 interface UpdateUserCreditsArgs {
-  customerId: Customer["id"];
+  paymentProcessorUserId: NonNullable<User["paymentProcessorUserId"]>;
   numOfCreditsPurchased: number;
   datePaid: Date;
 }
 
 export function updateUserCredits(
-  { customerId, numOfCreditsPurchased, datePaid }: UpdateUserCreditsArgs,
+  {
+    paymentProcessorUserId,
+    numOfCreditsPurchased,
+    datePaid,
+  }: UpdateUserCreditsArgs,
   userDelegate: PrismaClient["user"],
 ) {
   return userDelegate.update({
     where: {
-      paymentProcessorUserId: customerId,
+      paymentProcessorUserId,
     },
     data: {
       credits: { increment: numOfCreditsPurchased },

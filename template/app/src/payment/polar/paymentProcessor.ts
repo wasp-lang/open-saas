@@ -4,14 +4,14 @@ import {
   type PaymentProcessor,
 } from "../paymentProcessor";
 import {
+  fetchUserPaymentProcessorUserId,
+  updateUserPaymentProcessorUserId,
+} from "../user";
+import {
   createPolarCheckoutSession,
   ensurePolarCustomer,
 } from "./checkoutUtils";
 import { polarClient } from "./polarClient";
-import {
-  fetchUserPaymentProcessorUserId,
-  updateUserPaymentProcessorUserId,
-} from "./user";
 import { polarMiddlewareConfigFn, polarWebhook } from "./webhook";
 
 export const polarPaymentProcessor: PaymentProcessor = {
@@ -29,15 +29,15 @@ export const polarPaymentProcessor: PaymentProcessor = {
       prismaUserDelegate,
     );
 
-    const session = await createPolarCheckoutSession({
+    const checkoutSession = await createPolarCheckoutSession({
       productId: paymentPlan.getPaymentProcessorPlanId(),
       customerId: customer.id,
     });
 
     return {
       session: {
-        id: session.id,
-        url: session.url,
+        id: checkoutSession.id,
+        url: checkoutSession.url,
       },
     };
   },

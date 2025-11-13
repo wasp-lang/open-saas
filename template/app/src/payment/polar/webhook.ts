@@ -1,10 +1,9 @@
-import { Order } from "@polar-sh/sdk/models/components/order.js";
+import { Product } from "@polar-sh/sdk/models/components/product.js";
 import { Subscription } from "@polar-sh/sdk/models/components/subscription.js";
 import { SubscriptionStatus } from "@polar-sh/sdk/models/components/subscriptionstatus.js";
-import {
-  validateEvent,
-  WebhookVerificationError,
-} from "@polar-sh/sdk/webhooks";
+import { WebhookOrderPaidPayload } from "@polar-sh/sdk/models/components/webhookorderpaidpayload.js";
+import { WebhookSubscriptionUpdatedPayload } from "@polar-sh/sdk/models/components/webhooksubscriptionupdatedpayload.js";
+import { validateEvent } from "@polar-sh/sdk/webhooks";
 import express from "express";
 import type { MiddlewareConfigFn, PrismaClient } from "wasp/server";
 import type { PaymentsWebhook } from "wasp/server/api";
@@ -16,7 +15,7 @@ import {
   PaymentPlanId,
   paymentPlans,
 } from "../plans";
-import { updateUserCredits, updateUserSubscription } from "./user";
+import { updateUserCredits, updateUserSubscription } from "../user";
 
 /**
  * Polar requires a raw request to construct events successfully.
@@ -40,33 +39,35 @@ export const polarWebhook: PaymentsWebhook = async (
 ) => {
   const prismaUserDelegate = context.entities.User;
   try {
-    const polarEvent = constructPolarEvent(request);
+    const event = constructPolarEvent(request);
 
-    switch (polarEvent.type) {
+    switch (event.type) {
       case "order.paid":
-        await handleOrderPaid(polarEvent.data, prismaUserDelegate);
+        await handleOrderPaid(event, prismaUserDelegate);
         break;
       case "subscription.updated":
-        await handleSubscriptionUpdated(polarEvent.data, prismaUserDelegate);
+        await handleSubscriptionUpdated(event, prismaUserDelegate);
         break;
       default:
-        throw new UnhandledWebhookEventError(polarEvent.type);
+        throw new UnhandledWebhookEventError(event.type);
     }
     return response.status(204).send();
   } catch (error) {
     if (error instanceof UnhandledWebhookEventError) {
+      // In development, it is likely that we will receive events that we are not handling.
       if (process.env.NODE_ENV === "development") {
         console.info("Unhandled Polar webhook event in development: ", error);
       } else if (process.env.NODE_ENV === "production") {
         console.error("Unhandled Polar webhook event in production: ", error);
       }
 
+      // We must return a 2XX status code, otherwise Polar will keep retrying the event.
       return response.status(200).json({ error: error.message });
     }
 
     console.error("Polar webhook error: ", error);
-    if (error instanceof WebhookVerificationError) {
-      return response.status(400).json({ error: "Invalid signature" });
+    if (error instanceof Error) {
+      return response.status(400).json({ error: error.message });
     } else {
       return response
         .status(500)
@@ -78,27 +79,26 @@ export const polarWebhook: PaymentsWebhook = async (
 function constructPolarEvent(
   request: express.Request,
 ): ReturnType<typeof validateEvent> {
-  const secret = requireNodeEnvVar("POLAR_WEBHOOK_SECRET");
+  const polarWebhookSecret = requireNodeEnvVar("POLAR_WEBHOOK_SECRET");
 
   return validateEvent(
     request.body,
     request.headers as Record<string, string>,
-    secret,
+    polarWebhookSecret,
   );
 }
 
 async function handleOrderPaid(
-  order: Order,
+  { data: order }: WebhookOrderPaidPayload,
   userDelegate: PrismaClient["user"],
 ): Promise<void> {
-  assertCustomerExternalIdExists(order.customer.externalId);
-
   const paymentPlanId = getPaymentPlanIdByProductId(order.productId);
+
   switch (paymentPlanId) {
     case PaymentPlanId.Credits10:
       await updateUserCredits(
         {
-          customerId: order.customerId,
+          paymentProcessorUserId: order.customerId,
           numOfCreditsPurchased: getProductIdCreditsAmount(order.productId),
           datePaid: order.createdAt,
         },
@@ -109,7 +109,7 @@ async function handleOrderPaid(
     case PaymentPlanId.Pro:
       await updateUserSubscription(
         {
-          customerId: order.customerId,
+          paymentProcessorUserId: order.customerId,
           paymentPlanId,
           subscriptionStatus: OpenSaasSubscriptionStatus.Active,
           datePaid: order.createdAt,
@@ -123,15 +123,44 @@ async function handleOrderPaid(
 }
 
 async function handleSubscriptionUpdated(
-  subscription: Subscription,
+  { data: subscription }: WebhookSubscriptionUpdatedPayload,
   userDelegate: PrismaClient["user"],
 ): Promise<void> {
-  assertCustomerExternalIdExists(subscription.customer.externalId);
-
   const paymentPlanId = getPaymentPlanIdByProductId(subscription.productId);
-  let subscriptionStatus = mapPolarToOpenSaasSubscriptionStatus(
-    subscription.status,
+  let subscriptionStatus = getOpenSaasSubscriptionStatus(subscription);
+
+  if (!subscriptionStatus) {
+    return;
+  }
+
+  await updateUserSubscription(
+    {
+      paymentProcessorUserId: subscription.customer.id,
+      subscriptionStatus,
+      paymentPlanId: paymentPlanId,
+    },
+    userDelegate,
   );
+}
+
+function getOpenSaasSubscriptionStatus(
+  subscription: Subscription,
+): OpenSaasSubscriptionStatus | undefined {
+  const polarToOpenSaasSubscriptionStatusMap: Record<
+    SubscriptionStatus,
+    OpenSaasSubscriptionStatus | undefined
+  > = {
+    trialing: OpenSaasSubscriptionStatus.Active,
+    active: OpenSaasSubscriptionStatus.Active,
+    past_due: OpenSaasSubscriptionStatus.PastDue,
+    canceled: OpenSaasSubscriptionStatus.Deleted,
+    unpaid: OpenSaasSubscriptionStatus.Deleted,
+    incomplete_expired: OpenSaasSubscriptionStatus.Deleted,
+    incomplete: undefined,
+  };
+
+  let subscriptionStatus =
+    polarToOpenSaasSubscriptionStatusMap[subscription.status];
 
   if (
     subscriptionStatus === OpenSaasSubscriptionStatus.Active &&
@@ -140,41 +169,10 @@ async function handleSubscriptionUpdated(
     subscriptionStatus = OpenSaasSubscriptionStatus.CancelAtPeriodEnd;
   }
 
-  await updateUserSubscription(
-    {
-      customerId: subscription.customer.id,
-      subscriptionStatus,
-      paymentPlanId: paymentPlanId,
-    },
-    userDelegate,
-  );
+  return subscriptionStatus;
 }
 
-function assertCustomerExternalIdExists(
-  externalId: string | null,
-): asserts externalId is string {
-  if (!externalId) {
-    throw new Error("Customer external ID is required");
-  }
-}
-
-function mapPolarToOpenSaasSubscriptionStatus(
-  polarSubscriptionStatus: SubscriptionStatus,
-): OpenSaasSubscriptionStatus {
-  const statusMap: Record<SubscriptionStatus, OpenSaasSubscriptionStatus> = {
-    active: OpenSaasSubscriptionStatus.Active,
-    canceled: OpenSaasSubscriptionStatus.Deleted,
-    past_due: OpenSaasSubscriptionStatus.PastDue,
-    incomplete_expired: OpenSaasSubscriptionStatus.Deleted,
-    incomplete: OpenSaasSubscriptionStatus.PastDue,
-    trialing: OpenSaasSubscriptionStatus.Active,
-    unpaid: OpenSaasSubscriptionStatus.PastDue,
-  };
-
-  return statusMap[polarSubscriptionStatus];
-}
-
-function getProductIdCreditsAmount(productId: string): number {
+function getProductIdCreditsAmount(productId: Product["id"]): number {
   const planId = getPaymentPlanIdByProductId(productId);
   const plan = paymentPlans[planId];
 
@@ -187,12 +185,12 @@ function getProductIdCreditsAmount(productId: string): number {
   return plan.effect.amount;
 }
 
-function getPaymentPlanIdByProductId(polarProductId: string): PaymentPlanId {
-  for (const [planId, plan] of Object.entries(paymentPlans)) {
-    if (plan.getPaymentProcessorPlanId() === polarProductId) {
-      return planId as PaymentPlanId;
+function getPaymentPlanIdByProductId(productId: Product["id"]): PaymentPlanId {
+  for (const [paymentPlanId, paymentPlan] of Object.entries(paymentPlans)) {
+    if (paymentPlan.getPaymentProcessorPlanId() === productId) {
+      return paymentPlanId as PaymentPlanId;
     }
   }
 
-  throw new Error(`Unknown Polar product ID: ${polarProductId}`);
+  throw new Error(`Unknown Polar product ID: ${productId}`);
 }

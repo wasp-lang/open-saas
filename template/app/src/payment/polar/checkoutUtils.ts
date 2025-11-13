@@ -3,28 +3,26 @@ import { Customer } from "@polar-sh/sdk/models/components/customer.js";
 import { config } from "wasp/server";
 import { polarClient } from "./polarClient";
 
+/**
+ * Returns a Polar customer for the given User email, creating a customer if none exist.
+ * NOTE: Polar enforces unique emails and `externalId` can't be changed once set.
+ */
 export async function ensurePolarCustomer(
   userId: string,
   userEmail: string,
 ): Promise<Customer> {
-  try {
-    const existingCustomer = await polarClient.customers.getExternal({
-      externalId: userId,
-    });
-
-    if (existingCustomer) {
-      console.log("Using an existing Polar customer");
-      return existingCustomer;
-    }
-  } catch (error) {
-    // FIXME: we might create a new customer on other errors too
-  }
-
-  console.log("Creating a new Polar customer");
-  return polarClient.customers.create({
-    externalId: userId,
+  const polarCustomers = await polarClient.customers.list({
     email: userEmail,
   });
+
+  if (polarCustomers.result.items.length === 0) {
+    return polarClient.customers.create({
+      externalId: userId,
+      email: userEmail,
+    });
+  } else {
+    return polarCustomers.result.items[0];
+  }
 }
 
 interface CreatePolarCheckoutSessionArgs {
