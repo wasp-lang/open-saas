@@ -10,6 +10,8 @@ jobs:
   prettier:
     name: Prettier Check
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -28,6 +30,8 @@ jobs:
   eslint:
     name: ESLint Check
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
