@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-# Set the locale and language to C for consistent behavior
+# Set the locale to C for consistent behavior
 # See: https://unix.stackexchange.com/questions/87745/what-does-lc-all-c-do
 export LC_ALL=C
-export LANG=C
 
 # Determine the patch command to use based on OS
 PATCH_CMD="patch"
