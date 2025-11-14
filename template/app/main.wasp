@@ -1,6 +1,6 @@
 app OpenSaaS {
   wasp: {
-    version: "^0.18.0"
+    version: "^0.19.0"
   },
 
   title: "My Open SaaS App",
@@ -11,7 +11,7 @@ app OpenSaaS {
     "<meta name='description' content='Your apps main description and features.' />",
     "<meta name='author' content='Your (App) Name' />",
     "<meta name='keywords' content='saas, solution, product, app, service' />",
-    
+
     "<meta property='og:type' content='website' />",
     "<meta property='og:title' content='Your Open SaaS App' />",
     "<meta property='og:site_name' content='Your Open SaaS App' />",
@@ -305,7 +305,7 @@ page NotFoundPage {
 //#endregion
 
 //#region Contact Form Messages
-// TODO: 
+// TODO:
 // add functionality to allow users to send messages to admin
 // and make them accessible via the admin dashboard
 route AdminMessagesRoute { path: "/admin/messages", to: AdminMessagesPage }

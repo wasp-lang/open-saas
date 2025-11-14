@@ -1,7 +1,7 @@
 --- template/app/main.wasp
 +++ opensaas-sh/app/main.wasp
 @@ -3,31 +3,32 @@
-     version: "^0.18.0"
+     version: "^0.19.0"
    },
  
 -  title: "My Open SaaS App",
@@ -13,11 +13,10 @@
 -    "<meta name='description' content='Your apps main description and features.' />",
 -    "<meta name='author' content='Your (App) Name' />",
 -    "<meta name='keywords' content='saas, solution, product, app, service' />",
--    
 +    "<meta name='description' content='Build and launch your SaaS application faster with our free, open-source starter kit. Features include auth, payments, AI example app, and admin dashboard.' />",
 +    "<meta name='author' content='Open SaaS' />",
 +    "<meta name='keywords' content='saas, starter, boilerplate, free, open source, authentication, payments' />",
-+
+ 
 +    "<meta property='og:site_name' content='Open SaaS' />",
      "<meta property='og:type' content='website' />",
 -    "<meta property='og:title' content='Your Open SaaS App' />",
