@@ -87,6 +87,7 @@ There are two ways to get help or provide feedback (and we try to always respond
 This repository includes comprehensive code quality tooling to help maintain code standards:
 
 #### Prettier (Code Formatting)
+
 Prettier is configured for automatic code formatting across all JavaScript, TypeScript, and other supported files.
 
 ```bash
@@ -98,6 +99,7 @@ npm run prettier:format
 ```
 
 #### ESLint (Code Linting)
+
 ESLint is configured with TypeScript and React support to catch potential bugs and enforce code quality standards.
 
 ```bash
@@ -109,6 +111,7 @@ npm run lint:fix
 ```
 
 The ESLint configuration includes:
+
 - TypeScript support with `@typescript-eslint`
 - React and React Hooks linting
 - Sensible defaults tuned for a SaaS application
