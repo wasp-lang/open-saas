@@ -46,6 +46,7 @@ This release includes major improvements to the Stripe payment integration, UI e
 ### Contributors
 
 Special thanks to all contributors who made this release possible:
+
 - @FranjoMindek
 - @cprecioso
 - @infomiho
