@@ -33,20 +33,22 @@ and `.copy` files to copy files directly from the diff directory to the derived 
 
 ### Workflow
 
-The typical workflow is:
+To make the workflow easier, we created two helper scripts:
+- `opensaas-sh/tools/patch.sh`
+- `opensaas-sh/tools/diff.sh`
 
-1. Run `dope.sh` with the `patch` action to generate `opensaas-sh/app/` from `template/app/` and `opensaash-sh/app_diff/`:
+1. Run `patch.sh` script to generate `opensaas-sh/app/` from `template/app/` and `opensaash-sh/app_diff/`:
 
 ```sh
-./dope.sh ../template app patch
+./opensaas-sh/tools/patch.sh
 ```
 
 2. If there are any conflicts (usually due to updates to the template), modify `opensaas-sh/app/` until you resolve them. Make any additional changes as needed.
 
-3. Generate a new `opensaas-sh/app_diff/` based on the updated `opensaas-sh/app/` by running:
+3. Run `diff.sh` to generate a new `opensaas-sh/app_diff/` based on the updated `opensaas-sh/app/`:
 
 ```sh
-./dope.sh ../template app diff
+./opensaas-sh/tools/diff.sh
 ```
 
 ### Requirements
