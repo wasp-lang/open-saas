@@ -67,3 +67,15 @@ export function getSubscriptionPaymentPlanIds(): PaymentPlanId[] {
     (planId) => paymentPlans[planId].effect.kind === "subscription",
   );
 }
+
+export function getPaymentPlanIdByPaymentProcessorPlanId(
+  paymentProcessorUserId: NonNullable<User["paymentProcessorUserId"]>,
+): PaymentPlanId {
+  for (const [planId, plan] of Object.entries(paymentPlans)) {
+    if (plan.getPaymentProcessorPlanId() === paymentProcessorUserId) {
+      return planId as PaymentPlanId;
+    }
+  }
+
+  throw new Error(`Unknown payment processor ID: ${paymentProcessorUserId}`);
+}

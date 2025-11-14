@@ -1,4 +1,3 @@
-import { Product } from "@polar-sh/sdk/models/components/product.js";
 import { Subscription } from "@polar-sh/sdk/models/components/subscription.js";
 import { SubscriptionStatus } from "@polar-sh/sdk/models/components/subscriptionstatus.js";
 import { WebhookOrderPaidPayload } from "@polar-sh/sdk/models/components/webhookorderpaidpayload.js";
@@ -11,6 +10,7 @@ import { requireNodeEnvVar } from "../../server/utils";
 import { assertUnreachable } from "../../shared/utils";
 import { UnhandledWebhookEventError } from "../errors";
 import {
+  getPaymentPlanIdByPaymentProcessorPlanId,
   SubscriptionStatus as OpenSaasSubscriptionStatus,
   PaymentPlanId,
   paymentPlans,
@@ -92,7 +92,9 @@ async function handleOrderPaid(
   { data: order }: WebhookOrderPaidPayload,
   userDelegate: PrismaClient["user"],
 ): Promise<void> {
-  const paymentPlanId = getPaymentPlanIdByProductId(order.productId);
+  const paymentPlanId = getPaymentPlanIdByPaymentProcessorPlanId(
+    order.productId,
+  );
 
   switch (paymentPlanId) {
     case PaymentPlanId.Credits10:
@@ -126,7 +128,9 @@ async function handleSubscriptionUpdated(
   { data: subscription }: WebhookSubscriptionUpdatedPayload,
   userDelegate: PrismaClient["user"],
 ): Promise<void> {
-  const paymentPlanId = getPaymentPlanIdByProductId(subscription.productId);
+  const paymentPlanId = getPaymentPlanIdByPaymentProcessorPlanId(
+    subscription.productId,
+  );
   let subscriptionStatus = getOpenSaasSubscriptionStatus(subscription);
 
   if (!subscriptionStatus) {
@@ -170,14 +174,4 @@ function getOpenSaasSubscriptionStatus(
   }
 
   return subscriptionStatus;
-}
-
-function getPaymentPlanIdByProductId(productId: Product["id"]): PaymentPlanId {
-  for (const [paymentPlanId, paymentPlan] of Object.entries(paymentPlans)) {
-    if (paymentPlan.getPaymentProcessorPlanId() === productId) {
-      return paymentPlanId as PaymentPlanId;
-    }
-  }
-
-  throw new Error(`Unknown Polar product ID: ${productId}`);
 }
