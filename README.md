@@ -82,7 +82,44 @@ There are two ways to get help or provide feedback (and we try to always respond
 
 ## Development Tools
 
-For information about the development tools used to maintain derived projects (like opensaas.sh), see [tools/README.md](./tools/README.md).
+### Code Quality Tools
+
+This repository includes comprehensive code quality tooling to help maintain code standards:
+
+#### Prettier (Code Formatting)
+
+Prettier is configured for automatic code formatting across all JavaScript, TypeScript, and other supported files.
+
+```bash
+# Check if files are formatted correctly
+npm run prettier:check
+
+# Automatically format all files
+npm run prettier:format
+```
+
+#### ESLint (Code Linting)
+
+ESLint is configured with TypeScript and React support to catch potential bugs and enforce code quality standards.
+
+```bash
+# Run ESLint to check for issues
+npm run lint
+
+# Automatically fix fixable issues
+npm run lint:fix
+```
+
+The ESLint configuration includes:
+
+- TypeScript support with `@typescript-eslint`
+- React and React Hooks linting
+- Sensible defaults tuned for a SaaS application
+- Automatic support for CommonJS (.cjs), ES Modules (.mjs), and TypeScript files
+
+Both Prettier and ESLint checks are automatically run in CI/CD pipelines to ensure code quality.
+
+For information about other development tools used to maintain derived projects (like opensaas.sh), see [tools/README.md](./tools/README.md).
 
 ## Contributing
 
