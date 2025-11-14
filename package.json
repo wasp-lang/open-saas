@@ -2,10 +2,10 @@
   "name": "wasp-repo",
   "type": "module",
   "scripts": {
-    "prettier:check": "prettier --ignore-unknown --check --config .prettierrc .",
-    "prettier:format": "prettier --ignore-unknown --write --config .prettierrc .",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "prettier:check": "prettier --ignore-unknown --check --config .prettierrc .",
+    "prettier:format": "prettier --ignore-unknown --write --config .prettierrc ."
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
