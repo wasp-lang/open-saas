@@ -5,7 +5,7 @@ import {
   CardDescription,
   CardFooter,
   CardTitle,
-} from "../../components/ui/card";
+} from "../../client/components/ui/card";
 import SectionTitle from "./SectionTitle";
 
 interface Testimonial {

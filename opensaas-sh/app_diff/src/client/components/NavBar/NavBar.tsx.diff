@@ -4,13 +4,13 @@
  import { Link as ReactRouterLink } from "react-router-dom";
  import { useAuth } from "wasp/client/auth";
  import { Link as WaspRouterLink, routes } from "wasp/client/router";
-+import { Button } from "../../../components/ui/button";
++import { Button } from "../../../client/components/ui/button";
  import {
    Sheet,
    SheetContent,
 @@ -17,6 +18,7 @@
- import { useIsLandingPage } from "../../hooks/useIsLandingPage";
  import logo from "../../static/logo.webp";
+ import { cn } from "../../utils";
  import DarkModeSwitcher from "../DarkModeSwitcher";
 +import RepoInfo from "../RepoInfo";
  import { Announcement } from "./Announcement";

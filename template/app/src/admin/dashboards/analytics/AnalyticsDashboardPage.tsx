@@ -1,6 +1,6 @@
 import { type AuthUser } from "wasp/auth";
 import { getDailyStats, useQuery } from "wasp/client/operations";
-import { cn } from "../../../lib/utils";
+import { cn } from "../../../client/utils";
 import DefaultLayout from "../../layout/DefaultLayout";
 import RevenueAndProfitChart from "./RevenueAndProfitChart";
 import SourcesTable from "./SourcesTable";

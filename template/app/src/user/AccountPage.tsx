@@ -1,14 +1,14 @@
 import { getCustomerPortalUrl, useQuery } from "wasp/client/operations";
 import { Link as WaspRouterLink, routes } from "wasp/client/router";
 import type { User } from "wasp/entities";
-import { Button } from "../components/ui/button";
+import { Button } from "../client/components/ui/button";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "../components/ui/card";
-import { Separator } from "../components/ui/separator";
+} from "../client/components/ui/card";
+import { Separator } from "../client/components/ui/separator";
 import {
   PaymentPlanId,
   SubscriptionStatus,

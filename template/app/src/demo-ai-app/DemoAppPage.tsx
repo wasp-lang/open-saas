@@ -12,19 +12,19 @@ import { Link, routes } from "wasp/client/router";
 
 import { ArrowRight, Loader2, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
-import { Button } from "../components/ui/button";
+import { Button } from "../client/components/ui/button";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "../components/ui/card";
-import { Checkbox } from "../components/ui/checkbox";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
-import { ToastAction } from "../components/ui/toast";
-import { toast } from "../hooks/use-toast";
-import { cn } from "../lib/utils";
+} from "../client/components/ui/card";
+import { Checkbox } from "../client/components/ui/checkbox";
+import { Input } from "../client/components/ui/input";
+import { Label } from "../client/components/ui/label";
+import { ToastAction } from "../client/components/ui/toast";
+import { toast } from "../client/hooks/use-toast";
+import { cn } from "../client/utils";
 import type {
   GeneratedSchedule,
   Task as ScheduleTask,
