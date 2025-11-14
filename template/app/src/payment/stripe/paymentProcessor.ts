@@ -36,13 +36,13 @@ export const stripePaymentProcessor: PaymentProcessor = {
       prismaUserDelegate,
     );
 
-    const stripeSession = await createStripeCheckoutSession({
+    const checkoutSession = await createStripeCheckoutSession({
       customerId: customer.id,
       priceId: paymentPlan.getPaymentProcessorPlanId(),
       mode: paymentPlanEffectToStripeCheckoutSessionMode(paymentPlan.effect),
     });
 
-    if (!stripeSession.url) {
+    if (!checkoutSession.url) {
       throw new Error(
         "Stripe checkout session URL is missing. Checkout session might not be active.",
       );
@@ -50,8 +50,8 @@ export const stripePaymentProcessor: PaymentProcessor = {
 
     return {
       session: {
-        url: stripeSession.url,
-        id: stripeSession.id,
+        url: checkoutSession.url,
+        id: checkoutSession.id,
       },
     };
   },
