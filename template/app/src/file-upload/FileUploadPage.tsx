@@ -10,9 +10,9 @@ import {
 import type { File } from "wasp/entities";
 
 import { Download, Trash } from "lucide-react";
-import { Alert, AlertDescription } from "../components/ui/alert";
-import { Button } from "../components/ui/button";
-import { Card, CardContent, CardTitle } from "../components/ui/card";
+import { Alert, AlertDescription } from "../client/components/ui/alert";
+import { Button } from "../client/components/ui/button";
+import { Card, CardContent, CardTitle } from "../client/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -20,12 +20,12 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "../components/ui/dialog";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
-import { Progress } from "../components/ui/progress";
-import { toast } from "../hooks/use-toast";
-import { cn } from "../lib/utils";
+} from "../client/components/ui/dialog";
+import { Input } from "../client/components/ui/input";
+import { Label } from "../client/components/ui/label";
+import { Progress } from "../client/components/ui/progress";
+import { toast } from "../client/hooks/use-toast";
+import { cn } from "../client/utils";
 import { uploadFileWithProgress, validateFile } from "./fileUploading";
 import { ALLOWED_FILE_TYPES } from "./validation";
 

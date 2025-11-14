@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useRef, useState } from "react";
-import { Card, CardContent } from "../../components/ui/card";
+import { Card, CardContent } from "../../client/components/ui/card";
 
 const EXAMPLES_CAROUSEL_INTERVAL = 3000;
 const EXAMPLES_CAROUSEL_SCROLL_TIMEOUT = 200;

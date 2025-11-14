@@ -1,7 +1,7 @@
 import { Link as WaspRouterLink, routes } from "wasp/client/router";
+import { Button } from "../../client/components/ui/button";
 import openSaasBannerDark from "../../client/static/open-saas-banner-dark.svg";
 import openSaasBannerLight from "../../client/static/open-saas-banner-light.svg";
-import { Button } from "../../components/ui/button";
 
 export default function Hero() {
   return (

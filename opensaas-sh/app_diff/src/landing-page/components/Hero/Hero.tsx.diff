@@ -5,7 +5,7 @@
 +import { Link as ReactRouterLink } from "react-router-dom";
 +import { useAuth } from "wasp/client/auth";
 +import { Link as WaspRouterLink, routes } from "wasp/client/router";
-+import { Button } from "../../../components/ui/button";
++import { Button } from "../../../client/components/ui/button";
 +import { DocsUrl, WaspUrl } from "../../../shared/common";
 +import Orbit from "./Orbit";
 +

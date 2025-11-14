@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { cva, VariantProps } from "class-variance-authority";
-import { cn } from "../../lib/utils";
+import { cn } from "../../utils";
 
 const cardVariants = cva(
   "rounded-xl border shadow hover:shadow-lg transition-all duration-300 xur",

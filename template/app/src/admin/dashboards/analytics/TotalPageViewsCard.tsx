@@ -1,6 +1,10 @@
 import { ArrowDown, ArrowUp, Eye } from "lucide-react";
-import { Card, CardContent, CardHeader } from "../../../components/ui/card";
-import { cn } from "../../../lib/utils";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+} from "../../../client/components/ui/card";
+import { cn } from "../../../client/utils";
 
 type PageViewsStats = {
   totalPageViews: number | undefined;

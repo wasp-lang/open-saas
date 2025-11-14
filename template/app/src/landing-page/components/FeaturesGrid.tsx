@@ -4,8 +4,8 @@ import {
   CardContent,
   CardDescription,
   CardTitle,
-} from "../../components/ui/card";
-import { cn } from "../../lib/utils";
+} from "../../client/components/ui/card";
+import { cn } from "../../client/utils";
 import { Feature } from "./Features";
 import SectionTitle from "./SectionTitle";
 

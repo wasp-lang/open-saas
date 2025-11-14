@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { routes } from "wasp/client/router";
-import { Toaster } from "../components/ui/toaster";
+import { Toaster } from "../client/components/ui/toaster";
 import "./Main.css";
 import NavBar from "./components/NavBar/NavBar";
 import {

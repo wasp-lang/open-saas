@@ -1,5 +1,5 @@
---- template/app/src/lib/utils.ts
-+++ opensaas-sh/app/src/lib/utils.ts
+--- template/app/src/client/utils.ts
++++ opensaas-sh/app/src/client/utils.ts
 @@ -4,3 +4,12 @@
  export function cn(...inputs: ClassValue[]) {
    return twMerge(clsx(inputs));

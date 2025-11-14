@@ -11,7 +11,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import Logo from "../../client/static/logo.webp";
-import { cn } from "../../lib/utils";
+import { cn } from "../../client/utils";
 import SidebarLinkGroup from "./SidebarLinkGroup";
 
 interface SidebarProps {

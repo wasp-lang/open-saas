@@ -1,7 +1,7 @@
 import { Moon, Sun } from "lucide-react";
-import { Label } from "../../components/ui/label";
-import { cn } from "../../lib/utils";
+import { Label } from "../../client/components/ui/label";
 import useColorMode from "../hooks/useColorMode";
+import { cn } from "../utils";
 
 const DarkModeSwitcher = () => {
   const [colorMode, setColorMode] = useColorMode();
