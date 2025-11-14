@@ -7,14 +7,25 @@ export LC_ALL=C
 # Determine the patch command to use based on OS
 PATCH_CMD="patch"
 if [[ "$(uname)" == "Darwin" ]]; then
-  # On macOS, require gpatch to be installed
-  if command -v gpatch &> /dev/null; then
-    PATCH_CMD="gpatch"
-  else
-    echo "Error: GNU patch (gpatch) not found. On macOS, this script requires GNU patch."
-    echo "Install it with: brew install gpatch"
-    exit 1
+  PATCH_CMD="gpatch"
+fi
+
+# Assert that we are using GNU patch
+if ! $PATCH_CMD --version 2> /dev/null | grep -q "GNU patch"; then
+  echo "Error: GNU patch not found."
+  if [[ "$(uname)" == "Darwin" ]]; then
+    echo "On macOS, install it with: brew install gpatch"
   fi
+  exit 1
+fi
+
+# Assert that we are using GNU diff
+if ! diff --version 2> /dev/null | grep -q "GNU diffutils"; then
+  echo "Error: GNU diff not found."
+  if [[ "$(uname)" == "Darwin" ]]; then
+    echo "On macOS, install it with: brew install diffutils"
+  fi
+  exit 1
 fi
 
 # List all the source files in the specified dir.
