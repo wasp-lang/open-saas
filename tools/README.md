@@ -37,7 +37,7 @@ The typical workflow is:
 
 1. Run `dope.sh` with the `patch` action to generate `opensaas-sh/app/` from `template/app/` and `opensaash-sh/app_diff/`:
 
-```bash
+```sh
 ./dope.sh ../template app patch
 ```
 
@@ -45,7 +45,7 @@ The typical workflow is:
 
 3. Generate a new `opensaas-sh/app_diff/` based on the updated `opensaas-sh/app/` by running:
 
-```bash
+```sh
 ./dope.sh ../template app diff
 ```
 
