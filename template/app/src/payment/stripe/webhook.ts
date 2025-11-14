@@ -193,14 +193,14 @@ function getOpenSaasSubscriptionStatus(
     incomplete: undefined,
   };
 
-  let subscriptionStauts =
+  const subscriptionStauts =
     stripeToOpenSaasSubscriptionStatusMap[subscription.status];
 
   if (
     subscriptionStauts === SubscriptionStatus.Active &&
     subscription.cancel_at_period_end
   ) {
-    subscriptionStauts = SubscriptionStatus.CancelAtPeriodEnd;
+    return SubscriptionStatus.CancelAtPeriodEnd;
   }
 
   return subscriptionStauts;

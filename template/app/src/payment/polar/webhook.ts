@@ -99,7 +99,7 @@ async function handleOrderPaid(
       await updateUserCredits(
         {
           paymentProcessorUserId: order.customerId,
-          numOfCreditsPurchased: getProductIdCreditsAmount(order.productId),
+          numOfCreditsPurchased: paymentPlans[paymentPlanId].effect.amount,
           datePaid: order.createdAt,
         },
         userDelegate,
@@ -159,30 +159,17 @@ function getOpenSaasSubscriptionStatus(
     incomplete: undefined,
   };
 
-  let subscriptionStatus =
+  const subscriptionStatus =
     polarToOpenSaasSubscriptionStatusMap[subscription.status];
 
   if (
     subscriptionStatus === OpenSaasSubscriptionStatus.Active &&
     subscription.cancelAtPeriodEnd
   ) {
-    subscriptionStatus = OpenSaasSubscriptionStatus.CancelAtPeriodEnd;
+    return OpenSaasSubscriptionStatus.CancelAtPeriodEnd;
   }
 
   return subscriptionStatus;
-}
-
-function getProductIdCreditsAmount(productId: Product["id"]): number {
-  const planId = getPaymentPlanIdByProductId(productId);
-  const plan = paymentPlans[planId];
-
-  if (plan.effect.kind !== "credits") {
-    throw new Error(
-      `Product ${productId} is not a credit product (plan: ${planId})`,
-    );
-  }
-
-  return plan.effect.amount;
 }
 
 function getPaymentPlanIdByProductId(productId: Product["id"]): PaymentPlanId {
