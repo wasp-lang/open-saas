@@ -141,7 +141,7 @@ async function handleInvoicePaid(
 
 function getInvoicePriceId(invoice: Stripe.Invoice): Stripe.Price["id"] {
   const invoiceLineItems = invoice.lines.data;
-  // We only expect one line item. 
+  // We only expect one line item.
   // If your workflow expects more, you should change this function to handle them.
   if (invoiceLineItems.length !== 1) {
     throw new Error("There should be exactly one line item in Stripe invoice");
@@ -204,7 +204,7 @@ function getSubscriptionPriceId(
   subscription: Stripe.Subscription,
 ): Stripe.Price["id"] {
   const subscriptionItems = subscription.items.data;
-  // We only expect one subscription item. 
+  // We only expect one subscription item.
   // If your workflow expects more, you should change this function to handle them.
   if (subscriptionItems.length !== 1) {
     throw new Error(
