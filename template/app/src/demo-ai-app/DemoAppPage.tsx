@@ -214,7 +214,7 @@ function NewTaskForm({
         {isTasksLoading && (
           <div className="text-muted-foreground">Loading...</div>
         )}
-        {tasks!! && tasks.length > 0 ? (
+        {tasks! && tasks.length > 0 ? (
           <div className="space-y-4">
             {tasks.map((task: Task) => (
               <Todo
@@ -364,7 +364,7 @@ function Schedule({ schedule }: { schedule: GeneratedSchedule }) {
   return (
     <div className="flex flex-col gap-6 py-6" data-testid="schedule">
       <div className="space-y-4">
-        {!!schedule.tasks ? (
+        {schedule.tasks ? (
           schedule.tasks
             .map((task) => (
               <TaskCard
@@ -419,7 +419,7 @@ function TaskCard({
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
-        {!!taskItems ? (
+        {taskItems ? (
           <ul className="space-y-2">
             {taskItems.map((taskItem) => {
               if (taskItem.taskName === task.name) {
