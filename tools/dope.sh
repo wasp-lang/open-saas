@@ -60,8 +60,8 @@ recreate_diff_dir() {
   # For each source file in the derived dir, generate a .diff file between it and the
   # corresponding source file in the base dir.
   while IFS= read -r filepath; do
-    local derivedFilepath="${DERIVED_DIR}/${filepath}"
     local baseFilepath="${BASE_DIR}/${filepath}"
+    local derivedFilepath="${DERIVED_DIR}/${filepath}"
 
     local filepathToBeUsedAsBase="${baseFilepath}"
     # If the file is not one of the source files in base dir (e.g. is gitignored or doesn't exist),
@@ -80,7 +80,8 @@ recreate_diff_dir() {
       cp "${derivedFilepath}" "${DIFF_DIR}/${filepath}.copy"
       echo "Generated ${DIFF_DIR}/${filepath}.copy"
     else
-      diff -Nu --label "${baseFilepath}" --label "${derivedFilepath}" "${filepathToBeUsedAsBase}" "${derivedFilepath}" > "${DIFF_DIR}/${filepath}.diff"
+      diff -Nu --label "${baseFilepath}" --label "${derivedFilepath}" \
+        "${filepathToBeUsedAsBase}" "${derivedFilepath}" > "${DIFF_DIR}/${filepath}.diff"
       echo "Generated ${DIFF_DIR}/${filepath}.diff"
     fi
   done <<< "${DERIVED_FILES}"

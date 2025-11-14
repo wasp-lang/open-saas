@@ -1,6 +1,6 @@
 --- template/app/src/payment/paymentProcessor.ts
 +++ opensaas-sh/app/src/payment/paymentProcessor.ts
-@@ -28,9 +28,4 @@
+@@ -29,9 +29,4 @@
    webhookMiddlewareConfigFn: MiddlewareConfigFn;
  }
  
