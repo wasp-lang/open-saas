@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-#
-# Diff Or Patch Executor
-#
-# Allows you to easily create a diff between the two projects (base and derived), or to patch those diffs onto the base project to get the derived one.
-# Useful when derived project has only small changes on top of base project and you want to keep it in a dir in the same repo as main project.
+
+# Set the locale and language to C for consistent behavior
+# See: https://unix.stackexchange.com/questions/87745/what-does-lc-all-c-do
+export LC_ALL=C
+export LANG=C
 
 # Determine the patch command to use based on OS
 PATCH_CMD="patch"
