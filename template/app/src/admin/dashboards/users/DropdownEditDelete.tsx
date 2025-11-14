@@ -4,7 +4,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../../../components/ui/dropdown-menu";
+} from "../../../client/components/ui/dropdown-menu";
 
 const DropdownEditDelete = () => {
   return (

@@ -3,8 +3,8 @@
 @@ -0,0 +1,48 @@
 +import { useEffect, useState } from "react";
 +import { FaGithub } from "react-icons/fa";
-+import { Button } from "../../components/ui/button";
-+import { formatNumber } from "../../lib/utils";
++import { Button } from "../../client/components/ui/button";
++import { formatNumber } from "../utils";
 +
 +const RepoInfo = () => {
 +  const [repoInfo, setRepoInfo] = useState<null | any>(null);

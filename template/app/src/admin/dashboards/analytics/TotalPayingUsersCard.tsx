@@ -1,8 +1,12 @@
 import { ArrowDown, ArrowUp, ShoppingBag } from "lucide-react";
 import { useMemo } from "react";
 import { type DailyStatsProps } from "../../../analytics/stats";
-import { Card, CardContent, CardHeader } from "../../../components/ui/card";
-import { cn } from "../../../lib/utils";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+} from "../../../client/components/ui/card";
+import { cn } from "../../../client/utils";
 
 const TotalPayingUsersCard = ({ dailyStats, isLoading }: DailyStatsProps) => {
   const isDeltaPositive = useMemo(() => {
