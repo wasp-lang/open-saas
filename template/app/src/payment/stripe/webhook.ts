@@ -8,8 +8,11 @@ import { requireNodeEnvVar } from "../../server/utils";
 import { assertUnreachable } from "../../shared/utils";
 import { UnhandledWebhookEventError } from "../errors";
 import { PaymentPlanId, paymentPlans, SubscriptionStatus } from "../plans";
-import { updateUserCredits, updateUserSubscription } from "../user";
 import { stripeClient } from "./stripeClient";
+import {
+  updateUserOneTimePaymentDetails,
+  updateUserSubscriptionDetails,
+} from "./user";
 
 /**
  * Stripe requires a raw request to construct events successfully.
@@ -32,30 +35,38 @@ export const stripeWebhook: PaymentsWebhook = async (
 ) => {
   const prismaUserDelegate = context.entities.User;
   try {
-    const event = constructStripeEvent(request);
+    const stripeEvent = constructStripeEvent(request);
 
     // If you'd like to handle more events, you can add more cases below.
     // When deploying your app, you configure your webhook in the Stripe dashboard
     // to only send the events that you're handling above.
     // See: https://docs.opensaas.sh/guides/deploying/#setting-up-your-stripe-webhook
-    switch (event.type) {
+    switch (stripeEvent.type) {
       case "invoice.paid":
-        await handleInvoicePaid(event, prismaUserDelegate);
+        await handleInvoicePaid(stripeEvent, prismaUserDelegate);
         break;
       case "customer.subscription.updated":
-        await handleCustomerSubscriptionUpdated(event, prismaUserDelegate);
+        await handleCustomerSubscriptionUpdated(
+          stripeEvent,
+          prismaUserDelegate,
+        );
         break;
       case "customer.subscription.deleted":
-        await handleCustomerSubscriptionDeleted(event, prismaUserDelegate);
+        await handleCustomerSubscriptionDeleted(
+          stripeEvent,
+          prismaUserDelegate,
+        );
         break;
       default:
-        throw new UnhandledWebhookEventError(event.type);
+        throw new UnhandledWebhookEventError(stripeEvent.type);
     }
     return response.status(204).send();
   } catch (error) {
     if (error instanceof UnhandledWebhookEventError) {
       // In development, it is likely that we will receive events that we are not handling.
       // E.g. via the `stripe trigger` command.
+      // While these can be ignored safely in development, it's good to be aware of them.
+      // For production we shouldn't have any extra webhook events.
       if (process.env.NODE_ENV === "development") {
         console.info("Unhandled Stripe webhook event in development: ", error);
       } else if (process.env.NODE_ENV === "production") {
@@ -71,7 +82,7 @@ export const stripeWebhook: PaymentsWebhook = async (
       return response.status(400).json({ error: error.message });
     } else {
       return response
-        .status(500)
+        .status(400)
         .json({ error: "Error processing Stripe webhook event" });
     }
   }
@@ -102,9 +113,9 @@ async function handleInvoicePaid(
 
   switch (paymentPlanId) {
     case PaymentPlanId.Credits10:
-      await updateUserCredits(
+      await updateUserOneTimePaymentDetails(
         {
-          paymentProcessorUserId: customerId,
+          customerId,
           datePaid: invoicePaidAtDate,
           numOfCreditsPurchased: paymentPlans[paymentPlanId].effect.amount,
         },
@@ -113,9 +124,9 @@ async function handleInvoicePaid(
       break;
     case PaymentPlanId.Pro:
     case PaymentPlanId.Hobby:
-      await updateUserSubscription(
+      await updateUserSubscriptionDetails(
         {
-          paymentProcessorUserId: customerId,
+          customerId,
           datePaid: invoicePaidAtDate,
           paymentPlanId,
           subscriptionStatus: SubscriptionStatus.Active,
@@ -161,8 +172,8 @@ async function handleCustomerSubscriptionUpdated(
     getSubscriptionPriceId(subscription),
   );
 
-  const user = await updateUserSubscription(
-    { paymentProcessorUserId: customerId, paymentPlanId, subscriptionStatus },
+  const user = await updateUserSubscriptionDetails(
+    { customerId, paymentPlanId, subscriptionStatus },
     prismaUserDelegate,
   );
 
@@ -179,31 +190,14 @@ async function handleCustomerSubscriptionUpdated(
 function getOpenSaasSubscriptionStatus(
   subscription: Stripe.Subscription,
 ): SubscriptionStatus | undefined {
-  const stripeToOpenSaasSubscriptionStatusMap: Record<
-    Stripe.Subscription.Status,
-    SubscriptionStatus | undefined
-  > = {
-    trialing: SubscriptionStatus.Active,
-    active: SubscriptionStatus.Active,
-    past_due: SubscriptionStatus.PastDue,
-    canceled: SubscriptionStatus.Deleted,
-    unpaid: SubscriptionStatus.Deleted,
-    incomplete_expired: SubscriptionStatus.Deleted,
-    paused: undefined,
-    incomplete: undefined,
-  };
-
-  const subscriptionStauts =
-    stripeToOpenSaasSubscriptionStatusMap[subscription.status];
-
-  if (
-    subscriptionStauts === SubscriptionStatus.Active &&
-    subscription.cancel_at_period_end
-  ) {
-    return SubscriptionStatus.CancelAtPeriodEnd;
+  if (subscription.status === SubscriptionStatus.Active) {
+    if (subscription.cancel_at_period_end) {
+      return SubscriptionStatus.CancelAtPeriodEnd;
+    }
+    return SubscriptionStatus.Active;
+  } else if (subscription.status === SubscriptionStatus.PastDue) {
+    return SubscriptionStatus.PastDue;
   }
-
-  return subscriptionStauts;
 }
 
 function getSubscriptionPriceId(
@@ -228,11 +222,8 @@ async function handleCustomerSubscriptionDeleted(
   const subscription = event.data.object;
   const customerId = getCustomerId(subscription.customer);
 
-  await updateUserSubscription(
-    {
-      paymentProcessorUserId: customerId,
-      subscriptionStatus: SubscriptionStatus.Deleted,
-    },
+  await updateUserSubscriptionDetails(
+    { customerId, subscriptionStatus: SubscriptionStatus.Deleted },
     prismaUserDelegate,
   );
 }
@@ -259,12 +250,14 @@ function getInvoicePaidAtDate(invoice: Stripe.Invoice): Date {
   return new Date(invoice.status_transitions.paid_at * 1000);
 }
 
-function getPaymentPlanIdByPriceId(priceId: Stripe.Price["id"]): PaymentPlanId {
-  for (const [planId, plan] of Object.entries(paymentPlans)) {
-    if (plan.getPaymentProcessorPlanId() === priceId) {
-      return planId as PaymentPlanId;
-    }
+function getPaymentPlanIdByPriceId(priceId: string): PaymentPlanId {
+  const paymentPlanId = Object.values(PaymentPlanId).find(
+    (paymentPlanId) =>
+      paymentPlans[paymentPlanId].getPaymentProcessorPlanId() === priceId,
+  );
+  if (!paymentPlanId) {
+    throw new Error(`No payment plan with Stripe price id ${priceId}`);
   }
 
-  throw new Error(`Unknown Stripe price ID: ${priceId}`);
+  return paymentPlanId;
 }
