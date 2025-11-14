@@ -6,4 +6,8 @@ src/payment/lemonSqueezy/paymentDetails.ts
 src/payment/lemonSqueezy/paymentProcessor.ts
 src/payment/lemonSqueezy/webhook.ts
 src/payment/lemonSqueezy/webhookPayload.ts
+src/payment/polar/checkoutUtils.ts
+src/payment/polar/paymentProcessor.ts
+src/payment/polar/polarClient.ts
+src/payment/polar/webhook.ts
 src/payment/webhook.ts
