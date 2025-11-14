@@ -35,38 +35,30 @@ export const stripeWebhook: PaymentsWebhook = async (
 ) => {
   const prismaUserDelegate = context.entities.User;
   try {
-    const stripeEvent = constructStripeEvent(request);
+    const event = constructStripeEvent(request);
 
     // If you'd like to handle more events, you can add more cases below.
     // When deploying your app, you configure your webhook in the Stripe dashboard
     // to only send the events that you're handling above.
     // See: https://docs.opensaas.sh/guides/deploying/#setting-up-your-stripe-webhook
-    switch (stripeEvent.type) {
+    switch (event.type) {
       case "invoice.paid":
-        await handleInvoicePaid(stripeEvent, prismaUserDelegate);
+        await handleInvoicePaid(event, prismaUserDelegate);
         break;
       case "customer.subscription.updated":
-        await handleCustomerSubscriptionUpdated(
-          stripeEvent,
-          prismaUserDelegate,
-        );
+        await handleCustomerSubscriptionUpdated(event, prismaUserDelegate);
         break;
       case "customer.subscription.deleted":
-        await handleCustomerSubscriptionDeleted(
-          stripeEvent,
-          prismaUserDelegate,
-        );
+        await handleCustomerSubscriptionDeleted(event, prismaUserDelegate);
         break;
       default:
-        throw new UnhandledWebhookEventError(stripeEvent.type);
+        throw new UnhandledWebhookEventError(event.type);
     }
     return response.status(204).send();
   } catch (error) {
     if (error instanceof UnhandledWebhookEventError) {
       // In development, it is likely that we will receive events that we are not handling.
       // E.g. via the `stripe trigger` command.
-      // While these can be ignored safely in development, it's good to be aware of them.
-      // For production we shouldn't have any extra webhook events.
       if (process.env.NODE_ENV === "development") {
         console.info("Unhandled Stripe webhook event in development: ", error);
       } else if (process.env.NODE_ENV === "production") {
@@ -82,7 +74,7 @@ export const stripeWebhook: PaymentsWebhook = async (
       return response.status(400).json({ error: error.message });
     } else {
       return response
-        .status(400)
+        .status(500)
         .json({ error: "Error processing Stripe webhook event" });
     }
   }
@@ -190,14 +182,31 @@ async function handleCustomerSubscriptionUpdated(
 function getOpenSaasSubscriptionStatus(
   subscription: Stripe.Subscription,
 ): SubscriptionStatus | undefined {
-  if (subscription.status === SubscriptionStatus.Active) {
-    if (subscription.cancel_at_period_end) {
-      return SubscriptionStatus.CancelAtPeriodEnd;
-    }
-    return SubscriptionStatus.Active;
-  } else if (subscription.status === SubscriptionStatus.PastDue) {
-    return SubscriptionStatus.PastDue;
+  const stripeToOpenSaasSubscriptionStatusMap: Record<
+    Stripe.Subscription.Status,
+    SubscriptionStatus | undefined
+  > = {
+    trialing: SubscriptionStatus.Active,
+    active: SubscriptionStatus.Active,
+    past_due: SubscriptionStatus.PastDue,
+    canceled: SubscriptionStatus.Deleted,
+    unpaid: SubscriptionStatus.Deleted,
+    incomplete_expired: SubscriptionStatus.Deleted,
+    paused: undefined,
+    incomplete: undefined,
+  };
+
+  const subscriptionStauts =
+    stripeToOpenSaasSubscriptionStatusMap[subscription.status];
+
+  if (
+    subscriptionStauts === SubscriptionStatus.Active &&
+    subscription.cancel_at_period_end
+  ) {
+    return SubscriptionStatus.CancelAtPeriodEnd;
   }
+
+  return subscriptionStauts;
 }
 
 function getSubscriptionPriceId(
