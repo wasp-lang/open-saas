@@ -160,6 +160,20 @@
 -    avatarSrc: daBoiAvatar,
 -    socialUrl: "https://twitter.com/wasplang",
 -    quote: "I don't even know how to code. I'm just a plushie.",
+-  },
+-  {
+-    name: "Mr. Foobar",
+-    role: "Founder @ Cool Startup",
+-    avatarSrc: daBoiAvatar,
+-    socialUrl: "",
+-    quote: "This product makes me cooler than I already am.",
+-  },
+-  {
+-    name: "Jamie",
+-    role: "Happy Customer",
+-    avatarSrc: daBoiAvatar,
+-    socialUrl: "#",
+-    quote: "My cats love it!",
 +    name: "Max Khamrovskyi",
 +    role: "Senior Eng @ Red Hat",
 +    avatarSrc:
@@ -167,13 +181,8 @@
 +    socialUrl: "https://twitter.com/maksim36ua",
 +    quote:
 +      "I used Wasp to build and sell my AI-augmented SaaS app for marketplace vendors within two months!",
-   },
-   {
--    name: "Mr. Foobar",
--    role: "Founder @ Cool Startup",
--    avatarSrc: daBoiAvatar,
--    socialUrl: "",
--    quote: "This product makes me cooler than I already am.",
++  },
++  {
 +    name: "Jonathan Cocharan",
 +    role: "Entrepreneur",
 +    avatarSrc:
@@ -181,13 +190,8 @@
 +    socialUrl: "https://twitter.com/JonathanCochran",
 +    quote:
 +      "In just 6 nights... my SaaS app is live 🎉! Huge thanks to the amazing @wasplang community 🙌 for their guidance along the way. These tools are incredibly efficient 🤯!",
-   },
-   {
--    name: "Jamie",
--    role: "Happy Customer",
--    avatarSrc: daBoiAvatar,
--    socialUrl: "#",
--    quote: "My cats love it!",
++  },
++  {
 +    name: "Billy Howell",
 +    role: "Entrepreneur",
 +    avatarSrc:
@@ -195,7 +199,7 @@
 +    socialUrl: "https://twitter.com/billyjhowell",
 +    quote:
 +      "Congrats! I am loving Wasp & Open SaaS. It's really helped me, a self-taught coder increase my confidence. I feel like I've finally found the perfect, versatile stack for all my projects instead of trying out a new one each time.",
-   },
++  },
 +  {
 +    name: "Tim Skaggs",
 +    role: "Founder @ Antler US",
@@ -249,7 +253,7 @@
 +      "https://dev.to/wasp/our-web-framework-reached-9000-stars-on-github-9000-jij#comment-2dech",
 +    quote:
 +      "This is exactly the framework I've been dreaming of ever since I've been waiting to fully venture into the JS Backend Dev world. I believe Wasp will go above 50k stars this year. The documentation alone gives me the confidence that this is my permanent Nodejs framework and I'm staying with Wasp. Phenomenal work by the team...  Please keep up your amazing spirits. Thank you",
-+  },
+   },
  ];
 -
  export const faqs = [
@@ -261,14 +265,14 @@
 +    question: "Why is this SaaS Template free and open-source?",
 +    answer:
 +      "We believe the best product is made when the community puts their heads together. We also believe a quality starting point for a web app should be free and available to everyone. Our hope is that together we can create the best SaaS template out there and bring our ideas to customers quickly.",
-   },
++  },
 +  {
 +    id: 2,
 +    question: "What's Wasp?",
 +    href: "https://wasp-lang.dev",
 +    answer:
 +      "It's the fastest way to develop full-stack React + NodeJS + Prisma apps and it's what gives this template superpowers. Wasp relies on React, NodeJS, and Prisma to define web components and server queries and actions. Wasp's secret sauce is its compiler which takes the client, server code, and config file and outputs the client app, server app and deployment code, supercharging the development experience. Combined with this template, you can build a SaaS app in record time.",
-+  },
+   },
  ];
 -
  export const footerNavigation = {

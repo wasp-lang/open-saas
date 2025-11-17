@@ -7,19 +7,19 @@ import {
   useQuery,
 } from "wasp/client/operations";
 import { type User } from "wasp/entities";
-import useDebounce from "../../../client/hooks/useDebounce";
-import { Button } from "../../../components/ui/button";
-import { Checkbox } from "../../../components/ui/checkbox";
-import { Input } from "../../../components/ui/input";
-import { Label } from "../../../components/ui/label";
+import { Button } from "../../../client/components/ui/button";
+import { Checkbox } from "../../../client/components/ui/checkbox";
+import { Input } from "../../../client/components/ui/input";
+import { Label } from "../../../client/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../../components/ui/select";
-import { Switch } from "../../../components/ui/switch";
+} from "../../../client/components/ui/select";
+import { Switch } from "../../../client/components/ui/switch";
+import useDebounce from "../../../client/hooks/useDebounce";
 import { SubscriptionStatus } from "../../../payment/plans";
 import LoadingSpinner from "../../layout/LoadingSpinner";
 import DropdownEditDelete from "./DropdownEditDelete";

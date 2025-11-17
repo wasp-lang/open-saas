@@ -5,12 +5,10 @@ on:
     branches:
       - main
   pull_request:
-    branches:
-      - main
 
 env:
   WASP_TELEMETRY_DISABLE: 1
-  WASP_VERSION: 0.18.0
+  WASP_VERSION: 0.18.1
 
 jobs:
   test:
@@ -108,7 +106,6 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           STRIPE_API_KEY: ${{ secrets.STRIPE_KEY }}
           STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
-          STRIPE_CUSTOMER_PORTAL_URL: https://billing.stripe.com/p/login/test_8wM8x17JN7DT4zC000
           PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID: ${{ secrets.STRIPE_HOBBY_SUBSCRIPTION_PRICE_ID }}
           PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID: ${{ secrets.STRIPE_PRO_SUBSCRIPTION_PRICE_ID }}
           PAYMENTS_CREDITS_10_PLAN_ID: ${{ secrets.STRIPE_CREDITS_PRICE_ID }}

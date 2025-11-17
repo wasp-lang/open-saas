@@ -3,9 +3,9 @@
 @@ -0,0 +1,163 @@
 +import { useState } from "react";
 +import { FaDiscord, FaGithub, FaGoogle, FaSlack } from "react-icons/fa";
-+import { Button } from "../../../components/ui/button";
-+import { Card, CardContent, CardHeader } from "../../../components/ui/card";
-+import { Input } from "../../../components/ui/input";
++import { Button } from "../../../client/components/ui/button";
++import { Card, CardContent, CardHeader } from "../../../client/components/ui/card";
++import { Input } from "../../../client/components/ui/input";
 +import { DocsUrl } from "../../../shared/common";
 +import HighlightedFeature from "../HighlightedFeature";
 +
