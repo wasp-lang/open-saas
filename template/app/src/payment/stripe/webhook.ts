@@ -182,7 +182,7 @@ async function handleCustomerSubscriptionUpdated(
 function getOpenSaasSubscriptionStatus(
   subscription: Stripe.Subscription,
 ): SubscriptionStatus | undefined {
-  const stripeToOpenSaasSubscriptionStatusMap: Record<
+  const stripeToOpenSaasSubscriptionStatus: Record<
     Stripe.Subscription.Status,
     SubscriptionStatus | undefined
   > = {
@@ -196,17 +196,17 @@ function getOpenSaasSubscriptionStatus(
     incomplete: undefined,
   };
 
-  const subscriptionStauts =
-    stripeToOpenSaasSubscriptionStatusMap[subscription.status];
+  const subscriptionStatus =
+    stripeToOpenSaasSubscriptionStatus[subscription.status];
 
   if (
-    subscriptionStauts === SubscriptionStatus.Active &&
+    subscriptionStatus === SubscriptionStatus.Active &&
     subscription.cancel_at_period_end
   ) {
     return SubscriptionStatus.CancelAtPeriodEnd;
   }
 
-  return subscriptionStauts;
+  return subscriptionStatus;
 }
 
 function getSubscriptionPriceId(
