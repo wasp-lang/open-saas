@@ -188,7 +188,7 @@ We will explain more about these auth methods, and how to properly integrate the
 
 ### Subscription Payments with Stripe, Lemon Squeezy or Polar
 
-No SaaS is complete without payments, specifically subscription payments. That's why this template comes with a fully functional Stripe, Lemon Squeezy or Polar integration. 
+No SaaS is complete without payments, specifically subscription payments. That's why this template comes with a fully functional Stripe, Lemon Squeezy and Polar integration. 
 
 Let's take a quick look at how payments are handled in this template.
 
