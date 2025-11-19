@@ -141,9 +141,8 @@ You can then test the payment flow via the client by doing the following:
    ```sh
    wasp db studio
    ```
+6. Navigate to `localhost:5555` and click on the `users` table. You should see the `subscriptionStatus` is `active` for the user that just made the purchase.
    <Image src={dbStudio} alt="db studio" loading="lazy" />
-
-    Navigate to `localhost:5555` and click on the `users` table. You should see the `subscriptionStatus` is `active` for the user that just made the purchase.
 
 :::note
 If you want to learn more about how a user's payment status, subscription status, and subscription tier affect a user's priveledges within the app, check out the [User Overview](/general/user-overview/) reference.

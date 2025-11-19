@@ -37,17 +37,17 @@ When you're ready to go live, make sure this is set to `false`.
 
 Once you've created your account, you'll need to get your organization access token. 
 You can do that by:
-1. Navigating to the `Developers` section under dashboard `Settings > General`.
-1. Click on the `New Token` button to create a new token.
-2. Give your token a name (e.g., "Open SaaS Development").
-3. Select an expiration date. `No expiration` is fine for sandbox mode, but discouraged for live mode.
-4. Select the minimal scope necessary:
+1. Navigating to the `Developers` section under the `Settings > General` page.
+2. Click on the `New Token` button to create a new token.
+3. Give your token a name (e.g., "Open SaaS Development").
+4. Select an expiration date. `No expiration` is fine for sandbox mode, but discouraged for live mode.
+5. Select the minimal scope necessary:
    - `checkouts:write`
    - `customer_sessions:write`
    - `customers:read`
    - `customers:write`
    - `orders:read`
-5. Copy the generated token and paste it in your `.env.server` file:
+6. Copy the generated token and paste it in your `.env.server` file:
    ```ini title=".env.server"
    POLAR_ORGANIZATION_ACCESS_TOKEN=polar_oat_...
    ```
@@ -55,16 +55,18 @@ You can do that by:
 ### Create Products
 
 To create Polar products, in your Polar dashboard:
-1. Navigate to `Prodcuts` section.
+1. Navigate to `Prodcuts > Catalogue` page.
 2. Click on the `+ New Product` button to create a new product.
 3. Fill in the product details:
    - **Name**: e.g., "Hobby Plan", "Pro Plan", or "10 Credits".
    - **Description**: Brief description of what the product includes.
    - **Pricing**: Select "Recurring subscription" for recurring plans or "One-time purchase" for credits, then configure the desired pricing.
-4. Configure any remaining optional fields, e.g. **Media**, **Checkout Fields**, **Metadata**, etc.
+4. Configure any remaining optional fields.
 5. Click `Create Product`.
 
-After creating each product, you'll need to copy the Product ID from the product page and add it to your `.env.server` file. Tap the `⠇` icon in the top-right corner and select `Copy Product ID`. Open SaaS template features a preset of two different subscriptions ("Hobby" and "Pro") and one one-time pruchase ("Credits 10"):
+After creating each product, you'll need to copy the `Product ID` from the `Prodcuts > Catalogue` page and add it to your `.env.server` file. Tap the `⠇` icon in the top-right corner and select `Copy Product ID`. 
+
+Open SaaS features a preset of two different subscriptions ("Hobby" and "Pro") and one one-time pruchase ("Credits 10"):
 
 ```ini title=".env.server"
 PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID=<your-hobby-product-id>
@@ -95,7 +97,7 @@ https://89e5-2003-c7-153c-72a5-f837.ngrok-free.app/payments-webhook
 ```
 
 Next, configure the webhook in your Polar dashboard:
-1. Go to `Settings > Webhooks` page.
+1. Navigate to `Settings > Webhooks` page.
 2. Click `Add Endpoint` to create a new endpoint.
 3. In the URL field, paste your `ngrok` forwarding address with `/payments-webhook` appended (for example: `https://abc123.ngrok-free.app/payments-webhook`).
 4. Set the `Format` to `"Raw"`.
@@ -124,20 +126,21 @@ You can then test the payment flow:
 4. Complete the payment.
 5. You should be redirected back to the checkout success page.
 
-Check the Polar dashboard for webhook event logs:
+To verify everythin executed correctly we can:
+- Check Polar webhook event logs.
+- Inspect our database's `User` table.
 
-<Image src={polarWebhookLogs} alt="How to check webhook logs in Polar dashboard" loading="lazy" />
+To check webhook event logs:
+1. Navigate to `Settings > Webhooks` page
+2. Click the `Details` button of our previously created webhook.
+3. Confirm all of the events have been successful:
+   <Image src={polarWebhookLogs} alt="How to check webhook logs in Polar dashboard" loading="lazy" />
 
-And verify the user's subscription status in your database:
-
-```sh
-wasp db studio
-```
-
-Navigate to `localhost:5555` and check the `User` table to confirm the `subscriptionStatus` is `active` for the user who made the purchase.
-
-<Image src={polarUserTable} alt="User table showing updated user" loading="lazy" />
-
-:::note[Polar Test Cards]
-Polar uses Stripe's test card numbers for development. Check their [testing documentation](https://docs.stripe.com/testing#cards) for further information.
-:::
+To inspect the `User` table in the database:
+1. Run Wasp DB studio:
+   ```sh
+   wasp db studio
+   ```
+2. Navigate to `localhost:5555` and check the `User` table. 
+3. Confirm the `subscriptionStatus` is `active` for the user who made the purchase.
+   <Image src={polarUserTable} alt="User table showing updated user" loading="lazy" />
