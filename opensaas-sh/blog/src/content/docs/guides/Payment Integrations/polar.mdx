@@ -115,7 +115,7 @@ Next, configure the webhook in your Polar dashboard:
 Before testing payments, make sure that you:
 - Created and set your `POLAR_ORGANIZATION_ACCESS_TOKEN` in `.env.server`.
 - Created your products and set their `<NAME>_PLAN_ID` in `.env.server`.
-- Configured webhook and set `POLAR_WEBHOOK_SECRET` in `.env.server`.
+- Created your webhook and set `POLAR_WEBHOOK_SECRET` in `.env.server`.
 - Your `ngrok` tunnel is running.
 
 You can then test the payment flow:
@@ -126,9 +126,9 @@ You can then test the payment flow:
 4. Complete the payment.
 5. You should be redirected back to the checkout success page.
 
-To verify everythin executed correctly we can:
-- Check Polar webhook event logs.
-- Inspect our database's `User` table.
+To verify everythin executed correctly we will:
+1. Check Polar webhook event logs.
+2. Inspect our database's `User` table.
 
 To check webhook event logs:
 1. Navigate to `Settings > Webhooks` page
