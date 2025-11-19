@@ -93,7 +93,8 @@ recreate_diff_dir() {
       echo "Generated ${DIFF_DIR}/${filepath}.copy"
     else
       diff -Nu --label "${baseFilepath}" --label "${derivedFilepath}" \
-        "${filepathToBeUsedAsBase}" "${derivedFilepath}" > "${DIFF_DIR}/${filepath}.diff"
+        "${filepathToBeUsedAsBase}" "${derivedFilepath}" \
+        > "${DIFF_DIR}/${filepath}.diff"
       echo "Generated ${DIFF_DIR}/${filepath}.diff"
     fi
   done <<< "${DERIVED_FILES}"
