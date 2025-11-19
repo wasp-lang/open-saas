@@ -9,6 +9,9 @@ tags:
 authors: vince
 ---
 import VideoPlayer from '../../../components/VideoPlayer.astro';
+import { Image } from 'astro:assets';
+import chatInterface from '../../../assets/gemini-3/chat.webp';
+import landingPage from '../../../assets/gemini-3/landing-page.webp';
 
 I'm always skeptical of demos whenever a new model gets released. So I had to test Google's new Gemini 3 model myself.
 
@@ -27,6 +30,8 @@ I started with a fresh copy of the [Open SaaS template](https://opensaas.sh/) an
 Using Cursor's "Plan Mode," Gemini 3 proposed three different design styles. I chose an "interactive product-led demo" approach. The model generated a plan and executed it on the first try, building a custom interactive component and integrating it seamlessly into the existing landing page hero section.
 
 This was a cool surprise, as I hand't thought about building an interactive component to showcase the app's features. A nice win!
+
+<Image src={landingPage} alt="Landing page" width={800} />
 
 ## Refactoring with Structured Outputs
 
@@ -52,6 +57,8 @@ Gemini 3 broke this down into a multi-step plan:
 The result was a functional chat interface where the AI intelligently adjusted the schedule based on user feedback, embedded directly into the app. I loved how it injected a nice styled component into the chat window, something that I wanted (it read my mind!) and would have taken me hours to build in the past.
 
 I was really happy with the results of this challenge!
+
+<Image src={chatInterface} alt="Chat interface" width={800} />
 
 ## Conclusion
 
