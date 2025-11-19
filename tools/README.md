@@ -17,13 +17,13 @@ Instead, we version the diffs between it and the template in an `opensaas-sh/app
 ./dope.sh <BASE_DIR> <DERIVED_DIR> <ACTION>
 ```
 
-- `<BASE_DIR>`: The base project directory (e.g., `template/app/`)
-- `<DERIVED_DIR>`: The derived project directory (e.g., `opensaas-sh/app/`)
+- `<BASE_DIR>`: The base project directory (e.g., `base/app/` or `template/app/`)
+- `<DERIVED_DIR>`: The derived project directory (e.g., `derived/app/` or `opensaas-sh/app/`)
 - `<ACTION>`: Either `diff` or `patch`
   - `diff`: Creates a diff between the base and derived directories
   - `patch`: Applies existing diffs onto the base directory to recreate the derived directory
 
-The diffs are stored in a directory named `<DERIVED_DIR>_diff/` (e.g., `app_diff/`).
+The diffs are stored in a directory named `<DERIVED_DIR>_diff/` (e.g., `derived/app_diff/` or `opensaas-sh/app_diff/`).
 
 ### Diff structure
 
