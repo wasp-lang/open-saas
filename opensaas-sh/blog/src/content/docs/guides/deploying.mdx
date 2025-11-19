@@ -208,8 +208,8 @@ With the webhook URL ready, go to `Settings` > `Webhooks` in your [Polar Dashboa
 - paste the webhook forwarding URL in the `URL` field.
 - set the `Format` to `"Raw"`
 - select at least the following events to be sent:
-  - order.paid
-  - subscription.updated
+  - `order.paid`
+  - `subscription.updated`
 - click `Save`
 - copy the generated webhook secret (a long, random string starting with `polar_whs_`).
 - add this signing secret to your server's production environment variables under `POLAR_WEBHOOK_SECRET=`
