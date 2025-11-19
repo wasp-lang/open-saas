@@ -198,7 +198,7 @@ Let's take a quick look at how payments are handled in this template.
 4. Stripe / Lemon Squeezy / Polar sends a webhook event to the server with the payment info
 5. The app server's **webhook handler** handles the event and updates the user's subscription status
 
-The payment processor you choose (Stripe, Lemon Squeezy or Polar) and its related functions can be found at `src/payment/paymentProcessor.ts`. The `Payment Processor` object holds the logic for creating checkout sessions, webhooks, etc.
+The payment processor you choose (Stripe, Lemon Squeezy or Polar) and its related functions can be found at `src/payment/paymentProcessor.ts`. The `PaymentProcessor` object holds the logic for creating checkout sessions, webhooks, etc.
 
 The logic for creating the Checkout session is defined in the `src/payment/operation.ts` file. [Actions](https://wasp.sh/docs/data-model/operations/actions) are a type of Wasp Operation, specifically your server-side functions that are used to **write** or **update** data to the database. Once they're defined in the `main.wasp` file, you can easily call them on the client-side:
 
