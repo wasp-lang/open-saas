@@ -69,13 +69,13 @@ export function getSubscriptionPaymentPlanIds(): PaymentPlanId[] {
 }
 
 export function getPaymentPlanIdByPaymentProcessorPlanId(
-  paymentProcessorUserId: NonNullable<User["paymentProcessorUserId"]>,
+  paymentProcessorPlanId: string,
 ): PaymentPlanId {
   for (const [planId, plan] of Object.entries(paymentPlans)) {
-    if (plan.getPaymentProcessorPlanId() === paymentProcessorUserId) {
+    if (plan.getPaymentProcessorPlanId() === paymentProcessorPlanId) {
       return planId as PaymentPlanId;
     }
   }
 
-  throw new Error(`Unknown payment processor ID: ${paymentProcessorUserId}`);
+  throw new Error(`Unknown payment processor plan ID: ${paymentProcessorPlanId}`);
 }
