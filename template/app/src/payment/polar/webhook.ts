@@ -39,7 +39,11 @@ export const polarWebhook: PaymentsWebhook = async (
 ) => {
   const prismaUserDelegate = context.entities.User;
   try {
-    const event = constructPolarEvent(request);
+    const event = validateEvent(
+      request.body,
+      request.headers as Record<string, string>,
+      requireNodeEnvVar("POLAR_WEBHOOK_SECRET"),
+    );
 
     switch (event.type) {
       case "order.paid":
@@ -75,18 +79,6 @@ export const polarWebhook: PaymentsWebhook = async (
     }
   }
 };
-
-function constructPolarEvent(
-  request: express.Request,
-): ReturnType<typeof validateEvent> {
-  const polarWebhookSecret = requireNodeEnvVar("POLAR_WEBHOOK_SECRET");
-
-  return validateEvent(
-    request.body,
-    request.headers as Record<string, string>,
-    polarWebhookSecret,
-  );
-}
 
 async function handleOrderPaid(
   { data: order }: WebhookOrderPaidPayload,
@@ -128,20 +120,20 @@ async function handleSubscriptionUpdated(
   { data: subscription }: WebhookSubscriptionUpdatedPayload,
   userDelegate: PrismaClient["user"],
 ): Promise<void> {
+  const newSubscriptionStatus = getOpenSaasSubscriptionStatus(subscription);
+  if (!newSubscriptionStatus) {
+    return;
+  }
+
   const paymentPlanId = getPaymentPlanIdByPaymentProcessorPlanId(
     subscription.productId,
   );
-  let subscriptionStatus = getOpenSaasSubscriptionStatus(subscription);
-
-  if (!subscriptionStatus) {
-    return;
-  }
 
   await updateUserSubscription(
     {
       paymentProcessorUserId: subscription.customer.id,
-      subscriptionStatus,
-      paymentPlanId: paymentPlanId,
+      subscriptionStatus: newSubscriptionStatus,
+      paymentPlanId,
     },
     userDelegate,
   );
@@ -150,7 +142,7 @@ async function handleSubscriptionUpdated(
 function getOpenSaasSubscriptionStatus(
   subscription: Subscription,
 ): OpenSaasSubscriptionStatus | undefined {
-  const polarToOpenSaasSubscriptionStatusMap: Record<
+  const polarToOpenSaasSubscriptionStatus: Record<
     SubscriptionStatus,
     OpenSaasSubscriptionStatus | undefined
   > = {
@@ -164,7 +156,7 @@ function getOpenSaasSubscriptionStatus(
   };
 
   const subscriptionStatus =
-    polarToOpenSaasSubscriptionStatusMap[subscription.status];
+    polarToOpenSaasSubscriptionStatus[subscription.status];
 
   if (
     subscriptionStatus === OpenSaasSubscriptionStatus.Active &&
