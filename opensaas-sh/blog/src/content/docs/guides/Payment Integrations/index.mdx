@@ -34,7 +34,7 @@ export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
 ```
 
 At this point, you can delete:
-- The unused payment processor code within the `/src/payment/<unused-provider>` directory.
+- The unused payment processor code within the `/src/payment/<unused-provider>` directories.
 - Any unused environment variables from `.env.server` (they will be prefixed with the name of the provider your are not using):
   - E.g. `STRIPE_API_KEY`, `LEMONSQUEEZY_API_KEY`, `POLAR_ORGANIZATION_ACCESS_TOKEN`.
 - Make sure to also uninstall the unused dependencies:

@@ -178,7 +178,7 @@ To make sure your app is consistent with your Stripe account, here are some step
 4. Select the events you want to listen to. These should be the same events you're consuming in your webhook which are handled in [`src/payment/stripe/webhook.ts`](https://github.com/wasp-lang/open-saas/blob/main/template/app/src/payment/stripe/webhook.ts):
    <Image src={stripeSigningSecret} alt="signing secret" loading="lazy" />
 5. After that, go to the webhook you just created and `reveal` the new signing secret.
-6. Add this secret to your deployed server's `STRIPE_WEBHOOK_SECRET=` environment variable. If you've deployed to Fly.io, you can do that easily with the following command:
+6. Add this secret to your deployed server's `STRIPE_WEBHOOK_SECRET` environment variable. If you've deployed to Fly.io, you can do that easily with the following command:
    ```sh
    wasp deploy fly cmd --context server secrets set STRIPE_WEBHOOK_SECRET=whsec_...
    ```
@@ -188,38 +188,39 @@ To make sure your app is consistent with your Stripe account, here are some step
 To set up your Lemon Squeezy webhook, you'll need the URL of you newly deployed server + `/payments-webhook`, e.g. `https://open-saas-wasp-sh-server.fly.dev/payments-webhook`. 
 
 With the webhook url ready, go to your [Lemon Squeezy Webhooks Dashboard](https://app.lemonsqueezy.com/settings/webhooks):
-- Click the `+` button.
-- Add the webhook forwarding url to the `Callback URL` section.
-- Give your webhook a signing secret (a long, random string).
-- Add this signing secret to your server's production environment variables under `LEMONSQUEEZY_WEBHOOK_SECRET=`.
-- Make sure to select at least the following updates to be sent:
-  - `order_created`
-  - `subscription_created`
-  - `subscription_updated`
-  - `subscription_cancelled`
-- Click `save`.
+1. Click the `+` button.
+2. Add the webhook forwarding url to the `Callback URL` section.
+3. Give your webhook a signing secret (a long, random string).
+4. Add this signing secret to your server's production environment variables under `LEMONSQUEEZY_WEBHOOK_SECRET`.
+5. Make sure to select at least the following updates to be sent:
+   - `order_created`
+   - `subscription_created`
+   - `subscription_updated`
+   - `subscription_cancelled`
+6. Click `save`.
 
 ### Setting up your Production Polar Webhook
 
 To set up your Polar webhook, you'll need the URL of your newly deployed server + `/payments-webhook`, e.g. `https://open-saas-wasp-sh-server.fly.dev/payments-webhook`. 
 
-With the webhook URL ready, go to `Settings` > `Webhooks` in your [Polar Dashboard](https://polar.sh/dashboard):
-- Click the `Add Endpoint` button.
-- Paste the webhook forwarding URL in the `URL` field.
-- Set the `Format` to `"Raw"`.
-- Select at least the following events to be sent:
-  - `order.paid`
-  - `subscription.updated`
-- Click `Save`.
-- Copy the generated webhook secret (a long, random string starting with `polar_whs_`).
-- Add this signing secret to your server's production environment variables under `POLAR_WEBHOOK_SECRET=`.
+With the webhook URL ready, in your [Polar Dashboard](https://polar.sh/dashboard):
+1. Navigate to `Settings > Webhooks`.
+2. Click the `Add Endpoint` button.
+3. Paste the webhook forwarding URL in the `URL` field.
+4. Set the `Format` to `"Raw"`.
+5. Select at least the following events to be sent:
+   - `order.paid`
+   - `subscription.updated`
+6. Click `Save`.
+7. Copy the generated webhook secret (a long, random string starting with `polar_whs_`).
+8. Add this signing secret to your server's production environment variables under `POLAR_WEBHOOK_SECRET`.
 
 ## Deploying your Blog
 
 Deploying your Astro Starlight blog is a bit different than deploying your SaaS app. As an example, we will show you how to deploy your blog for free to Netlify. You will need a Netlify account and [Netlify CLI](https://docs.netlify.com/cli/get-started/) installed to follow these instructions.
 
 Make sure you are logged in with Netlify CLI:
-- You can check if you are logged in with `netlify status`, 
+- You can check if you are logged in with `netlify status`.
 - You can log in with `netlify login`.
 
 Position yourself in the `blog` directory and run the following command:

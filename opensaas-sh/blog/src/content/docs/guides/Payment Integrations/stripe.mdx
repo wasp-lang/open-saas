@@ -26,7 +26,7 @@ If you're finding this template and its guides useful, consider giving us [a sta
 
 Once you've created your account, you'll need to get your test API keys. You can do that by navigating to [https://dashboard.stripe.com/test/apikeys](https://dashboard.stripe.com/test/apikeys) or by going to the [Stripe Dashboard](https://dashboard.stripe.com/test/dashboard) and clicking on the `Developers`:
 1. Click on the `Reveal test key token` button and copy the `Secret key`.
-2. Paste it in your `.env.server` file under `STRIPE_API_KEY=`.
+2. Paste it in your `.env.server` file under `STRIPE_API_KEY`.
 
 <Image src={testApiKeys} alt="test api keys" loading="lazy" />
 
@@ -86,18 +86,6 @@ stripe login
 If you're seeing errors, consider appending `sudo` to the stripe commands.
 See this [GitHuh issue](https://github.com/stripe/stripe-cli/issues/933) for more details.
 :::
-{/* 
-```sh
-stripe listen --forward-to localhost:3001/payments-webhook
-```
-
-You should see a message like this:
-
-```sh
-> Ready! You are using Stripe API Version [2023-08-16]. Your webhook signing secret is whsec_8a... (^C to quit)
-```
-
-Copy this secret to your `.env.server` file under `STRIPE_WEBHOOK_SECRET=`. */}
 
 ### Testing Webhooks via the Stripe CLI
 
