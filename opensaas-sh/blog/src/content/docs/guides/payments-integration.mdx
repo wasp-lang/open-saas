@@ -4,20 +4,20 @@ banner:
   content: |
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
 ---
-import { Image } from 'astro:assets';
-import testApiKeys from '@assets/stripe/api-keys.png';
-import testProduct from '@assets/stripe/test-product.png';
-import priceIds from '@assets/stripe/price-ids.png';
-import switchPlans from '@assets/stripe/switch-plans.png';
-import dbStudio from '@assets/stripe/db-studio.png';
 import addProduct from '@assets/lemon-squeezy/add-product.png';
 import addVariant from '@assets/lemon-squeezy/add-variant.png';
-import variantId from '@assets/lemon-squeezy/variant-id.png';
-import subscriptionVariantIds from '@assets/lemon-squeezy/subscription-variant-ids.png';
 import ngrok from '@assets/lemon-squeezy/ngrok.png';
 import storeId from '@assets/lemon-squeezy/store-id.png';
+import subscriptionVariantIds from '@assets/lemon-squeezy/subscription-variant-ids.png';
+import variantId from '@assets/lemon-squeezy/variant-id.png';
 import polarUserTable from '@assets/polar/user-table.png';
 import polarWebhookLogs from '@assets/polar/webhook-log.png';
+import testApiKeys from '@assets/stripe/api-keys.png';
+import dbStudio from '@assets/stripe/db-studio.png';
+import priceIds from '@assets/stripe/price-ids.png';
+import switchPlans from '@assets/stripe/switch-plans.png';
+import testProduct from '@assets/stripe/test-product.png';
+import { Image } from 'astro:assets';
 
 This guide will show you how to set up Payments for testing and local development with the following payment processors:
 - Stripe
@@ -32,7 +32,7 @@ Polar is an open-source [Merchant of Record](https://docs.polar.sh/merchant-of-r
 
 ## Important First Steps
 
-First, go to `/src/payment/paymentProcessor.ts` and choose which payment processor you'd like to use, e.g. Stripe, Lemon Squeezy, or Polar:
+First, go to `/src/payment/paymentProcessor.ts` and choose which payment processor you'd like to use: Stripe, Lemon Squeezy, or Polar:
 
 ```ts title="src/payment/paymentProcessor.ts" ins={6, 8, 10}
 import { stripePaymentProcessor } from './stripe/paymentProcessor';
@@ -48,24 +48,24 @@ export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
 ```
 
 At this point, you can delete:
-- the unused payment processor code within the `/src/payment/<unused-provider>` directory, 
-- any unused environment variables from `.env.server` (they will be prefixed with the name of the provider your are not using):
-  - e.g. `STRIPE_API_KEY`, `LEMONSQUEEZY_API_KEY`, `POLAR_ACCESS_TOKEN`
+- The unused payment processor code within the `/src/payment/<unused-provider>` directory.
+- Any unused environment variables from `.env.server` (they will be prefixed with the name of the provider your are not using):
+  - E.g. `STRIPE_API_KEY`, `LEMONSQUEEZY_API_KEY`, `POLAR_ACCESS_TOKEN`.
 - Make sure to also uninstall the unused dependencies:
-  - If using Stripe
+  - If using Stripe:
     ```sh
     npm uninstall @lemonsqueezy/lemonsqueezy.js @polar-sh/sdk
     ```
-  - If using Lemon Squeezy
+  - If using Lemon Squeezy:
     ```sh
     npm uninstall stripe @polar-sh/sdk
     ```
-  - If using Polar
+  - If using Polar:
     ```sh
     npm uninstall @lemonsqueezy/lemonsqueezy.js stripe
     ```
 - Remove any unused fields from the `User` model in the `schema.prisma` file if they exist:
-  - e.g. `lemonSqueezyCustomerPortalUrl`
+  - E.g. `lemonSqueezyCustomerPortalUrl`.
 
 Now your code is ready to go with your preferred payment processor and it's time to configure your payment processor's API keys, products, and other settings.
 
@@ -87,16 +87,16 @@ If you're finding this template and its guides useful, consider giving us [a sta
 
 ### Get your test Stripe API Keys
 
-Once you've created your account, you'll need to get your test API keys. You can do that by navigating to [https://dashboard.stripe.com/test/apikeys](https://dashboard.stripe.com/test/apikeys) or by going to the [Stripe Dashboard](https://dashboard.stripe.com/test/dashboard) and clicking on the `Developers`.
+Once you've created your account, you'll need to get your test API keys. You can do that by navigating to [https://dashboard.stripe.com/test/apikeys](https://dashboard.stripe.com/test/apikeys) or by going to the [Stripe Dashboard](https://dashboard.stripe.com/test/dashboard) and clicking on the `Developers`:
 
 <Image src={testApiKeys} alt="test api keys" loading="lazy" />
 
 - Click on the `Reveal test key token` button and copy the `Secret key`.
-- Paste it in your `.env.server` file under `STRIPE_API_KEY=`
+- Paste it in your `.env.server` file under `STRIPE_API_KEY=`.
 
 ### Create Test Products
 
-To create a test product, go to the test products url [https://dashboard.stripe.com/test/products](https://dashboard.stripe.com/test/products), or after navigating to your dashboard, click the `test mode` toggle.
+To create a test product, go to the test products url [https://dashboard.stripe.com/test/products](https://dashboard.stripe.com/test/products), or after navigating to your dashboard, click the `test mode` toggle:
 
 <Image src={testProduct} alt="test product" loading="lazy" />
 
@@ -110,14 +110,14 @@ To create a test product, go to the test products url [https://dashboard.stripe.
 <Image src={priceIds} alt="price ids" loading="lazy" />
 
 - After you save the product, you'll be directed to the product page. 
-- Copy the price IDs and paste them in the `.env.server` file
+- Copy the price IDs and paste them in the `.env.server` file.
   - We've set you up with two example subscription product environment variables, `PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID=` and `PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID=`.
   - As well as a one-time payment product/credits-based environment variable, `PAYMENTS_CREDITS_10_PLAN_ID=`.
-- Note that if you change the names of the price IDs, you'll need to update your server code to match these names as well
+- Note that if you change the names of the price IDs, you'll need to update your server code to match these names as well.
 
 ### Create a Test Customer
 
-You can create a test customer in the [Stripe Dashboard](https://dashboard.stripe.com/test/customers).
+You can create a test customer in the [Stripe Dashboard](https://dashboard.stripe.com/test/customers):
 
 - Click on the `Add a customer` button and fill in the relevant information for your test customer.
 
@@ -171,17 +171,17 @@ You should see a message like this:
 > Ready! You are using Stripe API Version [2023-08-16]. Your webhook signing secret is whsec_8a... (^C to quit)
 ```
 
-copy this secret to your `.env.server` file under `STRIPE_WEBHOOK_SECRET=`.
+Copy this secret to your `.env.server` file under `STRIPE_WEBHOOK_SECRET=`.
 
 ### Testing Webhooks via the Stripe CLI
 
-- In a new terminal window, run the following command:
+In a new terminal window, run the following command:
 
 ```sh
 stripe login
 ```
 
-- start the Stripe CLI webhook forwarding on port 3001 where your Node server is running. 
+Start the Stripe CLI webhook forwarding on port 3001 where your Node server is running:
 
 ```sh
 stripe listen --forward-to localhost:3001/payments-webhook
@@ -192,9 +192,9 @@ In older versions of this template, the webhook URL was `http://localhost:3001/s
 If you're using an older version, **make sure to use the url that matches the webhook url in your `main.wasp` file payemnts API definition.**
 :::
 
-remember to copy and paste the outputted webhook signing secret (`whsec_...`) into your `.env.server` file under `STRIPE_WEBHOOK_SECRET=` if you haven't already.
+Remember to copy and paste the outputted webhook signing secret (`whsec_...`) into your `.env.server` file under `STRIPE_WEBHOOK_SECRET=` if you haven't already.
 
-- In another terminal window, trigger a test event:
+In another terminal window, trigger a test event:
 
 ```sh
 stripe trigger payment_intent.succeeded
@@ -227,18 +227,15 @@ You can then test the payment flow via the client by doing the following:
 
 - Click on a Buy button on the for any of the products on the homepage. You should be redirected to the checkout page.
 - Fill in the form with the following test credit card number `4242 4242 4242 4242` and any future date for the expiration date and any 3 digits for the CVC.
-
 - Click on the "Pay" button. You should be redirected to the success page.
-
-- Check your terminal window for status messages and logs
-
+- Check your terminal window for status messages and logs.
 - You can also check your Database via the DB Studio to see if the user entity has been updated by running:
 
-```sh
-wasp db studio
-```
+  ```sh
+  wasp db studio
+  ```
 
-<Image src={dbStudio} alt="db studio" loading="lazy" />
+  <Image src={dbStudio} alt="db studio" loading="lazy" />
 
 - Navigate to `localhost:5555` and click on the `users` table. You should see the `subscriptionStatus` is `active` for the user that just made the purchase.
 
@@ -260,35 +257,36 @@ If you're finding this template and its guides useful, consider giving us [a sta
 
 ### Get your test Lemon Squeezy API Keys
 
-Once you've created your account, you'll need to get your test API keys. You can do that by navigating to [https://app.lemonsqueezy.com/settings/api](https://app.lemonsqueezy.com/settings/api) and creating a new API key.
+Once you've created your account, you'll need to get your test API keys. You can do that by navigating to [https://app.lemonsqueezy.com/settings/api](https://app.lemonsqueezy.com/settings/api) and creating a new API key:
 
-- Click on the `+` button
-- Give your API key a name
-- Copy and paste it in your `.env.server` file under `LEMONSQUEEZY_API_KEY=`
+- Click on the `+` button.
+- Give your API key a name.
+- Copy and paste it in your `.env.server` file under `LEMONSQUEEZY_API_KEY=`.
 
 ### Get your Lemon Squeezy Store ID
 
-<Image src={storeId} alt="store id" loading="lazy" />
 
 To get your store ID, go to the [Lemon Squeezy Dashboard](https://app.lemonsqueezy.com/settings/stores) and copy the `Store ID` from the top right corner.
 
-Copy and paste this number in your `.env.server` file under `LEMONSQUEEZY_STORE_ID=`
+<Image src={storeId} alt="store id" loading="lazy" />
+
+Copy and paste this number in your `.env.server` file under `LEMONSQUEEZY_STORE_ID=`.
 
 ### Create Test Products
 
-To create a test product, go to the test products url [https://app.lemonsqueezy.com/products](https://app.lemonsqueezy.com/products).
+To create a test product, go to the test products url [https://app.lemonsqueezy.com/products](https://app.lemonsqueezy.com/products):
 
 - Click on the `+ New Product` button and fill in the relevant information for your product. 
 - Fill in the general information.
 - For pricing, select the type of product you'd like to create, e.g. `Subscription` for a recurring monthly payment product or  `Single Payment` for credits-based product.
-<Image src={addProduct} alt="add product" loading="lazy" />
+  <Image src={addProduct} alt="add product" loading="lazy" />
 - Make sure you select `Software as a service (SaaS)` as the Tax category type.
 - If you want to add different price tiers for `Subscription` products, click on `add variant` under the `variants` tab. Here you can input the name of the variant (e.g. "Hobby", "Pro"), and that variant's price.
-<Image src={addVariant} alt="add variant" loading="lazy" />
+  <Image src={addVariant} alt="add variant" loading="lazy" />
 - For a product with no variants, on the product page, click the `...` menu button and select `Copy variant ID`
-<Image src={variantId} alt="variant id" loading="lazy" />
+  <Image src={variantId} alt="variant id" loading="lazy" />
 - For a product with variants, on the product page, click on the product, go to the variants tab and select `Copy ID` for each variant.
-<Image src={subscriptionVariantIds} alt="subscription variant ids" loading="lazy" />
+  <Image src={subscriptionVariantIds} alt="subscription variant ids" loading="lazy" />
 - Paste these IDs in the `.env.server` file:
   - We've set you up with two example subscription product environment variables, `PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID=` and `PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID=`.
   - As well as a one-time payment product/credits-based environment variable, `PAYMENTS_CREDITS__10_PLAN_ID=`.
@@ -314,16 +312,16 @@ https://89e5-2003-c7-153c-72a5-f837.ngrok-free.app/payments-webhook
 ```
 
 Now go to your [Lemon Squeezy Webhooks Dashboard](https://app.lemonsqueezy.com/settings/webhooks):
-- click the `+` button.
-- add the newly created webhook forwarding url to the `Callback URL` section.
-- give your webhook a signing secret (a long, random string).
-- copy and paste this same signing secret into your `.env.server` file under `LEMONSQUEEZY_WEBHOOK_SECRET=`
-- make sure to select at least the following updates to be sent:
-  - order_created
-  - subscription_created
-  - subscription_updated
-  - subscription_cancelled
-- click `save`
+- Click the `+` button.
+- Add the newly created webhook forwarding url to the `Callback URL` section.
+- Give your webhook a signing secret (a long, random string).
+- Copy and paste this same signing secret into your `.env.server` file under `LEMONSQUEEZY_WEBHOOK_SECRET=`.
+- Make sure to select at least the following updates to be sent:
+  - `order_created`
+  - `subscription_created`
+  - `subscription_updated`
+  - `subscription_cancelled`
+- Click `save`.
 
 You're now ready to start consuming Lemon Squeezy webhook events in local development.
 
@@ -341,7 +339,7 @@ If you're finding this template and its guides useful, consider giving us [a sta
 
 ### Enable Sandbox Mode
 
-For local development and testing, you'll want to use Polar's sandbox mode. The Polar sandbox is fully isolated, so there are separate URLs for the [sandbox dashboard](https://sandbox.polar.sh/dashboard) and [live dashboard](https://polar.sh/dashboard), each with independent products, sales, access tokens, etc. 
+For local development and testing, you'll want to use Polar's sandbox mode. The Polar sandbox is fully isolated, so there are separate URLs for the [sandbox dashboard](https://sandbox.polar.sh/dashboard) and [live dashboard](https://polar.sh/dashboard), each with independent account, products, sales, access tokens, etc. 
 
 Add the following to your `.env.server` file:
 
@@ -357,21 +355,21 @@ When you're ready to go live, change this to `false`.
 
 Once you've created your account, you'll need to get your API access token. You can do that by navigating to the `Developers` section under your dashboard settings and creating a new personal access token:
 
-- Click on the `New Token` button to create a new token
-- Give your token a name (e.g., "Open SaaS Development")
-- Copy the generated token and paste it in your `.env.server` file, e.g. `POLAR_ACCESS_TOKEN=polar_oat_...`
+- Click on the `New Token` button to create a new token.
+- Give your token a name (e.g., "Open SaaS Development").
+- Copy the generated token and paste it in your `.env.server` file, e.g. `POLAR_ACCESS_TOKEN=polar_oat_...`.
 
 ### Create Test Products
 
 To create test products in Polar, go to the `Products` section in your Polar dashboard:
 
-- Click on the `New Product` button to create a new product
+- Click on the `New Product` button to create a new product.
 - Fill in the product details:
-  - **Name**: e.g., "Hobby Plan", "Pro Plan", or "10 Credits"
-  - **Description**: Brief description of what the product includes
-  - **Pricing**: Select "Monthly" or "Yearly" for recurring plans or "One-time purchase" for credits, then configure the desired pricing type
-- Configure any remaining optional fields, e.g. **Media**, **Checkout Fields**, **Metadata**, etc
-- Click `Create Product`
+  - **Name**: e.g., "Hobby Plan", "Pro Plan", or "10 Credits".
+  - **Description**: Brief description of what the product includes.
+  - **Pricing**: Select "Monthly" or "Yearly" for recurring plans or "One-time purchase" for credits, then configure the desired pricing type.
+- Configure any remaining optional fields, e.g. **Media**, **Checkout Fields**, **Metadata**, etc.
+- Click `Create Product`.
 
 After creating each product, you'll need to copy the Product ID from the product page and add it to your `.env.server` file:
 
@@ -408,18 +406,18 @@ https://89e5-2003-c7-153c-72a5-f837.ngrok-free.app/payments-webhook
 Next, configure the webhook in your Polar dashboard:
 
 - Go to `Settings > Webhooks` page.
-- Click `Add Endpoint` to create a new endpoint
+- Click `Add Endpoint` to create a new endpoint.
 - In the URL field, paste your `ngrok` forwarding address with `/payments-webhook` appended (for example: `https://abc123.ngrok-free.app/payments-webhook`).
-- Set the `Format` to `"Raw"`
+- Set the `Format` to `"Raw"`.
 - Select the following events to listen for:
   - `order.paid`
   - `subscription.updated`
-- Click `Save`
+- Click `Save`.
 - Copy the generated webhook secret and add it to your `.env.server` file:
 
-```ini title=".env.server"
-POLAR_WEBHOOK_SECRET=polar_whs_...
-```
+  ```ini title=".env.server"
+  POLAR_WEBHOOK_SECRET=polar_whs_...
+  ```
 
 ### Testing Payments via the Local Application
 
@@ -427,15 +425,17 @@ Make sure that your **`ngrok` tunnel is running** and that the webhook is config
 
 You can then test the payment flow:
 
-- Click a Buy button for any product on the homepage
-- You should be redirected to Polar's checkout page
-- Fill in the checkout form with [test payment information](https://docs.polar.sh/integrate/sandbox#testing-payments)
-- Complete the payment
-- You should be redirected back to your success page
+- Click a Buy button for any product on the homepage.
+- You should be redirected to Polar's checkout page.
+- Fill in the checkout form with [test payment information](https://docs.polar.sh/integrate/sandbox#testing-payments).
+- Complete the payment.
+- You should be redirected back to the checkout success page.
 
-Check the Polar dashboard for webhook event logs and verify the user's subscription status in your database:
+Check the Polar dashboard for webhook event logs:
 
 <Image src={polarWebhookLogs} alt="How to check webhook logs in Polar dashboard" loading="lazy" />
+
+And verify the user's subscription status in your database:
 
 ```sh
 wasp db studio
