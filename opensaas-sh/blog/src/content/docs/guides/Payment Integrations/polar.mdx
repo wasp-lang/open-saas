@@ -1,0 +1,143 @@
+---
+title: Polar
+banner:
+  content: |
+    Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
+---
+import ngrok from '@assets/ngrok.png';
+import polarUserTable from '@assets/polar/user-table.png';
+import polarWebhookLogs from '@assets/polar/webhook-log.png';
+import { Image } from 'astro:assets';
+
+First, make sure you've defined your payment processor in `src/payment/paymentProcessor.ts`, as described in the [important first steps](#important-first-steps).
+
+Next, you'll need to create a Polar account in the sandbox mode. You can do that [here](https://sandbox.polar.sh/).
+
+:::tip[Star our Repo on GitHub! 🌟]
+We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
+
+If you're finding this template and its guides useful, consider giving us [a star on GitHub](https://github.com/wasp-lang/wasp)
+:::
+
+### Sandbox and Production Mode
+
+Polar features two separate environemnts: [sandbox](https://sandbox.polar.sh/dashboard) and [production](https://polar.sh/dashboard).
+They are fully isolated from each other, which means that you need to create seperate organizations for each of them. They also feature indepdendant products, sales, access tokens, etc.
+
+For local development and testing, you'll want to use Polar's sandbox mode. 
+To enable sandbox mode, make sure that `POLAR_SANDBOX_MODE` is set to `true` in your `.env.server` file:
+
+```ini title=".env.server"
+POLAR_SANDBOX_MODE=true
+```
+
+When you're ready to go live, make sure this is set to `false`.
+
+### Create Polar Organization Access Token
+
+Once you've created your account, you'll need to get your organization access token. 
+You can do that by:
+1. Navigating to the `Developers` section under dashboard `Settings > General`.
+1. Click on the `New Token` button to create a new token.
+2. Give your token a name (e.g., "Open SaaS Development").
+3. Select an expiration date. `No expiration` is fine for sandbox mode, but discouraged for live mode.
+4. Select the minimal scope necessary:
+   - `checkouts:write`
+   - `customer_sessions:write`
+   - `customers:read`
+   - `customers:write`
+   - `orders:read`
+5. Copy the generated token and paste it in your `.env.server` file:
+   ```ini title=".env.server"
+   POLAR_ORGANIZATION_ACCESS_TOKEN=polar_oat_...
+   ```
+
+### Create Products
+
+To create Polar products, in your Polar dashboard:
+1. Navigate to `Prodcuts` section.
+2. Click on the `+ New Product` button to create a new product.
+3. Fill in the product details:
+   - **Name**: e.g., "Hobby Plan", "Pro Plan", or "10 Credits".
+   - **Description**: Brief description of what the product includes.
+   - **Pricing**: Select "Recurring subscription" for recurring plans or "One-time purchase" for credits, then configure the desired pricing.
+4. Configure any remaining optional fields, e.g. **Media**, **Checkout Fields**, **Metadata**, etc.
+5. Click `Create Product`.
+
+After creating each product, you'll need to copy the Product ID from the product page and add it to your `.env.server` file. Tap the `⠇` icon in the top-right corner and select `Copy Product ID`. Open SaaS template features a preset of two different subscriptions ("Hobby" and "Pro") and one one-time pruchase ("Credits 10"):
+
+```ini title=".env.server"
+PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID=<your-hobby-product-id>
+PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID=<your-pro-product-id>
+PAYMENTS_CREDITS_10_PLAN_ID=<your-credits-product-id>
+```
+
+Note that if you change the names of the price IDs, you'll need to update your server code to match these names as well.
+
+### Create and Use the Polar Webhook in Local Development
+
+Polar notifies your Wasp app about events through a webhook (for example, when a payment succeeds). During development, you need to expose your locally running Wasp server (started with `wasp start`) to the internet. Wasp server runs on port 3001 by default, so you can, for example, run `ngrok` on the port 3001 to expose your server to the internet. `ngrok` will generate a public URL that you can give to Polar.
+
+To do this, first make sure you have installed [`ngrok`](https://ngrok.com/docs/getting-started/).
+
+Once `ngrok` is installed and your Wasp app is running, run:
+
+```sh
+ngrok http 3001
+```
+
+<Image src={ngrok} alt="ngrok" loading="lazy" />
+
+`ngrok` will display a forwarding address. Copy this address and append `/payments-webhook` to it. It should look something like this: 
+
+```sh title="Callback URL"
+https://89e5-2003-c7-153c-72a5-f837.ngrok-free.app/payments-webhook
+```
+
+Next, configure the webhook in your Polar dashboard:
+1. Go to `Settings > Webhooks` page.
+2. Click `Add Endpoint` to create a new endpoint.
+3. In the URL field, paste your `ngrok` forwarding address with `/payments-webhook` appended (for example: `https://abc123.ngrok-free.app/payments-webhook`).
+4. Set the `Format` to `"Raw"`.
+5. Select the following events to listen for:
+   - `order.paid`
+   - `subscription.updated`
+6. Click `Save`.
+7. Copy the generated webhook secret and add it to your `.env.server` file:
+   ```ini title=".env.server"
+   POLAR_WEBHOOK_SECRET=polar_whs_...
+   ```
+
+### Testing Payments in Local Development
+
+Before testing payments, make sure that you:
+- Created and set your `POLAR_ORGANIZATION_ACCESS_TOKEN` in `.env.server`.
+- Created your products and set their `<NAME>_PLAN_ID` in `.env.server`.
+- Configured webhook and set `POLAR_WEBHOOK_SECRET` in `.env.server`.
+- Your `ngrok` tunnel is running.
+
+You can then test the payment flow:
+
+1. Click a Buy button for any product on the homepage.
+2. You should be redirected to Polar's checkout page.
+3. Fill in the checkout form with [test payment information](https://docs.polar.sh/integrate/sandbox#testing-payments).
+4. Complete the payment.
+5. You should be redirected back to the checkout success page.
+
+Check the Polar dashboard for webhook event logs:
+
+<Image src={polarWebhookLogs} alt="How to check webhook logs in Polar dashboard" loading="lazy" />
+
+And verify the user's subscription status in your database:
+
+```sh
+wasp db studio
+```
+
+Navigate to `localhost:5555` and check the `User` table to confirm the `subscriptionStatus` is `active` for the user who made the purchase.
+
+<Image src={polarUserTable} alt="User table showing updated user" loading="lazy" />
+
+:::note[Polar Test Cards]
+Polar uses Stripe's test card numbers for development. Check their [testing documentation](https://docs.stripe.com/testing#cards) for further information.
+:::
