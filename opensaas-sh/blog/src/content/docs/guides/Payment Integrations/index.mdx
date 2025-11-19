@@ -4,6 +4,7 @@ banner:
   content: |
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
 ---
+import { TabItem, Tabs } from '@astrojs/starlight/components';
 
 This guide will show you how to set up Payments for testing and local development with the following payment processors:
 - Stripe
@@ -18,38 +19,70 @@ Polar is an open-source [Merchant of Record](https://docs.polar.sh/merchant-of-r
 
 ## Important First Steps
 
-First, go to `/src/payment/paymentProcessor.ts` and choose which payment processor you'd like to use: Stripe, Lemon Squeezy, or Polar:
+First, go to `/src/payment/paymentProcessor.ts` and choose which payment processor you'd like to use:
 
-```ts title="src/payment/paymentProcessor.ts" ins={6, 8, 10}
-import { stripePaymentProcessor } from './stripe/paymentProcessor';
-import { lemonSqueezyPaymentProcessor } from './lemonSqueezy/paymentProcessor';
-import { polarPaymentProcessor } from './polar/paymentProcessor';
-//...
+<Tabs syncKey="payment-provider">
+  <TabItem label="Stripe">
+    ```ts title="src/payment/paymentProcessor.ts" del={6, 7}
+    import { stripePaymentProcessor } from './stripe/paymentProcessor';
+    
+    // ...
 
-export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
-// or... 
-export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
-// or...
-export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
-```
+    export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
+    // export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
+    // export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
+    ```
+  </TabItem>
+  <TabItem label="Lemon Squeezy">
+    ```ts title="src/payment/paymentProcessor.ts" del={1, 6, 7, 8} ins={2, 9}
+    import { stripePaymentProcessor } from './stripe/paymentProcessor';
+    import { lemonSqueezyPaymentProcessor } from './lemonSqueezy/paymentProcessor';
+    
+    // ...
 
-At this point, you can delete:
+    export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
+    // export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
+    // export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
+    export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
+    ```
+  </TabItem>
+  <TabItem label="Polar">
+     ```ts title="src/payment/paymentProcessor.ts" del={1, 6, 7, 8} ins={2, 9}
+    import { stripePaymentProcessor } from './stripe/paymentProcessor';
+    import { polarPaymentProcessor } from './polar/paymentProcessor';
+    
+    // ...
+
+    export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
+    // export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
+    // export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
+    export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
+    ```
+</TabItem>
+</Tabs>
+
+Then you can delete:
 - The unused payment processor code within the `/src/payment/<unused-provider>` directories.
 - Any unused environment variables from `.env.server` (they will be prefixed with the name of the provider your are not using):
   - E.g. `STRIPE_API_KEY`, `LEMONSQUEEZY_API_KEY`, `POLAR_ORGANIZATION_ACCESS_TOKEN`.
 - Make sure to also uninstall the unused dependencies:
-  - If using Stripe:
-    ```sh
-    npm uninstall @lemonsqueezy/lemonsqueezy.js @polar-sh/sdk
-    ```
-  - If using Lemon Squeezy:
-    ```sh
-    npm uninstall stripe @polar-sh/sdk
-    ```
-  - If using Polar:
-    ```sh
-    npm uninstall @lemonsqueezy/lemonsqueezy.js stripe
-    ```
+  <Tabs syncKey="payment-provider">
+    <TabItem label="Stripe">
+      ```sh
+      npm uninstall @lemonsqueezy/lemonsqueezy.js @polar-sh/sdk
+      ```
+    </TabItem>
+    <TabItem label="Lemon Squeezy">
+      ```sh
+      npm uninstall stripe @polar-sh/sdk
+      ```
+    </TabItem>
+    <TabItem label="Polar">
+      ```sh
+      npm uninstall @lemonsqueezy/lemonsqueezy.js stripe
+      ```
+  </TabItem>
+  </Tabs>
 - Remove any unused fields from the `User` model in the `schema.prisma` file if they exist:
   - E.g. `lemonSqueezyCustomerPortalUrl`.
 
@@ -60,7 +93,3 @@ Follow the steps for your selected processor:
 - [Stripe](stripe/)
 - [Lemon Squeezy](lemon-squeezy/)
 - [Polar](polar/)
-
-## Deploying
-
-Once you deploy your app, you can follow the same steps, just make sure that you are no longer in test/sandbox mode within the payment processor dashboard. After you've repeated the steps in live mode, add the new API keys and price/variant IDs to your environment variables in your deployed environment.
