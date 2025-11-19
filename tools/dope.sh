@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-# Set the locale to C for consistent behavior
+# Set the locale to C for consistent command behavior.
+# For example, `sort` can sort differently depending on the locale, 
+# and `diff` might change if it's doing text or binary comparison.
 # See: https://unix.stackexchange.com/questions/87745/what-does-lc-all-c-do
 export LC_ALL=C
 
