@@ -387,7 +387,7 @@ The Product ID can be acquired on the product page in your Polar dashboard. Tap 
 
 ### Create and Use the Polar Webhook in Local Development
 
-Polar notifies your Wasp app through a webhook (for example, when a payment succeeds). During development, you need to expose your locally running Wasp server (started with `wasp start`) to the internet. Because the Wasp server runs on port 3001 by default, run `ngrok` on the same port. `ngrok` will generate a public URL that you can give to Polar.
+Polar notifies your Wasp app through a webhook (for example, when a payment succeeds). During development, you need to expose your locally running Wasp server (started with `wasp start`) to the internet. Wasp server runs on port 3001 by default, so you can run for example, `ngrok` on the port 3001 to expose your server to the internet. `ngrok` will generate a public URL that you can give to Polar.
 
 To do this, first make sure you have installed [`ngrok`](https://ngrok.com/docs/getting-started/).
 
