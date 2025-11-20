@@ -103,7 +103,7 @@ By default, we have three plans: `hobby` and `pro` subscription plans, as well a
 
 You can add more plans by adding more products and price IDs to your Stripe product and updating environment variables in your `.env.server` file as well as the relevant code in your app.
 
-See the [Payments Integration Guide](/guides/payments-integration/) for more info on how to do this.
+See the [Payment Integrations Guide](/guides/payment-integrations/) for more info on how to do this.
 
 ## User Roles
 

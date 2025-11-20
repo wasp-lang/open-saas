@@ -41,13 +41,13 @@ You can do that by:
 2. Click on the `New Token` button to create a new token.
 3. Give your token a name (e.g., "Open SaaS Development").
 4. Select an expiration date. `No expiration` is fine for sandbox mode, but discouraged for production mode.
-5. Select the minimal scope necessary:
+5. Select the following scopes:
    - `checkouts:write`
    - `customer_sessions:write`
    - `customers:read`
    - `customers:write`
    - `orders:read`
-6. Copy the generated token and paste it in your `.env.server` file:
+6. Copy the generated token and add it to your `.env.server` file:
    ```ini title=".env.server"
    POLAR_ORGANIZATION_ACCESS_TOKEN=polar_oat_...
    ```
@@ -66,7 +66,7 @@ To create Polar products, in your Polar dashboard:
 
 After creating each product, you'll need to copy the `Product ID` from the `Prodcuts > Catalogue` page and add it to your `.env.server` file. Tap the `⠇` icon in the top-right corner and select `Copy Product ID`. 
 
-Open SaaS features a preset of two different subscriptions ("Hobby" and "Pro") and one one-time pruchase ("Credits 10"):
+Open SaaS comes with some example products, two subscriptions and one one-time purchase plan:
 
 ```ini title=".env.server"
 PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID=<your-hobby-product-id>
@@ -80,7 +80,7 @@ Note that if you change the names of the price IDs, you'll need to update your s
 
 Polar notifies your Wasp app about events through a webhook (for example, when a payment succeeds). During development, you need to expose your locally running Wasp server (started with `wasp start`) to the internet. Wasp server runs on port 3001 by default, so you can, for example, run `ngrok` on port 3001 to expose your server to the internet. `ngrok` will generate a public URL that you can give to Polar.
 
-To do this, first make sure you have installed [`ngrok`](https://ngrok.com/docs/getting-started/).
+First make sure you have installed [`ngrok`](https://ngrok.com/docs/getting-started/).
 
 Once `ngrok` is installed and your Wasp app is running, run:
 

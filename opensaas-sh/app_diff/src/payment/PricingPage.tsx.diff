@@ -4,7 +4,7 @@
  } from "./plans";
  
  const bestDealPaymentPlanId: PaymentPlanId = PaymentPlanId.Pro;
-+const PaymentsDocsURL = "https://docs.opensaas.sh/guides/payments-integration/";
++const PaymentsDocsURL = "https://docs.opensaas.sh/guides/payment-integrations/";
  
  interface PaymentPlanCard {
    name: string;

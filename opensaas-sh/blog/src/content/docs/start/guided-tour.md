@@ -238,7 +238,7 @@ api paymentsWebhook {
 
 Within the webhook handler, we look for specific events that the Payment Processor sends us to let us know which payment was completed and for which user. Then we update the user's subscription status in the database.
 
-To learn more about configuring the app to handle your products and payments, check out the [Payments Integration guide](/guides/payments-integration/).
+To learn more about configuring the app to handle your products and payments, check out the [Payment Integrations guide](/guides/payment-integrations/).
 
 :::tip[Star our Repo on GitHub! 🌟]
 We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
