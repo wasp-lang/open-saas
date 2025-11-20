@@ -12,7 +12,7 @@ import variantId from '@assets/lemon-squeezy/variant-id.png';
 import ngrok from '@assets/ngrok.png';
 import { Image } from 'astro:assets';
 
-First, make sure you've defined your payment processor in `src/payment/paymentProcessor.ts`, as described in the [important first steps](#important-first-steps).
+First, make sure you've defined your payment processor in `src/payment/paymentProcessor.ts`, as described in the [important first steps](/guides/payment-integrations/).
 
 Next, you'll need to create a Lemon Squeezy account in test mode. You can do that [here](https://lemonsqueezy.com).
 
@@ -61,6 +61,12 @@ Note that if you change the names of the these environment variables, you'll nee
 ### Create and Use the Lemon Squeezy Webhook in Local Development
 
 Lemon Squeezy sends messages/updates to your Wasp app via its webhook, e.g. when a payment is successful. For that to work during development, we need to expose our locally running (via `wasp start`) Wasp app and make it available online, specifically the server part of it. Since the Wasp server runs on port 3001, you should run ngrok on port 3001, which will provide you with a public URL that you can use to configure Lemon Squeezy with.
+
+
+Polar notifies your Wasp app about events through a webhook (for example, when a payment succeeds). During development, you need to expose your locally running Wasp server (started with `wasp start`) to the internet. Wasp server runs on port 3001 by default, so you can, for example, run `ngrok` on the port 3001 to expose your server to the internet. `ngrok` will generate a public URL that you can give to Polar.
+
+
+
 
 To do this, first make sure you have installed [ngrok](https://ngrok.com/docs/getting-started/).
 

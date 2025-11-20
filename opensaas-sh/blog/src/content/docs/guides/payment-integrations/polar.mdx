@@ -9,7 +9,7 @@ import polarUserTable from '@assets/polar/user-table.png';
 import polarWebhookLogs from '@assets/polar/webhook-log.png';
 import { Image } from 'astro:assets';
 
-First, make sure you've defined your payment processor in `src/payment/paymentProcessor.ts`, as described in the [important first steps](#important-first-steps).
+First, make sure you've defined your payment processor in `src/payment/paymentProcessor.ts`, as described in the [important first steps](/guides/payment-integrations/).
 
 Next, you'll need to create a Polar account in the sandbox mode. You can do that [here](https://sandbox.polar.sh/).
 
@@ -78,7 +78,7 @@ Note that if you change the names of the price IDs, you'll need to update your s
 
 ### Create and Use the Polar Webhook in Local Development
 
-Polar notifies your Wasp app about events through a webhook (for example, when a payment succeeds). During development, you need to expose your locally running Wasp server (started with `wasp start`) to the internet. Wasp server runs on port 3001 by default, so you can, for example, run `ngrok` on the port 3001 to expose your server to the internet. `ngrok` will generate a public URL that you can give to Polar.
+Polar notifies your Wasp app about events through a webhook (for example, when a payment succeeds). During development, you need to expose your locally running Wasp server (started with `wasp start`) to the internet. Wasp server runs on port 3001 by default, so you can, for example, run `ngrok` on port 3001 to expose your server to the internet. `ngrok` will generate a public URL that you can give to Polar.
 
 To do this, first make sure you have installed [`ngrok`](https://ngrok.com/docs/getting-started/).
 
