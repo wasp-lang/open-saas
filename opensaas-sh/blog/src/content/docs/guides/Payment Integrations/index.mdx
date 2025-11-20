@@ -61,7 +61,7 @@ First, go to `/src/payment/paymentProcessor.ts` and choose which payment process
 </TabItem>
 </Tabs>
 
-Then you can delete:
+Then you should delete:
 - The unused payment processor code within the `/src/payment/<unused-provider>` directories.
 - Any unused environment variables from `.env.server` (they will be prefixed with the name of the provider your are not using):
   - E.g. `STRIPE_API_KEY`, `LEMONSQUEEZY_API_KEY`, `POLAR_ORGANIZATION_ACCESS_TOKEN`.
