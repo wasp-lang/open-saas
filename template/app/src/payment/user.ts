@@ -52,7 +52,7 @@ export function updateUserSubscription(
     datePaid,
   }: UpdateUserSubscriptionArgs,
   userDelegate: PrismaClient["user"],
-) {
+): Promise<User> {
   return userDelegate.update({
     where: {
       paymentProcessorUserId,
@@ -78,7 +78,7 @@ export function updateUserCredits(
     datePaid,
   }: UpdateUserCreditsArgs,
   userDelegate: PrismaClient["user"],
-) {
+): Promise<User> {
   return userDelegate.update({
     where: {
       paymentProcessorUserId,

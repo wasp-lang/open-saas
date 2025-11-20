@@ -68,6 +68,12 @@ export function getSubscriptionPaymentPlanIds(): PaymentPlanId[] {
   );
 }
 
+/**
+ * Returns Open SaaS `PaymentPlanId` for some payment provider's plan ID.
+ * 
+ * Different payment providers track plan ID in different ways.
+ * e.g. Stripe price ID, Polar product ID...
+ */
 export function getPaymentPlanIdByPaymentProcessorPlanId(
   paymentProcessorPlanId: string,
 ): PaymentPlanId {
@@ -77,5 +83,7 @@ export function getPaymentPlanIdByPaymentProcessorPlanId(
     }
   }
 
-  throw new Error(`Unknown payment processor plan ID: ${paymentProcessorPlanId}`);
+  throw new Error(
+    `Unknown payment processor plan ID: ${paymentProcessorPlanId}`,
+  );
 }

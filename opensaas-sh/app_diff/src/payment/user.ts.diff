@@ -62,7 +62,7 @@
      subscriptionStatus,
      datePaid,
 @@ -55,7 +55,7 @@
- ) {
+ ): Promise<User> {
    return userDelegate.update({
      where: {
 -      paymentProcessorUserId,
@@ -88,7 +88,7 @@
      datePaid,
    }: UpdateUserCreditsArgs,
 @@ -81,7 +81,7 @@
- ) {
+ ): Promise<User> {
    return userDelegate.update({
      where: {
 -      paymentProcessorUserId,

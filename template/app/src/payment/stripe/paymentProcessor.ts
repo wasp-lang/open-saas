@@ -8,14 +8,14 @@ import type {
 } from "../paymentProcessor";
 import type { PaymentPlanEffect } from "../plans";
 import {
+  fetchUserPaymentProcessorUserId,
+  updateUserPaymentProcessorUserId,
+} from "../user";
+import {
   createStripeCheckoutSession,
   ensureStripeCustomer,
 } from "./checkoutUtils";
 import { stripeClient } from "./stripeClient";
-import {
-  fetchUserPaymentProcessorUserId,
-  updateUserPaymentProcessorUserId,
-} from "./user";
 import { stripeMiddlewareConfigFn, stripeWebhook } from "./webhook";
 
 export const stripePaymentProcessor: PaymentProcessor = {
@@ -29,10 +29,7 @@ export const stripePaymentProcessor: PaymentProcessor = {
     const customer = await ensureStripeCustomer(userEmail);
 
     await updateUserPaymentProcessorUserId(
-      {
-        userId,
-        paymentProcessorUserId: customer.id,
-      },
+      { userId, paymentProcessorUserId: customer.id },
       prismaUserDelegate,
     );
 
