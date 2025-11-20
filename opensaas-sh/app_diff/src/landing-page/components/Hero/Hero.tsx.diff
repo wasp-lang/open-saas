@@ -13,10 +13,10 @@
 +  const { data: user } = useAuth();
 +
 +  return (
-+    <div className="relative w-full pt-32">
++    <div className="relative w-full [overflow-x:clip] pt-12">
 +      <TopGradient />
 +      <BottomGradient />
-+      <div className="mx-auto flex max-w-7xl flex-col overflow-x-hidden lg:flex-row">
++      <div className="mx-auto flex max-w-7xl flex-col pt-20 lg:flex-row">
 +        <div className="py-24 sm:py-32">
 +          <div className="max-w-8xl px-6 lg:px-8">
 +            <div className="lg:mb-18 mx-auto max-w-3xl text-center md:text-left">

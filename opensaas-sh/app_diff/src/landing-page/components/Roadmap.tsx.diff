@@ -1,0 +1,150 @@
+--- template/app/src/landing-page/components/Roadmap.tsx
++++ opensaas-sh/app/src/landing-page/components/Roadmap.tsx
+@@ -0,0 +1,147 @@
++import type { EpicStats } from "../operations";
++import { EpicStatus } from "../operations";
++
++import { useQuery, getGithubRoadmap } from "wasp/client/operations";
++import { Loader2 } from "lucide-react";
++
++export default function Roadmap() {
++  const { data: epics, isLoading, error } = useQuery(getGithubRoadmap);
++
++  if (isLoading) {
++    return (
++      <div className="flex justify-center py-12">
++        <Loader2 className="animate-spin h-8 w-8 text-yellow-500" />
++      </div>
++    );
++  }
++
++  if (error) {
++    return (
++      <div className="text-center py-12 text-red-500">
++        Failed to load roadmap
++      </div>
++    );
++  }
++
++  if (!epics || epics.length === 0) return null;
++
++  const getStatusColor = (status: EpicStatus) => {
++    switch (status) {
++      case EpicStatus.Ideas:
++        return "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border-blue-200 dark:border-blue-800";
++      case EpicStatus.Planned:
++        return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 border-green-200 dark:border-green-800";
++      case EpicStatus.InProgress:
++        return "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800";
++      case EpicStatus.Done:
++        return "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 border-purple-200 dark:border-purple-800";
++      default:
++        return "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-700";
++    }
++  };
++
++  const getProgressBarColor = (status: EpicStatus) => {
++    switch (status) {
++      case EpicStatus.Ideas: return "bg-blue-500";
++      case EpicStatus.Planned: return "bg-green-500";
++      case EpicStatus.InProgress: return "bg-yellow-500";
++      case EpicStatus.Done: return "bg-purple-500";
++      default: return "bg-gray-500";
++    }
++  };
++
++  const getBorderColor = (status: EpicStatus) => {
++    switch (status) {
++      case EpicStatus.Ideas: return "border-blue-200 dark:border-blue-800";
++      case EpicStatus.Planned: return "border-green-200 dark:border-green-800";
++      case EpicStatus.InProgress: return "border-yellow-200 dark:border-yellow-800";
++      case EpicStatus.Done: return "border-purple-200 dark:border-purple-800";
++      default: return "border-gray-200 dark:border-gray-700";
++    }
++  };
++
++  const getHoverBorderColor = (status: EpicStatus) => {
++    switch (status) {
++      case EpicStatus.Ideas: return "hover:border-blue-400 dark:hover:border-blue-600";
++      case EpicStatus.Planned: return "hover:border-green-400 dark:hover:border-green-600";
++      case EpicStatus.InProgress: return "hover:border-yellow-400 dark:hover:border-yellow-600";
++      case EpicStatus.Done: return "hover:border-purple-400 dark:hover:border-purple-600";
++      default: return "hover:border-gray-400 dark:hover:border-gray-600";
++    }
++  };
++
++  return (
++    <div className="py-12 md:py-20" id="roadmap">
++      <div className="mx-auto max-w-7xl px-6 lg:px-8">
++        <div className="mx-auto max-w-2xl text-center mb-12">
++          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl dark:text-white">
++            The Roadmap
++          </h2>
++          <p className="mt-4 text-lg leading-8 text-gray-600 dark:text-gray-300">
++            High-level topics we are planning and working on.
++          </p>
++        </div>
++
++        <div className="grid gap-6 md:grid-cols-4">
++          {[EpicStatus.Ideas, EpicStatus.Planned, EpicStatus.InProgress, EpicStatus.Done].map((status) => {
++            const statusEpics = epics.filter((e: EpicStats) => e.status === status);
++            const borderColor = getBorderColor(status);
++            const statusColor = getStatusColor(status);
++            
++            return (
++              <div key={status} className="flex flex-col gap-4">
++                <div className={`flex items-center justify-center p-3 rounded-lg border ${borderColor} ${statusColor.split(' ')[0]} bg-opacity-20`}>
++                  <h3 className={`font-bold ${statusColor.split(' ')[1]}`}>
++                    {status}
++                  </h3>
++                  <span className="ml-2 text-xs opacity-70">({statusEpics.length})</span>
++                </div>
++                
++                <div className="flex flex-col gap-4">
++                  {statusEpics.map((epic: EpicStats) => {
++                    const progress = epic.total > 0 ? Math.round((epic.done / epic.total) * 100) : 0;
++                    const progressColor = getProgressBarColor(epic.status);
++                    const hoverBorderColor = getHoverBorderColor(epic.status);
++                    
++                    return (
++                      <a 
++                        key={epic.name} 
++                        href={epic.url}
++                        target="_blank"
++                        rel="noreferrer"
++                        className={`group flex flex-col gap-3 rounded-xl border p-5 transition-all hover:shadow-md border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50 ${hoverBorderColor} block`}
++                      >
++                        <h4 className="font-semibold text-base text-gray-900 dark:text-white leading-tight group-hover:opacity-80 transition-opacity">
++                          {epic.name}
++                        </h4>
++
++                        <div className="mt-auto pt-1">
++                          <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1.5">
++                            <span>Progress</span>
++                            <span>{progress}% ({epic.done}/{epic.total})</span>
++                          </div>
++                          <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
++                            <div 
++                              className={`h-full rounded-full transition-all duration-500 ${progressColor}`}
++                              style={{ width: `${progress}%` }}
++                            />
++                          </div>
++                        </div>
++                      </a>
++                    );
++                  })}
++                  
++                  {statusEpics.length === 0 && (
++                    <div className="text-center py-8 text-sm text-gray-400 italic border border-dashed rounded-lg dark:border-gray-800">
++                      No epics
++                    </div>
++                  )}
++                </div>
++              </div>
++            );
++          })}
++        </div>
++      </div>
++    </div>
++  );
++}

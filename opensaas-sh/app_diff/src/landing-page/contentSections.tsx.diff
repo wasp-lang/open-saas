@@ -11,7 +11,7 @@
  import kivo from "../client/static/examples/kivo.webp";
  import messync from "../client/static/examples/messync.webp";
  import microinfluencerClub from "../client/static/examples/microinfluencers.webp";
-@@ -6,161 +11,253 @@
+@@ -6,161 +11,248 @@
  import reviewradar from "../client/static/examples/reviewradar.webp";
  import scribeist from "../client/static/examples/scribeist.webp";
  import searchcraft from "../client/static/examples/searchcraft.webp";
@@ -21,11 +21,6 @@
 +import { BlogUrl, DocsUrl, GithubUrl, WaspUrl } from "../shared/common";
 +import { GridFeature } from "./components/FeaturesGrid";
  
-+export const landingPageNavigationItems: NavigationItem[] = [
-+  { name: "Features", to: "#features" },
-+  { name: "Documentation", to: DocsUrl },
-+  { name: "Blog", to: BlogUrl },
-+];
  export const features: GridFeature[] = [
    {
 -    name: "Cool Feature 1",

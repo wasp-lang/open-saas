@@ -1,0 +1,211 @@
+--- template/app/src/landing-page/operations.ts
++++ opensaas-sh/app/src/landing-page/operations.ts
+@@ -0,0 +1,208 @@
++import type { GetGithubRoadmap } from 'wasp/server/operations'
++import * as z from 'zod'
++
++const ORG_NAME = "wasp-lang"
++const PROJECT_NUMBER = 6
++
++const GithubIssueSchema = z.object({
++  title: z.string(),
++  url: z.string(),
++  number: z.number(),
++  issueType: z.object({
++    name: z.string()
++  }).nullish(),
++  subIssues: z.object({
++    totalCount: z.number(),
++    nodes: z.array(z.object({
++      state: z.string(),
++      number: z.number()
++    }))
++  }).nullish()
++})
++
++const ProjectV2ItemFieldValueSchema = z.object({
++  name: z.string().nullish(),
++  field: z.object({
++    name: z.string()
++  }).nullish()
++})
++
++const ProjectV2ItemSchema = z.object({
++  id: z.string(),
++  databaseId: z.number().nullish(),
++  fieldValues: z.object({
++    nodes: z.array(ProjectV2ItemFieldValueSchema)
++  }),
++  content: GithubIssueSchema
++})
++
++const GithubGraphQLResponseSchema = z.object({
++  data: z.object({
++    organization: z.object({
++      projectV2: z.object({
++        items: z.object({
++          nodes: z.array(ProjectV2ItemSchema)
++        }).nullish()
++      }).nullish()
++    }).nullish()
++  }).nullish(),
++  errors: z.array(z.any()).nullish()
++})
++
++export enum EpicStatus {
++  Ideas = "Ideas",
++  Planned = "Planned",
++  InProgress = "In progress",
++  Done = "Done"
++}
++
++export type EpicStats = {
++  name: string
++  total: number
++  done: number
++  status: EpicStatus
++  url: string
++}
++
++type RoadmapData = EpicStats[]
++
++let cachedData: RoadmapData | null = null
++let lastFetchTime = 0
++const CACHE_DURATION = 60 * 60 * 1000
++
++export const getGithubRoadmap: GetGithubRoadmap<void, RoadmapData> = async () => {
++  const currentTime = Date.now()
++
++  if (cachedData && currentTime - lastFetchTime < CACHE_DURATION) {
++    return cachedData
++  }
++
++  const token = process.env.GITHUB_ROADMAP_TOKEN
++  if (!token) {
++    console.warn("GITHUB_ROADMAP_TOKEN is not set")
++    return []
++  }
++
++  const query = `
++    query($org: String!, $number: Int!) {
++      organization(login: $org) {
++        projectV2(number: $number) {
++          items(first: 100) {
++            nodes {
++              id
++              databaseId
++              fieldValues(first: 50) {
++                nodes {
++                  ... on ProjectV2ItemFieldSingleSelectValue {
++                    name
++                    field { ... on ProjectV2FieldCommon { name } }
++                  }
++                }
++              }
++              content {
++                ... on Issue {
++                  title
++                  url
++                  number
++                  issueType { name }
++                  subIssues(first: 100) {
++                    totalCount
++                    nodes {
++                      state
++                      number
++                    }
++                  }
++                }
++              }
++            }
++          }
++        }
++      }
++    }
++  `
++
++  try {
++    const response = await fetch("https://api.github.com/graphql", {
++      method: "POST",
++      headers: {
++        "Content-Type": "application/json",
++        Authorization: `Bearer ${token}`,
++      },
++      body: JSON.stringify({
++        query,
++        variables: { org: ORG_NAME, number: PROJECT_NUMBER },
++      }),
++    })
++
++    const json = await response.json()
++
++    const parseResult = GithubGraphQLResponseSchema.safeParse(json)
++    if (!parseResult.success) {
++      console.error("GitHub API response validation failed:", parseResult.error)
++      return cachedData || []
++    }
++
++    const validatedResponse = parseResult.data
++
++    if (validatedResponse.errors) {
++      console.error("GitHub API Errors:", validatedResponse.errors)
++      throw new Error("GitHub API returned errors")
++    }
++
++    const nodes = validatedResponse.data?.organization?.projectV2?.items?.nodes || []
++    const statusFieldName = "Status"
++
++    const BASE_PROJECT_URL = "https://github.com/orgs/wasp-lang/projects/6/views/1?pane=issue&itemId="
++
++    const epics: EpicStats[] = nodes
++      .filter((node) => {
++        const issue = node.content
++        return issue && issue.issueType?.name === "Epic"
++      })
++      .map((node) => {
++        const issue = node.content
++
++        const statusField = node.fieldValues.nodes.find(
++          (f) => f.field?.name === statusFieldName
++        )
++        const statusName = statusField?.name || "Ideas"
++        
++        let status: EpicStatus = EpicStatus.Ideas
++        if (Object.values(EpicStatus).includes(statusName as EpicStatus)) {
++            status = statusName as EpicStatus
++        }
++
++        const subIssues = issue.subIssues?.nodes || []
++        const total = issue.subIssues?.totalCount ?? subIssues.length
++        const done = subIssues.filter((sub) => sub.state === "CLOSED").length
++
++        return {
++          name: issue.title,
++          total,
++          done,
++          status,
++          url: `${BASE_PROJECT_URL}${node.databaseId}`
++        }
++      })
++
++    const statusOrder = { 
++      [EpicStatus.InProgress]: 0, 
++      [EpicStatus.Planned]: 1, 
++      [EpicStatus.Ideas]: 2, 
++      [EpicStatus.Done]: 3 
++    }
++    
++    epics.sort((a, b) => {
++      const orderA = statusOrder[a.status] ?? 99
++      const orderB = statusOrder[b.status] ?? 99
++      return orderA - orderB
++    })
++
++    cachedData = epics
++    lastFetchTime = currentTime
++    return epics
++  } catch (error) {
++    console.error("Failed to fetch GitHub roadmap:", error)
++    return cachedData || []
++  }
++}
