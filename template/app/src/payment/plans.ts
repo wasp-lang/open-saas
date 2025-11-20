@@ -69,7 +69,7 @@ export function getSubscriptionPaymentPlanIds(): PaymentPlanId[] {
 }
 
 /**
- * Returns Open SaaS `PaymentPlanId` for some payment providers's plan ID.
+ * Returns Open SaaS `PaymentPlanId` for some payment provider's plan ID.
  * 
  * Different payment providers track plan ID in different ways.
  * e.g. Stripe price ID, Polar product ID...
