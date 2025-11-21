@@ -1,0 +1,153 @@
+---
+title: "Open SaaS — Public Development Roadmap"
+date: 2025-11-21
+tags:
+  - roadmap
+  - open-saas
+  - wasp
+  - open-source
+authors: vince
+---
+import Tweet from '../../../components/Tweet.astro';
+
+We created Open SaaS to help developers launch full-featured SaaS products faster, without drowning in boilerplate or wrestling with fragmented tooling. As an open-source project built on top of Wasp, we also wanted this starter to be collaborative and community-driven, so we believe the roadmap should be open to the community as well.
+
+This document outlines where Open SaaS is heading next, the current epics that are guiding our work, and how you can get involved.
+
+---
+
+## **Why a roadmap?**
+
+Open SaaS is becoming a beast of its own. At 13k GitHub stars, and with constant feature additions and improvements, we thought it was time to make future development more organized, transparent, and community-driven.
+
+With thousands of SaaS apps being deployed with Open SaaS, the needs of its users are also becoming more diverse. It would be impossible to address all of them, but we needed a way to track and prioritize the most important features and improvements.
+
+The roadmap is thus a great way to make sense of all the different possible directions we can go in, help focus our efforts, and make development and contributions more meaningful.
+
+## **How it works**
+
+Open SaaS currently has over 100 open GitHub issues, so it would be crazy to track them all in the roadmap.
+
+So to make things more overseeable, we decided to implement the roadmap as a GitHub project that is a collection of epics (GitHub issues with "issue type" of "Epic").
+
+No regular issues are allowed in it, only epics, of which we don't want too many. Each of these epics then has a number of subtasks which are normal Github issues.
+
+Therefore, the roadmap serves as a high-level overview of how we plan to execute on all those GitHub issues, as well as ideas of things we're thinking of planning but may not be prioritizing just yet.
+
+---
+
+## **Guiding themes**
+
+When creating epics within the roadmap, there are a few categories we're focuusing on at the mmoment. These guiding themes inform the epics we create, and help us make sure we're addressing the most important needs of our users.
+
+### **1. Real-world launch readiness**
+
+Open SaaS should not just be a polished demo. It should be something you can deploy and scale. We want to make sure Open SaaS is a production-ready platform that can be used to build real-world SaaS products.
+
+### **2. Modularity & flexibility**
+
+Auth methods, billing providers, file uploads, AI integrations, analytics, and more. We want to make sure Open SaaS is a flexible and modular platform that can be tailored to the needs of (almost) any SaaS product.
+
+### **3. AI-first developer experience**
+
+Whether you use Cursor, VSCode + Copilot, Claude, or others, Open SaaS should have top-notch code quality and be able to “explain itself” well to AI-driven coding tools, making it enjoyable to devlopm with in 2026 and beyond.
+
+We also want to provide demos and templates for AI-powered SaaS products, so you can get started building SaaS apps that leverage the newest technologies to create powerful and innovative products.
+
+### **4. Community-powered evolution**
+
+We want Open SaaS to be shaped by real feedback, real PRs, and real use cases. Roadmap ideas are only valuable when they reflect what people actually need.
+
+---
+
+## **What's in the roadmap**
+
+We just got finished with a major UI redesign, which we dubbed "Open SaaS v2.0".
+
+<Tweet id="1950117243246821770" />
+
+
+
+### **1. Payment Provider Expansion & Billing Flexibility**
+
+Today, Open SaaS supports Stripe and Lemon Squeezy. That’s great, but SaaS products vary wildly in payment needs.
+
+**Upcoming focuses:**
+
+* Polar.sh integration (merged in #461)
+* Paddle, and additional gateways (especially regional-friendly options)
+* Supporting usage-based billing and credit-based models
+* Webhook templates & type-safe billing flows
+* A richer billing dashboard (refunds, proration, invoices, receipts)
+
+---
+
+### **2. AI-First Workflows & Templates**
+
+Open SaaS already includes a simple OpenAI integration, but we’re expanding far beyond that.
+
+**Coming soon:**
+
+* Built-in support for function calling & server-side LLM tools
+* Templates for AI-powered SaaS examples (agent dashboards, support bots, automation tools, internal copilots)
+* Cursor / Claude prompt presets for smoother onboarding
+* Scaffolds for hybrid UI + server AI agents
+* Docs: “How to build an AI SaaS in a weekend”
+
+---
+
+### **3. Wasp Alignment & Core Architecture Cleanup**
+
+To keep Open SaaS future-proof, we’ll maintain tight alignment with the Wasp framework.
+
+**Efforts underway:**
+
+* Updating to the latest Wasp versions & features
+* Improving folder structure and readability
+* Reducing magic; increasing explicitness
+* Enhancing generated code for clarity in LLM-assisted workflows
+* Improving tests & stability for production deployments
+
+---
+
+## **Current Status Snapshot**
+
+
+---
+
+# **How to Participate**
+
+Open SaaS is community-driven — and we’d love your help.
+
+### ⭐ Star the repo
+
+This helps surface the project to more developers.
+
+### 🧩 File issues or feature requests
+
+Especially around real-world SaaS requirements you’re running into.
+
+### 🔧 Contribute code
+
+If you’re interested in payments, dashboarding, AI workflows, or dev-experience improvements — we’ll happily support and guide.
+
+### 🚀 Build with it
+
+The best feedback always comes from people deploying real products.
+
+### 💬 Join the conversation
+
+Chat with us on Discord and share what you’re building, what’s missing, or what’s confusing.
+
+---
+
+# **Roadmap Updates**
+
+We’ll update this roadmap alongside major releases and aim for a quarterly revision cycle.
+
+You can follow progress in the GitHub Project board:
+
+👉 **[https://github.com/orgs/wasp-lang/projects/6](https://github.com/orgs/wasp-lang/projects/6)**
+
+If a major change lands, we’ll post a blog update on **opensaas.sh** and cross-link from the Wasp blog.
+
