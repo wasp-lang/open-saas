@@ -42,8 +42,7 @@ Then you should delete:
   - Stripe: `npm uninstall stripe`
   - Polar: `npm uninstall @polar-sh/sdk`
   - Lemon Squeezy: `npm uninstall @lemonsqueezy/lemonsqueezy.js`
-- Remove any unused fields from the `User` model in the `schema.prisma` file if they exist:
-  - Lemon Squeezy: `lemonSqueezyCustomerPortalUrl`
+- If you are not using Lemon Squeezy remove the `lemonSqueezyCustomerPortalUrl` field from the `User` model in the `schema.prisma` file.
 
 Now your code is ready to go with your preferred payment processor and it's time to configure your payment processor's API keys, products, and other settings.
 
