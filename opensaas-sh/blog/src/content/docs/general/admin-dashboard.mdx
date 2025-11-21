@@ -4,9 +4,9 @@ banner:
   content: |
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
 ---
-import { Image } from 'astro:assets';
-import dbStudio from '@assets/stripe/db-studio.png';
 import adminDashboard from '@assets/admin/admin-dashboard.png';
+import dbStudio from '@assets/stripe/db-studio.png';
+import { Image } from 'astro:assets';
 
 This is a reference on how the Admin dashboard, available at `/admin`, is set up.
 
@@ -55,7 +55,7 @@ If you're finding this template and its guides useful, consider giving us [a sta
 ### Analytics Dashboard
 The Admin analytics dashboard is a single place for you to view your most important metrics and perform some admin tasks. At the moment, it pulls data from:
 
-- [Payments Processor](/guides/payments-integration/):
+- [Payment Processor](/guides/payment-integrations/):
   - total revenue
   - revenue for each day of the past week
 - [Google or Plausible](/guides/analytics/): 
@@ -85,7 +85,7 @@ job dailyStatsJob {
 ```
 For more info on Wasp's recurring background jobs, check out the [Wasp Jobs docs](https://wasp.sh/docs/advanced/jobs).
 
-For a guide on how to integrate these services so that you can view your analytics via the dashboard, check out the [Payments Integration](/guides/payments-integration/) and [Analytics guide](/guides/analytics/) of the docs.
+For a guide on how to integrate these services so that you can view your analytics via the dashboard, check out the [Payment Integrations](/guides/payment-integrations/) and [Analytics guide](/guides/analytics/) of the docs.
 
 :::note[Help us improve]
 We're always looking to improve the Admin dashboard. If you feel something is missing or could be improved, consider [opening an issue](https://github.com/wasp-lang/open-saas/issues) or [submitting a pull request](https://github.com/wasp-lang/open-saas/pulls)

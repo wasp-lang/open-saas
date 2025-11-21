@@ -125,9 +125,9 @@ const PricingPage = () => {
           </h2>
         </div>
         <p className="text-muted-foreground mx-auto mt-6 max-w-2xl text-center text-lg leading-8">
-          Choose between Stripe and LemonSqueezy as your payment provider. Just
-          add your Product IDs! Try it out below with test credit card number{" "}
-          <br />
+          Choose between Stripe, LemonSqueezy or Polar as your payment provider.
+          Just add your Product IDs! Try it out below with test credit card
+          number <br />
           <span className="bg-muted text-muted-foreground rounded-md px-2 py-1 font-mono text-sm">
             4242 4242 4242 4242 4242
           </span>
