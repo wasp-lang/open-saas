@@ -77,27 +77,26 @@ To create Polar products, in your Polar dashboard:
 Note that if you change names of your products, you'll need to update your app code to match these names as well.
 :::
 
-### Create and Use the Polar Webhook in Local Development
+### Using Polar Webhook in Local Development
 
-Polar notifies your Wasp app about events through a webhook (for example, when a payment succeeds). During development, you need to expose your locally running Wasp server (started with `wasp start`) to the internet. Wasp server runs on port 3001 by default, so you can, for example, run `ngrok` on port 3001 to expose your server to the internet. `ngrok` will generate a public URL that you can give to Polar.
+#### Exposing your Webhook Endpoint to the Internet 
 
-First make sure you have installed [`ngrok`](https://ngrok.com/docs/getting-started/).
+Polar notifies your Wasp app about customer and payment events through a webhook. However, to make it available to Polar during development, you need to expose your locally running Wasp server (started with `wasp start`) to the internet. 
 
-Once `ngrok` is installed and your Wasp app is running, run:
+You can do that by running `ngrok` on port 3001 (Wasp server runs on port 3001 by default). `ngrok` will then generate a public URL that we can provide to Polar:
 
-```sh
-ngrok http 3001
-```
+1. First make sure you have installed [`ngrok`](https://ngrok.com/docs/getting-started/).
+2. Once `ngrok` is installed and your Wasp app is running, run:
+   ```sh
+   ngrok http 3001
+   ```
+   <Image src={ngrok} alt="ngrok" loading="lazy" />
+3. `ngrok` will display a forwarding address. Copy this address and append `/payments-webhook` to it. It should look something like this: 
+   ```sh title="Callback URL"
+   https://89e5-2003-c7-153c-72a5-f837.ngrok-free.app/payments-webhook
+   ```
 
-<Image src={ngrok} alt="ngrok" loading="lazy" />
-
-`ngrok` will display a forwarding address. Copy this address and append `/payments-webhook` to it. It should look something like this: 
-
-```sh title="Callback URL"
-https://89e5-2003-c7-153c-72a5-f837.ngrok-free.app/payments-webhook
-```
-
-#### Creating your Sanbox Webhook
+#### Creating your Polar Webhook
 
 Next, configure the webhook in your Polar dashboard:
 1. Navigate to `Settings > Webhooks` page.
