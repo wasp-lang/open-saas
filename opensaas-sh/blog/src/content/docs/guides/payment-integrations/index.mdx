@@ -13,8 +13,7 @@ This guide will show you how to set up payments for testing and local developmen
 
 :::note[Which should I choose?]
 Stripe is the industry standard, is more configurable, and has cheaper fees.
-Lemon Squeezy acts a [Merchant of Record](https://www.lemonsqueezy.com/reporting/merchant-of-record). This means they take care of paying taxes in multiple countries for you, but charge higher fees per transaction.
-Polar is an open-source [Merchant of Record](https://docs.polar.sh/merchant-of-record/introduction#merchant-of-record) designed specifically for developers.
+Lemon Squeezy and Polar act as a [Merchant of Record](https://www.lemonsqueezy.com/reporting/merchant-of-record). This means they take care of paying taxes in multiple countries for you, but charge higher fees per transaction.
 :::
 
 ## Important First Steps
@@ -79,7 +78,7 @@ Then you should delete:
     </TabItem>
     <TabItem label="Polar">
       ```sh
-      npm uninstall @lemonsqueezy/lemonsqueezy.js stripe
+      npm uninstall stripe @lemonsqueezy/lemonsqueezy.js
       ```
   </TabItem>
   </Tabs>

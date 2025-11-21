@@ -33,7 +33,7 @@ POLAR_SANDBOX_MODE=true
 
 When you're ready to [deploy your app](/guides/deploying/), we'll remind you to set this to `false`.
 
-### Create Polar Organization Access Token
+### Polar Organization Access Token
 
 Once you've created your account, you'll need to get your organization access token. 
 You can do that by:
@@ -52,29 +52,27 @@ You can do that by:
    POLAR_ORGANIZATION_ACCESS_TOKEN=polar_oat_...
    ```
 
-### Create Products
+### Creating Products
 
 To create Polar products, in your Polar dashboard:
 1. Navigate to `Prodcuts > Catalogue` page.
 2. Click on the `+ New Product` button to create a new product.
-3. Fill in the product details:
-   - **Name**: e.g., "Hobby Plan", "Pro Plan", or "10 Credits".
-   - **Description**: Brief description of what the product includes.
-   - **Pricing**: Select "Recurring subscription" for recurring plans or "One-time purchase" for credits, then configure the desired pricing.
-4. Configure any remaining optional fields.
-5. Click `Create Product`.
+3. Fill in the product details.
+   - For subscription products, select `Recurring subscription` pricing.
+   - For one-time payment products, select `One-time purchase` pricing.  
+4. Click `Create Product`.
+5. Tap the `⠇` icon next to your product and select `Copy Product ID`. 
+6. Add the `Product ID` to your `.env.server` file.
+   Open SaaS by default expects three products, two subscriptions and one one-time purchase plan:
+   ```ini title=".env.server"
+   PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID=<your-hobby-product-id>
+   PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID=<your-pro-product-id>
+   PAYMENTS_CREDITS_10_PLAN_ID=<your-credits-product-id>
+   ```
 
-After creating each product, you'll need to copy the `Product ID` from the `Prodcuts > Catalogue` page and add it to your `.env.server` file. Tap the `⠇` icon in the top-right corner and select `Copy Product ID`. 
-
-Open SaaS comes with some example products, two subscriptions and one one-time purchase plan:
-
-```ini title=".env.server"
-PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID=<your-hobby-product-id>
-PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID=<your-pro-product-id>
-PAYMENTS_CREDITS_10_PLAN_ID=<your-credits-product-id>
-```
-
-Note that if you change the names of the price IDs, you'll need to update your server code to match these names as well.
+:::note[Naming products differently]
+Note that if you change names of your products, you'll need to update your app code to match these names as well.
+:::
 
 ### Create and Use the Polar Webhook in Local Development
 
@@ -96,9 +94,11 @@ ngrok http 3001
 https://89e5-2003-c7-153c-72a5-f837.ngrok-free.app/payments-webhook
 ```
 
+#### Creating your Sanbox Webhook
+
 Next, configure the webhook in your Polar dashboard:
 1. Navigate to `Settings > Webhooks` page.
-2. Click `Add Endpoint` to create a new endpoint.
+2. Click `Add Endpoint` button.
 3. In the URL field, paste your `ngrok` forwarding address with `/payments-webhook` appended (for example: `https://abc123.ngrok-free.app/payments-webhook`).
 4. Set the `Format` to `"Raw"`.
 5. Select the following events to listen for:
@@ -112,11 +112,7 @@ Next, configure the webhook in your Polar dashboard:
 
 ### Testing Payments in Local Development
 
-Before testing payments, make sure that you:
-- Created and set your `POLAR_ORGANIZATION_ACCESS_TOKEN` in `.env.server`.
-- Created your products and set their `<NAME>_PLAN_ID` in `.env.server`.
-- Created your webhook and set `POLAR_WEBHOOK_SECRET` in `.env.server`.
-- Your `ngrok` tunnel is running.
+Before testing payments, make sure that you created and set all the required env variables in `.env.server` (`POLAR_ORGANIZATION_ACCESS_TOKEN`, `<NAME>_PLAN_ID` and `POLAR_WEBHOOK_SECRET` ) and that your `ngrok` tunnel is running.
 
 You can then test the payment flow:
 
@@ -127,20 +123,16 @@ You can then test the payment flow:
 5. You should be redirected back to the checkout success page.
 
 To verify everything executed correctly you can:
-1. Check Polar webhook event logs.
-2. Inspect our database's `User` table.
-
-To check webhook event logs:
-1. Navigate to `Settings > Webhooks` page
-2. Click the `Details` button of our previously created webhook.
-3. Confirm all of the events have been successful:
-   <Image src={polarWebhookLogs} alt="How to check webhook logs in Polar dashboard" loading="lazy" />
-
-To inspect the `User` table in the database:
-1. Run Wasp DB studio:
-   ```sh
-   wasp db studio
-   ```
-2. Navigate to `localhost:5555` and check the `User` table. 
-3. Confirm the `subscriptionStatus` is `active` for the user who made the purchase.
-   <Image src={polarUserTable} alt="User table showing updated user" loading="lazy" />
+- Check Polar webhook event logs:
+  1. Navigate to `Settings > Webhooks` page
+  2. Click the `Details` button of our previously created webhook.
+  3. Confirm all of the events have been successful:
+     <Image src={polarWebhookLogs} alt="How to check webhook logs in Polar dashboard" loading="lazy" />
+- Inspect our database's `User` table:
+  1. Run Wasp DB studio:
+     ```sh
+     wasp db studio
+     ```
+  2. Navigate to `localhost:5555` and check the `User` table. 
+  3. Confirm the `subscriptionStatus` is `active` for the user who made the purchase.
+     <Image src={polarUserTable} alt="User table showing updated user" loading="lazy" />
