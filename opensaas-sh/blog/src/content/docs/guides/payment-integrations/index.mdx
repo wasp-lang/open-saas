@@ -20,70 +20,30 @@ Lemon Squeezy and Polar act as a [Merchant of Record](https://www.lemonsqueezy.c
 
 First, go to `/src/payment/paymentProcessor.ts` and choose which payment processor you'd like to use:
 
-<Tabs syncKey="payment-provider">
-  <TabItem label="Stripe">
-    ```ts title="src/payment/paymentProcessor.ts" del={6, 7}
-    import { stripePaymentProcessor } from './stripe/paymentProcessor';
-    
-    // ...
+```ts title="src/payment/paymentProcessor.ts" ins={7, 9, 11}
+import { stripePaymentProcessor } from './stripe/paymentProcessor';
+import { lemonSqueezyPaymentProcessor } from './lemonSqueezy/paymentProcessor';
+import { polarPaymentProcessor } from './polar/paymentProcessor';
 
-    export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
-    // export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
-    // export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
-    ```
-  </TabItem>
-  <TabItem label="Lemon Squeezy">
-    ```ts title="src/payment/paymentProcessor.ts" del={1, 6, 7, 8} ins={2, 9}
-    import { stripePaymentProcessor } from './stripe/paymentProcessor';
-    import { lemonSqueezyPaymentProcessor } from './lemonSqueezy/paymentProcessor';
-    
-    // ...
+// ...
 
-    export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
-    // export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
-    // export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
-    export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
-    ```
-  </TabItem>
-  <TabItem label="Polar">
-     ```ts title="src/payment/paymentProcessor.ts" del={1, 6, 7, 8} ins={2, 9}
-    import { stripePaymentProcessor } from './stripe/paymentProcessor';
-    import { polarPaymentProcessor } from './polar/paymentProcessor';
-    
-    // ...
-
-    export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
-    // export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
-    // export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
-    export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
-    ```
-</TabItem>
-</Tabs>
+export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
+// or
+export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
+// or
+export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
+```
 
 Then you should delete:
 - The unused payment processor code within the `/src/payment/<unused-provider>` directories.
 - Any unused environment variables from `.env.server` (they will be prefixed with the name of the provider your are not using):
   - E.g. `STRIPE_API_KEY`, `LEMONSQUEEZY_API_KEY`, `POLAR_ORGANIZATION_ACCESS_TOKEN`.
-- Make sure to also uninstall the unused dependencies:
-  <Tabs syncKey="payment-provider">
-    <TabItem label="Stripe">
-      ```sh
-      npm uninstall @lemonsqueezy/lemonsqueezy.js @polar-sh/sdk
-      ```
-    </TabItem>
-    <TabItem label="Lemon Squeezy">
-      ```sh
-      npm uninstall stripe @polar-sh/sdk
-      ```
-    </TabItem>
-    <TabItem label="Polar">
-      ```sh
-      npm uninstall stripe @lemonsqueezy/lemonsqueezy.js
-      ```
-  </TabItem>
-  </Tabs>
+- Make sure to also run `npm uninstall` for providers you didn't use:
+  - Stripe: `npm uninstall stripe`
+  - Polar: `npm uninstall @polar-sh/sdk`
+  - Lemon Squeezy: `npm uninstall @lemonsqueezy/lemonsqueezy.js`
 - Remove any unused fields from the `User` model in the `schema.prisma` file if they exist:
-  - E.g. `lemonSqueezyCustomerPortalUrl`.
+  - Lemon Squeezy: `lemonSqueezyCustomerPortalUrl`
 
 Now your code is ready to go with your preferred payment processor and it's time to configure your payment processor's API keys, products, and other settings.
 
