@@ -1,6 +1,12 @@
 --- template/app/src/landing-page/components/HighlightedFeature.tsx
 +++ opensaas-sh/app/src/landing-page/components/HighlightedFeature.tsx
-@@ -6,6 +6,8 @@
+@@ -1,11 +1,14 @@
+ import { cn } from "../../client/utils";
+ 
+ interface FeatureProps {
++  id?: string;
+   name: string;
+   description: string | React.ReactNode;
    direction?: "row" | "row-reverse";
    highlightedComponent: React.ReactNode;
    tilt?: "left" | "right";
@@ -9,7 +15,13 @@
  }
  
  /**
-@@ -18,6 +20,8 @@
+@@ -13,11 +16,14 @@
+  * Shows text description on one side, and whatever component you want to show on the other side to demonstrate the functionality.
+  */
+ const HighlightedFeature = ({
++  id,
+   name,
+   description,
    direction = "row",
    highlightedComponent,
    tilt,
@@ -18,9 +30,11 @@
  }: FeatureProps) => {
    const tiltToClass: Record<Required<FeatureProps>["tilt"], string> = {
      left: "rotate-1",
-@@ -27,12 +31,14 @@
+@@ -26,13 +32,16 @@
+ 
    return (
      <div
++      id={id}
        className={cn(
 -        "my-50 mx-auto flex max-w-6xl flex-col items-center justify-between gap-x-20 gap-y-10 px-8 transition-all duration-300 ease-in-out md:px-4",
 +        "my-50 mx-auto flex max-w-6xl flex-col justify-between gap-x-20 gap-y-10 px-8 transition-all duration-300 ease-in-out md:items-center md:px-4",
@@ -35,7 +49,7 @@
          {typeof description === "string" ? (
            <p className="text-muted-foreground">{description}</p>
          ) : (
-@@ -43,6 +49,7 @@
+@@ -43,6 +52,7 @@
          className={cn(
            "my-10 flex w-full flex-1 items-center justify-center transition-transform duration-300 ease-in-out",
            tilt && tiltToClass[tilt],

@@ -9,3 +9,20 @@
      );
    }, [location]);
  
+@@ -42,7 +42,15 @@
+       const id = location.hash.replace("#", "");
+       const element = document.getElementById(id);
+       if (element) {
+-        element.scrollIntoView();
++        const yOffset = -100;
++        const top = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
++        window.scrollTo({ top, behavior: "smooth" });
++      }
++    } else if (location.pathname === "/") {
++      // scroll to top of page
++      if (window.scrollY > 0) {
++        console.log("scrolling to top");
++        window.scrollTo({ top: 0, behavior: "smooth" });
+       }
+     }
+   }, [location]);

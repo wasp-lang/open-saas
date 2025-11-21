@@ -5,15 +5,16 @@
  import ExamplesCarousel from "./components/ExamplesCarousel";
  import FAQ from "./components/FAQ";
  import FeaturesGrid from "./components/FeaturesGrid";
-@@ -11,7 +12,6 @@
+@@ -11,7 +12,7 @@
    footerNavigation,
    testimonials,
  } from "./contentSections";
 -import AIReady from "./ExampleHighlightedFeature";
++import Roadmap from "./components/Roadmap";
  
  export default function LandingPage() {
    return (
-@@ -19,6 +19,9 @@
+@@ -19,8 +20,12 @@
        <main className="isolate">
          <Hero />
          <ExamplesCarousel examples={examples} />
@@ -22,4 +23,7 @@
 +        <Admin />
          <AIReady />
          <FeaturesGrid features={features} />
++        <Roadmap />
          <Testimonials testimonials={testimonials} />
+         <FAQ faqs={faqs} />
+       </main>
