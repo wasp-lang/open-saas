@@ -71,7 +71,7 @@
 +
 +let cachedData: RoadmapData | null = null
 +let lastFetchTime = 0
-+const CACHE_DURATION = 60 * 60 * 1000
++const CACHE_DURATION = 4 * 60 * 60 * 1000
 +
 +export const getGithubRoadmap: GetGithubRoadmap<void, RoadmapData> = async () => {
 +  const currentTime = Date.now()
