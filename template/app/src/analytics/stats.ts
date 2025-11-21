@@ -1,15 +1,14 @@
-import { listOrders } from "@lemonsqueezy/lemonsqueezy.js";
-import Stripe from "stripe";
 import { type DailyStats } from "wasp/entities";
 import { type DailyStatsJob } from "wasp/server/jobs";
-import { stripeClient } from "../payment/stripe/stripeClient";
 import {
   getDailyPageViews,
   getSources,
 } from "./providers/plausibleAnalyticsUtils";
 // import { getDailyPageViews, getSources } from './providers/googleAnalyticsUtils';
+import { fetchTotalLemonSqueezyRevenue } from "../payment/lemonSqueezy/stats";
 import { paymentProcessor } from "../payment/paymentProcessor";
 import { SubscriptionStatus } from "../payment/plans";
+import { fetchTotalStripeRevenue } from "../payment/stripe/stats";
 
 export type DailyStatsProps = {
   dailyStats?: DailyStats;
@@ -142,73 +141,3 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (
     });
   }
 };
-
-async function fetchTotalStripeRevenue() {
-  let totalRevenue = 0;
-  let params: Stripe.BalanceTransactionListParams = {
-    limit: 100,
-    // created: {
-    //   gte: startTimestamp,
-    //   lt: endTimestamp
-    // },
-    type: "charge",
-  };
-
-  let hasMore = true;
-  while (hasMore) {
-    const balanceTransactions =
-      await stripeClient.balanceTransactions.list(params);
-
-    for (const transaction of balanceTransactions.data) {
-      if (transaction.type === "charge") {
-        totalRevenue += transaction.amount;
-      }
-    }
-
-    if (balanceTransactions.has_more) {
-      // Set the starting point for the next iteration to the last object fetched
-      params.starting_after =
-        balanceTransactions.data[balanceTransactions.data.length - 1].id;
-    } else {
-      hasMore = false;
-    }
-  }
-
-  // Revenue is in cents so we convert to dollars (or your main currency unit)
-  return totalRevenue / 100;
-}
-
-async function fetchTotalLemonSqueezyRevenue() {
-  try {
-    let totalRevenue = 0;
-    let hasNextPage = true;
-    let currentPage = 1;
-
-    while (hasNextPage) {
-      const { data: response } = await listOrders({
-        filter: {
-          storeId: process.env.LEMONSQUEEZY_STORE_ID,
-        },
-        page: {
-          number: currentPage,
-          size: 100,
-        },
-      });
-
-      if (response?.data) {
-        for (const order of response.data) {
-          totalRevenue += order.attributes.total;
-        }
-      }
-
-      hasNextPage = !response?.meta?.page.lastPage;
-      currentPage++;
-    }
-
-    // Revenue is in cents so we convert to dollars (or your main currency unit)
-    return totalRevenue / 100;
-  } catch (error) {
-    console.error("Error fetching Lemon Squeezy revenue:", error);
-    throw error;
-  }
-}
