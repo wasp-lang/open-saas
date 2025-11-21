@@ -19,7 +19,7 @@
   "dependencies": {
     "@playwright/test": "^1.42.1",
     "@prisma/client": "5.19.1",
-    "@wasp.sh/wasp-app-runner": "0.0.9",
+    "@wasp.sh/wasp-app-runner": "0.0.10",
     "prisma": "5.19.1"
   },
   "devDependencies": {
