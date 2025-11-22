@@ -1,21 +1,33 @@
 #!/usr/bin/env bash
-#
-# Diff Or Patch Executor
-#
-# Allows you to easily create a diff between the two projects (base and derived), or to patch those diffs onto the base project to get the derived one.
-# Useful when derived project has only small changes on top of base project and you want to keep it in a dir in the same repo as main project.
+
+# Set the locale to C for consistent command behavior.
+# For example, `sort` can sort differently depending on the locale, 
+# and `diff` might change if it's doing text or binary comparison.
+# See: https://unix.stackexchange.com/questions/87745/what-does-lc-all-c-do
+export LC_ALL=C
 
 # Determine the patch command to use based on OS
 PATCH_CMD="patch"
 if [[ "$(uname)" == "Darwin" ]]; then
-  # On macOS, require gpatch to be installed
-  if command -v gpatch &> /dev/null; then
-    PATCH_CMD="gpatch"
-  else
-    echo "Error: GNU patch (gpatch) not found. On macOS, this script requires GNU patch."
-    echo "Install it with: brew install gpatch"
-    exit 1
+  PATCH_CMD="gpatch"
+fi
+
+# Assert that we are using GNU patch
+if ! $PATCH_CMD --version 2> /dev/null | grep -q "GNU patch"; then
+  echo "Error: GNU patch not found."
+  if [[ "$(uname)" == "Darwin" ]]; then
+    echo "On macOS, install it with: brew install gpatch"
   fi
+  exit 1
+fi
+
+# Assert that we are using GNU diff
+if ! diff --version 2> /dev/null | grep -q "GNU diffutils"; then
+  echo "Error: GNU diff not found."
+  if [[ "$(uname)" == "Darwin" ]]; then
+    echo "On macOS, install it with: brew install diffutils"
+  fi
+  exit 1
 fi
 
 # List all the source files in the specified dir.
@@ -60,8 +72,8 @@ recreate_diff_dir() {
   # For each source file in the derived dir, generate a .diff file between it and the
   # corresponding source file in the base dir.
   while IFS= read -r filepath; do
-    local derivedFilepath="${DERIVED_DIR}/${filepath}"
     local baseFilepath="${BASE_DIR}/${filepath}"
+    local derivedFilepath="${DERIVED_DIR}/${filepath}"
 
     local filepathToBeUsedAsBase="${baseFilepath}"
     # If the file is not one of the source files in base dir (e.g. is gitignored or doesn't exist),
@@ -80,7 +92,9 @@ recreate_diff_dir() {
       cp "${derivedFilepath}" "${DIFF_DIR}/${filepath}.copy"
       echo "Generated ${DIFF_DIR}/${filepath}.copy"
     else
-      diff -Nu --label "${baseFilepath}" --label "${derivedFilepath}" "${filepathToBeUsedAsBase}" "${derivedFilepath}" > "${DIFF_DIR}/${filepath}.diff"
+      diff -Nu --label "${baseFilepath}" --label "${derivedFilepath}" \
+        "${filepathToBeUsedAsBase}" "${derivedFilepath}" \
+        > "${DIFF_DIR}/${filepath}.diff"
       echo "Generated ${DIFF_DIR}/${filepath}.diff"
     fi
   done <<< "${DERIVED_FILES}"
