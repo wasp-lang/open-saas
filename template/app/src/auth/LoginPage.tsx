@@ -1,8 +1,19 @@
-import { LoginForm } from "wasp/client/auth";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { LoginForm, useAuth } from "wasp/client/auth";
 import { Link as WaspRouterLink, routes } from "wasp/client/router";
 import { AuthPageLayout } from "./AuthPageLayout";
 
 export default function Login() {
+  const { data: user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate("/demo-app");
+    }
+  }, [user, navigate]);
+
   return (
     <AuthPageLayout>
       <LoginForm />
