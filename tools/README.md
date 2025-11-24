@@ -45,9 +45,9 @@ The typical workflow is:
 
 3. Run `dope.sh` with the `diff` action to generate a new `derived/app_diff/` based on the updated `derived/app/`:
 
-```sh
-./dope.sh base/app derived/app diff
-```
+   ```sh
+   ./dope.sh base/app derived/app diff
+   ```
 
 ### Requirements
 
