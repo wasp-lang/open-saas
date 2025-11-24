@@ -35,7 +35,7 @@ and `.copy` files to copy files directly from the diff directory to the derived 
 
 The typical workflow is:
 
-1. Run `dope.sh` with the `patch` action to generate `derived/app/` from `base/app/` and `dervied/app_diff/`:
+1. Run `dope.sh` with the `patch` action to generate `derived/app/` from `base/app/` and `derived/app_diff/`:
 
 ```sh
 ./dope.sh base/app derived/app patch
