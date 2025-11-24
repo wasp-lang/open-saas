@@ -37,9 +37,9 @@ The typical workflow is:
 
 1. Run `dope.sh` with the `patch` action to generate `derived/app/` from `base/app/` and `derived/app_diff/`:
 
-```sh
-./dope.sh base/app derived/app patch
-```
+   ```sh
+   ./dope.sh base/app derived/app patch
+   ```
 
 2. If there are any conflicts (usually due to updates to the `base` app), modify `derived/app/` until you resolve them. Make any additional changes as needed.
 
