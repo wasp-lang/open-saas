@@ -4,7 +4,7 @@ banner:
   content: |
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
 ---
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { TabItem, Tabs } from '@astrojs/starlight/components';
 
 This guide explains how to use the integrated email sender and how you can integrate your own account in this template.
 
@@ -87,9 +87,9 @@ To set up your email sender, you first need an account with one of the supported
   <TabItem label="Mailgun">
     - Go to [Mailgun](https://mailgun.com) and create an account.
     - Go to [API Keys](https://app.mailgun.com/settings/api_security/api_keys?onboardingTask=api-key) and create a new API key.
-    - Copy the API key and add it to your .env.server file under the `MAILGUN_API_KEY=` variable.
+    - Copy the API key and add it to your .env.server file under the `MAILGUN_API_KEY` variable.
     - Go to [Domains](https://app.mailgun.com/mg/sending/new-domain?onboardingTask=add-verify-domain) and create a new domain.
-    - Copy the domain and add it to your .env.server file as `MAILGUN_DOMAIN=`.
+    - Copy the domain and add it to your .env.server file as `MAILGUN_DOMAIN`.
 
     Make sure to change the `defaultFrom` email address in the `main.wasp` file to use the same email address that you configured your account to send out emails with!
 

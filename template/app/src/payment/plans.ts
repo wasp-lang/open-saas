@@ -67,3 +67,23 @@ export function getSubscriptionPaymentPlanIds(): PaymentPlanId[] {
     (planId) => paymentPlans[planId].effect.kind === "subscription",
   );
 }
+
+/**
+ * Returns Open SaaS `PaymentPlanId` for some payment provider's plan ID.
+ * 
+ * Different payment providers track plan ID in different ways.
+ * e.g. Stripe price ID, Polar product ID...
+ */
+export function getPaymentPlanIdByPaymentProcessorPlanId(
+  paymentProcessorPlanId: string,
+): PaymentPlanId {
+  for (const [planId, plan] of Object.entries(paymentPlans)) {
+    if (plan.getPaymentProcessorPlanId() === paymentProcessorPlanId) {
+      return planId as PaymentPlanId;
+    }
+  }
+
+  throw new Error(
+    `Unknown payment processor plan ID: ${paymentProcessorPlanId}`,
+  );
+}

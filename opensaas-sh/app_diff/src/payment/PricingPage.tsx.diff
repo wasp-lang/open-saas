@@ -4,27 +4,7 @@
  } from "./plans";
  
  const bestDealPaymentPlanId: PaymentPlanId = PaymentPlanId.Pro;
-+const PaymentsDocsURL = "https://docs.opensaas.sh/guides/payments-integration/";
++const PaymentsDocsURL = "https://docs.opensaas.sh/guides/payment-integrations/";
  
  interface PaymentPlanCard {
    name: string;
-@@ -125,9 +126,16 @@
-           </h2>
-         </div>
-         <p className="text-muted-foreground mx-auto mt-6 max-w-2xl text-center text-lg leading-8">
--          Choose between Stripe and LemonSqueezy as your payment provider. Just
--          add your Product IDs! Try it out below with test credit card number{" "}
--          <br />
-+          Choose between{" "}
-+          <a href={PaymentsDocsURL} target="_blank" rel="noopener noreferrer">
-+            Stripe
-+          </a>{" "}
-+          and{" "}
-+          <a href={PaymentsDocsURL} target="_blank" rel="noopener noreferrer">
-+            LemonSqueezy
-+          </a>{" "}
-+          as your payment provider. Just add your Product IDs! Try it out below
-+          with test credit card number <br />
-           <span className="bg-muted text-muted-foreground rounded-md px-2 py-1 font-mono text-sm">
-             4242 4242 4242 4242 4242
-           </span>

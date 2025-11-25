@@ -10,16 +10,16 @@ import { stripeClient } from "./stripeClient";
 export async function ensureStripeCustomer(
   userEmail: NonNullable<User["email"]>,
 ): Promise<Stripe.Customer> {
-  const stripeCustomers = await stripeClient.customers.list({
+  const customers = await stripeClient.customers.list({
     email: userEmail,
   });
 
-  if (stripeCustomers.data.length === 0) {
+  if (customers.data.length === 0) {
     return stripeClient.customers.create({
       email: userEmail,
     });
   } else {
-    return stripeCustomers.data[0];
+    return customers.data[0];
   }
 }
 
