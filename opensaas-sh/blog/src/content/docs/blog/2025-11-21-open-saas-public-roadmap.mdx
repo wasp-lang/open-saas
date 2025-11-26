@@ -1,11 +1,11 @@
 ---
-title: "Open SaaS — Public Development Roadmap"
+title: "The Public Development Roadmap for Open SaaS"
 date: 2025-11-21
 tags:
   - roadmap
-  - open-saas
   - wasp
   - open-source
+  - development
 authors: vince
 ---
 import { Image } from 'astro:assets';
@@ -14,14 +14,19 @@ import openSaasRoadmap from '../../../assets/roadmap/open-saas-roadmap.webp';
 import epicExample from '../../../assets/roadmap/open-saas-epic.webp';
 import epicDetailExample from '../../../assets/roadmap/open-saas-epic-detail.webp';
 import aiReady from '../../../assets/roadmap/open-saas-ai-ready.webp';
+import subscribeGithubButton from '../../../assets/roadmap/subscribe-github.webp';
 import Tweet from '../../../components/Tweet.astro';
 import { Aside } from '@astrojs/starlight/components';
 
-We created Open SaaS to help developers launch full-featured SaaS products faster. As an open-source project powered by [Wasp](https://wasp.sh), we thought it was important to have two things:
-1. A solid roadmap so that development is focused.
-2. A roadmap that's public, so that the community can see what's coming next and get involved.
+We created Open SaaS to help developers launch full-featured SaaS products faster. 
 
-So we created just that. Behold, the [Open SaaS public roadmap](https://github.com/orgs/wasp-lang/projects/6)!
+But launching fast only works when you're working with clear direction and a good foundation. As an open-source project powered by [Wasp](https://wasp.sh), and with our users in mind, we thought it was important to add two things to this project:
+1. A solid roadmap so that development is focused.
+2. Making that roadmap public, to give the community a clear view of what's coming next and how they can get involved.
+
+So we created just that. 
+
+Behold, the [Open SaaS public roadmap](https://github.com/orgs/wasp-lang/projects/6)!
 <br/>
 <a href="https://github.com/orgs/wasp-lang/projects/6" target="_blank">
 <Image src={openSaasRoadmap} alt="Open SaaS public roadmap" style="border-radius: 8px;"/>
@@ -31,7 +36,7 @@ So we created just that. Behold, the [Open SaaS public roadmap](https://github.c
 
 ## Why a roadmap?
 
-Open SaaS is becoming a beast of its own. At 13k GitHub stars and growing, and with constant feature additions and improvements, we thought it was time to make future development more organized, transparent, and community-driven.
+Open SaaS is becoming a beast of its own. At [13k GitHub stars](https://github.com/wasp-lang/open-saas) and growing, and with constant feature additions and improvements, we thought it was time to make future development more organized, transparent, and community-driven.
 
 <br/>
 <a href="https://opensaas.sh" target="_blank">
@@ -39,7 +44,7 @@ Open SaaS is becoming a beast of its own. At 13k GitHub stars and growing, and w
 </a>
 <br/>
 
-With thousands of SaaS apps being deployed with Open SaaS, the needs of its users are also becoming more diverse. It would be impossible to address all of them, but we needed a way to track and prioritize the most important features and improvements.
+With tons of SaaS apps being deployed with Open SaaS, the needs of its users are also becoming more diverse. It would be impossible to address all of them, but we needed a way to track and prioritize the most important features and improvements.
 
 Up until now, it was just me basically deciding which issues to work on and when. This was pretty inefficent to begin with, and then with more contributors joining the project, it became even more so.
 
@@ -146,10 +151,18 @@ We want to keep Open SaaS relevant and up-to-date with the latest trends, as wel
 
 **Efforts underway:**
 
+* Refactors, galore! E.g. removing `any` and `as` from the codebase, extracting `SVGs`, etc. (issue [#568](https://github.com/wasp-lang/open-saas/issues/568))
 * Improving OpenSaaS.sh development workflows (issue [#552](https://github.com/wasp-lang/open-saas/issues/552))
 * Improving e2e tests (issue [#558](https://github.com/wasp-lang/open-saas/issues/558))
 
 ---
+
+<br/>
+
+<Aside type="tip" title="Subscribe to an Epic">
+If you find any of these Epics interesting, you can get notified when they're updated by subscribing to them. Just click the "Subscribe" button in the bottom right corner of the Epic detail view.
+<Image src={subscribeGithubButton} alt="Subscribe to an Epic" width="400" style="border-radius: 8px;"/>
+</Aside>
 
 # How to Participate
 
