@@ -20,7 +20,14 @@ cd app
 # Get the environment variables from Dotenv Vault.
 npm run env:pull
 
+# Run the dev database and create migrations.
+wasp db start
+wasp db migrate-dev --name "init"
+
+# You can stop the dev database after you created the migration.
+
 # Test that the app works in dev and prod modes.
+# Make sure the `@wasp.sh/wasp-app-runner` is updated to the latest version.
 npx @wasp.sh/wasp-app-runner dev
 npx @wasp.sh/wasp-app-runner build
 ```
