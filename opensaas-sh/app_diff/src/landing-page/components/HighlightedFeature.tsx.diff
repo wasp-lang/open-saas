@@ -37,7 +37,7 @@
 +      id={id}
        className={cn(
 -        "my-50 mx-auto flex max-w-6xl flex-col items-center justify-between gap-x-20 gap-y-10 px-8 transition-all duration-300 ease-in-out md:px-4",
-+        "my-50 mx-auto flex max-w-6xl flex-col justify-between gap-x-20 gap-y-10 px-8 transition-all duration-300 ease-in-out md:items-center md:px-4",
++        "my-50 mx-auto scroll-mt-24 flex max-w-6xl flex-col justify-between gap-x-20 gap-y-10 px-8 transition-all duration-300 ease-in-out md:items-center md:px-4",
          direction === "row" ? "md:flex-row" : "md:flex-row-reverse",
        )}
      >
