@@ -1,6 +1,6 @@
 --- template/app/src/landing-page/components/Examples/Auth.tsx
 +++ opensaas-sh/app/src/landing-page/components/Examples/Auth.tsx
-@@ -0,0 +1,163 @@
+@@ -0,0 +1,164 @@
 +import { useState } from "react";
 +import { FaDiscord, FaGithub, FaGoogle, FaSlack } from "react-icons/fa";
 +import { Button } from "../../../client/components/ui/button";
@@ -55,6 +55,7 @@
 +
 +  return (
 +    <HighlightedFeature
++      id='auth-feature'
 +      name="DIY Auth
 +Done for you"
 +      description={

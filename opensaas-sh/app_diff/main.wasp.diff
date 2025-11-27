@@ -106,7 +106,19 @@
      },
    },
  }
-@@ -207,9 +205,9 @@
+@@ -101,6 +99,11 @@
+   component: import LandingPage from "@src/landing-page/LandingPage"
+ }
+ 
++query getGithubRoadmap {
++  fn: import { getGithubRoadmap } from "@src/landing-page/operations",
++  entities: []
++}
++
+ //#region Auth Pages
+ route LoginRoute { path: "/login", to: LoginPage }
+ page LoginPage {
+@@ -207,9 +210,9 @@
  }
  
  api paymentsWebhook {
@@ -118,7 +130,7 @@
    httpRoute: (POST, "/payments-webhook")
  }
  //#endregion
-@@ -245,6 +243,17 @@
+@@ -245,6 +248,17 @@
    fn: import { deleteFile } from "@src/file-upload/operations",
    entities: [User, File]
  }
@@ -136,7 +148,7 @@
  //#endregion
  
  //#region Analytics
-@@ -291,7 +300,6 @@
+@@ -291,7 +305,6 @@
    component: import AdminCalendar from "@src/admin/elements/calendar/CalendarPage"
  }
  
