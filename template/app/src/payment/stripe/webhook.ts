@@ -7,12 +7,14 @@ import { emailSender } from "wasp/server/email";
 import { requireNodeEnvVar } from "../../server/utils";
 import { assertUnreachable } from "../../shared/utils";
 import { UnhandledWebhookEventError } from "../errors";
-import { PaymentPlanId, paymentPlans, SubscriptionStatus } from "../plans";
-import { stripeClient } from "./stripeClient";
 import {
-  updateUserOneTimePaymentDetails,
-  updateUserSubscriptionDetails,
-} from "./user";
+  getPaymentPlanIdByPaymentProcessorPlanId,
+  PaymentPlanId,
+  paymentPlans,
+  SubscriptionStatus,
+} from "../plans";
+import { updateUserCredits, updateUserSubscription } from "../user";
+import { stripeClient } from "./stripeClient";
 
 /**
  * Stripe requires a raw request to construct events successfully.
@@ -101,13 +103,15 @@ async function handleInvoicePaid(
   const invoice = event.data.object;
   const customerId = getCustomerId(invoice.customer);
   const invoicePaidAtDate = getInvoicePaidAtDate(invoice);
-  const paymentPlanId = getPaymentPlanIdByPriceId(getInvoicePriceId(invoice));
+  const paymentPlanId = getPaymentPlanIdByPaymentProcessorPlanId(
+    getInvoicePriceId(invoice),
+  );
 
   switch (paymentPlanId) {
     case PaymentPlanId.Credits10:
-      await updateUserOneTimePaymentDetails(
+      await updateUserCredits(
         {
-          customerId,
+          paymentProcessorUserId: customerId,
           datePaid: invoicePaidAtDate,
           numOfCreditsPurchased: paymentPlans[paymentPlanId].effect.amount,
         },
@@ -116,9 +120,9 @@ async function handleInvoicePaid(
       break;
     case PaymentPlanId.Pro:
     case PaymentPlanId.Hobby:
-      await updateUserSubscriptionDetails(
+      await updateUserSubscription(
         {
-          customerId,
+          paymentProcessorUserId: customerId,
           datePaid: invoicePaidAtDate,
           paymentPlanId,
           subscriptionStatus: SubscriptionStatus.Active,
@@ -160,12 +164,12 @@ async function handleCustomerSubscriptionUpdated(
   }
 
   const customerId = getCustomerId(subscription.customer);
-  const paymentPlanId = getPaymentPlanIdByPriceId(
+  const paymentPlanId = getPaymentPlanIdByPaymentProcessorPlanId(
     getSubscriptionPriceId(subscription),
   );
 
-  const user = await updateUserSubscriptionDetails(
-    { customerId, paymentPlanId, subscriptionStatus },
+  const user = await updateUserSubscription(
+    { paymentProcessorUserId: customerId, paymentPlanId, subscriptionStatus },
     prismaUserDelegate,
   );
 
@@ -231,8 +235,11 @@ async function handleCustomerSubscriptionDeleted(
   const subscription = event.data.object;
   const customerId = getCustomerId(subscription.customer);
 
-  await updateUserSubscriptionDetails(
-    { customerId, subscriptionStatus: SubscriptionStatus.Deleted },
+  await updateUserSubscription(
+    {
+      paymentProcessorUserId: customerId,
+      subscriptionStatus: SubscriptionStatus.Deleted,
+    },
     prismaUserDelegate,
   );
 }
@@ -257,16 +264,4 @@ function getInvoicePaidAtDate(invoice: Stripe.Invoice): Date {
   // Stripe returns timestamps in seconds (Unix time),
   // so we multiply by 1000 to convert to milliseconds.
   return new Date(invoice.status_transitions.paid_at * 1000);
-}
-
-function getPaymentPlanIdByPriceId(priceId: string): PaymentPlanId {
-  const paymentPlanId = Object.values(PaymentPlanId).find(
-    (paymentPlanId) =>
-      paymentPlans[paymentPlanId].getPaymentProcessorPlanId() === priceId,
-  );
-  if (!paymentPlanId) {
-    throw new Error(`No payment plan with Stripe price id ${priceId}`);
-  }
-
-  return paymentPlanId;
 }

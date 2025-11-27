@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
-import Stripe from "stripe";
 import { User } from "wasp/entities";
-import type { SubscriptionStatus } from "../plans";
-import { PaymentPlanId } from "../plans";
+import { PrismaClient } from "wasp/server";
+import { PaymentPlanId, SubscriptionStatus } from "./plans";
 
 export async function fetchUserPaymentProcessorUserId(
   userId: User["id"],
@@ -39,54 +37,54 @@ export function updateUserPaymentProcessorUserId(
   });
 }
 
-interface UpdateUserOneTimePaymentDetailsArgs {
-  customerId: Stripe.Customer["id"];
-  datePaid: Date;
-  numOfCreditsPurchased: number;
-}
-
-export function updateUserOneTimePaymentDetails(
-  {
-    customerId,
-    datePaid,
-    numOfCreditsPurchased,
-  }: UpdateUserOneTimePaymentDetailsArgs,
-  userDelegate: PrismaClient["user"],
-): Promise<User> {
-  return userDelegate.update({
-    where: {
-      paymentProcessorUserId: customerId,
-    },
-    data: {
-      datePaid,
-      credits: { increment: numOfCreditsPurchased },
-    },
-  });
-}
-
-interface UpdateUserSubscriptionDetailsArgs {
-  customerId: Stripe.Customer["id"];
+interface UpdateUserSubscriptionArgs {
+  paymentProcessorUserId: NonNullable<User["paymentProcessorUserId"]>;
   subscriptionStatus: SubscriptionStatus;
-  datePaid?: Date;
   paymentPlanId?: PaymentPlanId;
+  datePaid?: Date;
 }
 
-export function updateUserSubscriptionDetails(
+export function updateUserSubscription(
   {
-    customerId,
+    paymentProcessorUserId,
     paymentPlanId,
     subscriptionStatus,
     datePaid,
-  }: UpdateUserSubscriptionDetailsArgs,
+  }: UpdateUserSubscriptionArgs,
   userDelegate: PrismaClient["user"],
 ): Promise<User> {
   return userDelegate.update({
     where: {
-      paymentProcessorUserId: customerId,
+      paymentProcessorUserId,
     },
     data: {
       subscriptionPlan: paymentPlanId,
       subscriptionStatus,
+      datePaid,
+    },
+  });
+}
+
+interface UpdateUserCreditsArgs {
+  paymentProcessorUserId: NonNullable<User["paymentProcessorUserId"]>;
+  numOfCreditsPurchased: number;
+  datePaid: Date;
+}
+
+export function updateUserCredits(
+  {
+    paymentProcessorUserId,
+    numOfCreditsPurchased,
+    datePaid,
+  }: UpdateUserCreditsArgs,
+  userDelegate: PrismaClient["user"],
+): Promise<User> {
+  return userDelegate.update({
+    where: {
+      paymentProcessorUserId,
+    },
+    data: {
+      credits: { increment: numOfCreditsPurchased },
       datePaid,
     },
   });

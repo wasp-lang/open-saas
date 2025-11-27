@@ -62,7 +62,28 @@ export default defineConfig({
         },
         {
           label: "Guides",
-          autogenerate: { directory: "/guides/" },
+          items: [
+            { label: 'Analytics', link: "/guides/analytics/" },
+            { label: 'Authentication', link: "/guides/authentication/" },
+            { label: 'Authorization', link: "/guides/authorization/" },
+            { label: 'Cookie Consent Modal', link: "/guides/cookie-consent/" },
+            {
+              label: "Payment Integrations",
+              items: [
+                { label: "Overview", link: "/guides/payment-integrations/" },
+                { label: "Stripe", link: "/guides/payment-integrations/stripe/" },
+                { label: "Lemon Squeezy", link: "/guides/payment-integrations/lemon-squeezy/" },
+                { label: "Polar", link: "/guides/payment-integrations/polar/" },
+              ]
+            },
+            { label: 'Deploying', link: "/guides/deploying/" },
+            { label: 'SEO', link: "/guides/seo/" },
+            { label: 'Email Sending', link: "/guides/email-sending/" },
+            { label: 'File Uploading', link: "/guides/file-uploading/" },
+            { label: 'Tests', link: "/guides/tests/" },
+            { label: 'How (Not) to Update Your Open SaaS App', link: "/guides/updating-opensaas/" },
+            { label: 'Vibe Coding with Open SaaS', link: "/guides/vibe-coding/" },
+          ]
         },
         {
           label: "General",

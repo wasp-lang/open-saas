@@ -186,19 +186,19 @@ For development purposes, Wasp provides a `Dummy` email sender which Open SaaS c
 
 We will explain more about these auth methods, and how to properly integrate them into your app, in the [Authentication Guide](/guides/authentication/).
 
-### Subscription Payments with Stripe or Lemon Squeezy
+### Subscription Payments with Stripe, Lemon Squeezy or Polar
 
-No SaaS is complete without payments, specifically subscription payments. That's why this template comes with a fully functional Stripe or Lemon Squeezy integration. 
+No SaaS is complete without payments, specifically subscription payments. That's why this template comes with a fully functional Stripe, Lemon Squeezy and Polar integration. 
 
 Let's take a quick look at how payments are handled in this template.
 
 1. a user clicks the `BUY` button and a **Checkout session** is created on the server
 2. the user is redirected to the Checkout page where they enter their payment info
 3. the user is redirected back to the app and the Checkout session is completed
-4. Stripe / Lemon Squeezy sends a webhook event to the server with the payment info
+4. Stripe / Lemon Squeezy / Polar sends a webhook event to the server with the payment info
 5. The app server's **webhook handler** handles the event and updates the user's subscription status
 
-The payment processor you choose (Stripe or Lemon Squeezy) and its related functions can be found at `src/payment/paymentProcessor.ts`. The `Payment Processor` object holds the logic for creating checkout sessions, webhooks, etc.
+The payment processor you choose (Stripe, Lemon Squeezy or Polar) and its related functions can be found at `src/payment/paymentProcessor.ts`. The `PaymentProcessor` object holds the logic for creating checkout sessions, webhooks, etc.
 
 The logic for creating the Checkout session is defined in the `src/payment/operation.ts` file. [Actions](https://wasp.sh/docs/data-model/operations/actions) are a type of Wasp Operation, specifically your server-side functions that are used to **write** or **update** data to the database. Once they're defined in the `main.wasp` file, you can easily call them on the client-side:
 
@@ -226,7 +226,7 @@ const handleBuyClick = async (paymentPlanId) => {
 };
 ```
 
-The webhook handler is defined in the `src/payment/webhook.ts` file. Unlike Actions and Queries in Wasp which are only to be used internally, we define the webhook handler in the `main.wasp` file as an API endpoint in order to expose it externally to Stripe
+The webhook handler is defined in the `src/payment/webhook.ts` file. Unlike Actions and Queries in Wasp which are only to be used internally, we define the webhook handler in the `main.wasp` file as an API endpoint in order to expose it externally to the payment processor.
 
 ```js title="main.wasp"
 api paymentsWebhook {
@@ -238,7 +238,7 @@ api paymentsWebhook {
 
 Within the webhook handler, we look for specific events that the Payment Processor sends us to let us know which payment was completed and for which user. Then we update the user's subscription status in the database.
 
-To learn more about configuring the app to handle your products and payments, check out the [Payments Integration guide](/guides/payments-integration/).
+To learn more about configuring the app to handle your products and payments, check out the [Payment Integrations guide](/guides/payment-integrations/).
 
 :::tip[Star our Repo on GitHub! 🌟]
 We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
@@ -277,7 +277,7 @@ For more info on integrating Plausible or Google Analytics, check out the [Analy
 When you first start your Open SaaS app straight from the template, it will run, but many of the services won't work because they lack your own API keys. Here are list of services that need your API keys to work properly:
 
 - Auth Methods (Google, GitHub)
-- Stripe or Lemon Squeezy
+- Stripe, Lemon Squeezy or Polar
 - OpenAI (Chat GPT API)
 - Email Sending (Sendgrid) -- you must set this up if you're using the `email` Auth method 
 - Analytics (Plausible or Google Analytics)
