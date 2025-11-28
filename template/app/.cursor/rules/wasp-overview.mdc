@@ -9,6 +9,25 @@ This document covers the fundamental concepts of the Wasp framework and the basi
 
 ## Background Information
 
+### What is Open SaaS
+
+- Open SaaS is a free, open-source SaaS starter template built on top of the Wasp framework.
+- It provides a production-ready foundation for building SaaS applications with essential features already implemented:
+  - Full-stack authentication (email + OAuth providers: Google, GitHub, Discord)
+  - Stripe and Lemon Squeezy payment integration with subscription management
+  - Admin dashboard with user management
+  - Email sending (SendGrid, Mailgun, or SMTP)
+  - File uploads with AWS S3
+  - Analytics integration (Plausible or Google Analytics)
+  - Landing page and documentation site (Astro Starlight)
+  - Example AI integration with OpenAI
+  - End-to-end testing with Playwright
+  - One-command deployment to Railway or Fly.io
+- Open SaaS follows best practices and conventions specific to building SaaS applications on Wasp.
+- The template is designed to be customized and extended for your specific SaaS product needs.
+- Documentation: https://docs.opensaas.sh
+- LLM-optimized Open SaaS docs: https://docs.opensaas.sh/llms-full.txt
+
 ### What is Wasp
 
 - Wasp (Web Application SPecification language) is a declarative, statically typed, domain-specific language (DSL) for building modern, full-stack web applications.
