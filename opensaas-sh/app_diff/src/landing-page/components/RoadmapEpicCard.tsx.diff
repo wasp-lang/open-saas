@@ -1,7 +1,8 @@
 --- template/app/src/landing-page/components/RoadmapEpicCard.tsx
 +++ opensaas-sh/app/src/landing-page/components/RoadmapEpicCard.tsx
-@@ -0,0 +1,91 @@
+@@ -0,0 +1,92 @@
 +import { Plus } from "lucide-react";
++import ReactMarkdown from "react-markdown";
 +import { cn } from "../../client/utils";
 +import type { GithubEpic } from "../operations";
 +import { GithubEpicStatus } from "../operations";
@@ -29,7 +30,7 @@
 +      )}
 +    >
 +      <h4 className="text-base font-semibold leading-tight text-gray-900 transition-opacity dark:text-white">
-+        {epic.name}
++        <ReactMarkdown>{epic.name}</ReactMarkdown>
 +      </h4>
 +
 +      <div className="mt-auto pt-1">
