@@ -12,7 +12,7 @@ Inception :)!
 
 Since the demo app is just the open saas template with some small tweaks, and we want to be able to easily keep it up to date as the template changes, we don't version (in git) the actual demo app code, instead we version the diffs between it and the template: `app_diff/`.
 
-**Quick Reference:**
+#### Workflow
 
 - Generate `app/` from template and diffs: `./tools/patch.sh`
 - Update diffs after modifying `app/`: `./tools/diff.sh`

@@ -82,7 +82,7 @@ There are two ways to get help or provide feedback (and we try to always respond
 
 ## Development Tools
 
-For information about the development tools used to maintain derived projects (like opensaas.sh), see [tools/README.md](./tools/README.md).
+For information about the development tools used to maintain derived projects (like opensaas.sh and template-test), see [tools/README.md](./tools/README.md).
 
 ## Contributing
 
