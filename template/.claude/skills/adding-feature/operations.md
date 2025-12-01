@@ -20,12 +20,10 @@
 
 **Error Handling:**
 - use `HttpError` from `wasp/server`
-- common status codes: 401 (unauthorized), 403 (forbidden), 404 (not found)
 
 **Database Access:**
 - access via `context.entities.EntityName`
-- use Prisma methods: `findMany`, `findUnique`, `create`, `update`, `delete`
-- filter by `userId` for user-specific data
+- use Prisma methods on these entities
 
 ## Import Conventions
 

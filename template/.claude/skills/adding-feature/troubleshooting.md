@@ -2,7 +2,7 @@
 
 ## Type Errors After Adding Operations
 
-Run `cd app && wasp clean && wasp start` to regenerate types.
+Re-run `wasp start` and inform the user to restart the typescript server to regenerate types.
 
 ## "Cannot find module 'wasp/...'"
 
@@ -39,5 +39,4 @@ query getItems {
 ## Data Not Updating in UI
 
 - queries auto-refetch after actions complete
-- check browser console for errors
 - verify action completed successfully (no errors thrown)

@@ -94,19 +94,12 @@ refer to the following skills:
 
 ## Development Patterns
 
+Wasp abstracts and adds layers on top of the tools it uses to make development more productive. The codebase is your source of truth for how to use Wasp effectively. 
+
 ### Feature Organization
-Refer to [adding-feature SKILL.md](../.claude/skills/adding-feature/SKILL.md) for more information.
 
-### AI-Assisted Development
-
-This template includes Cursor rules in `.cursor/rules/` to help AI assistants understand Wasp and Open SaaS conventions:
-- `wasp-overview.mdc` - Wasp framework fundamentals and Open SaaS overview
-- `project-conventions.mdc` - Import rules and common patterns
-- `database-operations.mdc` - Database and operations patterns
-- `authentication.mdc` - Auth setup and customization
-- `ui-components.mdc` - ShadCN UI component usage
-- `deployment.mdc` - Production deployment guides
-- `advanced-troubleshooting.mdc` - Custom API endpoints, background jobs
+Use the current features as a guide to understand how code is organized.
+When adding new features, refer to [adding-feature SKILL.md](../.claude/skills/adding-feature/SKILL.md) for more information.
 
 ## Common Issues & Solutions
 
@@ -127,7 +120,7 @@ This template includes Cursor rules in `.cursor/rules/` to help AI assistants un
 When building your SaaS app with this template:
 
 1. **Configure branding:** Update `main.wasp` with your app name, title, description, and metadata
-2. **Choose auth methods:** Enable/disable OAuth providers in `main.wasp` auth section
+2. **Choose auth methods:** Enable/disable different auth methods (email, Google, GitHub, Discord, Slack, etc.) in `main.wasp` auth section
 3. **Set up payments:** Configure Stripe, Polar.sh or Lemon Squeezy (see https://docs.opensaas.sh/guides/payment-integrations/)
 4. **Customize landing page:** Edit components in `src/landing-page/`
 5. **Reference demo features:** Demo app code shows how to use the features of the template (`demo-ai-app`, example tasks, etc.)
