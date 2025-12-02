@@ -5,7 +5,9 @@ description: deploy the Open SaaS app to Railway or Fly.io using Wasp CLI.
 
 # deploying-app
 
-All deployment guide URLs, including provider-specific guide URLs, are available in the [Wasp LLM-optimized documentation](https://wasp.sh/llms.txt)
+Complete deployment guide URLs are available in the [Open SaaS Deployment Guide](https://docs.opensaas.sh/llms.txt) and the [Wasp LLM-optimized documentation](https://wasp.sh/llms.txt).
+
+Run [pre-deployment skill](../pre-deployment/SKILL.md) first to validate configuration.
 
 ## Pre-Deployment
 

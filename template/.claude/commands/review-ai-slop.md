@@ -1,8 +1,8 @@
 ---
-description: Review current code changes for AI generated 
+description: Review current code changes for poorly generated code.
 ---
 
-# Remove AI slop
+# Review AI Slop
 
 Check the diff against main, and remove all AI generated slop introduced in this branch.
 
