@@ -1,42 +1,13 @@
 # Troubleshooting - Adding Features
 
-## Type Errors After Adding Operations
+**Type errors after adding operations:** re-run `wasp start`, restart TypeScript server
 
-Re-run `wasp start` and inform the user to restart the typescript server to regenerate types.
+**Entity not in context:** add to `entities: [...]` array in main.wasp
 
-## "Cannot find module 'wasp/...'"
+**Migration fails:** check schema.prisma syntax, ensure DB running (`wasp start db`)
 
-Use `wasp/` prefix, NOT `@wasp/`. Example: `import { User } from 'wasp/entities'`
+**401 errors:** verify `authRequired: true` in main.wasp
 
-## Entity Not Found in Context
+**Page 404:** verify route defined in main.wasp, restart Wasp server
 
-Add entity to operation's `entities` array in `main.wasp`:
-```wasp
-query getItems {
-  fn: import { getItems } from "@src/feature-name/operations",
-  entities: [EntityName]  // ← Must list all entities used
-}
-```
-
-## Migration Fails
-
-- check `schema.prisma` syntax is valid
-- ensure PostgreSQL is running (`wasp start db` if using managed DB)
-- delete failed migration in `app/migrations/` directory and retry
-
-## 401 Unauthorized Errors
-
-- verify page has `authRequired: true` in `main.wasp`
-- ensure testing on `localhost:3000` (correct port)
-- check cookies are enabled in browser
-
-## Page Not Found (404)
-
-- verify route is defined in `main.wasp`
-- check path matches what you're navigating to
-- restart Wasp dev server
-
-## Data Not Updating in UI
-
-- queries auto-refetch after actions complete
-- verify action completed successfully (no errors thrown)
+For more issues, see [debugging-wasp skill](../debugging-wasp/SKILL.md).

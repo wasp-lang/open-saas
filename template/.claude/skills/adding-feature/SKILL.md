@@ -9,14 +9,14 @@ description: plan and scaffold a new feature for the Open SaaS app following Was
 
 1. ask the user what feature they want to add
 2. gather requirements:
-   - does it need authentication?
-   - what kind of database models (entities) may be needed?
-   - what are the main user actions? (create, read, update, delete, etc.)
-   - what dependencies may be needed?
-   - what integrations may be needed?
-   - what types of UI components may be needed?
-   - might this feature make use of wasp's jobs feature?
-   - etc.
+   - **Access:** public, authenticated, or admin-only?
+   - **Subscription tier:** available to all users or gated by plan (hobby/pro)?
+   - **Usage limits:** should it consume credits or have rate limits?
+   - **Data model:** what entities are needed? relate to User?
+   - **Operations:** what can users do? (CRUD, custom actions)
+   - **Admin visibility:** should admins see this data in the dashboard?
+   - **Background work:** needs scheduled jobs or async processing?
+   - **External APIs:** any third-party integrations?
 3. determine feature name in kebab-case (e.g., `todo-list`, `user-notes`)
 
 ## Implementation Steps
