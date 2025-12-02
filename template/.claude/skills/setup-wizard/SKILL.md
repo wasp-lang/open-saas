@@ -111,4 +111,11 @@ Provide a summary:
 - What was configured
 - What env vars still need to be filled in
 - Links to provider dashboards for obtaining credentials
-- Suggest running e2e tests after adding credentials
+- Links to [Open SaaS docs](https://docs.opensaas.sh) for completing integrations
+- Prompt the user if they'd like help with further setup for full functionality of the features they selected.
+
+### Further Setup Help
+
+- For payments, run the [configuring-payments skill](../configuring-payments/SKILL.md) for further setup.
+- For auth, run the [configuring-auth skill](../configuring-auth/SKILL.md) for further setup.
+- For features, run the [adding-feature skill](../adding-feature/SKILL.md) for further setup.

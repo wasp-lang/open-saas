@@ -7,7 +7,13 @@ description: configure payment integration for Open SaaS (Stripe, Lemon Squeezy,
 
 All payment integration guide URLs, including provider-specific guide URLs, are available in the [Open SaaS LLM-optimized documentation](https://docs.opensaas.sh/llms.txt)
 
-## Setup Steps
+## Setup Methods
+
+**Automated Stripe Setup via CLI:** For faster Stripe setup via command line, see [stripe-automated-setup.md](./stripe-automated-setup.md)
+
+**Manual Setup:** Follow steps below for any provider.
+
+## Manual Setup Steps
 
 ### 1. Select Provider
 
@@ -42,15 +48,11 @@ Update `src/payment/plans.ts` if changing product names.
 
 **Lemon Squeezy / Polar:** use ngrok (`ngrok http 3001`), set webhook URL to `https://[ngrok-url]/payments-webhook`
 
-### 5. Test
+## Testing Payments and Troubleshooting
 
-1. start wasp + webhook forwarding
-2. test checkout, verify `subscriptionStatus` in `wasp db studio`
+See [troubleshooting](./troubleshooting.md)
 
 ## Cleanup
 
 See [cleanup.md](./cleanup.md) to remove unused provider code.
 
-## Troubleshooting
-
-See [troubleshooting](./troubleshooting.md)

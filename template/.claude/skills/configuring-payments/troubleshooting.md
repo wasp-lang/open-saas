@@ -25,9 +25,10 @@ Check webhook events enabled:
 
 ## Test Payments
 
-**Stripe:** card `4242 4242 4242 4242`, API key starts with `sk_test_`
-
+**Stripe:** test card `4242 4242 4242 4242`, API key starts with `sk_test_`
 **Polar:** set `POLAR_SANDBOX_MODE=true`
+
+- test checkout, verify `subscriptionStatus` in `wasp db studio`
 
 ## More Help
 

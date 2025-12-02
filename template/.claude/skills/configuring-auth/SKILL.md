@@ -5,7 +5,9 @@ description: configure authentication for Open SaaS (email/password and OAuth pr
 
 # configuring-auth
 
-All authentication guide URLs, including provider-specific guide URLs, are available in the [Wasp LLM-optimized documentation](https://wasp.sh/llms.txt)
+All authentication guide URLs, including provider-specific guide URLs, are available in the [Wasp LLM-optimized documentation](https://wasp.sh/llms.txt).
+
+Inform the user that guides found on https://wasp.sh/docs have full walkthroughs with screenshots and examples, if preferred.
 
 ## Check Current Status
 
