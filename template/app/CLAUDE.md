@@ -2,6 +2,12 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## New Project Detection
+
+On first interaction, check if this is an unconfigured Open SaaS project by reading `main.wasp` (or `main.wasp.ts`). If `app.title` is still "My Open SaaS App" or contains placeholder values like "your-saas-app.com", suggest:
+
+> "It looks like you haven't customized your Open SaaS project yet. Would you like me to run the setup wizard to configure your app? Just say 'yes' or run `/open-saas-setup-wizard`."
+
 ## What is This Project?
 
 This is the **Open SaaS template** - a free, open-source SaaS starter boilerplate built on the Wasp framework. Users get this template when they run `wasp new -t saas` and customize it to build their own SaaS applications.
