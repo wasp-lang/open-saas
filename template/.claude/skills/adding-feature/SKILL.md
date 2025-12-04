@@ -33,11 +33,13 @@ When gathering requirements (either before or during plan mode), ask about:
 
 ## Implementation Steps
 
-Follow these guide:
+Prompt the user if they'd like to follow the [Kaizen approach](./kaizen-approach.md) when implementing a feature, especially for complex ones.
+
+Here is an example process for implementing a feature:
 
 1. **[Database Setup](./database.md)** - if feature needs entities
 2. **[Operations](./operations.md)** - backend queries and actions
-3. **[Wasp Configuration](./wasp-config.md)** - register in wasp config file
+3. **Wasp Configuration** - define feature in wasp config file
 4. **[Pages](./pages.md)** - frontend components
 5. **[Background Jobs](./background-jobs.md)** - scheduled or async background jobs
 

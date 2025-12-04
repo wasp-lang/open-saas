@@ -3,7 +3,6 @@
 ## Setup
 
 1. create `app/src/{feature-name}/{FeatureName}Page.tsx`
-2. reference [`../../../app/src/demo-ai-app/DemoAppPage.tsx`](../../../app/src/demo-ai-app/DemoAppPage.tsx) as example
 
 ## Guidelines
 
