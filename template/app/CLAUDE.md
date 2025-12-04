@@ -1,13 +1,5 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
-## New Project Detection
-
-On first interaction, check if this is an unconfigured Open SaaS project by reading `main.wasp` (or `main.wasp.ts`). If `app.title` is still "My Open SaaS App" or contains placeholder values like "your-saas-app.com", suggest:
-
-> "It looks like you haven't customized your Open SaaS project yet. Would you like me to run the setup wizard to configure your app? Just say 'yes' or run `/open-saas-setup-wizard`."
-
 ## What is This Project?
 
 This is the **Open SaaS template** - a free, open-source SaaS starter boilerplate built on the Wasp framework. Users get this template when they run `wasp new -t saas` and customize it to build their own SaaS applications.
@@ -24,11 +16,11 @@ This is the **Open SaaS template** - a free, open-source SaaS starter boilerplat
 - **Testing** - Playwright E2E tests included
 - **Deployment** - One-command deploy to Railway or Fly.io
 
-**Documentation:**
-- Open SaaS Docs (human-readable): https://docs.opensaas.sh
-- Open SaaS Docs (LLM-optimized): https://docs.opensaas.sh/llms.txt
-- Wasp Docs (human-readable): https://wasp.sh/docs
-- Wasp Docs (LLM-optimized): https://wasp.sh/llms.txt
+## New Project Detection
+
+On first interaction, check if this is an unconfigured Open SaaS project by reading `main.wasp` (or `main.wasp.ts`). If `app.title` is still "My Open SaaS App" or contains placeholder values like "your-saas-app.com", suggest:
+
+> "It looks like you haven't customized your Open SaaS project yet. Would you like me to run the setup wizard to configure your app? Just say 'yes' or run `/open-saas-setup-wizard`."
 
 ## Project Structure
 
@@ -37,17 +29,13 @@ This is a Wasp application. Wasp uses a declarative configuration file to genera
 - **`main.wasp`** - App configuration defining routes, pages, auth, operations, and more
   - note: users can also use `main.wasp.ts` instead of `main.wasp` for TypeScript support.
 - **`schema.prisma`** - Prisma database schema (defines data models)
-- **`src/`** - Application code organized by feature:
-  - `src/auth/` - Authentication logic and pages
-  - `src/client/` - Shared client components and layout
-  - `src/payment/` - Stripe/Lemon Squeezy integration
-  - `src/user/` - User profile and settings
-  - `src/demo-ai-app/` - Example OpenAI integration (demo feature)
-  - `src/file-upload/` - AWS S3 file upload example (demo feature)
-  - `src/landing-page/` - Marketing landing page components
-  - `src/admin/` - Admin dashboard
-  - `src/server/` - Server utilities and scripts
-  - `src/shared/` - Code shared between client and server
+- **`src/{featureName}/`** - Application code organized by feature:
+  - `operations.ts` - Wasp queries and actions
+  - `{FeatureName}Page.tsx` - Page components
+  - Components, utilities, and types as needed
+- **`src/client/components/ui`** - predefined ShadCN UI components
+- **`src/shared/`** - Code shared between client and server
+- **`e2e-tests/`** - Playwright end-to-end tests
 
 **Note:** The demo app features (`demo-ai-app`, `file-upload`, etc.) are examples users can reference and remove when building their own SaaS.
 
@@ -63,6 +51,7 @@ wasp db seed            # Run seed functions defined in main.wasp
 
 # Production
 wasp build              # Generate production build
+wasp build start        # Generate production build and start server to test locally
 wasp deploy             # Deploy to Railway or Fly.io
 
 # Maintenance
@@ -88,15 +77,18 @@ wasp clean              # Delete generated code and caches (fixes most issues)
 
 Wasp operations (queries and actions) are the primary way to communicate between client and server.
 
-Refer to the following skills for more information:
-- [operations.md](../.claude/skills/adding-feature/operations.md)
-
 ## Database Workflow
 
-refer to the following skills: 
-- [database.md](../.claude/skills/adding-feature/database.md)
-- [starting-wasp SKILL.md](../.claude/skills/starting-wasp/SKILL.md)
-- [migrating-db SKILL.md](../.claude/skills/migrating-db/SKILL.md)
+1. Edit `schema.prisma` to add/modify models
+2. Run `wasp db migrate-dev --name describe-change`
+3. Wasp auto-generates TypeScript types in `wasp/entities`
+4. Access via `context.entities.ModelName` in operations
+
+**Useful commands:**
+```bash
+wasp db studio          # GUI to inspect database
+wasp db reset           # Reset database (WARNING: deletes data)
+```
 
 ## Development Patterns
 
@@ -107,36 +99,45 @@ Wasp abstracts and adds layers on top of the tools it uses to make development m
 Use the current features as a guide to understand how code is organized.
 When adding new features, refer to [adding-feature SKILL.md](../.claude/skills/adding-feature/SKILL.md) for more information.
 
-## Common Issues & Solutions
+## Troubleshooting
 
-**"Cannot find module 'wasp/...'"**
-- Check import prefix is `wasp/`, not `@wasp/`
-- Restart Wasp dev server: `wasp clean && wasp start`
+**Nuclear option (fixes most issues):**
+```bash
+wasp clean && wasp start
+```
 
-**"Cannot find module '@src/...'" in TypeScript**
-- Use relative imports in `.ts`/`.tsx` files
-- Only use `@src/...` in `main.wasp` file
+**Restart TypeScript server:** `Cmd/Ctrl + Shift + P` → "TypeScript: Restart TS Server"
 
-**Type errors after changing operations**
-- Restart Wasp dev server to regenerate types
-- Check that entities are listed in operation definitions in `main.wasp`
+### Import Errors
+- `"Cannot find module 'wasp/...'"` → Use `wasp/`, not `@wasp/`
+- `"Cannot find module '@src/...'"` in TypeScript → Use relative paths, `@src/` is only for main.wasp
 
-## Customizing This Template
+### Entity/Operation Errors
+- `"context.entities.X is undefined"` → Check entity is in `entities: [...]` array in main.wasp
+- Types not updating → Restart Wasp server, then restart TS server
 
-When building your SaaS app with this template:
+### Database Issues
+- Schema changes not applied → `wasp db migrate-dev --name describe-change`
+- Database out of sync → `wasp db reset` (WARNING: deletes data)
 
-1. **Configure branding:** Update `main.wasp` with your app name, title, description, and metadata
-2. **Choose auth methods:** Enable/disable different auth methods (email, Google, GitHub, Discord, Slack, etc.) in `main.wasp` auth section
-3. **Set up payments:** Configure Stripe, Polar.sh or Lemon Squeezy (see https://docs.opensaas.sh/guides/payment-integrations/)
-4. **Customize landing page:** Edit components in `src/landing-page/`
-5. **Reference demo features:** Demo app code shows how to use the features of the template (`demo-ai-app`, example tasks, etc.)
-6. **Add your data models:** Define your entities in `schema.prisma`
-7. **Build your features:** Create your own pages, operations, and components in `src/`
-8. **Configure services:** Set up email, analytics, file storage in `.env.server`
-9. **Update tests:** Modify e2e tests to match your features
-10. **Deploy:** Run `wasp deploy` when ready for production
+### Runtime Errors
+- 401 errors → Check `if (!context.user)` guard or `authRequired: true` on page
+- DB connection issues → Run `wasp start db` or check `DATABASE_URL`
+- Env var changes not working → Restart server after `.env.server` changes
 
-Reference the skills in [.claude/skills/](../.claude/skills/) for more information.
+## Authentication Quick Reference
+
+**Email auth** is enabled by default. For production, switch from `Dummy` to a real email provider.
+
+**Dev testing:** Set `SKIP_EMAIL_VERIFICATION_IN_DEV=true` or find verification URLs in server console.
+
+## E2E Testing
+
+With the Wasp app running in a separate terminal, run the following commands:
+```bash
+cd e2e-tests && npm install    # First time only
+npm run local:e2e:start        # Run tests (opens Playwright UI)
+```
 
 ## Wasp Discord
 

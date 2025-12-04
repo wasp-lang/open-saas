@@ -7,7 +7,7 @@ description: deploy the Open SaaS app to Railway or Fly.io using Wasp CLI.
 
 ## Pre-Deployment
 
-1. Run [pre-deployment skill](../pre-deployment/SKILL.md) first to validate configuration.
+1. Run the [validating-pre-deployment skill](../validating-pre-deployment/SKILL.md) first to validate configuration.
 2. confirm platform: Railway or Fly.io
 3. verify CLI installed and logged in:
    - Railway: `railway whoami`

@@ -1,9 +1,9 @@
 ---
-name: pre-deployment
+name: validating-pre-deployment
 description: validate configuration and test production build before deploying.
 ---
 
-# pre-deployment
+# validating-pre-deployment
 
 Pre-deployment validation checks that catch common issues before deploying with the [deploying-app skill](../deploying-app/SKILL.md).
 
