@@ -19,10 +19,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Open SaaS follows best practices and conventions specific to building SaaS applications on Wasp. The template is designed to be customized and extended for your specific product needs.
 
-**Documentation:**
-- Human-readable: https://docs.opensaas.sh
-- LLM-optimized: https://docs.opensaas.sh/llms-full.txt
-
 ## Repository Structure
 
 This is the **Open SaaS** monorepo, a full-stack SaaS template built with Wasp, React, Node.js, and Prisma.
@@ -54,9 +50,6 @@ The `opensaas-sh` app is not directly versioned. Instead, only the **diffs** fro
 ```
 
 ## Working with the Wasp App
-
-Remember: LLM-optimized docs are always up-to-date at: https://wasp.sh/llms-full.txt
-and: https://docs.opensaas.sh/llms-full.txt
 
 ### Project Structure
 
@@ -179,10 +172,6 @@ The template includes comprehensive Cursor rules in `template/app/.cursor/rules/
 - `deployment.mdc` - Production deployment guides
 - `advanced-troubleshooting.mdc` - Custom API endpoints, background jobs
 
-Wasp documentation is available at:
-- LLM-optimized: https://wasp.sh/llms-full.txt
-- Human-readable: https://wasp.sh/docs
-
 ## Tech Stack
 
 - **Framework:** Wasp 0.19+ (React + Node.js + Prisma)
@@ -257,3 +246,12 @@ npm run test
 
 **macOS dope.sh errors**
 - Install: `brew install coreutils gpatch diffutils`
+
+## LLM-optimized Documentation
+
+If needed, ground yourself using the Wasp & Open SaaS documentation:
+- https://wasp.sh/llms.txt
+- https://docs.opensaas.sh/llms.txt
+
+## MCP Documentation Lookup
+- For specific lookups: Use `mcp__wasp-docs__find_docs` to search Wasp/OpenSaaS docs

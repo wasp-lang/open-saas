@@ -25,10 +25,10 @@ This is the **Open SaaS template** - a free, open-source SaaS starter boilerplat
 - **Deployment** - One-command deploy to Railway or Fly.io
 
 **Documentation:**
-- Open SaaS Docs: https://docs.opensaas.sh
-- LLM-optimized: https://docs.opensaas.sh/llms-full.txt
-- Wasp Docs: https://wasp.sh/docs
-- Wasp LLM-optimized: https://wasp.sh/llms-full.txt
+- Open SaaS Docs (human-readable): https://docs.opensaas.sh
+- Open SaaS Docs (LLM-optimized): https://docs.opensaas.sh/llms.txt
+- Wasp Docs (human-readable): https://wasp.sh/docs
+- Wasp Docs (LLM-optimized): https://wasp.sh/llms.txt
 
 ## Project Structure
 
@@ -138,12 +138,15 @@ When building your SaaS app with this template:
 
 Reference the skills in [.claude/skills/](../.claude/skills/) for more information.
 
-## Getting Help
+## Wasp Discord
 
-**Wasp Discord:** https://discord.gg/aCamt5wCpS (use #🙋questions channel)
+- https://discord.gg/aCamt5wCpS (use #🙋questions channel)
 
-**Documentation:**
-- Open SaaS Docs: https://docs.opensaas.sh
-- LLM-optimized: https://docs.opensaas.sh/llms-full.txt
-- Wasp Docs: https://wasp.sh/docs
-- Wasp LLM-optimized: https://wasp.sh/llms-full.txt
+## LLM-optimized Documentation
+
+If needed, ground yourself using the Wasp & Open SaaS documentation:
+- https://wasp.sh/llms.txt
+- https://docs.opensaas.sh/llms.txt
+
+## MCP Documentation Lookup
+- For specific lookups: Use `mcp__wasp-docs__find_docs` to search Wasp/OpenSaaS docs

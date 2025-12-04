@@ -5,11 +5,9 @@ description: configure payment integration for Open SaaS (Stripe, Lemon Squeezy,
 
 # configuring-payments
 
-All payment integration guide URLs, including provider-specific guide URLs, are available in the [Open SaaS LLM-optimized documentation](https://docs.opensaas.sh/llms.txt)
-
 ## Setup Methods
 
-**Automated Stripe Setup via CLI:** For faster Stripe setup via command line, see [stripe-automated-setup.md](./stripe-automated-setup.md)
+**Automated Stripe Setup via CLI:** For faster Stripe setup via command line, follow the instructions in [stripe-automated-setup.md](./stripe-automated-setup.md)
 
 **Manual Setup:** Follow steps below for any provider.
 
@@ -55,4 +53,12 @@ See [troubleshooting](./troubleshooting.md)
 ## Cleanup
 
 See [cleanup.md](./cleanup.md) to remove unused provider code.
+
+## Documentation
+
+Fetch guide URLs directly:
+- https://docs.opensaas.sh/llms.txt
+- https://wasp.sh/llms.txt
+
+If you need more specific info, use mcp__wasp-docs__find_docs to search.
 

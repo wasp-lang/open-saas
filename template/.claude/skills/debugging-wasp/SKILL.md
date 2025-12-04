@@ -71,3 +71,11 @@ wasp db reset
 ## Troubleshooting
 
 see [troubleshooting](./troubleshooting.md) for specific issues
+
+## Documentation
+
+Fetch full text documentation directly:
+- https://wasp.sh/llms-full.txt
+- https://docs.opensaas.sh/llms-full.txt
+
+If you need more specific info, use mcp__wasp-docs__find_docs to search.

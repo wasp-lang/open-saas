@@ -119,3 +119,10 @@ Provide a summary:
 - For payments, run the [configuring-payments skill](../configuring-payments/SKILL.md) for further setup.
 - For auth, run the [configuring-auth skill](../configuring-auth/SKILL.md) for further setup.
 - For features, run the [adding-feature skill](../adding-feature/SKILL.md) for further setup.
+
+## Documentation
+
+Fetch guide URLs directly:
+- https://docs.opensaas.sh/llms.txt
+
+If you need more specific info, use mcp__wasp-docs__find_docs to search.

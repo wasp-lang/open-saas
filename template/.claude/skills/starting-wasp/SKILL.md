@@ -5,13 +5,15 @@ description: start the Wasp development server correctly with all required servi
 
 # starting-wasp
 
+Start the wasp app for the user as a background task, or allow the user to start it themselves in separate terminals.
+
 ## Starting the Development Server
 
 1. check if the user has Wasp installed by running `wasp version`.
 2. if Wasp is not installed, instruct them to install it with: `curl -sSL https://get.wasp.sh/installer.sh | sh`
 3. check if PostgreSQL is needed by reading [`./app/schema.prisma`](../../../app/schema.prisma) to see if the database provider is `postgresql`.
 4. if PostgreSQL is required:
-   - ask if they have PostgreSQL running locally or want to use Wasp's managed database.
+   - ask if they have PostgreSQL running locally or want to use Wasp's managed database (default).
    - if they want Wasp's managed database, run `wasp start db` in the `template/app` directory first (in the background or instruct to run in separate terminal).
    - if they have their own database running, inform them that they need to set the correct `DATABASE_URL` in [`./app/.env.server`](../../../app/.env.server).
 5. run `wasp start` in the `template/app` directory in a separate terminal to start the development server.
@@ -25,3 +27,10 @@ description: start the Wasp development server correctly with all required servi
 ## Troubleshooting
 
 see [troubleshooting](../troubleshooting.md)
+
+## Documentation
+
+Fetch guide URLs directly:
+- https://wasp.sh/llms.txt
+
+If you need more specific info, use mcp__wasp-docs__find_docs to search.

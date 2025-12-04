@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["chrome-devtools-mcp@latest"]
+    },
+    "wasp-docs": {
+      "command": "wasp-mcp-docs"
+    }
+  }
+}

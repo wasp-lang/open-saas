@@ -1,6 +1,7 @@
 # Stripe Automated Setup via CLI
 
 Use these scripts and instructions to automate Stripe setup via CLI.
+Important: never edit any .env files, always ask the user to add the values!
 
 ## When to Use This
 
@@ -17,6 +18,18 @@ Use manual setup (dashboard) when:
 
 ## Prerequisites
 
+### Step 1: Select Your Stripe Account/Workspace
+
+**Important:** If you have multiple Stripe business accounts or workspaces, you MUST select the correct one BEFORE logging in to CLI. This ensures test products are created in the right workspace.
+
+1. Go to https://dashboard.stripe.com
+2. Click your account name in the **top left corner**
+3. Select the correct business/workspace for this project
+4. (Optional) If you need a new workspace, click **"+ New account"** and set it up
+5. **Stay logged in** with this account selected
+
+### Step 2: Install Stripe CLI
+
 Check if Stripe CLI is installed:
 ```bash
 stripe --version
@@ -31,21 +44,62 @@ brew install stripe/stripe-cli/stripe
 # Download from: https://stripe.com/docs/stripe-cli
 ```
 
-Login to Stripe:
+### Step 3: Login to Stripe CLI
+
 ```bash
 stripe login
 ```
 
+This will open your browser. Authorize the CLI with the account you selected in Step 1.
+
+### Step 4: Verify Correct Account is Connected
+
+After login, run:
+```bash
+stripe config --list
+```
+
+Prompt the user to confirm that the following are correct:
+- [ ] Account ID
+- [ ] Display Name
+- [ ] Project Name
+Prompt: "Does this match the Stripe workspace you selected in Step 1? If not, please log out and log back in with the correct project name."
+
+**⚠️ IMPORTANT:** The `test_mode_api_key` shown in `stripe config --list` is a **temporary CLI session key**, NOT your actual Stripe API key. Do NOT use this key in `.env.server`. You must get the real API key from the Stripe Dashboard (see Step 1 below).
+
+If the account is wrong, follow these steps:
+
+1. Log out:
+   ```bash
+   stripe logout
+   ```
+
+2. Prompt user to go to https://dashboard.stripe.com and select the correct workspace (top left corner)
+
+3. Log back in:
+   ```bash
+   stripe login
+   ```
+
+4. Verify again:
+   ```bash
+   stripe config --list
+   ```
+
 ## Automated Setup Process
 
-### Step 1: Get API Key
+### Step 1: Get API Key from Dashboard
 
-Open the Stripe API keys page and get your test key (starts with `sk_test_`):
+**⚠️ CRITICAL:** You must get the API key from the Stripe Dashboard, NOT from `stripe config --list`. The CLI's `test_mode_api_key` is a temporary session key that won't work for your application.
+
+Open the Stripe API keys page:
 ```bash
 stripe open dashboard/apikeys
 ```
 
-Help user add to `.env.server`:
+This opens your browser to the API keys page. Look for the **Secret key** (starts with `sk_test_` for test mode). Click "Reveal test key" if needed, then copy it.
+
+Instruct the user to add to `.env.server`:
 ```bash
 STRIPE_API_KEY=sk_test_51ABC...
 ```

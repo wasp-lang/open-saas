@@ -5,17 +5,14 @@ description: deploy the Open SaaS app to Railway or Fly.io using Wasp CLI.
 
 # deploying-app
 
-Complete deployment guide URLs are available in the [Open SaaS Deployment Guide](https://docs.opensaas.sh/llms.txt) and the [Wasp LLM-optimized documentation](https://wasp.sh/llms.txt).
-
-Run [pre-deployment skill](../pre-deployment/SKILL.md) first to validate configuration.
-
 ## Pre-Deployment
 
-1. confirm platform: Railway or Fly.io
-2. verify CLI installed and logged in:
+1. Run [pre-deployment skill](../pre-deployment/SKILL.md) first to validate configuration.
+2. confirm platform: Railway or Fly.io
+3. verify CLI installed and logged in:
    - Railway: `railway whoami`
    - Fly.io: `fly auth whoami`
-3. collect env vars: server secrets + client vars (prefixed `REACT_APP_`)
+4. collect env vars: server secrets + client vars (prefixed `REACT_APP_`)
 
 ## Deploy Commands
 
@@ -37,3 +34,11 @@ Run [pre-deployment skill](../pre-deployment/SKILL.md) first to validate configu
 ## Troubleshooting
 
 See [troubleshooting](./troubleshooting.md)
+
+## Documentation
+
+Fetch guide URLs directly:
+- https://docs.opensaas.sh/llms.txt
+- https://wasp.sh/llms.txt
+
+If you need more specific info, use mcp__wasp-docs__find_docs to search.

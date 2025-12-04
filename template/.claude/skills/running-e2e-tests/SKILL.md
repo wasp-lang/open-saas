@@ -23,3 +23,10 @@ description: run Playwright end-to-end tests for the Open SaaS app.
 ## Troubleshooting
 
 see [troubleshooting](../troubleshooting.md)
+
+## Documentation
+
+Fetch guide URLs directly:
+- https://docs.opensaas.sh/llms.txt
+
+If you need more specific info, use mcp__wasp-docs__find_docs to search.

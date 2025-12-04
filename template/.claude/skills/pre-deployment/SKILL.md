@@ -199,11 +199,9 @@ If all checks pass or user chooses to proceed:
 - Ask: "Would you like to proceed with deployment? I can guide you through deploying to Railway or Fly.io."
 - If yes, transition to [deploying-app skill](../deploying-app/SKILL.md)
 
-## Reference
+## Documentation
 
-For deployment details not covered here, see:
-- [Open SaaS Deployment Guide](https://docs.opensaas.sh/guides/deploying/) - Open SaaS-specific deployment instructions
-- [Wasp Deployment Intro](https://wasp.sh/docs/deployment/intro)
-- [Environment Variables](https://wasp.sh/docs/deployment/env-vars)
-- [Database Setup](https://wasp.sh/docs/deployment/database)
-- [Local Build Testing](https://wasp.sh/docs/deployment/local-testing)
+Fetch guide URLs directly:
+- https://docs.opensaas.sh/llms.txt
+
+If you need more specific info, use mcp__wasp-docs__find_docs to search.

@@ -22,3 +22,10 @@ description: migrate the database after making changes to `schema.prisma`.
 ## Troubleshooting
 
 see [troubleshooting](../troubleshooting.md)
+
+## Documentation
+
+Fetch guide URLs directly:
+- https://wasp.sh/llms.txt
+
+If you need more specific info, use mcp__wasp-docs__find_docs to search.

@@ -5,10 +5,6 @@ description: configure authentication for Open SaaS (email/password and OAuth pr
 
 # configuring-auth
 
-All authentication guide URLs, including provider-specific guide URLs, are available in the [Wasp LLM-optimized documentation](https://wasp.sh/llms.txt).
-
-Inform the user that guides found on https://wasp.sh/docs have full walkthroughs with screenshots and examples, if preferred.
-
 ## Check Current Status
 
 1. read [`../../../app/main.wasp`](../../../app/main.wasp) auth section
@@ -25,7 +21,7 @@ Email auth is enabled by default. For production:
 
 ## OAuth Providers
 
-1. **Enable:** uncomment provider in main.wasp auth methods. Note: Additional providers can be found in the [Wasp LLM-optimized documentation](https://wasp.sh/llms.txt).
+1. **Enable:** uncomment provider in main.wasp auth methods. Note: Additional providers can be found in the [Wasp documentation](https://wasp.sh/llms.txt).
 2. **Credentials:** set `<PROVIDER>_CLIENT_ID` and `<PROVIDER>_CLIENT_SECRET` in `.env.server`
 3. **Redirect URL:** configure in provider dashboard:
    - Dev: `http://localhost:3001/auth/<provider>/callback`
@@ -39,3 +35,10 @@ Comment out method in main.wasp, restart server.
 ## Troubleshooting
 
 see [troubleshooting](./troubleshooting.md)
+
+## Documentation
+
+Fetch guide URLs directly:
+- https://wasp.sh/llms.txt
+
+If you need more specific info, use mcp__wasp-docs__find_docs to search.

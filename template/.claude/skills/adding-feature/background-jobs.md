@@ -1,9 +1,4 @@
----
-name: adding-background-job
-description: add scheduled or async background jobs using Wasp's PgBoss integration.
----
-
-# adding-background-job
+# Background Jobs
 
 Complete job guide URLs are available in the [Wasp LLM-optimized documentation](https://wasp.sh/llms.txt).
 

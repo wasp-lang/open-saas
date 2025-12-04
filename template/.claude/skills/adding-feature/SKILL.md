@@ -5,8 +5,20 @@ description: plan and scaffold a new feature for the Open SaaS app following Was
 
 # adding-feature
 
+## Planning Requirement
+
+**IMPORTANT:** Before implementing any feature, use the EnterPlanMode tool to:
+1. Explore existing code patterns in the codebase
+2. Design the implementation approach
+3. Write a plan file for user approval and/or add tasks to the todo list with TodoWrite tool.
+
+Only proceed with implementation after the user approves the plan.
+
 ## Feature Planning
 
+### Requirements Gathering
+
+When gathering requirements (either before or during plan mode), ask about:
 1. ask the user what feature they want to add
 2. gather requirements:
    - **Access:** public, authenticated, or admin-only?
@@ -27,6 +39,7 @@ Follow these guide:
 2. **[Operations](./operations.md)** - backend queries and actions
 3. **[Wasp Configuration](./wasp-config.md)** - register in wasp config file
 4. **[Pages](./pages.md)** - frontend components
+5. **[Background Jobs](./background-jobs.md)** - scheduled or async background jobs
 
 ## Verification
 
@@ -38,3 +51,10 @@ Follow these guide:
 ## Troubleshooting
 
 see [troubleshooting](./troubleshooting.md)
+
+## Documentation
+
+Fetch guide URLs directly:
+- https://wasp.sh/llms.txt
+
+If you need more specific info, use mcp__wasp-docs__find_docs to search.
