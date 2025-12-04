@@ -29,10 +29,12 @@ Check the wasp config file (`main.wasp` or `main.wasp.ts`) `app` block for place
 - `<meta name='author'...` - should NOT be "Your (App) Name"
 - `<meta property='og:title'...` - should match actual app title
 - `<meta property='og:site_name'...` - should match actual app name
-- `<meta property='og:url'...` - should NOT be "https://your-saas-app.com"
+- `<meta property='og:url'...` - should NOT be "https://your-saas-app.com" or a placeholder value
 - `<meta property='og:description'...` - should NOT contain placeholder text
 - `<meta property='og:image'...` - should point to actual hosted image URL
 - `<meta name='twitter:image'...` - should point to actual hosted image URL
+
+Confirm that URLs are actual live URLs, not placeholder values set during the setup wizard.
 
 **Analytics Scripts:**
 - Plausible scripts should have actual domain (not `<your-site-id>`)

@@ -27,10 +27,12 @@ Then update in [`../../../app/main.wasp`](../../../app/main.wasp):
 - `app.title`
 - `app.head` meta tags
 
+DO NOT change URLs in the `app.head` meta tags. Leave these as they are until the user has a production domain and is ready to deploy.
+
 ### Step 2: Authentication
 
 Ask the user which auth methods they want:
-- Email/password (enabled by default with `Dummy` email sender for local development)
+- Email/password (works right away with `Dummy` email sender in local development)
 - Google OAuth (requires API keys)
 - GitHub OAuth (requires API keys)
 - Discord OAuth (requires API keys)
@@ -79,8 +81,15 @@ If yes, note they'll configure the analytics provider in Step 6.
 
 ### Step 6: Completing Integrations & Environment Variables
 
-For each integration selected: follow the guide or skill → generate checklist of required env vars → give user instructions to apply → move to next.
+For each integration selected in Steps 2-5: 
+1. fetch the guide or skill from the list below to guide the user through the integration
+2. generate checklist of required env vars 
+3. give user instructions for retrieving and adding env vars to `.env.server` 
+4. follow steps/run commands in the guide or skill to complete the integration for the user where applicable
+5. prompt the user to confirm they're ready to move to the next integration
+6. move to next integration
 
+Skills and guides to fetch for each integration:
 - OAuth providers: find the correct provider guide URL at https://wasp.sh/llms.txt
 - Email providers: find the sending emails guide URL at https://wasp.sh/llms.txt
 - Analytics providers: find the correct guide URL at https://docs.opensaas.sh/llms.txt
@@ -88,7 +97,7 @@ For each integration selected: follow the guide or skill → generate checklist 
 
 ### Step 7: Verify Setup
 
-1. "Would you like to start your Wasp app in a new terminal yourself or would you like me to start it for you as a background task?" 
+1. start the wasp app processes in new terminals as background tasks in the current Claude Code session: `wasp start db` and `wasp start`.
 2. after starting the development server, verify configuration compiles
 3. check for any errors.
 
