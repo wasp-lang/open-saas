@@ -40,6 +40,7 @@ Small, frequent improvements compound into major gains.
 - Don't try all three at once
 
 <Good>
+
 ```typescript
 // Iteration 1: Make it work
 const calculateTotal = (items: Item[]) => {
@@ -70,10 +71,12 @@ const calculateTotal = (items: Item[]): number => {
 };
 
 ```
+
 Each step is complete, tested, and working
 </Good>
 
 <Bad>
+
 ```typescript
 // Trying to do everything at once
 const calculateTotal = (items: Item[]): number => {
@@ -146,6 +149,7 @@ Design systems that prevent errors at compile/design time, not runtime.
 #### Type System Error Proofing
 
 <Good>
+
 ```typescript
 // Error: string status can be any value
 type OrderBad = {
@@ -174,6 +178,7 @@ Type system prevents entire classes of errors
 </Good>
 
 <Good>
+
 ```typescript
 // Make invalid states unrepresentable
 type NonEmptyArray<T> = [T, ...T[]];
@@ -195,6 +200,7 @@ Function signature guarantees safety
 #### Validation Error Proofing
 
 <Good>
+
 ```typescript
 // Error: Validation after use
 const processPayment = (amount: number) => {
@@ -242,6 +248,7 @@ Validate once at boundary, safe everywhere else
 #### Guards and Preconditions
 
 <Good>
+
 ```typescript
 // Early returns prevent deeply nested code
 const processUser = (user: User | null) => {
@@ -263,6 +270,7 @@ const processUser = (user: User | null) => {
   // Main logic here, guaranteed user is valid and active
   sendEmail(user.email, 'Welcome!');
 };
+
 ```
 
 Guards make assumptions explicit and enforced
@@ -271,6 +279,7 @@ Guards make assumptions explicit and enforced
 #### Configuration Error Proofing
 
 <Good>
+
 ```typescript
 // Error: Optional config with unsafe defaults
 type ConfigBad = {
@@ -302,8 +311,9 @@ const loadConfig = (): Config => {
 const config = loadConfig();
 const client = new APIClient(config);
 
-```
 Fail at startup, not in production
+
+```
 </Good>
 
 #### In Practice
@@ -353,6 +363,7 @@ Follow established patterns. Document what works. Make good practices easy to fo
 #### Following Patterns
 
 <Good>
+
 ```typescript
 // Existing codebase pattern for API clients
 class UserAPIClient {
@@ -373,6 +384,7 @@ Consistency makes codebase predictable
 </Good>
 
 <Bad>
+
 ```typescript
 // Existing pattern uses classes
 class UserAPIClient { /* ... */ }
@@ -389,6 +401,7 @@ Inconsistency creates confusion
 #### Error Handling Patterns
 
 <Good>
+
 ```typescript
 // Project standard: Result type for recoverable errors
 type Result<T, E> = { ok: true; value: T } | { ok: false; error: E };
@@ -421,6 +434,7 @@ Standard pattern across codebase
 #### Documentation Standards
 
 <Good>
+
 ```typescript
 /**
  * Retries an async operation with exponential backoff.
@@ -498,6 +512,7 @@ Build what's needed now. No more, no less. Avoid premature optimization and over
 #### YAGNI in Action
 
 <Good>
+
 ```typescript
 // Current requirement: Log errors to console
 const logError = (error: Error) => {
@@ -508,6 +523,7 @@ Simple, meets current need
 </Good>
 
 <Bad>
+
 ```typescript
 // Over-engineered for "future needs"
 interface LogTransport {
@@ -542,6 +558,7 @@ Building for imaginary future requirements
 - Multiple use cases emerged
 
 <Good>
+
 ```typescript
 // Start simple
 const formatCurrency = (amount: number): string => {
@@ -569,6 +586,7 @@ Complexity added only when needed
 #### Premature Abstraction
 
 <Bad>
+
 ```typescript
 // One use case, but building generic framework
 abstract class BaseCRUDService<T> {
@@ -588,6 +606,7 @@ Massive abstraction for uncertain future
 </Bad>
 
 <Good>
+
 ```typescript
 // Simple functions for current needs
 const getUsers = async (): Promise<User[]> => {
@@ -607,6 +626,7 @@ Abstract only when pattern proven across 3+ cases
 #### Performance Optimization
 
 <Good>
+
 ```typescript
 // Current: Simple approach
 const filterActiveUsers = (users: User[]): User[] => {
@@ -624,6 +644,7 @@ Optimize based on measurement, not assumptions
 </Good>
 
 <Bad>
+
 ```typescript
 // Premature optimization
 const filterActiveUsers = (users: User[]): User[] => {
@@ -661,18 +682,6 @@ Complex solution for unmeasured problem
 - Make abstraction as simple as possible
 - Prefer duplication over wrong abstraction
 - Refactor when pattern clear
-
-## Integration with Commands
-
-The Kaizen skill guides how you work. The commands provide structured analysis:
-
-- **`/why`**: Root cause analysis (5 Whys)
-- **`/cause-and-effect`**: Multi-factor analysis (Fishbone)
-- **`/plan-do-check-act`**: Iterative improvement cycles
-- **`/analyse-problem`**: Comprehensive documentation (A3)
-- **`/analyse`**: Smart method selection (Gemba/VSM/Muda)
-
-Use commands for structured problem-solving. Apply skill for day-to-day development.
 
 ## Red Flags
 

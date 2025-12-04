@@ -150,7 +150,12 @@ chmod +x check-stripe-config.sh
 
 Review output with user and fix any issues.
 
-### Step 5: Restart Wasp Server
+### Step 5: Cleanup
+
+- Remove the unused payment processor code from the `src/payment/<unused-provider>` directory.
+- Prompt the user to remove the unused provider variables from the `.env.server` file.
+
+### Step 6: Restart Wasp Server
 
 Server should auto-restart when `.env.server` changes. If not:
 ```bash
