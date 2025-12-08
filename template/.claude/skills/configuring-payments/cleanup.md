@@ -4,7 +4,11 @@ Optional cleanup after selecting payment provider.
 
 ## Remove Unused Provider Directories
 
-Delete directories in `app/src/payment/` for providers you're not using (e.g., `stripe/`, `lemonsqueezy/`, `polar/`).
+Delete code for providers you're not using (e.g., `stripe/`, `lemonsqueezy/`, `polar/`) in the following directories:
+- `app/src/payment/<unused-provider>/`
+- `app/src/payment/paymentProcessor.ts`
+- `app/src/server/scripts/dbSeeds.ts`
+- `app/src/analytics/stats.ts`
 
 ## Environment Variables
 

@@ -27,6 +27,8 @@ Set in `.env.server`:
 | Lemon Squeezy | `LEMONSQUEEZY_API_KEY`, `LEMONSQUEEZY_STORE_ID`, `LEMONSQUEEZY_WEBHOOK_SECRET` |
 | Polar | `POLAR_ORGANIZATION_ACCESS_TOKEN`, `POLAR_WEBHOOK_SECRET`, `POLAR_SANDBOX_MODE=true` |
 
+Include specifics, e.g. scopes, from the guide URLs for the chosen provider: https://docs.opensaas.sh/llms.txt
+
 ### 3. Create Products
 
 Create in provider dashboard: 2 subscriptions (Hobby, Pro) + 1 one-time (Credits).
@@ -46,13 +48,15 @@ Update `src/payment/plans.ts` if changing product names.
 
 **Lemon Squeezy / Polar:** use ngrok (`ngrok http 3001`), set webhook URL to `https://[ngrok-url]/payments-webhook`
 
+Include specifics, e.g. events, secrets, etc., from the guide URLs for the chosen provider: https://docs.opensaas.sh/llms.txt
+
+### 5. Cleanup
+
+Remove unused provider code by following [cleanup.md](./cleanup.md)
+
 ## Testing Payments and Troubleshooting
 
 See [troubleshooting](./troubleshooting.md)
-
-## Cleanup
-
-See [cleanup.md](./cleanup.md) to remove unused provider code.
 
 ## Documentation
 
