@@ -17,6 +17,10 @@ Repo is divided into two main parts: [template](/template) dir and [opensaas-sh]
 
 ## How to Contribute
 
+> [!IMPORTANT]
+> The in-development version of the template uses the in-development version of Wasp. We've set up the `./tools/wasp` script.
+> To use it, whenever you would normally run `wasp <command>`, run `<path-to-repo>/tools/wasp <command>` instead.
+
 1. Make sure you understand the basics of how open-saas works (check out [docs](https://docs.opensaas.sh)).
 2. Check out this repo (`main` branch) and make sure you are able to get the app in [template/app/](/template/app) running (to set it up, follow the same steps as for running a new open-saas app, as explained in the open-saas docs).
 3. Create a new git branch for your work (aka feature branch) and do your changes on it.
