@@ -38,7 +38,7 @@ jobs:
         if: env.WASP_VERSION == 'main'
         run:
           # Installs the latest published build of the CLI from the `main` branch.
-          npm i -g https://pkg.pr.new/wasp-lang/wasp/@wasp.sh/wasp-cli@main
+          npm i -g https://pkg.pr.new/@wasp.sh/wasp-cli@main
 
       - name: Cache global node modules
         uses: actions/cache@v4
