@@ -36,9 +36,8 @@ jobs:
       # If you're copying this workflow to your own project, you can remove this step:
       - name: Install latest development Wasp
         if: env.WASP_VERSION == 'main'
-        run:
-          # Installs the latest published build of the CLI from the `main` branch.
-          npm i -g https://pkg.pr.new/@wasp.sh/wasp-cli@main
+        # Installs the latest published build of the CLI from the `main` branch.
+        run: npm i -g https://pkg.pr.new/@wasp.sh/wasp-cli@main
 
       - name: Cache global node modules
         uses: actions/cache@v4
