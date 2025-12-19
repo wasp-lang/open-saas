@@ -10,6 +10,10 @@ Inception :)!
 
 ### Demo app (app_diff/)
 
+> [!IMPORTANT]
+> The in-development version of the template uses the in-development version of Wasp. We've set up the `./tools/wasp` script.
+> To use it, whenever you would normally run `wasp <command>`, run `<path-to-repo>/tools/wasp <command>` instead.
+
 Since the demo app is just the open saas template with some small tweaks, and we want to be able to easily keep it up to date as the template changes, we don't version (in git) the actual demo app code, instead we version the diffs between it and the template: `app_diff/`.
 
 #### Workflow
