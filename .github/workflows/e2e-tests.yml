@@ -8,7 +8,9 @@ on:
 
 env:
   WASP_TELEMETRY_DISABLE: 1
-  WASP_VERSION: 0.20.0
+  WASP_VERSION:
+    # If you're copying this workflow to your own project, set this to your app's Wasp version:
+    main
 
 jobs:
   test:
@@ -27,8 +29,15 @@ jobs:
       - name: Docker setup
         uses: docker/setup-buildx-action@v3
 
-      - name: Install Wasp
+      - name: Install Wasp ${{ env.WASP_VERSION }}
+        if: env.WASP_VERSION != 'main'
         run: curl -sSL https://get.wasp.sh/installer.sh | sh -s -- -v ${{ env.WASP_VERSION }}
+
+      # If you're copying this workflow to your own project, you can remove this step:
+      - name: Install latest development Wasp
+        if: env.WASP_VERSION == 'main'
+        # Installs the latest published build of the CLI from the `main` branch.
+        run: npm i -g https://pkg.pr.new/@wasp.sh/wasp-cli@main
 
       - name: Cache global node modules
         uses: actions/cache@v4
