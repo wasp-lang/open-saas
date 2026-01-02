@@ -27,7 +27,7 @@ const Header = (props: {
               <span className="du-block absolute right-0 h-full w-full">
                 <span
                   className={cn(
-                    "bg-foreground relative left-0 top-0 my-1 block h-0.5 w-0 rounded-sm delay-[0] duration-200 ease-in-out",
+                    "bg-foreground relative left-0 top-0 my-1 block h-0.5 w-0 rounded-sm delay-0 duration-200 ease-in-out",
                     {
                       "!w-full delay-300": !props.sidebarOpen,
                     },
@@ -55,7 +55,7 @@ const Header = (props: {
                   className={cn(
                     "bg-foreground absolute left-2.5 top-0 block h-full w-0.5 rounded-sm delay-300 duration-200 ease-in-out",
                     {
-                      "!h-0 !delay-[0]": !props.sidebarOpen,
+                      "!h-0 !delay-0": !props.sidebarOpen,
                     },
                   )}
                 ></span>
