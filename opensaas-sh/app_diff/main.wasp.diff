@@ -54,7 +54,7 @@
          fromField: {
            name: "Open SaaS App",
 -          email: "me@example.com"
-+          email: "noreply@wasp.sh"
++          email: "noreply@mg.wasp.sh"
          },
          emailVerification: {
            clientRoute: EmailVerificationRoute,
@@ -102,7 +102,7 @@
        name: "Open SaaS App",
        // When using a real provider, e.g. SendGrid, you must use the same email address that you configured your account to send out emails with!
 -      email: "me@example.com"
-+      email: "noreply@wasp.sh"
++      email: "noreply@mg.wasp.sh"
      },
    },
  }
