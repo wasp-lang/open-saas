@@ -118,7 +118,7 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
                     <div className="relative">
                       <FileText className="left-4.5 text-muted-foreground absolute top-4 h-5 w-5" />
                       <Textarea
-                        className="border-border bg-background pl-11.5 pr-4.5 text-foreground focus:border-primary w-full rounded border py-3 focus-visible:outline-none"
+                        className="border-border bg-background pl-11.5 pr-4.5 text-foreground focus:border-primary w-full rounded border py-3 focus-visible:outline-hidden"
                         name="bio"
                         id="bio"
                         rows={6}
@@ -171,7 +171,7 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
                     <input
                       type="file"
                       accept="image/*"
-                      className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
+                      className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-hidden"
                     />
                     <div className="flex flex-col items-center justify-center space-y-3">
                       <span className="border-border bg-background flex h-10 w-10 items-center justify-center rounded-full border">

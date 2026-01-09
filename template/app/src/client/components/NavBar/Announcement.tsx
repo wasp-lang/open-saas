@@ -2,12 +2,12 @@ const ANNOUNCEMENT_URL = "https://github.com/wasp-lang/wasp";
 
 export function Announcement() {
   return (
-    <div className="from-accent to-secondary text-primary-foreground relative flex w-full items-center justify-center gap-3 bg-gradient-to-r p-3 text-center font-semibold">
+    <div className="from-accent to-secondary text-primary-foreground relative flex w-full items-center justify-center gap-3 bg-linear-to-r p-3 text-center font-semibold">
       <a
         href={ANNOUNCEMENT_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="hidden cursor-pointer transition-opacity hover:opacity-90 hover:drop-shadow lg:block"
+        className="hidden cursor-pointer transition-opacity hover:opacity-90 hover:drop-shadow-sm lg:block"
       >
         Support Open-Source Software!
       </a>

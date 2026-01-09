@@ -145,7 +145,7 @@ const ExampleCard = forwardRef<HTMLDivElement, ExampleCardProps>(
         href={example.href}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex-shrink-0 snap-center"
+        className="shrink-0 snap-center"
         onMouseEnter={() => onMouseEnter(index)}
       >
         <Card
