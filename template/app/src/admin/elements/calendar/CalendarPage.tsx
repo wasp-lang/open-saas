@@ -45,7 +45,7 @@ const Calendar = ({ user }: { user: AuthUser }) => {
             <tr className="grid grid-cols-7">
               <td className="ease border-border text-accent hover:bg-accent hover:text-accent-foreground md:h-25 xl:h-31 relative h-20 cursor-pointer border p-2 transition duration-500 md:p-6">
                 <span className="font-medium">1</span>
-                <div className="md:h-30 group h-16 w-full flex-grow cursor-pointer py-1">
+                <div className="md:h-30 group h-16 w-full grow cursor-pointer py-1">
                   <span className="group-hover:text-primary md:hidden">
                     More
                   </span>
@@ -140,7 +140,7 @@ const Calendar = ({ user }: { user: AuthUser }) => {
               </td>
               <td className="ease border-border text-accent hover:bg-accent hover:text-accent-foreground md:h-25 xl:h-31 relative h-20 cursor-pointer border p-2 transition duration-500 md:p-6">
                 <span className="font-medium">25</span>
-                <div className="md:h-30 group h-16 w-full flex-grow cursor-pointer py-1">
+                <div className="md:h-30 group h-16 w-full grow cursor-pointer py-1">
                   <span className="group-hover:text-primary md:hidden">
                     More
                   </span>

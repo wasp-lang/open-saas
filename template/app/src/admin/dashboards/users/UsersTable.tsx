@@ -90,7 +90,7 @@ const UsersTable = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="border-border bg-card rounded-sm border shadow">
+      <div className="border-border bg-card rounded-sm border shadow-sm">
         <div className="bg-muted/40 flex w-full flex-col items-start justify-between gap-3 p-6">
           <span className="text-sm font-medium">Filters:</span>
           <div className="flex w-full items-center justify-between gap-3 px-2">
