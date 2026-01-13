@@ -147,14 +147,6 @@
   }
 }
 
-/*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
 @layer base {
   *,
   ::after,
@@ -216,52 +208,6 @@
 
   & > * {
     background: hsl(var(--background));
-  }
-}
-
-@layer utilities {
-  /* third-party libraries CSS */
-
-  .tableCheckbox:checked ~ div span {
-    @apply opacity-100;
-  }
-  .tableCheckbox:checked ~ div {
-    @apply bg-primary border-primary;
-  }
-
-  .apexcharts-legend-text {
-    @apply text-muted-foreground!;
-  }
-  .apexcharts-text {
-    @apply fill-muted-foreground!;
-  }
-  .apexcharts-xcrosshairs {
-    @apply fill-border!;
-  }
-  .apexcharts-gridline {
-    @apply stroke-border!;
-  }
-  .apexcharts-series.apexcharts-pie-series path {
-    @apply dark:stroke-transparent!;
-  }
-  .apexcharts-legend-series {
-    @apply inline-flex! gap-1.5;
-  }
-  .apexcharts-tooltip.apexcharts-theme-light {
-    @apply dark:bg-card! dark:border-border!;
-  }
-  .apexcharts-tooltip.apexcharts-theme-light .apexcharts-tooltip-title {
-    @apply dark:bg-muted! dark:border-border!;
-  }
-  .apexcharts-xaxistooltip,
-  .apexcharts-yaxistooltip {
-    @apply dark:bg-muted! dark:border-muted! dark:text-muted-foreground!;
-  }
-  .apexcharts-xaxistooltip-bottom:after {
-    @apply dark:border-b-muted!;
-  }
-  .apexcharts-xaxistooltip-bottom:before {
-    @apply dark:border-b-muted!;
   }
 }
 
@@ -339,4 +285,48 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* third-party libraries CSS */
+
+.tableCheckbox:checked ~ div span {
+  @apply opacity-100;
+}
+.tableCheckbox:checked ~ div {
+  @apply bg-primary border-primary;
+}
+
+.apexcharts-legend-text {
+  @apply text-muted-foreground!;
+}
+.apexcharts-text {
+  @apply fill-muted-foreground!;
+}
+.apexcharts-xcrosshairs {
+  @apply fill-border!;
+}
+.apexcharts-gridline {
+  @apply stroke-border!;
+}
+.apexcharts-series.apexcharts-pie-series path {
+  @apply dark:stroke-transparent!;
+}
+.apexcharts-legend-series {
+  @apply inline-flex! gap-1.5;
+}
+.apexcharts-tooltip.apexcharts-theme-light {
+  @apply dark:bg-card! dark:border-border!;
+}
+.apexcharts-tooltip.apexcharts-theme-light .apexcharts-tooltip-title {
+  @apply dark:bg-muted! dark:border-border!;
+}
+.apexcharts-xaxistooltip,
+.apexcharts-yaxistooltip {
+  @apply dark:bg-muted! dark:border-muted! dark:text-muted-foreground!;
+}
+.apexcharts-xaxistooltip-bottom:after {
+  @apply dark:border-b-muted!;
+}
+.apexcharts-xaxistooltip-bottom:before {
+  @apply dark:border-b-muted!;
 }

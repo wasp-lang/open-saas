@@ -18,7 +18,7 @@
    @keyframes rotating {
      0%,
      100% {
-@@ -217,6 +221,64 @@
+@@ -209,6 +213,64 @@
    & > * {
      background: hsl(var(--background));
    }
@@ -82,12 +82,11 @@
 +  font-display: swap;
  }
  
- @layer utilities {
-@@ -339,4 +401,22 @@
+ @layer base {
+@@ -285,6 +347,19 @@
    body {
      @apply bg-background text-foreground;
    }
-+
 +  /* Global typography styles */
 +  h1,
 +  h2,
@@ -101,8 +100,14 @@
 +  p {
 +    @apply font-mono text-base leading-relaxed;
 +  }
-+}
+ }
+ 
+ /* third-party libraries CSS */
+@@ -330,3 +405,7 @@
+ .apexcharts-xaxistooltip-bottom:before {
+   @apply dark:border-b-muted!;
+ }
 +
 +.navbar-maxwidth-transition {
 +  transition: max-width 300ms cubic-bezier(0.4, 0, 0.2, 1);
- }
++}

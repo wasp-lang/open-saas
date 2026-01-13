@@ -191,7 +191,7 @@
 +  return (
 +    <div className="relative flex h-[500px] w-[500px] items-center justify-center">
 +      <div className="absolute flex flex-col items-center gap-2">
-+        <p className="text-gradient-primary font-sans text-6xl font-black">
++        <p className="text-gradient-primary font-sans text-6xl font-black leading-none">
 +          100%
 +        </p>
 +        <p className="text-muted-foreground text-lg">Open Source</p>
@@ -199,40 +199,40 @@
 +
 +      {circles.map((circle, circleIndex) => {
 +        const gradients = [
-+          `conic-gradient(from ${rotation * circle.circleRotationSpeed}deg, 
-+            hsl(var(--primary) / 0.15), 
-+            hsl(var(--primary) / 0), 
-+            hsl(var(--primary) / 0), 
-+            hsl(var(--primary) / 0.15), 
-+            hsl(var(--primary) / 0), 
-+            hsl(var(--primary) / 0.05), 
++          `conic-gradient(from ${rotation * circle.circleRotationSpeed}deg,
++            hsl(var(--primary) / 0.15),
++            hsl(var(--primary) / 0),
++            hsl(var(--primary) / 0),
++            hsl(var(--primary) / 0.15),
++            hsl(var(--primary) / 0),
++            hsl(var(--primary) / 0.05),
 +            hsl(var(--primary) / 0.15)
 +          )`,
-+          `conic-gradient(from ${rotation * circle.circleRotationSpeed + 45}deg, 
-+            hsl(var(--primary) / 0.12), 
-+            hsl(var(--primary) / 0), 
-+            hsl(var(--primary) / 0.08), 
-+            hsl(var(--primary) / 0), 
-+            hsl(var(--primary) / 0.2), 
-+            hsl(var(--primary) / 0), 
++          `conic-gradient(from ${rotation * circle.circleRotationSpeed + 45}deg,
++            hsl(var(--primary) / 0.12),
++            hsl(var(--primary) / 0),
++            hsl(var(--primary) / 0.08),
++            hsl(var(--primary) / 0),
++            hsl(var(--primary) / 0.2),
++            hsl(var(--primary) / 0),
 +            hsl(var(--primary) / 0.12)
 +          )`,
-+          `conic-gradient(from ${rotation * circle.circleRotationSpeed + 90}deg, 
-+            hsl(var(--primary) / 0.1), 
-+            hsl(var(--primary) / 0.18), 
-+            hsl(var(--primary) / 0.1), 
-+            hsl(var(--primary) / 0), 
-+            hsl(var(--primary) / 0.15), 
-+            hsl(var(--primary) / 0), 
++          `conic-gradient(from ${rotation * circle.circleRotationSpeed + 90}deg,
++            hsl(var(--primary) / 0.1),
++            hsl(var(--primary) / 0.18),
++            hsl(var(--primary) / 0.1),
++            hsl(var(--primary) / 0),
++            hsl(var(--primary) / 0.15),
++            hsl(var(--primary) / 0),
 +            hsl(var(--primary) / 0.1)
 +          )`,
-+          `conic-gradient(from ${rotation * circle.circleRotationSpeed + 135}deg, 
-+            hsl(var(--primary) / 0.08), 
-+            hsl(var(--primary) / 0), 
-+            hsl(var(--primary) / 0.16), 
-+            hsl(var(--primary) / 0.06), 
-+            hsl(var(--primary) / 0), 
-+            hsl(var(--primary) / 0.12), 
++          `conic-gradient(from ${rotation * circle.circleRotationSpeed + 135}deg,
++            hsl(var(--primary) / 0.08),
++            hsl(var(--primary) / 0),
++            hsl(var(--primary) / 0.16),
++            hsl(var(--primary) / 0.06),
++            hsl(var(--primary) / 0),
++            hsl(var(--primary) / 0.12),
 +            hsl(var(--primary) / 0.08)
 +          )`,
 +        ];
