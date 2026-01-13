@@ -49,7 +49,7 @@ export default function Testimonials({
                     src={testimonial.avatarSrc}
                     loading="lazy"
                     alt={`${testimonial.name}'s avatar`}
-                    className="ring-border/20 group-hover:ring-primary/30 h-10 w-10 flex-shrink-0 rounded-full ring-2 transition-all duration-200"
+                    className="ring-border/20 group-hover:ring-primary/30 h-10 w-10 shrink-0 rounded-full ring-2 transition-all duration-200"
                   />
                   <div className="min-w-0 flex-1">
                     <CardTitle className="group-hover:text-card-foreground truncate text-sm font-semibold transition-colors duration-200">

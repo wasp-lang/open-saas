@@ -239,7 +239,7 @@ function NewTaskForm({
                   step={0.5}
                   min={1}
                   max={24}
-                  className="min-w-[7rem] text-center"
+                  className="min-w-28 text-center"
                   value={todaysHours}
                   onChange={(e) => setTodaysHours(+e.currentTarget.value)}
                 />

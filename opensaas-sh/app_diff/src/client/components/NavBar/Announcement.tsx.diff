@@ -11,14 +11,14 @@
 +    today.toISOString().slice(0, 10) >= launchDate.toISOString().slice(0, 10);
 +
    return (
--    <div className="from-accent to-secondary text-primary-foreground relative flex w-full items-center justify-center gap-3 bg-gradient-to-r p-3 text-center font-semibold">
-+    <div className="from-accent to-secondary text-primary-foreground relative z-[51] flex w-full items-center justify-center gap-3 bg-gradient-to-r p-3 text-center font-semibold tracking-wider">
+-    <div className="from-accent to-secondary text-primary-foreground relative flex w-full items-center justify-center gap-3 bg-linear-to-r p-3 text-center font-semibold">
++    <div className="from-accent to-secondary text-primary-foreground relative z-51 flex w-full items-center justify-center gap-3 bg-linear-to-r p-3 text-center font-semibold tracking-wider">
        <a
          href={ANNOUNCEMENT_URL}
          target="_blank"
 -        rel="noopener noreferrer"
--        className="hidden cursor-pointer transition-opacity hover:opacity-90 hover:drop-shadow lg:block"
-+        className="hidden transition-opacity hover:opacity-90 hover:drop-shadow lg:block"
+-        className="hidden cursor-pointer transition-opacity hover:opacity-90 hover:drop-shadow-sm lg:block"
++        className="hidden transition-opacity hover:opacity-90 hover:drop-shadow-sm lg:block"
        >
 -        Support Open-Source Software!
 +        🚀 Open SaaS v2.0 {hasLaunched ? "is here!" : "launches tomorrow!"}

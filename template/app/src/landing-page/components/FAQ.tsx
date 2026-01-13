@@ -37,7 +37,7 @@ export default function FAQ({ faqs }: { faqs: FAQ[] }) {
                 {faq.href && (
                   <a
                     href={faq.href}
-                    className="text-primary hover:text-primary/80 flex-shrink-0 whitespace-nowrap text-base font-medium leading-7 transition-colors duration-200"
+                    className="text-primary hover:text-primary/80 shrink-0 whitespace-nowrap text-base font-medium leading-7 transition-colors duration-200"
                   >
                     Learn more →
                   </a>

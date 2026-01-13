@@ -144,7 +144,7 @@ const PricingPage = () => {
               className={cn(
                 "relative flex grow flex-col justify-between overflow-hidden transition-all duration-300 hover:shadow-lg",
                 {
-                  "ring-primary !bg-transparent ring-2":
+                  "ring-primary bg-transparent! ring-2":
                     planId === bestDealPaymentPlanId,
                   "ring-border ring-1 lg:my-8":
                     planId !== bestDealPaymentPlanId,
@@ -157,7 +157,7 @@ const PricingPage = () => {
                   aria-hidden="true"
                 >
                   <div
-                    className="from-primary/40 via-primary/20 to-primary/10 absolute h-full w-full bg-gradient-to-br opacity-30"
+                    className="from-primary/40 via-primary/20 to-primary/10 absolute h-full w-full bg-linear-to-br opacity-30"
                     style={{
                       clipPath: "circle(670% at 50% 50%)",
                     }}
