@@ -22,7 +22,7 @@
                name: "_gid", // string: exact cookie name
              },
 +            {
-+              name: /^__sec__/, // regex: match all REO.dev cookies starting with '__sec__'
++              name: /^__sec__/, // regex: match all REO.dev cookies (https://docs.reo.dev/integrations/tracking-beacon/reo.dev-javascript-cookies-and-consent-guide#key-features-of-reo.dev-cookies)
 +            },
            ],
          },
