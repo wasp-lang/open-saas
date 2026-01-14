@@ -8,17 +8,16 @@
    }
  }
  
-@@ -15,7 +16,8 @@
-     disablePageInteraction: false,
+@@ -16,7 +17,7 @@
      hideFromBots: import.meta.env.PROD ? true : false, // Set this to false for dev/headless tests otherwise the modal will not be visible.
      mode: "opt-in",
+     // Bump the revision field when you add new services
 -    revision: 0,
-+    // Bump the revision field when you add new services
 +    revision: 1,
  
      // Default configuration for the cookie.
      cookie: {
-@@ -49,6 +51,9 @@
+@@ -50,6 +51,9 @@
              {
                name: "_gid", // string: exact cookie name
              },
@@ -28,7 +27,7 @@
            ],
          },
  
-@@ -78,6 +83,24 @@
+@@ -79,6 +83,24 @@
                } catch (error) {
                  console.error(error);
                }
