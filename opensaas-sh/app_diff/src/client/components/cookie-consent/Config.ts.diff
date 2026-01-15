@@ -1,0 +1,54 @@
+--- template/app/src/client/components/cookie-consent/Config.ts
++++ opensaas-sh/app/src/client/components/cookie-consent/Config.ts
+@@ -3,6 +3,7 @@
+ declare global {
+   interface Window {
+     dataLayer: any;
++    Reo: any;
+   }
+ }
+ 
+@@ -16,7 +17,7 @@
+     hideFromBots: import.meta.env.PROD ? true : false, // Set this to false for dev/headless tests otherwise the modal will not be visible.
+     mode: "opt-in",
+     // Bump the revision field when you add new services
+-    revision: 0,
++    revision: 1,
+ 
+     // Default configuration for the cookie.
+     cookie: {
+@@ -50,6 +51,9 @@
+             {
+               name: "_gid", // string: exact cookie name
+             },
++            {
++              name: /^__sec__/, // regex: match all REO.dev cookies (https://docs.reo.dev/integrations/tracking-beacon/reo.dev-javascript-cookies-and-consent-guide#key-features-of-reo.dev-cookies)
++            },
+           ],
+         },
+ 
+@@ -79,6 +83,24 @@
+               } catch (error) {
+                 console.error(error);
+               }
++            },
++            onReject: () => {},
++          },
++          reo: {
++            label: "REO.dev",
++            onAccept: () => {
++              try {
++                const REO_CLIENT_ID = "96f303a127451b4";
++                const script = document.createElement("script");
++                script.src = `https://static.reo.dev/${REO_CLIENT_ID}/reo.js`;
++                script.defer = true;
++                script.onload = () => {
++                  window.Reo.init({ clientID: REO_CLIENT_ID });
++                };
++                document.head.appendChild(script);
++              } catch (error) {
++                console.error(error);
++              }
+             },
+             onReject: () => {},
+           },
