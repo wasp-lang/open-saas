@@ -2,4 +2,4 @@
 
 # Just a wrapper to always use the latest Wasp CLI from main branch.
 
-npx -y https://pkg.pr.new/@wasp.sh/wasp-cli@main "$@"
+npm_config_prefer_online=true npx -y https://pkg.pr.new/@wasp.sh/wasp-cli@main "$@"
