@@ -2,8 +2,8 @@
   "name": "opensaas",
   "type": "module",
   "workspaces": [
-    ".wasp/build/*",
-    ".wasp/out/*"
+    ".wasp/out/*",
+    ".wasp/out/sdk/wasp"
   ],
   "dependencies": {
     "@aws-sdk/client-s3": "^3.523.0",
@@ -44,7 +44,6 @@
     "tailwindcss": "^4.1.18",
     "tailwindcss-animate": "^1.0.7",
     "vanilla-cookieconsent": "^3.0.1",
-    "wasp": "file:.wasp/out/sdk/wasp",
     "zod": "^3.25.76"
   },
   "devDependencies": {
