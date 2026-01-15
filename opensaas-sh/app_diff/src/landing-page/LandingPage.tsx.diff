@@ -14,14 +14,13 @@
  
  export default function LandingPage() {
    return (
-@@ -19,8 +20,12 @@
-       <main className="isolate">
+@@ -20,7 +21,11 @@
          <Hero />
          <ExamplesCarousel examples={examples} />
+         <AIReady />
 +        <Auth />
 +        <Payments />
 +        <Admin />
-         <AIReady />
          <FeaturesGrid features={features} />
 +        <Roadmap />
          <Testimonials testimonials={testimonials} />

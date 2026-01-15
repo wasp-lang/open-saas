@@ -27,8 +27,8 @@
 +                </span>
 +              </h1>
 +              <p className="text-md text-muted-foreground mt-6 max-w-2xl font-mono leading-8">
-+                An open-source, feature-rich, full-stack React + NodeJS starter
-+                kit that manages boilerplate for you. Powered by
++                An open-source, feature-rich, React + NodeJS + Prisma starter
++                kit built for the AI era. Powered by
 +                <a
 +                  href={WaspUrl}
 +                  className="group font-bold transition-all duration-300"

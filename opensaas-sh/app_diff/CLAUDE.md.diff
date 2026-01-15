@@ -1,0 +1,6 @@
+--- template/app/CLAUDE.md
++++ opensaas-sh/app/CLAUDE.md
+@@ -0,0 +1,3 @@
++# Wasp Knowledge
++
++Wasp knowledge can be found at @.claude/wasp/knowledge/general-wasp-knowledge.md

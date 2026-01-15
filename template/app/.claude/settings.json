@@ -1,0 +1,13 @@
+{
+  "enabledPlugins": {
+    "wasp@wasp-plugins": true
+  },
+  "extraKnownMarketplaces": {
+    "wasp-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "wasp-lang/claude-plugins"
+      }
+    }
+  }
+}
