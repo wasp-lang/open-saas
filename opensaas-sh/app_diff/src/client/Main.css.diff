@@ -1,6 +1,6 @@
 --- template/app/src/client/Main.css
 +++ opensaas-sh/app/src/client/Main.css
-@@ -123,6 +123,8 @@
+@@ -122,6 +122,8 @@
      0px 2px 4px rgba(0, 0, 0, 0.2), inset 0px 2px 2px #ffffff,
      inset 0px -1px 1px rgba(0, 0, 0, 0.1);
    --shadow-switch-1: 0px 0px 5px rgba(0, 0, 0, 0.15);
@@ -9,7 +9,7 @@
  
    --drop-shadow-1: 0px 1px 0px #e2e8f0;
    --drop-shadow-2: 0px 1px 4px rgba(0, 0, 0, 0.12);
-@@ -137,6 +139,8 @@
+@@ -136,6 +138,8 @@
    --radius-md: calc(var(--radius) - 2px);
    --radius-sm: calc(var(--radius) - 4px);
  
@@ -18,7 +18,7 @@
    @keyframes rotating {
      0%,
      100% {
-@@ -210,6 +214,64 @@
+@@ -209,6 +213,64 @@
    & > * {
      background: hsl(var(--background));
    }
@@ -82,8 +82,8 @@
 +  font-display: swap;
  }
  
- /* Theme CSS Variables - outside @layer to ensure they're always included */
-@@ -317,6 +379,19 @@
+ @layer base {
+@@ -285,6 +347,19 @@
    body {
      @apply bg-background text-foreground;
    }
@@ -102,8 +102,8 @@
 +  }
  }
  
- /* Dark mode color overrides - bypasses @theme build-time evaluation */
-@@ -396,3 +471,7 @@
+ /* third-party libraries CSS */
+@@ -330,3 +405,7 @@
  .apexcharts-xaxistooltip-bottom:before {
    @apply dark:border-b-muted!;
  }

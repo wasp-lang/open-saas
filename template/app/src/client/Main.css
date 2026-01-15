@@ -10,49 +10,48 @@
   --color-current: currentColor;
   --color-transparent: transparent;
   --color-black-2: #010101;
-  /* Dynamic color variables - reference CSS custom properties directly */
-  --color-background: var(--background-color);
-  --color-foreground: var(--foreground-color);
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
 
-  --color-card: var(--card-color);
-  --color-card-foreground: var(--card-foreground-color);
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
 
-  --color-card-accent: var(--card-accent-color);
-  --color-card-accent-foreground: var(--card-accent-foreground-color);
+  --color-card-accent: hsl(var(--card-accent));
+  --color-card-accent-foreground: hsl(var(--card-accent-foreground));
 
-  --color-card-subtle: var(--card-subtle-color);
-  --color-card-subtle-foreground: var(--card-subtle-foreground-color);
+  --color-card-subtle: hsl(var(--card-subtle));
+  --color-card-subtle-foreground: hsl(var(--card-subtle-foreground));
 
-  --color-popover: var(--popover-color);
-  --color-popover-foreground: var(--popover-foreground-color);
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
 
-  --color-primary: var(--primary-color);
-  --color-primary-foreground: var(--primary-foreground-color);
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
 
-  --color-secondary: var(--secondary-color);
-  --color-secondary-foreground: var(--secondary-foreground-color);
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
 
-  --color-secondary-muted: var(--secondary-muted-color);
-  --color-secondary-muted-foreground: var(--secondary-muted-foreground-color);
+  --color-secondary-muted: hsl(var(--secondary-muted));
+  --color-secondary-muted-foreground: hsl(var(--secondary-muted-foreground));
 
-  --color-muted: var(--muted-color);
-  --color-muted-foreground: var(--muted-foreground-color);
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
 
-  --color-accent: var(--accent-color);
-  --color-accent-foreground: var(--accent-foreground-color);
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
 
-  --color-destructive: var(--destructive-color);
-  --color-destructive-foreground: var(--destructive-foreground-color);
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
 
-  --color-success: var(--success-color);
-  --color-success-foreground: var(--success-foreground-color);
+  --color-success: hsl(var(--success));
+  --color-success-foreground: hsl(var(--success-foreground));
 
-  --color-warning: var(--warning-color);
-  --color-warning-foreground: var(--warning-foreground-color);
+  --color-warning: hsl(var(--warning));
+  --color-warning-foreground: hsl(var(--warning-foreground));
 
-  --color-border: var(--border-color);
-  --color-input: var(--input-color);
-  --color-ring: var(--ring-color);
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
 
   --breakpoint-2xsm: 375px;
   --breakpoint-xsm: 425px;
@@ -212,102 +211,71 @@
   }
 }
 
-/* Theme CSS Variables - outside @layer to ensure they're always included */
-/* These define the actual color values that change between light/dark modes */
-:root {
-  --background: 0 0% 100%;
-  --foreground: 0 0% 3.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 0 0% 3.9%;
-  --card-accent: 0 0% 100%;
-  --card-accent-foreground: 0 0% 3.9%;
-  --card-subtle: 31 57% 96%;
-  --card-subtle-foreground: 0 0% 9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 3.9%;
-  --primary: 210 100% 13%;
-  --primary-foreground: 0 0% 98%;
-  --secondary: 32 100% 37%;
-  --secondary-foreground: 0 0% 9%;
-  --secondary-muted: 32 75% 78%;
-  --secondary-muted-foreground: 0 0% 3.9%;
-  --muted: 0 0% 96.1%;
-  --muted-foreground: 0 0% 45.1%;
-  --accent: 33 74% 62%;
-  --accent-foreground: 0 0% 98%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 98%;
-  --success: 141 71% 48%;
-  --success-foreground: 0 0% 98%;
-  --warning: 36 100% 50%;
-  --warning-foreground: 0 0% 98%;
-  --border: 0 0% 89.8%;
-  --input: 0 0% 89.8%;
-  --ring: 0 0% 3.9%;
-  --radius: 0.5rem;
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --card-accent: 0 0% 100%;
+    --card-accent-foreground: 0 0% 3.9%;
+    --card-subtle: 31 57% 96%;
+    --card-subtle-foreground: 0 0% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 210 100% 13%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 32 100% 37%;
+    --secondary-foreground: 0 0% 9%;
+    --secondary-muted: 32 75% 78%;
+    --secondary-muted-foreground: 0 0% 3.9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 33 74% 62%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 141 71% 48%;
+    --success-foreground: 0 0% 98%;
+    --warning: 36 100% 50%;
+    --warning-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --radius: 0.5rem;
+  }
 
-  /* Full color values for Tailwind @theme references */
-  --background-color: hsl(0 0% 100%);
-  --foreground-color: hsl(0 0% 3.9%);
-  --card-color: hsl(0 0% 100%);
-  --card-foreground-color: hsl(0 0% 3.9%);
-  --card-accent-color: hsl(0 0% 100%);
-  --card-accent-foreground-color: hsl(0 0% 3.9%);
-  --card-subtle-color: hsl(31 57% 96%);
-  --card-subtle-foreground-color: hsl(0 0% 9%);
-  --popover-color: hsl(0 0% 100%);
-  --popover-foreground-color: hsl(0 0% 3.9%);
-  --primary-color: hsl(210 100% 13%);
-  --primary-foreground-color: hsl(0 0% 98%);
-  --secondary-color: hsl(32 100% 37%);
-  --secondary-foreground-color: hsl(0 0% 9%);
-  --secondary-muted-color: hsl(32 75% 78%);
-  --secondary-muted-foreground-color: hsl(0 0% 3.9%);
-  --muted-color: hsl(0 0% 96.1%);
-  --muted-foreground-color: hsl(0 0% 45.1%);
-  --accent-color: hsl(33 74% 62%);
-  --accent-foreground-color: hsl(0 0% 98%);
-  --destructive-color: hsl(0 84.2% 60.2%);
-  --destructive-foreground-color: hsl(0 0% 98%);
-  --success-color: hsl(141 71% 48%);
-  --success-foreground-color: hsl(0 0% 98%);
-  --warning-color: hsl(36 100% 50%);
-  --warning-foreground-color: hsl(0 0% 98%);
-  --border-color: hsl(0 0% 89.8%);
-  --input-color: hsl(0 0% 89.8%);
-  --ring-color: hsl(0 0% 3.9%);
-}
-
-.dark {
-  --background: 210 50% 5%;
-  --foreground: 0 0% 98%;
-  --card: 210 50% 5%;
-  --card-foreground: 0 0% 98%;
-  --card-accent: 31 57% 93%;
-  --card-accent-foreground: 0 0% 3.9%;
-  --card-subtle: 233 24% 15%;
-  --card-subtle-foreground: 0 0% 98%;
-  --popover: 0 0% 3.9%;
-  --popover-foreground: 0 0% 98%;
-  --primary: 31 57% 93%;
-  --primary-foreground: 0 0% 9%;
-  --secondary: 209 91% 61%;
-  --secondary-foreground: 0 0% 98%;
-  --secondary-muted: 210 67% 94%;
-  --secondary-muted-foreground: 0 0% 3.9%;
-  --muted: 210 100% 13%;
-  --muted-foreground: 0 0% 63.9%;
-  --accent: 31 57% 93%;
-  --accent-foreground: 210 100% 13%;
-  --destructive: 0 62.8% 63%;
-  --destructive-foreground: 0 0% 98%;
-  --success: 141 71% 48%;
-  --success-foreground: 0 0% 98%;
-  --warning: 36 100% 50%;
-  --warning-foreground: 0 0% 98%;
-  --border: 0 0% 14.9%;
-  --input: 0 0% 14.9%;
-  --ring: 0 0% 83.1%;
+  .dark {
+    --background: 210 50% 5%;
+    --foreground: 0 0% 98%;
+    --card: 210 50% 5%;
+    --card-foreground: 0 0% 98%;
+    --card-accent: 31 57% 93%;
+    --card-accent-foreground: 0 0% 3.9%;
+    --card-subtle: 233 24% 15%;
+    --card-subtle-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 31 57% 93%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 209 91% 61%;
+    --secondary-foreground: 0 0% 98%;
+    --secondary-muted: 210 67% 94%;
+    --secondary-muted-foreground: 0 0% 3.9%;
+    --muted: 210 100% 13%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 31 57% 93%;
+    --accent-foreground: 210 100% 13%;
+    --destructive: 0 62.8% 63%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 141 71% 48%;
+    --success-foreground: 0 0% 98%;
+    --warning: 36 100% 50%;
+    --warning-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+  }
 }
 
 @layer base {
@@ -317,40 +285,6 @@
   body {
     @apply bg-background text-foreground;
   }
-}
-
-/* Dark mode color overrides - bypasses @theme build-time evaluation */
-/* These rules have higher specificity and apply the correct dark mode colors */
-.dark {
-  --color-background: hsl(210 50% 5%);
-  --color-foreground: hsl(0 0% 98%);
-  --color-card: hsl(210 50% 5%);
-  --color-card-foreground: hsl(0 0% 98%);
-  --color-card-accent: hsl(31 57% 93%);
-  --color-card-accent-foreground: hsl(0 0% 3.9%);
-  --color-card-subtle: hsl(233 24% 15%);
-  --color-card-subtle-foreground: hsl(0 0% 98%);
-  --color-popover: hsl(0 0% 3.9%);
-  --color-popover-foreground: hsl(0 0% 98%);
-  --color-primary: hsl(31 57% 93%);
-  --color-primary-foreground: hsl(0 0% 9%);
-  --color-secondary: hsl(209 91% 61%);
-  --color-secondary-foreground: hsl(0 0% 98%);
-  --color-secondary-muted: hsl(210 67% 94%);
-  --color-secondary-muted-foreground: hsl(0 0% 3.9%);
-  --color-muted: hsl(210 100% 13%);
-  --color-muted-foreground: hsl(0 0% 63.9%);
-  --color-accent: hsl(31 57% 93%);
-  --color-accent-foreground: hsl(210 100% 13%);
-  --color-destructive: hsl(0 62.8% 63%);
-  --color-destructive-foreground: hsl(0 0% 98%);
-  --color-success: hsl(141 71% 48%);
-  --color-success-foreground: hsl(0 0% 98%);
-  --color-warning: hsl(36 100% 50%);
-  --color-warning-foreground: hsl(0 0% 98%);
-  --color-border: hsl(0 0% 14.9%);
-  --color-input: hsl(0 0% 14.9%);
-  --color-ring: hsl(0 0% 83.1%);
 }
 
 /* third-party libraries CSS */
