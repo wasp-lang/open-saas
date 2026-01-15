@@ -317,6 +317,8 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
 /* Dark mode color overrides - bypasses @theme build-time evaluation */
 /* These rules have higher specificity and apply the correct dark mode colors */
 .dark {
