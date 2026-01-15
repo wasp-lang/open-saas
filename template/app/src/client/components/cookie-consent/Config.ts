@@ -15,6 +15,7 @@ const getConfig = () => {
     disablePageInteraction: false,
     hideFromBots: import.meta.env.PROD ? true : false, // Set this to false for dev/headless tests otherwise the modal will not be visible.
     mode: "opt-in",
+    // Bump the revision field when you add new services
     revision: 0,
 
     // Default configuration for the cookie.
