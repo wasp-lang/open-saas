@@ -68,7 +68,7 @@ function getGithubEmailInfo(githubData: z.infer<typeof githubDataSchema>) {
 // instead of ["user"] and access args.profile.username instead
 export function getGitHubAuthConfig() {
   return {
-    scopes: ["user"],
+    scopes: ["user:email"],
   };
 }
 
