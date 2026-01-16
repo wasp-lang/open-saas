@@ -9,7 +9,7 @@
 +  return (
 +    <HighlightedFeature
 +      name="AI Ready"
-+      description="Built-in OpenAI integration with LLM-optimized docs and AI-friendly architecture for seamless AI-assisted development."
++      description="With Wasp's abstractions and opinionated defaults, plus custom agent rules, skills, and tools to use with your favorite AI-assisted coding tool, this is the perfect stack for building complex apps in the AI era."
 +      highlightedComponent={<AIReadyExample />}
 +      direction="row-reverse"
 +    />

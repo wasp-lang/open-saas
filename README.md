@@ -29,9 +29,9 @@ The template itself is built on top of some very powerful tools and frameworks, 
 
 - 🐝 [Wasp](https://wasp.sh) - a full-stack React, NodeJS, Prisma framework with superpowers
 - 🚀 [Astro](https://starlight.astro.build/) - Astro's lightweight "Starlight" template for documentation and blog
-- 💸 [Stripe](https://stripe.com) or [Lemon Squeezy](https://lemonsqueezy.com/) (with Polar.sh and Paddle coming soon!) - for products and payments
+- 💸 [Stripe](https://stripe.com), [Polar.sh](https://polar.sh), or [Lemon Squeezy](https://lemonsqueezy.com/) - for products and payments
 - 💅 [ShadCN UI](https://tailwindcss.com) - for components & styling (plus admin dashboard!)
-- 🤖 [AI-Ready](https://docs.opensaas.sh/) - full set of Cursor rules & llms-full.txt for ai-assisted coding
+- 🤖 [AI-Ready](https://docs.opensaas.sh/) - Custom Plugins, Skills, & Rules for AI-assisted coding with Claude Code, Cursor, or your favorite AI-assisted coding tool
 - 📈 [Plausible](https://plausible.io) or [Google](https://analytics.google.com/) Analytics
 - 🤖 [OpenAI](https://openai.com) - OpenAI API w/ function calling example
 - 📦 [AWS S3](https://aws.amazon.com/s3/) - for file uploads
