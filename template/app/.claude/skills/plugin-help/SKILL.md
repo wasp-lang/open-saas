@@ -3,15 +3,7 @@ name: plugin-help
 description: Shows the Wasp plugin's available features, commands, and skills.
 ---
 
-1. run the [check-wasp-init hook](../../hooks/check-wasp-init.js) using the Bash tool with `node` command to see if Wasp knowledge has been initialized.
-2. let the user know if the Wasp plugin has been initialized or not.
-3. if the Wasp plugin has not been initialized, let the user know they should take care of this first by running `/wasp:init`:
-```markdown
-⚠️
-The Wasp plugin hasn't been initialized for the current project.
-Run `/wasp:init` to get the plugin's full functionality.
-```
-4. display the [Wasp Plugin for Claude Code](#wasp-plugin-for-claude-code) section to the user exactly as it is below.
+Display the [Wasp Plugin for Claude Code](#wasp-plugin-for-claude-code) section to the user exactly as it is below.
 
 --- --- 🐝 🐝 🐝 --- ---
 
@@ -32,7 +24,6 @@ The result: Claude actually understands Wasp instead of guessing.
 ## Quick Reference
 
 Slash Commands:
-`/wasp:init` - Initialize plugin for your project
 `/wasp:expert-advice` - Get advice on improvements from a Wasp expert
 `/wasp:help` - Show this guide
 
@@ -54,10 +45,7 @@ Skills:
 
 ## 📖 Documentation Access
 
-The plugin ensures Claude detects your project's Wasp version and references the correct documentation:
-
-- **Latest:** `https://wasp.sh/llms.txt`
-- **Versioned:** `https://wasp.sh/llms-{version}.txt` (e.g., `llms-0.15.txt`)
+The plugin ensures Claude detects your project's Wasp version and references the correct documentation.
 
 
 ## 🫂 Community & Contribute
