@@ -5,8 +5,6 @@ banner:
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
 ---
 import { Image } from 'astro:assets';
-import llmsFullCursor from '@assets/ai/llm-full-cursor.webp';
-import llmsTextChat from '@assets/ai/llm-txt-chat.webp';
 import vibeBoi from '@assets/ai/vibe-boi.png';
 
 <Image src={vibeBoi} alt="vibe boi" width={300} />
@@ -19,51 +17,41 @@ Wasp is the perfect match for vibe coding due to its central config file which g
 
 To make it even easier, here are some resources to help you use Wasp & Open SaaS with AI as effectively as possible.
 
-## Wasp Plugin for Claude Code
+## Agent Skills and Rules
 
-If you're using [Claude Code](https://docs.anthropic.com/en/docs/claude-code), you can install the official Wasp plugin to give it curated access to Wasp docs, workflows (such as guided deployments), and best practices.
+We've packaged Wasp agent skills and rules into the template to be used by your favorite AI-assisted coding tools.
 
-Install the plugin by running the following commands in your terminal:
+Skills are found in the `app/.claude` directory of the Open SaaS template, but because [Agent Skills](https://agentskills.io/) are a standard, your AI-assisted coding tool will either load them automatically from the `.claude` directory, or you can add them to manually.
+See your AI-assisted coding tool's documentation for more details on how to add Agent Skills.
 
-**1. Add the Wasp marketplace**
-```bash
-claude plugin marketplace add wasp-lang/claude-plugins
-```
-
-**2. Install the Wasp plugin**
-```bash
-claude plugin install wasp@wasp-plugins --scope project
-```
-
-For more details on the plugin features and how to use it, see the:
-- [Wasp Claude Code plugin repository](https://github.com/wasp-lang/claude-plugins/tree/main/plugins/wasp).
-
+Read more about the [AGENTS.md standard](https://agents.md/) to see if it's compatible with your AI-assisted coding tool of choice..
 
 ## LLM-Friendly Documentation
 
-We've also created a bunch of LLM-friendly documentation:
+Note: the `AGENTS.md` has specific instructions on how to use the LLM-friendly documentation but you can also paste the following links in chat sessions if needed.
+
 - [Open SaaS Docs - LLMs.txt](https://docs.opensaas.sh/llms.txt) - Links to the raw text docs.
 - [Open SaaS Docs - LLMs-full.txt](https://docs.opensaas.sh/llms-full.txt) - Complete docs as one text file.
 - [Wasp Docs - LLMs.txt](https://wasp.sh/llms.txt) - Links to the raw text docs by Wasp version.
 - [Wasp Docs - LLMs-full.txt](https://wasp.sh/llms-full.txt) - Complete docs as one text file.
 
-If you're using an AI-assisted IDE like Cursor, you can add these to your settings so you can easily reference them in your chat sessions.
-Or you can just pass the URLs directly into your chat sessions with your AI assistant.
+## MCP Server Installation
 
-:::note[Our Claude Code Plugin Does this Automatically!]
-If you're using the [Wasp Claude Code plugin](#wasp-plugin-for-claude-code), it will automatically fetch the correct Wasp docs for the version of Wasp you're using to your chat sessions whenever you ask it about Wasp features or documentation.
-:::
+### Claude Code
+For Claude Code users, the `app/.mcp.json` file is already located in the root of the project.
 
-<Image src={llmsFullCursor} alt="add llms-full.txt to settings" />
-
-<Image src={llmsTextChat} alt="add llms.txt to settings" />
-
-## AI Rules & Example Prompts in the Template
-
-The template also comes with:
-- A full set of rules files, `app/.cursor/rules`, to be used with Cursor or adapted to your coding tool of choice (Windsurf, Claude Code, etc.).
-- A set of example prompts, `app/.cursor/example-prompts.md`, to help you get started.
-
+### Cursor / VS Code
+Add the following to your `mcp.json` file:
+```json
+{
+    // ... other MCP servers ...
+    "Chrome DevTools": {
+      "command": "npx chrome-devtools-mcp@latest",
+      "env": {},
+      "args": []
+    }
+}
+```
 
 ## More AI-assisted Coding Learning Resources
 
