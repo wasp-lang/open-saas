@@ -28,14 +28,11 @@ Slash Commands:
 `/wasp:help` - Show this guide
 
 Skills:
-`add-feature` - Add Wasp's built-in features (auth, email, database, styling)
 `deploying-app` - Guided deployment to Railway or Fly.io
 `start-dev-server` - Start dev environment with full debugging visibility (db -> server -> browser console)
 
 ## 💬 Example Prompts
 
-- *"Add Google authentication to my app"*
-- *"Help me add ShadCN UI to my app"*
 - *"Add another authentication method to my app"*
 - *"Set up email sending with SendGrid"*
 - *"Solve the errors in the browser using the Chrome DevTools MCP server"*
