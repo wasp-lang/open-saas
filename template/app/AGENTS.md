@@ -15,16 +15,18 @@ To fetch (integration) guides for the specific features of this SaaS template, s
 
 ### Start a Wasp Development Session with Full Debugging Visibility
 
-Run the development servers and the Chrome DevTools MCP server to give Agents full debugging visibility:
-  1. Check the `schema.prisma` file and if a Postgres database is used, a managed instance can be started with `wasp db start` (Docker must be installed and running for this to work.)
-  2. Start the Wasp development server `wasp start` to give Agents direct access to server logs and build errors.
-  3. For browser debugging, recommend using the Chrome DevTools MCP server to give Agents visibility into browser console logs, UI functionality, network requests, and runtime errors.
+Run the [`start-dev-server` skill](.claude/skills/start-dev-server/SKILL.md) with the recommended options if possible to give the Agent full debugging visibility.
 
-### Schema Changes
+### Database Schema and Migrations
 
-Changes to `schema.prisma` are not applied until `wasp db migrate-dev --name <descriptive-name>` runs. Continue coding freely and tell the user to run migrations when ready to test.
+Always run database migrations with the `--name` flag:
+```bash
+wasp db migrate-dev --name <descriptive-name>
+```
 
-**Track pending migrations:** The dev server warns about this, but users may miss it if Wasp is running as a background task. Remind them of this before testing/viewing the app, and offer to run migrations for them.
+Changes to `schema.prisma` are not applied until database migrations are run. 
+
+**Track pending migrations:** The dev server warns about this, but users may miss it if Wasp is running as a background task. Continue coding freely but inform users of pending migrations before testing/viewing the app and offer to run migrations when the user wants to.
 
 ### Deployments
 

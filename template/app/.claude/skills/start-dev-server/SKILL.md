@@ -35,16 +35,17 @@ wasp start db
 Run this as a background task in the current claude code session.
 Wait 5-15 seconds for the database to be ready.
 
-
 ### Step 2: Start Dev Server
 
-Run as a background task:
+Start the Wasp development server as a background task:
 ```bash
 wasp start
 ```
 
-Listen to the output from `wasp start` and if it gives a prisma **db migration warning**, follow the [running-db-migrations.md](./running-db-migrations.md) reference.
-
+If this is the first time starting the app, or if there are pending migrations, run the following command:
+```bash
+wasp db migrate-dev --name <migration-name>
+```
 
 ### Step 3: Verify Server is Running
 

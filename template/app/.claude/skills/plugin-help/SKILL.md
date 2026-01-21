@@ -36,17 +36,15 @@ Skills:
 
 - *"Add Google authentication to my app"*
 - *"Help me add ShadCN UI to my app"*
-- *"Migrate the database from SQLite to PostgreSQL and start it for me"*
+- *"Add another authentication method to my app"*
 - *"Set up email sending with SendGrid"*
 - *"Solve the errors in the browser using the Chrome DevTools MCP server"*
 - *"Why isn't my recurring job working?"*
 - *"Deploy my app to Railway"*
 
-
 ## 📖 Documentation Access
 
-The plugin ensures Claude detects your project's Wasp version and references the correct documentation.
-
+The plugin ensures Claude detects your project's Wasp version and references the correct, LLM-friendly documentation.
 
 ## 🫂 Community & Contribute
 
