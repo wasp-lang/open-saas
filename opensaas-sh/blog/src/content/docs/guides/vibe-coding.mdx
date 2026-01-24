@@ -5,8 +5,6 @@ banner:
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
 ---
 import { Image } from 'astro:assets';
-import llmsFullCursor from '@assets/ai/llm-full-cursor.webp';
-import llmsTextChat from '@assets/ai/llm-txt-chat.webp';
 import vibeBoi from '@assets/ai/vibe-boi.png';
 
 <Image src={vibeBoi} alt="vibe boi" width={300} />
@@ -15,34 +13,48 @@ If you're looking to use AI to help build (or "vibe code") your SaaS app, this g
 
 ## Coding with AI, Open SaaS, & Wasp
 
-Wasp is particularly well suited to coding with AI due to its central config file which gives LLMs context about the entire full-stack app, and its ability to manage boilerplate code so AI doesn't have to. 
+Wasp is the perfect match for vibe coding due to its central config file which gives LLMs immediate context about the entire full-stack app, as well as its ability to manage boilerplate code so AI doesn't have to. 
 
-Regardless, there are still some shortcomings to using AI to code with Wasp, as well as a learning curve to using it effectively.
+To make it even easier, here are some resources to help you use Wasp & Open SaaS with AI as effectively as possible.
 
-Luckily, we did the work for you and put together a bunch of resources to help you use Wasp & Open SaaS with AI as effectively as possible.
+## Agent Skills and Rules
 
-### AI Resources in the Template
+We've packaged Wasp agent skills and rules into the template to be used by your favorite AI-assisted coding tools (Claude Code, Cursor, VS Code/Copilot, Codex, Gemini CLI, OpenCode, etc.).
 
-The template comes with:
-- A full set of rules files, `app/.cursor/rules`, to be used with Cursor or adapted to your coding tool of choice (Windsurf, Claude Code, etc.).
-- A set of example prompts, `app/.cursor/example-prompts.md`, to help you get started.
+Skills are found in the `app/.claude` directory of the Open SaaS template, but because [Agent Skills](https://agentskills.io/) are a recognized standard, your AI-assisted coding tool will either load them automatically from the `.claude` directory, or can be used as-is after they've been properly referenced.
+See your AI-assisted coding tool's documentation for more details on how to add Agent Skills.
 
-### LLM-Friendly Documentation
+Rules, found within the `AGENTS.md` (and `CLAUDE.md`), is another open standard used by many popular AI-assisted coding tools to give instructions to the agents when coding.
+Read more about the [AGENTS.md standard](https://agents.md/) to see if it's compatible with your AI-assisted coding tool of choice.
 
-We've also created a bunch of LLM-friendly documentation:
+## LLM-Friendly Documentation
+
+Note: the `AGENTS.md` has specific instructions on how to automatically fetch and use the LLM-friendly documentation but you can also paste the following links in chat sessions if needed.
+
 - [Open SaaS Docs - LLMs.txt](https://docs.opensaas.sh/llms.txt) - Links to the raw text docs.
-- **[Open SaaS Docs - LLMs-full.txt](https://docs.opensaas.sh/llms-full.txt) - Complete docs as one text file.** ✅😎
-- [Wasp Docs - LLMs.txt](https://wasp.sh/llms.txt) - Links to the raw text docs.
-- **[Wasp Docs - LLMs-full.txt](https://wasp.sh/llms-full.txt) - Complete docs as one text file.**
+- [Open SaaS Docs - LLMs-full.txt](https://docs.opensaas.sh/llms-full.txt) - Complete docs as one text file.
+- [Wasp Docs - LLMs.txt](https://wasp.sh/llms.txt) - Links to the raw text docs by Wasp version.
+- [Wasp Docs - LLMs-full.txt](https://wasp.sh/llms-full.txt) - Complete docs as one text file.
 
-Add these to your AI-assisted IDE settings so you can easily reference them in your chat sessions with the LLM.
-**In most cases, you'll want to pass the `llms-full.txt` to the LLM and ask it to help you with a specific task.**
+## MCP Server Installation
 
-<Image src={llmsFullCursor} alt="add llms-full.txt to settings" />
+### Claude Code
+For Claude Code users, the `app/.mcp.json` file is already located in the root of the project.
 
-<Image src={llmsTextChat} alt="add llms.txt to settings" />
+### Cursor / VS Code
+Add the following to your `mcp.json` file:
+```json
+{
+    // ... other MCP servers ...
+    "Chrome DevTools": {
+      "command": "npx chrome-devtools-mcp@latest",
+      "env": {},
+      "args": []
+    }
+}
+```
 
-### More AI-assisted Coding Learning Resources
+## More AI-assisted Coding Learning Resources
 
 Here's a list of articles and tutorials we've made:
 - [3hr YouTube tutorial: Vibe Coding a Personal Finance App w/ Wasp & Cursor](https://www.youtube.com/watch?v=WYzEROo7reY)
