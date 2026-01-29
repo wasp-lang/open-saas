@@ -38,7 +38,7 @@
     "react-apexcharts": "1.4.1",
     "react-dom": "^19.2.1",
     "react-hook-form": "^7.60.0",
-    "react-router-dom": "^6.26.2",
+    "react-router": "^7.12.0",
     "stripe": "18.1.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss": "^4.1.18",

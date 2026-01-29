@@ -92,7 +92,7 @@ See the Wasp Auth docs for available methods and complete guides [wasp-overview.
   - Redirect or show alternative content if the user is not authenticated.
   ```typescript
   import { useAuth } from 'wasp/client/auth';
-  import { useNavigate } from 'react-router-dom';
+  import { useNavigate } from 'react-router';
 
   const MyProtectedPage = () => {
     const { data: user, isLoading, error } = useAuth(); // Returns AuthUser | null
@@ -102,7 +102,7 @@ See the Wasp Auth docs for available methods and complete guides [wasp-overview.
     // If error, it likely means the auth session is invalid/expired
     if (error || !user) {
       // Redirect to login page defined in main.wasp (auth.onAuthFailedRedirectTo)
-      // or use the navigate hook from react-router-dom for more fine-grained control
+      // or use the navigate hook from react-router for more fine-grained control
       navigate('/some-other-path');
       return <div>Please log in to access this page.</div>;
     }

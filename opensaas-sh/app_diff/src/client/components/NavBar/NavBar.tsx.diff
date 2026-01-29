@@ -1,7 +1,7 @@
 --- template/app/src/client/components/NavBar/NavBar.tsx
 +++ opensaas-sh/app/src/client/components/NavBar/NavBar.tsx
 @@ -3,6 +3,7 @@
- import { Link as ReactRouterLink } from "react-router-dom";
+ import { Link as ReactRouterLink } from "react-router";
  import { useAuth } from "wasp/client/auth";
  import { Link as WaspRouterLink, routes } from "wasp/client/router";
 +import { Button } from "../../../client/components/ui/button";
@@ -69,7 +69,7 @@
 -              size={isScrolled ? "1rem" : "1.1rem"}
 +              size="1rem"
                className={cn("transition-all duration-300", {
-                 "ml-1 mt-[0.1rem]": !isScrolled,
+                 "mt-[0.1rem] ml-1": !isScrolled,
                  "ml-1": isScrolled,
 @@ -180,7 +188,7 @@
            <SheetHeader>
