@@ -43,11 +43,11 @@ This document outlines the specific conventions, file structures, and general ru
 - **Wasp Actions Client-Side:** Call actions directly using `async/await`. DO NOT USE the `useAction` hook unless optimistic updates are needed. See [database-operations.mdc](mdc:template/app/.cursor/rules/database-operations.mdc).
   - ✅ `import { deleteTask } from 'wasp/client/operations'; await deleteTask({ taskId });`
 - Root Component (`src/App.tsx` or similar):
-  - Ensure the root component defined in @main.wasp (usually via `app.client.rootComponent`) renders the `<Outlet />` component from `react-router-dom` to display nested page content.
+  - Ensure the root component defined in @main.wasp (usually via `app.client.rootComponent`) renders the `<Outlet />` component from `react-router` to display nested page content.
     ```tsx
     // Example Root Component
     import React from 'react';
-    import { Outlet } from 'react-router-dom';
+    import { Outlet } from 'react-router';
     import Header from './Header'; // Example shared component
 
     function App() {
