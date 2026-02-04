@@ -7,7 +7,7 @@ app OpenSaaS {
 
   head: [
     "<link rel='icon' href='/favicon.ico' />",
-    "<meta charset='utf-8' />",
+
     "<meta name='description' content='Your apps main description and features.' />",
     "<meta name='author' content='Your (App) Name' />",
     "<meta name='keywords' content='saas, solution, product, app, service' />",
