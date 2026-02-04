@@ -4,7 +4,7 @@
 +import { GithubEpicStatus } from "../operations";
 +
 +import { GitPullRequestArrow, Loader2 } from "lucide-react";
-+import { Link } from "react-router-dom";
++import { Link } from "react-router";
 +import { getGithubRoadmap, useQuery } from "wasp/client/operations";
 +import { RoadmapStatusColumn } from "./RoadmapStatusColumn";
 +
@@ -35,7 +35,7 @@
 +    return (
 +      <RoadmapWrapper>
 +        <div className="flex items-center justify-center gap-1 py-12 text-center text-gray-500 dark:text-gray-400">
-+          <GitPullRequestArrow className="h-5 w-5 mr-1" />
++          <GitPullRequestArrow className="mr-1 h-5 w-5" />
 +          <p>No roadmap items yet.</p>
 +          <p>
 +            Add your idea{" "}

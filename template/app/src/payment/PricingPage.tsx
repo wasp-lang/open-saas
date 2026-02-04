@@ -1,6 +1,6 @@
 import { CheckCircle } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useAuth } from "wasp/client/auth";
 import {
   generateCheckoutSession,
@@ -153,7 +153,7 @@ const PricingPage = () => {
             >
               {planId === bestDealPaymentPlanId && (
                 <div
-                  className="absolute right-0 top-0 -z-10 h-full w-full transform-gpu blur-3xl"
+                  className="absolute top-0 right-0 -z-10 h-full w-full transform-gpu blur-3xl"
                   aria-hidden="true"
                 >
                   <div
@@ -168,7 +168,7 @@ const PricingPage = () => {
                 <div className="flex items-center justify-between gap-x-4">
                   <CardTitle
                     id={planId}
-                    className="text-foreground text-lg font-semibold leading-8"
+                    className="text-foreground text-lg leading-8 font-semibold"
                   >
                     {paymentPlanCards[planId].name}
                   </CardTitle>
@@ -180,7 +180,7 @@ const PricingPage = () => {
                   <span className="text-foreground text-4xl font-bold tracking-tight">
                     {paymentPlanCards[planId].price}
                   </span>
-                  <span className="text-muted-foreground text-sm font-semibold leading-6">
+                  <span className="text-muted-foreground text-sm leading-6 font-semibold">
                     {paymentPlans[planId].effect.kind === "subscription" &&
                       "/month"}
                   </span>
