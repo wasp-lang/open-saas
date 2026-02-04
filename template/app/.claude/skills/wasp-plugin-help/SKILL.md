@@ -1,5 +1,5 @@
 ---
-name: plugin-help
+name: wasp-plugin-help
 description: Shows the Wasp plugin's available features, commands, and skills.
 ---
 
@@ -23,12 +23,9 @@ The result: Claude actually understands Wasp instead of guessing.
 
 ## Quick Reference
 
-Slash Commands:
-`/wasp:expert-advice` - Get advice on improvements from a Wasp expert
-`/wasp:help` - Show this guide
-
 Skills:
-`deploying-app` - Guided deployment to Railway or Fly.io
+`expert-wasp-advice` - Get advice on improvements from a Wasp expert
+`deploying-wasp-app` - Guided deployment to Railway or Fly.io
 `start-dev-server` - Start dev environment with full debugging visibility (db -> server -> browser console)
 
 ## 💬 Example Prompts
