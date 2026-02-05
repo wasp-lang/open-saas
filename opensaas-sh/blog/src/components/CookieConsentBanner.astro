@@ -9,23 +9,20 @@
     }
   }
 
-  // See https://cookieconsent.orestbida.com/reference/configuration-reference.html for configuration options.
   const config: Parameters<typeof CookieConsent.run>[0] = {
-    // Default configuration for the modal.
     root: "body",
     autoShow: true,
     disablePageInteraction: false,
     hideFromBots: import.meta.env.PROD ? true : false, // Set this to false for dev/headless tests otherwise the modal will not be visible.
     mode: "opt-in",
-    // Bump the revision field when you add new services
+    // Keep this in sync with: opensaas-sh/app/src/client/components/cookie-consent/Config.ts
     revision: 1,
 
-    // Default configuration for the cookie.
     cookie: {
       name: "cc_cookie",
-      // Use .opensaas.sh domain to share consent with main site
+      // Use opensaas.sh domain to share consent with main site
       domain: location.hostname.includes("opensaas.sh")
-        ? ".opensaas.sh"
+        ? "opensaas.sh"
         : location.hostname,
       path: "/",
       sameSite: "Lax",
@@ -43,18 +40,12 @@
 
     categories: {
       necessary: {
-        enabled: true, // this category is enabled by default
-        readOnly: true, // this category cannot be disabled
+        enabled: true,
+        readOnly: true
       },
       analytics: {
         autoClear: {
           cookies: [
-            {
-              name: /^_ga/, // regex: match all cookies starting with '_ga'
-            },
-            {
-              name: "_gid", // string: exact cookie name
-            },
             {
               name: /^__sec__/, // regex: match all REO.dev cookies (https://docs.reo.dev/integrations/tracking-beacon/reo.dev-javascript-cookies-and-consent-guide#key-features-of-reo.dev-cookies)
             },
@@ -64,7 +55,6 @@
           ],
         },
 
-        // https://cookieconsent.orestbida.com/reference/configuration-reference.html#category-services
         services: {
           posthog: {
             label: "PostHog",
@@ -102,10 +92,8 @@
               "We use cookies primarily for analytics to enhance your experience. By accepting, you agree to our use of these cookies. You can manage your preferences or learn more about our cookie policy.",
             acceptAllBtn: "Accept all",
             acceptNecessaryBtn: "Reject all",
-            // showPreferencesBtn: 'Manage Individual preferences', // (OPTIONAL) Activates the preferences modal
             footer: `<a href="/general/privacy-policy/">Privacy Policy</a>`,
           },
-          // The showPreferencesBtn activates this modal to manage individual preferences https://cookieconsent.orestbida.com/reference/configuration-reference.html#translation-preferencesmodal
           preferencesModal: {
             sections: [],
           },
