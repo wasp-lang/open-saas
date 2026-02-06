@@ -8,16 +8,19 @@
    }
  }
  
-@@ -16,7 +17,7 @@
+@@ -15,8 +16,9 @@
+     disablePageInteraction: false,
      hideFromBots: import.meta.env.PROD ? true : false, // Set this to false for dev/headless tests otherwise the modal will not be visible.
      mode: "opt-in",
-     // Bump the revision field when you add new services
+-    // Bump the revision field when you add new services
 -    revision: 0,
++    // Bump the revision field when you add new services.
++    // Keep this in sync with: opensaas-sh/blog/src/components/CookieConsentBanner.astro
 +    revision: 1,
  
      // Default configuration for the cookie.
      cookie: {
-@@ -50,6 +51,9 @@
+@@ -50,6 +52,9 @@
              {
                name: "_gid", // string: exact cookie name
              },
@@ -27,7 +30,7 @@
            ],
          },
  
-@@ -82,6 +86,24 @@
+@@ -82,6 +87,24 @@
              },
              onReject: () => {},
            },
@@ -52,7 +55,7 @@
          },
        },
      },
-@@ -98,10 +120,7 @@
+@@ -98,10 +121,7 @@
              acceptNecessaryBtn: "Reject all",
              // showPreferencesBtn: 'Manage Individual preferences', // (OPTIONAL) Activates the preferences modal
              // TODO: Add your own privacy policy and terms and conditions links below.
