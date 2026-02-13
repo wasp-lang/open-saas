@@ -32,7 +32,7 @@ jobs:
 
       - name: Install Wasp ${{ env.WASP_VERSION }}
         if: env.WASP_VERSION != 'main'
-        run: curl -sSL https://get.wasp.sh/installer.sh | sh -s -- -v ${{ env.WASP_VERSION }}
+        run: npm i -g @wasp.sh/wasp-cli@${{ env.WASP_VERSION }}
 
       # If you're copying this workflow to your own project, you can remove this step:
       - name: Install latest development Wasp

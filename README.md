@@ -20,7 +20,7 @@ This template is:
 3. comes with a ton of features out of the box!
 4. focused on free, open-source services, where possible
 
-🧑‍💻 Check it out in action here: [OpenSaaS.sh](https://opensaas.sh)  
+🧑‍💻 Check it out in action here: [OpenSaaS.sh](https://opensaas.sh)
 📚 Check out the Docs here: [Open SaaS Docs](https://docs.opensaas.sh)
 
 ## What's inside?
@@ -56,7 +56,7 @@ You also get access to Wasp's diverse, helpful community if you get stuck or nee
 First, to install the latest version of [Wasp](https://wasp.sh/) on macOS, Linux, or Windows with WSL, run the following command:
 
 ```bash
-curl -sSL https://get.wasp.sh/installer.sh | sh
+npm i -g @wasp.sh/wasp-cli
 ```
 
 Then, create a new SaaS app with the following command:
