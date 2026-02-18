@@ -27,6 +27,7 @@ export interface PaymentProcessor {
   ) => Promise<string | null>;
   webhook: PaymentsWebhook;
   webhookMiddlewareConfigFn: MiddlewareConfigFn;
+  fetchTotalRevenue: () => Promise<number>;
 }
 
 /**
