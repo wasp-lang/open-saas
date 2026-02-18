@@ -17,6 +17,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      stripe:
+        image: stripe/stripe-cli:latest
+        env:
+          STRIPE_DEVICE_NAME: ${{ secrets.STRIPE_DEVICE_NAME }}
+        options: stripe listen --api-key ${{ secrets.STRIPE_KEY }} --forward-to localhost:3001/payments-webhook
+
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v4
@@ -92,22 +99,6 @@ jobs:
         run: |
           cd e2e-tests
           npx playwright install --with-deps
-
-      - name: "[e2e-tests] Install Stripe CLI"
-        run: |
-          curl -s https://packages.stripe.dev/api/security/keypair/stripe-cli-gpg/public | gpg --dearmor | sudo tee /usr/share/keyrings/stripe.gpg
-          echo "deb [signed-by=/usr/share/keyrings/stripe.gpg] https://packages.stripe.dev/stripe-cli-debian-local stable main" | sudo tee -a /etc/apt/sources.list.d/stripe.list
-          sudo apt update
-          sudo apt install stripe
-
-      # For Stripe webhooks to work in development, we need to run the Stripe CLI to listen for webhook events.
-      # The Stripe CLI will receive the webhook events from Stripe test payments and
-      # forward them to our local server so that we can test the payment flow in our e2e tests.
-      - name: "[e2e-tests] Run Stripe CLI to listen for webhooks"
-        env:
-          STRIPE_DEVICE_NAME: ${{ secrets.STRIPE_DEVICE_NAME }}
-        run: |
-          stripe listen --api-key ${{ secrets.STRIPE_KEY }} --forward-to localhost:3001/payments-webhook &
 
       - name: "[e2e-tests] Run Playwright tests"
         env:
