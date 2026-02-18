@@ -22,7 +22,8 @@ jobs:
         image: stripe/stripe-cli:latest
         env:
           STRIPE_DEVICE_NAME: ${{ secrets.STRIPE_DEVICE_NAME }}
-        options: stripe listen --api-key ${{ secrets.STRIPE_KEY }} --forward-to localhost:3001/payments-webhook
+          STRIPE_API_KEY: ${{ secrets.STRIPE_KEY }}
+        options: stripe listen --forward-to localhost:3001/payments-webhook
 
     steps:
       - name: Checkout the repo
