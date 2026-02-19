@@ -1,7 +1,7 @@
 --- template/app/src/payment/paymentProcessor.ts
 +++ opensaas-sh/app/src/payment/paymentProcessor.ts
-@@ -29,10 +29,4 @@
-   webhookMiddlewareConfigFn: MiddlewareConfigFn;
+@@ -30,10 +30,4 @@
+   fetchTotalRevenue: () => Promise<number>;
  }
  
 -/**

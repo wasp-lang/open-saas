@@ -75,6 +75,33 @@ export const stripePaymentProcessor: PaymentProcessor = {
   },
   webhook: stripeWebhook,
   webhookMiddlewareConfigFn: stripeMiddlewareConfigFn,
+  fetchTotalRevenue: async () => {
+    let totalRevenue = 0;
+    const params: Stripe.BalanceTransactionListParams = {
+      limit: 100,
+      type: "charge",
+    };
+
+    let hasMore = true;
+    while (hasMore) {
+      const balanceTransactions =
+        await stripeClient.balanceTransactions.list(params);
+
+      for (const transaction of balanceTransactions.data) {
+        totalRevenue += transaction.amount;
+      }
+
+      if (balanceTransactions.has_more) {
+        params.starting_after =
+          balanceTransactions.data[balanceTransactions.data.length - 1].id;
+      } else {
+        hasMore = false;
+      }
+    }
+
+    // Revenue is in cents so we convert to dollars (or your main currency unit)
+    return totalRevenue / 100;
+  },
 };
 
 function paymentPlanEffectToStripeCheckoutSessionMode({
