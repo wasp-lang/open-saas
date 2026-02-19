@@ -1,11 +1,12 @@
 import { BetaAnalyticsDataClient } from "@google-analytics/data";
+import { env } from "wasp/server";
 
-const CLIENT_EMAIL = process.env.GOOGLE_ANALYTICS_CLIENT_EMAIL;
+const CLIENT_EMAIL = env.GOOGLE_ANALYTICS_CLIENT_EMAIL;
 const PRIVATE_KEY = Buffer.from(
-  process.env.GOOGLE_ANALYTICS_PRIVATE_KEY!,
+  env.GOOGLE_ANALYTICS_PRIVATE_KEY,
   "base64",
 ).toString("utf-8");
-const PROPERTY_ID = process.env.GOOGLE_ANALYTICS_PROPERTY_ID;
+const PROPERTY_ID = env.GOOGLE_ANALYTICS_PROPERTY_ID;
 
 const analyticsDataClient = new BetaAnalyticsDataClient({
   credentials: {

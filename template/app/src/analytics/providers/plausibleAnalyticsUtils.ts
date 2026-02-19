@@ -1,6 +1,8 @@
-const PLAUSIBLE_API_KEY = process.env.PLAUSIBLE_API_KEY!;
-const PLAUSIBLE_SITE_ID = process.env.PLAUSIBLE_SITE_ID!;
-const PLAUSIBLE_BASE_URL = process.env.PLAUSIBLE_BASE_URL;
+import { env } from "wasp/server";
+
+const PLAUSIBLE_API_KEY = env.PLAUSIBLE_API_KEY;
+const PLAUSIBLE_SITE_ID = env.PLAUSIBLE_SITE_ID;
+const PLAUSIBLE_BASE_URL = env.PLAUSIBLE_BASE_URL;
 
 const headers = {
   "Content-Type": "application/json",
