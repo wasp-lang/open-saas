@@ -10,11 +10,11 @@ import { requireNodeEnvVar } from "../../server/utils";
 import { assertUnreachable } from "../../shared/utils";
 import { UnhandledWebhookEventError } from "../errors";
 import {
-  getPaymentPlanIdByPaymentProcessorPlanId,
   SubscriptionStatus as OpenSaasSubscriptionStatus,
   PaymentPlanId,
   paymentPlans,
 } from "../plans";
+import { getPaymentPlanIdByPaymentProcessorPlanId } from "../paymentProcessorPlans";
 import { updateUserCredits, updateUserSubscription } from "../user";
 
 /**
