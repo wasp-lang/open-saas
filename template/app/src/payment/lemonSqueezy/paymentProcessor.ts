@@ -1,5 +1,5 @@
 import { lemonSqueezySetup, listOrders } from "@lemonsqueezy/lemonsqueezy.js";
-import { requireNodeEnvVar } from "../../server/utils";
+import { env } from "wasp/server";
 import type {
   CreateCheckoutSessionArgs,
   FetchCustomerPortalUrlArgs,
@@ -10,7 +10,7 @@ import { lemonSqueezyMiddlewareConfigFn, lemonSqueezyWebhook } from "./webhook";
 import { getPaymentProcessorPlanIdByPaymentPlan } from "../paymentProcessorPlans";
 
 lemonSqueezySetup({
-  apiKey: requireNodeEnvVar("LEMONSQUEEZY_API_KEY"),
+  apiKey: env.LEMONSQUEEZY_API_KEY,
 });
 
 export const lemonSqueezyPaymentProcessor: PaymentProcessor = {
@@ -25,7 +25,7 @@ export const lemonSqueezyPaymentProcessor: PaymentProcessor = {
         "User ID needed to create Lemon Squeezy Checkout Session",
       );
     const session = await createLemonSqueezyCheckoutSession({
-      storeId: requireNodeEnvVar("LEMONSQUEEZY_STORE_ID"),
+      storeId: env.LEMONSQUEEZY_STORE_ID,
       variantId: getPaymentProcessorPlanIdByPaymentPlan(paymentPlan),
       userEmail,
       userId,
@@ -55,7 +55,7 @@ export const lemonSqueezyPaymentProcessor: PaymentProcessor = {
     while (hasNextPage) {
       const { data: response } = await listOrders({
         filter: {
-          storeId: requireNodeEnvVar("LEMONSQUEEZY_STORE_ID"),
+          storeId: env.LEMONSQUEEZY_STORE_ID,
         },
         page: {
           number: currentPage,
