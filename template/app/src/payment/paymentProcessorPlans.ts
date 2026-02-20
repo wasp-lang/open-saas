@@ -1,13 +1,23 @@
-import { requireNodeEnvVar } from "../server/utils";
+import { env } from "wasp/server";
 import { type PaymentPlan, PaymentPlanId } from "./plans";
 
-const paymentProcessorPlanIds = {
-  [PaymentPlanId.Hobby]: requireNodeEnvVar("PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID"),
-  [PaymentPlanId.Pro]: requireNodeEnvVar("PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID"),
-  [PaymentPlanId.Credits10]: requireNodeEnvVar("PAYMENTS_CREDITS_10_PLAN_ID"),
+/**
+ * The ID under which this payment plan is identified on your payment processor.
+ *
+ * E.g. price id on Stripe, or variant id on LemonSqueezy.
+ */
+export const paymentProcessorPlanIds = {
+  [PaymentPlanId.Hobby]: env.PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID,
+  [PaymentPlanId.Pro]: env.PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID,
+  [PaymentPlanId.Credits10]: env.PAYMENTS_CREDITS_10_PLAN_ID,
 } as const satisfies Record<PaymentPlanId, string>;
 
-export function getPaymentProcessorPlanIdByPaymentPlan(paymentPlan: PaymentPlan): string {
+/**
+ * Returns your payment processor plan ID for a given Open SaaS `PaymentPlan`.
+ */
+export function getPaymentProcessorPlanIdByPaymentPlan(
+  paymentPlan: PaymentPlan,
+): string {
   return paymentProcessorPlanIds[paymentPlan.id];
 }
 

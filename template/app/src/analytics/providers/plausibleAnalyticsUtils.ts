@@ -1,10 +1,8 @@
-const PLAUSIBLE_API_KEY = process.env.PLAUSIBLE_API_KEY!;
-const PLAUSIBLE_SITE_ID = process.env.PLAUSIBLE_SITE_ID!;
-const PLAUSIBLE_BASE_URL = process.env.PLAUSIBLE_BASE_URL;
+import { env } from "wasp/server";
 
 const headers = {
   "Content-Type": "application/json",
-  Authorization: `Bearer ${PLAUSIBLE_API_KEY}`,
+  Authorization: `Bearer ${env.PLAUSIBLE_API_KEY}`,
 };
 
 type PageViewsResult = {
@@ -36,13 +34,10 @@ export async function getDailyPageViews() {
 
 async function getTotalPageViews() {
   const response = await fetch(
-    `${PLAUSIBLE_BASE_URL}/v1/stats/aggregate?site_id=${PLAUSIBLE_SITE_ID}&metrics=pageviews`,
+    `${env.PLAUSIBLE_BASE_URL}/v1/stats/aggregate?site_id=${env.PLAUSIBLE_SITE_ID}&metrics=pageviews`,
     {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${PLAUSIBLE_API_KEY}`,
-      },
+      headers,
     },
   );
   if (!response.ok) {
@@ -90,10 +85,10 @@ async function getPrevDayViewsChangePercent() {
 }
 
 async function getPageviewsForDate(date: string) {
-  const url = `${PLAUSIBLE_BASE_URL}/v1/stats/aggregate?site_id=${PLAUSIBLE_SITE_ID}&period=day&date=${date}&metrics=pageviews`;
+  const url = `${env.PLAUSIBLE_BASE_URL}/v1/stats/aggregate?site_id=${env.PLAUSIBLE_SITE_ID}&period=day&date=${date}&metrics=pageviews`;
   const response = await fetch(url, {
     method: "GET",
-    headers: headers,
+    headers,
   });
   if (!response.ok) {
     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -103,10 +98,10 @@ async function getPageviewsForDate(date: string) {
 }
 
 export async function getSources() {
-  const url = `${PLAUSIBLE_BASE_URL}/v1/stats/breakdown?site_id=${PLAUSIBLE_SITE_ID}&property=visit:source&metrics=visitors`;
+  const url = `${env.PLAUSIBLE_BASE_URL}/v1/stats/breakdown?site_id=${env.PLAUSIBLE_SITE_ID}&property=visit:source&metrics=visitors`;
   const response = await fetch(url, {
     method: "GET",
-    headers: headers,
+    headers,
   });
   if (!response.ok) {
     throw new Error(`HTTP error! Status: ${response.status}`);
