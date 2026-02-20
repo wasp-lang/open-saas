@@ -1,3 +1,5 @@
+[![Deploy on Hostinger](https://assets.hostinger.com/vps/deploy.svg)](https://www.hostinger.com/web-apps-hosting)
+
 ## Welcome to your new SaaS App! 🎉
 
 <div style="display: flex; gap: 16px; align-items: center;">
