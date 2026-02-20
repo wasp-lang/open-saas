@@ -1,6 +1,6 @@
 --- template/app/src/analytics/providers/plausibleAnalyticsUtils.ts
 +++ opensaas-sh/app/src/analytics/providers/plausibleAnalyticsUtils.ts
-@@ -36,7 +36,7 @@
+@@ -38,7 +38,7 @@
  
  async function getTotalPageViews() {
    const response = await fetch(
@@ -9,7 +9,7 @@
      {
        method: "GET",
        headers: {
-@@ -90,7 +90,7 @@
+@@ -92,7 +92,7 @@
  }
  
  async function getPageviewsForDate(date: string) {
@@ -18,7 +18,7 @@
    const response = await fetch(url, {
      method: "GET",
      headers: headers,
-@@ -103,7 +103,7 @@
+@@ -105,7 +105,7 @@
  }
  
  export async function getSources() {

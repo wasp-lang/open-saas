@@ -1,15 +1,16 @@
 --- template/app/src/auth/userSignupFields.ts
 +++ opensaas-sh/app/src/auth/userSignupFields.ts
-@@ -1,8 +1,6 @@
+@@ -1,9 +1,6 @@
  import { defineUserSignupFields } from "wasp/auth/providers/types";
+-import { env } from "wasp/server";
  import { z } from "zod";
  
--const adminEmails = process.env.ADMIN_EMAILS?.split(",") || [];
+-const adminEmails = env.ADMIN_EMAILS;
 -
  const emailDataSchema = z.object({
    email: z.string(),
  });
-@@ -16,10 +14,6 @@
+@@ -17,10 +14,6 @@
      const emailData = emailDataSchema.parse(data);
      return emailData.email;
    },
@@ -20,7 +21,7 @@
  });
  
  const githubDataSchema = z.object({
-@@ -48,14 +42,6 @@
+@@ -49,14 +42,6 @@
      const githubData = githubDataSchema.parse(data);
      return githubData.profile.login;
    },
@@ -35,7 +36,7 @@
  });
  
  // We are using the first email from the list of emails returned by GitHub.
-@@ -88,13 +74,6 @@
+@@ -89,13 +74,6 @@
      const googleData = googleDataSchema.parse(data);
      return googleData.profile.email;
    },
@@ -49,7 +50,7 @@
  });
  
  export function getGoogleAuthConfig() {
-@@ -126,13 +105,6 @@
+@@ -127,13 +105,6 @@
      const discordData = discordDataSchema.parse(data);
      return discordData.profile.username;
    },

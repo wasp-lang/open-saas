@@ -15,7 +15,6 @@ import {
 } from "../plans";
 import { getPaymentPlanIdByPaymentProcessorPlanId } from "../paymentProcessorPlans";
 import { updateUserCredits, updateUserSubscription } from "../user";
-import { getPaymentPlanIdByPaymentProcessorPlanId } from "../paymentProcessorPlans";
 
 /**
  * Polar requires a raw request to construct events successfully.
