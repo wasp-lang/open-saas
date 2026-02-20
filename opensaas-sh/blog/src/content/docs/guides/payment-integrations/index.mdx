@@ -35,10 +35,10 @@ export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
 ```
 
 Then you should delete:
-- The unused payment processor code within the `/src/payment/<unused-provider>` directories.
-- Any unused environment variables from `.env.server` (they will be prefixed with the name of the provider your are not using):
+- The unused payment processor directories at `/src/payment/<unused-provider>`.
+- Any unused environment variables from `.env.server` (they will be prefixed with the name of the provider you are not using):
   - E.g. `STRIPE_API_KEY`, `LEMONSQUEEZY_API_KEY`, `POLAR_ORGANIZATION_ACCESS_TOKEN`.
-- Update `src/env.ts` to uncomment the env schema for your chosen provider and comment out the others.
+- Update `src/env.ts` to remove the env schema imports and `.merge()` calls for the providers you removed.
 - Make sure to also run `npm uninstall` for providers you didn't use:
   - Stripe: `npm uninstall stripe`
   - Polar: `npm uninstall @polar-sh/sdk`
