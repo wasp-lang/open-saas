@@ -127,11 +127,13 @@ export const makeStripePayment = async ({
 
   await page.waitForURL("**/checkout?status=success");
   await page.waitForURL("**/account");
-  if (planId === "credits10") {
-    await expect(page.getByText("13 credits")).toBeVisible();
-  } else {
-    await expect(page.getByText(planId)).toBeVisible();
-  }
+
+  // Wait for webhook to process and update subscription status
+  const expectedText = planId === "credits10" ? "13 credits" : planId;
+  await expect(async () => {
+    await page.reload();
+    await expect(page.getByText(expectedText)).toBeVisible();
+  }).toPass({ timeout: 10000, intervals: [500] });
 };
 
 export const acceptAllCookies = async (page: Page) => {
