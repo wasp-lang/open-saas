@@ -28,7 +28,6 @@ export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
         return response.url().includes("login") && response.status() === 200;
       })
       .catch((err) => console.error(err.message)),
-    ,
     clickLogin,
   ]);
 
