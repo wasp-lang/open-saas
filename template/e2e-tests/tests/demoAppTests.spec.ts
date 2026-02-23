@@ -64,8 +64,8 @@ test("User can make 3 AI schedule generations", async () => {
     ]);
 
     const schedule = page.getByTestId("schedule");
-    expect(schedule).toContainText(task1, { ignoreCase: true });
-    expect(schedule).toContainText(task2, { ignoreCase: true });
+    await expect(schedule).toContainText(task1, { ignoreCase: true });
+    await expect(schedule).toContainText(task2, { ignoreCase: true });
   }
 });
 
@@ -95,8 +95,8 @@ test("AI schedule generation fails on 4th attempt", async () => {
   ]);
 
   const schedule = page.getByTestId("schedule");
-  expect(schedule).not.toContainText(task1, { ignoreCase: true });
-  expect(schedule).not.toContainText(task2, { ignoreCase: true });
+  await expect(schedule).not.toContainText(task1, { ignoreCase: true });
+  await expect(schedule).not.toContainText(task2, { ignoreCase: true });
 });
 
 test("Make test payment with Stripe for hobby plan", async () => {
@@ -134,6 +134,6 @@ test("User should be able to generate another schedule after payment", async () 
   ]);
 
   const schedule = page.getByTestId("schedule");
-  expect(schedule).toContainText(task1, { ignoreCase: true });
-  expect(schedule).toContainText(task2, { ignoreCase: true });
+  await expect(schedule).toContainText(task1, { ignoreCase: true });
+  await expect(schedule).toContainText(task2, { ignoreCase: true });
 });
