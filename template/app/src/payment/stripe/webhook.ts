@@ -8,11 +8,11 @@ import { requireNodeEnvVar } from "../../server/utils";
 import { assertUnreachable } from "../../shared/utils";
 import { UnhandledWebhookEventError } from "../errors";
 import {
-  getPaymentPlanIdByPaymentProcessorPlanId,
   PaymentPlanId,
   paymentPlans,
   SubscriptionStatus,
 } from "../plans";
+import { getPaymentPlanIdByPaymentProcessorPlanId } from "../paymentProcessorPlans";
 import { updateUserCredits, updateUserSubscription } from "../user";
 import { stripeClient } from "./stripeClient";
 

@@ -48,7 +48,7 @@ To create a test product, go to the test products url [https://dashboard.stripe.
 If you intend to let your users switch between two subscription plans, e.g. upgrade from hobby to pro, you'll need to create two separate products with their own price IDs. The ability for users to swich plans can then be configured later in the [Customer Portal](#set-up-the-customer-portal).
 
 :::note[Naming products differently]
-Note that if you change names of your products, you'll need to update your app code in `src/payment/plants.ts` to match these names as well.
+Note that if you change names of your products, you'll need to update your app code in `src/payment/plans.ts` and `src/payment/paymentProcessorPlans.ts` to match these names as well.
 :::
 
 ### Create a Test Customer
