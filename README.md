@@ -89,3 +89,7 @@ For information about the development tools used to maintain derived projects (l
 Note that we've tried to get as many of the core features of a SaaS app into this template as possible, but there still might be some missing features or functionality.
 
 We could always use some help tying up loose ends: contributions are welcome! Check out [CONTRIBUTING.md](/CONTRIBUTING.md) for more details.
+
+## Deployment
+
+[![Deploy on Hostinger](https://assets.hostinger.com/vps/deploy.svg)](https://www.hostinger.com/web-apps-hosting)
