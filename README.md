@@ -18,7 +18,7 @@ This template is:
 1. fully open-source
 2. completely free to use and distribute
 3. comes with a ton of features out of the box!
-4. focused on free, open-source services, where possible
+4. ready to work with your favorite AI coding tool or agent (Claude Code, Cursor, Codex, OpenCode, etc.)
 
 🧑‍💻 Check it out in action here: [OpenSaaS.sh](https://opensaas.sh)
 📚 Check out the Docs here: [Open SaaS Docs](https://docs.opensaas.sh)
