@@ -10,6 +10,7 @@ interface FAQ {
   question: string;
   answer: string;
   href?: string;
+  linkText?: string;
 }
 
 export default function FAQ({ faqs }: { faqs: FAQ[] }) {
@@ -39,7 +40,7 @@ export default function FAQ({ faqs }: { faqs: FAQ[] }) {
                     href={faq.href}
                     className="text-primary hover:text-primary/80 shrink-0 whitespace-nowrap text-base font-medium leading-7 transition-colors duration-200"
                   >
-                    Learn more →
+                    {faq.linkText ?? "Learn more"} →
                   </a>
                 )}
               </div>
