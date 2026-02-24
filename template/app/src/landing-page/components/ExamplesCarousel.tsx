@@ -157,7 +157,9 @@ const ExampleCard = forwardRef<HTMLDivElement, ExampleCardProps>(
             <img
               src={example.imageSrc}
               alt={example.name}
-              className="aspect-video h-auto w-full"
+              width={700}
+              height={444}
+              className="h-auto w-full"
             />
             <div className="p-4">
               <p className="font-bold">{example.name}</p>

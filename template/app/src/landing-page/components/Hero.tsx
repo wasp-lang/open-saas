@@ -21,7 +21,7 @@ export default function Hero() {
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Button size="lg" variant="outline" asChild>
                 <WaspRouterLink to={routes.PricingPageRoute.to}>
-                  Learn More
+                  View Pricing
                 </WaspRouterLink>
               </Button>
               <Button size="lg" variant="default" asChild>

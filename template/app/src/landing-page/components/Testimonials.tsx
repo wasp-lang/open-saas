@@ -49,6 +49,8 @@ export default function Testimonials({
                     src={testimonial.avatarSrc}
                     loading="lazy"
                     alt={`${testimonial.name}'s avatar`}
+                    width={40}
+                    height={40}
                     className="ring-border/20 group-hover:ring-primary/30 h-10 w-10 shrink-0 rounded-full ring-2 transition-all duration-200"
                   />
                   <div className="min-w-0 flex-1">
