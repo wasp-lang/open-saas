@@ -1,15 +1,9 @@
 .agents/skills/add-wasp-skills/SKILL.md
 .agents/skills/getting-started/SKILL.md
 .agents/skills/guided-tour/SKILL.md
-.claude/README.md
 .claude/skills/add-wasp-skills
-.claude/skills/deploying-app/SKILL.md
-.claude/skills/deploying-app/validating-pre-deployment.md
-.claude/skills/expert-wasp-advice/SKILL.md
 .claude/skills/getting-started
 .claude/skills/guided-tour
-.claude/skills/start-dev-server/SKILL.md
-.claude/skills/wasp-plugin-help/SKILL.md
 src/client/static/open-saas-banner-dark.svg
 src/client/static/open-saas-banner-light.svg
 src/landing-page/components/Hero.tsx
