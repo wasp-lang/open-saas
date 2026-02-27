@@ -1,5 +1,5 @@
 ---
-title: Vibe Coding with Open SaaS
+title: "AI-assisted Coding / Vibe Coding with Open SaaS"
 banner:
   content: |
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
@@ -9,23 +9,28 @@ import vibeBoi from '@assets/ai/vibe-boi.png';
 
 <Image src={vibeBoi} alt="vibe boi" width={300} />
 
-If you're looking to use AI to help build (or "vibe code") your SaaS app, this guide is for you.
+If you're looking to use AI coding tools to help build your SaaS app, this guide is for you.
 
 ## Coding with AI, Open SaaS, & Wasp
 
-Wasp is the perfect match for vibe coding due to its central config file which gives LLMs immediate context about the entire full-stack app, as well as its ability to manage boilerplate code so AI doesn't have to. 
+Wasp is the perfect match for AI-assisted coding due to its central config file which gives LLMs immediate context about the entire full-stack app, as well as its ability to manage boilerplate code so AI doesn't have to. 
 
 To make it even easier, here are some resources to help you use Wasp & Open SaaS with AI as effectively as possible.
 
 ## Agent Skills and Rules
 
-We've packaged Wasp agent skills and rules into the template to be used by your favorite AI-assisted coding tools (Claude Code, Cursor, VS Code/Copilot, Codex, Gemini CLI, OpenCode, etc.).
+We've put some agent skills and rules into the template to help you get started using Open SaaS with your favorite AI-assisted coding tools (Claude Code, Cursor, VS Code/Copilot, Codex, Gemini CLI, OpenCode, etc.).
 
-Skills are found in the `app/.claude` directory of the Open SaaS template, but because [Agent Skills](https://agentskills.io/) are a recognized standard, your AI-assisted coding tool will either load them automatically from the `.claude` directory, or can be used as-is after they've been properly referenced.
-See your AI-assisted coding tool's documentation for more details on how to add Agent Skills.
+Skills are found in the `app/.agents` (and `app/.claude`) directory of the Open SaaS template, and follow the [Agent Skills](https://agentskills.io/) standard.
+See your AI-assisted coding tool's documentation for more details on how to add Agent Skills if they don't load automatically.
 
-Rules, found within the `AGENTS.md` (and `CLAUDE.md`), is another open standard used by many popular AI-assisted coding tools to give instructions to the agents when coding.
-Read more about the [AGENTS.md standard](https://agents.md/) to see if it's compatible with your AI-assisted coding tool of choice.
+Rules, found within the `AGENTS.md` (and `CLAUDE.md`), is another [open standard](https://agents.md/) used by many popular AI-assisted coding tools to give instructions to the agents when coding.
+
+:::tip[These are just a starting point!]
+Use these skills and rules to get your project up and running.
+
+Run the `add-wasp-skills` skill to add [Wasp framework-specific skills](https://github.com/wasp-lang/claude-plugins/tree/main/plugins/wasp) to your project for even more power.
+:::
 
 ## LLM-Friendly Documentation
 
@@ -35,24 +40,6 @@ Note: the `AGENTS.md` has specific instructions on how to automatically fetch an
 - [Open SaaS Docs - LLMs-full.txt](https://docs.opensaas.sh/llms-full.txt) - Complete docs as one text file.
 - [Wasp Docs - LLMs.txt](https://wasp.sh/llms.txt) - Links to the raw text docs by Wasp version.
 - [Wasp Docs - LLMs-full.txt](https://wasp.sh/llms-full.txt) - Complete docs as one text file.
-
-## MCP Server Installation
-
-### Claude Code
-For Claude Code users, the `app/.mcp.json` file is already located in the root of the project.
-
-### Cursor / VS Code
-Add the following to your `mcp.json` file:
-```json
-{
-    // ... other MCP servers ...
-    "Chrome DevTools": {
-      "command": "npx chrome-devtools-mcp@latest",
-      "env": {},
-      "args": []
-    }
-}
-```
 
 ## More AI-assisted Coding Learning Resources
 

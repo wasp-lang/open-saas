@@ -76,7 +76,7 @@ export default defineConfig({
             { label: 'File Uploading', link: "/guides/file-uploading/" },
             { label: 'Tests', link: "/guides/tests/" },
             { label: 'How (Not) to Update Your Open SaaS App', link: "/guides/updating-opensaas/" },
-            { label: 'Vibe Coding with Open SaaS', link: "/guides/vibe-coding/" },
+            { label: 'Using AI Coding Tools', link: "/guides/vibe-coding/" },
           ]
         },
         {
