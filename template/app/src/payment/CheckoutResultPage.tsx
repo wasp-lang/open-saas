@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
+import { Navigate, useNavigate, useSearchParams } from "react-router";
 
 const ACCOUNT_PAGE_REDIRECT_DELAY_MS = 4000;
 

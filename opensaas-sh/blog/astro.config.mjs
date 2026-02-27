@@ -28,13 +28,6 @@ export default defineConfig({
             src: "https://opensaas.sh/wasparadocs/wasp/script.js",
           },
         },
-        {
-          tag: "script",
-          attrs: {
-            defer: true,
-            src: "/piggy.js",
-          },
-        },
       ],
       editLink: {
         baseUrl:
@@ -45,6 +38,7 @@ export default defineConfig({
         // We customized ThemeSelect to include a "Copy URL for LLMs" button
         ThemeSelect: "./src/components/MyRightNavBarItems.astro",
         Head: "./src/components/HeadWithOGImage.astro",
+        PageFrame: "./src/components/PageFrameWithCookieConsent.astro",
       },
       social: {
         github: "https://github.com/wasp-lang/open-saas",

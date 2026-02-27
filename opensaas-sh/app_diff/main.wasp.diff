@@ -1,6 +1,6 @@
 --- template/app/main.wasp
 +++ opensaas-sh/app/main.wasp
-@@ -3,31 +3,32 @@
+@@ -3,31 +3,31 @@
      version: "^0.21.0"
    },
  
@@ -9,7 +9,7 @@
  
    head: [
      "<link rel='icon' href='/favicon.ico' />",
-     "<meta charset='utf-8' />",
+ 
 -    "<meta name='description' content='Your apps main description and features.' />",
 -    "<meta name='author' content='Your (App) Name' />",
 -    "<meta name='keywords' content='saas, solution, product, app, service' />",
@@ -45,11 +45,10 @@
 -    "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.local.js'></script>",  // for development
 +
 +    "<script defer data-domain='opensaas.sh' data-api='/waspara/wasp/event' src='/waspara/wasp/script.js'></script>",
-+    "<script defer src='/piggy.js'></script>",
    ],
  
    // 🔐 Auth out of the box! https://wasp.sh/docs/auth/overview
-@@ -39,7 +40,7 @@
+@@ -39,7 +39,7 @@
        email: {
          fromField: {
            name: "Open SaaS App",
@@ -58,7 +57,7 @@
          },
          emailVerification: {
            clientRoute: EmailVerificationRoute,
-@@ -51,21 +52,18 @@
+@@ -51,21 +51,18 @@
          },
          userSignupFields: import { getEmailUserFields } from "@src/auth/userSignupFields",
        },
@@ -92,7 +91,7 @@
      },
      onAuthFailedRedirectTo: "/login",
      onAuthSucceededRedirectTo: "/demo-app",
-@@ -87,11 +85,11 @@
+@@ -87,11 +84,11 @@
      // NOTE: "Dummy" provider is just for local development purposes.
      //   Make sure to check the server logs for the email confirmation url (it will not be sent to an address)!
      //   Once you are ready for production, switch to e.g. "SendGrid" or "Mailgun" providers. Check out https://docs.opensaas.sh/guides/email-sending/ .
@@ -106,7 +105,7 @@
      },
    },
  }
-@@ -101,6 +99,11 @@
+@@ -101,6 +98,11 @@
    component: import LandingPage from "@src/landing-page/LandingPage"
  }
  
@@ -118,7 +117,7 @@
  //#region Auth Pages
  route LoginRoute { path: "/login", to: LoginPage }
  page LoginPage {
-@@ -207,9 +210,9 @@
+@@ -207,9 +209,9 @@
  }
  
  api paymentsWebhook {
@@ -130,7 +129,7 @@
    httpRoute: (POST, "/payments-webhook")
  }
  //#endregion
-@@ -245,6 +248,17 @@
+@@ -245,6 +247,17 @@
    fn: import { deleteFile } from "@src/file-upload/operations",
    entities: [User, File]
  }
@@ -148,7 +147,7 @@
  //#endregion
  
  //#region Analytics
-@@ -291,7 +305,6 @@
+@@ -291,7 +304,6 @@
    component: import AdminCalendar from "@src/admin/elements/calendar/CalendarPage"
  }
  

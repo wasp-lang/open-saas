@@ -1,4 +1,4 @@
-import { lemonSqueezySetup } from "@lemonsqueezy/lemonsqueezy.js";
+import { lemonSqueezySetup, listOrders } from "@lemonsqueezy/lemonsqueezy.js";
 import { requireNodeEnvVar } from "../../server/utils";
 import type {
   CreateCheckoutSessionArgs,
@@ -46,4 +46,33 @@ export const lemonSqueezyPaymentProcessor: PaymentProcessor = {
   },
   webhook: lemonSqueezyWebhook,
   webhookMiddlewareConfigFn: lemonSqueezyMiddlewareConfigFn,
+  fetchTotalRevenue: async () => {
+    let totalRevenue = 0;
+    let hasNextPage = true;
+    let currentPage = 1;
+
+    while (hasNextPage) {
+      const { data: response } = await listOrders({
+        filter: {
+          storeId: requireNodeEnvVar("LEMONSQUEEZY_STORE_ID"),
+        },
+        page: {
+          number: currentPage,
+          size: 100,
+        },
+      });
+
+      if (response?.data) {
+        for (const order of response.data) {
+          totalRevenue += order.attributes.total;
+        }
+      }
+
+      hasNextPage = !response?.meta?.page.lastPage;
+      currentPage++;
+    }
+
+    // Revenue is in cents so we convert to dollars (or your main currency unit)
+    return totalRevenue / 100;
+  },
 };

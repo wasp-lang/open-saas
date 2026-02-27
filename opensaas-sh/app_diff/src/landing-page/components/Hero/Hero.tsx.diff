@@ -2,7 +2,7 @@
 +++ opensaas-sh/app/src/landing-page/components/Hero/Hero.tsx
 @@ -0,0 +1,93 @@
 +import { ArrowRight } from "lucide-react";
-+import { Link as ReactRouterLink } from "react-router-dom";
++import { Link as ReactRouterLink } from "react-router";
 +import { useAuth } from "wasp/client/auth";
 +import { Link as WaspRouterLink, routes } from "wasp/client/router";
 +import { Button } from "../../../client/components/ui/button";

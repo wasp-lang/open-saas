@@ -1,12 +1,12 @@
-@import "tailwindcss" source("..");
+@import "tailwindcss";
 
-@plugin '@tailwindcss/forms';
-@plugin '@tailwindcss/typography';
-@plugin 'tailwindcss-animate';
+@plugin "@tailwindcss/forms";
+@plugin "@tailwindcss/typography";
+@plugin "tailwindcss-animate";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
-@theme {
+@theme inline {
   --color-current: currentColor;
   --color-transparent: transparent;
   --color-black-2: #010101;
@@ -98,7 +98,7 @@
   --z-index-99999: 99999;
   --z-index-999999: 999999;
 
-  --content-icon-copy: url('../images/icon/icon-copy-alt.svg');
+  --content-icon-copy: url("../images/icon/icon-copy-alt.svg");
 
   --transition-property-width: width;
   --transition-property-stroke: stroke;

@@ -1,6 +1,7 @@
 name: Check `opensaas-sh` diffs are up to date
 
 on:
+  workflow_dispatch:
   pull_request:
   push:
     branches:
@@ -9,7 +10,7 @@ on:
 jobs:
   check-diffs:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v6
 
