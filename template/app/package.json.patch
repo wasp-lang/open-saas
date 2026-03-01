@@ -1,0 +1,9 @@
+--- a/template/app/package.json
++++ b/template/app/package.json
+@@ -12,6 +12,7 @@
+     "@aws-sdk/s3-request-presigner": "^3.523.0",
+     "@google-analytics/data": "4.1.0",
++    "ethers": "^6.13.0",
+     "@hookform/resolvers": "^5.1.1",
+     "@lemonsqueezy/lemonsqueezy.js": "^3.2.0",
+     "@polar-sh/sdk": "^0.34.3",
