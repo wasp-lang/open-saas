@@ -2,7 +2,7 @@
 +++ opensaas-sh/app/src/client/components/cookie-consent/Config.ts
 @@ -1,4 +1,5 @@
  import type { CookieConsentConfig } from "vanilla-cookieconsent";
-+import { loadScript } from "vanilla-cookieconsent";
++import * as CookieConsent from "vanilla-cookieconsent";
  
  declare global {
    interface Window {
@@ -39,7 +39,7 @@
 +            label: "PostHog",
 +            onAccept: async () => {
 +              try {
-+                await loadScript("/scripts/posthog.js");
++                await CookieConsent.loadScript("/scripts/posthog.js");
 +              } catch (error) {
 +                console.error(error);
 +              }
@@ -50,7 +50,7 @@
 +            label: "REO.dev",
 +            onAccept: async () => {
 +              try {
-+                await loadScript("/scripts/reo.js");
++                await CookieConsent.loadScript("/scripts/reo.js");
 +              } catch (error) {
 +                console.error(error);
 +              }
