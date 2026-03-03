@@ -212,6 +212,16 @@ api paymentsWebhook {
   middlewareConfigFn: import { paymentsMiddlewareConfigFn } from "@src/payment/webhook",
   httpRoute: (POST, "/payments-webhook")
 }
+
+apiNamespace mdkNamespace {
+  middlewareConfigFn: import { mdkNamespaceMiddlewareFn } from "@src/payment/moneydevkit/mdkApi",
+  path: "/api/mdk"
+}
+
+route MdkCheckoutRoute { path: "/mdk-checkout/:id", to: MdkCheckoutPage }
+page MdkCheckoutPage {
+  component: import MdkCheckoutPage from "@src/payment/moneydevkit/MdkCheckoutPage"
+}
 //#endregion
 
 //#region File Upload

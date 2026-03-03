@@ -12,6 +12,7 @@
     "@google-analytics/data": "4.1.0",
     "@hookform/resolvers": "^5.1.1",
     "@lemonsqueezy/lemonsqueezy.js": "^3.2.0",
+    "@moneydevkit/replit": "^0.13.0",
     "@polar-sh/sdk": "^0.34.3",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-avatar": "^1.1.10",
@@ -25,6 +26,7 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-switch": "^1.2.5",
     "@radix-ui/react-toast": "^1.2.14",
+    "@tanstack/react-query": "4.42.2",
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/typography": "^0.5.19",
     "apexcharts": "3.41.0",
@@ -39,12 +41,16 @@
     "react-dom": "^19.2.1",
     "react-hook-form": "^7.60.0",
     "react-router": "^7.12.0",
+    "standardwebhooks": "^1.0.0",
     "stripe": "18.1.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss": "^4.1.18",
     "tailwindcss-animate": "^1.0.7",
     "vanilla-cookieconsent": "^3.0.1",
     "zod": "^3.25.76"
+  },
+  "scripts": {
+    "postinstall": "node scripts/fix-mdk-esm.js"
   },
   "devDependencies": {
     "@faker-js/faker": "8.3.1",
