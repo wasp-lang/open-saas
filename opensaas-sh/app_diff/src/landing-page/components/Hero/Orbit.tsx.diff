@@ -1,6 +1,6 @@
 --- template/app/src/landing-page/components/Hero/Orbit.tsx
 +++ opensaas-sh/app/src/landing-page/components/Hero/Orbit.tsx
-@@ -0,0 +1,277 @@
+@@ -0,0 +1,282 @@
 +import logo from "../../../client/static/logo.webp";
 +import nodeLogoDark from "../../../client/static/logos/nodejs-dark.webp";
 +import nodeLogo from "../../../client/static/logos/nodejs-light.webp";
@@ -216,7 +216,7 @@
 +      `}</style>
 +
 +      <div className="absolute flex flex-col items-center gap-2">
-+        <p className="text-gradient-primary font-sans text-6xl font-black leading-none">
++        <p className="text-gradient-primary font-sans text-6xl leading-none font-black">
 +          100%
 +        </p>
 +        <p className="text-muted-foreground text-lg">Open Source</p>
@@ -230,12 +230,16 @@
 +            width: circle.radius * 2,
 +            height: circle.radius * 2,
 +            background: ringGradients[circleIndex],
-+            mask: `radial-gradient(circle at center, transparent ${circle.radius - 2}px, black ${
-+              circle.radius - 1
-+            }px, black ${circle.radius}px, transparent ${circle.radius + 1}px)`,
-+            WebkitMask: `radial-gradient(circle at center, transparent ${circle.radius - 2}px, black ${
-+              circle.radius - 1
-+            }px, black ${circle.radius}px, transparent ${circle.radius + 1}px)`,
++            mask: `radial-gradient(circle at center, transparent ${
++              circle.radius - 2
++            }px, black ${circle.radius - 1}px, black ${
++              circle.radius
++            }px, transparent ${circle.radius + 1}px)`,
++            WebkitMask: `radial-gradient(circle at center, transparent ${
++              circle.radius - 2
++            }px, black ${circle.radius - 1}px, black ${
++              circle.radius
++            }px, transparent ${circle.radius + 1}px)`,
 +            animation: `ring-spin ${circle.ringPeriod}s linear infinite`,
 +          }}
 +        />
@@ -249,7 +253,7 @@
 +        return (
 +          <div
 +            key={logoConfig.id}
-+            className="absolute left-1/2 top-1/2"
++            className="absolute top-1/2 left-1/2"
 +            style={
 +              {
 +                width: 0,
