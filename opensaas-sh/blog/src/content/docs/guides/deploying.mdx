@@ -104,7 +104,7 @@ Because this template was built with a specific version of the Stripe API in min
 ```ts title="stripeClient.ts" 
 const STRIPE_API_VERSION = "2025-04-30.basil"; // or e.g. 2023-08-16 if using older format
 
-export const stripeClient = new Stripe(requireNodeEnvVar("STRIPE_API_KEY"), {
+export const stripeClient = new Stripe(env.STRIPE_API_KEY, {
   apiVersion: STRIPE_API_VERSION,
 });
 ```
@@ -120,7 +120,7 @@ To make sure your app is consistent with your Stripe account, here are some step
    ```ts title="stripeClient.ts" {1}
    const STRIPE_API_VERSION = "2025-04-30.basil"; // or e.g. 2023-08-16 if using older format
 
-   export const stripeClient = new Stripe(requireNodeEnvVar("STRIPE_API_KEY"), {
+   export const stripeClient = new Stripe(env.STRIPE_API_KEY, {
      apiVersion: STRIPE_API_VERSION,
    });
    ```

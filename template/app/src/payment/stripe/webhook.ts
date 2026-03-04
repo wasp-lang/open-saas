@@ -1,10 +1,9 @@
 import { type PrismaClient } from "@prisma/client";
 import express from "express";
 import type { Stripe } from "stripe";
-import { type MiddlewareConfigFn } from "wasp/server";
+import { env, type MiddlewareConfigFn } from "wasp/server";
 import { type PaymentsWebhook } from "wasp/server/api";
 import { emailSender } from "wasp/server/email";
-import { requireNodeEnvVar } from "../../server/utils";
 import { assertUnreachable } from "../../shared/utils";
 import { UnhandledWebhookEventError } from "../errors";
 import {
@@ -83,7 +82,7 @@ export const stripeWebhook: PaymentsWebhook = async (
 };
 
 function constructStripeEvent(request: express.Request): Stripe.Event {
-  const stripeWebhookSecret = requireNodeEnvVar("STRIPE_WEBHOOK_SECRET");
+  const stripeWebhookSecret = env.STRIPE_WEBHOOK_SECRET;
   const stripeSignature = request.headers["stripe-signature"];
   if (!stripeSignature) {
     throw new Error("Stripe webhook signature not provided");

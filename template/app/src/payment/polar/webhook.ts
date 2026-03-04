@@ -4,9 +4,8 @@ import { WebhookOrderPaidPayload } from "@polar-sh/sdk/models/components/webhook
 import { WebhookSubscriptionUpdatedPayload } from "@polar-sh/sdk/models/components/webhooksubscriptionupdatedpayload.js";
 import { validateEvent } from "@polar-sh/sdk/webhooks";
 import express from "express";
-import type { MiddlewareConfigFn, PrismaClient } from "wasp/server";
+import { env, type MiddlewareConfigFn, type PrismaClient } from "wasp/server";
 import type { PaymentsWebhook } from "wasp/server/api";
-import { requireNodeEnvVar } from "../../server/utils";
 import { assertUnreachable } from "../../shared/utils";
 import { UnhandledWebhookEventError } from "../errors";
 import {
@@ -42,7 +41,7 @@ export const polarWebhook: PaymentsWebhook = async (
     const event = validateEvent(
       request.body,
       request.headers as Record<string, string>,
-      requireNodeEnvVar("POLAR_WEBHOOK_SECRET"),
+      env.POLAR_WEBHOOK_SECRET,
     );
 
     switch (event.type) {

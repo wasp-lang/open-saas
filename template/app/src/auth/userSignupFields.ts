@@ -1,7 +1,10 @@
 import { defineUserSignupFields } from "wasp/auth/providers/types";
+import { env } from "wasp/server";
 import { z } from "zod";
 
-const adminEmails = process.env.ADMIN_EMAILS?.split(",") || [];
+function isAdminEmail(email: string): boolean {
+  return env.ADMIN_EMAILS.includes(email);
+}
 
 const emailDataSchema = z.object({
   email: z.string(),
@@ -18,7 +21,7 @@ export const getEmailUserFields = defineUserSignupFields({
   },
   isAdmin: (data) => {
     const emailData = emailDataSchema.parse(data);
-    return adminEmails.includes(emailData.email);
+    return isAdminEmail(emailData.email);
   },
 });
 
@@ -54,7 +57,7 @@ export const getGitHubUserFields = defineUserSignupFields({
     if (!emailInfo.verified) {
       return false;
     }
-    return adminEmails.includes(emailInfo.email);
+    return isAdminEmail(emailInfo.email);
   },
 });
 
@@ -93,7 +96,7 @@ export const getGoogleUserFields = defineUserSignupFields({
     if (!googleData.profile.email_verified) {
       return false;
     }
-    return adminEmails.includes(googleData.profile.email);
+    return isAdminEmail(googleData.profile.email);
   },
 });
 
@@ -131,7 +134,7 @@ export const getDiscordUserFields = defineUserSignupFields({
     if (!discordData.profile.email || !discordData.profile.verified) {
       return false;
     }
-    return adminEmails.includes(discordData.profile.email);
+    return isAdminEmail(discordData.profile.email);
   },
 });
 
