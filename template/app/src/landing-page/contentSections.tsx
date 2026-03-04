@@ -105,7 +105,6 @@ export const faqs = [
     question: "Whats the meaning of life?",
     answer: "42.",
     href: "https://en.wikipedia.org/wiki/42_(number)",
-    linkText: "Read about the number 42 on Wikipedia",
   },
 ];
 
