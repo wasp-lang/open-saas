@@ -7,7 +7,7 @@ const paymentProcessorPlanIds = {
   [PaymentPlanId.Credits10]: requireNodeEnvVar("PAYMENTS_CREDITS_10_PLAN_ID"),
 } as const satisfies Record<PaymentPlanId, string>;
 
-export function getPaymentProcessorPlanIdByPaymentPlan(paymentPlan: PaymentPlan): string {
+export function getPaymentProcessorPlanId(paymentPlan: PaymentPlan): string {
   return paymentProcessorPlanIds[paymentPlan.id];
 }
 

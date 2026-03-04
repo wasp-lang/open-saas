@@ -7,7 +7,7 @@ import type {
 } from "../paymentProcessor";
 import { createLemonSqueezyCheckoutSession } from "./checkoutUtils";
 import { lemonSqueezyMiddlewareConfigFn, lemonSqueezyWebhook } from "./webhook";
-import { getPaymentProcessorPlanIdByPaymentPlan } from "../paymentProcessorPlans";
+import { getPaymentProcessorPlanId } from "../paymentProcessorPlans";
 
 lemonSqueezySetup({
   apiKey: requireNodeEnvVar("LEMONSQUEEZY_API_KEY"),
@@ -26,7 +26,7 @@ export const lemonSqueezyPaymentProcessor: PaymentProcessor = {
       );
     const session = await createLemonSqueezyCheckoutSession({
       storeId: requireNodeEnvVar("LEMONSQUEEZY_STORE_ID"),
-      variantId: getPaymentProcessorPlanIdByPaymentPlan(paymentPlan),
+      variantId: getPaymentProcessorPlanId(paymentPlan),
       userEmail,
       userId,
     });

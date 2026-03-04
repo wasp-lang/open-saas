@@ -14,7 +14,7 @@ import {
 } from "./checkoutUtils";
 import { polarClient } from "./polarClient";
 import { polarMiddlewareConfigFn, polarWebhook } from "./webhook";
-import { getPaymentProcessorPlanIdByPaymentPlan } from "../paymentProcessorPlans";
+import { getPaymentProcessorPlanId } from "../paymentProcessorPlans";
 
 export const polarPaymentProcessor: PaymentProcessor = {
   id: "polar",
@@ -32,7 +32,7 @@ export const polarPaymentProcessor: PaymentProcessor = {
     );
 
     const checkoutSession = await createPolarCheckoutSession({
-      productId: getPaymentProcessorPlanIdByPaymentPlan(paymentPlan),
+      productId: getPaymentProcessorPlanId(paymentPlan),
       customerId: customer.id,
     });
 

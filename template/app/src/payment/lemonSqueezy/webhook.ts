@@ -8,7 +8,7 @@ import { requireNodeEnvVar } from "../../server/utils";
 import { assertUnreachable } from "../../shared/utils";
 import { UnhandledWebhookEventError } from "../errors";
 import { PaymentPlanId, paymentPlans, SubscriptionStatus } from "../plans";
-import { getPaymentProcessorPlanIdByPaymentPlan } from "../paymentProcessorPlans";
+import { getPaymentProcessorPlanId } from "../paymentProcessorPlans";
 import { updateUserLemonSqueezyPaymentDetails } from "./paymentDetails";
 import {
   parseWebhookPayload,
@@ -265,7 +265,7 @@ async function fetchUserCustomerPortalUrl({
 
 function getPlanIdByVariantId(variantId: string): PaymentPlanId {
   const planId = Object.values(PaymentPlanId).find(
-    (planId) => getPaymentProcessorPlanIdByPaymentPlan(paymentPlans[planId]) === variantId,
+    (planId) => getPaymentProcessorPlanId(paymentPlans[planId]) === variantId,
   );
   if (!planId) {
     throw new Error(`No plan with LemonSqueezy variant id ${variantId}`);

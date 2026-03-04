@@ -17,7 +17,7 @@ import {
 } from "./checkoutUtils";
 import { stripeClient } from "./stripeClient";
 import { stripeMiddlewareConfigFn, stripeWebhook } from "./webhook";
-import { getPaymentProcessorPlanIdByPaymentPlan } from "../paymentProcessorPlans";
+import { getPaymentProcessorPlanId } from "../paymentProcessorPlans";
 
 export const stripePaymentProcessor: PaymentProcessor = {
   id: "stripe",
@@ -36,7 +36,7 @@ export const stripePaymentProcessor: PaymentProcessor = {
 
     const checkoutSession = await createStripeCheckoutSession({
       customerId: customer.id,
-      priceId: getPaymentProcessorPlanIdByPaymentPlan(paymentPlan),
+      priceId: getPaymentProcessorPlanId(paymentPlan),
       mode: paymentPlanEffectToStripeCheckoutSessionMode(paymentPlan.effect),
     });
 
