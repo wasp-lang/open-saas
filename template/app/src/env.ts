@@ -12,6 +12,9 @@ import { plausibleEnvSchema, googleAnalyticsEnvSchema } from './analytics/env'
 // to validate `process.env` at server startup. Access the validated env vars
 // with `import { env } from 'wasp/server'` instead of using `process.env` directly.
 // https://wasp.sh/docs/project/env-vars#custom-env-var-validations
+//
+// If you remove a feature (e.g. an analytics or payment provider), make sure
+// to also remove its env schema import and `.merge(...)` call below.
 export const serverEnvValidationSchema = defineEnvValidationSchema(
   authEnvSchema
     .merge(stripeEnvSchema)
