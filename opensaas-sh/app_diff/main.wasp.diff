@@ -44,7 +44,7 @@
 -    "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.js'></script>",  // for production
 -    "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.local.js'></script>",  // for development
 +
-+    "<script defer data-domain='opensaas.sh' data-api='/waspara/wasp/event' src='/waspara/wasp/script.js'></script>",
++    "<script defer data-domain='opensaas.sh' vite-ignore data-api='/waspara/wasp/event' src='/waspara/wasp/script.js'></script>",
    ],
  
    // 🔐 Auth out of the box! https://wasp.sh/docs/auth/overview
