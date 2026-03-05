@@ -1,49 +1,39 @@
 --- template/app/src/landing-page/components/Examples/Auth.tsx
 +++ opensaas-sh/app/src/landing-page/components/Examples/Auth.tsx
-@@ -0,0 +1,164 @@
-+import { useState } from "react";
+@@ -0,0 +1,155 @@
++import { type ComponentType, useState } from "react";
 +import { FaDiscord, FaGithub, FaGoogle, FaSlack } from "react-icons/fa";
 +import { Button } from "../../../client/components/ui/button";
-+import { Card, CardContent, CardHeader } from "../../../client/components/ui/card";
++import {
++  Card,
++  CardContent,
++  CardHeader,
++} from "../../../client/components/ui/card";
 +import { Input } from "../../../client/components/ui/input";
 +import { DocsUrl } from "../../../shared/common";
 +import HighlightedFeature from "../HighlightedFeature";
 +
-+const SupportedAuthProviders = [
-+  "google",
-+  "github",
-+  "discord",
-+  "slack",
-+] as const;
-+type AuthProvider = (typeof SupportedAuthProviders)[number];
++const Provider = {
++  google: { displayName: "Google", icon: FaGoogle },
++  github: { displayName: "GitHub", icon: FaGithub },
++  discord: { displayName: "Discord", icon: FaDiscord },
++  slack: { displayName: "Slack", icon: FaSlack },
++} as const satisfies Record<
++  string,
++  { displayName: string; icon: ComponentType<{ className?: string }> }
++>;
 +
-+const providers: {
-+  name: AuthProvider;
-+  icon: React.ComponentType<{ className?: string }>;
-+}[] = [
-+  {
-+    name: "google",
-+    icon: FaGoogle,
-+  },
-+  {
-+    name: "github",
-+    icon: FaGithub,
-+  },
-+  {
-+    name: "discord",
-+    icon: FaDiscord,
-+  },
-+  {
-+    name: "slack",
-+    icon: FaSlack,
-+  },
-+];
++type AuthProvider = keyof typeof Provider;
++
++const providers = Object.entries(Provider) as (readonly [
++  key: AuthProvider,
++  provider: (typeof Provider)[AuthProvider],
++])[];
 +
 +export default function Auth() {
-+  const [selectedProviders, setSelectedProviders] = useState<AuthProvider[]>([
-+    "google",
-+    "github",
-+  ]);
++  const [selectedProviders, setSelectedProviders] = useState<
++    readonly AuthProvider[]
++  >(["google", "github"]);
 +
 +  const toggleProvider = (provider: AuthProvider) => {
 +    setSelectedProviders((prev) =>
@@ -55,9 +45,8 @@
 +
 +  return (
 +    <HighlightedFeature
-+      id='auth-feature'
-+      name="DIY Auth
-+Done for you"
++      id="auth-feature"
++      name="DIY Auth Done for you"
 +      description={
 +        <AuthPlayground
 +          toggleProvider={toggleProvider}
@@ -68,7 +57,7 @@
 +        <AuthExample selectedProviders={selectedProviders} />
 +      }
 +      tilt="left"
-+      className="h-[400px]"
++      className="h-100"
 +    />
 +  );
 +}
@@ -78,7 +67,7 @@
 +  selectedProviders,
 +}: {
 +  toggleProvider: (provider: AuthProvider) => void;
-+  selectedProviders: AuthProvider[];
++  selectedProviders: readonly AuthProvider[];
 +}) => {
 +  return (
 +    <div className="flex flex-col gap-2">
@@ -86,16 +75,15 @@
 +        Pre-configured full-stack Auth that you own.
 +      </p>
 +      <div className="flex flex-row gap-2">
-+        {providers.map((provider) => {
++        {providers.map(([key, provider]) => {
 +          const IconComponent = provider.icon;
 +          return (
 +            <Button
-+              key={provider.name}
-+              onClick={() => toggleProvider(provider.name)}
++              key={key}
++              onClick={() => toggleProvider(key)}
 +              size="iconLg"
-+              variant={
-+                selectedProviders.includes(provider.name) ? "inner" : "outer"
-+              }
++              variant={selectedProviders.includes(key) ? "inner" : "outer"}
++              title={provider.displayName}
 +            >
 +              <IconComponent />
 +            </Button>
@@ -119,7 +107,7 @@
 +const AuthExample = ({
 +  selectedProviders,
 +}: {
-+  selectedProviders: AuthProvider[];
++  selectedProviders: readonly AuthProvider[];
 +}) => {
 +  return (
 +    <Card
@@ -137,8 +125,7 @@
 +            ) : null}
 +            <div className="flex flex-row gap-2">
 +              {selectedProviders.map((provider) => {
-+                const providerData = providers.find((p) => p.name === provider);
-+                const IconComponent = providerData?.icon;
++                const { icon: IconComponent, displayName } = Provider[provider];
 +                return (
 +                  <a
 +                    href={DocsUrl + "/guides/authentication/"}
@@ -146,8 +133,12 @@
 +                    className="mb-2 w-full"
 +                    target="_blank"
 +                  >
-+                    <Button variant="outline" className="w-full">
-+                      {IconComponent && <IconComponent className="h-4 w-4" />}
++                    <Button
++                      variant="outline"
++                      className="w-full"
++                      title={displayName}
++                    >
++                      <IconComponent className="h-4 w-4" />
 +                    </Button>
 +                  </a>
 +                );
