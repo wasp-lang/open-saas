@@ -38,6 +38,7 @@ export default defineConfig({
         // We customized ThemeSelect to include a "Copy URL for LLMs" button
         ThemeSelect: "./src/components/MyRightNavBarItems.astro",
         Head: "./src/components/HeadWithOGImage.astro",
+        PageTitle: "./src/components/TitleWithBannerImage.astro",
         PageFrame: "./src/components/PageFrameWithCookieConsent.astro",
       },
       social: {
@@ -57,27 +58,39 @@ export default defineConfig({
         {
           label: "Guides",
           items: [
-            { label: 'Analytics', link: "/guides/analytics/" },
-            { label: 'Authentication', link: "/guides/authentication/" },
-            { label: 'Authorization', link: "/guides/authorization/" },
-            { label: 'Cookie Consent Modal', link: "/guides/cookie-consent/" },
+            { label: "Analytics", link: "/guides/analytics/" },
+            { label: "Authentication", link: "/guides/authentication/" },
+            { label: "Authorization", link: "/guides/authorization/" },
+            { label: "Cookie Consent Modal", link: "/guides/cookie-consent/" },
             {
               label: "Payment Integrations",
               items: [
                 { label: "Overview", link: "/guides/payment-integrations/" },
-                { label: "Stripe", link: "/guides/payment-integrations/stripe/" },
-                { label: "Lemon Squeezy", link: "/guides/payment-integrations/lemon-squeezy/" },
+                {
+                  label: "Stripe",
+                  link: "/guides/payment-integrations/stripe/",
+                },
+                {
+                  label: "Lemon Squeezy",
+                  link: "/guides/payment-integrations/lemon-squeezy/",
+                },
                 { label: "Polar", link: "/guides/payment-integrations/polar/" },
-              ]
+              ],
             },
-            { label: 'Deploying', link: "/guides/deploying/" },
-            { label: 'SEO', link: "/guides/seo/" },
-            { label: 'Email Sending', link: "/guides/email-sending/" },
-            { label: 'File Uploading', link: "/guides/file-uploading/" },
-            { label: 'Tests', link: "/guides/tests/" },
-            { label: 'How (Not) to Update Your Open SaaS App', link: "/guides/updating-opensaas/" },
-            { label: 'Vibe Coding with Open SaaS', link: "/guides/vibe-coding/" },
-          ]
+            { label: "Deploying", link: "/guides/deploying/" },
+            { label: "SEO", link: "/guides/seo/" },
+            { label: "Email Sending", link: "/guides/email-sending/" },
+            { label: "File Uploading", link: "/guides/file-uploading/" },
+            { label: "Tests", link: "/guides/tests/" },
+            {
+              label: "How (Not) to Update Your Open SaaS App",
+              link: "/guides/updating-opensaas/",
+            },
+            {
+              label: "Vibe Coding with Open SaaS",
+              link: "/guides/vibe-coding/",
+            },
+          ],
         },
         {
           label: "General",
@@ -92,25 +105,25 @@ export default defineConfig({
             vince: {
               name: "Vince",
               title: "Dev Rel @ Wasp",
-              picture: "/CRAIG_ROCK.png", // Images in the `public` directory are supported.
+              picture: "https://github.com/vincanger.png",
               url: "https://wasp.sh",
             },
             matija: {
               name: "Matija",
               title: "CEO @ Wasp",
-              picture: "/matija.jpeg", // Images in the `public` directory are supported.
+              picture: "https://github.com/matijasos.png",
               url: "https://wasp.sh",
             },
             milica: {
               name: "Milica",
               title: "Growth @ Wasp",
-              picture: "/milica.jpg", // Images in the `public` directory are supported.
+              picture: "https://github.com/mmaksimovic.png",
               url: "https://wasp.sh",
             },
             martin: {
               name: "Martin",
               title: "CTO @ Wasp",
-              picture: "/martin.jpg", // Images in the `public` directory are supported.
+              picture: "https://github.com/martinsos.png",
               url: "https://wasp.sh",
             },
           },

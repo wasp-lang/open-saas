@@ -1,6 +1,7 @@
 ---
 import type { Props } from '@astrojs/starlight/props'
 import Default from '@astrojs/starlight/components/Head.astro'
+import BlogPostSchema from './BlogPostSchema.astro'
 import { BANNER_PATH, DEFAULT_BANNER_IMAGE, getBannerImageFilename, checkBannerImageExists } from './imagePaths'
 
 const bannerImageFileName = getBannerImageFilename({ path: Astro.props.id })
@@ -18,6 +19,12 @@ if (imageExists) {
     Astro.site,
   )
 }
+
+// Extract keywords and tags for meta tags
+const { entry } = Astro.props
+const keywords = (entry?.data as any)?.keywords as string[] | undefined
+const tags = (entry?.data as any)?.tags as string[] | undefined
+const metaKeywords = keywords || tags
 ---
 
 <Default {...Astro.props}><slot /></Default>
@@ -27,3 +34,6 @@ if (imageExists) {
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta name="twitter:image" content={ogImageUrl} />
+{metaKeywords && <meta name="keywords" content={metaKeywords.join(',')} />}
+{tags && tags.map((tag: string) => <meta property="article:tag" content={tag} />)}
+<BlogPostSchema {...Astro.props} />

@@ -4,9 +4,10 @@ interface Props {
   name: string;
   title: string;
   avatarUrl?: string;
+  profileUrl?: string;
 }
 
-const { quote, name, title, avatarUrl } = Astro.props;
+const { quote, name, title, avatarUrl, profileUrl } = Astro.props;
 ---
 
 <figure class="mx-auto max-w-screen-md rounded-lg bg-gray-50 px-6 py-8 text-center dark:bg-gray-800/50">
@@ -21,7 +22,11 @@ const { quote, name, title, avatarUrl } = Astro.props;
       <img class="h-10 w-10 rounded-full" src={avatarUrl} alt={`${name}'s profile picture`} />
     )}
     <div class="flex flex-col items-start divide-x-2 divide-gray-500 dark:divide-gray-700">
-      <span class="pr-3 font-medium text-gray-900 dark:text-white">{name}</span>
+      {profileUrl ? (
+        <a href={profileUrl} target="_blank" rel="noopener noreferrer" class="pr-3 font-medium text-gray-900 hover:underline dark:text-white">{name}</a>
+      ) : (
+        <span class="pr-3 font-medium text-gray-900 dark:text-white">{name}</span>
+      )}
       {title && <span class="pl-3 text-sm font-light text-gray-500 dark:text-gray-400">{title}</span>}
     </div>
   </figcaption>
