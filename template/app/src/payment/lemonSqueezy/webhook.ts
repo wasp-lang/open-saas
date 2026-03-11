@@ -2,12 +2,12 @@ import { getCustomer } from "@lemonsqueezy/lemonsqueezy.js";
 import { type PrismaClient } from "@prisma/client";
 import crypto from "crypto";
 import express from "express";
-import { HttpError, type MiddlewareConfigFn } from "wasp/server";
+import { HttpError, env, type MiddlewareConfigFn } from "wasp/server";
 import { type PaymentsWebhook } from "wasp/server/api";
-import { requireNodeEnvVar } from "../../server/utils";
 import { assertUnreachable } from "../../shared/utils";
 import { UnhandledWebhookEventError } from "../errors";
 import { PaymentPlanId, paymentPlans, SubscriptionStatus } from "../plans";
+import { getPaymentProcessorPlanId } from "../paymentProcessorPlans";
 import { updateUserLemonSqueezyPaymentDetails } from "./paymentDetails";
 import {
   parseWebhookPayload,
@@ -73,7 +73,7 @@ function parseRequestBody(request: express.Request): string {
     throw new HttpError(400, "Lemon Squeezy webhook signature not provided");
   }
 
-  const secret = requireNodeEnvVar("LEMONSQUEEZY_WEBHOOK_SECRET");
+  const secret = env.LEMONSQUEEZY_WEBHOOK_SECRET;
   const hmac = crypto.createHmac("sha256", secret);
   const digest = Buffer.from(hmac.update(requestBody).digest("hex"), "utf8");
 
@@ -264,7 +264,7 @@ async function fetchUserCustomerPortalUrl({
 
 function getPlanIdByVariantId(variantId: string): PaymentPlanId {
   const planId = Object.values(PaymentPlanId).find(
-    (planId) => paymentPlans[planId].getPaymentProcessorPlanId() === variantId,
+    (planId) => getPaymentProcessorPlanId(paymentPlans[planId]) === variantId,
   );
   if (!planId) {
     throw new Error(`No plan with LemonSqueezy variant id ${variantId}`);

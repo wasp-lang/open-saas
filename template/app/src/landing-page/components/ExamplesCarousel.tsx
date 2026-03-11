@@ -113,7 +113,7 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
       </h2>
       <div className="w-full max-w-full overflow-hidden">
         <div
-          className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pb-10 pt-4"
+          className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pt-4 pb-10"
           ref={scrollContainerRef}
         >
           {examples.map((example, index) => (
@@ -157,7 +157,7 @@ const ExampleCard = forwardRef<HTMLDivElement, ExampleCardProps>(
             <img
               src={example.imageSrc}
               alt={example.name}
-              className="aspect-video h-auto w-full"
+              className="aspect-video h-auto w-full object-cover object-top"
             />
             <div className="p-4">
               <p className="font-bold">{example.name}</p>
