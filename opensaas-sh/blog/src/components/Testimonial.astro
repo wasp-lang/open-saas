@@ -2,7 +2,7 @@
 interface Props {
   quote: string;
   name: string;
-  title: string;
+  title?: string;
   avatarUrl?: string;
   profileUrl?: string;
 }
@@ -17,17 +17,17 @@ const { quote, name, title, avatarUrl, profileUrl } = Astro.props;
   <blockquote>
     <p class="text-xl font-medium text-gray-900 dark:text-gray-200"><i>&ldquo;{quote}&rdquo;</i></p>
   </blockquote>
-  <figcaption class="flex items-center justify-center space-x-3">
+  <figcaption class="flex items-end justify-center space-x-5">
     {avatarUrl && (
-      <img class="h-10 w-10 rounded-full" src={avatarUrl} alt={`${name}'s profile picture`} />
+      <img class="h-12 w-12 rounded-full" src={avatarUrl} alt={`${name}'s profile picture`} />
     )}
-    <div class="flex flex-col items-start divide-x-2 divide-gray-500 dark:divide-gray-700">
+    <div class="flex flex-col items-start">
       {profileUrl ? (
-        <a href={profileUrl} target="_blank" rel="noopener noreferrer" class="pr-3 font-medium text-gray-900 hover:underline dark:text-white">{name}</a>
+        <a href={profileUrl} target="_blank" rel="noopener noreferrer" class="font-medium text-gray-900 hover:underline dark:text-white">{name}</a>
       ) : (
-        <span class="pr-3 font-medium text-gray-900 dark:text-white">{name}</span>
+        <span class="font-medium text-gray-900 dark:text-white">{name}</span>
       )}
-      {title && <span class="pl-3 text-sm font-light text-gray-500 dark:text-gray-400">{title}</span>}
+      {title && <span class="text-sm font-light text-gray-500 dark:text-gray-400">{title}</span>}
     </div>
   </figcaption>
 </figure>

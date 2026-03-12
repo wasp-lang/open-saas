@@ -34,15 +34,15 @@ import llmsFull from '../../../assets/ai/llm-txt-chat.webp';
 
 You've probably seen the tweets, the YouTube tutorials, and the "I built a SaaS in 24 hours with AI" posts. But if you've actually tried to vibe code a SaaS, you know the reality is *much* messier than that.
 
-Luckily, there are a bunch of tools, SaaS boilerplate starters, and workflows that you can use to build a profitable (side) business with, if you just know how to apply them correctly. 
+Luckily, there are a bunch of tools, SaaS boilerplate starters, and workflows that you can use to build a profitable (side) business with, as long as you know how to apply them correctly. 
 
-So let's take a look at what's out there, and then do a deeper dive into what works.
+So let's take a look at what's out there, and what really works.
 
 ## TL;DR
 
 - **AI-native platforms** (Replit, Lovable, Bolt) are great for prototyping but hit a ceiling as complexity grows. Code is coupled to their infra, and it quickly becomes expensive and difficult to maintain.
-- **AI coding tools** (Claude Code, Cursor, Codex) give you great code and full control, but they need the right foundation and some fundamental understanding of the underlying tools is needed to work well with them.
-- **The winning combo:** Claude Code paired with a well-structured SaaS boilerplate like Open SaaS is the best way to vibe code a SaaS in 2026, giving you fast and easy development, along with better control as your app grows.
+- **AI coding tools** (Claude Code, Cursor, Codex) give you great code and full control, but they need the right foundation and you'll need some fundamental understanding of the underlying tools to work well with them.
+- **The winning combo:** Claude Code paired with a well-structured SaaS boilerplate like Open SaaS is the best way to vibe code a SaaS in 2026, giving you coherent code generation, along with better control as your app grows.
 - **Two key techniques** for effective vibe coding: (1) LLM-friendly docs (llms.txt and beyond), (2) full-stack debugging visibility.
 
 {/* truncate */}
@@ -68,9 +68,7 @@ In the table below, we quickly compare the two approaches. In the sections below
 
 Tools like Replit Agent, Lovable, Bolt.new, and v0  aim for a "zero-config", purer "vibe coding" approach, where you describe what you want and get a working app. They aim to remove setup, config, and having to touch the code and/or terminal as much as possible. They're impressive for demos and fast prototyping.
 
-The catch here is that most of these apps are then locked-in to their hosting, auth, and storage solutions . This isn't always bad, but things can easily get complicated and expensive as your app grows, or if you need more flexibility. If you do decide to export hile you're trying to build your business. All of them give you the option to export your code **you can export your code.** All of these tools let you push to GitHub or download a ZIP. You own the code you generate. That's not the issue.
-
-The issue is what happens *after* you export:
+The catch here is that most of these apps are then locked-in to their hosting, auth, and storage solutions. This isn't always bad, but things can easily get complicated and expensive as your app grows:
 
 - **The "70% problem"**: these tools get you roughly 70% of the way to a working product. The last 30% — auth hardening, error handling, performance, deployment config — [requires significant manual effort](https://blog.codeitbro.com/bolt-new-review/). One estimate puts the cost of making Bolt.new output production-ready at [$5,000-$20,000](https://trickle.so/blog/bolt-new-review) in professional dev work.
 - **Infrastructure coupling**: the code you export is tightly coupled to a specific service stack. Lovable, for example, generates code [deeply wired into Supabase](https://www.ml6.eu/en/blog/the-anatomy-of-a-lovable-app-and-its-boundaries-in-enterprise-software), a separate service for auth, storage, realtime, edge functions, etc. Leaving Lovable/Supabase means rewriting all of those integrations. Replit similarly relies on its default [Auth](https://docs.replit.com/replit-workspace/replit-auth), [Storage](https://docs.replit.com/cloud-services/storage-and-databases/object-storage), and [database options](https://docs.replit.com/cloud-services/storage-and-databases/sql-database).
@@ -87,7 +85,7 @@ Tools like Claude Code, Cursor, GitHub Copilot, and Codex work directly with you
 
 The pros here are: full control, no lock-in, works with any stack, and the added bonus is that it will be cheaper. You can version it, test it, deploy it anywhere, and switch tools whenever you want.
 
-But **these tools require a bit more work** to get the most out of them. You'll have to be comfortable using the terminal,  install a few more underlying tools, and its good to have a general understanding of the fundamentals when working with them. But, luckily, these tools can help you each step of the way, and if you set things up right (which we will show you how to do in this article) you can go all the way with them.
+But **these tools require a bit more work** to get the most out of them. You'll have to be comfortable using the terminal, install a few more underlying tools, and its good to have a general understanding of the fundamentals when working with them. But, luckily, these tools can help you each step of the way, and if you set things up right (which we will show you how to do in this article) you can go all the way with them.
 
 In comparison to the AI-native platforms, if you're serious about building something substantial [these tools give better results at cheaper prices](https://www.reddit.com/answers/727395fa-476c-4817-895b-cf1c5937ec83/?q=pros+and+cons+of+claude+code&source=ANSWERS).
 
@@ -95,15 +93,17 @@ We'll use Claude Code as the driving example throughout this post, but the same 
 
 ### The Winning Combo: Claude Code + SaaS Boilerplate
 
-Most of the hard parts of building a SaaS are routine, boilerplate tasks like setting up auth, payments, email, file uploads, admin dashboard, etc. These are the things that are time-consuming to set up, but are necessary for a functional SaaS.
+Most of the tedious parts of building a SaaS are routine, boilerplate tasks like setting up authentication, payments, email sending, file uploads, admin dashboard, etc. These are the things that are time-consuming to set up, aren't very creative or interesting, but are 100% necessary for a functional SaaS.
 
-Luckily, tons of SaaS boilerplate starters exist, giving you a solid foundation to build your SaaS on top of.
+Luckily, tons of SaaS boilerplate starter kits exist, giving you a solid foundation to build your SaaS on top of. They provide all the necessary integrations, plumbing, and glue code, along with some nice extras, so you can just focus on building the fun part of your app.
 
-A well-structured boilerplate has some key benefits: it allows you to start working on the actual business logic of your SaaS from day one instead of spending precious time setting up integrations and other mundane tasks. It also has the added benefits of giving the AI patterns, structure, and conventions to follow, making it easier for tools like Claude Code to generate clean, consistent code. It's like giving a skilled carpenter a well-organized workshop instead of an empty shed. The tools are there, the materials are laid out, and there's a clear plan to follow.
+A well-structured boilerplate has some key benefits: it allows you to start working on the actual business logic of your SaaS from day one. It also gives the AI patterns, structure, and conventions to follow, making it easier for tools like Claude Code to generate clean, consistent code. 
+
+*It's like giving a skilled carpenter a well-organized workshop instead of an empty shed. The tools are there, the materials are laid out, and there's a clear plan to follow.*
 
 You keep the full control, but you skip the part where you (or your AI) have to make a hundred decisions about project structure, auth patterns, payment integration, and deployment config. That's all solved for you already by the starter kit.
 
-But, because so many boilerplate starters exist, choosing the right one can be a daunting task.
+But, because so many boilerplate starters exist, choosing the right one can be a pain.
 
 ## Choosing Your SaaS Boilerplate
 
@@ -113,29 +113,30 @@ In the table below, we quickly compare some popular, battle-tested starters. In 
 
 | | Paid Boilerplates (ShipFast, Supastarter) | Open SaaS |
 |---|---|---|
-| **Price** | $199-$299+ | Free, open-source |
+| **Price** | $250-$800+ | Free, open-source |
 | **Auth** | Third-party providers (Clerk, Supabase auth, Better Auth) | Built-in (email/password, Google, GitHub, Microsoft, Slack, etc.) |
-| **Payments** | Stripe (typically) | Stripe, Lemon Squeezy, or Polar.sh |
+| **Payments** | Stripe, Lemon Squeezy, or Polar.sh, etc. | Stripe, Lemon Squeezy, or Polar.sh |
 | **Deployment** | Vercel + Supabase (typically) | Railway, Fly.io, or any VPS |
 | **Community** | 1-2 maintainers | 13,000+ GitHub stars, active open-source community |
-| **LLM-friendly docs** | Varies | Full llms.txt for both template and framework |
-| **AI coding tool support** | Generic | Claude Code plugin with skills and best practices |
+| **LLM-friendly docs** | llms.txt | llms.txt |
+| **Codebase structure** | Multiple apps/packages with separate configs and third-party integrations wired together | Single app, feature-based organization with fullstack code colocated |
 
 ### Paid Boilerplates
 
-Options like [ShipFast](https://shipfa.st/) ($199-$299) and [Supastarter](https://supastarter.dev/) (starting at $299) are popular choices. They're packed with lots of features and have a strong history of adoption and support..
+Options like [ShipFast](https://shipfa.st/) ($250) and [Supastarter](https://supastarter.dev/) (starting at $299) are popular choices. They're packed with lots of features and have a strong history of adoption and support.
 
 But there are a few things to consider:
 
-- **Upfront cost**: $200-$300+ before you've written a line of business logic
-- **Vendor-leaning stacks**: many are built on top of Vercel + Supabase + third-party auth services. That's more vendor lock-in and recurring hosting costs on top of the purchase price. You're not just paying for the boilerplate — you're committing to a specific infrastructure stack.
+- **Upfront cost**: $250-$800+ before you've written a line of business logic
+- **Vendor-leaning stacks**: many are built on top of Vercel + Supabase + third-party auth services. That's more vendor lock-in and recurring hosting costs on top of the purchase price. You're not just paying for the boilerplate, but you're also committing to a specific infrastructure stack.
 - **Code Quality**: most paid boilerplates are maintained by a one or two developers. An open-source project, on the other hand, is maintained by many more people, and the community input is much larger, making it more robust and reliable.
+- **Stack fragmentation**: ShipFast is a flat Next.js app where auth, payments, email, and database are each handled by separate third-party libraries you wire together yourself. Supastarter is a Turborepo monorepo with 4 separate Next.js apps and 8+ shared packages, each with its own config. Both approaches mean more files for an AI tool to navigate, more indirection to follow, and more context needed to make a single cross-cutting change.
 
 None of this means paid boilerplates are bad. They can absolutely save you time. But it's worth understanding what you're signing up for beyond the purchase price.
 
 ### Open SaaS -- a free, open-source, production-ready SaaS boilerplate starter
 
-<Testimonial quote="The documentation is a million times better for Open SaaS than for ShipFast... I got frustrated with ShipFast's terrible code and terrible documentation (or just the lack of) and I found Open SaaS. It's looking like it will be a better experience." name="Sean Nam" Title="Indiehacker & Founder @ NotePulse" avatarUrl="https://pbs.twimg.com/profile_images/1787873578584793088/Yo1wWG_p_400x400.jpg" profileUrl="https://x.com/nam_sean" />
+<Testimonial quote="The documentation is a million times better for Open SaaS than for ShipFast... I got frustrated with ShipFast's terrible code and terrible documentation (or just the lack of) and I found Open SaaS. It's looking like it will be a better experience." name="Sean Nam" title="Founder @ NotePulse" avatarUrl="https://pbs.twimg.com/profile_images/1787873578584793088/Yo1wWG_p_400x400.jpg" profileUrl="https://x.com/nam_sean" />
 
 [Open SaaS](https://opensaas.sh) is free, and open-source. It's powered by [Wasp](https://wasp.sh) — a batteries-included full-stack framework for React, Node.js, and Prisma apps.
 
@@ -146,6 +147,8 @@ Here's what you get out of the box:
 - **Email, file uploads, admin dashboard, analytics, e2e tests**: the full SaaS toolkit.
 - **Deploy anywhere**: Railway, Fly.io, or any VPS. No vendor lock-in.
 - **13,000+ GitHub stars** and an active open-source community backing it.
+
+Because Open SaaS is built on [Wasp](https://wasp.sh/docs), everything lives under one roof. React frontend, Node.js backend, and Prisma database layer are all managed by a single framework, with a declarative config (`main.wasp` or `main.wasp.ts`) that defines your routes, pages, operations, auth, and background jobs. The codebase is organized by feature (e.g. auth, payments, file uploads) with backend logic and frontend components sitting side by side. When an AI coding tool reads `main.wasp`, it immediately understands the full app structure without having to jump between separate apps, packages, or third-party service abstractions. One framework, one config, one mental model for the AI to follow.
 
 ## Effectively Vibe Coding Your SaaS
 
@@ -161,12 +164,12 @@ One of the best solutions is to use `llms.txt` files. These are structured docs 
 
 Open SaaS and Wasp both provide these:
 
-- **Open SaaS docs**: `https://docs.opensaas.sh/llms.txt`
-- **Wasp framework docs**: `https://wasp.sh/llms.txt`
+- **Open SaaS docs**: [`https://docs.opensaas.sh/llms.txt`](https://docs.opensaas.sh/llms.txt)
+- **Wasp framework docs**: [`https://wasp.sh/llms.txt`](https://wasp.sh/llms.txt)
 
 <Image src={llmsFull} alt="Using llms.txt in an AI coding tool" style="border-radius: 8px;" />
 
-Just add these URLs to your AI coding tool's chat session (or context settings). When the AI needs to, for example, understand how Wasp auth works or how to set up Stripe payments in Open SaaS, it has the full, up-to-date docs right there. 
+Just add these URLs to your AI coding tool's chat session or "memory" (e.g. `CLAUDE.md`, `AGENTS.md`). When the AI needs to, for example, understand how Wasp auth works or how to set up Stripe payments in Open SaaS, it has the full, up-to-date docs right there. 
 
 And it's not just Open SaaS and Wasp. Most developer tools and integrations have adopted the `llms.txt` standard. Try appending `/llms.txt` to any tool's docs URL and see what comes back. You'd be surprised how many services already support it. When you're implementing a new integration, pass its `llms.txt` to your coding agent so it has good guardrails for development.
 
@@ -179,7 +182,7 @@ AI can write code all day, but if it can't tell whether the code actually works,
 The fix is giving your AI tool full-stack visibility into what's happening when the code runs, so it can see the errors, and fix them without you having to always intervene.
 
 - **Background dev server**: Run your dev server as a background task so the AI can see server logs, compilation errors, and runtime exceptions in real time. In Claude Code, you can use background tasks (Ctrl+B) to keep `wasp start` running while you work, or just tell it to "start the dev server as a background task".
-- **Browser automation**: Tools like Chrome DevTools MCP let AI see what's actually rendering in the browser —- console errors, network requests, DOM state —- without you having to screenshot anything. The AI can verify that the button it just added actually appears on the page and handles clicks correctly.
+- **Browser automation**: Tools like [Chrome DevTools MCP](https://github.com/ChromeDevTools/chrome-devtools-mcp) or [Vercel's agent browser](https://github.com/vercel-labs/agent-browser) let AI see what's actually rendering in the browser -- console errors, network requests, DOM state -- without you having to screenshot anything. The AI can verify that the button it just added actually appears on the page and handles clicks correctly.
 
 Together, these create a tight feedback loop: AI writes code → sees the result → spots the error → fixes it → verifies the fix. This improves the quality of the code it generates, and makes the entire process less tedious and more efficient.
 
@@ -206,13 +209,18 @@ claude plugin marketplace add wasp-lang/claude-plugins
 claude plugin install wasp@wasp-plugins --scope project
 ```
 
+:::note[Other coding agents]
 If you're using a coding agent tool other than Claude Code, like Codex, OpenCode, or Cursor, you can get the same set of agent skills by running:
 
 ```bash
 npx skills add wasp-lang/claude-plugins
 ```
+:::
 
-Then, in a new session, run the `/wasp-plugin-init` skill command to initialize the plugin with Wasp best practices for your project. 
+Then, in a new session, run the plugin initialization skill command to initialize the plugin with Wasp best practices for your project:
+```bash
+/wasp-plugin-init
+```
 
 ### Step 3: Get Integrations Working (Stripe, Email Sender, OpenAI, etc)
 
@@ -235,9 +243,9 @@ wasp start
 
 Or just tell Claude Code to run `start the dev server as a background task` and it will run the correct commands for you :)
 
-Now it's finally time to give Claude Code a real feature request — "add a user settings page where users can update their profile" — and watch it use `main.wasp` to understand your app's structure, reference the right patterns from the boilerplate, and implement the feature correctly.
+Now it's finally time to give Claude Code a real feature request — "add a user settings page where users can update their profile" — and watch it reference the Wasp config file(s) to understand your app's structure, reference the right patterns from the boilerplate, and implement the feature correctly.
 
-Because Wasp is opinionated, Claude won't have to guess where to put files, how to wire up routes, or which patterns to follow. It reads `main.wasp`, sees the existing conventions, and follows them. You get consistent, working code on the first try — or pretty close to it.
+Because Wasp is opinionated, Claude won't have to guess where to put files, how to wire up routes, or which patterns to follow. It reads the config file(s), sees the existing conventions, and follows them. You get consistent, working code on the first try — or pretty close to it.
 
 <Aside type="note">
 Remember, if you're using Cursor, Copilot, or another tool, the same principles apply. Check out our [Vibe Coding guide](/guides/vibe-coding/) more info.
@@ -260,7 +268,11 @@ Remember, if you're using Cursor, Copilot, or another tool, the same principles 
   },
   {
     question: "What is the best free SaaS boilerplate starter for AI-assisted development?",
-    answer: "Open SaaS is a free, open-source SaaS boilerplate for React, Node.js, and Prisma apps powered by the Wasp framework. It comes with auth, payments (Stripe, Lemon Squeezy, or Polar.sh), email, file uploads, an admin dashboard, and more, all pre-configured. Its opinionated structure gives AI tools clear patterns to follow, and it includes LLM-friendly docs for both the template and the framework."
+    answer: "Open SaaS is a free, open-source SaaS boilerplate for React, Node.js, and Prisma apps powered by the Wasp framework. It comes with auth, payments (Stripe, Lemon Squeezy, or Polar.sh), email sending, file uploads, an admin dashboard, and more, all pre-configured. Because it's built on Wasp, the entire stack is managed by a single framework with a declarative config file. The codebase is organized by feature with backend and frontend code colocated, so AI tools can understand the full app structure from one file instead of navigating multiple apps, packages, and third-party integrations."
+  },
+  {
+    question: "Does codebase structure matter for AI-assisted development?",
+    answer: "Yes, significantly. AI coding tools work best when they can quickly understand the full picture of your app. A codebase organized by feature with colocated fullstack code — like Open SaaS, where backend logic and frontend components sit side by side — gives the AI one clear mental model to follow. In contrast, boilerplates that split code across multiple apps, packages, and third-party integrations require the AI to navigate more files and follow more indirection, which increases the chance of inconsistencies and errors."
   },
   {
     question: "How do I set up Claude Code for full-stack SaaS development?",
