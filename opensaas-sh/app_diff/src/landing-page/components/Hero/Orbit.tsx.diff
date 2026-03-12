@@ -1,7 +1,6 @@
 --- template/app/src/landing-page/components/Hero/Orbit.tsx
 +++ opensaas-sh/app/src/landing-page/components/Hero/Orbit.tsx
-@@ -0,0 +1,283 @@
-+import { useEffect, useState } from "react";
+@@ -0,0 +1,282 @@
 +import logo from "../../../client/static/logo.webp";
 +import nodeLogoDark from "../../../client/static/logos/nodejs-dark.webp";
 +import nodeLogo from "../../../client/static/logos/nodejs-light.webp";
@@ -153,131 +152,131 @@
 +];
 +
 +const circles = [
-+  { radius: 120, rotationSpeed: 0.5, circleRotationSpeed: 0.2 }, // Innermost circle
-+  { radius: 180, rotationSpeed: 0.3, circleRotationSpeed: 0.15 }, // Second circle
-+  { radius: 240, rotationSpeed: 0.2, circleRotationSpeed: 0.1 }, // Third circle
-+  { radius: 300, rotationSpeed: 0.1, circleRotationSpeed: 0.05 }, // Outermost circle
++  // Innermost to outermost
++  { radius: 120, orbitPeriod: 72, ringPeriod: 180 },
++  { radius: 180, orbitPeriod: 120, ringPeriod: 240 },
++  { radius: 240, orbitPeriod: 180, ringPeriod: 360 },
++  { radius: 300, orbitPeriod: 360, ringPeriod: 720 },
 +];
 +
-+const gradients = [];
++const ringGradients = [
++  `conic-gradient(from 0deg,
++    hsl(var(--primary) / 0.15),
++    hsl(var(--primary) / 0),
++    hsl(var(--primary) / 0),
++    hsl(var(--primary) / 0.15),
++    hsl(var(--primary) / 0),
++    hsl(var(--primary) / 0.05),
++    hsl(var(--primary) / 0.15)
++  )`,
++  `conic-gradient(from 45deg,
++    hsl(var(--primary) / 0.12),
++    hsl(var(--primary) / 0),
++    hsl(var(--primary) / 0.08),
++    hsl(var(--primary) / 0),
++    hsl(var(--primary) / 0.2),
++    hsl(var(--primary) / 0),
++    hsl(var(--primary) / 0.12)
++  )`,
++  `conic-gradient(from 90deg,
++    hsl(var(--primary) / 0.1),
++    hsl(var(--primary) / 0.18),
++    hsl(var(--primary) / 0.1),
++    hsl(var(--primary) / 0),
++    hsl(var(--primary) / 0.15),
++    hsl(var(--primary) / 0),
++    hsl(var(--primary) / 0.1)
++  )`,
++  `conic-gradient(from 135deg,
++    hsl(var(--primary) / 0.08),
++    hsl(var(--primary) / 0),
++    hsl(var(--primary) / 0.16),
++    hsl(var(--primary) / 0.06),
++    hsl(var(--primary) / 0),
++    hsl(var(--primary) / 0.12),
++    hsl(var(--primary) / 0.08)
++  )`,
++];
 +
 +export default function Orbit() {
-+  const [rotation, setRotation] = useState(0);
-+
-+  useEffect(() => {
-+    const animate = () => {
-+      setRotation((prev) => prev + 0.5);
-+    };
-+
-+    const interval = setInterval(animate, 50);
-+    return () => clearInterval(interval);
-+  }, []);
-+
-+  const getLogoPosition = (
-+    circleIndex: number,
-+    position: number,
-+    rotation: number,
-+  ) => {
-+    const circle = circles[circleIndex];
-+    const totalRotation = rotation * circle.rotationSpeed + position;
-+    const radians = (totalRotation * Math.PI) / 180;
-+
-+    return {
-+      x: Math.cos(radians) * circle.radius,
-+      y: Math.sin(radians) * circle.radius,
-+    };
-+  };
-+
 +  return (
 +    <div className="relative flex h-[500px] w-[500px] items-center justify-center">
++      <style>{`
++        @keyframes ring-spin {
++          to { transform: rotate(360deg); }
++        }
++        @keyframes orbit-spin {
++          from { transform: rotate(var(--start-angle, 0deg)); }
++          to { transform: rotate(calc(var(--start-angle, 0deg) + 360deg)); }
++        }
++        @keyframes orbit-counter-spin {
++          from { transform: rotate(calc(var(--start-angle, 0deg) * -1)); }
++          to { transform: rotate(calc(var(--start-angle, 0deg) * -1 - 360deg)); }
++        }
++      `}</style>
++
 +      <div className="absolute flex flex-col items-center gap-2">
-+        <p className="text-gradient-primary font-sans text-6xl font-black leading-none">
++        <p className="text-gradient-primary font-sans text-6xl leading-none font-black">
 +          100%
 +        </p>
 +        <p className="text-muted-foreground text-lg">Open Source</p>
 +      </div>
 +
-+      {circles.map((circle, circleIndex) => {
-+        const gradients = [
-+          `conic-gradient(from ${rotation * circle.circleRotationSpeed}deg,
-+            hsl(var(--primary) / 0.15),
-+            hsl(var(--primary) / 0),
-+            hsl(var(--primary) / 0),
-+            hsl(var(--primary) / 0.15),
-+            hsl(var(--primary) / 0),
-+            hsl(var(--primary) / 0.05),
-+            hsl(var(--primary) / 0.15)
-+          )`,
-+          `conic-gradient(from ${rotation * circle.circleRotationSpeed + 45}deg,
-+            hsl(var(--primary) / 0.12),
-+            hsl(var(--primary) / 0),
-+            hsl(var(--primary) / 0.08),
-+            hsl(var(--primary) / 0),
-+            hsl(var(--primary) / 0.2),
-+            hsl(var(--primary) / 0),
-+            hsl(var(--primary) / 0.12)
-+          )`,
-+          `conic-gradient(from ${rotation * circle.circleRotationSpeed + 90}deg,
-+            hsl(var(--primary) / 0.1),
-+            hsl(var(--primary) / 0.18),
-+            hsl(var(--primary) / 0.1),
-+            hsl(var(--primary) / 0),
-+            hsl(var(--primary) / 0.15),
-+            hsl(var(--primary) / 0),
-+            hsl(var(--primary) / 0.1)
-+          )`,
-+          `conic-gradient(from ${rotation * circle.circleRotationSpeed + 135}deg,
-+            hsl(var(--primary) / 0.08),
-+            hsl(var(--primary) / 0),
-+            hsl(var(--primary) / 0.16),
-+            hsl(var(--primary) / 0.06),
-+            hsl(var(--primary) / 0),
-+            hsl(var(--primary) / 0.12),
-+            hsl(var(--primary) / 0.08)
-+          )`,
-+        ];
-+
-+        return (
-+          <div
-+            key={circleIndex}
-+            className="absolute rounded-full"
-+            style={{
-+              width: circle.radius * 2,
-+              height: circle.radius * 2,
-+              background: gradients[circleIndex],
-+              mask: `radial-gradient(circle at center, transparent ${circle.radius - 2}px, black ${
-+                circle.radius - 1
-+              }px, black ${circle.radius}px, transparent ${circle.radius + 1}px)`,
-+              WebkitMask: `radial-gradient(circle at center, transparent ${circle.radius - 2}px, black ${
-+                circle.radius - 1
-+              }px, black ${circle.radius}px, transparent ${circle.radius + 1}px)`,
-+            }}
-+          />
-+        );
-+      })}
++      {circles.map((circle, circleIndex) => (
++        <div
++          key={circleIndex}
++          className="absolute rounded-full"
++          style={{
++            width: circle.radius * 2,
++            height: circle.radius * 2,
++            background: ringGradients[circleIndex],
++            mask: `radial-gradient(circle at center, transparent ${
++              circle.radius - 2
++            }px, black ${circle.radius - 1}px, black ${
++              circle.radius
++            }px, transparent ${circle.radius + 1}px)`,
++            WebkitMask: `radial-gradient(circle at center, transparent ${
++              circle.radius - 2
++            }px, black ${circle.radius - 1}px, black ${
++              circle.radius
++            }px, transparent ${circle.radius + 1}px)`,
++            animation: `ring-spin ${circle.ringPeriod}s linear infinite`,
++          }}
++        />
++      ))}
 +
 +      {logoConfigs.map((logoConfig) => {
-+        const { x, y } = getLogoPosition(
-+          logoConfig.circleIndex,
-+          logoConfig.position,
-+          rotation,
-+        );
-+        const LogoComponent = logoConfig.component;
++        const circle = circles[logoConfig.circleIndex];
 +        const logoSize = logoConfig.size || 32;
++        const LogoComponent = logoConfig.component;
 +
 +        return (
 +          <div
 +            key={logoConfig.id}
-+            className="absolute z-20"
-+            style={{
-+              left: "50%",
-+              top: "50%",
-+              transform: `translate(calc(${x}px - ${logoSize / 2}px), calc(${y}px - ${logoSize / 2}px))`,
-+              width: logoSize,
-+              height: logoSize,
-+            }}
++            className="absolute top-1/2 left-1/2"
++            style={
++              {
++                width: 0,
++                height: 0,
++                "--start-angle": `${logoConfig.position}deg`,
++                animation: `orbit-spin ${circle.orbitPeriod}s linear infinite`,
++              } as React.CSSProperties
++            }
 +          >
-+            <LogoComponent />
++            <div style={{ transform: `translateX(${circle.radius}px)` }}>
++              <div
++                className="z-20 flex items-center justify-center"
++                style={{
++                  width: logoSize,
++                  height: logoSize,
++                  marginLeft: -logoSize / 2,
++                  marginTop: -logoSize / 2,
++                  animation: `orbit-counter-spin ${circle.orbitPeriod}s linear infinite`,
++                }}
++              >
++                <LogoComponent />
++              </div>
++            </div>
 +          </div>
 +        );
 +      })}

@@ -21,7 +21,7 @@
      "@radix-ui/react-avatar": "^1.1.10",
      "@radix-ui/react-checkbox": "^1.3.2",
 @@ -38,6 +41,7 @@
-     "react-apexcharts": "2.0.1",
+     "react-apexcharts": "2.1.0",
      "react-dom": "^19.2.1",
      "react-hook-form": "^7.60.0",
 +    "react-icons": "^5.5.0",

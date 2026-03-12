@@ -207,7 +207,7 @@ const fetchAllFileKeysFromS3 = async () => {
 
   do {
     const command = new ListObjectsV2Command({
-      Bucket: process.env.AWS_S3_FILES_BUCKET,
+      Bucket: env.AWS_S3_FILES_BUCKET,
       ContinuationToken: continuationToken,
     });
 
