@@ -83,6 +83,10 @@ app OpenSaaS {
     rootComponent: import App from "@src/client/App",
   },
 
+  server: {
+    envValidationSchema: import { serverEnvValidationSchema } from "@src/env",
+  },
+
   emailSender: {
     // NOTE: "Dummy" provider is just for local development purposes.
     //   Make sure to check the server logs for the email confirmation url (it will not be sent to an address)!

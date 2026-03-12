@@ -1,7 +1,7 @@
 import type { PrismaPromise } from "@prisma/client";
 import OpenAI from "openai";
 import type { GptResponse, Task, User } from "wasp/entities";
-import { HttpError, prisma } from "wasp/server";
+import { HttpError, env, prisma } from "wasp/server";
 import type {
   CreateTask,
   DeleteTask,
@@ -15,14 +15,7 @@ import { SubscriptionStatus } from "../payment/plans";
 import { ensureArgsSchemaOrThrowHttpError } from "../server/validation";
 import { GeneratedSchedule, TaskPriority } from "./schedule";
 
-const openAi = setUpOpenAi();
-function setUpOpenAi(): OpenAI {
-  if (process.env.OPENAI_API_KEY) {
-    return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-  } else {
-    throw new Error("OpenAI API key is not set");
-  }
-}
+const openAi = new OpenAI({ apiKey: env.OPENAI_API_KEY });
 
 //#region Actions
 const generateGptResponseInputSchema = z.object({

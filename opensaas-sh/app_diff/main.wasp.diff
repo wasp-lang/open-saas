@@ -3,20 +3,20 @@
 @@ -3,31 +3,31 @@
      version: "^0.21.0"
    },
-
+ 
 -  title: "My Open SaaS App",
 +  title: "Open SaaS",
-
+ 
    head: [
      "<link rel='icon' href='/favicon.ico' />",
-
+ 
 -    "<meta name='description' content='Your apps main description and features.' />",
 -    "<meta name='author' content='Your (App) Name' />",
 -    "<meta name='keywords' content='saas, solution, product, app, service' />",
 +    "<meta name='description' content='Build and launch your SaaS application faster with our free, open-source starter kit. Features include auth, payments, AI example app, and admin dashboard.' />",
 +    "<meta name='author' content='Open SaaS' />",
 +    "<meta name='keywords' content='saas, starter, boilerplate, free, open source, authentication, payments' />",
-
+ 
 +    "<meta property='og:site_name' content='Open SaaS' />",
      "<meta property='og:type' content='website' />",
 -    "<meta property='og:title' content='Your Open SaaS App' />",
@@ -46,7 +46,7 @@
 +
 +    "<script defer data-domain='opensaas.sh' vite-ignore='' data-api='/waspara/wasp/event' src='/waspara/wasp/script.js'></script>",
    ],
-
+ 
    // 🔐 Auth out of the box! https://wasp.sh/docs/auth/overview
 @@ -39,7 +39,7 @@
        email: {
@@ -91,7 +91,7 @@
      },
      onAuthFailedRedirectTo: "/login",
      onAuthSucceededRedirectTo: "/demo-app",
-@@ -87,11 +84,11 @@
+@@ -91,11 +88,11 @@
      // NOTE: "Dummy" provider is just for local development purposes.
      //   Make sure to check the server logs for the email confirmation url (it will not be sent to an address)!
      //   Once you are ready for production, switch to e.g. "SendGrid" or "Mailgun" providers. Check out https://docs.opensaas.sh/guides/email-sending/ .
@@ -105,10 +105,10 @@
      },
    },
  }
-@@ -101,6 +98,11 @@
+@@ -105,6 +102,11 @@
    component: import LandingPage from "@src/landing-page/LandingPage"
  }
-
+ 
 +query getGithubRoadmap {
 +  fn: import { getGithubRoadmap } from "@src/landing-page/operations",
 +  entities: []
@@ -117,9 +117,9 @@
  //#region Auth Pages
  route LoginRoute { path: "/login", to: LoginPage }
  page LoginPage {
-@@ -207,9 +209,9 @@
+@@ -211,9 +213,9 @@
  }
-
+ 
  api paymentsWebhook {
 -  fn: import { paymentsWebhook } from "@src/payment/webhook",
 +  fn: import { stripeWebhook } from "@src/payment/stripe/webhook",
@@ -129,7 +129,7 @@
    httpRoute: (POST, "/payments-webhook")
  }
  //#endregion
-@@ -245,6 +247,17 @@
+@@ -249,6 +251,17 @@
    fn: import { deleteFile } from "@src/file-upload/operations",
    entities: [User, File]
  }
@@ -145,12 +145,12 @@
 +  entities: [File]
 +}
  //#endregion
-
+ 
  //#region Analytics
-@@ -291,7 +304,6 @@
+@@ -295,7 +308,6 @@
    component: import AdminCalendar from "@src/admin/elements/calendar/CalendarPage"
  }
-
+ 
 -
  route AdminUIButtonsRoute { path: "/admin/ui/buttons", to: AdminUIButtonsPage }
  page AdminUIButtonsPage {

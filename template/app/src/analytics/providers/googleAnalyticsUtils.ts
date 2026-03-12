@@ -1,22 +1,21 @@
 import { BetaAnalyticsDataClient } from "@google-analytics/data";
+import { env } from "wasp/server";
 
-const CLIENT_EMAIL = process.env.GOOGLE_ANALYTICS_CLIENT_EMAIL;
 const PRIVATE_KEY = Buffer.from(
-  process.env.GOOGLE_ANALYTICS_PRIVATE_KEY!,
+  env.GOOGLE_ANALYTICS_PRIVATE_KEY,
   "base64",
 ).toString("utf-8");
-const PROPERTY_ID = process.env.GOOGLE_ANALYTICS_PROPERTY_ID;
 
 const analyticsDataClient = new BetaAnalyticsDataClient({
   credentials: {
-    client_email: CLIENT_EMAIL,
+    client_email: env.GOOGLE_ANALYTICS_CLIENT_EMAIL,
     private_key: PRIVATE_KEY,
   },
 });
 
 export async function getSources() {
   const [response] = await analyticsDataClient.runReport({
-    property: `properties/${PROPERTY_ID}`,
+    property: `properties/${env.GOOGLE_ANALYTICS_PROPERTY_ID}`,
     dateRanges: [
       {
         startDate: "2020-01-01",
@@ -65,7 +64,7 @@ export async function getDailyPageViews() {
 
 async function getTotalPageViews() {
   const [response] = await analyticsDataClient.runReport({
-    property: `properties/${PROPERTY_ID}`,
+    property: `properties/${env.GOOGLE_ANALYTICS_PROPERTY_ID}`,
     dateRanges: [
       {
         startDate: "2020-01-01", // go back to earliest date of your app
@@ -90,7 +89,7 @@ async function getTotalPageViews() {
 
 async function getPrevDayViewsChangePercent() {
   const [response] = await analyticsDataClient.runReport({
-    property: `properties/${PROPERTY_ID}`,
+    property: `properties/${env.GOOGLE_ANALYTICS_PROPERTY_ID}`,
 
     dateRanges: [
       {
