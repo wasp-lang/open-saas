@@ -329,7 +329,9 @@ async function generateScheduleWithGpt(
     temperature: 1,
   });
 
-  const gptResponse =
-    completion?.choices[0]?.message?.tool_calls?.[0]?.function.arguments;
+  const gptResponse = completion.choices[0].message.tool_calls?.find(
+    (call) => call.type === "function",
+  )?.function.arguments;
+
   return gptResponse !== undefined ? JSON.parse(gptResponse) : null;
 }

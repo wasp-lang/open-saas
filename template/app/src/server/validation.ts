@@ -7,9 +7,18 @@ export function ensureArgsSchemaOrThrowHttpError<Schema extends z.ZodType>(
 ): z.infer<Schema> {
   const parseResult = schema.safeParse(rawArgs);
   if (!parseResult.success) {
-    console.error(parseResult.error);
+    console.error(
+      // We keep the `cause` property so that errors have stack traces pointing
+      // to the original schema.
+      new Error(
+        "Operation arguments validation failed:\n" +
+          z.prettifyError(parseResult.error),
+        { cause: parseResult.error },
+      ),
+    );
+
     throw new HttpError(400, "Operation arguments validation failed", {
-      errors: parseResult.error.errors,
+      cause: parseResult.error,
     });
   } else {
     return parseResult.data;
