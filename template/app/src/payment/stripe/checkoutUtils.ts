@@ -45,11 +45,8 @@ export function createStripeCheckoutSession({
     mode,
     success_url: `${config.frontendUrl}/checkout?status=success`,
     cancel_url: `${config.frontendUrl}/checkout?status=canceled`,
-    automatic_tax: { enabled: true },
+    automatic_tax: { enabled: false },
     allow_promotion_codes: true,
-    customer_update: {
-      address: "auto",
-    },
     invoice_creation: getInvoiceCreationConfig(mode),
   });
 }
