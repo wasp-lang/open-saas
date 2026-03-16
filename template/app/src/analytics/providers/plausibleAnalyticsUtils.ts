@@ -72,15 +72,13 @@ async function getPrevDayViewsChangePercent() {
     typeDBY: typeof pageViewsDayBeforeYesterday,
   });
 
-  let change = 0;
   if (pageViewsYesterday === 0 || pageViewsDayBeforeYesterday === 0) {
     return "0";
-  } else {
-    change =
-      ((pageViewsYesterday - pageViewsDayBeforeYesterday) /
-        pageViewsDayBeforeYesterday) *
-      100;
   }
+  const change =
+    ((pageViewsYesterday - pageViewsDayBeforeYesterday) /
+      pageViewsDayBeforeYesterday) *
+    100;
   return change.toFixed(0);
 }
 

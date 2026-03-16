@@ -2,7 +2,10 @@
 
 set -e
 
-command -v wasp >/dev/null || { echo "Error: Wasp CLI not found"; exit 1; }
+command -v wasp > /dev/null || {
+  echo "Error: Wasp CLI not found"
+  exit 1
+}
 
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
 ROOT_DIR="${SCRIPT_DIR}/../.."

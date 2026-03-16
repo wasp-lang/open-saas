@@ -5,9 +5,9 @@ import type {
   FetchCustomerPortalUrlArgs,
   PaymentProcessor,
 } from "../paymentProcessor";
+import { getPaymentProcessorPlanId } from "../paymentProcessorPlans";
 import { createLemonSqueezyCheckoutSession } from "./checkoutUtils";
 import { lemonSqueezyMiddlewareConfigFn, lemonSqueezyWebhook } from "./webhook";
-import { getPaymentProcessorPlanId } from "../paymentProcessorPlans";
 
 lemonSqueezySetup({
   apiKey: env.LEMONSQUEEZY_API_KEY,

@@ -113,7 +113,7 @@ const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
       </h2>
       <div className="w-full max-w-full overflow-hidden">
         <div
-          className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pt-4 pb-10"
+          className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pb-10 pt-4"
           ref={scrollContainerRef}
         >
           {examples.map((example, index) => (

@@ -6,6 +6,7 @@ import type {
   FetchCustomerPortalUrlArgs,
   PaymentProcessor,
 } from "../paymentProcessor";
+import { getPaymentProcessorPlanId } from "../paymentProcessorPlans";
 import type { PaymentPlanEffect } from "../plans";
 import {
   fetchUserPaymentProcessorUserId,
@@ -17,7 +18,6 @@ import {
 } from "./checkoutUtils";
 import { stripeClient } from "./stripeClient";
 import { stripeMiddlewareConfigFn, stripeWebhook } from "./webhook";
-import { getPaymentProcessorPlanId } from "../paymentProcessorPlans";
 
 export const stripePaymentProcessor: PaymentProcessor = {
   id: "stripe",

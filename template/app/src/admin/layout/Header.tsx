@@ -10,7 +10,7 @@ const Header = (props: {
   user: AuthUser;
 }) => {
   return (
-    <header className="bg-background border-border sticky top-0 z-10 flex w-full border-b shadow-xs">
+    <header className="bg-background border-border shadow-xs sticky top-0 z-10 flex w-full border-b">
       <div className="flex grow items-center justify-between px-8 py-5 sm:justify-end sm:gap-5">
         <div className="flex items-center gap-2 sm:gap-4 lg:hidden">
           {/* <!-- Hamburger Toggle BTN --> */}
@@ -21,7 +21,7 @@ const Header = (props: {
               e.stopPropagation();
               props.setSidebarOpen(!props.sidebarOpen);
             }}
-            className="z-99999 border-border bg-background block rounded-sm border p-1.5 shadow-xs lg:hidden"
+            className="z-99999 border-border bg-background shadow-xs block rounded-sm border p-1.5 lg:hidden"
           >
             <span className="h-5.5 w-5.5 relative block cursor-pointer">
               <span className="du-block absolute right-0 h-full w-full">
