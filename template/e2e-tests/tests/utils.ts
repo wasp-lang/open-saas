@@ -28,7 +28,6 @@ export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
         return response.url().includes("login") && response.status() === 200;
       })
       .catch((err) => console.error(err.message)),
-    ,
     clickLogin,
   ]);
 
@@ -50,13 +49,12 @@ export const signUserUp = async ({
       if (sessionId) {
         localStorage.removeItem("wasp:sessionId");
       }
-      window.location.reload();
     } catch (e) {
       console.error("Failed to clear localStorage:", e);
     }
   });
 
-  await page.waitForLoadState("domcontentloaded");
+  await page.reload({ waitUntil: "domcontentloaded" });
 
   await page.getByRole("link", { name: "Log in" }).click();
 
