@@ -4,7 +4,7 @@ import { Image } from 'astro:assets';
 import { BANNER_PATH, getBannerImageFilename, checkBannerImageExists } from './imagePaths'
 
 const { id, entry } = Astro.props;
-const title = entry?.data?.title ?? Astro.props.entry?.data?.title;
+const title = entry?.data?.title;
 const subtitle = entry?.data?.subtitle;
 const hideBannerImage = entry?.data?.hideBannerImage;
 const imageExists = id ? checkBannerImageExists({ bannerImageFileName: getBannerImageFilename({ path: id }) }) : false;
