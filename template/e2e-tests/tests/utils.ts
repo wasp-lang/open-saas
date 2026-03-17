@@ -63,13 +63,16 @@ export const signUserUp = async ({
   await page.fill('input[name="email"]', user.email);
   await page.fill('input[name="password"]', DEFAULT_PASSWORD);
 
-  await page.click('button:has-text("Sign up")');
+  const clickSignup = page.click('button:has-text("Sign up")');
 
-  await page
-    .waitForResponse((response) => {
-      return response.url().includes("signup") && response.status() === 200;
-    })
-    .catch((err) => console.error(err.message));
+  await Promise.all([
+    page
+      .waitForResponse((response) => {
+        return response.url().includes("signup") && response.status() === 200;
+      })
+      .catch((err) => console.error(err.message)),
+    clickSignup,
+  ]);
 };
 
 export const createRandomUser = () => {
