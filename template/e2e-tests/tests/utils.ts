@@ -10,12 +10,7 @@ export type User = {
 const DEFAULT_PASSWORD = "password123";
 
 export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
-  await page.goto("/");
-
-  await page.getByRole("link", { name: "Log in" }).click();
-  await page.waitForURL("**/login", {
-    waitUntil: "domcontentloaded",
-  });
+  await page.goto("/login", { waitUntil: "domcontentloaded" });
 
   await page.fill('input[name="email"]', user.email);
   await page.fill('input[name="password"]', DEFAULT_PASSWORD);
@@ -41,7 +36,7 @@ export const signUserUp = async ({
   page: Page;
   user: User;
 }) => {
-  await page.goto("/");
+  await page.goto("/signup", { waitUntil: "domcontentloaded" });
 
   await page.evaluate(() => {
     try {
@@ -53,12 +48,6 @@ export const signUserUp = async ({
       console.error("Failed to clear localStorage:", e);
     }
   });
-
-  await page.reload({ waitUntil: "domcontentloaded" });
-
-  await page.getByRole("link", { name: "Log in" }).click();
-
-  await page.click('text="go to signup"');
 
   await page.fill('input[name="email"]', user.email);
   await page.fill('input[name="password"]', DEFAULT_PASSWORD);
