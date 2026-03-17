@@ -1,7 +1,6 @@
 import type { PrismaPromise } from "@prisma/client";
-import OpenAI from "openai";
 import type { GptResponse, Task, User } from "wasp/entities";
-import { HttpError, env, prisma } from "wasp/server";
+import { HttpError, prisma } from "wasp/server";
 import type {
   CreateTask,
   DeleteTask,
@@ -13,9 +12,14 @@ import type {
 import * as z from "zod";
 import { SubscriptionStatus } from "../payment/plans";
 import { ensureArgsSchemaOrThrowHttpError } from "../server/validation";
+import {
+  clampTemperature,
+  createAiClient,
+  getDefaultModel,
+} from "./ai-provider";
 import { GeneratedSchedule, TaskPriority } from "./schedule";
 
-const openAi = new OpenAI({ apiKey: env.OPENAI_API_KEY });
+const aiClient = createAiClient();
 
 //#region Actions
 const generateGptResponseInputSchema = z.object({
@@ -47,12 +51,12 @@ export const generateGptResponse: GenerateGptResponse<
     },
   });
 
-  console.log("Calling open AI api");
-  const generatedSchedule = await generateScheduleWithGpt(tasks, hours);
+  console.log("Calling AI api");
+  const generatedSchedule = await generateScheduleWithAi(tasks, hours);
   if (generatedSchedule === null) {
     throw new HttpError(
       500,
-      "Encountered a problem in communication with OpenAI",
+      "Encountered a problem in communication with the AI provider",
     );
   }
 
@@ -240,7 +244,7 @@ export const getAllTasksByUser: GetAllTasksByUser<void, Task[]> = async (
 };
 //#endregion
 
-async function generateScheduleWithGpt(
+async function generateScheduleWithAi(
   tasks: Task[],
   hours: number,
 ): Promise<GeneratedSchedule | null> {
@@ -249,8 +253,8 @@ async function generateScheduleWithGpt(
     time,
   }));
 
-  const completion = await openAi.chat.completions.create({
-    model: "gpt-3.5-turbo", // you can use any model here, e.g. 'gpt-3.5-turbo', 'gpt-4', etc.
+  const completion = await aiClient.chat.completions.create({
+    model: getDefaultModel(),
     messages: [
       {
         role: "system",
@@ -326,7 +330,7 @@ async function generateScheduleWithGpt(
         name: "parseTodaysSchedule",
       },
     },
-    temperature: 1,
+    temperature: clampTemperature(1),
   });
 
   const gptResponse = completion.choices[0].message.tool_calls?.find(
