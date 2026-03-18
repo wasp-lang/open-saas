@@ -16,7 +16,7 @@ const PROVIDER_CONFIGS: Record<AiProvider, ProviderConfig> = {
   minimax: {
     baseURL: "https://api.minimax.io/v1",
     apiKeyEnv: "MINIMAX_API_KEY",
-    defaultModel: "MiniMax-M2.5",
+    defaultModel: "MiniMax-M2.7",
   },
 };
 
@@ -37,9 +37,9 @@ export function getAiProvider(): AiProvider {
 /**
  * Creates an OpenAI-compatible client configured for the selected provider.
  *
- * - **openai** – standard OpenAI SDK usage (no baseURL override).
- * - **minimax** – points the SDK at `https://api.minimax.io/v1`
- *   (MiniMax's OpenAI-compatible endpoint) and reads `MINIMAX_API_KEY`.
+ * - **openai** \u2013 standard OpenAI SDK usage (no baseURL override).
+ * - **minimax** \u2013 points the SDK at `https://api.minimax.io/v1`
+ *   (MiniMax\u2019s OpenAI-compatible endpoint) and reads `MINIMAX_API_KEY`.
  */
 export function createAiClient(): OpenAI {
   const provider = getAiProvider();
@@ -66,9 +66,9 @@ export function getDefaultModel(): string {
 }
 
 /**
- * Ensures the temperature value is within the provider's accepted range.
+ * Ensures the temperature value is within the provider\u2019s accepted range.
  *
- * MiniMax requires temperature in the range (0, 1] — a value of exactly 0
+ * MiniMax requires temperature in the range (0, 1] \u2014 a value of exactly 0
  * is rejected. This helper clamps the value when the MiniMax provider is active.
  */
 export function clampTemperature(temp: number): number {

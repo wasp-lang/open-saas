@@ -34,9 +34,9 @@ describe.skipIf(!MINIMAX_API_KEY)(
       });
     });
 
-    it("completes a simple chat request with MiniMax-M2.5", async () => {
+    it("completes a simple chat request with MiniMax-M2.7", async () => {
       const completion = await client.chat.completions.create({
-        model: "MiniMax-M2.5",
+        model: "MiniMax-M2.7",
         messages: [{ role: "user", content: "Reply with exactly: hello" }],
         temperature: 1,
         max_tokens: 32,
@@ -49,9 +49,9 @@ describe.skipIf(!MINIMAX_API_KEY)(
       expect(text.toLowerCase()).toContain("hello");
     }, 30_000);
 
-    it("supports function/tool calling with MiniMax-M2.5", async () => {
+    it("supports function/tool calling with MiniMax-M2.7", async () => {
       const completion = await client.chat.completions.create({
-        model: "MiniMax-M2.5",
+        model: "MiniMax-M2.7",
         messages: [
           {
             role: "user",
@@ -94,9 +94,24 @@ describe.skipIf(!MINIMAX_API_KEY)(
       expect(args.location).toBeDefined();
     }, 30_000);
 
-    it("completes a request with MiniMax-M2.5-highspeed", async () => {
+    it("completes a request with MiniMax-M2.7-highspeed", async () => {
       const completion = await client.chat.completions.create({
-        model: "MiniMax-M2.5-highspeed",
+        model: "MiniMax-M2.7-highspeed",
+        messages: [{ role: "user", content: "Reply with exactly: ok" }],
+        temperature: 1,
+        max_tokens: 16,
+      });
+
+      expect(completion.choices).toBeDefined();
+      expect(completion.choices.length).toBeGreaterThan(0);
+
+      const text = completion.choices[0].message.content ?? "";
+      expect(text.toLowerCase()).toContain("ok");
+    }, 30_000);
+
+    it("completes a request with legacy MiniMax-M2.5", async () => {
+      const completion = await client.chat.completions.create({
+        model: "MiniMax-M2.5",
         messages: [{ role: "user", content: "Reply with exactly: ok" }],
         temperature: 1,
         max_tokens: 16,

@@ -59,9 +59,9 @@ describe("getDefaultModel", () => {
     expect(getDefaultModel()).toBe("gpt-4o-mini");
   });
 
-  it("returns MiniMax-M2.5 for minimax", () => {
+  it("returns MiniMax-M2.7 for minimax", () => {
     process.env.AI_PROVIDER = "minimax";
-    expect(getDefaultModel()).toBe("MiniMax-M2.5");
+    expect(getDefaultModel()).toBe("MiniMax-M2.7");
   });
 });
 
