@@ -53,6 +53,7 @@
     "@types/react": "^19.2.7",
     "prisma": "5.19.1",
     "typescript": "5.8.2",
-    "vite": "^7.0.6"
+    "vite": "^7.0.6",
+    "vitest": "^4.1.0"
   }
 }

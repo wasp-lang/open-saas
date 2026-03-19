@@ -52,6 +52,9 @@ function generateMockUserData(): MockUserData {
     datePaid: hasUserPaidOnStripe
       ? faker.date.between({ from: createdAt, to: timePaid })
       : null,
+    subscriptionEndDate: subscriptionStatus
+      ? faker.date.future({ refDate: now })
+      : null,
     subscriptionPlan: subscriptionStatus
       ? faker.helpers.arrayElement(getSubscriptionPaymentPlanIds())
       : null,
