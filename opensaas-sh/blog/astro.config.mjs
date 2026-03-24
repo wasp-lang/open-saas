@@ -20,6 +20,13 @@ export default defineConfig({
       },
       head: [
         {
+          tag: "meta",
+          attrs: {
+            name: "google-site-verification",
+            content: "0AMsAfi62u_qg8v_h_QIFmLvxn8k24WZaCq5q5Sfr68",
+          },
+        },
+        {
           tag: "script",
           attrs: {
             defer: true,
