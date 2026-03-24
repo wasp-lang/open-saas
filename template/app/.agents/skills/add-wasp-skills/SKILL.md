@@ -12,8 +12,8 @@ Let the user know that Wasp agent skills (also called plugins) are available for
 
 ## Step 2: Fetch Installation Instructions
 
-Fetch the installation instructions from: https://raw.githubusercontent.com/wasp-lang/claude-plugins/refs/heads/main/README.md
+Fetch the installation instructions from: https://raw.githubusercontent.com/wasp-lang/wasp-agent-plugins/refs/heads/main/plugins/wasp/README.md
 
 ## Step 3: Guide Installation
 
-Walk the user through the installation instructions from the fetched README. Follow them exactly as written.
+Walk the user through the installation instructions from the fetched README.
