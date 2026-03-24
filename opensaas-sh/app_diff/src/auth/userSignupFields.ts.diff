@@ -1,26 +1,29 @@
 --- template/app/src/auth/userSignupFields.ts
 +++ opensaas-sh/app/src/auth/userSignupFields.ts
-@@ -1,8 +1,6 @@
+@@ -1,11 +1,6 @@
  import { defineUserSignupFields } from "wasp/auth/providers/types";
+-import { env } from "wasp/server";
  import { z } from "zod";
  
--const adminEmails = process.env.ADMIN_EMAILS?.split(",") || [];
+-function isAdminEmail(email: string): boolean {
+-  return env.ADMIN_EMAILS.includes(email);
+-}
 -
  const emailDataSchema = z.object({
    email: z.string(),
  });
-@@ -16,10 +14,6 @@
+@@ -19,10 +14,6 @@
      const emailData = emailDataSchema.parse(data);
      return emailData.email;
    },
 -  isAdmin: (data) => {
 -    const emailData = emailDataSchema.parse(data);
--    return adminEmails.includes(emailData.email);
+-    return isAdminEmail(emailData.email);
 -  },
  });
  
  const githubDataSchema = z.object({
-@@ -48,14 +42,6 @@
+@@ -51,14 +42,6 @@
      const githubData = githubDataSchema.parse(data);
      return githubData.profile.login;
    },
@@ -30,12 +33,12 @@
 -    if (!emailInfo.verified) {
 -      return false;
 -    }
--    return adminEmails.includes(emailInfo.email);
+-    return isAdminEmail(emailInfo.email);
 -  },
  });
  
  // We are using the first email from the list of emails returned by GitHub.
-@@ -88,13 +74,6 @@
+@@ -91,13 +74,6 @@
      const googleData = googleDataSchema.parse(data);
      return googleData.profile.email;
    },
@@ -44,12 +47,12 @@
 -    if (!googleData.profile.email_verified) {
 -      return false;
 -    }
--    return adminEmails.includes(googleData.profile.email);
+-    return isAdminEmail(googleData.profile.email);
 -  },
  });
  
  export function getGoogleAuthConfig() {
-@@ -126,13 +105,6 @@
+@@ -129,13 +105,6 @@
      const discordData = discordDataSchema.parse(data);
      return discordData.profile.username;
    },
@@ -58,7 +61,7 @@
 -    if (!discordData.profile.email || !discordData.profile.verified) {
 -      return false;
 -    }
--    return adminEmails.includes(discordData.profile.email);
+-    return isAdminEmail(discordData.profile.email);
 -  },
  });
  

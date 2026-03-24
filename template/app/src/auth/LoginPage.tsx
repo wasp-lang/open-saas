@@ -1,8 +1,11 @@
 import { LoginForm } from "wasp/client/auth";
 import { Link as WaspRouterLink, routes } from "wasp/client/router";
 import { AuthPageLayout } from "./AuthPageLayout";
+import { useRedirectIfLoggedIn } from "./hooks/useRedirectIfLoggedIn";
 
 export default function Login() {
+  useRedirectIfLoggedIn();
+
   return (
     <AuthPageLayout>
       <LoginForm />

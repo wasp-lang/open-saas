@@ -23,12 +23,12 @@ jobs:
 
       - name: Setup Node.js
         id: setup-node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "22"
 
       - name: Docker setup
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Install Wasp ${{ env.WASP_VERSION }}
         if: env.WASP_VERSION != 'main'
@@ -41,7 +41,7 @@ jobs:
         run: npm i -g https://pkg.pr.new/@wasp.sh/wasp-cli@main
 
       - name: Cache global node modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.npm
           key: node-modules-${{ runner.os }}-${{ hashFiles('template/app/package-lock.json') }}-${{ hashFiles('template/e2e-tests/package-lock.json') }}-wasp${{ env.WASP_VERSION }}-node${{ steps.setup-node.outputs.node-version }}
@@ -81,7 +81,7 @@ jobs:
 
       - name: "[e2e-tests] Cache Playwright Browsers for Playwright's Version"
         id: cache-playwright-browsers
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/ms-playwright
           key: playwright-browsers-${{ env.PLAYWRIGHT_VERSION }}-${{ runner.os }}

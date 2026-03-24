@@ -1,6 +1,6 @@
 --- template/app/src/landing-page/components/RoadmapEpicCard.tsx
 +++ opensaas-sh/app/src/landing-page/components/RoadmapEpicCard.tsx
-@@ -0,0 +1,91 @@
+@@ -0,0 +1,92 @@
 +import { Plus } from "lucide-react";
 +import { cn } from "../../client/utils";
 +import type { GithubEpic } from "../operations";
@@ -28,7 +28,7 @@
 +        hoverBorderColor,
 +      )}
 +    >
-+      <h4 className="text-base font-semibold leading-tight text-gray-900 transition-opacity dark:text-white">
++      <h4 className="text-base leading-tight font-semibold text-gray-900 transition-opacity dark:text-white">
 +        {epic.name}
 +      </h4>
 +
@@ -57,6 +57,7 @@
 +      target="_blank"
 +      rel="noreferrer"
 +      className="group flex min-h-[100px] items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-100/50 p-5 transition-all hover:border-blue-400 hover:bg-blue-50 dark:border-gray-700 dark:bg-gray-900/30 dark:hover:border-blue-600 dark:hover:bg-blue-900/20"
++      title="Add your idea to the roadmap"
 +    >
 +      <Plus className="h-8 w-8 text-gray-400 transition-colors group-hover:text-blue-500 dark:text-gray-600 dark:group-hover:text-blue-400" />
 +    </a>

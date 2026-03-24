@@ -11,6 +11,7 @@ export const collections = {
           ...blogSchemaResult.shape,
           subtitle: z.string().optional(),
           hideBannerImage: z.boolean().optional(),
+          keywords: z.array(z.string()).optional(),
         });
       },
     }),

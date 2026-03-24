@@ -8,11 +8,13 @@ src/client/static/open-saas-banner-dark.svg
 src/client/static/open-saas-banner-light.svg
 src/landing-page/components/Hero.tsx
 src/payment/lemonSqueezy/checkoutUtils.ts
+src/payment/lemonSqueezy/env.ts
 src/payment/lemonSqueezy/paymentDetails.ts
 src/payment/lemonSqueezy/paymentProcessor.ts
 src/payment/lemonSqueezy/webhook.ts
 src/payment/lemonSqueezy/webhookPayload.ts
 src/payment/polar/checkoutUtils.ts
+src/payment/polar/env.ts
 src/payment/polar/paymentProcessor.ts
 src/payment/polar/polarClient.ts
 src/payment/polar/webhook.ts

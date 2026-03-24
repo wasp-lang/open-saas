@@ -1,6 +1,6 @@
 app OpenSaaS {
   wasp: {
-    version: "^0.21.0"
+    version: "^0.22.0"
   },
 
   title: "My Open SaaS App",
@@ -81,6 +81,10 @@ app OpenSaaS {
 
   client: {
     rootComponent: import App from "@src/client/App",
+  },
+
+  server: {
+    envValidationSchema: import { serverEnvValidationSchema } from "@src/env",
   },
 
   emailSender: {
