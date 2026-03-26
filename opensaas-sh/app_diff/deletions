@@ -1,3 +1,9 @@
+.agents/skills/add-wasp-skills/SKILL.md
+.agents/skills/getting-started/SKILL.md
+.agents/skills/guided-tour/SKILL.md
+.claude/skills/add-wasp-skills
+.claude/skills/getting-started
+.claude/skills/guided-tour
 src/client/static/open-saas-banner-dark.svg
 src/client/static/open-saas-banner-light.svg
 src/landing-page/components/Hero.tsx
