@@ -1,4 +1,4 @@
-declare module "virtual:starlight-blog-config" {
+declare module "virtual:starlight-blog/config" {
   const StarlightBlogConfig: import("./libs/config").StarlightBlogConfig;
 
   export default StarlightBlogConfig;
