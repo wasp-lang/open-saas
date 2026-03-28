@@ -133,6 +133,9 @@ async function handleSubscriptionUpdated(
       paymentProcessorUserId: subscription.customer.id,
       subscriptionStatus: newSubscriptionStatus,
       paymentPlanId,
+      subscriptionEndDate: subscription.currentPeriodEnd
+        ? new Date(subscription.currentPeriodEnd)
+        : undefined,
     },
     userDelegate,
   );

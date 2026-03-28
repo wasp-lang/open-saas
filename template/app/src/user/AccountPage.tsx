@@ -64,6 +64,7 @@ export default function AccountPage({ user }: { user: User }) {
                   subscriptionPlan={user.subscriptionPlan}
                   subscriptionStatus={user.subscriptionStatus}
                   datePaid={user.datePaid}
+                  subscriptionEndDate={user.subscriptionEndDate}
                 />
               </div>
             </div>
@@ -103,7 +104,8 @@ function UserCurrentSubscriptionPlan({
   subscriptionPlan,
   subscriptionStatus,
   datePaid,
-}: Pick<User, "subscriptionPlan" | "subscriptionStatus" | "datePaid">) {
+  subscriptionEndDate,
+}: Pick<User, "subscriptionPlan" | "subscriptionStatus" | "datePaid" | "subscriptionEndDate">) {
   let subscriptionPlanMessage = "Free Plan";
   if (
     subscriptionPlan !== null &&
@@ -114,6 +116,7 @@ function UserCurrentSubscriptionPlan({
       parsePaymentPlanId(subscriptionPlan),
       datePaid,
       subscriptionStatus as SubscriptionStatus,
+      subscriptionEndDate,
     );
   }
 
@@ -133,14 +136,14 @@ function formatSubscriptionStatusMessage(
   subscriptionPlan: PaymentPlanId,
   datePaid: Date,
   subscriptionStatus: SubscriptionStatus,
+  subscriptionEndDate: Date | null,
 ): string {
   const paymentPlanName = prettyPaymentPlanName(subscriptionPlan);
+  const endDateStr = formatBillingPeriodEnd(datePaid, subscriptionEndDate);
   const statusToMessage: Record<SubscriptionStatus, string> = {
     active: `${paymentPlanName}`,
     past_due: `Payment for your ${paymentPlanName} plan is past due! Please update your subscription payment information.`,
-    cancel_at_period_end: `Your ${paymentPlanName} plan subscription has been canceled, but remains active until the end of the current billing period: ${prettyPrintEndOfBillingPeriod(
-      datePaid,
-    )}`,
+    cancel_at_period_end: `Your ${paymentPlanName} plan subscription has been canceled, but remains active until the end of the current billing period: ${endDateStr}`,
     deleted: `Your previous subscription has been canceled and is no longer active.`,
   };
 
@@ -151,10 +154,14 @@ function formatSubscriptionStatusMessage(
   return statusToMessage[subscriptionStatus];
 }
 
-function prettyPrintEndOfBillingPeriod(date: Date) {
-  const oneMonthFromNow = new Date(date);
-  oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
-  return oneMonthFromNow.toLocaleDateString();
+function formatBillingPeriodEnd(datePaid: Date, subscriptionEndDate: Date | null): string {
+  if (subscriptionEndDate) {
+    return subscriptionEndDate.toLocaleDateString();
+  }
+  // Fallback for users who subscribed before subscriptionEndDate was tracked
+  const estimated = new Date(datePaid);
+  estimated.setMonth(estimated.getMonth() + 1);
+  return estimated.toLocaleDateString();
 }
 
 function CustomerPortalButton() {

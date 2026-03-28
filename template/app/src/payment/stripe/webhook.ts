@@ -118,17 +118,22 @@ async function handleInvoicePaid(
       );
       break;
     case PaymentPlanId.Pro:
-    case PaymentPlanId.Hobby:
+    case PaymentPlanId.Hobby: {
+      const subscriptionEndDate = invoice.lines.data[0]?.period?.end
+        ? new Date(invoice.lines.data[0].period.end * 1000)
+        : undefined;
       await updateUserSubscription(
         {
           paymentProcessorUserId: customerId,
           datePaid: invoicePaidAtDate,
           paymentPlanId,
           subscriptionStatus: SubscriptionStatus.Active,
+          subscriptionEndDate,
         },
         prismaUserDelegate,
       );
       break;
+    }
     default:
       assertUnreachable(paymentPlanId);
   }
@@ -167,8 +172,14 @@ async function handleCustomerSubscriptionUpdated(
     getSubscriptionPriceId(subscription),
   );
 
+  // current_period_end is available on the Stripe API response but not in the SDK types.
+  const currentPeriodEnd = (subscription as unknown as Record<string, unknown>)["current_period_end"] as number | undefined;
+  const subscriptionEndDate = currentPeriodEnd
+    ? new Date(currentPeriodEnd * 1000)
+    : undefined;
+
   const user = await updateUserSubscription(
-    { paymentProcessorUserId: customerId, paymentPlanId, subscriptionStatus },
+    { paymentProcessorUserId: customerId, paymentPlanId, subscriptionStatus, subscriptionEndDate },
     prismaUserDelegate,
   );
 
@@ -238,6 +249,7 @@ async function handleCustomerSubscriptionDeleted(
     {
       paymentProcessorUserId: customerId,
       subscriptionStatus: SubscriptionStatus.Deleted,
+      subscriptionEndDate: null,
     },
     prismaUserDelegate,
   );
