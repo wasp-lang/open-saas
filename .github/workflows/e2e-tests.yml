@@ -25,7 +25,7 @@ jobs:
         id: setup-node
         uses: actions/setup-node@v6
         with:
-          node-version: "22"
+          node-version: "22.22.2"
 
       - name: Docker setup
         uses: docker/setup-buildx-action@v4
