@@ -41,10 +41,10 @@
 -    // NOTE: Plausible does not use Cookies, so you can simply add the scripts here.
 -    // Google, on the other hand, does, so you must instead add the script dynamically
 -    // via the Cookie Consent component after the user clicks the "Accept" cookies button.
--    "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.js'></script>",  // for production
--    "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.local.js'></script>",  // for development
+-    "<script async data-domain='<your-site-id>' src='https://plausible.io/js/script.js'></script>",  // for production
+-    "<script async data-domain='<your-site-id>' src='https://plausible.io/js/script.local.js'></script>",  // for development
 +
-+    "<script defer data-domain='opensaas.sh' vite-ignore='' data-api='/waspara/wasp/event' src='/waspara/wasp/script.js'></script>",
++    "<script async data-domain='opensaas.sh' data-api='/waspara/wasp/event' src='/waspara/wasp/script.js'></script>",
    ],
  
    // 🔐 Auth out of the box! https://wasp.sh/docs/auth/overview
