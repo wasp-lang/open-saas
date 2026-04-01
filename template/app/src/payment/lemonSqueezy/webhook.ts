@@ -120,7 +120,7 @@ async function handleOrderCreated(
   let datePaid: Date | undefined = undefined;
   if (status === "paid" && plan.effect.kind === "credits") {
     numOfCreditsPurchased = plan.effect.amount;
-    datePaid = new Date();
+    datePaid = new Date(data.attributes.created_at);
   }
 
   await updateUserLemonSqueezyPaymentDetails(
@@ -154,7 +154,7 @@ async function handleSubscriptionCreated(
         userId,
         subscriptionPlan: planId,
         subscriptionStatus: status as SubscriptionStatus,
-        datePaid: new Date(),
+        datePaid: new Date(data.attributes.created_at),
       },
       prismaUserDelegate,
     );
@@ -190,7 +190,7 @@ async function handleSubscriptionUpdated(
         userId,
         subscriptionPlan: planId,
         subscriptionStatus: status as SubscriptionStatus,
-        ...(status === "active" && { datePaid: new Date() }),
+        ...(status === "active" && { datePaid: new Date(data.attributes.updated_at) }),
       },
       prismaUserDelegate,
     );
@@ -211,7 +211,7 @@ async function handleSubscriptionCancelled(
       lemonSqueezyId,
       userId,
       // cancel_at_period_end is the Stripe equivalent of LemonSqueezy's cancelled
-      subscriptionStatus: "cancel_at_period_end" as SubscriptionStatus,
+      subscriptionStatus: SubscriptionStatus.CancelAtPeriodEnd,
     },
     prismaUserDelegate,
   );

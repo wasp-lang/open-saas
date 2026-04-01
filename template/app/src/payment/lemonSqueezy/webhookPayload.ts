@@ -60,6 +60,7 @@ const orderDataSchema = z.object({
       variant_id: z.number(),
     }),
     order_number: z.number(),
+    created_at: z.string(),
   }),
 });
 
@@ -73,5 +74,8 @@ const subscriptionDataSchema = z.object({
     customer_id: z.number(),
     status: z.string(),
     variant_id: z.number(),
+    created_at: z.string(),
+    updated_at: z.string(),
+    renews_at: z.string().nullable(),
   }),
 });
