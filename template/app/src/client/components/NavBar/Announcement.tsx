@@ -2,7 +2,7 @@ const ANNOUNCEMENT_URL = "https://github.com/wasp-lang/wasp";
 
 export function Announcement() {
   return (
-    <div className="from-accent to-secondary text-primary-foreground relative flex w-full items-center justify-center gap-3 bg-linear-to-r p-3 text-center font-semibold">
+    <div className="from-accent to-secondary text-primary-foreground bg-linear-to-r relative flex w-full items-center justify-center gap-3 p-3 text-center font-semibold">
       <a
         href={ANNOUNCEMENT_URL}
         target="_blank"

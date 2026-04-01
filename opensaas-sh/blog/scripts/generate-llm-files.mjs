@@ -48,7 +48,7 @@ async function generateFiles() {
   const introSummary =
     "> Open SaaS is a free, open-source, full-stack starter kit for building SaaS applications quickly. It leverages the [Wasp](https://wasp.sh/docs) framework (React, Node.js, Prisma) and integrates with various services like Stripe/Lemon Squeezy, OpenAI API, AWS S3, and different email providers.";
 
-  let orderedSourceFiles = [];
+  const orderedSourceFiles = [];
   const fullConcatenatedFileUrl = OPEN_SAAS_DOCS_BASE_URL + LLM_FULL_FILENAME;
   let overviewContent = `# Open SaaS Documentation for LLMs\n\n${introSummary}\n\n## Full Documentation\n - [View Complete LLM-formatted Open SaaS Documentation](${fullConcatenatedFileUrl})\n\n## Individual documentation sections and guides:\n`;
   let fullConcatContent = "";

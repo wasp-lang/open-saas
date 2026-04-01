@@ -4,6 +4,7 @@ import {
   type FetchCustomerPortalUrlArgs,
   type PaymentProcessor,
 } from "../paymentProcessor";
+import { getPaymentProcessorPlanId } from "../paymentProcessorPlans";
 import {
   fetchUserPaymentProcessorUserId,
   updateUserPaymentProcessorUserId,
@@ -14,7 +15,6 @@ import {
 } from "./checkoutUtils";
 import { polarClient } from "./polarClient";
 import { polarMiddlewareConfigFn, polarWebhook } from "./webhook";
-import { getPaymentProcessorPlanId } from "../paymentProcessorPlans";
 
 export const polarPaymentProcessor: PaymentProcessor = {
   id: "polar",

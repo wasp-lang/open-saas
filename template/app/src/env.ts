@@ -1,12 +1,12 @@
-import { defineEnvValidationSchema } from 'wasp/env'
+import { defineEnvValidationSchema } from "wasp/env";
 
-import { authEnvSchema } from './auth/env'
-import { stripeEnvSchema } from './payment/stripe/env'
-import { lemonSqueezyEnvSchema } from './payment/lemonSqueezy/env'
-import { polarEnvSchema } from './payment/polar/env'
-import { demoAiAppEnvSchema } from './demo-ai-app/env'
-import { fileUploadEnvSchema } from './file-upload/env'
-import { plausibleEnvSchema, googleAnalyticsEnvSchema } from './analytics/env'
+import { googleAnalyticsEnvSchema, plausibleEnvSchema } from "./analytics/env";
+import { authEnvSchema } from "./auth/env";
+import { demoAiAppEnvSchema } from "./demo-ai-app/env";
+import { fileUploadEnvSchema } from "./file-upload/env";
+import { lemonSqueezyEnvSchema } from "./payment/lemonSqueezy/env";
+import { polarEnvSchema } from "./payment/polar/env";
+import { stripeEnvSchema } from "./payment/stripe/env";
 
 // Wasp merges this schema with its built-in env var validations and uses it
 // to validate `process.env` at server startup. Access the validated env vars
@@ -23,5 +23,5 @@ export const serverEnvValidationSchema = defineEnvValidationSchema(
     .merge(demoAiAppEnvSchema)
     .merge(fileUploadEnvSchema)
     .merge(plausibleEnvSchema)
-    .merge(googleAnalyticsEnvSchema)
-)
+    .merge(googleAnalyticsEnvSchema),
+);

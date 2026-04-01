@@ -1,5 +1,5 @@
-import * as React from "react";
 import { cva, VariantProps } from "class-variance-authority";
+import * as React from "react";
 
 import { cn } from "../../utils";
 
@@ -9,14 +9,13 @@ const cardVariants = cva(
     variants: {
       variant: {
         default: "bg-card text-card-foreground",
-        accent:
-          "bg-card-accent text-card-accent-foreground hover:scale-[1.02]",
+        accent: "bg-card-accent text-card-accent-foreground hover:scale-[1.02]",
         faded: "text-card-faded-foreground scale-95 opacity-50",
         bento:
           "bg-card-subtle text-card-subtle-foreground hover:scale-[1.02] border-none shadow-none",
       },
     },
-  }
+  },
 );
 
 function Card({
@@ -65,7 +64,11 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
 
 function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div data-slot="card-content" className={cn("p-6 pt-0", className)} {...props} />
+    <div
+      data-slot="card-content"
+      className={cn("p-6 pt-0", className)}
+      {...props}
+    />
   );
 }
 
