@@ -16,8 +16,18 @@ export default function AIReady() {
 const AIReadyExample = () => {
   return (
     <div className="w-full">
-      <img src={aiReady} alt="AI Ready" loading="lazy" className="dark:hidden" />
-      <img src={aiReadyDark} alt="AI Ready" loading="lazy" className="hidden dark:block" />
+      <img
+        src={aiReady}
+        alt="AI Ready"
+        loading="lazy"
+        className="dark:hidden"
+      />
+      <img
+        src={aiReadyDark}
+        alt="AI Ready"
+        loading="lazy"
+        className="hidden dark:block"
+      />
     </div>
   );
 };

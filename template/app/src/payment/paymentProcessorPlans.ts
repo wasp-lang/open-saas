@@ -28,7 +28,9 @@ export function getPaymentProcessorPlanId(paymentPlan: PaymentPlan): string {
 export function getPaymentPlanIdByPaymentProcessorPlanId(
   paymentProcessorPlanId: string,
 ): PaymentPlanId {
-  for (const [planId, processorPlanId] of Object.entries(paymentProcessorPlanIds)) {
+  for (const [planId, processorPlanId] of Object.entries(
+    paymentProcessorPlanIds,
+  )) {
     if (processorPlanId === paymentProcessorPlanId) {
       return planId as PaymentPlanId;
     }

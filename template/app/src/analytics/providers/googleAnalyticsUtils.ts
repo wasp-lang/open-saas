@@ -35,19 +35,17 @@ export async function getSources() {
     ],
   });
 
-  let activeUsersPerReferrer: any[] = [];
-  if (response?.rows) {
-    activeUsersPerReferrer = response.rows.map((row) => {
-      if (row.dimensionValues && row.metricValues) {
-        return {
-          source: row.dimensionValues[0].value,
-          visitors: row.metricValues[0].value,
-        };
-      }
-    });
-  } else {
+  if (!response?.rows) {
     throw new Error("No response from Google Analytics");
   }
+  const activeUsersPerReferrer = response.rows.map((row) => {
+    if (row.dimensionValues && row.metricValues) {
+      return {
+        source: row.dimensionValues[0].value,
+        visitors: row.metricValues[0].value,
+      };
+    }
+  });
 
   return activeUsersPerReferrer;
 }
@@ -77,13 +75,11 @@ async function getTotalPageViews() {
       },
     ],
   });
-  let totalViews = 0;
-  if (response?.rows) {
-    // @ts-ignore
-    totalViews = parseInt(response.rows[0].metricValues[0].value);
-  } else {
+  if (!response?.rows) {
     throw new Error("No response from Google Analytics");
   }
+  // @ts-ignore
+  const totalViews = parseInt(response.rows[0].metricValues[0].value);
   return totalViews;
 }
 
