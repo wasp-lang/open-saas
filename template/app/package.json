@@ -52,7 +52,7 @@
     "@types/express": "^5.0.0",
     "@types/react": "^19.2.7",
     "prisma": "5.19.1",
-    "typescript": "5.8.2",
+    "typescript": "5.9.3",
     "vite": "^7.0.6"
   }
 }
