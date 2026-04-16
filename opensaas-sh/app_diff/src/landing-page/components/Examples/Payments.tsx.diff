@@ -7,8 +7,8 @@
 +export default function Payments() {
 +  return (
 +    <HighlightedFeature
-+      name="Stripe / Lemon Squeezy Integration"
-+      description="No SaaS is complete without payments. We've pre-configured checkout and webhooks. Just choose a provider and start cashing out."
++      name="Stripe / Polar.sh / Lemon Squeezy Integration"
++      description="No SaaS is complete without payments. We've pre-configured checkout and webhooks for Stripe, Polar.sh, and Lemon Squeezy. Just choose a provider and start cashing out."
 +      highlightedComponent={<PaymentsExample />}
 +      direction="row-reverse"
 +    />

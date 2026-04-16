@@ -202,18 +202,18 @@ This scaffolds a new Open SaaS project with auth, payments, email, file uploads,
 
 ### Step 2: Set Up Claude Code with the Wasp Plugin
 
-After [installing Claude Code](https://code.claude.com/docs/en/quickstart), add [the Wasp plugin](https://github.com/wasp-lang/claude-plugins/tree/main/plugins/wasp) so that it has deep knowledge of the framework, as well as skills and instructions on how to properly use full-stack debugging visibility, llms.txt docs, and more:
+After [installing Claude Code](https://code.claude.com/docs/en/quickstart), add [the Wasp plugin](https://github.com/wasp-lang/wasp-agent-plugins/tree/main/plugins/wasp) so that it has deep knowledge of the framework, as well as skills and instructions on how to properly use full-stack debugging visibility, llms.txt docs, and more:
 
 ```bash
-claude plugin marketplace add wasp-lang/claude-plugins
-claude plugin install wasp@wasp-plugins --scope project
+claude plugin marketplace add wasp-lang/wasp-agent-plugins
+claude plugin install wasp@wasp-agent-plugins --scope project
 ```
 
 :::note[Other coding agents]
 If you're using a coding agent tool other than Claude Code, like Codex, OpenCode, or Cursor, you can get the same set of agent skills by running:
 
 ```bash
-npx skills add wasp-lang/claude-plugins
+npx skills add wasp-lang/wasp-agent-plugins
 ```
 :::
 

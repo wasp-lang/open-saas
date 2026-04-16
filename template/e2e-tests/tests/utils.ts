@@ -10,12 +10,7 @@ export type User = {
 const DEFAULT_PASSWORD = "password123";
 
 export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
-  await page.goto("/");
-
-  await page.getByRole("link", { name: "Log in" }).click();
-  await page.waitForURL("**/login", {
-    waitUntil: "domcontentloaded",
-  });
+  await page.goto("/login", { waitUntil: "domcontentloaded" });
 
   await page.fill('input[name="email"]', user.email);
   await page.fill('input[name="password"]', DEFAULT_PASSWORD);
@@ -28,7 +23,6 @@ export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
         return response.url().includes("login") && response.status() === 200;
       })
       .catch((err) => console.error(err.message)),
-    ,
     clickLogin,
   ]);
 
@@ -42,7 +36,7 @@ export const signUserUp = async ({
   page: Page;
   user: User;
 }) => {
-  await page.goto("/");
+  await page.goto("/signup", { waitUntil: "domcontentloaded" });
 
   await page.evaluate(() => {
     try {
@@ -50,28 +44,24 @@ export const signUserUp = async ({
       if (sessionId) {
         localStorage.removeItem("wasp:sessionId");
       }
-      window.location.reload();
     } catch (e) {
       console.error("Failed to clear localStorage:", e);
     }
   });
 
-  await page.waitForLoadState("domcontentloaded");
-
-  await page.getByRole("link", { name: "Log in" }).click();
-
-  await page.click('text="go to signup"');
-
   await page.fill('input[name="email"]', user.email);
   await page.fill('input[name="password"]', DEFAULT_PASSWORD);
 
-  await page.click('button:has-text("Sign up")');
+  const clickSignup = page.click('button:has-text("Sign up")');
 
-  await page
-    .waitForResponse((response) => {
-      return response.url().includes("signup") && response.status() === 200;
-    })
-    .catch((err) => console.error(err.message));
+  await Promise.all([
+    page
+      .waitForResponse((response) => {
+        return response.url().includes("signup") && response.status() === 200;
+      })
+      .catch((err) => console.error(err.message)),
+    clickSignup,
+  ]);
 };
 
 export const createRandomUser = () => {

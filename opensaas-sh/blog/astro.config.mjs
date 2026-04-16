@@ -20,6 +20,13 @@ export default defineConfig({
       },
       head: [
         {
+          tag: "meta",
+          attrs: {
+            name: "google-site-verification",
+            content: "0AMsAfi62u_qg8v_h_QIFmLvxn8k24WZaCq5q5Sfr68",
+          },
+        },
+        {
           tag: "script",
           attrs: {
             defer: true,
@@ -77,20 +84,14 @@ export default defineConfig({
                 { label: "Polar", link: "/guides/payment-integrations/polar/" },
               ],
             },
-            { label: "Deploying", link: "/guides/deploying/" },
-            { label: "SEO", link: "/guides/seo/" },
-            { label: "Email Sending", link: "/guides/email-sending/" },
-            { label: "File Uploading", link: "/guides/file-uploading/" },
-            { label: "Tests", link: "/guides/tests/" },
-            {
-              label: "How (Not) to Update Your Open SaaS App",
-              link: "/guides/updating-opensaas/",
-            },
-            {
-              label: "Vibe Coding with Open SaaS",
-              link: "/guides/vibe-coding/",
-            },
-          ],
+            { label: 'Deploying', link: "/guides/deploying/" },
+            { label: 'SEO', link: "/guides/seo/" },
+            { label: 'Email Sending', link: "/guides/email-sending/" },
+            { label: 'File Uploading', link: "/guides/file-uploading/" },
+            { label: 'Tests', link: "/guides/tests/" },
+            { label: 'How (Not) to Update Your Open SaaS App', link: "/guides/updating-opensaas/" },
+            { label: 'Using AI Coding Tools', link: "/guides/vibe-coding/" },
+          ]
         },
         {
           label: "General",
