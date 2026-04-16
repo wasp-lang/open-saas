@@ -70,7 +70,7 @@
      },
      data: {
        subscriptionPlan: paymentPlanId,
-@@ -66,14 +66,14 @@
+@@ -66,22 +66,18 @@
  }
  
  interface UpdateUserCreditsArgs {
@@ -81,13 +81,13 @@
  }
  
  export function updateUserCredits(
-   {
+-  {
 -    paymentProcessorUserId,
-+    stripeId,
-     numOfCreditsPurchased,
-     datePaid,
-   }: UpdateUserCreditsArgs,
-@@ -81,7 +81,7 @@
+-    numOfCreditsPurchased,
+-    datePaid,
+-  }: UpdateUserCreditsArgs,
++  { stripeId, numOfCreditsPurchased, datePaid }: UpdateUserCreditsArgs,
+   userDelegate: PrismaClient["user"],
  ): Promise<User> {
    return userDelegate.update({
      where: {

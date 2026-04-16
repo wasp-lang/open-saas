@@ -20,7 +20,7 @@
 +        <div className="py-24 sm:py-32">
 +          <div className="max-w-8xl px-6 lg:px-8">
 +            <div className="lg:mb-18 mx-auto max-w-3xl text-center md:text-left">
-+              <h1 className="text-foreground text-5xl font-extrabold md:text-6xl leading-none">
++              <h1 className="text-foreground text-5xl font-extrabold leading-none md:text-6xl">
 +                The <span className="italic">free</span> SaaS template with{" "}
 +                <span className="text-gradient-primary font-black">
 +                  superpowers
@@ -69,7 +69,7 @@
 +      aria-hidden="true"
 +    >
 +      <div
-+        className="aspect-1020/880 w-[70rem] flex-none bg-linear-to-tr from-amber-400 to-purple-300 opacity-10 sm:right-1/4 sm:translate-x-1/2 dark:hidden"
++        className="aspect-1020/880 bg-linear-to-tr w-[70rem] flex-none from-amber-400 to-purple-300 opacity-10 sm:right-1/4 sm:translate-x-1/2 dark:hidden"
 +        style={{
 +          clipPath:
 +            "polygon(80% 20%, 90% 55%, 50% 100%, 70% 30%, 20% 50%, 50% 0)",
@@ -86,7 +86,7 @@
 +      aria-hidden="true"
 +    >
 +      <div
-+        className="relative aspect-1020/880 w-[90rem] bg-linear-to-br from-amber-400 to-purple-300 opacity-10 sm:-left-3/4 sm:translate-x-1/4 dark:hidden"
++        className="aspect-1020/880 bg-linear-to-br relative w-[90rem] from-amber-400 to-purple-300 opacity-10 sm:-left-3/4 sm:translate-x-1/4 dark:hidden"
 +        style={{
 +          clipPath: "ellipse(80% 30% at 80% 50%)",
 +        }}

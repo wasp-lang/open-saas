@@ -1,10 +1,13 @@
 --- template/app/src/file-upload/workers.ts
 +++ opensaas-sh/app/src/file-upload/workers.ts
-@@ -0,0 +1,34 @@
-+import type { DeleteFilesJob } from 'wasp/server/jobs';
-+import { deleteFileFromS3 } from './s3Utils';
+@@ -0,0 +1,37 @@
++import type { DeleteFilesJob } from "wasp/server/jobs";
++import { deleteFileFromS3 } from "./s3Utils";
 +
-+export const deleteFilesJob: DeleteFilesJob<never, void> = async (_args, context) => {
++export const deleteFilesJob: DeleteFilesJob<never, void> = async (
++  _args,
++  context,
++) => {
 +  const dayInMiliseconds = 1000 * 60 * 60 * 24;
 +  const sevenDaysAgo = Date.now() - 7 * dayInMiliseconds;
 +  const filesToDelete = await context.entities.File.findMany({
@@ -20,11 +23,11 @@
 +    filesToDelete.map(async (file) => {
 +      await deleteFileFromS3({ s3Key: file.s3Key });
 +      return file.id;
-+    })
++    }),
 +  );
 +
 +  const successfullyDeletedFromS3Ids = deletionResults
-+    .filter((result) => result.status === 'fulfilled')
++    .filter((result) => result.status === "fulfilled")
 +    .map((result) => result.value);
 +
 +  const deletedFiles = await context.entities.File.deleteMany({

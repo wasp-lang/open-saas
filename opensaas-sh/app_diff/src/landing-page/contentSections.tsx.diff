@@ -1,9 +1,8 @@
 --- template/app/src/landing-page/contentSections.tsx
 +++ opensaas-sh/app/src/landing-page/contentSections.tsx
-@@ -1,4 +1,9 @@
+@@ -1,4 +1,8 @@
 -import daBoiAvatar from "../client/static/da-boi.webp";
 +import { routes } from "wasp/client/router";
-+import type { NavigationItem } from "../client/components/NavBar/NavBar";
 +import blog from "../client/static/assets/blog.webp";
 +import email from "../client/static/assets/email.webp";
 +import fileupload from "../client/static/assets/fileupload.webp";
@@ -11,7 +10,7 @@
  import kivo from "../client/static/examples/kivo.webp";
  import messync from "../client/static/examples/messync.webp";
  import microinfluencerClub from "../client/static/examples/microinfluencers.webp";
-@@ -6,161 +11,248 @@
+@@ -6,161 +10,248 @@
  import reviewradar from "../client/static/examples/reviewradar.webp";
  import scribeist from "../client/static/examples/scribeist.webp";
  import searchcraft from "../client/static/examples/searchcraft.webp";

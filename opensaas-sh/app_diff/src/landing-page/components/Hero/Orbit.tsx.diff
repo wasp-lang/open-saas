@@ -216,7 +216,7 @@
 +      `}</style>
 +
 +      <div className="absolute flex flex-col items-center gap-2">
-+        <p className="text-gradient-primary font-sans text-6xl leading-none font-black">
++        <p className="text-gradient-primary font-sans text-6xl font-black leading-none">
 +          100%
 +        </p>
 +        <p className="text-muted-foreground text-lg">Open Source</p>
@@ -253,7 +253,7 @@
 +        return (
 +          <div
 +            key={logoConfig.id}
-+            className="absolute top-1/2 left-1/2"
++            className="absolute left-1/2 top-1/2"
 +            style={
 +              {
 +                width: 0,

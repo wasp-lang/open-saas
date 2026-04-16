@@ -28,7 +28,7 @@
 +        hoverBorderColor,
 +      )}
 +    >
-+      <h4 className="text-base leading-tight font-semibold text-gray-900 transition-opacity dark:text-white">
++      <h4 className="text-base font-semibold leading-tight text-gray-900 transition-opacity dark:text-white">
 +        {epic.name}
 +      </h4>
 +
