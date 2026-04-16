@@ -1,5 +1,6 @@
 import { defineEnvValidationSchema } from "wasp/env";
 
+import * as z from "zod";
 import { googleAnalyticsEnvSchema, plausibleEnvSchema } from "./analytics/env";
 import { authEnvSchema } from "./auth/env";
 import { demoAiAppEnvSchema } from "./demo-ai-app/env";
@@ -14,14 +15,16 @@ import { stripeEnvSchema } from "./payment/stripe/env";
 // https://wasp.sh/docs/project/env-vars#custom-env-var-validations
 //
 // If you remove a feature (e.g. an analytics or payment provider), make sure
-// to also remove its env schema import and `.merge(...)` call below.
+// to also remove its env schema import and `...schema.shape` below.
 export const serverEnvValidationSchema = defineEnvValidationSchema(
-  authEnvSchema
-    .merge(stripeEnvSchema)
-    .merge(lemonSqueezyEnvSchema)
-    .merge(polarEnvSchema)
-    .merge(demoAiAppEnvSchema)
-    .merge(fileUploadEnvSchema)
-    .merge(plausibleEnvSchema)
-    .merge(googleAnalyticsEnvSchema),
+  z.object({
+    ...authEnvSchema.shape,
+    ...stripeEnvSchema.shape,
+    ...lemonSqueezyEnvSchema.shape,
+    ...polarEnvSchema.shape,
+    ...demoAiAppEnvSchema.shape,
+    ...fileUploadEnvSchema.shape,
+    ...plausibleEnvSchema.shape,
+    ...googleAnalyticsEnvSchema.shape,
+  }),
 );
