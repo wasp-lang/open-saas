@@ -11,3 +11,6 @@ app_diff/
 
 # Ignore minified JS files in the public folder.
 **/public/**/*.js
+
+# Blog scripts.
+opensaas-sh/blog/scripts/

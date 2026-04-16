@@ -14,6 +14,7 @@ export default tseslint.config(
       "app_diff/**",
       "**/public/**/*.js",
       "**/.astro/**",
+      "opensaas-sh/blog/scripts/**",
     ],
   },
 

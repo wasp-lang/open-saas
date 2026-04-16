@@ -18,7 +18,7 @@
     "prettier-plugin-organize-imports": "4.3.0",
     "prettier-plugin-pkg": "0.22.1",
     "prettier-plugin-sh": "0.18.1",
-    "prettier-plugin-tailwindcss": "0.7.2",
+    "prettier-plugin-tailwindcss": "^0.6.14",
     "typescript": "5.9.3",
     "typescript-eslint": "^8.58.1"
   }
