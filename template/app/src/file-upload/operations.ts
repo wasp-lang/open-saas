@@ -65,7 +65,10 @@ export const addFileToDb: AddFileToDb<AddFileToDbInput, File> = async (
     throw new HttpError(401);
   }
 
-  const args = ensureArgsSchemaOrThrowHttpError(addFileToDbInputSchema, rawArgs);
+  const args = ensureArgsSchemaOrThrowHttpError(
+    addFileToDbInputSchema,
+    rawArgs,
+  );
 
   const fileExists = await checkFileExistsInS3({ s3Key: args.s3Key });
   if (!fileExists) {
@@ -112,7 +115,7 @@ type GetDownloadFileSignedURLInput = z.infer<
 export const getDownloadFileSignedURL: GetDownloadFileSignedURL<
   GetDownloadFileSignedURLInput,
   string
-> = async (rawArgs, _context) => {
+> = async (rawArgs) => {
   const { s3Key } = ensureArgsSchemaOrThrowHttpError(
     getDownloadFileSignedURLInputSchema,
     rawArgs,

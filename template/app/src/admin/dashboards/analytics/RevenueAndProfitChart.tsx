@@ -142,6 +142,7 @@ const RevenueAndProfitChart = ({ weeklyStats }: DailyStatsProps) => {
 
   useEffect(() => {
     if (dailyRevenueArray && dailyRevenueArray.length > 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setState((prevState) => {
         // Check if a "Revenue" series already exists
         const existingSeriesIndex = prevState.series.findIndex(
@@ -183,6 +184,7 @@ const RevenueAndProfitChart = ({ weeklyStats }: DailyStatsProps) => {
       !!dailyRevenueArray &&
       dailyRevenueArray?.length > 0
     ) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setChartOptions({
         ...options,
         xaxis: {

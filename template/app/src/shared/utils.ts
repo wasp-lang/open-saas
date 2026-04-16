@@ -2,7 +2,10 @@
  * Used purely to help compiler check for exhaustiveness in switch statements,
  * will never execute. See https://stackoverflow.com/a/39419171.
  */
-export function assertUnreachable(_: never): never {
+export function assertUnreachable(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _: never,
+): never {
   throw Error("This code should be unreachable");
 }
 
