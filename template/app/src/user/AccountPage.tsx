@@ -21,7 +21,7 @@ export default function AccountPage({ user }: { user: User }) {
     <div className="mt-10 px-6">
       <Card className="mb-4 lg:m-8">
         <CardHeader>
-          <CardTitle className="text-foreground text-base leading-6 font-semibold">
+          <CardTitle className="text-foreground text-base font-semibold leading-6">
             Account Information
           </CardTitle>
         </CardHeader>
@@ -76,7 +76,7 @@ export default function AccountPage({ user }: { user: User }) {
                 <div className="text-foreground mt-1 text-sm sm:col-span-1 sm:mt-0">
                   {user.credits} credits
                 </div>
-                <div className="mt-4 ml-auto sm:mt-0">
+                <div className="ml-auto mt-4 sm:mt-0">
                   <BuyMoreButton subscriptionStatus={user.subscriptionStatus} />
                 </div>
               </div>
@@ -122,7 +122,7 @@ function UserCurrentSubscriptionPlan({
       <div className="text-foreground mt-1 text-sm sm:col-span-1 sm:mt-0">
         {subscriptionPlanMessage}
       </div>
-      <div className="mt-4 ml-auto sm:mt-0">
+      <div className="ml-auto mt-4 sm:mt-0">
         <CustomerPortalButton />
       </div>
     </>

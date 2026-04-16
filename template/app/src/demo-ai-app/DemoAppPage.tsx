@@ -236,7 +236,7 @@ function NewTaskForm({
               <div className="flex items-center justify-between gap-3">
                 <Label
                   htmlFor="time"
-                  className="text-muted-foreground text-sm font-semibold text-nowrap"
+                  className="text-muted-foreground text-nowrap text-sm font-semibold"
                 >
                   How many hours will you work today?
                 </Label>
@@ -336,7 +336,7 @@ function Todo({ id, isDone, description, time }: TodoProps) {
               type="number"
               min={0.5}
               step={0.5}
-              className={cn("h-8 w-18 text-center text-xs", {
+              className={cn("w-18 h-8 text-center text-xs", {
                 "pointer-events-none opacity-50": isDone,
               })}
               value={time}
@@ -351,7 +351,7 @@ function Todo({ id, isDone, description, time }: TodoProps) {
             </span>
           </div>
         </div>
-        <div className="flex w-15 items-center justify-end">
+        <div className="w-15 flex items-center justify-end">
           <Button
             variant="ghost"
             size="sm"
