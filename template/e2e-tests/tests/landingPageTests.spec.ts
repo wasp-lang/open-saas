@@ -1,4 +1,4 @@
-import { Cookie, expect, test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 test.describe("general landing page tests", () => {
   test.beforeEach(async ({ page }) => {
@@ -49,27 +49,22 @@ test.describe("cookie consent tests", () => {
     await page.$$('button:has-text("Accept all")');
     await page.click('button:has-text("Accept all")');
 
-    let cookies = await context.cookies();
+    const cookies = await context.cookies();
     const consentCookie = cookies.find((c) => c.name === "cc_cookie");
     const cookieObject = JSON.parse(decodeURIComponent(consentCookie.value));
     // Check that the Cookie Consent cookie is set. This should happen immediately, and then the GA cookies will get set after it, dynamically.
     expect(cookieObject.categories.includes("analytics")).toBeTruthy();
 
-    const areGaCookiesSet = (cookies: Cookie[]) => {
-      const gaCookiesArr = cookies.filter((c) => c.name.startsWith("_ga"));
-      return gaCookiesArr.length === 2; // GA cookies are _ga and _ga_<GA_ANALYTICS_ID>
-    };
-
-    const startTime = Date.now();
-    const MAX_TIME_MS = 10000;
-    let timeElapsed = 0;
-
-    while (!areGaCookiesSet(cookies) && timeElapsed < MAX_TIME_MS) {
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for 1 second before checking again
-      cookies = await context.cookies();
-      timeElapsed = Date.now() - startTime;
-    }
-
-    expect(timeElapsed).toBeLessThan(MAX_TIME_MS);
+    // GA cookies (_ga and _ga_<GA_ANALYTICS_ID>) are loaded asynchronously
+    // after consent. Poll until both are present, allowing extra time for slow CI.
+    await expect
+      .poll(
+        async () => {
+          const cookies = await context.cookies();
+          return cookies.filter((c) => c.name.startsWith("_ga")).length;
+        },
+        { timeout: 15000, intervals: [200, 500, 1000] },
+      )
+      .toBe(2);
   });
 });
