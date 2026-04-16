@@ -10,7 +10,7 @@ export default function Hero() {
       <BottomGradient />
       <div className="md:p-24">
         <div className="max-w-8xl mx-auto px-6 lg:px-8">
-          <div className="lg:mb-18 mx-auto max-w-3xl text-center">
+          <div className="mx-auto max-w-3xl text-center lg:mb-18">
             <h1 className="text-foreground text-5xl font-bold sm:text-6xl">
               Some <span className="italic">cool</span> words about{" "}
               <span className="text-gradient-primary">your product</span>
@@ -60,11 +60,11 @@ export default function Hero() {
 function TopGradient() {
   return (
     <div
-      className="absolute right-0 top-0 -z-10 w-full transform-gpu overflow-hidden blur-3xl sm:top-0"
+      className="absolute top-0 right-0 -z-10 w-full transform-gpu overflow-hidden blur-3xl sm:top-0"
       aria-hidden="true"
     >
       <div
-        className="aspect-1020/880 w-280 bg-linear-to-tr flex-none from-amber-400 to-purple-300 opacity-10 sm:right-1/4 sm:translate-x-1/2 dark:hidden"
+        className="aspect-1020/880 w-280 flex-none bg-linear-to-tr from-amber-400 to-purple-300 opacity-10 sm:right-1/4 sm:translate-x-1/2 dark:hidden"
         style={{
           clipPath:
             "polygon(80% 20%, 90% 55%, 50% 100%, 70% 30%, 20% 50%, 50% 0)",
@@ -81,7 +81,7 @@ function BottomGradient() {
       aria-hidden="true"
     >
       <div
-        className="aspect-1020/880 w-360 bg-linear-to-br relative from-amber-400 to-purple-300 opacity-10 sm:-left-3/4 sm:translate-x-1/4 dark:hidden"
+        className="relative aspect-1020/880 w-360 bg-linear-to-br from-amber-400 to-purple-300 opacity-10 sm:-left-3/4 sm:translate-x-1/4 dark:hidden"
         style={{
           clipPath: "ellipse(80% 30% at 80% 50%)",
         }}

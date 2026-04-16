@@ -202,11 +202,11 @@ const RevenueAndProfitChart = ({ weeklyStats }: DailyStatsProps) => {
   }, [daysOfWeekArr, dailyRevenueArray]);
 
   return (
-    <div className="border-border bg-card pt-7.5 shadow-default sm:px-7.5 col-span-12 rounded-sm border px-5 pb-5 xl:col-span-8">
+    <div className="border-border bg-card shadow-default col-span-12 rounded-sm border px-5 pt-7.5 pb-5 sm:px-7.5 xl:col-span-8">
       <div className="flex flex-wrap items-start justify-between gap-3 sm:flex-nowrap">
         <div className="flex w-full flex-wrap gap-3 sm:gap-5">
-          <div className="min-w-47.5 flex">
-            <span className="border-primary mr-2 mt-1 flex h-4 w-full max-w-4 items-center justify-center rounded-full border">
+          <div className="flex min-w-47.5">
+            <span className="border-primary mt-1 mr-2 flex h-4 w-full max-w-4 items-center justify-center rounded-full border">
               <span className="bg-primary block h-2.5 w-full max-w-2.5 rounded-full"></span>
             </span>
             <div className="w-full">
@@ -216,8 +216,8 @@ const RevenueAndProfitChart = ({ weeklyStats }: DailyStatsProps) => {
               </p>
             </div>
           </div>
-          <div className="min-w-47.5 flex">
-            <span className="border-secondary mr-2 mt-1 flex h-4 w-full max-w-4 items-center justify-center rounded-full border">
+          <div className="flex min-w-47.5">
+            <span className="border-secondary mt-1 mr-2 flex h-4 w-full max-w-4 items-center justify-center rounded-full border">
               <span className="bg-secondary block h-2.5 w-full max-w-2.5 rounded-full"></span>
             </span>
             <div className="w-full">
@@ -228,7 +228,7 @@ const RevenueAndProfitChart = ({ weeklyStats }: DailyStatsProps) => {
             </div>
           </div>
         </div>
-        <div className="max-w-45 flex w-full justify-end">
+        <div className="flex w-full max-w-45 justify-end">
           <div className="bg-muted inline-flex items-center rounded-md p-1.5">
             <button className="bg-background text-foreground shadow-card hover:bg-background hover:shadow-card rounded px-3 py-1 text-xs font-medium">
               Day

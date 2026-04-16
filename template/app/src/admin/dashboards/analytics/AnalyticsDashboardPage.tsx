@@ -35,7 +35,7 @@ const Dashboard = ({ user }: { user: AuthUser }) => {
             "opacity-25": !stats,
           })}
         >
-          <div className="2xl:gap-7.5 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
             <TotalPageViewsCard
               totalPageViews={stats?.dailyStats.totalViews}
               prevDayViewsChangePercent={
@@ -57,7 +57,7 @@ const Dashboard = ({ user }: { user: AuthUser }) => {
             />
           </div>
 
-          <div className="2xl:mt-7.5 2xl:gap-7.5 mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6">
+          <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
             <RevenueAndProfitChart
               weeklyStats={stats?.weeklyStats}
               isLoading={isLoading}

@@ -6,7 +6,7 @@ const SourcesTable = ({
   sources: PageViewSource[] | undefined;
 }) => {
   return (
-    <div className="border-border bg-card shadow-default sm:px-7.5 rounded-sm border px-5 pb-2.5 pt-6 xl:pb-1">
+    <div className="border-border bg-card shadow-default rounded-sm border px-5 pt-6 pb-2.5 sm:px-7.5 xl:pb-1">
       <h4 className="text-foreground mb-6 text-xl font-semibold">
         Top Sources
       </h4>

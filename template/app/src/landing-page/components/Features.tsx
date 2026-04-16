@@ -22,8 +22,8 @@ export default function Features({ features }: { features: Feature[] }) {
         <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
           {features.map((feature) => (
             <div key={feature.name} className="relative pl-16">
-              <dt className="text-foreground text-base font-semibold leading-7">
-                <div className="border-accent bg-accent/30 absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg border">
+              <dt className="text-foreground text-base leading-7 font-semibold">
+                <div className="border-accent bg-accent/30 absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg border">
                   <div className="text-2xl">{feature.icon}</div>
                 </div>
                 {feature.name}

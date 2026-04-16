@@ -11,7 +11,7 @@ const DarkModeSwitcher = () => {
     <div>
       <Label
         className={cn(
-          "h-7.5 bg-muted relative m-0 block w-14 cursor-pointer rounded-full transition-colors duration-300 ease-in-out",
+          "bg-muted relative m-0 block h-7.5 w-14 cursor-pointer rounded-full transition-colors duration-300 ease-in-out",
         )}
       >
         <input
@@ -25,7 +25,7 @@ const DarkModeSwitcher = () => {
         />
         <span
           className={cn(
-            "border-border absolute left-[3px] top-1/2 flex h-6 w-6 -translate-y-1/2 translate-x-0 items-center justify-center rounded-full border bg-white shadow-md transition-all duration-300 ease-in-out",
+            "border-border absolute top-1/2 left-[3px] flex h-6 w-6 translate-x-0 -translate-y-1/2 items-center justify-center rounded-full border bg-white shadow-md transition-all duration-300 ease-in-out",
             {
               "right-[3px]! translate-x-full!": !isInLightMode,
             },

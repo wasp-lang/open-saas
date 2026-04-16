@@ -57,7 +57,7 @@ export default function App() {
             {shouldDisplayAppNavBar && (
               <NavBar navigationItems={navigationItems} />
             )}
-            <div className="max-w-(--breakpoint-2xl) mx-auto">
+            <div className="mx-auto max-w-(--breakpoint-2xl)">
               <Outlet />
             </div>
           </>
