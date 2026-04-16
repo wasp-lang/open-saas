@@ -23,7 +23,7 @@ const TotalPageViewsCard = ({
   return (
     <Card>
       <CardHeader>
-        <div className="h-11.5 w-11.5 bg-muted flex items-center justify-center rounded-full">
+        <div className="bg-muted h-11.5 w-11.5 flex items-center justify-center rounded-full">
           <Eye className="size-6" />
         </div>
       </CardHeader>

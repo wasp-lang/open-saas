@@ -66,6 +66,7 @@ const UsersTable = () => {
 
   useEffect(
     function backToPageOne() {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentPage(1);
     },
     [debouncedEmailFilter, subscriptionStatusFilter, isAdminFilter],

@@ -1,6 +1,6 @@
 --- template/app/src/landing-page/operations.ts
 +++ opensaas-sh/app/src/landing-page/operations.ts
-@@ -0,0 +1,244 @@
+@@ -0,0 +1,247 @@
 +import type { GetGithubRoadmap } from "wasp/server/operations";
 +
 +import * as z from "zod";
@@ -28,7 +28,10 @@
 +let lastFetchTime = 0;
 +const CACHE_DURATION_4_HOURS = 4 * 60 * 60 * 1000;
 +
-+export const getGithubRoadmap: GetGithubRoadmap<void, GithubEpic[]> = async () => {
++export const getGithubRoadmap: GetGithubRoadmap<
++  void,
++  GithubEpic[]
++> = async () => {
 +  const currentTime = Date.now();
 +
 +  if (

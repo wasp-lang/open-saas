@@ -35,19 +35,19 @@ export async function getSources() {
     ],
   });
 
-  let activeUsersPerReferrer: any[] = [];
-  if (response?.rows) {
-    activeUsersPerReferrer = response.rows.map((row) => {
-      if (row.dimensionValues && row.metricValues) {
-        return {
-          source: row.dimensionValues[0].value,
-          visitors: row.metricValues[0].value,
-        };
-      }
-    });
-  } else {
+  if (!response?.rows) {
     throw new Error("No response from Google Analytics");
   }
+
+  const activeUsersPerReferrer = response.rows
+    .map((row) => {
+      const source = row.dimensionValues?.[0]?.value;
+      const visitors = row.metricValues?.[0]?.value;
+      if (source && visitors) {
+        return { source, visitors };
+      }
+    })
+    .filter(Boolean);
 
   return activeUsersPerReferrer;
 }
@@ -77,13 +77,11 @@ async function getTotalPageViews() {
       },
     ],
   });
-  let totalViews = 0;
-  if (response?.rows) {
-    // @ts-ignore
-    totalViews = parseInt(response.rows[0].metricValues[0].value);
-  } else {
+  const totalViewsStr = response.rows?.[0]?.metricValues?.[0]?.value;
+  if (!totalViewsStr) {
     throw new Error("No response from Google Analytics");
   }
+  const totalViews = parseInt(totalViewsStr);
   return totalViews;
 }
 
@@ -117,30 +115,25 @@ async function getPrevDayViewsChangePercent() {
     ],
   });
 
-  let viewsFromYesterday;
-  let viewsFromDayBeforeYesterday;
+  const viewsFromYesterdayStr = response.rows?.[0]?.metricValues?.[0]?.value;
+  const viewsFromDayBeforeYesterdayStr =
+    response.rows?.[1]?.metricValues?.[0]?.value;
 
-  if (response?.rows && response.rows.length === 2) {
-    // @ts-ignore
-    viewsFromYesterday = response.rows[0].metricValues[0].value;
-    // @ts-ignore
-    viewsFromDayBeforeYesterday = response.rows[1].metricValues[0].value;
-
-    if (viewsFromYesterday && viewsFromDayBeforeYesterday) {
-      viewsFromYesterday = parseInt(viewsFromYesterday);
-      viewsFromDayBeforeYesterday = parseInt(viewsFromDayBeforeYesterday);
-      if (viewsFromYesterday === 0 || viewsFromDayBeforeYesterday === 0) {
-        return "0";
-      }
-      console.table({ viewsFromYesterday, viewsFromDayBeforeYesterday });
-
-      const change =
-        ((viewsFromYesterday - viewsFromDayBeforeYesterday) /
-          viewsFromDayBeforeYesterday) *
-        100;
-      return change.toFixed(0);
-    }
-  } else {
+  if (!viewsFromYesterdayStr || !viewsFromDayBeforeYesterdayStr) {
     return "0";
   }
+
+  const viewsFromYesterday = parseInt(viewsFromYesterdayStr);
+  const viewsFromDayBeforeYesterday = parseInt(viewsFromDayBeforeYesterdayStr);
+  if (viewsFromYesterday === 0 || viewsFromDayBeforeYesterday === 0) {
+    return "0";
+  }
+  console.table({ viewsFromYesterday, viewsFromDayBeforeYesterday });
+
+  const change =
+    ((viewsFromYesterday - viewsFromDayBeforeYesterday) /
+      viewsFromDayBeforeYesterday) *
+    100;
+
+  return change.toFixed(0);
 }

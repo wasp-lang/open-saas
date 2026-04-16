@@ -43,7 +43,7 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
                         Full Name
                       </Label>
                       <div className="relative">
-                        <User className="left-4.5 text-muted-foreground absolute top-2 h-5 w-5" />
+                        <User className="text-muted-foreground left-4.5 absolute top-2 h-5 w-5" />
                         <Input
                           className="pl-11.5"
                           type="text"
@@ -80,7 +80,7 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
                       Email Address
                     </Label>
                     <div className="relative">
-                      <Mail className="left-4.5 text-muted-foreground absolute top-2 h-5 w-5" />
+                      <Mail className="text-muted-foreground left-4.5 absolute top-2 h-5 w-5" />
                       <Input
                         className="pl-11.5"
                         type="email"
@@ -116,9 +116,9 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
                       BIO
                     </Label>
                     <div className="relative">
-                      <FileText className="left-4.5 text-muted-foreground absolute top-4 h-5 w-5" />
+                      <FileText className="text-muted-foreground left-4.5 absolute top-4 h-5 w-5" />
                       <Textarea
-                        className="border-border bg-background pl-11.5 pr-4.5 text-foreground focus:border-primary w-full rounded border py-3 focus-visible:outline-hidden"
+                        className="border-border bg-background text-foreground focus:border-primary pr-4.5 pl-11.5 focus-visible:outline-hidden w-full rounded border py-3"
                         name="bio"
                         id="bio"
                         rows={6}
@@ -166,12 +166,12 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
 
                   <div
                     id="FileUpload"
-                    className="mb-5.5 border-primary bg-background sm:py-7.5 relative block w-full cursor-pointer appearance-none rounded border-2 border-dashed px-4 py-4"
+                    className="border-primary bg-background mb-5.5 sm:py-7.5 relative block w-full cursor-pointer appearance-none rounded border-2 border-dashed px-4 py-4"
                   >
                     <input
                       type="file"
                       accept="image/*"
-                      className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-hidden"
+                      className="outline-hidden absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0"
                     />
                     <div className="flex flex-col items-center justify-center space-y-3">
                       <span className="border-border bg-background flex h-10 w-10 items-center justify-center rounded-full border">

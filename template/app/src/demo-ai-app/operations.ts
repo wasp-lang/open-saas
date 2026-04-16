@@ -1,7 +1,7 @@
 import type { PrismaPromise } from "@prisma/client";
 import OpenAI from "openai";
 import type { GptResponse, Task, User } from "wasp/entities";
-import { HttpError, env, prisma } from "wasp/server";
+import { env, HttpError, prisma } from "wasp/server";
 import type {
   CreateTask,
   DeleteTask,
@@ -13,7 +13,7 @@ import type {
 import * as z from "zod";
 import { SubscriptionStatus } from "../payment/plans";
 import { ensureArgsSchemaOrThrowHttpError } from "../server/validation";
-import { GeneratedSchedule, TaskPriority } from "./schedule";
+import { GeneratedSchedule, generatedScheduleSchema } from "./schedule";
 
 const openAi = new OpenAI({ apiKey: env.OPENAI_API_KEY });
 
@@ -270,53 +270,7 @@ async function generateScheduleWithGpt(
         function: {
           name: "parseTodaysSchedule",
           description: "parses the days tasks and returns a schedule",
-          parameters: {
-            type: "object",
-            properties: {
-              tasks: {
-                type: "array",
-                description:
-                  "Name of main tasks provided by user, ordered by priority",
-                items: {
-                  type: "object",
-                  properties: {
-                    name: {
-                      type: "string",
-                      description: "Name of main task provided by user",
-                    },
-                    priority: {
-                      type: "string",
-                      enum: ["low", "medium", "high"] as TaskPriority[],
-                      description: "task priority",
-                    },
-                  },
-                },
-              },
-              taskItems: {
-                type: "array",
-                items: {
-                  type: "object",
-                  properties: {
-                    description: {
-                      type: "string",
-                      description:
-                        'detailed breakdown and description of sub-task related to main task. e.g., "Prepare your learning session by first reading through the documentation"',
-                    },
-                    time: {
-                      type: "number",
-                      description:
-                        "time allocated for a given subtask in hours, e.g. 0.5",
-                    },
-                    taskName: {
-                      type: "string",
-                      description: "name of main task related to subtask",
-                    },
-                  },
-                },
-              },
-            },
-            required: ["tasks", "taskItems", "time", "priority"],
-          },
+          parameters: z.toJSONSchema(generatedScheduleSchema),
         },
       },
     ],
@@ -333,5 +287,7 @@ async function generateScheduleWithGpt(
     (call) => call.type === "function",
   )?.function.arguments;
 
-  return gptResponse !== undefined ? JSON.parse(gptResponse) : null;
+  return gptResponse !== undefined
+    ? generatedScheduleSchema.parse(JSON.parse(gptResponse))
+    : null;
 }

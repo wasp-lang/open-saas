@@ -58,12 +58,17 @@ const addFileToDbInputSchema = z.object({
 type AddFileToDbInput = z.infer<typeof addFileToDbInputSchema>;
 
 export const addFileToDb: AddFileToDb<AddFileToDbInput, File> = async (
-  args,
+  rawArgs,
   context,
 ) => {
   if (!context.user) {
     throw new HttpError(401);
   }
+
+  const args = ensureArgsSchemaOrThrowHttpError(
+    addFileToDbInputSchema,
+    rawArgs,
+  );
 
   const fileExists = await checkFileExistsInS3({ s3Key: args.s3Key });
   if (!fileExists) {
@@ -110,7 +115,7 @@ type GetDownloadFileSignedURLInput = z.infer<
 export const getDownloadFileSignedURL: GetDownloadFileSignedURL<
   GetDownloadFileSignedURLInput,
   string
-> = async (rawArgs, _context) => {
+> = async (rawArgs) => {
   const { s3Key } = ensureArgsSchemaOrThrowHttpError(
     getDownloadFileSignedURLInputSchema,
     rawArgs,
@@ -125,12 +130,14 @@ const deleteFileInputSchema = z.object({
 type DeleteFileInput = z.infer<typeof deleteFileInputSchema>;
 
 export const deleteFile: DeleteFile<DeleteFileInput, File> = async (
-  args,
+  rawArgs,
   context,
 ) => {
   if (!context.user) {
     throw new HttpError(401);
   }
+
+  const args = ensureArgsSchemaOrThrowHttpError(deleteFileInputSchema, rawArgs);
 
   const deletedFile = await context.entities.File.delete({
     where: {

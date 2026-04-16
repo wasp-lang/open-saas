@@ -5,8 +5,8 @@ import { polarClient } from "./polarClient";
 
 /**
  * Returns a Polar customer for the given User email, creating a customer if none exist.
- * 
- * NOTE: Polar enforces unique emails and `externalId`. 
+ *
+ * NOTE: Polar enforces unique emails and `externalId`.
  *       Additionally, `externalId` can't be changed once set.
  */
 export async function ensurePolarCustomer(

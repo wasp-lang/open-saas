@@ -7,15 +7,17 @@ export async function parseWebhookPayload(rawPayload: string) {
     const rawEvent: unknown = JSON.parse(rawPayload);
     const { meta, data } = await genericEventSchema.parseAsync(rawEvent);
     switch (meta.event_name) {
-      case "order_created":
+      case "order_created": {
         const orderData = await orderDataSchema.parseAsync(data);
         return { eventName: meta.event_name, meta, data: orderData };
+      }
       case "subscription_created":
       case "subscription_updated":
       case "subscription_cancelled":
-      case "subscription_expired":
+      case "subscription_expired": {
         const subscriptionData = await subscriptionDataSchema.parseAsync(data);
         return { eventName: meta.event_name, meta, data: subscriptionData };
+      }
       default:
         // If you'd like to handle more events, you can add more cases above.
         throw new UnhandledWebhookEventError(meta.event_name);

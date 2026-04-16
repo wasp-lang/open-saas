@@ -1,6 +1,6 @@
 --- template/app/src/client/components/NavBar/Announcement.tsx
 +++ opensaas-sh/app/src/client/components/NavBar/Announcement.tsx
-@@ -1,32 +1,34 @@
+@@ -1,32 +1,37 @@
 -const ANNOUNCEMENT_URL = "https://github.com/wasp-lang/wasp";
 +const ANNOUNCEMENT_URL = "https://x.com/hot_town/status/1950117243246821770";
  
@@ -11,14 +11,15 @@
 +    today.toISOString().slice(0, 10) >= launchDate.toISOString().slice(0, 10);
 +
    return (
--    <div className="from-accent to-secondary text-primary-foreground relative flex w-full items-center justify-center gap-3 bg-linear-to-r p-3 text-center font-semibold">
-+    <div className="from-accent to-secondary text-primary-foreground relative z-51 flex w-full items-center justify-center gap-3 bg-linear-to-r p-3 text-center font-semibold tracking-wider">
+-    <div className="from-accent to-secondary text-primary-foreground bg-linear-to-r relative flex w-full items-center justify-center gap-3 p-3 text-center font-semibold">
++    <div className="from-accent to-secondary text-primary-foreground z-51 bg-linear-to-r relative flex w-full items-center justify-center gap-3 p-3 text-center font-semibold tracking-wider">
        <a
          href={ANNOUNCEMENT_URL}
          target="_blank"
 -        rel="noopener noreferrer"
 -        className="hidden cursor-pointer transition-opacity hover:opacity-90 hover:drop-shadow-sm lg:block"
 +        className="hidden transition-opacity hover:opacity-90 hover:drop-shadow-sm lg:block"
++        rel="noreferrer"
        >
 -        Support Open-Source Software!
 +        🚀 Open SaaS v2.0 {hasLaunched ? "is here!" : "launches tomorrow!"}
@@ -30,6 +31,7 @@
 -        rel="noopener noreferrer"
 -        className="bg-background/20 hover:bg-background/30 hidden cursor-pointer rounded-full px-2.5 py-1 text-xs tracking-wider transition-colors lg:block"
 +        className="bg-background/20 hover:bg-background/30 hidden cursor-pointer rounded-full px-2.5 py-1 tracking-wider opacity-95 transition-colors lg:block"
++        rel="noreferrer"
        >
 -        Star Our Repo on Github ⭐️ →
 +        {hasLaunched ? "Check out the Launch 🎉" : "Get notified! 📆"} →
@@ -39,6 +41,7 @@
          target="_blank"
 -        rel="noopener noreferrer"
          className="bg-background/20 hover:bg-background/30 cursor-pointer rounded-full px-2.5 py-1 text-xs transition-colors lg:hidden"
++        rel="noreferrer"
        >
 -        ⭐️ Star the Our Repo and Support Open-Source! ⭐️
 +        🎉 The Open SaaS v2.0 Launch is Live! 🚀

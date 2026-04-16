@@ -69,7 +69,7 @@
 -              size={isScrolled ? "1rem" : "1.1rem"}
 +              size="1rem"
                className={cn("transition-all duration-300", {
-                 "mt-[0.1rem] ml-1": !isScrolled,
+                 "ml-1 mt-[0.1rem]": !isScrolled,
                  "ml-1": isScrolled,
 @@ -180,7 +188,7 @@
            <SheetHeader>

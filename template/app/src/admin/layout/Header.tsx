@@ -10,7 +10,7 @@ const Header = (props: {
   user: AuthUser;
 }) => {
   return (
-    <header className="bg-background border-border sticky top-0 z-10 flex w-full border-b shadow-xs">
+    <header className="bg-background border-border shadow-xs sticky top-0 z-10 flex w-full border-b">
       <div className="flex grow items-center justify-between px-8 py-5 sm:justify-end sm:gap-5">
         <div className="flex items-center gap-2 sm:gap-4 lg:hidden">
           {/* <!-- Hamburger Toggle BTN --> */}
@@ -21,7 +21,7 @@ const Header = (props: {
               e.stopPropagation();
               props.setSidebarOpen(!props.sidebarOpen);
             }}
-            className="z-99999 border-border bg-background block rounded-sm border p-1.5 shadow-xs lg:hidden"
+            className="border-border bg-background z-99999 shadow-xs block rounded-sm border p-1.5 lg:hidden"
           >
             <span className="h-5.5 w-5.5 relative block cursor-pointer">
               <span className="du-block absolute right-0 h-full w-full">
@@ -37,7 +37,7 @@ const Header = (props: {
                   className={cn(
                     "bg-foreground relative left-0 top-0 my-1 block h-0.5 w-0 rounded-sm delay-150 duration-200 ease-in-out",
                     {
-                      "delay-400 w-full!": !props.sidebarOpen,
+                      "w-full! delay-400": !props.sidebarOpen,
                     },
                   )}
                 ></span>
@@ -61,7 +61,7 @@ const Header = (props: {
                 ></span>
                 <span
                   className={cn(
-                    "delay-400 bg-foreground absolute left-0 top-2.5 block h-0.5 w-full rounded-sm duration-200 ease-in-out",
+                    "bg-foreground delay-400 absolute left-0 top-2.5 block h-0.5 w-full rounded-sm duration-200 ease-in-out",
                     {
                       "h-0! delay-200!": !props.sidebarOpen,
                     },

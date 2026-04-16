@@ -1,18 +1,20 @@
 --- template/app/src/landing-page/components/RoadmapStatusColumn.tsx
 +++ opensaas-sh/app/src/landing-page/components/RoadmapStatusColumn.tsx
-@@ -0,0 +1,93 @@
+@@ -0,0 +1,92 @@
++import { cn } from "../../client/utils";
 +import type { GithubEpic } from "../operations";
 +import { GithubEpicStatus } from "../operations";
-+import { cn } from "../../client/utils";
-+import { RoadmapEpicCard } from "./RoadmapEpicCard";
-+import { RoadmapEpicAddIssueCard } from "./RoadmapEpicCard";
++import { RoadmapEpicAddIssueCard, RoadmapEpicCard } from "./RoadmapEpicCard";
 +
 +type RoadmapStatusColumnProps = {
 +  status: GithubEpicStatus;
 +  epics: GithubEpic[];
 +};
 +
-+export function RoadmapStatusColumn({ status, epics }: RoadmapStatusColumnProps) {
++export function RoadmapStatusColumn({
++  status,
++  epics,
++}: RoadmapStatusColumnProps) {
 +  const borderColor = getBorderColor(status);
 +  const statusBgColor = getStatusBgColor(status);
 +  const statusTextColor = getStatusTextColor(status);
@@ -41,9 +43,7 @@
 +          </div>
 +        )}
 +
-+        {status === GithubEpicStatus.Ideas && (
-+          <RoadmapEpicAddIssueCard />
-+        )}
++        {status === GithubEpicStatus.Ideas && <RoadmapEpicAddIssueCard />}
 +      </div>
 +    </div>
 +  );
@@ -93,4 +93,3 @@
 +      return "border-gray-200 dark:border-gray-700";
 +  }
 +};
-+

@@ -31,7 +31,7 @@
            ],
          },
  
-@@ -82,6 +90,28 @@
+@@ -87,6 +95,28 @@
              },
              onReject: () => {},
            },
@@ -60,7 +60,7 @@
          },
        },
      },
-@@ -98,10 +128,7 @@
+@@ -103,10 +133,7 @@
              acceptNecessaryBtn: "Reject all",
              // showPreferencesBtn: 'Manage Individual preferences', // (OPTIONAL) Activates the preferences modal
              // TODO: Add your own privacy policy and terms and conditions links below.

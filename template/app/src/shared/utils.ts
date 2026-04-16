@@ -2,7 +2,10 @@
  * Used purely to help compiler check for exhaustiveness in switch statements,
  * will never execute. See https://stackoverflow.com/a/39419171.
  */
-export function assertUnreachable(_: never): never {
+export function assertUnreachable(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _: never,
+): never {
   throw Error("This code should be unreachable");
 }
 
@@ -12,7 +15,7 @@ export function assertUnreachable(_: never): never {
 export function throttleWithTrailingInvocation(
   fn: () => void,
   delayInMilliseconds: number,
-): ((...args: any[]) => void) & { cancel: () => void } {
+): (() => void) & { cancel: () => void } {
   let fnLastCallTime: number | null = null;
   let trailingInvocationTimeoutId: ReturnType<typeof setTimeout> | null = null;
   let isTrailingInvocationPending = false;

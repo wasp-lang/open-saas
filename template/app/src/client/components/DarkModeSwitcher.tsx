@@ -11,7 +11,7 @@ const DarkModeSwitcher = () => {
     <div>
       <Label
         className={cn(
-          "h-7.5 bg-muted relative m-0 block w-14 cursor-pointer rounded-full transition-colors duration-300 ease-in-out",
+          "bg-muted h-7.5 relative m-0 block w-14 cursor-pointer rounded-full transition-colors duration-300 ease-in-out",
         )}
       >
         <input

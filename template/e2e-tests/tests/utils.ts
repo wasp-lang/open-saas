@@ -79,7 +79,7 @@ export const makeStripePayment = async ({
   page,
   planId,
 }: {
-  test: any;
+  test: typeof import("@playwright/test").test;
   page: Page;
   planId: "hobby" | "pro" | "credits10";
 }) => {
@@ -98,7 +98,9 @@ export const makeStripePayment = async ({
     waitUntil: "domcontentloaded",
   });
   await page.fill('input[name="cardNumber"]', "4242424242424242");
-  await page.getByPlaceholder("MM / YY").fill(`12${getNextYearLastTwoDigits()}`);
+  await page
+    .getByPlaceholder("MM / YY")
+    .fill(`12${getNextYearLastTwoDigits()}`);
   await page.getByPlaceholder("CVC").fill("123");
   await page.getByPlaceholder("Full name on card").fill("Test User");
   const countrySelect = page.getByLabel("Country or region");

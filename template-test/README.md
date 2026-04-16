@@ -4,7 +4,7 @@ Tests the production version of the Open SaaS template that users get from `wasp
 
 **Why this exists:** As a part of our release checklist, we want to test that the production version of the Open SaaS template works.
 
-**How it works:** We create a new Wasp app from the production Open SaaS template, and then modify the app to be production-ready (e.g. replace `Dummy` email service with `SMTP`, add Dotenv Vault with real credentials, etc.). 
+**How it works:** We create a new Wasp app from the production Open SaaS template, and then modify the app to be production-ready (e.g. replace `Dummy` email service with `SMTP`, add Dotenv Vault with real credentials, etc.).
 
 ## Testing a new Wasp release
 

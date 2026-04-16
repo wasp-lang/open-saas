@@ -137,8 +137,10 @@ function NewTaskForm({
     try {
       await handleCreateTask({ description });
       setDescription("");
-    } catch (err: any) {
-      window.alert("Error: " + (err.message || "Something went wrong"));
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Something went wrong";
+      window.alert("Error: " + message);
     }
   };
 
@@ -151,8 +153,12 @@ function NewTaskForm({
       if (response) {
         setResponse(response);
       }
-    } catch (err: any) {
-      if (err.statusCode === 402) {
+    } catch (err) {
+      const statusCode =
+        err && typeof err === "object" && "statusCode" in err
+          ? err.statusCode
+          : undefined;
+      if (statusCode === 402) {
         toast({
           title: "⚠️ You are out of credits!",
           style: {
@@ -172,7 +178,8 @@ function NewTaskForm({
       } else {
         toast({
           title: "Error",
-          description: err.message || "Something went wrong",
+          description:
+            err instanceof Error ? err.message : "Something went wrong",
           variant: "destructive",
         });
       }
@@ -214,7 +221,7 @@ function NewTaskForm({
         {isTasksLoading && (
           <div className="text-muted-foreground">Loading...</div>
         )}
-        {tasks!! && tasks.length > 0 ? (
+        {tasks! && tasks.length > 0 ? (
           <div className="space-y-4">
             {tasks.map((task: Task) => (
               <Todo
@@ -364,7 +371,7 @@ function Schedule({ schedule }: { schedule: GeneratedSchedule }) {
   return (
     <div className="flex flex-col gap-6 py-6" data-testid="schedule">
       <div className="space-y-4">
-        {!!schedule.tasks ? (
+        {schedule.tasks ? (
           schedule.tasks
             .map((task) => (
               <TaskCard
@@ -419,7 +426,7 @@ function TaskCard({
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
-        {!!taskItems ? (
+        {taskItems ? (
           <ul className="space-y-2">
             {taskItems.map((taskItem) => {
               if (taskItem.taskName === task.name) {

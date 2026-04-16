@@ -1,11 +1,9 @@
 --- template/app/.claude/settings.json
 +++ opensaas-sh/app/.claude/settings.json
-@@ -0,0 +1,13 @@
+@@ -0,0 +1,11 @@
 +{
 +  "enableAllProjectMcpServers": true,
-+  "enabledMcpjsonServers": [
-+    "chrome-devtools"
-+  ],
++  "enabledMcpjsonServers": ["chrome-devtools"],
 +  "permissions": {
 +    "allow": [
 +      "Bash(ln:*)",

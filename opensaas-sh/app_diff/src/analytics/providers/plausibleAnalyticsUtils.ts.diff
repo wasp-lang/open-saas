@@ -9,7 +9,7 @@
      {
        method: "GET",
        headers,
-@@ -85,7 +85,7 @@
+@@ -83,7 +83,7 @@
  }
  
  async function getPageviewsForDate(date: string) {
@@ -18,7 +18,7 @@
    const response = await fetch(url, {
      method: "GET",
      headers,
-@@ -98,7 +98,7 @@
+@@ -96,7 +96,7 @@
  }
  
  export async function getSources() {

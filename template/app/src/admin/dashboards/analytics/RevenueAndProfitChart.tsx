@@ -109,7 +109,7 @@ interface ChartOneState {
   }[];
 }
 
-const RevenueAndProfitChart = ({ weeklyStats, isLoading }: DailyStatsProps) => {
+const RevenueAndProfitChart = ({ weeklyStats }: DailyStatsProps) => {
   const dailyRevenueArray = useMemo(() => {
     if (!!weeklyStats && weeklyStats?.length > 0) {
       const sortedWeeks = weeklyStats?.sort((a, b) => {
@@ -142,6 +142,7 @@ const RevenueAndProfitChart = ({ weeklyStats, isLoading }: DailyStatsProps) => {
 
   useEffect(() => {
     if (dailyRevenueArray && dailyRevenueArray.length > 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setState((prevState) => {
         // Check if a "Revenue" series already exists
         const existingSeriesIndex = prevState.series.findIndex(
@@ -183,6 +184,7 @@ const RevenueAndProfitChart = ({ weeklyStats, isLoading }: DailyStatsProps) => {
       !!dailyRevenueArray &&
       dailyRevenueArray?.length > 0
     ) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setChartOptions({
         ...options,
         xaxis: {
@@ -200,7 +202,7 @@ const RevenueAndProfitChart = ({ weeklyStats, isLoading }: DailyStatsProps) => {
   }, [daysOfWeekArr, dailyRevenueArray]);
 
   return (
-    <div className="border-border bg-card pt-7.5 shadow-default sm:px-7.5 col-span-12 rounded-sm border px-5 pb-5 xl:col-span-8">
+    <div className="border-border bg-card shadow-default pt-7.5 sm:px-7.5 col-span-12 rounded-sm border px-5 pb-5 xl:col-span-8">
       <div className="flex flex-wrap items-start justify-between gap-3 sm:flex-nowrap">
         <div className="flex w-full flex-wrap gap-3 sm:gap-5">
           <div className="min-w-47.5 flex">

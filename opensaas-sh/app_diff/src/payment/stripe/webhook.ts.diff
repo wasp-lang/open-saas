@@ -1,6 +1,6 @@
 --- template/app/src/payment/stripe/webhook.ts
 +++ opensaas-sh/app/src/payment/stripe/webhook.ts
-@@ -110,7 +110,7 @@
+@@ -106,7 +106,7 @@
      case PaymentPlanId.Credits10:
        await updateUserCredits(
          {
@@ -9,7 +9,7 @@
            datePaid: invoicePaidAtDate,
            numOfCreditsPurchased: paymentPlans[paymentPlanId].effect.amount,
          },
-@@ -121,7 +121,7 @@
+@@ -117,7 +117,7 @@
      case PaymentPlanId.Hobby:
        await updateUserSubscription(
          {
@@ -18,7 +18,7 @@
            datePaid: invoicePaidAtDate,
            paymentPlanId,
            subscriptionStatus: SubscriptionStatus.Active,
-@@ -168,7 +168,7 @@
+@@ -164,7 +164,7 @@
    );
  
    const user = await updateUserSubscription(
@@ -27,7 +27,7 @@
      prismaUserDelegate,
    );
  
-@@ -236,7 +236,7 @@
+@@ -232,7 +232,7 @@
  
    await updateUserSubscription(
      {
