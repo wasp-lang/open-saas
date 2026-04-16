@@ -65,8 +65,12 @@ const getConfig = () => {
                   throw new Error("Google Analytics ID is missing");
                 }
                 window.dataLayer = window.dataLayer || [];
-                function gtag(...args: unknown[]) {
-                  window.dataLayer.push(args);
+                // Google's gtag.js initialization snippet relies on pushing the
+                // arguments object (not a real array) into dataLayer, so the
+                // gtag.js loader can replay queued events correctly.
+                function gtag() {
+                  // eslint-disable-next-line prefer-rest-params
+                  window.dataLayer.push(arguments);
                 }
                 gtag("js", new Date());
                 gtag("config", GA_ANALYTICS_ID);
