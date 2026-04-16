@@ -1,7 +1,7 @@
 --- template/app/src/payment/stripe/paymentProcessor.ts
 +++ opensaas-sh/app/src/payment/stripe/paymentProcessor.ts
-@@ -8,8 +8,8 @@
- } from "../paymentProcessor";
+@@ -9,8 +9,8 @@
+ import { getPaymentProcessorPlanId } from "../paymentProcessorPlans";
  import type { PaymentPlanEffect } from "../plans";
  import {
 -  fetchUserPaymentProcessorUserId,
