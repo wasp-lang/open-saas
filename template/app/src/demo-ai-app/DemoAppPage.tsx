@@ -137,8 +137,10 @@ function NewTaskForm({
     try {
       await handleCreateTask({ description });
       setDescription("");
-    } catch (err: any) {
-      window.alert("Error: " + (err.message || "Something went wrong"));
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Something went wrong";
+      window.alert("Error: " + message);
     }
   };
 
@@ -151,8 +153,12 @@ function NewTaskForm({
       if (response) {
         setResponse(response);
       }
-    } catch (err: any) {
-      if (err.statusCode === 402) {
+    } catch (err) {
+      const statusCode =
+        err && typeof err === "object" && "statusCode" in err
+          ? err.statusCode
+          : undefined;
+      if (statusCode === 402) {
         toast({
           title: "⚠️ You are out of credits!",
           style: {
@@ -172,7 +178,8 @@ function NewTaskForm({
       } else {
         toast({
           title: "Error",
-          description: err.message || "Something went wrong",
+          description:
+            err instanceof Error ? err.message : "Something went wrong",
           variant: "destructive",
         });
       }
@@ -229,7 +236,7 @@ function NewTaskForm({
               <div className="flex items-center justify-between gap-3">
                 <Label
                   htmlFor="time"
-                  className="text-muted-foreground text-nowrap text-sm font-semibold"
+                  className="text-muted-foreground text-sm font-semibold text-nowrap"
                 >
                   How many hours will you work today?
                 </Label>
@@ -329,7 +336,7 @@ function Todo({ id, isDone, description, time }: TodoProps) {
               type="number"
               min={0.5}
               step={0.5}
-              className={cn("w-18 h-8 text-center text-xs", {
+              className={cn("h-8 w-18 text-center text-xs", {
                 "pointer-events-none opacity-50": isDone,
               })}
               value={time}
@@ -344,7 +351,7 @@ function Todo({ id, isDone, description, time }: TodoProps) {
             </span>
           </div>
         </div>
-        <div className="w-15 flex items-center justify-end">
+        <div className="flex w-15 items-center justify-end">
           <Button
             variant="ghost"
             size="sm"

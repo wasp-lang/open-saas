@@ -145,7 +145,7 @@ const UsersTable = () => {
                           />
                           <Label
                             htmlFor="all-statuses"
-                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                           >
                             All Statuses
                           </Label>
@@ -158,7 +158,7 @@ const UsersTable = () => {
                           />
                           <Label
                             htmlFor="has-not-subscribed"
-                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                           >
                             Has Not Subscribed
                           </Label>
@@ -177,7 +177,7 @@ const UsersTable = () => {
                             />
                             <Label
                               htmlFor={status}
-                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                              className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             >
                               {status}
                             </Label>
@@ -264,7 +264,7 @@ const UsersTable = () => {
           )}
         </div>
 
-        <div className="border-border py-4.5 grid grid-cols-9 border-t-4 px-4 md:px-6">
+        <div className="border-border grid grid-cols-9 border-t-4 px-4 py-4.5 md:px-6">
           <div className="col-span-3 flex items-center">
             <p className="font-medium">Email / Username</p>
           </div>
@@ -287,7 +287,7 @@ const UsersTable = () => {
           data.users.map((user) => (
             <div
               key={user.id}
-              className="py-4.5 grid grid-cols-9 gap-4 px-4 md:px-6"
+              className="grid grid-cols-9 gap-4 px-4 py-4.5 md:px-6"
             >
               <div className="col-span-3 flex items-center">
                 <div className="flex flex-col gap-1">

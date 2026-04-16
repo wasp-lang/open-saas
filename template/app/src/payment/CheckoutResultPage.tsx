@@ -16,7 +16,7 @@ export default function CheckoutResultPage() {
     return () => {
       clearTimeout(accountPageRedirectTimeoutId);
     };
-  }, []);
+  }, [navigate]);
 
   if (status !== "success" && status !== "canceled") {
     return <Navigate to="/account" />;

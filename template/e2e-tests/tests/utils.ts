@@ -1,5 +1,5 @@
-import { expect, type Page } from "@playwright/test";
-import { randomUUID } from "crypto";
+import { expect, type Page } from "@playwright/test"
+import { randomUUID } from "crypto"
 
 export type User = {
   id?: number;
@@ -79,7 +79,7 @@ export const makeStripePayment = async ({
   page,
   planId,
 }: {
-  test: any;
+  test:  typeof import("@playwright/test").test;
   page: Page;
   planId: "hobby" | "pro" | "credits10";
 }) => {

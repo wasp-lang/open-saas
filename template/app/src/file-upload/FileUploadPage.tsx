@@ -51,7 +51,7 @@ export default function FileUploadPage() {
 
   useEffect(() => {
     allUserFiles.refetch();
-  }, []);
+  }, [allUserFiles]);
 
   useEffect(() => {
     if (fileKeyForS3.length > 0) {
@@ -75,7 +75,7 @@ export default function FileUploadPage() {
           setFileKeyForS3("");
         });
     }
-  }, [fileKeyForS3]);
+  }, [fileKeyForS3, refetchDownloadUrl]);
 
   const handleUpload = async (e: FormEvent<HTMLFormElement>) => {
     try {

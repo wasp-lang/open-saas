@@ -33,7 +33,7 @@ const TotalRevenueCard = ({
         weeklyStats[1]?.totalRevenue) *
       100;
     return Math.floor(percentage);
-  }, [weeklyStats]);
+  }, [isLoading, weeklyStats]);
 
   return (
     <Card>

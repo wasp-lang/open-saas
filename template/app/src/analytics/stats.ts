@@ -117,11 +117,11 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (
     }
 
     console.table({ dailyStats });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error calculating daily stats: ", error);
     await context.entities.Logs.create({
       data: {
-        message: `Error calculating daily stats: ${error?.message}`,
+        message: `Error calculating daily stats: ${error instanceof Error ? error.message : String(error)}`,
         level: "job-error",
       },
     });
