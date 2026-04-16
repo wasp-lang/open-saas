@@ -1,4 +1,4 @@
-## Welcome to your new SaaS App! 🎉
+## Welcome to your new SaaS App! 🎉🎉
 
 <div style="display: flex; gap: 16px; align-items: center;">
   <a href="https://www.producthunt.com/products/open-saas?embed=true&utm_source=badge-top-post-topic-badge&utm_medium=badge&utm_source=badge-open&#0045;saas&#0045;2&#0045;0" target="_blank">
