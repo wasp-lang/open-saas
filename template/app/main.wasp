@@ -297,6 +297,17 @@ page AnalyticsDashboardPage {
   component: import AnalyticsDashboardPage from "@src/admin/dashboards/analytics/AnalyticsDashboardPage"
 }
 
+route AdminUnderwritingActivityRoute { path: "/admin/underwriting-activity", to: AdminUnderwritingActivityPage }
+page AdminUnderwritingActivityPage {
+  authRequired: true,
+  component: import UnderwritingActivityPage from "@src/admin/dashboards/underwriting/UnderwritingActivityPage"
+}
+
+query getUnderwritingActivity {
+  fn: import { getUnderwritingActivity } from "@src/underwriting/operations",
+  entities: [User, Deal, UnderwritingRun, LoanScenario, DocumentExtraction]
+}
+
 route AdminUsersRoute { path: "/admin/users", to: AdminUsersPage }
 page AdminUsersPage {
   authRequired: true,

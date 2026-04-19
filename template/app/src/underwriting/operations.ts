@@ -17,6 +17,7 @@ import type {
   GetDeals,
   GetDocumentExtractions,
   GetLoanScenarios,
+  GetUnderwritingActivity,
   GetUnderwritingRuns,
   RunLoanSizing,
   RunUnderwriting,
@@ -461,3 +462,279 @@ async function extractWithAi(
     throw new HttpError(500, "OpenAI did not return an extraction");
   return extractionOutputSchema.parse(JSON.parse(raw));
 }
+
+// ---------- Admin: underwriting activity ----------
+export type UnderwritingActivityDay = {
+  date: string; // YYYY-MM-DD
+  underwritingRuns: number;
+  loanScenarios: number;
+  documentExtractions: number;
+};
+
+export type UnderwritingActivityTopUser = {
+  userId: string;
+  email: string | null;
+  username: string | null;
+  underwritingRuns: number;
+  loanScenarios: number;
+  documentExtractions: number;
+  totalRuns: number;
+};
+
+export type UnderwritingActivityRecent = {
+  id: string;
+  kind: "underwriting" | "loan" | "extraction";
+  createdAt: Date;
+  summary: string;
+  userEmail: string | null;
+  userUsername: string | null;
+  dealName: string | null;
+};
+
+export type UnderwritingActivity = {
+  totals: {
+    underwritingRuns: number;
+    loanScenarios: number;
+    documentExtractions: number;
+    deals: number;
+  };
+  last7Days: {
+    underwritingRuns: number;
+    loanScenarios: number;
+    documentExtractions: number;
+  };
+  last30Days: {
+    underwritingRuns: number;
+    loanScenarios: number;
+    documentExtractions: number;
+  };
+  trend: UnderwritingActivityDay[]; // last 30 days, ascending
+  topUsers: UnderwritingActivityTopUser[]; // top 10 by total runs, last 30 days
+  recent: UnderwritingActivityRecent[]; // last 20 events across all types
+};
+
+export const getUnderwritingActivity: GetUnderwritingActivity<
+  void,
+  UnderwritingActivity
+> = async (_args, context) => {
+  if (!context.user) throw new HttpError(401);
+  if (!context.user.isAdmin) throw new HttpError(403, "Admin only");
+
+  const now = new Date();
+  const startOf = (daysAgo: number) => {
+    const d = new Date(now);
+    d.setUTCHours(0, 0, 0, 0);
+    d.setUTCDate(d.getUTCDate() - daysAgo);
+    return d;
+  };
+  const since7 = startOf(7);
+  const since30 = startOf(30);
+
+  const [
+    totalUnderwriting,
+    totalLoan,
+    totalExtraction,
+    totalDeals,
+    l7Underwriting,
+    l7Loan,
+    l7Extraction,
+    l30Underwriting,
+    l30Loan,
+    l30Extraction,
+  ] = await Promise.all([
+    context.entities.UnderwritingRun.count(),
+    context.entities.LoanScenario.count(),
+    context.entities.DocumentExtraction.count(),
+    context.entities.Deal.count(),
+    context.entities.UnderwritingRun.count({
+      where: { createdAt: { gte: since7 } },
+    }),
+    context.entities.LoanScenario.count({
+      where: { createdAt: { gte: since7 } },
+    }),
+    context.entities.DocumentExtraction.count({
+      where: { createdAt: { gte: since7 } },
+    }),
+    context.entities.UnderwritingRun.count({
+      where: { createdAt: { gte: since30 } },
+    }),
+    context.entities.LoanScenario.count({
+      where: { createdAt: { gte: since30 } },
+    }),
+    context.entities.DocumentExtraction.count({
+      where: { createdAt: { gte: since30 } },
+    }),
+  ]);
+
+  // Build 30-day trend. Count in JS from createdAt lists — fine at this scale.
+  const trendWindow = startOf(29); // include today -> 30 buckets
+  const [runsWindow, loansWindow, extractionsWindow] = await Promise.all([
+    context.entities.UnderwritingRun.findMany({
+      where: { createdAt: { gte: trendWindow } },
+      select: { createdAt: true, userId: true },
+    }),
+    context.entities.LoanScenario.findMany({
+      where: { createdAt: { gte: trendWindow } },
+      select: { createdAt: true, userId: true },
+    }),
+    context.entities.DocumentExtraction.findMany({
+      where: { createdAt: { gte: trendWindow } },
+      select: { createdAt: true, userId: true },
+    }),
+  ]);
+
+  const toDayKey = (d: Date) => d.toISOString().slice(0, 10);
+  const buckets: Record<string, UnderwritingActivityDay> = {};
+  for (let i = 0; i < 30; i++) {
+    const d = new Date(trendWindow);
+    d.setUTCDate(d.getUTCDate() + i);
+    const key = toDayKey(d);
+    buckets[key] = {
+      date: key,
+      underwritingRuns: 0,
+      loanScenarios: 0,
+      documentExtractions: 0,
+    };
+  }
+  for (const r of runsWindow) {
+    const k = toDayKey(r.createdAt);
+    if (buckets[k]) buckets[k].underwritingRuns++;
+  }
+  for (const r of loansWindow) {
+    const k = toDayKey(r.createdAt);
+    if (buckets[k]) buckets[k].loanScenarios++;
+  }
+  for (const r of extractionsWindow) {
+    const k = toDayKey(r.createdAt);
+    if (buckets[k]) buckets[k].documentExtractions++;
+  }
+  const trend = Object.values(buckets).sort((a, b) =>
+    a.date.localeCompare(b.date),
+  );
+
+  // Top users by total runs in last 30 days.
+  const userCounts: Record<
+    string,
+    Omit<UnderwritingActivityTopUser, "email" | "username">
+  > = {};
+  const bump = (
+    uid: string,
+    key: "underwritingRuns" | "loanScenarios" | "documentExtractions",
+  ) => {
+    const row = (userCounts[uid] ??= {
+      userId: uid,
+      underwritingRuns: 0,
+      loanScenarios: 0,
+      documentExtractions: 0,
+      totalRuns: 0,
+    });
+    row[key]++;
+    row.totalRuns++;
+  };
+  for (const r of runsWindow) bump(r.userId, "underwritingRuns");
+  for (const r of loansWindow) bump(r.userId, "loanScenarios");
+  for (const r of extractionsWindow) bump(r.userId, "documentExtractions");
+
+  const topUserEntries = Object.values(userCounts)
+    .sort((a, b) => b.totalRuns - a.totalRuns)
+    .slice(0, 10);
+
+  const topUserProfiles = topUserEntries.length
+    ? await context.entities.User.findMany({
+        where: { id: { in: topUserEntries.map((u) => u.userId) } },
+        select: { id: true, email: true, username: true },
+      })
+    : [];
+  const profileById = new Map(topUserProfiles.map((u) => [u.id, u]));
+
+  const topUsers: UnderwritingActivityTopUser[] = topUserEntries.map((u) => {
+    const p = profileById.get(u.userId);
+    return {
+      ...u,
+      email: p?.email ?? null,
+      username: p?.username ?? null,
+    };
+  });
+
+  // Recent feed: last 20 events across all three types, merged and sorted.
+  const [recentRuns, recentLoans, recentExtractions] = await Promise.all([
+    context.entities.UnderwritingRun.findMany({
+      take: 20,
+      orderBy: { createdAt: "desc" },
+      include: {
+        user: { select: { email: true, username: true } },
+        deal: { select: { name: true } },
+      },
+    }),
+    context.entities.LoanScenario.findMany({
+      take: 20,
+      orderBy: { createdAt: "desc" },
+      include: {
+        user: { select: { email: true, username: true } },
+        deal: { select: { name: true } },
+      },
+    }),
+    context.entities.DocumentExtraction.findMany({
+      take: 20,
+      orderBy: { createdAt: "desc" },
+      include: {
+        user: { select: { email: true, username: true } },
+        deal: { select: { name: true } },
+      },
+    }),
+  ]);
+
+  const recent: UnderwritingActivityRecent[] = [
+    ...recentRuns.map((r) => ({
+      id: r.id,
+      kind: "underwriting" as const,
+      createdAt: r.createdAt,
+      summary: r.summary,
+      userEmail: r.user.email,
+      userUsername: r.user.username,
+      dealName: r.deal?.name ?? null,
+    })),
+    ...recentLoans.map((r) => ({
+      id: r.id,
+      kind: "loan" as const,
+      createdAt: r.createdAt,
+      summary: r.summary,
+      userEmail: r.user.email,
+      userUsername: r.user.username,
+      dealName: r.deal?.name ?? null,
+    })),
+    ...recentExtractions.map((r) => ({
+      id: r.id,
+      kind: "extraction" as const,
+      createdAt: r.createdAt,
+      summary: `${r.documentType} — ${r.sourceFileName}`,
+      userEmail: r.user.email,
+      userUsername: r.user.username,
+      dealName: r.deal?.name ?? null,
+    })),
+  ]
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    .slice(0, 20);
+
+  return {
+    totals: {
+      underwritingRuns: totalUnderwriting,
+      loanScenarios: totalLoan,
+      documentExtractions: totalExtraction,
+      deals: totalDeals,
+    },
+    last7Days: {
+      underwritingRuns: l7Underwriting,
+      loanScenarios: l7Loan,
+      documentExtractions: l7Extraction,
+    },
+    last30Days: {
+      underwritingRuns: l30Underwriting,
+      loanScenarios: l30Loan,
+      documentExtractions: l30Extraction,
+    },
+    trend,
+    topUsers,
+    recent,
+  };
+};
