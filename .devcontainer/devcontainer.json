@@ -1,0 +1,13 @@
+{
+    "name": "open-saas",
+    "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+    "postCreateCommand": "npm install -g @anthropic-ai/claude-code && cd template && npm install",
+    "customizations": {
+          "vscode": {
+                  "extensions": [
+                            "anthropic.claude-code"
+                  ]
+          }
+    },
+    "forwardPorts": [3000, 3001]
+}

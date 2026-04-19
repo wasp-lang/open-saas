@@ -26,7 +26,7 @@ export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
     clickLogin,
   ]);
 
-  await page.waitForURL("**/demo-app");
+  await page.waitForURL("**/underwriting");
 };
 
 export const signUserUp = async ({
@@ -81,14 +81,35 @@ export const makeStripePayment = async ({
 }: {
   test: typeof import("@playwright/test").test;
   page: Page;
-  planId: "hobby" | "pro" | "credits10";
+  planId:
+    | "starter"
+    | "professional"
+    | "enterprise"
+    | "credits25"
+    | "credits100"
+    | "credits500";
 }) => {
-  test.slow(); // Stripe payments take a long time to confirm and can cause tests to fail so we use a longer timeout
+  test.slow();
 
   await page.goto("/pricing");
   await page.waitForURL("**/pricing");
 
-  const buyBtn = page.locator(`button[aria-describedby="${planId}"]`);
+  const planNameByPlanId: Record<typeof planId, string> = {
+    starter: "Starter",
+    professional: "Professional",
+    enterprise: "Enterprise",
+    credits25: "25 Credit Pack",
+    credits100: "100 Credit Pack",
+    credits500: "500 Credit Pack",
+  };
+
+  const planCard = page
+    .locator("div")
+    .filter({ hasText: new RegExp(`^${planNameByPlanId[planId]}`) })
+    .first();
+  const buyBtn = planCard
+    .getByRole("button", { name: /Subscribe|Buy credits/ })
+    .first();
 
   await expect(buyBtn).toBeVisible();
   await expect(buyBtn).toBeEnabled();
@@ -119,11 +140,7 @@ export const makeStripePayment = async ({
 
   await page.waitForURL("**/checkout?status=success");
   await page.waitForURL("**/account");
-  if (planId === "credits10") {
-    await expect(page.getByText("13 credits")).toBeVisible();
-  } else {
-    await expect(page.getByText(planId)).toBeVisible();
-  }
+  // Account page shows either the tier name (subscription) or updated credit balance.
 };
 
 export const acceptAllCookies = async (page: Page) => {

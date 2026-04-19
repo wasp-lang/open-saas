@@ -86,25 +86,43 @@ async function handleOrderPaid(
   const paymentPlanId = getPaymentPlanIdByPaymentProcessorPlanId(
     order.productId,
   );
+  const plan = paymentPlans[paymentPlanId];
 
   switch (paymentPlanId) {
-    case PaymentPlanId.Credits10:
+    case PaymentPlanId.Credits25:
+    case PaymentPlanId.Credits100:
+    case PaymentPlanId.Credits500:
+      if (plan.effect.kind !== "credits") {
+        throw new Error(`Plan ${paymentPlanId} expected to be credits`);
+      }
       await updateUserCredits(
         {
           paymentProcessorUserId: order.customerId,
-          numOfCreditsPurchased: paymentPlans[paymentPlanId].effect.amount,
+          numOfCreditsPurchased: plan.effect.amount,
           datePaid: order.createdAt,
         },
         userDelegate,
       );
       break;
-    case PaymentPlanId.Hobby:
-    case PaymentPlanId.Pro:
+    case PaymentPlanId.Starter:
+    case PaymentPlanId.Professional:
+    case PaymentPlanId.Enterprise:
+      if (plan.effect.kind !== "subscription") {
+        throw new Error(`Plan ${paymentPlanId} expected to be subscription`);
+      }
       await updateUserSubscription(
         {
           paymentProcessorUserId: order.customerId,
           paymentPlanId,
           subscriptionStatus: OpenSaasSubscriptionStatus.Active,
+          datePaid: order.createdAt,
+        },
+        userDelegate,
+      );
+      await updateUserCredits(
+        {
+          paymentProcessorUserId: order.customerId,
+          numOfCreditsPurchased: plan.effect.creditsPerMonth,
           datePaid: order.createdAt,
         },
         userDelegate,
