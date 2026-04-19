@@ -1,8 +1,10 @@
 import { ArrowRight, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { runUnderwriting } from "wasp/client/operations";
 import { Link, routes } from "wasp/client/router";
+import type { Deal } from "wasp/entities";
 import { Button } from "../client/components/ui/button";
+import { DealPicker, useDealSelection } from "./DealPicker";
 import {
   Card,
   CardContent,
@@ -62,6 +64,17 @@ export default function UnderwritingPage() {
   const [result, setResult] = useState<UnderwritingRunResult | null>(null);
   const [isRunning, setIsRunning] = useState(false);
 
+  const prefillFromDeal = useCallback((deal: Deal) => {
+    setForm((f) => ({
+      ...f,
+      purchasePrice: deal.purchasePrice,
+      assetClass: deal.assetClass as UnderwritingInput["assetClass"],
+      market: [deal.city, deal.state].filter(Boolean).join(", "),
+    }));
+  }, []);
+
+  const { deals, dealId, setDealId } = useDealSelection(prefillFromDeal);
+
   const update = <K extends keyof UnderwritingInput>(
     key: K,
     value: UnderwritingInput[K],
@@ -70,7 +83,7 @@ export default function UnderwritingPage() {
   async function handleRun() {
     try {
       setIsRunning(true);
-      const res = await runUnderwriting(form);
+      const res = await runUnderwriting({ ...form, dealId });
       setResult(res);
     } catch (err) {
       const statusCode =
@@ -121,6 +134,13 @@ export default function UnderwritingPage() {
               <CardTitle>Deal inputs</CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-2 gap-4">
+              <div className="col-span-2">
+                <DealPicker
+                  deals={deals}
+                  dealId={dealId}
+                  onChange={setDealId}
+                />
+              </div>
               <div className="col-span-2">
                 <Label>Asset class</Label>
                 <Select

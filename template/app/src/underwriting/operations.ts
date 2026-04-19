@@ -13,6 +13,7 @@ import type {
   DeleteDeal,
   ExtractDocument,
   GetDeal,
+  GetDealDetail,
   GetDeals,
   GetDocumentExtractions,
   GetLoanScenarios,
@@ -128,6 +129,46 @@ export const getDeal: GetDeal<{ id: string }, Deal | null> = async (
   return context.entities.Deal.findFirst({
     where: { id, userId: context.user.id },
   });
+};
+
+export type DealDetail = {
+  deal: Deal;
+  underwritingRuns: UnderwritingRun[];
+  loanScenarios: LoanScenario[];
+  documentExtractions: DocumentExtraction[];
+};
+
+export const getDealDetail: GetDealDetail<
+  { id: string },
+  DealDetail | null
+> = async (rawArgs, context) => {
+  requireAuth(context);
+  const { id } = ensureArgsSchemaOrThrowHttpError(
+    z.object({ id: z.string().min(1) }),
+    rawArgs,
+  );
+  const deal = await context.entities.Deal.findFirst({
+    where: { id, userId: context.user.id },
+  });
+  if (!deal) return null;
+
+  const [underwritingRuns, loanScenarios, documentExtractions] =
+    await Promise.all([
+      context.entities.UnderwritingRun.findMany({
+        where: { dealId: id, userId: context.user.id },
+        orderBy: { createdAt: "desc" },
+      }),
+      context.entities.LoanScenario.findMany({
+        where: { dealId: id, userId: context.user.id },
+        orderBy: { createdAt: "desc" },
+      }),
+      context.entities.DocumentExtraction.findMany({
+        where: { dealId: id, userId: context.user.id },
+        orderBy: { createdAt: "desc" },
+      }),
+    ]);
+
+  return { deal, underwritingRuns, loanScenarios, documentExtractions };
 };
 
 // ---------- Underwriting ----------

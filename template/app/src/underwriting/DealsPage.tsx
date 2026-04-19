@@ -1,5 +1,6 @@
-import { Loader2, Trash2 } from "lucide-react";
+import { ArrowRight, Loader2, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { Link as ReactRouterLink } from "react-router";
 import {
   createDeal,
   deleteDeal,
@@ -194,11 +195,15 @@ export default function DealsPage() {
               </Card>
             )}
             {deals?.map((d: Deal) => (
-              <Card key={d.id}>
+              <Card key={d.id} className="hover:ring-primary/40 hover:ring-1">
                 <CardContent className="flex items-start justify-between gap-3 p-4">
-                  <div>
-                    <div className="text-foreground font-semibold">
+                  <ReactRouterLink
+                    to={`/deals/${d.id}`}
+                    className="min-w-0 flex-1"
+                  >
+                    <div className="text-foreground flex items-center gap-2 font-semibold">
                       {d.name}
+                      <ArrowRight className="text-muted-foreground h-4 w-4" />
                     </div>
                     <div className="text-muted-foreground text-xs">
                       {[d.address, d.city, d.state]
@@ -211,12 +216,13 @@ export default function DealsPage() {
                         maximumFractionDigits: 0,
                       })}
                     </div>
-                  </div>
+                  </ReactRouterLink>
                   <Button
                     size="sm"
                     variant="ghost"
                     className="text-destructive"
                     onClick={() => handleDelete(d.id)}
+                    aria-label={`Delete ${d.name}`}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

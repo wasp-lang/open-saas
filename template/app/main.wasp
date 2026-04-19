@@ -123,6 +123,12 @@ page DealsPage {
   component: import DealsPage from "@src/underwriting/DealsPage"
 }
 
+route DealDetailRoute { path: "/deals/:id", to: DealDetailPage }
+page DealDetailPage {
+  authRequired: true,
+  component: import DealDetailPage from "@src/underwriting/DealDetailPage"
+}
+
 action createDeal {
   fn: import { createDeal } from "@src/underwriting/operations",
   entities: [Deal, User]
@@ -141,6 +147,11 @@ query getDeals {
 query getDeal {
   fn: import { getDeal } from "@src/underwriting/operations",
   entities: [Deal]
+}
+
+query getDealDetail {
+  fn: import { getDealDetail } from "@src/underwriting/operations",
+  entities: [Deal, UnderwritingRun, LoanScenario, DocumentExtraction]
 }
 //#endregion
 

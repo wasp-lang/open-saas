@@ -1,8 +1,10 @@
 import { ArrowRight, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { runLoanSizing } from "wasp/client/operations";
 import { Link, routes } from "wasp/client/router";
+import type { Deal } from "wasp/entities";
 import { Button } from "../client/components/ui/button";
+import { DealPicker, useDealSelection } from "./DealPicker";
 import {
   Card,
   CardContent,
@@ -58,6 +60,16 @@ export default function LoanSizingPage() {
   const [result, setResult] = useState<LoanSizingResult | null>(null);
   const [isRunning, setIsRunning] = useState(false);
 
+  const prefillFromDeal = useCallback((deal: Deal) => {
+    setForm((f) => ({
+      ...f,
+      purchasePrice: deal.purchasePrice,
+      assetClass: deal.assetClass as LoanSizingInput["assetClass"],
+    }));
+  }, []);
+
+  const { deals, dealId, setDealId } = useDealSelection(prefillFromDeal);
+
   const update = <K extends keyof LoanSizingInput>(
     k: K,
     v: LoanSizingInput[K],
@@ -66,7 +78,7 @@ export default function LoanSizingPage() {
   async function handleRun() {
     try {
       setIsRunning(true);
-      const res = await runLoanSizing(form);
+      const res = await runLoanSizing({ ...form, dealId });
       setResult(res);
     } catch (err) {
       const statusCode =
@@ -116,6 +128,13 @@ export default function LoanSizingPage() {
               <CardTitle>Sizing inputs</CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-2 gap-4">
+              <div className="col-span-2">
+                <DealPicker
+                  deals={deals}
+                  dealId={dealId}
+                  onChange={setDealId}
+                />
+              </div>
               <div className="col-span-2">
                 <Label>Asset class</Label>
                 <Select

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { extractDocument } from "wasp/client/operations";
 import { Link, routes } from "wasp/client/router";
 import { Button } from "../client/components/ui/button";
+import { DealPicker, useDealSelection } from "./DealPicker";
 import {
   Card,
   CardContent,
@@ -37,6 +38,7 @@ export default function DocumentExtractPage() {
   const [rawText, setRawText] = useState("");
   const [result, setResult] = useState<ExtractionResult | null>(null);
   const [isRunning, setIsRunning] = useState(false);
+  const { deals, dealId, setDealId } = useDealSelection();
 
   async function handleRun() {
     if (rawText.trim().length < 20) {
@@ -54,6 +56,7 @@ export default function DocumentExtractPage() {
         documentType: docType,
         sourceFileName,
         rawText,
+        dealId,
       });
       setResult(res);
     } catch (err) {
@@ -105,6 +108,11 @@ export default function DocumentExtractPage() {
               <CardTitle>Input</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
+              <DealPicker
+                deals={deals}
+                dealId={dealId}
+                onChange={setDealId}
+              />
               <div>
                 <Label>Document type</Label>
                 <Select
