@@ -1,10 +1,14 @@
-import { ArrowRight, Loader2 } from "lucide-react";
-import { useCallback, useState } from "react";
-import { runUnderwriting } from "wasp/client/operations";
+import { ArrowRight, Download, Loader2 } from "lucide-react";
+import { useCallback, useRef, useState } from "react";
+import {
+  exportUnderwritingRun,
+  runUnderwriting,
+} from "wasp/client/operations";
 import { Link, routes } from "wasp/client/router";
 import type { Deal } from "wasp/entities";
 import { Button } from "../client/components/ui/button";
 import { DealPicker, useDealSelection } from "./DealPicker";
+import { downloadXlsx } from "./downloadXlsx";
 import {
   Card,
   CardContent,
@@ -64,7 +68,11 @@ export default function UnderwritingPage() {
   const [result, setResult] = useState<UnderwritingRunResult | null>(null);
   const [isRunning, setIsRunning] = useState(false);
 
+  const selectedDealRef = useRef<Deal | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
+
   const prefillFromDeal = useCallback((deal: Deal) => {
+    selectedDealRef.current = deal;
     setForm((f) => ({
       ...f,
       purchasePrice: deal.purchasePrice,
@@ -74,6 +82,28 @@ export default function UnderwritingPage() {
   }, []);
 
   const { deals, dealId, setDealId } = useDealSelection(prefillFromDeal);
+
+  async function handleExport() {
+    if (!result) return;
+    try {
+      setIsExporting(true);
+      const res = await exportUnderwritingRun({
+        dealName: selectedDealRef.current?.name ?? null,
+        input: form,
+        output: result.output,
+        narrative: result.narrative,
+      });
+      downloadXlsx(res.filename, res.base64);
+    } catch (err) {
+      toast({
+        title: "Export failed",
+        description: err instanceof Error ? err.message : "Unknown error",
+        variant: "destructive",
+      });
+    } finally {
+      setIsExporting(false);
+    }
+  }
 
   const update = <K extends keyof UnderwritingInput>(
     key: K,
@@ -253,6 +283,26 @@ export default function UnderwritingPage() {
           <div className="space-y-6">
             {result ? (
               <>
+                <div className="flex justify-end">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleExport}
+                    disabled={isExporting}
+                  >
+                    {isExporting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Building Excel…
+                      </>
+                    ) : (
+                      <>
+                        <Download className="mr-2 h-4 w-4" />
+                        Export to Excel
+                      </>
+                    )}
+                  </Button>
+                </div>
                 <Card>
                   <CardHeader>
                     <CardTitle>Key metrics</CardTitle>

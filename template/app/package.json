@@ -30,6 +30,7 @@
     "apexcharts": "5.10.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "exceljs": "^4.4.0",
     "lucide-react": "^0.525.0",
     "openai": "^6.27.0",
     "prettier": "3.1.1",

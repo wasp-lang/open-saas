@@ -1,10 +1,14 @@
-import { ArrowRight, Loader2 } from "lucide-react";
-import { useCallback, useState } from "react";
-import { runLoanSizing } from "wasp/client/operations";
+import { ArrowRight, Download, Loader2 } from "lucide-react";
+import { useCallback, useRef, useState } from "react";
+import {
+  exportLoanScenario,
+  runLoanSizing,
+} from "wasp/client/operations";
 import { Link, routes } from "wasp/client/router";
 import type { Deal } from "wasp/entities";
 import { Button } from "../client/components/ui/button";
 import { DealPicker, useDealSelection } from "./DealPicker";
+import { downloadXlsx } from "./downloadXlsx";
 import {
   Card,
   CardContent,
@@ -60,7 +64,11 @@ export default function LoanSizingPage() {
   const [result, setResult] = useState<LoanSizingResult | null>(null);
   const [isRunning, setIsRunning] = useState(false);
 
+  const selectedDealRef = useRef<Deal | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
+
   const prefillFromDeal = useCallback((deal: Deal) => {
+    selectedDealRef.current = deal;
     setForm((f) => ({
       ...f,
       purchasePrice: deal.purchasePrice,
@@ -69,6 +77,28 @@ export default function LoanSizingPage() {
   }, []);
 
   const { deals, dealId, setDealId } = useDealSelection(prefillFromDeal);
+
+  async function handleExport() {
+    if (!result) return;
+    try {
+      setIsExporting(true);
+      const res = await exportLoanScenario({
+        dealName: selectedDealRef.current?.name ?? null,
+        input: form,
+        output: result.output,
+        memo: result.memo,
+      });
+      downloadXlsx(res.filename, res.base64);
+    } catch (err) {
+      toast({
+        title: "Export failed",
+        description: err instanceof Error ? err.message : "Unknown error",
+        variant: "destructive",
+      });
+    } finally {
+      setIsExporting(false);
+    }
+  }
 
   const update = <K extends keyof LoanSizingInput>(
     k: K,
@@ -224,6 +254,26 @@ export default function LoanSizingPage() {
           <div className="space-y-6">
             {result ? (
               <>
+                <div className="flex justify-end">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleExport}
+                    disabled={isExporting}
+                  >
+                    {isExporting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Building Excel…
+                      </>
+                    ) : (
+                      <>
+                        <Download className="mr-2 h-4 w-4" />
+                        Export to Excel
+                      </>
+                    )}
+                  </Button>
+                </div>
                 <Card>
                   <CardHeader>
                     <CardTitle>Max loan by constraint</CardTitle>

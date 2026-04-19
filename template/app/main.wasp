@@ -167,6 +167,11 @@ action runUnderwriting {
   entities: [User, Deal, UnderwritingRun]
 }
 
+action exportUnderwritingRun {
+  fn: import { exportUnderwritingRun } from "@src/underwriting/operations",
+  entities: [User]
+}
+
 query getUnderwritingRuns {
   fn: import { getUnderwritingRuns } from "@src/underwriting/operations",
   entities: [UnderwritingRun]
@@ -183,6 +188,11 @@ page LoanSizingPage {
 action runLoanSizing {
   fn: import { runLoanSizing } from "@src/underwriting/operations",
   entities: [User, Deal, LoanScenario]
+}
+
+action exportLoanScenario {
+  fn: import { exportLoanScenario } from "@src/underwriting/operations",
+  entities: [User]
 }
 
 query getLoanScenarios {

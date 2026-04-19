@@ -11,6 +11,8 @@ import { env, HttpError, prisma } from "wasp/server";
 import type {
   CreateDeal,
   DeleteDeal,
+  ExportLoanScenario,
+  ExportUnderwritingRun,
   ExtractDocument,
   GetDeal,
   GetDealDetail,
@@ -25,6 +27,11 @@ import type {
 import * as z from "zod";
 import { SubscriptionStatus } from "../payment/plans";
 import { ensureArgsSchemaOrThrowHttpError } from "../server/validation";
+import {
+  buildLoanSizingWorkbook,
+  buildUnderwritingWorkbook,
+  safeFilename,
+} from "./exports";
 import { computeLoanSizing, computeUnderwriting } from "./finance";
 import {
   dealInputSchema,
@@ -736,5 +743,73 @@ export const getUnderwritingActivity: GetUnderwritingActivity<
     trend,
     topUsers,
     recent,
+  };
+};
+
+// ---------- Excel exports ----------
+// Exports accept the full fresh-run payload (input + output + narrative/memo)
+// from the client. This keeps exports lossless without needing a DB schema
+// migration to store every narrative field. The server still auth-gates the
+// call and validates shape via Zod.
+export type ExcelExportResult = {
+  filename: string;
+  base64: string;
+};
+
+const exportUnderwritingArgsSchema = z.object({
+  dealName: z.string().nullable().optional(),
+  input: underwritingInputSchema,
+  output: z.any(),
+  narrative: underwritingNarrativeSchema,
+});
+
+export const exportUnderwritingRun: ExportUnderwritingRun<
+  z.infer<typeof exportUnderwritingArgsSchema>,
+  ExcelExportResult
+> = async (rawArgs, context) => {
+  requireAuth(context);
+  const args = ensureArgsSchemaOrThrowHttpError(
+    exportUnderwritingArgsSchema,
+    rawArgs,
+  );
+  const buffer = await buildUnderwritingWorkbook({
+    dealName: args.dealName ?? null,
+    input: args.input,
+    output: args.output,
+    narrative: args.narrative,
+    createdAt: new Date(),
+  });
+  return {
+    filename: safeFilename(`${args.dealName ?? "underwriting"}`),
+    base64: buffer.toString("base64"),
+  };
+};
+
+const exportLoanScenarioArgsSchema = z.object({
+  dealName: z.string().nullable().optional(),
+  input: loanSizingInputSchema,
+  output: z.any(),
+  memo: loanMemoSchema,
+});
+
+export const exportLoanScenario: ExportLoanScenario<
+  z.infer<typeof exportLoanScenarioArgsSchema>,
+  ExcelExportResult
+> = async (rawArgs, context) => {
+  requireAuth(context);
+  const args = ensureArgsSchemaOrThrowHttpError(
+    exportLoanScenarioArgsSchema,
+    rawArgs,
+  );
+  const buffer = await buildLoanSizingWorkbook({
+    dealName: args.dealName ?? null,
+    input: args.input,
+    output: args.output,
+    memo: args.memo,
+    createdAt: new Date(),
+  });
+  return {
+    filename: safeFilename(`${args.dealName ?? "loan-sizing"}`),
+    base64: buffer.toString("base64"),
   };
 };
