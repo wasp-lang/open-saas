@@ -34,10 +34,6 @@ export const stripeWebhook: PaymentsWebhook = async (
   try {
     const event = constructStripeEvent(request);
 
-    // If you'd like to handle more events, you can add more cases below.
-    // When deploying your app, you configure your webhook in the Stripe dashboard
-    // to only send the events that you're handling above.
-    // See: https://docs.opensaas.sh/guides/deploying/#setting-up-your-stripe-webhook
     switch (event.type) {
       case "invoice.paid":
         await handleInvoicePaid(event, prismaUserDelegate);
@@ -54,15 +50,12 @@ export const stripeWebhook: PaymentsWebhook = async (
     return response.status(204).send();
   } catch (error) {
     if (error instanceof UnhandledWebhookEventError) {
-      // In development, it is likely that we will receive events that we are not handling.
-      // E.g. via the `stripe trigger` command.
       if (process.env.NODE_ENV === "development") {
         console.info("Unhandled Stripe webhook event in development: ", error);
       } else if (process.env.NODE_ENV === "production") {
         console.error("Unhandled Stripe webhook event in production: ", error);
       }
 
-      // We must return a 2XX status code, otherwise Stripe will keep retrying the event.
       return response.status(204).send();
     }
 
@@ -102,25 +95,45 @@ async function handleInvoicePaid(
     getInvoicePriceId(invoice),
   );
 
+  const plan = paymentPlans[paymentPlanId];
+
   switch (paymentPlanId) {
-    case PaymentPlanId.Credits10:
+    case PaymentPlanId.Credits25:
+    case PaymentPlanId.Credits100:
+    case PaymentPlanId.Credits500:
+      if (plan.effect.kind !== "credits") {
+        throw new Error(`Plan ${paymentPlanId} expected to be credits`);
+      }
       await updateUserCredits(
         {
           paymentProcessorUserId: customerId,
           datePaid: invoicePaidAtDate,
-          numOfCreditsPurchased: paymentPlans[paymentPlanId].effect.amount,
+          numOfCreditsPurchased: plan.effect.amount,
         },
         prismaUserDelegate,
       );
       break;
-    case PaymentPlanId.Pro:
-    case PaymentPlanId.Hobby:
+    case PaymentPlanId.Starter:
+    case PaymentPlanId.Professional:
+    case PaymentPlanId.Enterprise:
+      if (plan.effect.kind !== "subscription") {
+        throw new Error(`Plan ${paymentPlanId} expected to be subscription`);
+      }
       await updateUserSubscription(
         {
           paymentProcessorUserId: customerId,
           datePaid: invoicePaidAtDate,
           paymentPlanId,
           subscriptionStatus: SubscriptionStatus.Active,
+        },
+        prismaUserDelegate,
+      );
+      // Grant monthly credit allotment for this subscription tier.
+      await updateUserCredits(
+        {
+          paymentProcessorUserId: customerId,
+          datePaid: invoicePaidAtDate,
+          numOfCreditsPurchased: plan.effect.creditsPerMonth,
         },
         prismaUserDelegate,
       );
@@ -132,8 +145,6 @@ async function handleInvoicePaid(
 
 function getInvoicePriceId(invoice: Stripe.Invoice): Stripe.Price["id"] {
   const invoiceLineItems = invoice.lines.data;
-  // We only expect one line item.
-  // If your workflow expects more, you should change this function to handle them.
   if (invoiceLineItems.length !== 1) {
     throw new Error("There should be exactly one line item in Stripe invoice");
   }
@@ -152,7 +163,6 @@ async function handleCustomerSubscriptionUpdated(
 ): Promise<void> {
   const subscription = event.data.object;
 
-  // There are other subscription statuses, such as `trialing` that we are not handling.
   const subscriptionStatus = getOpenSaasSubscriptionStatus(subscription);
   if (!subscriptionStatus) {
     return;
@@ -212,8 +222,6 @@ function getSubscriptionPriceId(
   subscription: Stripe.Subscription,
 ): Stripe.Price["id"] {
   const subscriptionItems = subscription.items.data;
-  // We only expect one subscription item.
-  // If your workflow expects more, you should change this function to handle them.
   if (subscriptionItems.length !== 1) {
     throw new Error(
       "There should be exactly one subscription item in Stripe subscription",
@@ -256,7 +264,5 @@ function getInvoicePaidAtDate(invoice: Stripe.Invoice): Date {
     throw new Error("Invoice has not been paid yet");
   }
 
-  // Stripe returns timestamps in seconds (Unix time),
-  // so we multiply by 1000 to convert to milliseconds.
   return new Date(invoice.status_transitions.paid_at * 1000);
 }

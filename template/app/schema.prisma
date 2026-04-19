@@ -16,19 +16,21 @@ model User {
   isAdmin                   Boolean         @default(false)
 
   paymentProcessorUserId    String?         @unique
-  lemonSqueezyCustomerPortalUrl String?     // You can delete this if you're not using Lemon Squeezy as your payments processor.
+  lemonSqueezyCustomerPortalUrl String?
   subscriptionStatus        String?         // 'active', 'cancel_at_period_end', 'past_due', 'deleted'
-  subscriptionPlan          String?         // 'hobby', 'pro'
+  subscriptionPlan          String?         // 'free', 'starter', 'professional', 'enterprise'
   datePaid                  DateTime?
-  credits                   Int             @default(3)
+  credits                   Int             @default(5)
 
-  gptResponses              GptResponse[]
+  deals                     Deal[]
+  underwritingRuns          UnderwritingRun[]
+  loanScenarios             LoanScenario[]
+  documentExtractions       DocumentExtraction[]
   contactFormMessages       ContactFormMessage[]
-  tasks                     Task[]
   files                     File[]
 }
 
-model GptResponse {
+model Deal {
   id                        String          @id @default(uuid())
   createdAt                 DateTime        @default(now())
   updatedAt                 DateTime        @updatedAt
@@ -36,19 +38,65 @@ model GptResponse {
   user                      User            @relation(fields: [userId], references: [id])
   userId                    String
 
-  content                   String
+  name                      String
+  address                   String?
+  city                      String?
+  state                     String?
+  assetClass                String          // 'multifamily', 'office', 'industrial', 'retail', 'hotel', 'mixed-use'
+  units                     Int?
+  squareFeet                Int?
+  yearBuilt                 Int?
+  purchasePrice             Float
+  notes                     String?
+
+  underwritingRuns          UnderwritingRun[]
+  loanScenarios             LoanScenario[]
+  documentExtractions       DocumentExtraction[]
 }
 
-model Task {
+model UnderwritingRun {
   id                        String          @id @default(uuid())
   createdAt                 DateTime        @default(now())
 
   user                      User            @relation(fields: [userId], references: [id])
   userId                    String
 
-  description               String
-  time                      String          @default("1")
-  isDone                    Boolean         @default(false)
+  deal                      Deal?           @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  dealId                    String?
+
+  inputs                    String          // JSON: purchase price, NOI, rent growth, cap rate, hold period, etc.
+  outputs                   String          // JSON: IRR, equity multiple, cash-on-cash, 10-yr cash flow, sensitivity
+  summary                   String          // AI-generated executive summary
+}
+
+model LoanScenario {
+  id                        String          @id @default(uuid())
+  createdAt                 DateTime        @default(now())
+
+  user                      User            @relation(fields: [userId], references: [id])
+  userId                    String
+
+  deal                      Deal?           @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  dealId                    String?
+
+  inputs                    String          // JSON: purchase price, NOI, rate, term, amort, DSCR target, LTV cap
+  outputs                   String          // JSON: loan amount, DSCR, LTV, LTC, debt yield, payment, lender comparison
+  summary                   String          // AI-generated debt memo
+}
+
+model DocumentExtraction {
+  id                        String          @id @default(uuid())
+  createdAt                 DateTime        @default(now())
+
+  user                      User            @relation(fields: [userId], references: [id])
+  userId                    String
+
+  deal                      Deal?           @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  dealId                    String?
+
+  documentType              String          // 't12', 'rent_roll', 'om', 'loan_quote'
+  sourceFileName            String
+  extracted                 String          // JSON structured output
 }
 
 model File {

@@ -45,12 +45,26 @@ export default function Testimonials({
                   href={testimonial.socialUrl}
                   className="group flex w-full items-center gap-x-3 transition-all duration-200 hover:opacity-80"
                 >
-                  <img
-                    src={testimonial.avatarSrc}
-                    loading="lazy"
-                    alt={`${testimonial.name}'s avatar`}
-                    className="ring-border/20 group-hover:ring-primary/30 h-10 w-10 shrink-0 rounded-full ring-2 transition-all duration-200"
-                  />
+                  {testimonial.avatarSrc ? (
+                    <img
+                      src={testimonial.avatarSrc}
+                      loading="lazy"
+                      alt={`${testimonial.name}'s avatar`}
+                      className="ring-border/20 group-hover:ring-primary/30 h-10 w-10 shrink-0 rounded-full ring-2 transition-all duration-200"
+                    />
+                  ) : (
+                    <div
+                      aria-hidden="true"
+                      className="bg-primary/10 text-primary ring-border/20 group-hover:ring-primary/30 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold ring-2 transition-all duration-200"
+                    >
+                      {testimonial.name
+                        .split(" ")
+                        .map((part) => part.charAt(0))
+                        .slice(0, 2)
+                        .join("")
+                        .toUpperCase()}
+                    </div>
+                  )}
                   <div className="min-w-0 flex-1">
                     <CardTitle className="group-hover:text-card-foreground truncate text-sm font-semibold transition-colors duration-200">
                       {testimonial.name}

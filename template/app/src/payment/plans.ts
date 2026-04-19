@@ -6,9 +6,12 @@ export enum SubscriptionStatus {
 }
 
 export enum PaymentPlanId {
-  Hobby = "hobby",
-  Pro = "pro",
-  Credits10 = "credits10",
+  Starter = "starter",
+  Professional = "professional",
+  Enterprise = "enterprise",
+  Credits25 = "credits25",
+  Credits100 = "credits100",
+  Credits500 = "credits500",
 }
 
 export interface PaymentPlan {
@@ -17,29 +20,44 @@ export interface PaymentPlan {
 }
 
 export type PaymentPlanEffect =
-  | { kind: "subscription" }
+  | { kind: "subscription"; creditsPerMonth: number }
   | { kind: "credits"; amount: number };
 
 export const paymentPlans = {
-  [PaymentPlanId.Hobby]: {
-    id: PaymentPlanId.Hobby,
-    effect: { kind: "subscription" },
+  [PaymentPlanId.Starter]: {
+    id: PaymentPlanId.Starter,
+    effect: { kind: "subscription", creditsPerMonth: 50 },
   },
-  [PaymentPlanId.Pro]: {
-    id: PaymentPlanId.Pro,
-    effect: { kind: "subscription" },
+  [PaymentPlanId.Professional]: {
+    id: PaymentPlanId.Professional,
+    effect: { kind: "subscription", creditsPerMonth: 250 },
   },
-  [PaymentPlanId.Credits10]: {
-    id: PaymentPlanId.Credits10,
-    effect: { kind: "credits", amount: 10 },
+  [PaymentPlanId.Enterprise]: {
+    id: PaymentPlanId.Enterprise,
+    effect: { kind: "subscription", creditsPerMonth: 1500 },
+  },
+  [PaymentPlanId.Credits25]: {
+    id: PaymentPlanId.Credits25,
+    effect: { kind: "credits", amount: 25 },
+  },
+  [PaymentPlanId.Credits100]: {
+    id: PaymentPlanId.Credits100,
+    effect: { kind: "credits", amount: 100 },
+  },
+  [PaymentPlanId.Credits500]: {
+    id: PaymentPlanId.Credits500,
+    effect: { kind: "credits", amount: 500 },
   },
 } as const satisfies Record<PaymentPlanId, PaymentPlan>;
 
 export function prettyPaymentPlanName(planId: PaymentPlanId): string {
   const planToName: Record<PaymentPlanId, string> = {
-    [PaymentPlanId.Hobby]: "Hobby",
-    [PaymentPlanId.Pro]: "Pro",
-    [PaymentPlanId.Credits10]: "10 Credits",
+    [PaymentPlanId.Starter]: "Starter",
+    [PaymentPlanId.Professional]: "Professional",
+    [PaymentPlanId.Enterprise]: "Enterprise",
+    [PaymentPlanId.Credits25]: "25 Credits",
+    [PaymentPlanId.Credits100]: "100 Credits",
+    [PaymentPlanId.Credits500]: "500 Credits",
   };
   return planToName[planId];
 }

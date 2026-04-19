@@ -146,8 +146,11 @@ async function handleSubscriptionCreated(
   const lemonSqueezyId = customer_id.toString();
 
   const planId = getPlanIdByVariantId(variant_id.toString());
+  const plan = paymentPlans[planId];
 
   if (status === "active") {
+    const creditsPerMonth =
+      plan.effect.kind === "subscription" ? plan.effect.creditsPerMonth : 0;
     await updateUserLemonSqueezyPaymentDetails(
       {
         lemonSqueezyId,
@@ -155,6 +158,7 @@ async function handleSubscriptionCreated(
         subscriptionPlan: planId,
         subscriptionStatus: status as SubscriptionStatus,
         datePaid: new Date(),
+        numOfCreditsPurchased: creditsPerMonth,
       },
       prismaUserDelegate,
     );
@@ -177,12 +181,8 @@ async function handleSubscriptionUpdated(
   const lemonSqueezyId = customer_id.toString();
 
   const planId = getPlanIdByVariantId(variant_id.toString());
+  const plan = paymentPlans[planId];
 
-  // We ignore other statuses like 'paused' and 'unpaid' for now, because we block user usage if their status is NOT active.
-  // Note that a status changes to 'past_due' on a failed payment retry, then after 4 unsuccesful payment retries status
-  // becomes 'unpaid' and finally 'expired' (i.e. 'deleted').
-  // NOTE: ability to pause or trial a subscription is something that has to be additionally configured in the lemon squeezy dashboard.
-  // If you do enable these features, make sure to handle these statuses here.
   if (status === "past_due" || status === "active") {
     await updateUserLemonSqueezyPaymentDetails(
       {
@@ -190,7 +190,13 @@ async function handleSubscriptionUpdated(
         userId,
         subscriptionPlan: planId,
         subscriptionStatus: status as SubscriptionStatus,
-        ...(status === "active" && { datePaid: new Date() }),
+        ...(status === "active" && {
+          datePaid: new Date(),
+          numOfCreditsPurchased:
+            plan.effect.kind === "subscription"
+              ? plan.effect.creditsPerMonth
+              : 0,
+        }),
       },
       prismaUserDelegate,
     );

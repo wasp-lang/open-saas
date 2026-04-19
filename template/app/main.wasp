@@ -1,45 +1,32 @@
-app OpenSaaS {
+app UnderwriteAi {
   wasp: {
     version: "^0.23.0"
   },
 
-  title: "My Open SaaS App",
+  title: "Underwrite AI",
 
   head: [
     "<link rel='icon' href='/favicon.ico' />",
 
-    "<meta name='description' content='Your apps main description and features.' />",
-    "<meta name='author' content='Your (App) Name' />",
-    "<meta name='keywords' content='saas, solution, product, app, service' />",
+    "<meta name='description' content='Underwrite AI replaces real estate acquisition analysts and loan underwriters. Instant pro formas, debt sizing, and document extraction.' />",
+    "<meta name='author' content='Underwrite AI' />",
+    "<meta name='keywords' content='real estate, underwriting, acquisitions, loan sizing, pro forma, commercial real estate, CRE, debt' />",
 
     "<meta property='og:type' content='website' />",
-    "<meta property='og:title' content='Your Open SaaS App' />",
-    "<meta property='og:site_name' content='Your Open SaaS App' />",
-    "<meta property='og:url' content='https://your-saas-app.com' />",
-    "<meta property='og:description' content='Your apps main description and features.' />",
-    "<meta property='og:image' content='https://your-saas-app.com/public-banner.webp' />",
-    "<meta name='twitter:image' content='https://your-saas-app.com/public-banner.webp' />",
-    "<meta name='twitter:image:width' content='800' />",
-    "<meta name='twitter:image:height' content='400' />",
-    "<meta name='twitter:card' content='summary_large_image' />",
-    // TODO: You can put your Plausible analytics scripts below (https://docs.opensaas.sh/guides/analytics/):
-    // NOTE: Plausible does not use Cookies, so you can simply add the scripts here.
-    // Google, on the other hand, does, so you must instead add the script dynamically
-    // via the Cookie Consent component after the user clicks the "Accept" cookies button.
-    "<script async data-domain='<your-site-id>' src='https://plausible.io/js/script.js'></script>",  // for production
-    "<script async data-domain='<your-site-id>' src='https://plausible.io/js/script.local.js'></script>",  // for development
+    "<meta property='og:title' content='Underwrite AI — replace your real estate analyst' />",
+    "<meta property='og:site_name' content='Underwrite AI' />",
+    "<meta property='og:url' content='https://underwriteai.example.com' />",
+    "<meta property='og:description' content='Instant CRE pro formas, debt sizing, and document extraction. Credit-based pricing.' />",
   ],
 
   // 🔐 Auth out of the box! https://wasp.sh/docs/auth/overview
   auth: {
     userEntity: User,
     methods: {
-      // NOTE: If you decide to not use email auth, make sure to also delete the related routes and pages below.
-      //   (RequestPasswordReset(Route|Page), PasswordReset(Route|Page), EmailVerification(Route|Page))
       email: {
         fromField: {
-          name: "Open SaaS App",
-          email: "me@example.com"
+          name: "Underwrite AI",
+          email: "hello@underwriteai.example.com"
         },
         emailVerification: {
           clientRoute: EmailVerificationRoute,
@@ -51,30 +38,13 @@ app OpenSaaS {
         },
         userSignupFields: import { getEmailUserFields } from "@src/auth/userSignupFields",
       },
-      // Uncomment to enable Google Auth (check https://wasp.sh/docs/auth/social-auth/google for setup instructions):
-      // google: { // Guide for setting up Auth via Google
-      //   userSignupFields: import { getGoogleUserFields } from "@src/auth/userSignupFields",
-      //   configFn: import { getGoogleAuthConfig } from "@src/auth/userSignupFields",
-      // },
-      // Uncomment to enable GitHub Auth (check https://wasp.sh/docs/auth/social-auth/github for setup instructions):
-      // gitHub: {
-      //   userSignupFields: import { getGitHubUserFields } from "@src/auth/userSignupFields",
-      //   configFn: import { getGitHubAuthConfig } from "@src/auth/userSignupFields",
-      // },
-      // Uncomment to enable Discord Auth (check https://wasp.sh/docs/auth/social-auth/discord for setup instructions):
-      // discord: {
-      //   userSignupFields: import { getDiscordUserFields } from "@src/auth/userSignupFields",
-      //   configFn: import { getDiscordAuthConfig } from "@src/auth/userSignupFields"
-      // }
     },
     onAuthFailedRedirectTo: "/login",
-    onAuthSucceededRedirectTo: "/demo-app",
+    onAuthSucceededRedirectTo: "/underwriting",
   },
 
   db: {
-    // Run `wasp db seed` to seed the database with the seed functions below:
     seeds: [
-      // Populates the database with a bunch of fake users to work with during development.
       import { seedMockUsers } from "@src/server/scripts/dbSeeds",
     ]
   },
@@ -88,14 +58,10 @@ app OpenSaaS {
   },
 
   emailSender: {
-    // NOTE: "Dummy" provider is just for local development purposes.
-    //   Make sure to check the server logs for the email confirmation url (it will not be sent to an address)!
-    //   Once you are ready for production, switch to e.g. "SendGrid" or "Mailgun" providers. Check out https://docs.opensaas.sh/guides/email-sending/ .
     provider: Dummy,
     defaultFrom: {
-      name: "Open SaaS App",
-      // When using a real provider, e.g. SendGrid, you must use the same email address that you configured your account to send out emails with!
-      email: "me@example.com"
+      name: "Underwrite AI",
+      email: "hello@underwriteai.example.com"
     },
   },
 }
@@ -150,41 +116,85 @@ action updateIsUserAdminById {
 }
 //#endregion
 
-//#region Demo AI App
-route DemoAppRoute { path: "/demo-app", to: DemoAppPage }
-page DemoAppPage {
+//#region Underwrite AI — Deals
+route DealsRoute { path: "/deals", to: DealsPage }
+page DealsPage {
   authRequired: true,
-  component: import DemoAppPage from "@src/demo-ai-app/DemoAppPage"
+  component: import DealsPage from "@src/underwriting/DealsPage"
 }
 
-action generateGptResponse {
-  fn: import { generateGptResponse } from "@src/demo-ai-app/operations",
-  entities: [User, Task, GptResponse]
+action createDeal {
+  fn: import { createDeal } from "@src/underwriting/operations",
+  entities: [Deal, User]
 }
 
-action createTask {
-  fn: import { createTask } from "@src/demo-ai-app/operations",
-  entities: [Task]
+action deleteDeal {
+  fn: import { deleteDeal } from "@src/underwriting/operations",
+  entities: [Deal]
 }
 
-action deleteTask {
-  fn: import { deleteTask } from "@src/demo-ai-app/operations",
-  entities: [Task]
+query getDeals {
+  fn: import { getDeals } from "@src/underwriting/operations",
+  entities: [Deal]
 }
 
-action updateTask {
-  fn: import { updateTask } from "@src/demo-ai-app/operations",
-  entities: [Task]
+query getDeal {
+  fn: import { getDeal } from "@src/underwriting/operations",
+  entities: [Deal]
+}
+//#endregion
+
+//#region Underwrite AI — Underwriting
+route UnderwritingRoute { path: "/underwriting", to: UnderwritingPage }
+page UnderwritingPage {
+  authRequired: true,
+  component: import UnderwritingPage from "@src/underwriting/UnderwritingPage"
 }
 
-query getGptResponses {
-  fn: import { getGptResponses } from "@src/demo-ai-app/operations",
-  entities: [User, GptResponse]
+action runUnderwriting {
+  fn: import { runUnderwriting } from "@src/underwriting/operations",
+  entities: [User, Deal, UnderwritingRun]
 }
 
-query getAllTasksByUser {
-  fn: import { getAllTasksByUser } from "@src/demo-ai-app/operations",
-  entities: [Task]
+query getUnderwritingRuns {
+  fn: import { getUnderwritingRuns } from "@src/underwriting/operations",
+  entities: [UnderwritingRun]
+}
+//#endregion
+
+//#region Underwrite AI — Loan Sizing
+route LoanSizingRoute { path: "/loan-sizing", to: LoanSizingPage }
+page LoanSizingPage {
+  authRequired: true,
+  component: import LoanSizingPage from "@src/underwriting/LoanSizingPage"
+}
+
+action runLoanSizing {
+  fn: import { runLoanSizing } from "@src/underwriting/operations",
+  entities: [User, Deal, LoanScenario]
+}
+
+query getLoanScenarios {
+  fn: import { getLoanScenarios } from "@src/underwriting/operations",
+  entities: [LoanScenario]
+}
+//#endregion
+
+//#region Underwrite AI — Document Extraction
+route DocumentExtractRoute { path: "/document-extract", to: DocumentExtractPage }
+page DocumentExtractPage {
+  authRequired: true,
+  component: import DocumentExtractPage from "@src/underwriting/DocumentExtractPage"
+}
+
+action extractDocument {
+  fn: import { extractDocument } from "@src/underwriting/operations",
+  entities: [User, Deal, DocumentExtraction]
+}
+
+query getDocumentExtractions {
+  fn: import { getDocumentExtractions } from "@src/underwriting/operations",
+  entities: [DocumentExtraction]
 }
 //#endregion
 
@@ -263,8 +273,7 @@ job dailyStatsJob {
     fn: import { calculateDailyStats } from "@src/analytics/stats"
   },
   schedule: {
-    cron: "0 * * * *" // every hour. useful in production
-    // cron: "* * * * *" // every minute. useful for debugging
+    cron: "0 * * * *"
   },
   entities: [User, DailyStats, Logs, PageViewSource]
 }
@@ -295,7 +304,6 @@ page AdminCalendarPage {
   component: import AdminCalendar from "@src/admin/elements/calendar/CalendarPage"
 }
 
-
 route AdminUIButtonsRoute { path: "/admin/ui/buttons", to: AdminUIButtonsPage }
 page AdminUIButtonsPage {
   authRequired: true,
@@ -308,10 +316,7 @@ page NotFoundPage {
 }
 //#endregion
 
-//#region Contact Form Messages
-// TODO:
-// add functionality to allow users to send messages to admin
-// and make them accessible via the admin dashboard
+//#region Admin Messages
 route AdminMessagesRoute { path: "/admin/messages", to: AdminMessagesPage }
 page AdminMessagesPage {
   authRequired: true,
