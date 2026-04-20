@@ -1,5 +1,5 @@
 ---
-title: "Good Specs, Right Tools, Weeks to Production: How a PM Built an Emergency Preparedness SaaS with OpenSaaS"
+title: "Good Specs, Right Tools, Weeks to Production: How a PM Built an Emergency Preparedness SaaS with Open SaaS"
 date: 2026-04-13
 tags:
   - wasp
@@ -19,14 +19,14 @@ keywords:
   - "open source saas starter kit"
   - "chroni emergency planning"
 authors: matija
-description: "How a Product Manager at PepsiCo built Chroni, a multi-language emergency preparedness SaaS for European families, using OpenSaaS, Wasp, and Claude Code - shipped in weeks, not months."
+description: "How a Product Manager at PepsiCo built Chroni, a multi-language emergency preparedness SaaS for European families, using Open SaaS, Wasp, and Claude Code - shipped in weeks, not months."
 ---
 
 import { Image } from 'astro:assets';
 import chroniSignup from '../../../assets/chroni/Chroni-sign-up.png';
 import VideoPlayer from '../../../components/VideoPlayer.astro';
 
-*Piotr Ciechowicz is a Product Manager at PepsiCo, where his day job is PowerBI dashboards, data pipelines, and enormous Excel files. On the side, he builds. His latest project, [Chroni](https://chroni.eu), is a multi-language emergency preparedness SaaS built entirely on OpenSaaS and Wasp. He has a detailed emergency plan, and thinks your family should have one too.*
+*Piotr Ciechowicz is a Product Manager at PepsiCo, where his day job is PowerBI dashboards, data pipelines, and enormous Excel files. On the side, he builds. His latest project, [Chroni](https://chroni.eu), is a multi-language emergency preparedness SaaS built entirely on Open SaaS and Wasp. He has a detailed emergency plan, and thinks your family should have one too.*
 
 ---
 
@@ -53,21 +53,21 @@ On top of that, I built:
 - A family emergency plan
 - Full multi-language support - currently English, German, and Polish
 
-<Image src={chroniSignup} alt="Chroni's sign up page - a multi-language emergency preparedness SaaS with Google OAuth, built on Wasp and OpenSaaS." />
+<Image src={chroniSignup} alt="Chroni's sign up page - a multi-language emergency preparedness SaaS with Google OAuth, built on Wasp and Open SaaS." />
 
 ---
 
-## You're a PM, not an engineer. How did you pick a stack - and why OpenSaaS?
+## You're a PM, not an engineer. How did you pick a stack - and why Open SaaS?
 
 Being a PM actually helped. I specced things out before touching any tooling, without falling in love with ideas or technology.
 
 What I needed was clear: browser-first SaaS with auth and user management, payments, full-stack without having to stitch frontend, backend, and auth myself - that would have driven me mad before shipping. And it had to be AI-friendly. I used Claude Code throughout.
 
-I looked at a few boilerplates. They felt messy. Then I found OpenSaaS and Wasp.
+I looked at a few boilerplates. They felt messy. Then I found Open SaaS and Wasp.
 
 Wasp describes itself as a full-stack React + Node.js + Prisma framework with superpowers. That's accurate - but for me the biggest differentiator was simpler: **it thinks in products, not in files.** And it met every criterion I had.
 
-OpenSaaS took it even further. From the first `git clone`, I immediately had:
+Open SaaS took it even further. From the first `git clone`, I immediately had:
 
 - **Authentication** - email and Google OAuth out of the box
 - **Stripe integration** - subscription management and webhook handling, done
@@ -128,7 +128,7 @@ If you're a PM, a designer, anyone who thinks in products rather than in code - 
 
 > *Wasp's structure makes AI-assisted development actually work. Heck, even I understood what was what.*
 
-Prepare your specs before you write a line of code. The coding becomes the easy part. And lean on OpenSaaS - the fact that auth, payments, and the admin dashboard are already there means you spend your time on the one thing only you can build.
+Prepare your specs before you write a line of code. The coding becomes the easy part. And lean on Open SaaS - the fact that auth, payments, and the admin dashboard are already there means you spend your time on the one thing only you can build.
 
 ---
 
