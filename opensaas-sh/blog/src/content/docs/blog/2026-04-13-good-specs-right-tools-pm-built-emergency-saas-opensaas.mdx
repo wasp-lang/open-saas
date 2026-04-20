@@ -116,7 +116,7 @@ On the coding side, Wasp's structure made a real difference for AI-assisted work
 
 A few places. AI-generated technical debt was real: hardcoded values, placeholders, TODO comments scattered through the codebase. Where my personal discipline fell short, Wasp's structure picked up the slack.
 
-Deployment on Railway was trickier than expected, initial builds were bundling everything into a single service instead of separating them properly. I ended up solving it with a GitHub Actions pipeline: pushes to the production repo trigger consistent builds and deploys. It became a reusable template across projects.
+Deployment on Railway was trickier than expected, and honestly that was my bad. At first I tried to deploy with Claude Code, but Claude by default didn't know how to do this correctly, which caused bundling: initial builds were packing everything into a single service instead of separating them properly. Once that part was sorted, the builds still failed frequently for different reasons. What worked for me in the end was a GitHub Actions pipeline: pushes to the production repo trigger consistent builds and deploys. It became a reusable template across projects, though I know now there are even better and easier ways to deploy safely. 😉
 
 Auth pages don't support multi-language out of the box. Chroni is a three-language product, so I had to work around that with CSS, which introduced some UI awkwardness that Claude Code wasn't great at fixing either.
 
