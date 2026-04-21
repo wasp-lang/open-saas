@@ -43,7 +43,7 @@ If you want more fine-grained control over what users can access, there are two 
 ```tsx title="ExamplePage.tsx" "{ user }: { user: User }"
 import { type User } from "wasp/entities";
 
-export default function Example({ user }: { user: User }) {
+export function Example({ user }: { user: User }) {
 
   if (user.subscriptionStatus === 'past_due') {
     return (<span>Your subscription is past due. Please update your payment information.</span>)
@@ -63,7 +63,7 @@ export default function Example({ user }: { user: User }) {
 ```tsx title="ExamplePage.tsx" {1, 4}
 import { useAuth } from "wasp/client/auth";
 
-export default function ExampleHomePage() {
+export function ExampleHomePage() {
   const { data: user } = useAuth();
 
   return (
