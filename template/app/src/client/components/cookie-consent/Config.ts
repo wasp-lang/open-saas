@@ -6,7 +6,7 @@ declare global {
   }
 }
 
-const getConfig = () => {
+export const getConfig = () => {
   // See https://cookieconsent.orestbida.com/reference/configuration-reference.html for configuration options.
   const config: CookieConsentConfig = {
     // Default configuration for the modal.
@@ -119,5 +119,3 @@ const getConfig = () => {
 
   return config;
 };
-
-export default getConfig;

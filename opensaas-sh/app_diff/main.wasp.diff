@@ -106,7 +106,7 @@
    },
  }
 @@ -105,6 +102,11 @@
-   component: import LandingPage from "@src/landing-page/LandingPage"
+   component: import { LandingPage } from "@src/landing-page/LandingPage"
  }
  
 +query getGithubRoadmap {
@@ -148,7 +148,7 @@
  
  //#region Analytics
 @@ -295,7 +308,6 @@
-   component: import AdminCalendar from "@src/admin/elements/calendar/CalendarPage"
+   component: import { CalendarPage } from "@src/admin/elements/calendar/CalendarPage"
  }
  
 -

@@ -2,9 +2,9 @@
 +++ opensaas-sh/app/src/landing-page/components/Examples/Payments.tsx
 @@ -0,0 +1,21 @@
 +import payments from "../../../client/static/assets/payments.webp";
-+import HighlightedFeature from "../HighlightedFeature";
++import { HighlightedFeature } from "../HighlightedFeature";
 +
-+export default function Payments() {
++export function Payments() {
 +  return (
 +    <HighlightedFeature
 +      name="Stripe / Polar.sh / Lemon Squeezy Integration"

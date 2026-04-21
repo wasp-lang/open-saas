@@ -16,7 +16,7 @@ import {
   prettyPaymentPlanName,
 } from "../payment/plans";
 
-export default function AccountPage({ user }: { user: User }) {
+export function AccountPage({ user }: { user: User }) {
   return (
     <div className="mt-10 px-6">
       <Card className="mb-4 lg:m-8">

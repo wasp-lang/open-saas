@@ -80,7 +80,7 @@ app OpenSaaS {
   },
 
   client: {
-    rootComponent: import App from "@src/client/App",
+    rootComponent: import { App } from "@src/client/App",
   },
 
   server: {
@@ -102,13 +102,13 @@ app OpenSaaS {
 
 route LandingPageRoute { path: "/", to: LandingPage }
 page LandingPage {
-  component: import LandingPage from "@src/landing-page/LandingPage"
+  component: import { LandingPage } from "@src/landing-page/LandingPage"
 }
 
 //#region Auth Pages
 route LoginRoute { path: "/login", to: LoginPage }
 page LoginPage {
-  component: import Login from "@src/auth/LoginPage"
+  component: import { Login } from "@src/auth/LoginPage"
 }
 
 route SignupRoute { path: "/signup", to: SignupPage }
@@ -136,7 +136,7 @@ page EmailVerificationPage {
 route AccountRoute { path: "/account", to: AccountPage }
 page AccountPage {
   authRequired: true,
-  component: import Account from "@src/user/AccountPage"
+  component: import { AccountPage } from "@src/user/AccountPage"
 }
 
 query getPaginatedUsers {
@@ -154,7 +154,7 @@ action updateIsUserAdminById {
 route DemoAppRoute { path: "/demo-app", to: DemoAppPage }
 page DemoAppPage {
   authRequired: true,
-  component: import DemoAppPage from "@src/demo-ai-app/DemoAppPage"
+  component: import { DemoAppPage } from "@src/demo-ai-app/DemoAppPage"
 }
 
 action generateGptResponse {
@@ -191,13 +191,13 @@ query getAllTasksByUser {
 //#region Payment
 route PricingPageRoute { path: "/pricing", to: PricingPage }
 page PricingPage {
-  component: import PricingPage from "@src/payment/PricingPage"
+  component: import { PricingPage } from "@src/payment/PricingPage"
 }
 
 route CheckoutResultRoute { path: "/checkout", to: CheckoutResultPage }
 page CheckoutResultPage {
   authRequired: true,
-  component: import CheckoutResultPage from "@src/payment/CheckoutResultPage"
+  component: import { CheckoutResultPage } from "@src/payment/CheckoutResultPage"
 }
 
 query getCustomerPortalUrl {
@@ -222,7 +222,7 @@ api paymentsWebhook {
 route FileUploadRoute { path: "/file-upload", to: FileUploadPage }
 page FileUploadPage {
   authRequired: true,
-  component: import FileUpload from "@src/file-upload/FileUploadPage"
+  component: import { FileUploadPage } from "@src/file-upload/FileUploadPage"
 }
 
 action createFileUploadUrl {
@@ -274,32 +274,32 @@ job dailyStatsJob {
 route AdminRoute { path: "/admin", to: AnalyticsDashboardPage }
 page AnalyticsDashboardPage {
   authRequired: true,
-  component: import AnalyticsDashboardPage from "@src/admin/dashboards/analytics/AnalyticsDashboardPage"
+  component: import { AnalyticsDashboardPage } from "@src/admin/dashboards/analytics/AnalyticsDashboardPage"
 }
 
 route AdminUsersRoute { path: "/admin/users", to: AdminUsersPage }
 page AdminUsersPage {
   authRequired: true,
-  component: import AdminUsers from "@src/admin/dashboards/users/UsersDashboardPage"
+  component: import { UsersDashboardPage } from "@src/admin/dashboards/users/UsersDashboardPage"
 }
 
 route AdminSettingsRoute { path: "/admin/settings", to: AdminSettingsPage }
 page AdminSettingsPage {
   authRequired: true,
-  component: import AdminSettings from "@src/admin/elements/settings/SettingsPage"
+  component: import { SettingsPage } from "@src/admin/elements/settings/SettingsPage"
 }
 
 route AdminCalendarRoute { path: "/admin/calendar", to: AdminCalendarPage }
 page AdminCalendarPage {
   authRequired: true,
-  component: import AdminCalendar from "@src/admin/elements/calendar/CalendarPage"
+  component: import { CalendarPage } from "@src/admin/elements/calendar/CalendarPage"
 }
 
 
 route AdminUIButtonsRoute { path: "/admin/ui/buttons", to: AdminUIButtonsPage }
 page AdminUIButtonsPage {
   authRequired: true,
-  component: import AdminUI from "@src/admin/elements/ui-elements/ButtonsPage"
+  component: import { ButtonsPage } from "@src/admin/elements/ui-elements/ButtonsPage"
 }
 
 route NotFoundRoute { path: "*", to: NotFoundPage }
@@ -315,6 +315,6 @@ page NotFoundPage {
 route AdminMessagesRoute { path: "/admin/messages", to: AdminMessagesPage }
 page AdminMessagesPage {
   authRequired: true,
-  component: import AdminMessages from "@src/admin/dashboards/messages/MessagesPage"
+  component: import { AdminMessages } from "@src/admin/dashboards/messages/MessagesPage"
 }
 //#endregion

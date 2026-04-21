@@ -11,7 +11,7 @@ interface ExampleApp {
   href: string;
 }
 
-const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
+export const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
   const [currentExample, setCurrentExample] = useState(0);
   const [isInView, setIsInView] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -173,5 +173,3 @@ const ExampleCard = forwardRef<HTMLDivElement, ExampleCardProps>(
 );
 
 ExampleCard.displayName = "ExampleCard";
-
-export default ExamplesCarousel;

@@ -11,10 +11,10 @@ import {
 import { Input } from "../../../client/components/ui/input";
 import { Label } from "../../../client/components/ui/label";
 import { Textarea } from "../../../client/components/ui/textarea";
-import Breadcrumb from "../../layout/Breadcrumb";
-import DefaultLayout from "../../layout/DefaultLayout";
+import { Breadcrumb } from "../../layout/Breadcrumb";
+import { DefaultLayout } from "../../layout/DefaultLayout";
 
-const SettingsPage = ({ user }: { user: AuthUser }) => {
+export const SettingsPage = ({ user }: { user: AuthUser }) => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     // TODO implement
     event.preventDefault();
@@ -201,5 +201,3 @@ const SettingsPage = ({ user }: { user: AuthUser }) => {
     </DefaultLayout>
   );
 };
-
-export default SettingsPage;

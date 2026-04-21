@@ -18,7 +18,7 @@
 @@ -13,11 +16,14 @@
   * Shows text description on one side, and whatever component you want to show on the other side to demonstrate the functionality.
   */
- const HighlightedFeature = ({
+ export const HighlightedFeature = ({
 +  id,
    name,
    description,

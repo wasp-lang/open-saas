@@ -1,12 +1,12 @@
 --- template/app/src/client/components/RepoInfo.tsx
 +++ opensaas-sh/app/src/client/components/RepoInfo.tsx
-@@ -0,0 +1,48 @@
+@@ -0,0 +1,47 @@
 +import { useEffect, useState } from "react";
 +import { FaGithub } from "react-icons/fa";
 +import { Button } from "../../client/components/ui/button";
 +import { formatNumber } from "../utils";
 +
-+const RepoInfo = () => {
++export const RepoInfo = () => {
 +  const [repoInfo, setRepoInfo] = useState<null | any>(null);
 +  const [isLoading, setIsLoading] = useState(true);
 +
@@ -48,4 +48,3 @@
 +  );
 +};
 +
-+export default RepoInfo;

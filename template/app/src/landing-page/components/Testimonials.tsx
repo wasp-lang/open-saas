@@ -6,7 +6,7 @@ import {
   CardFooter,
   CardTitle,
 } from "../../client/components/ui/card";
-import SectionTitle from "./SectionTitle";
+import { SectionTitle } from "./SectionTitle";
 
 interface Testimonial {
   name: string;
@@ -16,7 +16,7 @@ interface Testimonial {
   quote: string;
 }
 
-export default function Testimonials({
+export function Testimonials({
   testimonials,
 }: {
   testimonials: Testimonial[];

@@ -8,7 +8,7 @@
 +import { getGithubRoadmap, useQuery } from "wasp/client/operations";
 +import { RoadmapStatusColumn } from "./RoadmapStatusColumn";
 +
-+export default function Roadmap() {
++export function Roadmap() {
 +  const { data: epics, isLoading, error } = useQuery(getGithubRoadmap);
 +
 +  if (isLoading) {

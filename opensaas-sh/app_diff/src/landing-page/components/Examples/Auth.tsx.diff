@@ -11,7 +11,7 @@
 +} from "../../../client/components/ui/card";
 +import { Input } from "../../../client/components/ui/input";
 +import { DocsUrl } from "../../../shared/common";
-+import HighlightedFeature from "../HighlightedFeature";
++import { HighlightedFeature } from "../HighlightedFeature";
 +
 +const Provider = {
 +  google: { displayName: "Google", icon: FaGoogle },
@@ -30,7 +30,7 @@
 +  provider: (typeof Provider)[AuthProvider],
 +])[];
 +
-+export default function Auth() {
++export function Auth() {
 +  const [selectedProviders, setSelectedProviders] = useState<
 +    readonly AuthProvider[]
 +  >(["google", "github"]);

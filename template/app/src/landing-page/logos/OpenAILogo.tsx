@@ -1,4 +1,4 @@
-export default function OpenAILogo() {
+export function OpenAILogo() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

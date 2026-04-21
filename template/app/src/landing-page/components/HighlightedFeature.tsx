@@ -12,7 +12,7 @@ interface FeatureProps {
  * A component that highlights a feature with a description and a highlighted component.
  * Shows text description on one side, and whatever component you want to show on the other side to demonstrate the functionality.
  */
-const HighlightedFeature = ({
+export const HighlightedFeature = ({
   name,
   description,
   direction = "row",
@@ -50,5 +50,3 @@ const HighlightedFeature = ({
     </div>
   );
 };
-
-export default HighlightedFeature;

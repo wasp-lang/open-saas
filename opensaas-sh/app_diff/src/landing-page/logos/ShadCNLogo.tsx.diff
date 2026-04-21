@@ -1,7 +1,7 @@
 --- template/app/src/landing-page/logos/ShadCNLogo.tsx
 +++ opensaas-sh/app/src/landing-page/logos/ShadCNLogo.tsx
 @@ -0,0 +1,34 @@
-+export default function ShadCNLogo() {
++export function ShadCNLogo() {
 +  return (
 +    <svg
 +      width={32}

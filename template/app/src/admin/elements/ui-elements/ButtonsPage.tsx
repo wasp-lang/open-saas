@@ -1,10 +1,10 @@
 import { Heart, Plus, Trash2 } from "lucide-react";
 import { type AuthUser } from "wasp/auth";
 import { Button } from "../../../client/components/ui/button";
-import Breadcrumb from "../../layout/Breadcrumb";
-import DefaultLayout from "../../layout/DefaultLayout";
+import { Breadcrumb } from "../../layout/Breadcrumb";
+import { DefaultLayout } from "../../layout/DefaultLayout";
 
-const Buttons = ({ user }: { user: AuthUser }) => {
+export const ButtonsPage = ({ user }: { user: AuthUser }) => {
   return (
     <DefaultLayout user={user}>
       <Breadcrumb pageName="Buttons" />
@@ -71,5 +71,3 @@ const Buttons = ({ user }: { user: AuthUser }) => {
     </DefaultLayout>
   );
 };
-
-export default Buttons;

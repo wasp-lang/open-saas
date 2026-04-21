@@ -3,7 +3,7 @@ import { Button } from "../../client/components/ui/button";
 import openSaasBannerDark from "../../client/static/open-saas-banner-dark.svg";
 import openSaasBannerLight from "../../client/static/open-saas-banner-light.svg";
 
-export default function Hero() {
+export function Hero() {
   return (
     <div className="relative w-full pt-14">
       <TopGradient />

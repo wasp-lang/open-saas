@@ -1,4 +1,4 @@
-import SectionTitle from "./SectionTitle";
+import { SectionTitle } from "./SectionTitle";
 
 export interface Feature {
   name: string;
@@ -7,7 +7,7 @@ export interface Feature {
   href: string;
 }
 
-export default function Features({ features }: { features: Feature[] }) {
+export function Features({ features }: { features: Feature[] }) {
   return (
     <div id="features" className="mx-auto mt-48 max-w-7xl px-6 lg:px-8">
       <SectionTitle

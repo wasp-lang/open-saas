@@ -1,10 +1,10 @@
 import { type AuthUser } from "wasp/auth";
-import DarkModeSwitcher from "../../client/components/DarkModeSwitcher";
+import { DarkModeSwitcher } from "../../client/components/DarkModeSwitcher";
 import { cn } from "../../client/utils";
 import { UserDropdown } from "../../user/UserDropdown";
-import MessageButton from "../dashboards/messages/MessageButton";
+import { MessageButton } from "../dashboards/messages/MessageButton";
 
-const Header = (props: {
+export const Header = (props: {
   sidebarOpen: string | boolean | undefined;
   setSidebarOpen: (arg0: boolean) => void;
   user: AuthUser;
@@ -93,5 +93,3 @@ const Header = (props: {
     </header>
   );
 };
-
-export default Header;

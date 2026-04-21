@@ -11,7 +11,7 @@ type PageViewsStats = {
   prevDayViewsChangePercent: string | undefined;
 };
 
-const TotalPageViewsCard = ({
+export const TotalPageViewsCard = ({
   totalPageViews,
   prevDayViewsChangePercent,
 }: PageViewsStats) => {
@@ -64,5 +64,3 @@ const TotalPageViewsCard = ({
     </Card>
   );
 };
-
-export default TotalPageViewsCard;

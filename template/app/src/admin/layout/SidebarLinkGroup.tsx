@@ -5,7 +5,7 @@ interface SidebarLinkGroupProps {
   activeCondition: boolean;
 }
 
-const SidebarLinkGroup = ({
+export const SidebarLinkGroup = ({
   children,
   activeCondition,
 }: SidebarLinkGroupProps) => {
@@ -17,5 +17,3 @@ const SidebarLinkGroup = ({
 
   return <li>{children(handleClick, open)}</li>;
 };
-
-export default SidebarLinkGroup;

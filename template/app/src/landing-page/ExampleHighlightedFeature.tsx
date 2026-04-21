@@ -1,8 +1,8 @@
 import aiReadyDark from "../client/static/assets/aiready-dark.webp";
 import aiReady from "../client/static/assets/aiready.webp";
-import HighlightedFeature from "./components/HighlightedFeature";
+import { HighlightedFeature } from "./components/HighlightedFeature";
 
-export default function AIReady() {
+export function AIReady() {
   return (
     <HighlightedFeature
       name="Example Feature Highlight"

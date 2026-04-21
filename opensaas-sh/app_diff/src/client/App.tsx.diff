@@ -7,7 +7,7 @@
  import { routes } from "wasp/client/router";
  import { Toaster } from "../client/components/ui/toaster";
 @@ -17,9 +17,7 @@
- export default function App() {
+ export function App() {
    const location = useLocation();
    const isMarketingPage = useMemo(() => {
 -    return (

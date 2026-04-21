@@ -3,18 +3,18 @@ import { Outlet, useLocation } from "react-router";
 import { routes } from "wasp/client/router";
 import { Toaster } from "../client/components/ui/toaster";
 import "./Main.css";
-import NavBar from "./components/NavBar/NavBar";
+import { NavBar } from "./components/NavBar/NavBar";
 import {
   demoNavigationitems,
   marketingNavigationItems,
 } from "./components/NavBar/constants";
-import CookieConsentBanner from "./components/cookie-consent/Banner";
+import { CookieConsentBanner } from "./components/cookie-consent/Banner";
 
 /**
  * use this component to wrap all child components
  * this is useful for templates, themes, and context
  */
-export default function App() {
+export function App() {
   const location = useLocation();
   const isMarketingPage = useMemo(() => {
     return (

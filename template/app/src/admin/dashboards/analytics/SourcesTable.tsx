@@ -1,6 +1,6 @@
 import { type PageViewSource } from "wasp/entities";
 
-const SourcesTable = ({
+export const SourcesTable = ({
   sources,
 }: {
   sources: PageViewSource[] | undefined;
@@ -58,5 +58,3 @@ const SourcesTable = ({
     </div>
   );
 };
-
-export default SourcesTable;
