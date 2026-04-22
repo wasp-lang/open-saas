@@ -1,4 +1,4 @@
-import { FC, ReactNode, useState } from "react";
+import { ReactNode, useState } from "react";
 import { Navigate } from "react-router";
 import { type AuthUser } from "wasp/auth";
 import { Header } from "./Header";
@@ -9,7 +9,7 @@ interface Props {
   children?: ReactNode;
 }
 
-export const DefaultLayout: FC<Props> = ({ children, user }) => {
+export function DefaultLayout({ children, user }: Props) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (!user.isAdmin) {
@@ -35,4 +35,4 @@ export const DefaultLayout: FC<Props> = ({ children, user }) => {
       </div>
     </div>
   );
-};
+}

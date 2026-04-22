@@ -14,10 +14,10 @@
 +  );
 +}
 +
-+const AdminExample = () => {
++function AdminExample() {
 +  return (
 +    <div className="w-full">
 +      <img src={admin} alt="Admin" />
 +    </div>
 +  );
-+};
++}

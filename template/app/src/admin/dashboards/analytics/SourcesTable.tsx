@@ -1,10 +1,10 @@
 import { type PageViewSource } from "wasp/entities";
 
-export const SourcesTable = ({
+export function SourcesTable({
   sources,
 }: {
   sources: PageViewSource[] | undefined;
-}) => {
+}) {
   return (
     <div className="border-border bg-card shadow-default sm:px-7.5 rounded-sm border px-5 pb-2.5 pt-6 xl:pb-1">
       <h4 className="text-foreground mb-6 text-xl font-semibold">
@@ -57,4 +57,4 @@ export const SourcesTable = ({
       </div>
     </div>
   );
-};
+}

@@ -53,7 +53,7 @@ export const paymentPlanCards: Record<PaymentPlanId, PaymentPlanCard> = {
   },
 };
 
-export const PricingPage = () => {
+export function PricingPage() {
   const [isPaymentLoading, setIsPaymentLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -233,4 +233,4 @@ export const PricingPage = () => {
       </div>
     </div>
   );
-};
+}

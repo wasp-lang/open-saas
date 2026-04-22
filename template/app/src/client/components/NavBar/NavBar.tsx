@@ -244,13 +244,15 @@ function renderNavigationItems(
   });
 }
 
-const NavLogo = ({ isScrolled }: { isScrolled: boolean }) => (
-  <img
-    className={cn("transition-all duration-500", {
-      "size-8": !isScrolled,
-      "size-7": isScrolled,
-    })}
-    src={logo}
-    alt="Your SaaS App"
-  />
-);
+function NavLogo({ isScrolled }: { isScrolled: boolean }) {
+  return (
+    <img
+      className={cn("transition-all duration-500", {
+        "size-8": !isScrolled,
+        "size-7": isScrolled,
+      })}
+      src={logo}
+      alt="Your SaaS App"
+    />
+  );
+}

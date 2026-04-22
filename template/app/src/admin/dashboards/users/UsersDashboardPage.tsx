@@ -3,7 +3,7 @@ import { Breadcrumb } from "../../layout/Breadcrumb";
 import { DefaultLayout } from "../../layout/DefaultLayout";
 import { UsersTable } from "./UsersTable";
 
-export const UsersDashboardPage = ({ user }: { user: AuthUser }) => {
+export function UsersDashboardPage({ user }: { user: AuthUser }) {
   return (
     <DefaultLayout user={user}>
       <Breadcrumb pageName="Users" />
@@ -12,4 +12,4 @@ export const UsersDashboardPage = ({ user }: { user: AuthUser }) => {
       </div>
     </DefaultLayout>
   );
-};
+}

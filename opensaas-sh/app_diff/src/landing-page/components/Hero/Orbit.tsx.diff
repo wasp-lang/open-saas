@@ -23,7 +23,7 @@
 +  size?: number;
 +}
 +
-+const ImageLogo = ({
++function ImageLogo({
 +  src,
 +  alt,
 +  className,
@@ -33,7 +33,7 @@
 +  alt: string;
 +  className?: string;
 +  dark?: boolean;
-+}) => {
++}) {
 +  return (
 +    <img
 +      src={src}
@@ -45,7 +45,7 @@
 +      )}
 +    />
 +  );
-+};
++}
 +
 +const logoConfigs: LogoConfig[] = [
 +  {

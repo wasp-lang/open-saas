@@ -4,7 +4,7 @@ import { Button } from "../../../client/components/ui/button";
 import { Breadcrumb } from "../../layout/Breadcrumb";
 import { DefaultLayout } from "../../layout/DefaultLayout";
 
-export const ButtonsPage = ({ user }: { user: AuthUser }) => {
+export function ButtonsPage({ user }: { user: AuthUser }) {
   return (
     <DefaultLayout user={user}>
       <Breadcrumb pageName="Buttons" />
@@ -70,4 +70,4 @@ export const ButtonsPage = ({ user }: { user: AuthUser }) => {
       </div>
     </DefaultLayout>
   );
-};
+}

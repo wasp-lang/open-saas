@@ -14,7 +14,7 @@ import { Textarea } from "../../../client/components/ui/textarea";
 import { Breadcrumb } from "../../layout/Breadcrumb";
 import { DefaultLayout } from "../../layout/DefaultLayout";
 
-export const SettingsPage = ({ user }: { user: AuthUser }) => {
+export function SettingsPage({ user }: { user: AuthUser }) {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     // TODO implement
     event.preventDefault();
@@ -200,4 +200,4 @@ export const SettingsPage = ({ user }: { user: AuthUser }) => {
       </div>
     </DefaultLayout>
   );
-};
+}

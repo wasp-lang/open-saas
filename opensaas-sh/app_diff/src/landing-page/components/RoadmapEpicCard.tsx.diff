@@ -50,7 +50,7 @@
 +  );
 +}
 +
-+export const RoadmapEpicAddIssueCard = () => {
++export function RoadmapEpicAddIssueCard() {
 +  return (
 +    <a
 +      href="https://github.com/wasp-lang/open-saas/issues/new"
@@ -62,7 +62,7 @@
 +      <Plus className="h-8 w-8 text-gray-400 transition-colors group-hover:text-blue-500 dark:text-gray-600 dark:group-hover:text-blue-400" />
 +    </a>
 +  );
-+};
++}
 +
 +const getProgressBarColor = (status: GithubEpicStatus) => {
 +  switch (status) {

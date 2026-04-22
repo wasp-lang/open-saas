@@ -17,7 +17,7 @@
  }
  
  interface FeaturesGridProps {
-@@ -62,7 +64,8 @@
+@@ -59,7 +61,8 @@
    direction = "col",
    align = "center",
    size = "medium",
@@ -27,7 +27,7 @@
  }: GridFeature) {
    const gridFeatureSizeToClasses: Record<GridFeature["size"], string> = {
      small: "col-span-1",
-@@ -80,60 +83,98 @@
+@@ -77,60 +80,98 @@
      "col-reverse": "flex-col-reverse",
    };
  
@@ -155,7 +155,7 @@
        </CardContent>
      </Card>
    );
-@@ -144,7 +185,7 @@
+@@ -141,7 +182,7 @@
          href={href}
          target="_blank"
          rel="noopener noreferrer"

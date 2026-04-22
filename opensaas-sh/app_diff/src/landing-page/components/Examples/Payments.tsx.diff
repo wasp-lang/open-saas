@@ -15,10 +15,10 @@
 +  );
 +}
 +
-+const PaymentsExample = () => {
++function PaymentsExample() {
 +  return (
 +    <div className="w-full max-w-lg">
 +      <img src={payments} alt="Payments" />
 +    </div>
 +  );
-+};
++}

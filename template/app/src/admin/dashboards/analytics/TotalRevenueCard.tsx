@@ -8,11 +8,11 @@ import {
 } from "../../../client/components/ui/card";
 import { cn } from "../../../client/utils";
 
-export const TotalRevenueCard = ({
+export function TotalRevenueCard({
   dailyStats,
   weeklyStats,
   isLoading,
-}: DailyStatsProps) => {
+}: DailyStatsProps) {
   const isDeltaPositive = useMemo(() => {
     if (!weeklyStats) return false;
     return weeklyStats[0].totalRevenue - weeklyStats[1]?.totalRevenue > 0;
@@ -76,4 +76,4 @@ export const TotalRevenueCard = ({
       </CardContent>
     </Card>
   );
-};
+}

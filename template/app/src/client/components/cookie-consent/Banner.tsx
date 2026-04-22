@@ -8,10 +8,10 @@ import { getConfig } from "./Config";
  * run `npm uninstall vanilla-cookieconsent`, and delete this component, its config file,
  * as well as its import in src/client/App.tsx .
  */
-export const CookieConsentBanner = () => {
+export function CookieConsentBanner() {
   useEffect(() => {
     CookieConsent.run(getConfig());
   }, []);
 
   return <div id="cookieconsent"></div>;
-};
+}

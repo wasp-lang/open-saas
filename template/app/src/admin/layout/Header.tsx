@@ -4,11 +4,11 @@ import { cn } from "../../client/utils";
 import { UserDropdown } from "../../user/UserDropdown";
 import { MessageButton } from "../dashboards/messages/MessageButton";
 
-export const Header = (props: {
+export function Header(props: {
   sidebarOpen: string | boolean | undefined;
   setSidebarOpen: (arg0: boolean) => void;
   user: AuthUser;
-}) => {
+}) {
   return (
     <header className="bg-background border-border shadow-xs sticky top-0 z-10 flex w-full border-b">
       <div className="flex grow items-center justify-between px-8 py-5 sm:justify-end sm:gap-5">
@@ -92,4 +92,4 @@ export const Header = (props: {
       </div>
     </header>
   );
-};
+}
