@@ -3,7 +3,7 @@ interface NavigationItem {
   href: string;
 }
 
-export default function Footer({
+export function Footer({
   footerNavigation,
 }: {
   footerNavigation: {

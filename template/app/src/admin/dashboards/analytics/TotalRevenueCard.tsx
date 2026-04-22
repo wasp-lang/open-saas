@@ -8,7 +8,7 @@ import {
 } from "../../../client/components/ui/card";
 import { cn } from "../../../client/utils";
 
-const TotalRevenueCard = ({
+export const TotalRevenueCard = ({
   dailyStats,
   weeklyStats,
   isLoading,
@@ -77,5 +77,3 @@ const TotalRevenueCard = ({
     </Card>
   );
 };
-
-export default TotalRevenueCard;

@@ -16,7 +16,7 @@ import { UserMenuItems } from "../../../user/UserMenuItems";
 import { useIsLandingPage } from "../../hooks/useIsLandingPage";
 import logo from "../../static/logo.webp";
 import { cn } from "../../utils";
-import DarkModeSwitcher from "../DarkModeSwitcher";
+import { DarkModeSwitcher } from "../DarkModeSwitcher";
 import { Announcement } from "./Announcement";
 
 export interface NavigationItem {
@@ -24,7 +24,7 @@ export interface NavigationItem {
   to: string;
 }
 
-export default function NavBar({
+export function NavBar({
   navigationItems,
 }: {
   navigationItems: NavigationItem[];

@@ -19,10 +19,10 @@ import {
   SelectValue,
 } from "../../../client/components/ui/select";
 import { Switch } from "../../../client/components/ui/switch";
-import useDebounce from "../../../client/hooks/useDebounce";
+import { useDebounce } from "../../../client/hooks/useDebounce";
 import { SubscriptionStatus } from "../../../payment/plans";
-import LoadingSpinner from "../../layout/LoadingSpinner";
-import DropdownEditDelete from "./DropdownEditDelete";
+import { LoadingSpinner } from "../../layout/LoadingSpinner";
+import { DropdownEditDelete } from "./DropdownEditDelete";
 
 function AdminSwitch({ id, isAdmin }: Pick<User, "id" | "isAdmin">) {
   const { data: currentUser } = useAuth();
@@ -39,7 +39,7 @@ function AdminSwitch({ id, isAdmin }: Pick<User, "id" | "isAdmin">) {
   );
 }
 
-const UsersTable = () => {
+export const UsersTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [emailFilter, setEmailFilter] = useState<string | undefined>(undefined);
   const [isAdminFilter, setIsAdminFilter] = useState<boolean | undefined>(
@@ -320,5 +320,3 @@ const UsersTable = () => {
     </div>
   );
 };
-
-export default UsersTable;

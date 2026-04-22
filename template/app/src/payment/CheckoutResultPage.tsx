@@ -3,7 +3,7 @@ import { Navigate, useNavigate, useSearchParams } from "react-router";
 
 const ACCOUNT_PAGE_REDIRECT_DELAY_MS = 4000;
 
-export default function CheckoutResultPage() {
+export function CheckoutResultPage() {
   const navigate = useNavigate();
   const [urlSearchParams] = useSearchParams();
   const status = urlSearchParams.get("status");

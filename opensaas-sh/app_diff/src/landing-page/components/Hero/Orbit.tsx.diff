@@ -9,11 +9,11 @@
 +import tailwindLogoDark from "../../../client/static/logos/tailwind-dark.webp";
 +import tailwindLogo from "../../../client/static/logos/tailwind-light.webp";
 +import { cn } from "../../../client/utils";
-+import AstroLogo from "../../logos/AstroLogo";
-+import OpenAILogo from "../../logos/OpenAILogo";
-+import PrismaLogo from "../../logos/PrismaLogo";
-+import ReactLogo from "../../logos/ReactLogo";
-+import ShadCNLogo from "../../logos/ShadCNLogo";
++import { AstroLogo } from "../../logos/AstroLogo";
++import { OpenAILogo } from "../../logos/OpenAILogo";
++import { PrismaLogo } from "../../logos/PrismaLogo";
++import { ReactLogo } from "../../logos/ReactLogo";
++import { ShadCNLogo } from "../../logos/ShadCNLogo";
 +
 +interface LogoConfig {
 +  id: string;
@@ -198,7 +198,7 @@
 +  )`,
 +];
 +
-+export default function Orbit() {
++export function Orbit() {
 +  return (
 +    <div className="relative flex h-[500px] w-[500px] items-center justify-center">
 +      <style>{`

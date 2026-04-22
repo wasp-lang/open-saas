@@ -2,7 +2,7 @@
 +++ opensaas-sh/app/src/landing-page/components/FeaturesGrid.tsx
 @@ -9,13 +9,15 @@
  import { Feature } from "./Features";
- import SectionTitle from "./SectionTitle";
+ import { SectionTitle } from "./SectionTitle";
  
 -export interface GridFeature extends Omit<Feature, "icon"> {
 +export interface GridFeature extends Omit<Feature, "icon" | "name"> {
@@ -17,7 +17,7 @@
  }
  
  interface FeaturesGridProps {
-@@ -59,7 +61,8 @@
+@@ -62,7 +64,8 @@
    direction = "col",
    align = "center",
    size = "medium",
@@ -27,7 +27,7 @@
  }: GridFeature) {
    const gridFeatureSizeToClasses: Record<GridFeature["size"], string> = {
      small: "col-span-1",
-@@ -77,60 +80,98 @@
+@@ -80,60 +83,98 @@
      "col-reverse": "flex-col-reverse",
    };
  
@@ -155,7 +155,7 @@
        </CardContent>
      </Card>
    );
-@@ -141,7 +182,7 @@
+@@ -144,7 +185,7 @@
          href={href}
          target="_blank"
          rel="noopener noreferrer"

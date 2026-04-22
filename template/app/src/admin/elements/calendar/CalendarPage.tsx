@@ -1,8 +1,8 @@
 import { type AuthUser } from "wasp/auth";
-import Breadcrumb from "../../layout/Breadcrumb";
-import DefaultLayout from "../../layout/DefaultLayout";
+import { Breadcrumb } from "../../layout/Breadcrumb";
+import { DefaultLayout } from "../../layout/DefaultLayout";
 
-const Calendar = ({ user }: { user: AuthUser }) => {
+export const CalendarPage = ({ user }: { user: AuthUser }) => {
   return (
     <DefaultLayout user={user}>
       <Breadcrumb pageName="Calendar" />
@@ -195,5 +195,3 @@ const Calendar = ({ user }: { user: AuthUser }) => {
     </DefaultLayout>
   );
 };
-
-export default Calendar;

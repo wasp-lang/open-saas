@@ -32,7 +32,7 @@ import type {
   TaskPriority,
 } from "./schedule";
 
-export default function DemoAppPage() {
+export function DemoAppPage() {
   return (
     <div className="py-10 lg:mt-10">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">

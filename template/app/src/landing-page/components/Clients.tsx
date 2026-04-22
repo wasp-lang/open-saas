@@ -1,7 +1,7 @@
-import AstroLogo from "../logos/AstroLogo";
-import OpenAILogo from "../logos/OpenAILogo";
-import PrismaLogo from "../logos/PrismaLogo";
-import SalesforceLogo from "../logos/SalesforceLogo";
+import { AstroLogo } from "../logos/AstroLogo";
+import { OpenAILogo } from "../logos/OpenAILogo";
+import { PrismaLogo } from "../logos/PrismaLogo";
+import { SalesforceLogo } from "../logos/SalesforceLogo";
 
 const LOGOS = [
   { id: "salesforce", element: <SalesforceLogo /> },
@@ -10,7 +10,7 @@ const LOGOS = [
   { id: "openai", element: <OpenAILogo /> },
 ];
 
-export default function Clients() {
+export function Clients() {
   return (
     <div className="items-between mx-auto mt-12 flex max-w-7xl flex-col gap-y-6 px-6 lg:px-8">
       <h2 className="text-muted-foreground mb-6 text-center font-semibold tracking-wide">

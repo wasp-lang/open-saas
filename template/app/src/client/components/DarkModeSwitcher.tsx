@@ -1,9 +1,9 @@
 import { Moon, Sun } from "lucide-react";
 import { Label } from "../../client/components/ui/label";
-import useColorMode from "../hooks/useColorMode";
+import { useColorMode } from "../hooks/useColorMode";
 import { cn } from "../utils";
 
-const DarkModeSwitcher = () => {
+export const DarkModeSwitcher = () => {
   const [colorMode, setColorMode] = useColorMode();
   const isInLightMode = colorMode === "light";
 
@@ -56,5 +56,3 @@ function ModeIcon({ isInLightMode }: { isInLightMode: boolean }) {
     </>
   );
 }
-
-export default DarkModeSwitcher;

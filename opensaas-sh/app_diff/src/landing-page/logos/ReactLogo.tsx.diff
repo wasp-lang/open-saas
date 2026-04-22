@@ -1,7 +1,7 @@
 --- template/app/src/landing-page/logos/ReactLogo.tsx
 +++ opensaas-sh/app/src/landing-page/logos/ReactLogo.tsx
 @@ -0,0 +1,28 @@
-+export default function ReactLogo() {
++export function ReactLogo() {
 +  return (
 +    <svg
 +      width={32}

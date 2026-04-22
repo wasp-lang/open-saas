@@ -7,7 +7,7 @@ import {
 } from "../../client/components/ui/card";
 import { cn } from "../../client/utils";
 import { Feature } from "./Features";
-import SectionTitle from "./SectionTitle";
+import { SectionTitle } from "./SectionTitle";
 
 export interface GridFeature extends Omit<Feature, "icon"> {
   icon?: React.ReactNode;
@@ -23,7 +23,10 @@ interface FeaturesGridProps {
   className?: string;
 }
 
-const FeaturesGrid = ({ features, className = "" }: FeaturesGridProps) => {
+export const FeaturesGrid = ({
+  features,
+  className = "",
+}: FeaturesGridProps) => {
   return (
     <div
       className="mx-auto my-16 flex max-w-7xl flex-col gap-4 md:my-24 lg:my-40"
@@ -150,5 +153,3 @@ function FeaturesGridItem({
 
   return gridFeatureCard;
 }
-
-export default FeaturesGrid;

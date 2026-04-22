@@ -1,10 +1,10 @@
 --- template/app/src/landing-page/logos/SalesforceLogo.tsx
 +++ opensaas-sh/app/src/landing-page/logos/SalesforceLogo.tsx
-@@ -1,27 +1,24 @@
--export default function SalesforceLogo() {
+@@ -1,27 +1,22 @@
+-export function SalesforceLogo() {
 +import React from "react";
 +
-+const SalesforceLogo: React.FC = () => {
++export const SalesforceLogo: React.FC = () => {
    return (
 -    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 273 191">
 -      <defs>
@@ -47,5 +47,3 @@
    );
 -}
 +};
-+
-+export default SalesforceLogo;

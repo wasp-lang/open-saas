@@ -11,8 +11,8 @@
 @@ -17,6 +18,7 @@
  import logo from "../../static/logo.webp";
  import { cn } from "../../utils";
- import DarkModeSwitcher from "../DarkModeSwitcher";
-+import RepoInfo from "../RepoInfo";
+ import { DarkModeSwitcher } from "../DarkModeSwitcher";
++import { RepoInfo } from "../RepoInfo";
  import { Announcement } from "./Announcement";
  
  export interface NavigationItem {

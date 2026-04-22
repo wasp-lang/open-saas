@@ -12,14 +12,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router";
 import Logo from "../../client/static/logo.webp";
 import { cn } from "../../client/utils";
-import SidebarLinkGroup from "./SidebarLinkGroup";
+import { SidebarLinkGroup } from "./SidebarLinkGroup";
 
 interface SidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (arg: boolean) => void;
 }
 
-const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
+export const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const location = useLocation();
   const { pathname } = location;
 
@@ -259,5 +259,3 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     </aside>
   );
 };
-
-export default Sidebar;
