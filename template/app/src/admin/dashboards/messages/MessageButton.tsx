@@ -1,7 +1,7 @@
 import { MessageCircleMore } from "lucide-react";
 import { Link as WaspRouterLink, routes } from "wasp/client/router";
 
-export const MessageButton = () => {
+export function MessageButton() {
   return (
     <li
       className="relative"
@@ -20,4 +20,4 @@ export const MessageButton = () => {
       </WaspRouterLink>
     </li>
   );
-};
+}

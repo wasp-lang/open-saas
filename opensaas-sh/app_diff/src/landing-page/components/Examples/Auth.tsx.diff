@@ -62,13 +62,13 @@
 +  );
 +}
 +
-+const AuthPlayground = ({
++function AuthPlayground({
 +  toggleProvider,
 +  selectedProviders,
 +}: {
 +  toggleProvider: (provider: AuthProvider) => void;
 +  selectedProviders: readonly AuthProvider[];
-+}) => {
++}) {
 +  return (
 +    <div className="flex flex-col gap-2">
 +      <p className="text-muted-foreground">
@@ -92,9 +92,9 @@
 +      </div>
 +    </div>
 +  );
-+};
++}
 +
-+const Divider = () => {
++function Divider() {
 +  return (
 +    <div className="flex flex-row items-center gap-2">
 +      <div className="bg-muted h-px flex-1" />
@@ -102,13 +102,13 @@
 +      <div className="bg-muted h-px flex-1" />
 +    </div>
 +  );
-+};
++}
 +
-+const AuthExample = ({
++function AuthExample({
 +  selectedProviders,
 +}: {
 +  selectedProviders: readonly AuthProvider[];
-+}) => {
++}) {
 +  return (
 +    <Card
 +      className="w-full max-w-md py-10 transition-all duration-300 ease-in-out"
@@ -155,4 +155,4 @@
 +      </CardContent>
 +    </Card>
 +  );
-+};
++}

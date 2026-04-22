@@ -13,7 +13,7 @@ export function AIReady() {
   );
 }
 
-const AIReadyExample = () => {
+function AIReadyExample() {
   return (
     <div className="w-full">
       <img
@@ -30,4 +30,4 @@ const AIReadyExample = () => {
       />
     </div>
   );
-};
+}

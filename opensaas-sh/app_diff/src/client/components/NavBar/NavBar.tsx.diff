@@ -109,11 +109,12 @@
                </div>
              </div>
            </div>
-@@ -251,6 +266,6 @@
-       "size-7": isScrolled,
-     })}
-     src={logo}
--    alt="Your SaaS App"
-+    alt="Open SaaS App"
-   />
- );
+@@ -252,7 +267,7 @@
+         "size-7": isScrolled,
+       })}
+       src={logo}
+-      alt="Your SaaS App"
++      alt="Open SaaS App"
+     />
+   );
+ }

@@ -4,13 +4,13 @@ import { Link as WaspRouterLink } from "wasp/client/router";
 import { type User } from "wasp/entities";
 import { userMenuItems } from "./constants";
 
-export const UserMenuItems = ({
+export function UserMenuItems({
   user,
   onItemClick,
 }: {
   user?: Partial<User>;
   onItemClick?: () => void;
-}) => {
+}) {
   return (
     <>
       {userMenuItems.map((item) => {
@@ -44,4 +44,4 @@ export const UserMenuItems = ({
       </li>
     </>
   );
-};
+}

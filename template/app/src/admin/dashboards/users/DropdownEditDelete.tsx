@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from "../../../client/components/ui/dropdown-menu";
 
-export const DropdownEditDelete = () => {
+export function DropdownEditDelete() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -26,4 +26,4 @@ export const DropdownEditDelete = () => {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-};
+}

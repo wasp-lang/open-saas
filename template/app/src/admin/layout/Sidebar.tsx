@@ -19,7 +19,7 @@ interface SidebarProps {
   setSidebarOpen: (arg: boolean) => void;
 }
 
-export const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
+export function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
   const location = useLocation();
   const { pathname } = location;
 
@@ -258,4 +258,4 @@ export const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       </div>
     </aside>
   );
-};
+}

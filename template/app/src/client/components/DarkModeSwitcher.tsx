@@ -3,7 +3,7 @@ import { Label } from "../../client/components/ui/label";
 import { useColorMode } from "../hooks/useColorMode";
 import { cn } from "../utils";
 
-export const DarkModeSwitcher = () => {
+export function DarkModeSwitcher() {
   const [colorMode, setColorMode] = useColorMode();
   const isInLightMode = colorMode === "light";
 
@@ -36,7 +36,7 @@ export const DarkModeSwitcher = () => {
       </Label>
     </div>
   );
-};
+}
 
 function ModeIcon({ isInLightMode }: { isInLightMode: boolean }) {
   const iconStyle =

@@ -11,7 +11,7 @@ interface ExampleApp {
   href: string;
 }
 
-export const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
+export function ExamplesCarousel({ examples }: { examples: ExampleApp[] }) {
   const [currentExample, setCurrentExample] = useState(0);
   const [isInView, setIsInView] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -129,7 +129,7 @@ export const ExamplesCarousel = ({ examples }: { examples: ExampleApp[] }) => {
       </div>
     </div>
   );
-};
+}
 
 interface ExampleCardProps {
   example: ExampleApp;

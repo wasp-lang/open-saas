@@ -109,7 +109,7 @@ interface ChartOneState {
   }[];
 }
 
-export const RevenueAndProfitChart = ({ weeklyStats }: DailyStatsProps) => {
+export function RevenueAndProfitChart({ weeklyStats }: DailyStatsProps) {
   const dailyRevenueArray = useMemo(() => {
     if (!!weeklyStats && weeklyStats?.length > 0) {
       const sortedWeeks = weeklyStats?.sort((a, b) => {
@@ -255,4 +255,4 @@ export const RevenueAndProfitChart = ({ weeklyStats }: DailyStatsProps) => {
       </div>
     </div>
   );
-};
+}

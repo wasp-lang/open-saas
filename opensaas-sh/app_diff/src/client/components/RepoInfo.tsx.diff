@@ -6,7 +6,7 @@
 +import { Button } from "../../client/components/ui/button";
 +import { formatNumber } from "../utils";
 +
-+export const RepoInfo = () => {
++export function RepoInfo() {
 +  const [repoInfo, setRepoInfo] = useState<null | any>(null);
 +  const [isLoading, setIsLoading] = useState(true);
 +
@@ -46,5 +46,5 @@
 +      </Button>
 +    </a>
 +  );
-+};
++}
 +

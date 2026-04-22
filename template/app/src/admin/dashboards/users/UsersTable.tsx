@@ -39,7 +39,7 @@ function AdminSwitch({ id, isAdmin }: Pick<User, "id" | "isAdmin">) {
   );
 }
 
-export const UsersTable = () => {
+export function UsersTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const [emailFilter, setEmailFilter] = useState<string | undefined>(undefined);
   const [isAdminFilter, setIsAdminFilter] = useState<boolean | undefined>(
@@ -319,4 +319,4 @@ export const UsersTable = () => {
       </div>
     </div>
   );
-};
+}

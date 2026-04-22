@@ -18,7 +18,7 @@
 @@ -13,11 +16,14 @@
   * Shows text description on one side, and whatever component you want to show on the other side to demonstrate the functionality.
   */
- export const HighlightedFeature = ({
+ export function HighlightedFeature({
 +  id,
    name,
    description,
@@ -27,7 +27,7 @@
    tilt,
 +  className,
 +  url,
- }: FeatureProps) => {
+ }: FeatureProps) {
    const tiltToClass: Record<Required<FeatureProps>["tilt"], string> = {
      left: "rotate-1",
 @@ -26,13 +32,16 @@
