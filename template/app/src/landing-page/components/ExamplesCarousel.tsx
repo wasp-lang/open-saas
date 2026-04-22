@@ -136,7 +136,7 @@ interface ExampleCardProps {
   index: number;
   isCurrent: boolean;
   onMouseEnter: (index: number) => void;
-  ref?: Ref;
+  ref?: Ref<HTMLDivElement>;
 }
 
 function ExampleCard({
