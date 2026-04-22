@@ -23,10 +23,7 @@ interface FeaturesGridProps {
   className?: string;
 }
 
-export function FeaturesGrid({
-  features,
-  className = "",
-}: FeaturesGridProps) {
+export function FeaturesGrid({ features, className = "" }: FeaturesGridProps) {
   return (
     <div
       className="mx-auto my-16 flex max-w-7xl flex-col gap-4 md:my-24 lg:my-40"
