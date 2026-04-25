@@ -8,6 +8,7 @@ import type {
 } from "../paymentProcessor";
 import { getPaymentProcessorPlanId } from "../paymentProcessorPlans";
 import type { PaymentPlanEffect } from "../plans";
+import { ACCOUNT_URL_PATH } from "../constants";
 import {
   fetchUserPaymentProcessorUserId,
   updateUserPaymentProcessorUserId,
@@ -69,7 +70,7 @@ export const stripePaymentProcessor: PaymentProcessor = {
     const billingPortalSession =
       await stripeClient.billingPortal.sessions.create({
         customer: paymentProcessorUserId,
-        return_url: `${config.frontendUrl}/account`,
+        return_url: `${config.frontendUrl}${ACCOUNT_URL_PATH}`,
       });
 
     return billingPortalSession.url;

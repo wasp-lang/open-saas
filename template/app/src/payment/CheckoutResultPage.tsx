@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Navigate, useNavigate, useSearchParams } from "react-router";
+import { ACCOUNT_URL_PATH } from "./constants";
 
 const ACCOUNT_PAGE_REDIRECT_DELAY_MS = 4000;
 
@@ -10,7 +11,7 @@ export default function CheckoutResultPage() {
 
   useEffect(() => {
     const accountPageRedirectTimeoutId = setTimeout(() => {
-      navigate("/account");
+      navigate(ACCOUNT_URL_PATH);
     }, ACCOUNT_PAGE_REDIRECT_DELAY_MS);
 
     return () => {
@@ -19,7 +20,7 @@ export default function CheckoutResultPage() {
   }, [navigate]);
 
   if (status !== "success" && status !== "canceled") {
-    return <Navigate to="/account" />;
+    return <Navigate to={ACCOUNT_URL_PATH} />;
   }
 
   return (

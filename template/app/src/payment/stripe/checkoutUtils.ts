@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import { User } from "wasp/entities";
 import { config } from "wasp/server";
+import { CHECKOUT_CANCELED_URL_PATH, CHECKOUT_SUCCESS_URL_PATH } from "../constants";
 import { stripeClient } from "./stripeClient";
 
 /**
@@ -43,8 +44,8 @@ export function createStripeCheckoutSession({
       },
     ],
     mode,
-    success_url: `${config.frontendUrl}/checkout?status=success`,
-    cancel_url: `${config.frontendUrl}/checkout?status=canceled`,
+    success_url: `${config.frontendUrl}${CHECKOUT_SUCCESS_URL_PATH}`,
+    cancel_url: `${config.frontendUrl}${CHECKOUT_CANCELED_URL_PATH}`,
     automatic_tax: { enabled: true },
     allow_promotion_codes: true,
     customer_update: {

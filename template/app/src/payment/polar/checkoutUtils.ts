@@ -1,6 +1,7 @@
 import { Checkout } from "@polar-sh/sdk/models/components/checkout.js";
 import { Customer } from "@polar-sh/sdk/models/components/customer.js";
 import { config } from "wasp/server";
+import { CHECKOUT_SUCCESS_URL_PATH } from "../constants";
 import { polarClient } from "./polarClient";
 
 /**
@@ -38,7 +39,7 @@ export function createPolarCheckoutSession({
 }: CreatePolarCheckoutSessionArgs): Promise<Checkout> {
   return polarClient.checkouts.create({
     products: [productId],
-    successUrl: `${config.frontendUrl}/checkout?status=success`,
+    successUrl: `${config.frontendUrl}${CHECKOUT_SUCCESS_URL_PATH}`,
     customerId,
   });
 }
