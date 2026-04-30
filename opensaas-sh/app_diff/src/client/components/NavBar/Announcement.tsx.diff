@@ -1,18 +1,14 @@
 --- template/app/src/client/components/NavBar/Announcement.tsx
 +++ opensaas-sh/app/src/client/components/NavBar/Announcement.tsx
-@@ -1,32 +1,37 @@
+@@ -1,32 +1,33 @@
 -const ANNOUNCEMENT_URL = "https://github.com/wasp-lang/wasp";
-+const ANNOUNCEMENT_URL = "https://x.com/hot_town/status/1950117243246821770";
++const ANNOUNCEMENT_URL = "https:/openvibe.sh";
  
  export function Announcement() {
-+  const launchDate = new Date("2025-07-29T00:00:00-07:00");
-+  const today = new Date();
-+  const hasLaunched =
-+    today.toISOString().slice(0, 10) >= launchDate.toISOString().slice(0, 10);
 +
    return (
 -    <div className="from-accent to-secondary text-primary-foreground bg-linear-to-r relative flex w-full items-center justify-center gap-3 p-3 text-center font-semibold">
-+    <div className="from-accent to-secondary text-primary-foreground z-51 bg-linear-to-r relative flex w-full items-center justify-center gap-3 p-3 text-center font-semibold tracking-wider">
++    <div className="from-accent to-secondary text-primary-foreground relative z-51 flex w-full items-center justify-center gap-3 bg-linear-to-r p-3 text-center font-semibold tracking-wider">
        <a
          href={ANNOUNCEMENT_URL}
          target="_blank"
@@ -22,7 +18,7 @@
 +        rel="noreferrer"
        >
 -        Support Open-Source Software!
-+        🚀 Open SaaS v2.0 {hasLaunched ? "is here!" : "launches tomorrow!"}
++        🧑‍🏫 Learn to build a SaaS with our free, interactive course
        </a>
        <div className="bg-primary-foreground/20 hidden w-0.5 self-stretch lg:block"></div>
        <a
@@ -34,7 +30,7 @@
 +        rel="noreferrer"
        >
 -        Star Our Repo on Github ⭐️ →
-+        {hasLaunched ? "Check out the Launch 🎉" : "Get notified! 📆"} →
++        Become a pro with Open Vibe 😎 →
        </a>
        <a
          href={ANNOUNCEMENT_URL}
@@ -44,7 +40,7 @@
 +        rel="noreferrer"
        >
 -        ⭐️ Star the Our Repo and Support Open-Source! ⭐️
-+        🎉 The Open SaaS v2.0 Launch is Live! 🚀
++        🧑‍🏫 Learn to Build a SaaS w/ our free course → 
        </a>
      </div>
    );
