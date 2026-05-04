@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { Navigate, useNavigate, useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
+import { Link, routes } from "wasp/client/router";
 
 const ACCOUNT_PAGE_REDIRECT_DELAY_MS = 4000;
 
@@ -10,7 +11,7 @@ export function CheckoutResultPage() {
 
   useEffect(() => {
     const accountPageRedirectTimeoutId = setTimeout(() => {
-      navigate("/account");
+      navigate(routes.AccountRoute.to);
     }, ACCOUNT_PAGE_REDIRECT_DELAY_MS);
 
     return () => {
@@ -19,7 +20,7 @@ export function CheckoutResultPage() {
   }, [navigate]);
 
   if (status !== "success" && status !== "canceled") {
-    return <Navigate to="/account" />;
+    return <Link to={routes.AccountRoute.to} />;
   }
 
   return (

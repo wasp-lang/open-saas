@@ -1,6 +1,6 @@
 import { ReactNode, useState } from "react";
-import { Navigate } from "react-router";
 import { type AuthUser } from "wasp/auth";
+import { Link, routes } from "wasp/client/router";
 import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
 
@@ -13,7 +13,7 @@ export function DefaultLayout({ children, user }: Props) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (!user.isAdmin) {
-    return <Navigate to="/" replace />;
+    return <Link to={routes.LandingPageRoute.to} replace />;
   }
 
   return (
