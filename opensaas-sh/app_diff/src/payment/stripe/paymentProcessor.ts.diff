@@ -42,6 +42,6 @@
        await stripeClient.billingPortal.sessions.create({
 -        customer: paymentProcessorUserId,
 +        customer: stripeId,
-         return_url: `${config.frontendUrl}/account`,
+         return_url: CUSTOMER_PORTAL_RETURN_URL,
        });
  
