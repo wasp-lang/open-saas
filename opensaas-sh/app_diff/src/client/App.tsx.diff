@@ -6,19 +6,20 @@
  import { Outlet, useLocation } from "react-router";
  import { routes } from "wasp/client/router";
  import { Toaster } from "../client/components/ui/toaster";
-@@ -17,9 +17,7 @@
+@@ -17,10 +17,7 @@
  export function App() {
    const location = useLocation();
    const isMarketingPage = useMemo(() => {
 -    return (
--      location.pathname === "/" || location.pathname.startsWith("/pricing")
+-      location.pathname === routes.LandingPageRoute.to ||
+-      location.pathname === routes.PricingPageRoute.to
 -    );
-+    return location.pathname === "/";
++    return location.pathname === routes.LandingPageRoute.to;
    }, [location]);
  
    const navigationItems = isMarketingPage
-@@ -37,14 +35,33 @@
-     return location.pathname.startsWith("/admin");
+@@ -38,14 +35,33 @@
+     return location.pathname.startsWith(routes.AdminRoute.to);
    }, [location]);
  
 +  const resizeObserverRef = useRef<ResizeObserver | null>(null);

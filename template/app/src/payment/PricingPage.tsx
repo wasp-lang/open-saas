@@ -7,6 +7,7 @@ import {
   getCustomerPortalUrl,
   useQuery,
 } from "wasp/client/operations";
+import { routes } from "wasp/client/router";
 import { Alert, AlertDescription } from "../client/components/ui/alert";
 import { Button } from "../client/components/ui/button";
 import {
@@ -73,7 +74,7 @@ export function PricingPage() {
 
   async function handleBuyNowClick(paymentPlanId: PaymentPlanId) {
     if (!user) {
-      navigate("/login");
+      navigate(routes.LoginRoute.to);
       return;
     }
     try {
@@ -99,7 +100,7 @@ export function PricingPage() {
 
   const handleCustomerPortalClick = () => {
     if (!user) {
-      navigate("/login");
+      navigate(routes.LoginRoute.to);
       return;
     }
 

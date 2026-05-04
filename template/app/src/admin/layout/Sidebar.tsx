@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router";
+import { Link, routes } from "wasp/client/router";
 import Logo from "../../client/static/logo.webp";
 import { cn } from "../../client/utils";
 import { SidebarLinkGroup } from "./SidebarLinkGroup";
@@ -79,9 +80,9 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
     >
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="py-5.5 lg:py-6.5 flex items-center justify-between gap-2 px-6">
-        <NavLink to="/">
+        <Link to={routes.LandingPageRoute.to}>
           <img src={Logo} alt="Logo" width={50} />
-        </NavLink>
+        </Link>
 
         <button
           ref={trigger}
@@ -107,7 +108,7 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
             <ul className="mb-6 flex flex-col gap-1.5">
               {/* <!-- Menu Item Dashboard --> */}
               <NavLink
-                to="/admin"
+                to={routes.AdminRoute.to}
                 end
                 className={({ isActive }) =>
                   cn(
@@ -127,7 +128,7 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
               {/* <!-- Menu Item Users --> */}
               <li>
                 <NavLink
-                  to="/admin/users"
+                  to={routes.AdminUsersRoute.to}
                   end
                   className={({ isActive }) =>
                     cn(
@@ -147,7 +148,7 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
               {/* <!-- Menu Item Settings --> */}
               <li>
                 <NavLink
-                  to="/admin/settings"
+                  to={routes.AdminSettingsRoute.to}
                   end
                   className={({ isActive }) =>
                     cn(
@@ -176,7 +177,7 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
               {/* <!-- Menu Item Calendar --> */}
               <li>
                 <NavLink
-                  to="/admin/calendar"
+                  to={routes.AdminCalendarRoute.to}
                   end
                   className={({ isActive }) =>
                     cn(
@@ -231,7 +232,7 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                         <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
                           <li>
                             <NavLink
-                              to="/admin/ui/buttons"
+                              to={routes.AdminUIButtonsRoute.to}
                               end
                               className={({ isActive }) =>
                                 cn(
