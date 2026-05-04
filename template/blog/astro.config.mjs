@@ -2,7 +2,7 @@ import starlight from "@astrojs/starlight";
 import { defineConfig } from "astro/config";
 import starlightBlog from "starlight-blog";
 
-import tailwind from "@astrojs/tailwind";
+import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
@@ -45,11 +45,11 @@ export default defineConfig({
         Head: "./src/components/HeadWithOGImage.astro",
         PageTitle: "./src/components/TitleWithBannerImage.astro",
       },
-      social: {
-        github: "https://github.com/wasp-lang/open-saas",
-        twitter: "https://twitter.com/wasplang",
-        discord: "https://discord.gg/aCamt5wCpS",
-      },
+      social: [
+        { icon: "github", label: "GitHub", href: "https://github.com/wasp-lang/open-saas" },
+        { icon: "x.com", label: "X / Twitter", href: "https://twitter.com/wasplang" },
+        { icon: "discord", label: "Discord", href: "https://discord.gg/aCamt5wCpS" },
+      ],
       sidebar: [
         {
           label: "Start Here",
@@ -73,7 +73,6 @@ export default defineConfig({
       plugins: [
         starlightBlog({
           title: "Blog",
-          customCss: ["./src/styles/tailwind.css"],
           authors: {
             Dev: {
               name: "Dev",
@@ -85,6 +84,8 @@ export default defineConfig({
         }),
       ],
     }),
-    tailwind({ applyBaseStyles: false }),
   ],
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });
