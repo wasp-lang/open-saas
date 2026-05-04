@@ -4,8 +4,8 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "prettier:check": "prettier --ignore-unknown --check --config .prettierrc .",
-    "prettier:format": "prettier --ignore-unknown --write --config .prettierrc ."
+    "prettier:check": "prettier --ignore-unknown --check --config prettier.config.ts .",
+    "prettier:format": "prettier --ignore-unknown --write --config prettier.config.ts ."
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
