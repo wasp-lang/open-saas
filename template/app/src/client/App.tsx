@@ -18,7 +18,8 @@ export function App() {
   const location = useLocation();
   const isMarketingPage = useMemo(() => {
     return (
-      location.pathname === "/" || location.pathname.startsWith("/pricing")
+      location.pathname === routes.LandingPageRoute.to ||
+      location.pathname === routes.PricingPageRoute.to
     );
   }, [location]);
 
@@ -34,7 +35,7 @@ export function App() {
   }, [location]);
 
   const isAdminDashboard = useMemo(() => {
-    return location.pathname.startsWith("/admin");
+    return location.pathname.startsWith(routes.AdminRoute.to);
   }, [location]);
 
   useEffect(() => {
