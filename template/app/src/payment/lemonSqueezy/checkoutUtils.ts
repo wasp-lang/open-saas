@@ -1,4 +1,5 @@
 import { createCheckout } from "@lemonsqueezy/lemonsqueezy.js";
+import { CHECKOUT_SUCCESS_URL } from "../paths";
 
 interface LemonSqueezyCheckoutSessionParams {
   storeId: string;
@@ -19,6 +20,9 @@ export async function createLemonSqueezyCheckoutSession({
       custom: {
         user_id: userId, // You app's unique user ID is sent on checkout, and it's returned in the webhook so we can easily identify the user.
       },
+    },
+    productOptions: {
+      redirectUrl: CHECKOUT_SUCCESS_URL,
     },
   });
   if (error) {
