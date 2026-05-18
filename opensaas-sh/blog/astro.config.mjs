@@ -85,7 +85,7 @@ export default defineConfig({
               ],
             },
             { label: "Deploying", link: "/guides/deploying/" },
-            { label: "SEO", link: "/guides/seo/" },
+            { label: "SEO & Performance", link: "/guides/seo-performance/" },
             { label: "Email Sending", link: "/guides/email-sending/" },
             { label: "File Uploading", link: "/guides/file-uploading/" },
             { label: "Tests", link: "/guides/tests/" },
