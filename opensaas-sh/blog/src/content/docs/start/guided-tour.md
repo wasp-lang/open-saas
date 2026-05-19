@@ -278,7 +278,7 @@ Open SaaS ships SEO-friendly out of the box. Three pieces work together so your 
 2. **JSON-LD structured data (Schema Markup)** in `src/landing-page/components/SchemaMarkup.tsx` tells search engines and LLMs what your app is, who makes it, and what it offers — feeding rich snippets and AI-generated answers.
 3. **Prerendering** turns your React marketing pages (e.g. landing page, pricing, FAQ, etc.) into static HTML at build time, so crawlers see your content (including the schema markup) without needing to execute JavaScript.
 
-Customize the meta tags in `main.wasp` and the schema object in `SchemaMarkup.tsx` to match your product. See the [SEO guide](/guides/seo/) for details.
+Customize the meta tags in `main.wasp` and the schema object in `SchemaMarkup.tsx` to match your product. See the [SEO guide](/guides/seo-performance/) for details.
 
 ## App Customization Walkthrough
 
