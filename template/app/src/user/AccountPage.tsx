@@ -152,9 +152,12 @@ function formatSubscriptionStatusMessage(
 }
 
 function prettyPrintEndOfBillingPeriod(date: Date) {
-  const oneMonthFromNow = new Date(date);
-  oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
-  return oneMonthFromNow.toLocaleDateString();
+  const targetMonth = date.getMonth() + 1;
+  const targetYear = date.getFullYear() + (targetMonth > 11 ? 1 : 0);
+  const normalizedMonth = targetMonth % 12;
+  const lastDayOfMonth = new Date(targetYear, normalizedMonth + 1, 0).getDate();
+  const clampedDay = Math.min(date.getDate(), lastDayOfMonth);
+  return new Date(targetYear, normalizedMonth, clampedDay).toLocaleDateString();
 }
 
 function CustomerPortalButton() {
