@@ -30,5 +30,5 @@ const schema = {
 };
 
 export function SchemaMarkup() {
-  return <script type='application/ld+json'>{JSON.stringify(schema)}</script>;
+  return <script type="application/ld+json">{JSON.stringify(schema)}</script>;
 }
