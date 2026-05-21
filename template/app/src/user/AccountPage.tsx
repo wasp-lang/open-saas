@@ -151,13 +151,20 @@ function formatSubscriptionStatusMessage(
   return statusToMessage[subscriptionStatus];
 }
 
-function prettyPrintEndOfBillingPeriod(date: Date) {
-  const targetMonth = date.getMonth() + 1;
-  const targetYear = date.getFullYear() + (targetMonth > 11 ? 1 : 0);
-  const normalizedMonth = targetMonth % 12;
-  const lastDayOfMonth = new Date(targetYear, normalizedMonth + 1, 0).getDate();
-  const clampedDay = Math.min(date.getDate(), lastDayOfMonth);
-  return new Date(targetYear, normalizedMonth, clampedDay).toLocaleDateString();
+function prettyPrintEndOfBillingPeriod(datePaid: Date) {
+  const lastDayOfNextMonth = new Date(datePaid);
+  lastDayOfNextMonth.setMonth(lastDayOfNextMonth.getMonth() + 2, 0);
+  // Clamped so e.g., Jan 31 + 1 month → Feb 28, not until March 3.
+  const clampedDayOfMonth = Math.min(
+    datePaid.getDate(),
+    lastDayOfNextMonth.getDate(),
+  );
+  const endOfBillingPeriod = new Date(datePaid);
+  endOfBillingPeriod.setMonth(
+    endOfBillingPeriod.getMonth() + 1,
+    clampedDayOfMonth,
+  );
+  return endOfBillingPeriod.toLocaleDateString();
 }
 
 function CustomerPortalButton() {
