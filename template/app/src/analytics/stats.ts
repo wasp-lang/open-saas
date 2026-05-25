@@ -14,10 +14,10 @@ export type DailyStatsProps = {
   isLoading?: boolean;
 };
 
-export const calculateDailyStatsJob: CalculateDailyStatsJob<never, void> = async (
-  _args,
-  context,
-) => {
+export const calculateDailyStatsJob: CalculateDailyStatsJob<
+  never,
+  void
+> = async (_args, context) => {
   const nowUTC = new Date(Date.now());
   nowUTC.setUTCHours(0, 0, 0, 0);
 
