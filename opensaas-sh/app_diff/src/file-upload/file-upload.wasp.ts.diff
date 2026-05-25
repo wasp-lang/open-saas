@@ -4,9 +4,9 @@
 -import { action, page, query, route, type Part } from "@wasp.sh/spec";
 +import { action, job, page, query, route, type Part } from "@wasp.sh/spec";
  
+ import { group } from "../../main.wasp";
  import { FileUploadPage } from "./FileUploadPage" with { type: "ref" };
- import {
-@@ -8,6 +8,7 @@
+@@ -9,6 +9,7 @@
    getAllFilesByUser,
    getDownloadFileSignedURL,
  } from "./operations" with { type: "ref" };
@@ -14,10 +14,10 @@
  
  export const fileUploadParts: Part[] = [
    route(
-@@ -20,4 +21,11 @@
-   action(createFileUploadUrl, { entities: ["User", "File"] }),
-   action(addFileToDb, { entities: ["User", "File"] }),
-   action(deleteFile, { entities: ["User", "File"] }),
+@@ -24,4 +25,11 @@
+     action(addFileToDb),
+     action(deleteFile),
+   ]),
 +  job(deleteFilesJob, {
 +    executor: "PgBoss",
 +    schedule: {
