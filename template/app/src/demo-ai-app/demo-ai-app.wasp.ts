@@ -1,5 +1,6 @@
 import { action, page, query, route, type Part } from "@wasp.sh/spec";
 
+import { group } from "../../main.wasp";
 import { DemoAppPage } from "./DemoAppPage" with { type: "ref" };
 import {
   createTask,
@@ -16,8 +17,10 @@ export const demoAiAppParts: Part[] = [
   query(getGptResponses, { entities: ["User", "GptResponse"] }),
   action(generateGptResponse, { entities: ["User", "Task", "GptResponse"] }),
 
-  query(getAllTasksByUser, { entities: ["Task"] }),
-  action(createTask, { entities: ["Task"] }),
-  action(updateTask, { entities: ["Task"] }),
-  action(deleteTask, { entities: ["Task"] }),
+  ...group({ entities: ["Task"] }, [
+    query(getAllTasksByUser),
+    action(createTask),
+    action(updateTask),
+    action(deleteTask),
+  ]),
 ];

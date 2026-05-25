@@ -1,4 +1,4 @@
-import { app, page, route } from "@wasp.sh/spec";
+import { app, page, type Part, route } from "@wasp.sh/spec";
 
 import { App } from "./src/client/App" with { type: "ref" };
 import { NotFoundPage } from "./src/client/components/NotFoundPage" with { type: "ref" };
@@ -82,3 +82,13 @@ export default app({
     ...adminParts,
   ],
 });
+
+export function group<SomePart extends Part>(
+  sharedState: Partial<SomePart>,
+  parts: SomePart[],
+) {
+  return parts.map((part) => ({
+    ...part,
+    ...sharedState,
+  }));
+}

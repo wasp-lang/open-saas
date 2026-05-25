@@ -1,5 +1,6 @@
 import { action, page, query, route, type Part } from "@wasp.sh/spec";
 
+import { group } from "../../main.wasp";
 import { FileUploadPage } from "./FileUploadPage" with { type: "ref" };
 import {
   addFileToDb,
@@ -15,9 +16,12 @@ export const fileUploadParts: Part[] = [
     "/file-upload",
     page(FileUploadPage, { authRequired: true }),
   ),
-  query(getAllFilesByUser, { entities: ["User", "File"] }),
-  query(getDownloadFileSignedURL, { entities: ["User", "File"] }),
-  action(createFileUploadUrl, { entities: ["User", "File"] }),
-  action(addFileToDb, { entities: ["User", "File"] }),
-  action(deleteFile, { entities: ["User", "File"] }),
+
+  ...group({ entities: ["User", "File"] }, [
+    query(getAllFilesByUser),
+    query(getDownloadFileSignedURL),
+    action(createFileUploadUrl),
+    action(addFileToDb),
+    action(deleteFile),
+  ]),
 ];
