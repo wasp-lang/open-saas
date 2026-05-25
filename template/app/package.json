@@ -50,9 +50,12 @@
     "@faker-js/faker": "8.3.1",
     "@tailwindcss/vite": "^4.1.18",
     "@types/express": "^5.0.0",
+    "@types/node": "^24.0.0",
     "@types/react": "^19.2.7",
+    "@wasp.sh/spec": "file:.wasp/spec",
     "prisma": "5.19.1",
     "typescript": "5.9.3",
-    "vite": "^7.0.6"
+    "vite": "^7.0.6",
+    "vitest": "^4.0.16"
   }
 }

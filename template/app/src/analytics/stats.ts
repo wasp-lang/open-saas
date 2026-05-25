@@ -1,5 +1,5 @@
 import { type DailyStats } from "wasp/entities";
-import { type DailyStatsJob } from "wasp/server/jobs";
+import { type CalculateDailyStatsJob } from "wasp/server/jobs";
 import {
   getDailyPageViews,
   getSources,
@@ -14,7 +14,7 @@ export type DailyStatsProps = {
   isLoading?: boolean;
 };
 
-export const calculateDailyStats: DailyStatsJob<never, void> = async (
+export const calculateDailyStatsJob: CalculateDailyStatsJob<never, void> = async (
   _args,
   context,
 ) => {
