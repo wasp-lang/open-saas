@@ -1,0 +1,67 @@
+--- template/app/src/auth/auth.wasp.ts
++++ opensaas-sh/app/src/auth/auth.wasp.ts
+@@ -9,12 +9,15 @@
+   getPasswordResetEmailContent,
+   getVerificationEmailContent,
+ } from "./email-and-pass/emails" with { type: "ref" };
+-import { getEmailUserFields } from "./userSignupFields" with { type: "ref" };
+-
+-// Uncomment together with a matching social auth provider below:
+-// import { getGoogleUserFields, getGoogleAuthConfig } from "./userSignupFields" with { type: "ref" };
+-// import { getGitHubUserFields, getGitHubAuthConfig } from "./userSignupFields" with { type: "ref" };
+-// import { getDiscordUserFields, getDiscordAuthConfig } from "./userSignupFields" with { type: "ref" };
++import {
++  getDiscordAuthConfig,
++  getDiscordUserFields,
++  getEmailUserFields,
++  getGitHubAuthConfig,
++  getGitHubUserFields,
++  getGoogleAuthConfig,
++  getGoogleUserFields,
++} from "./userSignupFields" with { type: "ref" };
+ 
+ // 🔐 Auth out of the box! https://wasp.sh/docs/auth/overview
+ export const auth: Auth = {
+@@ -25,7 +28,7 @@
+     email: {
+       fromField: {
+         name: "Open SaaS App",
+-        email: "me@example.com",
++        email: "noreply@mg.wasp.sh",
+       },
+       emailVerification: {
+         clientRoute: "EmailVerificationRoute",
+@@ -37,21 +40,18 @@
+       },
+       userSignupFields: getEmailUserFields,
+     },
+-    // Uncomment to enable Google Auth (check https://wasp.sh/docs/auth/social-auth/google for setup instructions):
+-    // google: {
+-    //   userSignupFields: getGoogleUserFields,
+-    //   configFn: getGoogleAuthConfig,
+-    // },
+-    // Uncomment to enable GitHub Auth (check https://wasp.sh/docs/auth/social-auth/github for setup instructions):
+-    // gitHub: {
+-    //   userSignupFields: getGitHubUserFields,
+-    //   configFn: getGitHubAuthConfig,
+-    // },
+-    // Uncomment to enable Discord Auth (check https://wasp.sh/docs/auth/social-auth/discord for setup instructions):
+-    // discord: {
+-    //   userSignupFields: getDiscordUserFields,
+-    //   configFn: getDiscordAuthConfig,
+-    // },
++    google: {
++      userSignupFields: getGoogleUserFields,
++      configFn: getGoogleAuthConfig,
++    },
++    gitHub: {
++      userSignupFields: getGitHubUserFields,
++      configFn: getGitHubAuthConfig,
++    },
++    discord: {
++      userSignupFields: getDiscordUserFields,
++      configFn: getDiscordAuthConfig,
++    },
+   },
+   onAuthFailedRedirectTo: "/login",
+   onAuthSucceededRedirectTo: "/demo-app",

@@ -1,0 +1,30 @@
+--- template/app/src/payment/payment.wasp.ts
++++ opensaas-sh/app/src/payment/payment.wasp.ts
+@@ -7,12 +7,12 @@
+ } from "./operations" with { type: "ref" };
+ import { PricingPage } from "./PricingPage" with { type: "ref" };
+ import {
+-  paymentsMiddlewareConfigFn,
+-  paymentsWebhook,
+-} from "./webhook" with { type: "ref" };
++  stripeMiddlewareConfigFn,
++  stripeWebhook,
++} from "./stripe/webhook" with { type: "ref" };
+ 
+ export const paymentParts: Part[] = [
+-  route("PricingPageRoute", "/pricing", page(PricingPage), { prerender: true }),
++  route("PricingPageRoute", "/pricing", page(PricingPage)),
+   route(
+     "CheckoutResultRoute",
+     "/checkout",
+@@ -20,8 +20,8 @@
+   ),
+   query(getCustomerPortalUrl, { entities: ["User"] }),
+   action(generateCheckoutSession, { entities: ["User"] }),
+-  api("POST", "/payments-webhook", paymentsWebhook, {
++  api("POST", "/payments-webhook", stripeWebhook, {
+     entities: ["User"],
+-    middlewareConfigFn: paymentsMiddlewareConfigFn,
++    middlewareConfigFn: stripeMiddlewareConfigFn,
+   }),
+ ];
