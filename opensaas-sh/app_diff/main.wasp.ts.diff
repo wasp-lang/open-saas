@@ -7,14 +7,14 @@
 -import { LandingPage } from "./src/landing-page/LandingPage" with { type: "ref" };
  import { seedMockUsers } from "./src/server/scripts/dbSeeds" with { type: "ref" };
  
- import { adminParts } from "./src/admin/admin.wasp";
+ import { admin } from "./src/admin/admin.wasp";
 @@ -11,36 +10,37 @@
- import { auth, authParts } from "./src/auth/auth.wasp";
- import { demoAiAppParts } from "./src/demo-ai-app/demo-ai-app.wasp";
- import { fileUploadParts } from "./src/file-upload/file-upload.wasp";
-+import { landingPageParts } from "./src/landing-page/landing-page.wasp";
- import { paymentParts } from "./src/payment/payment.wasp";
- import { userParts } from "./src/user/user.wasp";
+ import { auth, authConfig } from "./src/auth/auth.wasp";
+ import { demoAiApp } from "./src/demo-ai-app/demo-ai-app.wasp";
+ import { fileUpload } from "./src/file-upload/file-upload.wasp";
++import { landingPage } from "./src/landing-page/landing-page.wasp";
+ import { payment } from "./src/payment/payment.wasp";
+ import { user } from "./src/user/user.wasp";
  
  export default app({
    name: "OpenSaaS",
@@ -60,7 +60,7 @@
 +
 +    "<script async data-domain='opensaas.sh' data-api='/waspara/wasp/event' src='/waspara/wasp/script.js'></script>",
    ],
-   auth,
+   auth: authConfig,
    db: {
 @@ -60,19 +60,17 @@
      // NOTE: "Dummy" provider is just for local development purposes.
@@ -81,7 +81,7 @@
 -    route("LandingPageRoute", "/", page(LandingPage), { prerender: true }),
      route("NotFoundRoute", "*", page(NotFoundPage)),
  
-+    ...landingPageParts,
-     ...authParts,
-     ...userParts,
-     ...demoAiAppParts,
++    ...landingPage,
+     ...auth,
+     ...user,
+     ...demoAiApp,

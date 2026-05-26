@@ -6,7 +6,7 @@
 +import { LandingPage } from "./LandingPage" with { type: "ref" };
 +import { getGithubRoadmap } from "./operations" with { type: "ref" };
 +
-+export const landingPageParts: Part[] = [
++export const landingPage: Part[] = [
 +  route("LandingPageRoute", "/", page(LandingPage)),
 +  query(getGithubRoadmap),
 +];
