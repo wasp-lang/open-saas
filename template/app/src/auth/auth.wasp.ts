@@ -73,23 +73,27 @@ function getEmailAuthMethod(): NonNullable<AuthMethods["email"]> {
 
 // Plug the following authentication methods in the `authConfig` above to enable them.
 // Do note that `email` and `usernameAndPassword` are mutually exclusive.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getUsernameAndPasswordAuthMethod(): NonNullable<
   AuthMethods["usernameAndPassword"]
 > {
   return {};
 }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getGoogleAuthMethod(): NonNullable<AuthMethods["google"]> {
   return {
     userSignupFields: getGoogleUserFields,
     configFn: getGoogleAuthConfig,
   };
 }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getGitGubAuthMethod(): NonNullable<AuthMethods["gitHub"]> {
   return {
     userSignupFields: getGitHubUserFields,
     configFn: getGitHubAuthConfig,
   };
 }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getDiscordAuthMethod(): NonNullable<AuthMethods["discord"]> {
   return {
     userSignupFields: getDiscordUserFields,
