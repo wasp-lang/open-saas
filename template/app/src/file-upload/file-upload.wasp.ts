@@ -1,6 +1,6 @@
 import { action, page, query, route, type Part } from "@wasp.sh/spec";
 
-import { group } from "../../main.wasp";
+import { group } from "../../helpers.wasp";
 import { FileUploadPage } from "./FileUploadPage" with { type: "ref" };
 import {
   addFileToDb,

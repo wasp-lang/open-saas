@@ -1,6 +1,6 @@
 import { action, page, query, route, type Part } from "@wasp.sh/spec";
 
-import { group } from "../../main.wasp";
+import { group } from "../../helpers.wasp";
 import { DemoAppPage } from "./DemoAppPage" with { type: "ref" };
 import {
   createTask,
