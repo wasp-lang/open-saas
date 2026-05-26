@@ -6,13 +6,13 @@ import { serverEnvValidationSchema } from "./src/env" with { type: "ref" };
 import { LandingPage } from "./src/landing-page/LandingPage" with { type: "ref" };
 import { seedMockUsers } from "./src/server/scripts/dbSeeds" with { type: "ref" };
 
-import { adminParts } from "./src/admin/admin.wasp";
-import { analyticsParts } from "./src/analytics/analytics.wasp";
-import { auth, authParts } from "./src/auth/auth.wasp";
-import { demoAiAppParts } from "./src/demo-ai-app/demo-ai-app.wasp";
-import { fileUploadParts } from "./src/file-upload/file-upload.wasp";
-import { paymentParts } from "./src/payment/payment.wasp";
-import { userParts } from "./src/user/user.wasp";
+import { admin } from "./src/admin/admin.wasp";
+import { analytics } from "./src/analytics/analytics.wasp";
+import { auth, authConfig } from "./src/auth/auth.wasp";
+import { demoAiApp } from "./src/demo-ai-app/demo-ai-app.wasp";
+import { fileUpload } from "./src/file-upload/file-upload.wasp";
+import { payment } from "./src/payment/payment.wasp";
+import { user } from "./src/user/user.wasp";
 
 export default app({
   name: "OpenSaaS",
@@ -42,7 +42,7 @@ export default app({
     "<script async data-domain='<your-site-id>' src='https://plausible.io/js/script.js'></script>", // for production
     "<script async data-domain='<your-site-id>' src='https://plausible.io/js/script.local.js'></script>", // for development
   ],
-  auth,
+  auth: authConfig,
   db: {
     // Run `wasp db seed` to seed the database with the seed functions below:
     seeds: [
@@ -73,12 +73,12 @@ export default app({
     route("LandingPageRoute", "/", page(LandingPage), { prerender: true }),
     route("NotFoundRoute", "*", page(NotFoundPage)),
 
-    ...authParts,
-    ...userParts,
-    ...demoAiAppParts,
-    ...paymentParts,
-    ...fileUploadParts,
-    ...analyticsParts,
-    ...adminParts,
+    ...auth,
+    ...user,
+    ...demoAiApp,
+    ...payment,
+    ...fileUpload,
+    ...analytics,
+    ...admin,
   ],
 });

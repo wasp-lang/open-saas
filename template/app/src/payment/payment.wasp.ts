@@ -11,7 +11,7 @@ import {
   paymentsWebhook,
 } from "./webhook" with { type: "ref" };
 
-export const paymentParts: Part[] = [
+export const payment: Part[] = [
   route("PricingPageRoute", "/pricing", page(PricingPage), { prerender: true }),
   route(
     "CheckoutResultRoute",

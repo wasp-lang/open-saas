@@ -1,6 +1,6 @@
 import { action, page, query, route, type Part } from "@wasp.sh/spec";
 
-import { group } from "../../helpers.wasp";
+import { group } from "../shared/utils.wasp";
 import { DemoAppPage } from "./DemoAppPage" with { type: "ref" };
 import {
   createTask,
@@ -11,7 +11,7 @@ import {
   updateTask,
 } from "./operations" with { type: "ref" };
 
-export const demoAiAppParts: Part[] = [
+export const demoAiApp: Part[] = [
   route("DemoAppRoute", "/demo-app", page(DemoAppPage, { authRequired: true })),
 
   query(getGptResponses, { entities: ["User", "GptResponse"] }),

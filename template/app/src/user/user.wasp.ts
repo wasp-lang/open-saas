@@ -6,7 +6,7 @@ import {
   updateIsUserAdminById,
 } from "./operations" with { type: "ref" };
 
-export const userParts: Part[] = [
+export const user: Part[] = [
   route("AccountRoute", "/account", page(AccountPage, { authRequired: true })),
   query(getPaginatedUsers, { entities: ["User"] }),
   action(updateIsUserAdminById, { entities: ["User"] }),

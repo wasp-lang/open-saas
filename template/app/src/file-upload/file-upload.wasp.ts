@@ -1,6 +1,6 @@
 import { action, page, query, route, type Part } from "@wasp.sh/spec";
 
-import { group } from "../../helpers.wasp";
+import { group } from "../shared/utils.wasp";
 import { FileUploadPage } from "./FileUploadPage" with { type: "ref" };
 import {
   addFileToDb,
@@ -10,7 +10,7 @@ import {
   getDownloadFileSignedURL,
 } from "./operations" with { type: "ref" };
 
-export const fileUploadParts: Part[] = [
+export const fileUpload: Part[] = [
   route(
     "FileUploadRoute",
     "/file-upload",

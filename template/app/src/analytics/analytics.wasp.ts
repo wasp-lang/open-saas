@@ -3,7 +3,7 @@ import { job, query, type Part } from "@wasp.sh/spec";
 import { getDailyStats } from "./operations" with { type: "ref" };
 import { calculateDailyStatsJob } from "./stats" with { type: "ref" };
 
-export const analyticsParts: Part[] = [
+export const analytics: Part[] = [
   query(getDailyStats, { entities: ["User", "DailyStats"] }),
   job(calculateDailyStatsJob, {
     executor: "PgBoss",

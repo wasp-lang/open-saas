@@ -7,7 +7,7 @@ import { CalendarPage } from "./elements/calendar/CalendarPage" with { type: "re
 import { SettingsPage } from "./elements/settings/SettingsPage" with { type: "ref" };
 import { ButtonsPage } from "./elements/ui-elements/ButtonsPage" with { type: "ref" };
 
-export const adminParts: Part[] = [
+export const admin: Part[] = [
   createAdminRoute("AdminRoute", "/admin", AnalyticsDashboardPage),
   createAdminRoute("AdminUsersRoute", "/admin/users", UsersDashboardPage),
   createAdminRoute("AdminSettingsRoute", "/admin/settings", SettingsPage),
