@@ -55,6 +55,8 @@
     "prisma": "5.19.1",
     "typescript": "5.9.3",
     "vite": "^7.0.6",
-    "vitest": "^4.0.16"
+    "vitest": "^4.0.16",
+    "@types/node": "^24.0.0",
+    "@wasp.sh/spec": "file:.wasp/spec"
   }
 }

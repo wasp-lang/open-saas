@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "jsx": "preserve",
+    "strict": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "skipLibCheck": true,
+    "allowJs": true,
+    "noEmit": true,
+    "lib": ["ES2023"]
+  },
+  "include": ["main.wasp.ts", "**/*.wasp.ts", ".wasp/out/types/spec"
+]
+}
