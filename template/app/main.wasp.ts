@@ -9,39 +9,18 @@ import { seedMockUsers } from "./src/server/scripts/dbSeeds" with { type: "ref" 
 import { adminDecls } from "./src/admin/admin.wasp";
 import { analyticsDecls } from "./src/analytics/analytics.wasp";
 import { authConfig, authDecls } from "./src/auth/auth.wasp";
+import { head } from "./src/client/head.wasp";
 import { demoAiAppDecls } from "./src/demo-ai-app/demo-ai-app.wasp";
 import { fileUploadDecls } from "./src/file-upload/file-upload.wasp";
 import { paymentDecls } from "./src/payment/payment.wasp";
+import { emailSender } from "./src/server/emailSender.wasp";
 import { userDecls } from "./src/user/user.wasp";
 
 export default app({
   name: "OpenSaaS",
   wasp: { version: "^0.24.0" },
   title: "My Open SaaS App",
-  head: [
-    "<link rel='icon' href='/favicon.ico' />",
-
-    "<meta name='description' content='Your apps main description and features.' />",
-    "<meta name='author' content='Your (App) Name' />",
-    "<meta name='keywords' content='saas, solution, product, app, service' />",
-
-    "<meta property='og:type' content='website' />",
-    "<meta property='og:title' content='Your Open SaaS App' />",
-    "<meta property='og:site_name' content='Your Open SaaS App' />",
-    "<meta property='og:url' content='https://your-saas-app.com' />",
-    "<meta property='og:description' content='Your apps main description and features.' />",
-    "<meta property='og:image' content='https://your-saas-app.com/public-banner.webp' />",
-    "<meta name='twitter:image' content='https://your-saas-app.com/public-banner.webp' />",
-    "<meta name='twitter:image:width' content='800' />",
-    "<meta name='twitter:image:height' content='400' />",
-    "<meta name='twitter:card' content='summary_large_image' />",
-    // TODO: You can put your Plausible analytics scripts below (https://docs.opensaas.sh/guides/analytics/):
-    // NOTE: Plausible does not use Cookies, so you can simply add the scripts here.
-    // Google, on the other hand, does, so you must instead add the script dynamically
-    // via the Cookie Consent component after the user clicks the "Accept" cookies button.
-    "<script async data-domain='<your-site-id>' src='https://plausible.io/js/script.js'></script>", // for production
-    "<script async data-domain='<your-site-id>' src='https://plausible.io/js/script.local.js'></script>", // for development
-  ],
+  head,
   auth: authConfig,
   db: {
     // Run `wasp db seed` to seed the database with the seed functions below:
@@ -56,17 +35,7 @@ export default app({
   server: {
     envValidationSchema: serverEnvValidationSchema,
   },
-  emailSender: {
-    // NOTE: "Dummy" provider is just for local development purposes.
-    //   Make sure to check the server logs for the email confirmation url (it will not be sent to an address)!
-    //   Once you are ready for production, switch to e.g. "SendGrid" or "Mailgun" providers. Check out https://docs.opensaas.sh/guides/email-sending/ .
-    provider: "Dummy",
-    defaultFrom: {
-      name: "Open SaaS App",
-      // When using a real provider, e.g. SendGrid, you must use the same email address that you configured your account to send out emails with!
-      email: "me@example.com",
-    },
-  },
+  emailSender,
   decls: [
     // Prerendering routes with static content creates HTML files at build time that are served immediately,
     // improving SEO, search engine/AI crawling, and performance: https://wasp.sh/docs/advanced/prerendering
