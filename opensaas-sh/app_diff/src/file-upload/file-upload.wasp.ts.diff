@@ -4,20 +4,20 @@
 -import { action, page, query, route, type Decl } from "@wasp.sh/spec";
 +import { action, job, page, query, route, type Decl } from "@wasp.sh/spec";
  
- import { group } from "../shared/utils.wasp";
  import { FileUploadPage } from "./FileUploadPage" with { type: "ref" };
-@@ -9,6 +9,7 @@
+ import {
+@@ -8,6 +8,7 @@
    getAllFilesByUser,
    getDownloadFileSignedURL,
  } from "./operations" with { type: "ref" };
 +import { deleteFilesJob } from "./workers" with { type: "ref" };
  
- export const fileUpload: Decl[] = [
+ export const fileUploadDecls: Decl[] = [
    route(
-@@ -24,4 +25,11 @@
-     action(addFileToDb),
-     action(deleteFile),
-   ]),
+@@ -20,4 +21,11 @@
+   action(addFileToDb, { entities: ["User", "File"] }),
+   action(createFileUploadUrl, { entities: ["User", "File"] }),
+   action(deleteFile, { entities: ["User", "File"] }),
 +  job(deleteFilesJob, {
 +    executor: "PgBoss",
 +    schedule: {
