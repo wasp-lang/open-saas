@@ -1,6 +1,5 @@
-import { action, page, query, route, type Part } from "@wasp.sh/spec";
+import { action, page, query, route, type Decl } from "@wasp.sh/spec";
 
-import { group } from "../shared/utils.wasp";
 import { DemoAppPage } from "./DemoAppPage" with { type: "ref" };
 import {
   createTask,
@@ -11,16 +10,14 @@ import {
   updateTask,
 } from "./operations" with { type: "ref" };
 
-export const demoAiApp: Part[] = [
+export const demoAiAppDecls: Decl[] = [
   route("DemoAppRoute", "/demo-app", page(DemoAppPage, { authRequired: true })),
 
   query(getGptResponses, { entities: ["User", "GptResponse"] }),
   action(generateGptResponse, { entities: ["User", "Task", "GptResponse"] }),
 
-  ...group({ entities: ["Task"] }, [
-    query(getAllTasksByUser),
-    action(createTask),
-    action(updateTask),
-    action(deleteTask),
-  ]),
+  query(getAllTasksByUser, { entities: ["Task"] }),
+  action(createTask, { entities: ["Task"] }),
+  action(updateTask, { entities: ["Task"] }),
+  action(deleteTask, { entities: ["Task"] }),
 ];

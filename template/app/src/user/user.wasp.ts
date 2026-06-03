@@ -1,4 +1,4 @@
-import { action, page, query, route, type Part } from "@wasp.sh/spec";
+import { action, page, query, route, type Decl } from "@wasp.sh/spec";
 
 import { AccountPage } from "./AccountPage" with { type: "ref" };
 import {
@@ -6,7 +6,7 @@ import {
   updateIsUserAdminById,
 } from "./operations" with { type: "ref" };
 
-export const user: Part[] = [
+export const userDecls: Decl[] = [
   route("AccountRoute", "/account", page(AccountPage, { authRequired: true })),
   query(getPaginatedUsers, { entities: ["User"] }),
   action(updateIsUserAdminById, { entities: ["User"] }),

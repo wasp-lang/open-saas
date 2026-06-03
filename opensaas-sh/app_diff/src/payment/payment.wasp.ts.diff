@@ -11,7 +11,7 @@
 +  stripeWebhook,
 +} from "./stripe/webhook" with { type: "ref" };
  
- export const payment: Part[] = [
+ export const payment: Decl[] = [
 -  route("PricingPageRoute", "/pricing", page(PricingPage), { prerender: true }),
 +  route("PricingPageRoute", "/pricing", page(PricingPage)),
    route(

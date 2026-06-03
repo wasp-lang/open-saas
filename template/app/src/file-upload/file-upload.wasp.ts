@@ -1,6 +1,5 @@
-import { action, page, query, route, type Part } from "@wasp.sh/spec";
+import { action, page, query, route, type Decl } from "@wasp.sh/spec";
 
-import { group } from "../shared/utils.wasp";
 import { FileUploadPage } from "./FileUploadPage" with { type: "ref" };
 import {
   addFileToDb,
@@ -10,18 +9,15 @@ import {
   getDownloadFileSignedURL,
 } from "./operations" with { type: "ref" };
 
-export const fileUpload: Part[] = [
+export const fileUploadDecls: Decl[] = [
   route(
     "FileUploadRoute",
     "/file-upload",
     page(FileUploadPage, { authRequired: true }),
   ),
-
-  ...group({ entities: ["User", "File"] }, [
-    query(getAllFilesByUser),
-    query(getDownloadFileSignedURL),
-    action(createFileUploadUrl),
-    action(addFileToDb),
-    action(deleteFile),
-  ]),
+  query(getAllFilesByUser, { entities: ["User", "File"] }),
+  query(getDownloadFileSignedURL, { entities: ["User", "File"] }),
+  action(addFileToDb, { entities: ["User", "File"] }),
+  action(createFileUploadUrl, { entities: ["User", "File"] }),
+  action(deleteFile, { entities: ["User", "File"] }),
 ];

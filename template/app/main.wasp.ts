@@ -6,13 +6,13 @@ import { serverEnvValidationSchema } from "./src/env" with { type: "ref" };
 import { LandingPage } from "./src/landing-page/LandingPage" with { type: "ref" };
 import { seedMockUsers } from "./src/server/scripts/dbSeeds" with { type: "ref" };
 
-import { admin } from "./src/admin/admin.wasp";
-import { analytics } from "./src/analytics/analytics.wasp";
-import { auth, authConfig } from "./src/auth/auth.wasp";
-import { demoAiApp } from "./src/demo-ai-app/demo-ai-app.wasp";
-import { fileUpload } from "./src/file-upload/file-upload.wasp";
-import { payment } from "./src/payment/payment.wasp";
-import { user } from "./src/user/user.wasp";
+import { adminDecls } from "./src/admin/admin.wasp";
+import { analyticsDecls } from "./src/analytics/analytics.wasp";
+import { authConfig, authDecls } from "./src/auth/auth.wasp";
+import { demoAiAppDecls } from "./src/demo-ai-app/demo-ai-app.wasp";
+import { fileUploadDecls } from "./src/file-upload/file-upload.wasp";
+import { paymentDecls } from "./src/payment/payment.wasp";
+import { userDecls } from "./src/user/user.wasp";
 
 export default app({
   name: "OpenSaaS",
@@ -67,18 +67,18 @@ export default app({
       email: "me@example.com",
     },
   },
-  parts: [
+  decls: [
     // Prerendering routes with static content creates HTML files at build time that are served immediately,
     // improving SEO, search engine/AI crawling, and performance: https://wasp.sh/docs/advanced/prerendering
     route("LandingPageRoute", "/", page(LandingPage), { prerender: true }),
     route("NotFoundRoute", "*", page(NotFoundPage)),
 
-    ...auth,
-    ...user,
-    ...demoAiApp,
-    ...payment,
-    ...fileUpload,
-    ...analytics,
-    ...admin,
+    ...authDecls,
+    ...userDecls,
+    ...demoAiAppDecls,
+    ...paymentDecls,
+    ...fileUploadDecls,
+    ...analyticsDecls,
+    ...adminDecls,
   ],
 });

@@ -1,4 +1,4 @@
-import { action, api, page, query, route, type Part } from "@wasp.sh/spec";
+import { action, api, page, query, route, type Decl } from "@wasp.sh/spec";
 
 import { CheckoutResultPage } from "./CheckoutResultPage" with { type: "ref" };
 import {
@@ -11,7 +11,7 @@ import {
   paymentsWebhook,
 } from "./webhook" with { type: "ref" };
 
-export const payment: Part[] = [
+export const paymentDecls: Decl[] = [
   route("PricingPageRoute", "/pricing", page(PricingPage), { prerender: true }),
   route(
     "CheckoutResultRoute",
