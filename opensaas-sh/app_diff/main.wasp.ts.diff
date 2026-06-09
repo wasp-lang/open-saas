@@ -34,7 +34,7 @@
 -    route("LandingPageRoute", "/", page(LandingPage), { prerender: true }),
      route("NotFoundRoute", "*", page(NotFoundPage)),
 +
-+    ...landingPage,
++    landingPage,
      authSpec,
      userSpec,
      demoAiAppSpec,
