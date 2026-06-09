@@ -1,4 +1,4 @@
-import { action, page, query, route, type Decl } from "@wasp.sh/spec";
+import { action, page, query, route, type Spec } from "@wasp.sh/spec";
 
 import { FileUploadPage } from "./FileUploadPage" with { type: "ref" };
 import {
@@ -9,7 +9,7 @@ import {
   getDownloadFileSignedURL,
 } from "./operations" with { type: "ref" };
 
-export const fileUploadDecls: Decl[] = [
+export const fileUploadSpec: Spec = [
   route(
     "FileUploadRoute",
     "/file-upload",

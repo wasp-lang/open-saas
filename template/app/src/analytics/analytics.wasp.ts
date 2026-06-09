@@ -1,9 +1,9 @@
-import { job, query, type Decl } from "@wasp.sh/spec";
+import { job, query, type Spec } from "@wasp.sh/spec";
 
 import { getDailyStats } from "./operations" with { type: "ref" };
 import { calculateDailyStatsJob } from "./stats" with { type: "ref" };
 
-export const analyticsDecls: Decl[] = [
+export const analyticsSpec: Spec = [
   query(getDailyStats, { entities: ["User", "DailyStats"] }),
   job(calculateDailyStatsJob, {
     executor: "PgBoss",

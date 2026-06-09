@@ -3,7 +3,7 @@ import {
   route,
   type Auth,
   type AuthMethods,
-  type Decl,
+  type Spec,
 } from "@wasp.sh/spec";
 
 import { LoginPage } from "./LoginPage" with { type: "ref" };
@@ -83,7 +83,7 @@ export const authConfig: Auth = {
   onAuthSucceededRedirectTo: "/demo-app",
 };
 
-export const authDecls: Decl[] = [
+export const authSpec: Spec = [
   route("LoginRoute", "/login", page(LoginPage)),
   route("SignupRoute", "/signup", page(SignupPage)),
   route(

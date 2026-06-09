@@ -1,4 +1,4 @@
-import { action, page, query, route, type Decl } from "@wasp.sh/spec";
+import { action, page, query, route, type Spec } from "@wasp.sh/spec";
 
 import { DemoAppPage } from "./DemoAppPage" with { type: "ref" };
 import {
@@ -10,7 +10,7 @@ import {
   updateTask,
 } from "./operations" with { type: "ref" };
 
-export const demoAiAppDecls: Decl[] = [
+export const demoAiAppSpec: Spec = [
   route("DemoAppRoute", "/demo-app", page(DemoAppPage, { authRequired: true })),
 
   query(getGptResponses, { entities: ["User", "GptResponse"] }),

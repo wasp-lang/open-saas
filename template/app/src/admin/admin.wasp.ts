@@ -1,4 +1,4 @@
-import { page, route, type Decl } from "@wasp.sh/spec";
+import { page, route, type Spec } from "@wasp.sh/spec";
 
 import { AnalyticsDashboardPage } from "./dashboards/analytics/AnalyticsDashboardPage" with { type: "ref" };
 import { MessagesPage } from "./dashboards/messages/MessagesPage" with { type: "ref" };
@@ -7,7 +7,7 @@ import { CalendarPage } from "./elements/calendar/CalendarPage" with { type: "re
 import { SettingsPage } from "./elements/settings/SettingsPage" with { type: "ref" };
 import { ButtonsPage } from "./elements/ui-elements/ButtonsPage" with { type: "ref" };
 
-export const adminDecls: Decl[] = [
+export const adminSpec: Spec = [
   route(
     "AdminRoute",
     "/admin",
