@@ -1,8 +1,8 @@
 --- template/app/src/file-upload/file-upload.wasp.ts
 +++ opensaas-sh/app/src/file-upload/file-upload.wasp.ts
 @@ -1,4 +1,4 @@
--import { action, page, query, route, type Decl } from "@wasp.sh/spec";
-+import { action, job, page, query, route, type Decl } from "@wasp.sh/spec";
+-import { action, page, query, route, type Spec } from "@wasp.sh/spec";
++import { action, job, page, query, route, type Spec } from "@wasp.sh/spec";
  
  import { FileUploadPage } from "./FileUploadPage" with { type: "ref" };
  import {
@@ -12,7 +12,7 @@
  } from "./operations" with { type: "ref" };
 +import { deleteFilesJob } from "./workers" with { type: "ref" };
  
- export const fileUploadDecls: Decl[] = [
+ export const fileUploadSpec: Spec = [
    route(
 @@ -20,4 +21,11 @@
    action(addFileToDb, { entities: ["User", "File"] }),

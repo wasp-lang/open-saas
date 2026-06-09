@@ -7,15 +7,15 @@
 -import { LandingPage } from "./src/landing-page/LandingPage" with { type: "ref" };
  import { seedMockUsers } from "./src/server/scripts/dbSeeds" with { type: "ref" };
  
- import { adminDecls } from "./src/admin/admin.wasp";
+ import { adminSpec } from "./src/admin/admin.wasp";
 @@ -12,6 +11,7 @@
  import { head } from "./src/client/head.wasp";
- import { demoAiAppDecls } from "./src/demo-ai-app/demo-ai-app.wasp";
- import { fileUploadDecls } from "./src/file-upload/file-upload.wasp";
+ import { demoAiAppSpec } from "./src/demo-ai-app/demo-ai-app.wasp";
+ import { fileUploadSpec } from "./src/file-upload/file-upload.wasp";
 +import { landingPage } from "./src/landing-page/landing-page.wasp";
- import { paymentDecls } from "./src/payment/payment.wasp";
+ import { paymentSpec } from "./src/payment/payment.wasp";
  import { emailSender } from "./src/server/emailSender.wasp";
- import { userDecls } from "./src/user/user.wasp";
+ import { userSpec } from "./src/user/user.wasp";
 @@ -19,7 +19,7 @@
  export default app({
    name: "OpenSaaS",
@@ -25,16 +25,16 @@
    head,
    auth: authConfig,
    db: {
-@@ -37,11 +37,9 @@
+@@ -37,10 +37,9 @@
    },
    emailSender,
-   decls: [
+   spec: [
 -    // Prerendering routes with static content creates HTML files at build time that are served immediately,
 -    // improving SEO, search engine/AI crawling, and performance: https://wasp.sh/docs/advanced/prerendering
 -    route("LandingPageRoute", "/", page(LandingPage), { prerender: true }),
      route("NotFoundRoute", "*", page(NotFoundPage)),
- 
++
 +    ...landingPage,
-     ...authDecls,
-     ...userDecls,
-     ...demoAiAppDecls,
+     authSpec,
+     userSpec,
+     demoAiAppSpec,
