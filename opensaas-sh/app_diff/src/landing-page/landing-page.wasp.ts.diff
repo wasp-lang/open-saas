@@ -7,6 +7,6 @@
 +import { getGithubRoadmap } from "./operations" with { type: "ref" };
 +
 +export const landingPage: Decl[] = [
-+  route("LandingPageRoute", "/", page(LandingPage)),
++  route("LandingPageRoute", "/", page(LandingPage), { prerender: true }),
 +  query(getGithubRoadmap),
 +];

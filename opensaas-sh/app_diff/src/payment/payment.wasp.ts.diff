@@ -1,6 +1,6 @@
 --- template/app/src/payment/payment.wasp.ts
 +++ opensaas-sh/app/src/payment/payment.wasp.ts
-@@ -7,12 +7,12 @@
+@@ -7,9 +7,9 @@
  } from "./operations" with { type: "ref" };
  import { PricingPage } from "./PricingPage" with { type: "ref" };
  import {
@@ -12,11 +12,7 @@
 +} from "./stripe/webhook" with { type: "ref" };
  
  export const paymentSpec: Spec = [
--  route("PricingPageRoute", "/pricing", page(PricingPage), { prerender: true }),
-+  route("PricingPageRoute", "/pricing", page(PricingPage)),
-   route(
-     "CheckoutResultRoute",
-     "/checkout",
+   route("PricingPageRoute", "/pricing", page(PricingPage), { prerender: true }),
 @@ -20,8 +20,8 @@
    ),
    query(getCustomerPortalUrl, { entities: ["User"] }),
