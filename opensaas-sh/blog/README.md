@@ -35,6 +35,28 @@ Static assets, like favicons and banner images, can be placed in the `public/` d
 
 We have a number of custom components in `src/components/` that you can use in your blog posts and docs.
 
+## 🏃 Running the Development Server
+
+To run the development server locally:
+
+```bash
+npm install
+npm run dev
+```
+
+This will start the Astro development server, typically accessible at `http://localhost:4321`.
+
+## 🚀 Deployment
+
+The blog is automatically deployed to Netlify via GitHub Actions. The deployment workflow is configured in `.github/workflows/blog-deployment.yml`.
+
+### How It Works
+
+- **Automatic Deployment**: When changes are pushed to the `main` branch that affect files in `opensaas-sh/blog/**`, the workflow automatically builds and deploys the site to Netlify.
+- **Pull Request Builds**: Pull requests that modify blog files will trigger a build job to verify the site builds successfully before merging.
+
+No manual deployment steps are required - just push your changes to the `main` branch!
+
 ##  Custom Components
 
 Custom components in the `src/components/` that replace default Starlight components are imported into the `astro.config.mjs` file:
