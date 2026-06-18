@@ -1,20 +1,18 @@
-import { app, page, route } from "@wasp.sh/spec";
+import { api, app, page, ref, route } from "@wasp.sh/spec";
+import { fileBased } from "@wasp.sh/file-based-routing/spec";
 
 import { App } from "./src/client/App" with { type: "ref" };
 import { NotFoundPage } from "./src/client/components/NotFoundPage" with { type: "ref" };
 import { serverEnvValidationSchema } from "./src/env" with { type: "ref" };
-import { LandingPage } from "./src/landing-page/LandingPage" with { type: "ref" };
+import {
+  paymentsMiddlewareConfigFn,
+  paymentsWebhook,
+} from "./src/payment/webhook" with { type: "ref" };
 import { seedMockUsers } from "./src/server/scripts/dbSeeds" with { type: "ref" };
 
-import { adminSpec } from "./src/admin/admin.wasp";
-import { analyticsSpec } from "./src/analytics/analytics.wasp";
-import { authConfig, authSpec } from "./src/auth/auth.wasp";
+import { authConfig } from "./src/auth/auth.wasp";
 import { head } from "./src/client/head.wasp";
-import { demoAiAppSpec } from "./src/demo-ai-app/demo-ai-app.wasp";
-import { fileUploadSpec } from "./src/file-upload/file-upload.wasp";
-import { paymentSpec } from "./src/payment/payment.wasp";
 import { emailSender } from "./src/server/emailSender.wasp";
-import { userSpec } from "./src/user/user.wasp";
 
 export default app({
   name: "OpenSaaS",
@@ -37,16 +35,17 @@ export default app({
   },
   emailSender,
   spec: [
-    // Prerendering routes with static content creates HTML files at build time that are served immediately,
-    // improving SEO, search engine/AI crawling, and performance: https://wasp.sh/docs/advanced/prerendering
-    route("LandingPageRoute", "/", page(LandingPage), { prerender: true }),
+    // The catch-all NotFound route is hand-written: the file-based router only
+    // produces a `/*` route, not React Router's bare `*`.
     route("NotFoundRoute", "*", page(NotFoundPage)),
-    authSpec,
-    userSpec,
-    demoAiAppSpec,
-    paymentSpec,
-    fileUploadSpec,
-    analyticsSpec,
-    adminSpec,
+    // The payments webhook is hand-written: the file-based router can't yet
+    // express an api's `middlewareConfigFn` ref through an options file.
+    api("POST", "/payments-webhook", paymentsWebhook, {
+      entities: ["User"],
+      middlewareConfigFn: paymentsMiddlewareConfigFn,
+    }),
+    // Pages, routes, queries, actions, and jobs are discovered from the
+    // filesystem under `src/app/`: https://github.com/wasp-lang/file-based-routing
+    await fileBased({ ref }),
   ],
 });

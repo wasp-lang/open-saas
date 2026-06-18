@@ -80,7 +80,7 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
     >
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="py-5.5 lg:py-6.5 flex items-center justify-between gap-2 px-6">
-        <Link to={routes.LandingPageRoute.to}>
+        <Link to={routes.RootRoute.to}>
           <img src={Logo} alt="Logo" width={50} />
         </Link>
 
@@ -232,7 +232,7 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                         <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
                           <li>
                             <NavLink
-                              to={routes.AdminUIButtonsRoute.to}
+                              to={routes.AdminUiButtonsRoute.to}
                               end
                               className={({ isActive }) =>
                                 cn(

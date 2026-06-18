@@ -1,0 +1,33 @@
+--- template/app/src/app/queries/(user)/getPaginatedUsers.ts
++++ opensaas-sh/app/src/app/queries/(user)/getPaginatedUsers.ts
+@@ -9,12 +9,7 @@
+ type GetPaginatedUsersOutput = {
+   users: Pick<
+     User,
+-    | "id"
+-    | "email"
+-    | "username"
+-    | "subscriptionStatus"
+-    | "paymentProcessorUserId"
+-    | "isAdmin"
++    "id" | "email" | "username" | "subscriptionStatus" | "stripeId" | "isAdmin"
+   >[];
+   totalPages: number;
+ };
+@@ -79,6 +74,7 @@
+             mode: "insensitive",
+           },
+           isAdmin,
++          isMockUser: true,
+         },
+         {
+           OR: [
+@@ -100,7 +96,7 @@
+       username: true,
+       isAdmin: true,
+       subscriptionStatus: true,
+-      paymentProcessorUserId: true,
++      stripeId: true,
+     },
+     orderBy: {
+       username: "asc",

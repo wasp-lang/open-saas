@@ -13,7 +13,7 @@ export function DefaultLayout({ children, user }: Props) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (!user.isAdmin) {
-    return <Link to={routes.LandingPageRoute.to} replace />;
+    return <Link to={routes.RootRoute.to} replace />;
   }
 
   return (

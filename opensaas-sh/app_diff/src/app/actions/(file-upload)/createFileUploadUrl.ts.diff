@@ -1,0 +1,25 @@
+--- template/app/src/app/actions/(file-upload)/createFileUploadUrl.ts
++++ opensaas-sh/app/src/app/actions/(file-upload)/createFileUploadUrl.ts
+@@ -1,6 +1,7 @@
+ import { HttpError } from "wasp/server";
+ import { type CreateFileUploadUrl } from "wasp/server/operations";
+ import * as z from "zod";
++import { checkIfUserHasReachedFileUploadLimit } from "../../../file-upload/fileUploading";
+ import { getUploadFileSignedURLFromS3 } from "../../../file-upload/s3Utils";
+ import { ALLOWED_FILE_TYPES } from "../../../file-upload/validation";
+ import { ensureArgsSchemaOrThrowHttpError } from "../../../server/validation";
+@@ -24,6 +25,14 @@
+     throw new HttpError(401);
+   }
+ 
++  const userFileLimitReached = await checkIfUserHasReachedFileUploadLimit({
++    userId: context.user.id,
++    prismaFileDelegate: context.entities.File,
++  });
++  if (userFileLimitReached) {
++    throw new HttpError(403, "This demo only allows 2 file uploads per user.");
++  }
++
+   const { fileType, fileName } = ensureArgsSchemaOrThrowHttpError(
+     createFileInputSchema,
+     rawArgs,

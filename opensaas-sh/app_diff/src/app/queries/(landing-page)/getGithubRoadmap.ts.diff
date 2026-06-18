@@ -1,0 +1,4 @@
+--- template/app/src/app/queries/(landing-page)/getGithubRoadmap.ts
++++ opensaas-sh/app/src/app/queries/(landing-page)/getGithubRoadmap.ts
+@@ -0,0 +1 @@
++export { getGithubRoadmap as default } from "../../../landing-page/operations";

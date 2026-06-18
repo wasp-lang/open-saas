@@ -18,8 +18,8 @@ export function App() {
   const location = useLocation();
   const isMarketingPage = useMemo(() => {
     return (
-      location.pathname === routes.LandingPageRoute.to ||
-      location.pathname === routes.PricingPageRoute.to
+      location.pathname === routes.RootRoute.to ||
+      location.pathname === routes.PricingRoute.to
     );
   }, [location]);
 

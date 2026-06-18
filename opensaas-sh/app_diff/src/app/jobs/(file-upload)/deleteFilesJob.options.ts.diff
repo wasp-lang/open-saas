@@ -1,0 +1,14 @@
+--- template/app/src/app/jobs/(file-upload)/deleteFilesJob.options.ts
++++ opensaas-sh/app/src/app/jobs/(file-upload)/deleteFilesJob.options.ts
+@@ -0,0 +1,11 @@
++import { options } from "@wasp.sh/file-based-routing";
++
++export default options({
++  job: {
++    executor: "PgBoss",
++    schedule: {
++      cron: "0 5 * * *",
++    },
++    entities: ["File"],
++  },
++});

@@ -1,0 +1,38 @@
+--- template/app/src/app/page.tsx
++++ opensaas-sh/app/src/app/page.tsx
+@@ -1,8 +1,15 @@
++import {
++  Admin,
++  AIReady,
++  Auth,
++  Payments,
++} from "../landing-page/components/Examples";
+ import { ExamplesCarousel } from "../landing-page/components/ExamplesCarousel";
+ import { FAQ } from "../landing-page/components/FAQ";
+ import { FeaturesGrid } from "../landing-page/components/FeaturesGrid";
+ import { Footer } from "../landing-page/components/Footer";
+ import { Hero } from "../landing-page/components/Hero";
++import { Roadmap } from "../landing-page/components/Roadmap";
+ import { SchemaMarkup } from "../landing-page/components/SchemaMarkup";
+ import { Testimonials } from "../landing-page/components/Testimonials";
+ import {
+@@ -12,7 +19,6 @@
+   footerNavigation,
+   testimonials,
+ } from "../landing-page/contentSections";
+-import { AIReady } from "../landing-page/ExampleHighlightedFeature";
+ 
+ export default function LandingPage() {
+   return (
+@@ -22,7 +28,11 @@
+         <Hero />
+         <ExamplesCarousel examples={examples} />
+         <AIReady />
++        <Auth />
++        <Payments />
++        <Admin />
+         <FeaturesGrid features={features} />
++        <Roadmap />
+         <Testimonials testimonials={testimonials} />
+         <FAQ faqs={faqs} />
+       </main>

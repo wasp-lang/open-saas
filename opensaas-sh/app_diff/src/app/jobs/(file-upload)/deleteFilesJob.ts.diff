@@ -1,0 +1,4 @@
+--- template/app/src/app/jobs/(file-upload)/deleteFilesJob.ts
++++ opensaas-sh/app/src/app/jobs/(file-upload)/deleteFilesJob.ts
+@@ -0,0 +1 @@
++export { deleteFilesJob as default } from "../../../file-upload/workers";

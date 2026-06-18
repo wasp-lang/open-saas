@@ -74,7 +74,7 @@ export function NavBar({
           >
             <div className="flex items-center gap-6">
               <WaspRouterLink
-                to={routes.LandingPageRoute.to}
+                to={routes.RootRoute.to}
                 className="text-foreground hover:text-primary flex items-center transition-colors duration-300 ease-in-out"
               >
                 <NavLogo isScrolled={isScrolled} />
@@ -179,7 +179,7 @@ function NavBarMobileMenu({
         <SheetContent side="right" className="w-[300px] sm:w-[400px]">
           <SheetHeader>
             <SheetTitle className="flex items-center">
-              <WaspRouterLink to={routes.LandingPageRoute.to}>
+              <WaspRouterLink to={routes.RootRoute.to}>
                 <span className="sr-only">Your SaaS</span>
                 <NavLogo isScrolled={false} />
               </WaspRouterLink>

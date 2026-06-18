@@ -1,6 +1,6 @@
 --- template/app/src/auth/auth.wasp.ts
 +++ opensaas-sh/app/src/auth/auth.wasp.ts
-@@ -28,7 +28,7 @@
+@@ -17,7 +17,7 @@
  const emailAuthMethod: NonNullable<AuthMethods["email"]> = {
    fromField: {
      name: "Open SaaS App",
@@ -9,7 +9,7 @@
    },
    emailVerification: {
      clientRoute: "EmailVerificationRoute",
-@@ -41,27 +41,20 @@
+@@ -30,27 +30,20 @@
    userSignupFields: getEmailUserFields,
  };
  
@@ -37,8 +37,8 @@
  const discordAuthMethod: NonNullable<AuthMethods["discord"]> = {
    userSignupFields: getDiscordUserFields,
    configFn: getDiscordAuthConfig,
-@@ -75,9 +68,9 @@
-     //       (RequestPasswordResetRoute, PasswordResetRoute, EmailVerificationRoute)
+@@ -64,9 +57,9 @@
+     //       (src/app/request-password-reset, src/app/password-reset, src/app/email-verification)
      email: emailAuthMethod,
      // usernameAndPassword: usernameAndPasswordAuthMethod,
 -    // google: googleAuthMethod,

@@ -6,6 +6,6 @@ export const useIsLandingPage = () => {
   const location = useLocation();
 
   return useMemo(() => {
-    return location.pathname === routes.LandingPageRoute.to;
+    return location.pathname === routes.RootRoute.to;
   }, [location]);
 };
