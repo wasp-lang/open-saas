@@ -1,13 +1,13 @@
 import { type AuthUser } from "wasp/auth";
 import { getDailyStats, useQuery } from "wasp/client/operations";
-import { cn } from "../../client/utils";
-import { DefaultLayout } from "../../admin/layout/DefaultLayout";
 import { RevenueAndProfitChart } from "../../admin/dashboards/analytics/RevenueAndProfitChart";
 import { SourcesTable } from "../../admin/dashboards/analytics/SourcesTable";
 import { TotalPageViewsCard } from "../../admin/dashboards/analytics/TotalPageViewsCard";
 import { TotalPayingUsersCard } from "../../admin/dashboards/analytics/TotalPayingUsersCard";
 import { TotalRevenueCard } from "../../admin/dashboards/analytics/TotalRevenueCard";
 import { TotalSignupsCard } from "../../admin/dashboards/analytics/TotalSignupsCard";
+import { DefaultLayout } from "../../admin/layout/DefaultLayout";
+import { cn } from "../../client/utils";
 
 export default function AnalyticsDashboardPage({ user }: { user: AuthUser }) {
   const { data: stats, isLoading, error } = useQuery(getDailyStats);

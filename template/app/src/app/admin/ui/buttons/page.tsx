@@ -1,8 +1,8 @@
 import { Heart, Plus, Trash2 } from "lucide-react";
 import { type AuthUser } from "wasp/auth";
-import { Button } from "../../../../client/components/ui/button";
 import { Breadcrumb } from "../../../../admin/layout/Breadcrumb";
 import { DefaultLayout } from "../../../../admin/layout/DefaultLayout";
+import { Button } from "../../../../client/components/ui/button";
 
 export default function ButtonsPage({ user }: { user: AuthUser }) {
   return (

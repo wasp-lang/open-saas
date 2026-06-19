@@ -1,7 +1,7 @@
 import { type AuthUser } from "wasp/auth";
+import { UsersTable } from "../../../admin/dashboards/users/UsersTable";
 import { Breadcrumb } from "../../../admin/layout/Breadcrumb";
 import { DefaultLayout } from "../../../admin/layout/DefaultLayout";
-import { UsersTable } from "../../../admin/dashboards/users/UsersTable";
 
 export default function UsersDashboardPage({ user }: { user: AuthUser }) {
   return (

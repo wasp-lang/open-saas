@@ -1,6 +1,8 @@
 import { FileText, Mail, Upload, User } from "lucide-react";
 import { FormEvent } from "react";
 import { type AuthUser } from "wasp/auth";
+import { Breadcrumb } from "../../../admin/layout/Breadcrumb";
+import { DefaultLayout } from "../../../admin/layout/DefaultLayout";
 import { Button } from "../../../client/components/ui/button";
 import {
   Card,
@@ -11,8 +13,6 @@ import {
 import { Input } from "../../../client/components/ui/input";
 import { Label } from "../../../client/components/ui/label";
 import { Textarea } from "../../../client/components/ui/textarea";
-import { Breadcrumb } from "../../../admin/layout/Breadcrumb";
-import { DefaultLayout } from "../../../admin/layout/DefaultLayout";
 
 export default function SettingsPage({ user }: { user: AuthUser }) {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {

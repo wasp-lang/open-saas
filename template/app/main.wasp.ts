@@ -1,5 +1,5 @@
-import { api, app, page, ref, route } from "@wasp.sh/spec";
 import { fileBased } from "@wasp.sh/file-based-routing/spec";
+import { api, app, page, ref, route } from "@wasp.sh/spec";
 
 import { App } from "./src/client/App" with { type: "ref" };
 import { NotFoundPage } from "./src/client/components/NotFoundPage" with { type: "ref" };
