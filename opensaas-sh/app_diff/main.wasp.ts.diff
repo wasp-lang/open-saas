@@ -1,11 +1,6 @@
 --- template/app/main.wasp.ts
 +++ opensaas-sh/app/main.wasp.ts
-@@ -1,13 +1,13 @@
--import { api, app, page, ref, route } from "@wasp.sh/spec";
- import { fileBased } from "@wasp.sh/file-based-routing/spec";
-+import { api, app, page, ref, route } from "@wasp.sh/spec";
- 
- import { App } from "./src/client/App" with { type: "ref" };
+@@ -5,9 +5,9 @@
  import { NotFoundPage } from "./src/client/components/NotFoundPage" with { type: "ref" };
  import { serverEnvValidationSchema } from "./src/env" with { type: "ref" };
  import {
@@ -21,7 +16,7 @@
 @@ -17,7 +17,7 @@
  export default app({
    name: "OpenSaaS",
-   wasp: { version: "^0.24.0" },
+   wasp: { version: "^0.25.0" },
 -  title: "My Open SaaS App",
 +  title: "Open SaaS",
    head,
