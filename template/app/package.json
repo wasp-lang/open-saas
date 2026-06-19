@@ -27,7 +27,7 @@
     "@radix-ui/react-toast": "^1.2.14",
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/typography": "^0.5.19",
-    "@wasp.sh/file-based-routing": "https://pkg.pr.new/wasp-lang/file-based-routing/@wasp.sh/file-based-routing@27",
+    "@wasp.sh/file-based-routing": "https://pkg.pr.new/wasp-lang/file-based-routing/@wasp.sh/file-based-routing@2b00b8b",
     "apexcharts": "5.10.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

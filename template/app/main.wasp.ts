@@ -1,14 +1,6 @@
 import { fileBased } from "@wasp.sh/file-based-routing/spec";
 import { api, app, page, ref, route } from "@wasp.sh/spec";
 
-// file-based-routing builds its refs from absolute file paths that keep the
-// `.ts`/`.tsx` extension, but Wasp's generated server compiles with
-// extensionless imports (its tsconfig doesn't set `allowImportingTsExtensions`,
-// so TSC rejects `.ts` import paths). Strip the extension before handing the
-// ref to Wasp so the discovered operations type-check.
-const extensionlessRef: typeof ref = (descriptor) =>
-  ref({ ...descriptor, from: descriptor.from.replace(/\.[mc]?[jt]sx?$/, "") });
-
 import { App } from "./src/client/App" with { type: "ref" };
 import { NotFoundPage } from "./src/client/components/NotFoundPage" with { type: "ref" };
 import { serverEnvValidationSchema } from "./src/env" with { type: "ref" };
@@ -54,6 +46,6 @@ export default app({
     }),
     // Pages, routes, queries, actions, and jobs are discovered from the
     // filesystem under `src/app/`: https://github.com/wasp-lang/file-based-routing
-    await fileBased({ ref: extensionlessRef }),
+    await fileBased({ ref }),
   ],
 });
