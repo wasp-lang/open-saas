@@ -5,7 +5,6 @@
   declare global {
     interface Window {
       posthog: any;
-      Reo: any;
     }
   }
 
@@ -47,9 +46,6 @@
         autoClear: {
           cookies: [
             {
-              name: /^__sec__/, // regex: match all REO.dev cookies (https://docs.reo.dev/integrations/tracking-beacon/reo.dev-javascript-cookies-and-consent-guide#key-features-of-reo.dev-cookies)
-            },
-            {
               name: /^ph_/, // regex: match all PostHog cookies
             },
           ],
@@ -61,17 +57,6 @@
             onAccept: async () => {
               try {
                 await CookieConsent.loadScript("/scripts/posthog.js");
-              } catch (error) {
-                console.error(error);
-              }
-            },
-            onReject: () => {},
-          },
-          reo: {
-            label: "REO.dev",
-            onAccept: async () => {
-              try {
-                await CookieConsent.loadScript("/scripts/reo.js");
               } catch (error) {
                 console.error(error);
               }
