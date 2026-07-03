@@ -34,6 +34,27 @@ export const stripeWebhook: PaymentsWebhook = async (
   try {
     const event = constructStripeEvent(request);
 
+    // Idempotency check: Prevent duplicate processing of the same Stripe event
+    const eventId = event.id;
+    try {
+      const alreadyProcessed = await context.entities.StripeEvent.findUnique({
+        where: { id: eventId },
+      });
+      if (alreadyProcessed) {
+        console.info(`[Webhook] Event ${eventId} already processed. Skipping...`);
+        return response.status(204).send();
+      }
+      await context.entities.StripeEvent.create({
+        data: { id: eventId },
+      });
+    } catch (err: any) {
+      if (err.code === 'P2002') {
+        console.info(`[Webhook] Event ${eventId} processed concurrently. Skipping...`);
+        return response.status(204).send();
+      }
+      throw err;
+    }
+
     // If you'd like to handle more events, you can add more cases below.
     // When deploying your app, you configure your webhook in the Stripe dashboard
     // to only send the events that you're handling above.

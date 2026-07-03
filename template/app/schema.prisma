@@ -109,3 +109,9 @@ model ContactFormMessage {
   isRead                    Boolean         @default(false)
   repliedAt                 DateTime?
 }
+
+model StripeEvent {
+  id        String   @id
+  createdAt DateTime @default(now())
+}
+
