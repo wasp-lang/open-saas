@@ -18,4 +18,4 @@ if [ -z "$latest_commit" ]; then
   exit 1
 fi
 
-npm_config_prefer_online=true npx -y "https://pkg.pr.new/@wasp.sh/wasp-cli@$latest_commit" "$@"
+exec npx -y "https://pkg.pr.new/@wasp.sh/wasp-cli@$latest_commit" "$@"
