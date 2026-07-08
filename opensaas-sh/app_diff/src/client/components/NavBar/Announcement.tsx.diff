@@ -2,7 +2,7 @@
 +++ opensaas-sh/app/src/client/components/NavBar/Announcement.tsx
 @@ -1,32 +1,33 @@
 -const ANNOUNCEMENT_URL = "https://github.com/wasp-lang/wasp";
-+const ANNOUNCEMENT_URL = "https:/openvibe.sh";
++const ANNOUNCEMENT_URL = "https://openvibe.sh/?utm_source=opensaas";
  
  export function Announcement() {
 +

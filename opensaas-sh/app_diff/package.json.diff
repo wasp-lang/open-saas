@@ -22,11 +22,23 @@
      "@radix-ui/react-accordion": "^1.2.11",
      "@radix-ui/react-avatar": "^1.1.10",
      "@radix-ui/react-checkbox": "^1.3.2",
-@@ -39,6 +44,7 @@
+@@ -39,7 +44,8 @@
      "react-apexcharts": "2.1.0",
      "react-dom": "^19.2.1",
      "react-hook-form": "^7.60.0",
+-    "react-router": "^7.12.0",
 +    "react-icons": "^5.5.0",
-     "react-router": "^7.12.0",
++    "react-router": "^8.0.1",
      "stripe": "18.1.0",
      "tailwind-merge": "^2.2.1",
+     "tailwindcss": "^4.1.18",
+@@ -56,7 +62,7 @@
+     "@wasp.sh/spec": "file:.wasp/spec",
+     "prisma": "5.19.1",
+     "typescript": "6.0.3",
+-    "vite": "^7.0.6",
+-    "vitest": "^4.0.16"
++    "vite": "^8.1.0",
++    "vitest": "^4.1.9"
+   }
+ }
