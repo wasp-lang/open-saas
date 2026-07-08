@@ -5,10 +5,10 @@
 WASP_CLI_MAIN_URL="https://pkg.pr.new/@wasp.sh/wasp-cli@main"
 
 get_latest_published_commit() {
-  curl -fsLI "$WASP_CLI_MAIN_URL" |
-    grep -i '^x-commit-key:' |
-    cut -d: -f4- |
-    tr -d '[:space:]'
+  curl -fsLI "$WASP_CLI_MAIN_URL" \
+    | grep -i '^x-commit-key:' \
+    | cut -d: -f4- \
+    | tr -d '[:space:]'
 }
 
 latest_commit=$(get_latest_published_commit)
