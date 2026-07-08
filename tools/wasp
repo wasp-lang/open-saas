@@ -2,4 +2,20 @@
 
 # Just a wrapper to always use the latest Wasp CLI from main branch.
 
-npm_config_prefer_online=true npx -y https://pkg.pr.new/@wasp.sh/wasp-cli@main "$@"
+WASP_CLI_MAIN_URL="https://pkg.pr.new/@wasp.sh/wasp-cli@main"
+
+get_latest_published_commit() {
+  curl -fsLI "$WASP_CLI_MAIN_URL" |
+    grep -i '^x-commit-key:' |
+    cut -d: -f4- |
+    tr -d '[:space:]'
+}
+
+latest_commit=$(get_latest_published_commit)
+
+if [ -z "$latest_commit" ]; then
+  printf '%s\n' "Failed to resolve latest published Wasp commit from main." >&2
+  exit 1
+fi
+
+exec npx -y "https://pkg.pr.new/@wasp.sh/wasp-cli@$latest_commit" "$@"
