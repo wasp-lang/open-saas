@@ -2,10 +2,10 @@
 
 # Just a wrapper to always use the latest Wasp CLI from main branch.
 
-latest_commit=$(git ls-remote https://github.com/wasp-lang/wasp.git refs/heads/main | cut -c1-7)
+latest_commit=$(curl -fsLI https://pkg.pr.new/@wasp.sh/wasp-cli@main | grep -i '^x-commit-key:' | cut -d: -f4- | tr -d '[:space:]')
 
 if [ -z "$latest_commit" ]; then
-  printf '%s\n' "Failed to resolve latest Wasp commit from main." >&2
+  printf '%s\n' "Failed to resolve latest published Wasp commit from main." >&2
   exit 1
 fi
 
