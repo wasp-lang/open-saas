@@ -61,7 +61,7 @@ import VideoPlayer from '../../../components/VideoPlayer.astro';
 
 ### HeadWithOGImage
 
-This component is used to generate the Open Graph (OG) meta tags for the social media preview images for each doc and blog post. 
+This component is used to generate the Open Graph (OG) meta tags for the social media preview images for each doc and blog post.
 
 It checks if a banner image exists in `./public/banner-images` with the same name as the blog post but with a `.webp` extension, e.g. if the blog post is `2024-12-10-open-saas-tutorial.mdx`, it checks for `./public/banner-images/2024-12-10-open-saas-tutorial.webp`. If it does, it uses that image. If it doesn't, it uses the default banner image.
 
