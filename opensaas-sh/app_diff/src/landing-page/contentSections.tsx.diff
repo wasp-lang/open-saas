@@ -16,7 +16,7 @@
  import searchcraft from "../client/static/examples/searchcraft.webp";
 -import { BlogUrl, DocsUrl } from "../shared/common";
 -import type { GridFeature } from "./components/FeaturesGrid";
-+import logo from "../client/static/logo.webp";
++import logo from "../client/static/logo.svg";
 +import { BlogUrl, DocsUrl, GithubUrl, WaspUrl } from "../shared/common";
 +import { GridFeature } from "./components/FeaturesGrid";
  
