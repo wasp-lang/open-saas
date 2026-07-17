@@ -11,7 +11,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router";
 import { Link, routes } from "wasp/client/router";
-import Logo from "../../client/static/logo.webp";
+import Logo from "../../client/static/logo.svg";
 import { cn } from "../../client/utils";
 import { SidebarLinkGroup } from "./SidebarLinkGroup";
 

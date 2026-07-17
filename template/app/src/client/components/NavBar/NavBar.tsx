@@ -14,7 +14,7 @@ import { throttleWithTrailingInvocation } from "../../../shared/utils";
 import { UserDropdown } from "../../../user/UserDropdown";
 import { UserMenuItems } from "../../../user/UserMenuItems";
 import { useIsLandingPage } from "../../hooks/useIsLandingPage";
-import logo from "../../static/logo.webp";
+import logo from "../../static/logo.svg";
 import { cn } from "../../utils";
 import { DarkModeSwitcher } from "../DarkModeSwitcher";
 import { Announcement } from "./Announcement";
@@ -247,7 +247,7 @@ function renderNavigationItems(
 function NavLogo({ isScrolled }: { isScrolled: boolean }) {
   return (
     <img
-      className={cn("transition-all duration-500", {
+      className={cn("rounded-md transition-all duration-500", {
         "size-8": !isScrolled,
         "size-7": isScrolled,
       })}
