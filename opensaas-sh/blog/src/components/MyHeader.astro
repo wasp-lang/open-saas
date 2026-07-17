@@ -3,30 +3,42 @@ import blogConfig from "virtual:starlight-blog/config";
 import config from "virtual:starlight/user-config";
 import { logos } from "virtual:starlight/user-images";
 
+const href = Astro.site;
 const { siteTitle } = Astro.locals.starlightRoute;
+
+const navItemClasses =
+  "ml-4 h-full gap-4 self-center border-e border-e-(--sl-color-gray-5) pe-4 min-[50rem]:flex min-[50rem]:items-center";
+const navLinkClasses =
+  "font-semibold text-(--sl-color-white) no-underline hover:text-(--sl-color-text-accent)";
+const logoClasses =
+  "h-[calc(var(--sl-nav-height)_-_2*var(--sl-nav-pad-y))] w-auto max-w-full object-contain object-[0_50%]";
 ---
 
-<a href="https://opensaas.sh" class="site-title sl-flex">
+<a
+  {href}
+  class="sl-flex max-w-full items-center justify-self-start gap-(--sl-nav-gap) overflow-hidden border-e border-e-(--sl-color-gray-5) pe-4 whitespace-nowrap no-underline"
+>
   {
     config.logo && logos.dark && (
       <>
         <img
-          class:list={{ "light:sl-hidden": !("src" in config.logo) }}
+          class:list={[
+            logoClasses,
+            { "light:sl-hidden print:hidden": !("src" in config.logo) },
+          ]}
           alt={config.logo.alt}
           src={logos.dark.src}
           width={logos.dark.width}
           height={logos.dark.height}
-          loading="eager"
         />
         {/* Show light alternate if a user configure both light and dark logos. */}
         {!("src" in config.logo) && (
           <img
-            class="dark:sl-hidden"
+            class:list={[logoClasses, "dark:sl-hidden print:block"]}
             alt={config.logo.alt}
             src={logos.light?.src}
             width={logos.light?.width}
             height={logos.light?.height}
-            loading="eager"
           />
         )}
       </>
@@ -34,72 +46,14 @@ const { siteTitle } = Astro.locals.starlightRoute;
   }
   <span
     class:list={{ "sr-only": config.logo?.replacesTitle }}
-    class="title-text dark:text-white hover:text-yellow-500"
+    class="font-semibold text-(length:--sl-text-h4) text-(--sl-color-white) hover:text-(--sl-color-text-accent)"
   >
     {siteTitle}
   </span>
 </a>
-<div>
-  <a href="/" class="text-gray-900 hover:text-yellow-500 dark:text-white"
-    >Docs</a
-  >
+<div class={navItemClasses}>
+  <a href="/" class={navLinkClasses}>Docs</a>
 </div>
-<div>
-  <a href="/blog/" class="text-gray-900 hover:text-yellow-500 dark:text-white"
-    >{blogConfig.title}</a
-  >
+<div class={navItemClasses}>
+  <a href="/blog/" class={navLinkClasses}>{blogConfig.title}</a>
 </div>
-
-<style>
-  .site-title {
-    justify-self: flex-start;
-    max-width: 100%;
-    overflow: hidden;
-    align-items: center;
-    color: var(--sl-color-gray-9);
-    gap: var(--sl-nav-gap);
-    font-size: var(--sl-text-h4);
-    font-weight: 600;
-    text-decoration: none;
-    white-space: nowrap;
-    padding-inline-end: 1rem;
-    border-inline-end: 1px solid var(--sl-color-gray-5);
-  }
-  img {
-    height: calc(var(--sl-nav-height) - 2 * var(--sl-nav-pad-y));
-    width: auto;
-    max-width: 100%;
-    object-fit: contain;
-    object-position: 0 50%;
-  }
-  div {
-    border-inline-end: 1px solid var(--sl-color-gray-5);
-    margin-left: 1rem;
-    align-self: center;
-    gap: 1rem;
-    height: 100%;
-    padding-inline-end: 1rem;
-  }
-  .title-text {
-    display: none;
-  }
-
-  @media (min-width: 50rem) {
-    div {
-      align-items: center;
-      display: flex;
-    }
-  }
-  @media (min-width: 28rem) {
-    .title-text {
-      display: block;
-    }
-  }
-  a {
-    font-weight: 600;
-    text-decoration: none;
-  }
-  a:hover {
-    opacity: 0.66;
-  }
-</style>

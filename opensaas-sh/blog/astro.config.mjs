@@ -118,8 +118,7 @@ export default defineConfig({
       plugins: [
         starlightBlog({
           title: "Blog",
-          // Our SiteTitle override (MyHeader) renders its own Blog link, so
-          // don't inject the plugin's navigation link.
+          // Our SiteTitle override renders its own Blog link.
           navigation: "none",
           customCss: ["./src/styles/tailwind.css"],
           authors: {
