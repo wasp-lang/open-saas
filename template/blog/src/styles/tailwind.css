@@ -1,3 +1,16 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "@astrojs/starlight-tailwind";
+
+@theme {
+  --color-accent-50: var(--color-yellow-50);
+  --color-accent-100: var(--color-yellow-100);
+  --color-accent-200: var(--color-yellow-200);
+  --color-accent-300: var(--color-yellow-300);
+  --color-accent-400: var(--color-yellow-400);
+  --color-accent-500: var(--color-yellow-500);
+  --color-accent-600: var(--color-yellow-600);
+  --color-accent-700: var(--color-yellow-700);
+  --color-accent-800: var(--color-yellow-800);
+  --color-accent-900: var(--color-yellow-900);
+  --color-accent-950: var(--color-yellow-950);
+}
