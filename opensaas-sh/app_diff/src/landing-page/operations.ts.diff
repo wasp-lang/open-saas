@@ -1,6 +1,6 @@
 --- template/app/src/landing-page/operations.ts
 +++ opensaas-sh/app/src/landing-page/operations.ts
-@@ -0,0 +1,247 @@
+@@ -0,0 +1,256 @@
 +import type { GetGithubRoadmap } from "wasp/server/operations";
 +
 +import * as z from "zod";
@@ -127,41 +127,42 @@
 +
 +    const BASE_PROJECT_URL = `https://github.com/orgs/${GITHUB_ORG_NAME}/projects/${OPEN_SAAS_GITHUB_PROJECT_NUMBER}/views/1?pane=issue&itemId=`;
 +
-+    const epics: GithubEpic[] = nodes
-+      .filter((node) => node.content?.issueType?.name === "Epic")
-+      .map((node) => {
-+        const issue = node.content;
++    const epics: GithubEpic[] = nodes.flatMap((node) => {
++      const issue = node.content;
++      if (issue?.issueType?.name !== "Epic") {
++        return [];
++      }
 +
-+        const statusField = node.fieldValues.nodes.find(
-+          (f) => f.field?.name === statusFieldName,
-+        );
-+        const statusName = statusField?.name || "Ideas";
++      const statusField = node.fieldValues.nodes.find(
++        (f) => f.field?.name === statusFieldName,
++      );
++      const statusName = statusField?.name || "Ideas";
 +
-+        let status: GithubEpicStatus = GithubEpicStatus.Ideas;
-+        if (
-+          Object.values(GithubEpicStatus).includes(
-+            statusName as GithubEpicStatus,
-+          )
-+        ) {
-+          status = statusName as GithubEpicStatus;
-+        } else {
-+          console.warn(`Unknown GitHub Epic status: ${statusName}`);
-+        }
++      let status: GithubEpicStatus = GithubEpicStatus.Ideas;
++      if (
++        Object.values(GithubEpicStatus).includes(statusName as GithubEpicStatus)
++      ) {
++        status = statusName as GithubEpicStatus;
++      } else {
++        console.warn(`Unknown GitHub Epic status: ${statusName}`);
++      }
 +
-+        const subIssues = issue.subIssues?.nodes || [];
-+        const totalIssues = issue.subIssues?.totalCount ?? subIssues.length;
-+        const doneIssues = subIssues.filter(
-+          (sub) => sub.state === "CLOSED",
-+        ).length;
++      const subIssues = issue.subIssues?.nodes || [];
++      const totalIssues = issue.subIssues?.totalCount ?? subIssues.length;
++      const doneIssues = subIssues.filter(
++        (sub) => sub.state === "CLOSED",
++      ).length;
 +
-+        return {
++      return [
++        {
 +          name: issue.title,
 +          totalIssues,
 +          doneIssues,
 +          status,
 +          url: `${BASE_PROJECT_URL}${node.databaseId}`,
-+        };
-+      });
++        },
++      ];
++    });
 +
 +    epics.sort((a, b) => getStatusOrder(a.status) - getStatusOrder(b.status));
 +
@@ -219,13 +220,21 @@
 +    .nullish(),
 +});
 +
++// Project boards also hold pull requests and draft issues. Our query only spreads
++// `... on Issue`, so those items come back as `{}` and must parse to null rather than
++// failing the whole response.
++const ProjectV2ItemContentSchema = z.union([
++  GithubIssueSchema,
++  z.object({}).transform(() => null),
++]);
++
 +const ProjectV2ItemSchema = z.object({
 +  id: z.string(),
 +  databaseId: z.number().nullish(),
 +  fieldValues: z.object({
 +    nodes: z.array(ProjectV2ItemFieldValueSchema),
 +  }),
-+  content: GithubIssueSchema,
++  content: ProjectV2ItemContentSchema.nullish(),
 +});
 +
 +const GithubGraphQLResponseSchema = z.object({
