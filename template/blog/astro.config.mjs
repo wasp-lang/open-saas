@@ -14,7 +14,7 @@ export default defineConfig({
       customCss: ["./src/styles/tailwind.css"],
       description: "Documentation for your SaaS.",
       logo: {
-        src: "/src/assets/logo.webp",
+        src: "/src/assets/logo.svg",
         alt: "Your SaaS",
       },
       head: [
