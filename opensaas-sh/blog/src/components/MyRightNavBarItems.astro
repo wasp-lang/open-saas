@@ -1,11 +1,14 @@
 ---
-import StarlightThemeSelect from '@astrojs/starlight/components/ThemeSelect.astro'
-import CopyForLlmButton from './CopyForLlmButton.astro'
+import StarlightThemeSelect from "@astrojs/starlight/components/ThemeSelect.astro";
+import CopyForLlmButton from "./CopyForLlmButton.astro";
 ---
 
 <div class="flex items-center justify-center gap-2">
   <CopyForLlmButton />
-  <span aria-hidden="true" style="display: inline-block; width: 1px; height: 2em; background: var(--sl-color-gray-5); margin: 0 0.5rem;"></span>
+  <span
+    aria-hidden="true"
+    style="display: inline-block; width: 1px; height: 2em; background: var(--sl-color-gray-5); margin: 0 0.5rem;"
+  ></span>
   <StarlightThemeSelect>
     <slot />
   </StarlightThemeSelect>

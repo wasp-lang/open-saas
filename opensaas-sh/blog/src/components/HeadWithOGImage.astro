@@ -1,29 +1,30 @@
 ---
-import Default from '@astrojs/starlight/components/Head.astro'
-import BlogPostSchema from './BlogPostSchema.astro'
-import { BANNER_PATH, DEFAULT_BANNER_IMAGE, getBannerImageFilename, checkBannerImageExists } from './imagePaths'
+import Default from "@astrojs/starlight/components/Head.astro";
+import BlogPostSchema from "./BlogPostSchema.astro";
+import {
+  BANNER_PATH,
+  checkBannerImageExists,
+  DEFAULT_BANNER_IMAGE,
+  getBannerImageFilename,
+} from "./imagePaths";
 
-const bannerImageFileName = getBannerImageFilename({ path: Astro.locals.starlightRoute.id })
-const imageExists = checkBannerImageExists({ bannerImageFileName })
+const bannerImageFileName = getBannerImageFilename({
+  path: Astro.locals.starlightRoute.id,
+});
+const imageExists = checkBannerImageExists({ bannerImageFileName });
 
 // Get the URL of the social media preview image for the current post using its
 // route id and replace the path and file extension with `.webp`.
-let ogImageUrl = new URL(
-  `${BANNER_PATH}/${DEFAULT_BANNER_IMAGE}`,
-  Astro.site,
-);
+let ogImageUrl = new URL(`${BANNER_PATH}/${DEFAULT_BANNER_IMAGE}`, Astro.site);
 if (imageExists) {
-  ogImageUrl = new URL(
-    `${BANNER_PATH}/${bannerImageFileName}`,
-    Astro.site,
-  )
+  ogImageUrl = new URL(`${BANNER_PATH}/${bannerImageFileName}`, Astro.site);
 }
 
 // Extract keywords and tags for meta tags
-const { entry } = Astro.locals.starlightRoute
-const keywords = (entry?.data as any)?.keywords as string[] | undefined
-const tags = (entry?.data as any)?.tags as string[] | undefined
-const metaKeywords = keywords || tags
+const { entry } = Astro.locals.starlightRoute;
+const keywords = (entry?.data as any)?.keywords as string[] | undefined;
+const tags = (entry?.data as any)?.tags as string[] | undefined;
+const metaKeywords = keywords || tags;
 ---
 
 <Default><slot /></Default>
@@ -33,6 +34,9 @@ const metaKeywords = keywords || tags
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta name="twitter:image" content={ogImageUrl} />
-{metaKeywords && <meta name="keywords" content={metaKeywords.join(',')} />}
-{tags && tags.map((tag: string) => <meta property="article:tag" content={tag} />)}
+{metaKeywords && <meta name="keywords" content={metaKeywords.join(",")} />}
+{
+  tags &&
+    tags.map((tag: string) => <meta property="article:tag" content={tag} />)
+}
 <BlogPostSchema />
