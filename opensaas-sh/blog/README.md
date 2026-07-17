@@ -42,7 +42,6 @@ Custom components in the `src/components/` that replace default Starlight compon
 ```js
 components: {
   SiteTitle: './src/components/MyHeader.astro',
-  ThemeSelect: './src/components/MyThemeSelect.astro',
   Head: './src/components/HeadWithOGImage.astro',
   PageTitle: './src/components/TitleWithBannerImage.astro',
 },

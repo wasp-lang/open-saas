@@ -10,13 +10,14 @@
     "start": "astro dev"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.4",
-    "@astrojs/starlight": "^0.29.2",
-    "@astrojs/starlight-tailwind": "^2.0.3",
-    "@astrojs/tailwind": "^5.1.2",
-    "astro": "^4.16.15",
-    "sharp": "^0.32.5",
-    "starlight-blog": "^0.15.0",
+    "@astrojs/check": "^0.9.9",
+    "@astrojs/starlight": "^0.41.3",
+    "@astrojs/starlight-tailwind": "^5.0.0",
+    "@tailwindcss/vite": "^4.1.0",
+    "astro": "^7.1.0",
+    "sharp": "^0.35.3",
+    "starlight-blog": "^0.27.0",
+    "tailwindcss": "^4.1.0",
     "typescript": "^5.4.5"
   }
 }

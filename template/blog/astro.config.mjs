@@ -1,8 +1,7 @@
 import starlight from "@astrojs/starlight";
+import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 import starlightBlog from "starlight-blog";
-
-import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
 export default defineConfig({
@@ -14,7 +13,7 @@ export default defineConfig({
       customCss: ["./src/styles/tailwind.css"],
       description: "Documentation for your SaaS.",
       logo: {
-        src: "/src/assets/logo.svg",
+        src: "/src/assets/wasp-logo.svg",
         alt: "Your SaaS",
       },
       head: [
@@ -41,15 +40,26 @@ export default defineConfig({
       },
       components: {
         SiteTitle: "./src/components/MyHeader.astro",
-        ThemeSelect: "./src/components/MyThemeSelect.astro",
         Head: "./src/components/HeadWithOGImage.astro",
         PageTitle: "./src/components/TitleWithBannerImage.astro",
       },
-      social: {
-        github: "https://github.com/wasp-lang/open-saas",
-        twitter: "https://twitter.com/wasplang",
-        discord: "https://discord.gg/aCamt5wCpS",
-      },
+      social: [
+        {
+          icon: "github",
+          label: "GitHub",
+          href: "https://github.com/wasp-lang/open-saas",
+        },
+        {
+          icon: "twitter",
+          label: "Twitter",
+          href: "https://twitter.com/wasplang",
+        },
+        {
+          icon: "discord",
+          label: "Discord",
+          href: "https://discord.gg/aCamt5wCpS",
+        },
+      ],
       sidebar: [
         {
           label: "Start Here",
@@ -73,6 +83,8 @@ export default defineConfig({
       plugins: [
         starlightBlog({
           title: "Blog",
+          // Our SiteTitle override renders its own Blog link.
+          navigation: "none",
           customCss: ["./src/styles/tailwind.css"],
           authors: {
             Dev: {
@@ -85,6 +97,6 @@ export default defineConfig({
         }),
       ],
     }),
-    tailwind({ applyBaseStyles: false }),
   ],
+  vite: { plugins: [tailwindcss()] },
 });
