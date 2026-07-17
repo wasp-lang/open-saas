@@ -5,7 +5,6 @@
 .claude/skills/getting-started
 .claude/skills/guided-tour
 public/llms.txt
-src/client/static/logo.webp
 src/client/static/open-saas-banner-dark.svg
 src/client/static/open-saas-banner-light.svg
 src/landing-page/components/Hero.tsx
