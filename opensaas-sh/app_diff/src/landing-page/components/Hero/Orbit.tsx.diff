@@ -54,7 +54,7 @@
 +      <ImageLogo
 +        src={logo}
 +        alt="Wasp Logo"
-+        className="h-8 w-8 dark:block"
++        className="h-8 w-8 rounded-md dark:block"
 +        dark={false}
 +      />
 +    ),

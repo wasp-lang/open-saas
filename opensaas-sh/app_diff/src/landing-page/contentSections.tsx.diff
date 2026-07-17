@@ -87,7 +87,7 @@
 -    size: "large",
 +    name: "Open SaaS",
 +    description: "Try the demo app",
-+    icon: <img src={logo} alt="Wasp Logo" />,
++    icon: <img src={logo} alt="Wasp Logo" className="rounded-md" />,
 +    href: routes.LoginRoute.to,
 +    size: "medium",
 +    highlight: true,
