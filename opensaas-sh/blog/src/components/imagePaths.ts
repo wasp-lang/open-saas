@@ -7,7 +7,7 @@ export const BANNER_PATH = "/banner-images";
 export const DEFAULT_BANNER_IMAGE = "opensaas.webp";
 
 export const getBannerImageFilename = ({ path }: { path: string }) =>
-  path.replace(/.*\//, "").replace(/\.\w+$/, ".webp");
+  path.replace(/.*\//, "").replace(/\.\w+$/, "") + ".webp";
 
 export const checkBannerImageExists = ({
   bannerImageFileName,

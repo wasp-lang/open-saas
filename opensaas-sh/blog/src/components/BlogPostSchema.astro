@@ -1,10 +1,9 @@
 ---
-import type { Props } from '@astrojs/starlight/props'
-import blogConfig from 'virtual:starlight-blog-config'
+import blogConfig from 'virtual:starlight-blog/config'
 import type { StarlightBlogAuthor } from 'starlight-blog/schema'
 import { BANNER_PATH, DEFAULT_BANNER_IMAGE, getBannerImageFilename, checkBannerImageExists } from './imagePaths'
 
-const { entry, id } = Astro.props
+const { entry, id } = Astro.locals.starlightRoute
 
 // Only generate schema for blog posts
 const isBlogPost = id.startsWith('blog/')

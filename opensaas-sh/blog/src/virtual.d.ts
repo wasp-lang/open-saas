@@ -1,5 +1,5 @@
-declare module "virtual:starlight-blog-config" {
-  const StarlightBlogConfig: import("./libs/config").StarlightBlogConfig;
+declare module "virtual:starlight-blog/config" {
+  const StarlightBlogConfig: import("starlight-blog").StarlightBlogConfig;
 
   export default StarlightBlogConfig;
 }

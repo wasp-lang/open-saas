@@ -1,9 +1,8 @@
 ---
-import type { Props } from '@astrojs/starlight/props'
 import { Image } from 'astro:assets';
 import { BANNER_PATH, getBannerImageFilename, checkBannerImageExists } from './imagePaths'
 
-const { id, entry } = Astro.props;
+const { id, entry } = Astro.locals.starlightRoute;
 const { title, subtitle, hideBannerImage } = entry.data;
 const bannerImageFileName = getBannerImageFilename({ path: id })
 const imageExists = checkBannerImageExists({ bannerImageFileName })
