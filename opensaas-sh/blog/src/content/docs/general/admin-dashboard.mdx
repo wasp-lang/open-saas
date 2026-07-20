@@ -16,11 +16,13 @@ This is a reference on how the Admin dashboard, available at `/admin`, is set up
 
 The Admin dashboard is only accessible to users with the `isAdmin` field set to true.
 
-```tsx title="schema.prisma" {5}
+```prisma title="schema.prisma" {7}
 model User {
-  id                        Int             @id @default(autoincrement())
+  id                        String          @id @default(uuid())
+  createdAt                 DateTime        @default(now())
+
   email                     String?         @unique
-  username                  String?
+  username                  String?         @unique
   isAdmin                   Boolean         @default(false)
   //...
 ```
