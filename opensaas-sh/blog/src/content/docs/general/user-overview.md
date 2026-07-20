@@ -45,6 +45,7 @@ We use payment processor to handle all of our subscription payments. The `User` 
 model User {
   // ...
   paymentProcessorUserId    String?         @unique
+  lemonSqueezyCustomerPortalUrl String?     // You can delete this if you're not using Lemon Squeezy as your payments processor.
   subscriptionStatus        String?         // 'active', 'cancel_at_period_end', 'past_due', 'deleted'.
   subscriptionPlan          String?         // 'hobby', 'pro'.
   datePaid                  DateTime?
@@ -54,6 +55,7 @@ model User {
 ```
 
 - `paymentProcessorUserId`: The payment processor's customer ID. This is created on checkout and used to identify the customer.
+- `lemonSqueezyCustomerPortalUrl`: Only relevant for Lemon Squeezy. A pernament URL to a user's custoemr portal. 
 - `subscriptionStatus`: The subscription status of a user. This is set by the payment processor and is used to determine whether the user has access to the app or not. By default, we have four statuses: `active`, `past_due`, `cancel_at_period_end`, and `deleted`.
 - `subscriptionPlan`: The subscription plan a user is on. This is set by the app and is used to determine what features the user has access to. By default, we have three payment plans: `hobby` and `pro` subscription plans, as well as a `credits10` one-time purchase plan.
 - `credits` (optional): By default, a user is given 3 credits to trial your product before they have to pay. You can create a one-time purchase product in Stripe to allow users to purchase more credits if they run out, e.g. the `credits10` plan in the template.
