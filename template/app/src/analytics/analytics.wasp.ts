@@ -8,8 +8,8 @@ export const analyticsSpec: Spec = [
   job(calculateDailyStatsJob, {
     executor: "PgBoss",
     schedule: {
-      cron: "0 * * * *", // every hour. useful in production
-      // cron: "* * * * *" // every minute. useful for debugging
+      cron: "0 * * * *", // Every hour. useful in production.
+      // cron: "* * * * *" // Every minute. useful for debugging.
     },
     entities: ["User", "DailyStats", "Logs", "PageViewSource"],
   }),

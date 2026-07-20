@@ -4,8 +4,8 @@ banner:
   content: |
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
 ---
-import { Image } from 'astro:assets';
 import { TabItem, Tabs } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
 
 This guides explains how to improve the SEO and performance for of your app.
 
@@ -16,16 +16,16 @@ Wasp gives you the ability to add meta tags to your landing page HTML via the `m
 ```js {8-11}
 app SaaSTemplate {
   wasp: {
-    version: "^0.13.0"
+    version: "^0.23.0"
   },
   title: "Open SaaS",
   head: [
-        "<meta property='og:type' content='website' />",
-        "<meta property='og:url' content='https://opensaas.sh' />",
-        "<meta property='og:title' content='Open SaaS' />",
-        "<meta property='og:description' content='Free, open-source SaaS boilerplate starter for React & NodeJS.' />",
-        "<meta property='og:image' content='https://opensaas.sh/public-banner.webp' />",
-        //...
+    "<meta property='og:type' content='website' />",
+    "<meta property='og:url' content='https://opensaas.sh' />",
+    "<meta property='og:title' content='Open SaaS' />",
+    "<meta property='og:description' content='Free, open-source SaaS boilerplate starter for React & NodeJS.' />",
+    "<meta property='og:image' content='https://opensaas.sh/public-banner.webp' />",
+    //...
   ],
   //...
 ```

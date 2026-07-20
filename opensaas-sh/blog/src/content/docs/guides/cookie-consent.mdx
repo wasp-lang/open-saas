@@ -4,19 +4,19 @@ banner:
   content: |
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
 ---
-import { Image } from 'astro:assets';
 import cookieBanner from '@assets/cookie-consent/cookiebanner.png';
 import preferences from '@assets/cookie-consent/preferences.png';
+import { Image } from 'astro:assets';
 
 <Image src={cookieBanner} alt="cookie banner" width="400px" />
 
 Cookie consent banners are annoying, we know. But they are legally required in many countries, so we have to deal with them.
 
-This guide will help you dynamically add or remove cookies from your app via the Cookie Consent modal that comes with this template. 
+This guide will help you dynamically add or remove cookies from your app via the cookie consent modal that comes with this template.
 
 This is needed for *non-essential cookies* that are not necessary for the basic functionality of your app, such as analytics cookies or marketing cookies.
 
-The Modal can be found at `app/src/client/components/cookie-consent/` and contains two main files:
+The cookie consent modal can be found at `app/src/client/components/cookie-consent/` and contains two main files:
 1. `Banner.tsx` - the component that displays the banner at the bottom of the page.
 2. `Config.ts` - the configuration file that contains the cookies/scripts that will be dynamically added.
 
