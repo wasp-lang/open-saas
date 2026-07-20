@@ -147,30 +147,41 @@ To begin customizing file uploads, is important to know where everything lives i
 
 In the current logic, files are first deleted from the app's database before attempting to delete them from S3. If, for some reason, the S3 deletion were to fail, the file would remain in S3 and not in the app's database and be orphaned:
 
-```ts
-// src/file-upload/operations.ts
-export const deleteFile: DeleteFile<DeleteFileInput, File> = async (args, context) => {
-
-  const deletedFile = await context.entities.File.delete(args.fileId);
+```ts title="src/file-upload/operations.ts"
+export const deleteFile: DeleteFile<DeleteFileInput, File> = async (
+  rawArgs,
+  context,
+) => {
+  // ...
+  const deletedFile = await context.entities.File.delete({
+    where: {
+      id: args.id,
+      user: {
+        id: context.user.id,
+      },
+    },
+  });
 
   try {
-    return await deleteFileFromS3({ s3Key: deletedFile.s3Key });
+    await deleteFileFromS3({ s3Key: deletedFile.s3Key });
   } catch (error) {
-    console.error(`S3 deletion failed. Orphaned file s3Key: ${deletedFile.s3Key}`, error);
+    console.error(
+      `S3 deletion failed. Orphaned file s3Key: ${deletedFile.s3Key}`,
+      error,
+    );
   }
 };
 ```
 
-To clean up these orphaned files, you could add a cleanup job that runs at an interval of your choosing to:
+To clean up these orphaned files, you can add a cleanup job (that runs at an interval of your choosing) to:
 
-1. Fetch all file keys from S3
-2. Fetch all file keys from the app's database
-3. Compare the two lists and delete any files from S3 that are not in the database
+1. Fetch all file keys from S3.
+2. Fetch all file keys from the app's database.
+3. Compare the two lists and delete any files from S3 that are not in the database.
 
 Here's an example of how you could implement this:
 
-```ts
-// .wasp config file
+```ts title="main.wasp"
 job cleanUpOrphanedFilesS3Job {
   executor: PgBoss,
   perform: {
@@ -183,15 +194,13 @@ job cleanUpOrphanedFilesS3Job {
 }
 ```
 
-```ts
-// src/file-upload/workers.ts
-
+```ts title="src/file-upload/workers.ts"
 import type { CleanUpOrphanedFilesS3Job } from 'wasp/server/jobs';
 import { s3Client, deleteFileFromS3 } from './s3Utils';
 import { ListObjectsV2Command, ListObjectsV2CommandOutput } from '@aws-sdk/client-s3';
 
 export const cleanUpOrphanedFilesS3: CleanUpOrphanedFilesS3Job<never, void> = async (
-  _args,
+  _rawArgs,
   context
 ) => {
   const allFileKeysFromS3 = await fetchAllFileKeysFromS3();
@@ -201,9 +210,9 @@ export const cleanUpOrphanedFilesS3: CleanUpOrphanedFilesS3Job<never, void> = as
   await findAndDeleteOrphanedFilesInS3(allFileKeysFromS3, allFileKeysFromDb);
 };
 
-const fetchAllFileKeysFromS3 = async () => {
+async function fetchAllFileKeysFromS3(): Promise<string[]> {
   const allS3Keys: string[] = [];
-  let continuationToken: string | undefined = undefined;
+  let continuationToken: string | undefined;
 
   do {
     const command = new ListObjectsV2Command({
@@ -231,15 +240,15 @@ const fetchAllFileKeysFromS3 = async () => {
   return allS3Keys;
 };
 
-const findAndDeleteOrphanedFilesInS3 = async (
+async function findAndDeleteOrphanedFilesInS3(
   allFileKeysFromS3: string[],
   allFileKeysFromDb: { s3Key: string }[]
-) => {
+): Promise<void> {
   const s3KeysNotFoundInDb = allFileKeysFromS3.filter(
     (s3Key) => !allFileKeysFromDb.some((file) => file.s3Key === s3Key)
   );
 
-  // Delete files from S3 that are not in the database
+  // Delete files from S3 that are not in the database.
   // If any file deletion fails, the job can continue and pick it up next run.
   const s3DeletionResults = await Promise.allSettled(
     s3KeysNotFoundInDb.map((s3Key) => deleteFileFromS3({ s3Key }))
