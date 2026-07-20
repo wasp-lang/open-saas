@@ -10,29 +10,18 @@ Inception :)!
 
 ### Demo app (app_diff/)
 
+> [!IMPORTANT]
+> The in-development version of the template uses the in-development version of Wasp. We've set up the `./tools/wasp` script.
+> To use it, whenever you would normally run `wasp <command>`, run `<path-to-repo>/tools/wasp <command>` instead.
+
 Since the demo app is just the open saas template with some small tweaks, and we want to be able to easily keep it up to date as the template changes, we don't version (in git) the actual demo app code, instead we version the diffs between it and the template: `app_diff/`.
 
-So because we don't version the actual demo app (`app/`) but its diffs instead (`app_diff`), the typical workflow is as follows:
+#### Workflow
 
-1. Run `./tools/patch.sh` to generate `app/` from `../template/` and `app_diff/`.
-2. If there are any conflicts (normally due to updates to the template), modify `app/` till you resolve them. Do any additional changes also if you wish.
-3. Generate new `app_diff/`, based on the current updated `app/`, by running `./tools/diff.sh`.
+- Generate `app/` from template and diffs: `./tools/patch.sh`
+- Update diffs after modifying `app/`: `./tools/diff.sh`
 
-**Running on MacOS**
-
-If you're running the `patch.sh` or `diff.sh` scripts on Mac, you need to install:
-
-- `grealpath` (packaged within `coreutils`),
-- `gpatch`,
-- and `diffutils`.
-
-```sh
-brew install coreutils # contains grealpath
-brew install gpatch
-brew install diffutils
-```
-
-Make sure not to commit `app/` to git. It is currently (until we resolve this) not added to .gitignore because that messes up diffing for us.
+For detailed information about the diff/patch workflow and macOS setup requirements, see [../tools/README.md](../tools/README.md).
 
 ### Blog (blog/)
 

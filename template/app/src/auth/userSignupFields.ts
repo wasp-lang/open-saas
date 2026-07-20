@@ -1,7 +1,10 @@
-import { z } from 'zod';
-import { defineUserSignupFields } from 'wasp/auth/providers/types';
+import { defineUserSignupFields } from "wasp/auth/providers/types";
+import { env } from "wasp/server";
+import { z } from "zod";
 
-const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
+function isAdminEmail(email: string): boolean {
+  return env.ADMIN_EMAILS.includes(email);
+}
 
 const emailDataSchema = z.object({
   email: z.string(),
@@ -18,7 +21,7 @@ export const getEmailUserFields = defineUserSignupFields({
   },
   isAdmin: (data) => {
     const emailData = emailDataSchema.parse(data);
-    return adminEmails.includes(emailData.email);
+    return isAdminEmail(emailData.email);
   },
 });
 
@@ -29,9 +32,12 @@ const githubDataSchema = z.object({
         z.object({
           email: z.string(),
           verified: z.boolean(),
-        })
+        }),
       )
-      .min(1, 'You need to have an email address associated with your GitHub account to sign up.'),
+      .min(
+        1,
+        "You need to have an email address associated with your GitHub account to sign up.",
+      ),
     login: z.string(),
   }),
 });
@@ -51,7 +57,7 @@ export const getGitHubUserFields = defineUserSignupFields({
     if (!emailInfo.verified) {
       return false;
     }
-    return adminEmails.includes(emailInfo.email);
+    return isAdminEmail(emailInfo.email);
   },
 });
 
@@ -65,7 +71,7 @@ function getGithubEmailInfo(githubData: z.infer<typeof githubDataSchema>) {
 // instead of ["user"] and access args.profile.username instead
 export function getGitHubAuthConfig() {
   return {
-    scopes: ['user'],
+    scopes: ["user:email"],
   };
 }
 
@@ -90,13 +96,13 @@ export const getGoogleUserFields = defineUserSignupFields({
     if (!googleData.profile.email_verified) {
       return false;
     }
-    return adminEmails.includes(googleData.profile.email);
+    return isAdminEmail(googleData.profile.email);
   },
 });
 
 export function getGoogleAuthConfig() {
   return {
-    scopes: ['profile', 'email'], // must include at least 'profile' for Google
+    scopes: ["profile", "email"], // must include at least 'profile' for Google
   };
 }
 
@@ -113,7 +119,9 @@ export const getDiscordUserFields = defineUserSignupFields({
     const discordData = discordDataSchema.parse(data);
     // Users need to have an email for payment processing.
     if (!discordData.profile.email) {
-      throw new Error('You need to have an email address associated with your Discord account to sign up.');
+      throw new Error(
+        "You need to have an email address associated with your Discord account to sign up.",
+      );
     }
     return discordData.profile.email;
   },
@@ -126,12 +134,12 @@ export const getDiscordUserFields = defineUserSignupFields({
     if (!discordData.profile.email || !discordData.profile.verified) {
       return false;
     }
-    return adminEmails.includes(discordData.profile.email);
+    return isAdminEmail(discordData.profile.email);
   },
 });
 
 export function getDiscordAuthConfig() {
   return {
-    scopes: ['identify', 'email'],
+    scopes: ["identify", "email"],
   };
 }

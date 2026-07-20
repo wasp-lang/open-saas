@@ -28,11 +28,11 @@ After adding your domain, you'll be taken to a page with your Plausible script t
 ```js {7}
 app OpenSaaS {
   wasp: {
-    version: "^0.13.0"
+    version: "^0.23.0"
   },
   title: "My SaaS App",
   head: [
-        "<your plausible script tag here>",
+    "<your plausible script tag here>",
   ],
   //...
 ```
@@ -48,7 +48,8 @@ Plausible does not use cookies, so you don't need to add it to your [Cookie Cons
 Plausible, being an open-source project, allows you to self-host your analytics. This is a great option if you want to keep your data private and not pay for the hosted service.
 
 *coming soon...*
-*until then, check out the [official documentation](https://plausible.io/docs)*
+
+*...until then, check out the [official documentation](https://plausible.io/docs)*.
 
 :::tip[Contribute!] 
 If you'd like to help us write this guide, click the "Edit page" button at the bottom of this page 
@@ -85,7 +86,7 @@ REACT_APP_GOOGLE_ANALYTICS_ID=<your-google-analytics-id> # e.g. G-1234567890
 
 :::tip[noscript]
 In the Installation Instructions, Google Tag Manager might also instruct you to paste the `noscript` code snippet immediately after the opening `<body>` tag.
-You should skip this step because this snippet is activated only if users try to browse your app without JavaScript enabled, which is very rare and Wasp needs JS anyway.
+You should skip this step because this snippet is activated only if users try to browse your app without JavaScript enabled, which is very rare and React needs JS anyway.
 :::
 
 Then, set up the Google Analytics API access by following these steps:

@@ -14,7 +14,7 @@ Below we outline our reasoning why, and provide a basic guide to help you update
 
 ## Why you probably shouldn't include the latest template changes in your app
 
-We generally **advise against updating your Open SaaS-based applications** after initial setup. 
+We generally **advise against updating your Open SaaS-based applications** after initial setup.
 
 Why? 
 
@@ -33,13 +33,13 @@ If you read above, considered the risks, and still need specific improvements, w
 To do this, you should can either 1) merge new Open SaaS template changes into your current project, or 2) merge project changes into a fresh Open SaaS template.
 
 1) Merge new Open SaaS template changes into your current project by:
-- reviewing the latest commits, 
-- understanding what happened, 
-- being mindful of the Wasp version you're using,
-- and then fitting those changes into your own codebase.
+    - reviewing the latest commits, 
+    - understanding what happened, 
+    - being mindful of the Wasp version you're using,
+    - and then fitting those changes into your own codebase.
 
 2) Merge your project changes into a fresh Open SaaS template by:
-- starting a new, fresh project with the latest Open SaaS template,
-- and then copying over the logic from your existing project that you want to keep.
+    - starting a new, fresh project with the latest Open SaaS template,
+    - and then copying over the logic from your existing project that you want to keep.
 
 The method you choose is up to you and will largely depend on the complexity of the changes you need to make.

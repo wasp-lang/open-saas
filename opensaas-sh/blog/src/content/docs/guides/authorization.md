@@ -32,9 +32,11 @@ page AccountPage {
 This will automatically redirect users to the login page if they are not logged in while trying to access that page.
 
 :::caution[Client-side authorization is just for the looks]
-Users can manipulate the client code as they wish, meaning that client-side access control (authorization) serves the purpose of ergonomics/user experience, not the purpose of restricting access to sensitive data.
+Users can manipulate the client code as they wish, meaning that client-side authorization (access control) serves the purpose of ergonomics/user experience, not the purpose of restricting access to sensitive data.
+
 This means that authorization in the client code is a nice-to-have: it is here to make sure users don't get lost in the part of the app they can't work with because data is missing due to them not having access, not to actually restrict them from doing something.
-Actually ensuring they don't have access to the data, that is on the server to ensure, via server-side logic that you will implement for authorization (access control).
+
+Actually ensuring they don't have access to the data, that is on the server to ensure, via server-side logic that you will implement for authorization.
 :::
 
 If you want more fine-grained control over what users can access, there are two Wasp-specific options:
@@ -43,8 +45,7 @@ If you want more fine-grained control over what users can access, there are two 
 ```tsx title="ExamplePage.tsx" "{ user }: { user: User }"
 import { type User } from "wasp/entities";
 
-export default function Example({ user }: { user: User }) {
-
+export function ExamplePage({ user }: { user: User }) {
   if (user.subscriptionStatus === 'past_due') {
     return (<span>Your subscription is past due. Please update your payment information.</span>)
   }
@@ -54,16 +55,15 @@ export default function Example({ user }: { user: User }) {
   if (user.subscriptionStatus === 'active') {
     return (<span>Thanks so much for your support!</span>)
   }
-
-}
+};
 ```
 
 2. Or you can take advantage of the `useAuth` hook and check for certain user properties before authorizing access to certain pages or components:
 
-```tsx title="ExamplePage.tsx" {1, 4}
+```tsx title="ExampleComponent.tsx" {1, 4}
 import { useAuth } from "wasp/client/auth";
 
-export default function ExampleHomePage() {
+export function ExampleComponent() {
   const { data: user } = useAuth();
 
   return (
@@ -78,10 +78,10 @@ Authorization on the server-side is the core of your access control logic, and d
 
 You can authorize access to server-side operations by adding a check for a logged-in user on the `context.user` object which is passed to all operations in Wasp:
 
-```tsx title="src/server/actions.ts" 
+```tsx title="src/server/actions.ts" "context.user"
 export const someServerAction: SomeServerAction<...> = async (args, context) => {
   if (!context.user) {
-    throw new HttpError(401); // throw an error if user is not logged in
+    throw new HttpError(401); // Throw an error if user is not logged in.
   }
 
   if (context.user.subscriptionStatus === 'past_due') {

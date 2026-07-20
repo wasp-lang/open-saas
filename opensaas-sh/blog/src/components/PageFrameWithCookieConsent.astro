@@ -1,0 +1,12 @@
+---
+import Default from "@astrojs/starlight/components/PageFrame.astro";
+import CookieConsentBanner from "./CookieConsentBanner.astro";
+---
+
+<Default>
+  <slot name="header" slot="header" />
+  <slot name="sidebar" slot="sidebar" />
+  <slot />
+</Default>
+
+<CookieConsentBanner />

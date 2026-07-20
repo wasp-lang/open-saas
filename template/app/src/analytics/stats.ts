@@ -1,16 +1,23 @@
-import { type DailyStats } from 'wasp/entities';
-import { type DailyStatsJob } from 'wasp/server/jobs';
-import Stripe from 'stripe';
-import { stripe } from '../payment/stripe/stripeClient';
-import { listOrders } from '@lemonsqueezy/lemonsqueezy.js';
-import { getDailyPageViews, getSources } from './providers/plausibleAnalyticsUtils';
+import { type DailyStats } from "wasp/entities";
+import { type CalculateDailyStatsJob } from "wasp/server/jobs";
+import {
+  getDailyPageViews,
+  getSources,
+} from "./providers/plausibleAnalyticsUtils";
 // import { getDailyPageViews, getSources } from './providers/googleAnalyticsUtils';
-import { paymentProcessor } from '../payment/paymentProcessor';
-import { SubscriptionStatus } from '../payment/plans';
+import { paymentProcessor } from "../payment/paymentProcessor";
+import { SubscriptionStatus } from "../payment/plans";
 
-export type DailyStatsProps = { dailyStats?: DailyStats; weeklyStats?: DailyStats[]; isLoading?: boolean };
+export type DailyStatsProps = {
+  dailyStats?: DailyStats;
+  weeklyStats?: DailyStats[];
+  isLoading?: boolean;
+};
 
-export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, context) => {
+export const calculateDailyStatsJob: CalculateDailyStatsJob<
+  never,
+  void
+> = async (_args, context) => {
   const nowUTC = new Date(Date.now());
   nowUTC.setUTCHours(0, 0, 0, 0);
 
@@ -42,17 +49,7 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, con
       paidUserDelta -= yesterdaysStats.paidUserCount;
     }
 
-    let totalRevenue;
-    switch (paymentProcessor.id) {
-      case 'stripe':
-        totalRevenue = await fetchTotalStripeRevenue();
-        break;
-      case 'lemonsqueezy':
-        totalRevenue = await fetchTotalLemonSqueezyRevenue();
-        break;
-      default:
-        throw new Error(`Unsupported payment processor: ${paymentProcessor.id}`);
-    }
+    const totalRevenue = await paymentProcessor.fetchTotalRevenue();
 
     const { totalViews, prevDayViewsChangePercent } = await getDailyPageViews();
 
@@ -63,7 +60,7 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, con
     });
 
     if (!dailyStats) {
-      console.log('No daily stat found for today, creating one...');
+      console.log("No daily stat found for today, creating one...");
       dailyStats = await context.entities.DailyStats.create({
         data: {
           date: nowUTC,
@@ -77,7 +74,7 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, con
         },
       });
     } else {
-      console.log('Daily stat found for today, updating it...');
+      console.log("Daily stat found for today, updating it...");
       dailyStats = await context.entities.DailyStats.update({
         where: {
           id: dailyStats.id,
@@ -97,7 +94,7 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, con
 
     for (const source of sources) {
       let visitors = source.visitors;
-      if (typeof source.visitors !== 'number') {
+      if (typeof source.visitors !== "number") {
         visitors = parseInt(source.visitors);
       }
       await context.entities.PageViewSource.upsert({
@@ -120,81 +117,13 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (_args, con
     }
 
     console.table({ dailyStats });
-  } catch (error: any) {
-    console.error('Error calculating daily stats: ', error);
+  } catch (error) {
+    console.error("Error calculating daily stats: ", error);
     await context.entities.Logs.create({
       data: {
-        message: `Error calculating daily stats: ${error?.message}`,
-        level: 'job-error',
+        message: `Error calculating daily stats: ${error instanceof Error ? error.message : String(error)}`,
+        level: "job-error",
       },
     });
   }
 };
-
-async function fetchTotalStripeRevenue() {
-  let totalRevenue = 0;
-  let params: Stripe.BalanceTransactionListParams = {
-    limit: 100,
-    // created: {
-    //   gte: startTimestamp,
-    //   lt: endTimestamp
-    // },
-    type: 'charge',
-  };
-
-  let hasMore = true;
-  while (hasMore) {
-    const balanceTransactions = await stripe.balanceTransactions.list(params);
-
-    for (const transaction of balanceTransactions.data) {
-      if (transaction.type === 'charge') {
-        totalRevenue += transaction.amount;
-      }
-    }
-
-    if (balanceTransactions.has_more) {
-      // Set the starting point for the next iteration to the last object fetched
-      params.starting_after = balanceTransactions.data[balanceTransactions.data.length - 1].id;
-    } else {
-      hasMore = false;
-    }
-  }
-
-  // Revenue is in cents so we convert to dollars (or your main currency unit)
-  return totalRevenue / 100;
-}
-
-async function fetchTotalLemonSqueezyRevenue() {
-  try {
-    let totalRevenue = 0;
-    let hasNextPage = true;
-    let currentPage = 1;
-
-    while (hasNextPage) {
-      const { data: response } = await listOrders({
-        filter: {
-          storeId: process.env.LEMONSQUEEZY_STORE_ID,
-        },
-        page: {
-          number: currentPage,
-          size: 100,
-        },
-      });
-
-      if (response?.data) {
-        for (const order of response.data) {
-          totalRevenue += order.attributes.total;
-        }
-      }
-
-      hasNextPage = !response?.meta?.page.lastPage;
-      currentPage++;
-    }
-
-    // Revenue is in cents so we convert to dollars (or your main currency unit)
-    return totalRevenue / 100;
-  } catch (error) {
-    console.error('Error fetching Lemon Squeezy revenue:', error);
-    throw error;
-  }
-}

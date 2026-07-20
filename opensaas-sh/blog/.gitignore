@@ -12,7 +12,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-
 # environment variables
 .env
 .env.production
@@ -22,3 +21,7 @@ pnpm-debug.log*
 
 # Local Netlify folder
 .netlify
+
+# LLM files
+llms.txt
+llms-full.txt

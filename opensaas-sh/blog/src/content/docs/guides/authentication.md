@@ -24,10 +24,10 @@ The great part is, by defining your auth config in the `main.wasp` file, Wasp ma
 
 ## Email Verified Auth
 
-`email` method is the default auth method in Open Saas.
+`email` method is the default auth method in Open SaaS.
 
 Since it needs to send emails to verify users and reset passwords, it requires an [email sender](https://wasp.sh/docs/advanced/email) provider: a service it can use to send emails.
-"email sender" provider is configured via `app.emailSender` field in the `main.wasp` file.
+A "email sender" provider is configured via `app.emailSender` field in the `main.wasp` file.
 
 :::caution[Dummy Email Provider]
 To make it easy for you to get started, Open SaaS initially comes with the `Dummy` "email sender" provider, which does not send any emails, but instead logs all email verification links/tokens to the server's console!
@@ -35,7 +35,7 @@ You can then follow these links to verify the user and continue with the sign-up
 
 ```tsx title="main.wasp"
   emailSender: {
-    provider: Dummy, // logs all email verification links/tokens to the server's console
+    provider: Dummy, // Logs all email verification links/tokens to the server's console.
     defaultFrom: {
       name: "Open SaaS App",
       email: "me@example.com" 
@@ -46,7 +46,7 @@ You can then follow these links to verify the user and continue with the sign-up
 You **can not use the Dummy provider in production** and your app **will not build** until you move to a production-ready provider, such as SendGrid. We outline the process of migrating to SendGrid below. 
 :::
 
-In order to use the `email` auth method in production, you'll need to switch from the `Dummy` "email sender" provider to a production-ready provider like SendGrid: 
+In order to use the `email` auth method in production, you'll need to switch from the `Dummy` "email sender" provider to a production-ready provider like SendGrid:
 
 1. First, set up your app's `emailSender` in the `main.wasp` file by following [this guide](/guides/email-sending/#integrate-your-email-sender). 
 2. Add your `SENDGRID_API_KEY` to the `.env.server` file.
@@ -83,7 +83,7 @@ Check out the  [Wasp Auth docs](https://wasp.sh/docs/auth/overview) for more inf
 
 ## Google, GitHub, & Discord Auth
 
-We've also customized and pre-built the Google and GitHub auth flow for you. To start using them, you just need to uncomment out the methods you want in your `main.wasp` file and obtain the proper API keys to add to your `.env.server` file. 
+We've also customized and pre-built the Google, Discord and GitHub auth flow for you. To start using them, you just need to uncomment out the methods you want in your `main.wasp` file and obtain the proper API keys to add to your `.env.server` file. 
 
 To create a Google OAuth app and get your Google API keys, follow the instructions in [Wasp's Google Auth docs](https://wasp.sh/docs/auth/social-auth/google#3-creating-a-google-oauth-app).
 
