@@ -56,11 +56,12 @@ export default defineConfig({
           "https://github.com/wasp-lang/open-saas/edit/main/opensaas-sh/blog",
       },
       components: {
+        Header: "./src/components/Header.astro",
         SiteTitle: "./src/components/SiteTitle.astro",
         // We customized ThemeSelect to include a "Copy URL for LLMs" button
-        ThemeSelect: "./src/components/MyRightNavBarItems.astro",
+        // ThemeSelect: "./src/components/MyRightNavBarItems.astro",
         Head: "./src/components/HeadWithOGImage.astro",
-        PageTitle: "./src/components/TitleWithBannerImage.astro",
+        PageTitle: "./src/components/PageTitleWithBannerImage.astro",
         PageFrame: "./src/components/PageFrameWithCookieConsent.astro",
       },
       social: [
@@ -135,7 +136,7 @@ export default defineConfig({
         starlightBlog({
           title: "Blog",
           // Our SiteTitle override renders its own Blog link.
-          navigation: "none",
+          // navigation: "none",
           customCss: ["./src/styles/tailwind.css"],
           authors: {
             vince: {

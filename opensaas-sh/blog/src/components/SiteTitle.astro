@@ -1,35 +1,28 @@
 ---
-import VersionSelect from "starlight-versions/components/VersionSelect.astro";
-import blogConfig from "virtual:starlight-blog/config";
+/**
+ * This module is dirctly copied over from starlight's source:
+ * https://starlight.astro.build/reference/overrides/#sitetitle
+ *
+ * Original CSS is left as is.
+ * New changes use Tailwind CSS instead.
+ */
+
 import config from "virtual:starlight/user-config";
 import { logos } from "virtual:starlight/user-images";
-
-const href = Astro.site;
-const { siteTitle } = Astro.locals.starlightRoute;
-
-// The blog is not versioned, so the version select makes no sense there.
-const isBlogRoute = Astro.url.pathname.startsWith("/blog/");
-
-const navItemClasses =
-  "ml-4 h-full gap-4 self-center border-e border-e-(--sl-color-gray-5) pe-4 min-[50rem]:flex min-[50rem]:items-center";
-const navLinkClasses =
-  "font-semibold text-(--sl-color-white) no-underline hover:text-(--sl-color-text-accent)";
-const logoClasses =
-  "h-[calc(var(--sl-nav-height)_-_2*var(--sl-nav-pad-y))] w-auto max-w-full object-contain object-[0_50%]";
+const { siteTitle, siteTitleHref } = Astro.locals.starlightRoute;
 ---
 
 <a
-  {href}
-  class="sl-flex max-w-full items-center justify-self-start gap-(--sl-nav-gap) overflow-hidden border-e border-e-(--sl-color-gray-5) pe-4 whitespace-nowrap no-underline"
+  href={siteTitleHref}
+  class={"site-title sl-flex hover:text-(--sl-color-text-accent)"}
 >
   {
     config.logo && logos.dark && (
       <>
         <img
-          class:list={[
-            logoClasses,
-            { "light:sl-hidden print:hidden": !("src" in config.logo) },
-          ]}
+          class:list={{
+            "light:sl-hidden print:hidden": !("src" in config.logo),
+          }}
           alt={config.logo.alt}
           src={logos.dark.src}
           width={logos.dark.width}
@@ -38,7 +31,7 @@ const logoClasses =
         {/* Show light alternate if a user configure both light and dark logos. */}
         {!("src" in config.logo) && (
           <img
-            class:list={[logoClasses, "dark:sl-hidden print:block"]}
+            class="dark:sl-hidden print:block"
             alt={config.logo.alt}
             src={logos.light?.src}
             width={logos.light?.width}
@@ -48,23 +41,32 @@ const logoClasses =
       </>
     )
   }
-  <span
-    class:list={{ "sr-only": config.logo?.replacesTitle }}
-    class="font-semibold text-(length:--sl-text-h4) text-(--sl-color-white) hover:text-(--sl-color-text-accent)"
-  >
+  <span class:list={{ "sr-only": config.logo?.replacesTitle }} translate="no">
     {siteTitle}
   </span>
 </a>
-<div class={navItemClasses}>
-  <a href="/" class={navLinkClasses}>Docs</a>
-</div>
-{
-  !isBlogRoute && (
-    <div class={navItemClasses}>
-      <VersionSelect />
-    </div>
-  )
-}
-<div class={navItemClasses}>
-  <a href="/blog/" class={navLinkClasses}>{blogConfig.title}</a>
-</div>
+
+<style>
+  @layer starlight.core {
+    .site-title {
+      align-items: center;
+      gap: var(--sl-nav-gap);
+      font-size: var(--sl-text-h4);
+      font-weight: 600;
+      color: var(--sl-color-white);
+      text-decoration: none;
+      white-space: nowrap;
+      min-width: 0;
+    }
+    span {
+      overflow: hidden;
+    }
+    img {
+      height: calc(var(--sl-nav-height) - 2 * var(--sl-nav-pad-y));
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+      object-position: 0 50%;
+    }
+  }
+</style>
