@@ -13,7 +13,7 @@ import {
 import type { PaymentsWebhook } from "wasp/server/api";
 import { assertUnreachable } from "../../shared/utils";
 import { UnhandledWebhookEventError } from "../errors";
-import { getPaymentPlanIdByPaymentProcessorPlanId } from "../paymentProcessorPlans";
+import { paymentProcessorPlanIds } from "../paymentProcessorPlans";
 import {
   SubscriptionStatus as OpenSaasSubscriptionStatus,
   PaymentPlanId,
@@ -87,6 +87,8 @@ export const paddleWebhook: PaymentsWebhook = async (
     console.error("Paddle webhook error: ", error);
     if (error instanceof HttpError) {
       return response.status(error.statusCode).json({ error: error.message });
+    } else if (error instanceof Error) {
+      return response.status(400).json({ error: error.message });
     } else {
       return response
         .status(500)
@@ -99,17 +101,29 @@ async function handleTransactionCompleted(
   transaction: TransactionNotification,
   userDelegate: PrismaClient["user"],
 ): Promise<void> {
+  // Paddle emits `transaction.completed` for non-purchase transactions too — most
+  // notably the zero-value transaction created when a customer updates their payment
+  // method. Skip those so we don't wrongly (re)activate a subscription or bump datePaid.
+  if (transaction.origin === "subscription_payment_method_change") {
+    return;
+  }
+
   if (!transaction.customerId) {
     throw new Error(`Paddle transaction ${transaction.id} has no customer ID`);
   }
 
-  const priceId = transaction.items[0]?.price?.id;
-  if (!priceId) {
-    throw new Error(`Paddle transaction ${transaction.id} has no price ID`);
+  const paymentPlanId = findPaymentPlanId(transaction.items);
+  if (!paymentPlanId) {
+    // A completed transaction whose line items don't match any of our plans (e.g. an
+    // add-on or a manual invoice). Nothing to fulfill — ignore it rather than throwing,
+    // which would make Paddle retry the delivery for days.
+    console.error(
+      `Paddle transaction ${transaction.id} has no line item matching a known plan; ignoring.`,
+    );
+    return;
   }
 
-  const paymentPlanId = getPaymentPlanIdByPaymentProcessorPlanId(priceId);
-  const datePaid = new Date();
+  const datePaid = new Date(transaction.billedAt ?? transaction.createdAt);
 
   switch (paymentPlanId) {
     case PaymentPlanId.Credits10:
@@ -144,10 +158,7 @@ async function handleSubscriptionChange(
   userDelegate: PrismaClient["user"],
 ): Promise<void> {
   const subscriptionStatus = getOpenSaasSubscriptionStatus(subscription);
-  const priceId = subscription.items[0]?.price?.id;
-  const paymentPlanId = priceId
-    ? getPaymentPlanIdByPaymentProcessorPlanId(priceId)
-    : undefined;
+  const paymentPlanId = findPaymentPlanId(subscription.items);
 
   await updateUserSubscription(
     {
@@ -157,6 +168,25 @@ async function handleSubscriptionChange(
     },
     userDelegate,
   );
+}
+
+/**
+ * Finds the first of our Open SaaS plans among a set of Paddle line items, matching
+ * on each item's price id. Returns undefined if none match — Paddle transactions and
+ * subscriptions can carry prices (add-ons, manual charges) with no corresponding plan.
+ */
+function findPaymentPlanId(
+  items: { price: { id: string } | null }[],
+): PaymentPlanId | undefined {
+  const priceIds = items.map((item) => item.price?.id);
+  for (const [planId, processorPlanId] of Object.entries(
+    paymentProcessorPlanIds,
+  )) {
+    if (priceIds.includes(processorPlanId)) {
+      return planId as PaymentPlanId;
+    }
+  }
+  return undefined;
 }
 
 /**
