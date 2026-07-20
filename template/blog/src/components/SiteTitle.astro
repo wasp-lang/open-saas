@@ -5,9 +5,17 @@
  * @see {@link https://starlight.astro.build/reference/overrides/#sitetitle}
  */
 
+import blogConfig from "virtual:starlight-blog/config";
 import config from "virtual:starlight/user-config";
 import { logos } from "virtual:starlight/user-images";
+
 const { siteTitle, siteTitleHref } = Astro.locals.starlightRoute;
+
+const navLinkClass =
+  "font-semibold  aria-[current=page]:text-(--sl-color-text-accent) no-underline hover:text-(--sl-color-text-accent) text-(--sl-color-white) border-s border-s-(--sl-color-gray-5) ps-4";
+
+const { pathname } = Astro.url;
+const isBlog = pathname.startsWith("/blog/");
 ---
 
 <a
@@ -43,6 +51,16 @@ const { siteTitle, siteTitleHref } = Astro.locals.starlightRoute;
     {siteTitle}
   </span>
 </a>
+<nav class="flex items-center justify-start gap-4 mx-4">
+  <a aria-current={!isBlog ? "page" : undefined} href="/" class={navLinkClass}
+    >Docs</a
+  >
+  <a
+    aria-current={isBlog ? "page" : undefined}
+    href="/blog/"
+    class={navLinkClass}>{blogConfig.title}</a
+  >
+</nav>
 
 <style>
   @layer starlight.core {

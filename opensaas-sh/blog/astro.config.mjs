@@ -58,8 +58,6 @@ export default defineConfig({
       components: {
         Header: "./src/components/Header.astro",
         SiteTitle: "./src/components/SiteTitle.astro",
-        // We customized ThemeSelect to include a "Copy URL for LLMs" button
-        // ThemeSelect: "./src/components/MyRightNavBarItems.astro",
         Head: "./src/components/HeadWithOGImage.astro",
         PageTitle: "./src/components/PageTitleWithBannerImage.astro",
         PageFrame: "./src/components/PageFrameWithCookieConsent.astro",
