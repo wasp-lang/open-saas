@@ -1,7 +1,18 @@
+import { readdirSync } from "node:fs";
+
 import starlight from "@astrojs/starlight";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 import starlightBlog from "starlight-blog";
+import starlightVersions from "starlight-versions";
+
+// The blog is not versioned, send versioned blog URLs back to the live blog.
+const versionedBlogRedirects = Object.fromEntries(
+  readdirSync("./src/content/docs/blog")
+    .filter((file) => /\.mdx?$/.test(file))
+    .map((file) => file.replace(/\.mdx?$/, ""))
+    .map((slug) => [`/0.23/blog/${slug}/`, `/blog/${slug}/`]),
+);
 
 // https://astro.build/config
 export default defineConfig({
@@ -9,6 +20,8 @@ export default defineConfig({
   trailingSlash: "always",
   redirects: {
     "/guides/seo/": "/guides/seo-performance/",
+    "/0.23/blog/": "/blog/",
+    ...versionedBlogRedirects,
   },
   integrations: [
     starlight({
@@ -43,7 +56,7 @@ export default defineConfig({
           "https://github.com/wasp-lang/open-saas/edit/main/opensaas-sh/blog",
       },
       components: {
-        SiteTitle: "./src/components/MyHeader.astro",
+        SiteTitle: "./src/components/SiteTitle.astro",
         // We customized ThemeSelect to include a "Copy URL for LLMs" button
         ThemeSelect: "./src/components/MyRightNavBarItems.astro",
         Head: "./src/components/HeadWithOGImage.astro",
@@ -116,6 +129,9 @@ export default defineConfig({
         },
       ],
       plugins: [
+        starlightVersions({
+          versions: [{ slug: "0.23", label: "<=0.23", }],
+        }),
         starlightBlog({
           title: "Blog",
           // Our SiteTitle override renders its own Blog link.
