@@ -133,7 +133,10 @@ export function PricingPage() {
       // rather than redirecting to a provider-hosted checkout URL.
       if (checkoutSession.paymentProcessorId === "paddle") {
         const paddle = await getPaddle();
-        paddle.Checkout.open({ transactionId: checkoutSession.sessionId });
+        paddle.Checkout.open({
+          transactionId: checkoutSession.sessionId,
+          settings: { variant: "one-page" },
+        });
         setIsPaymentLoading(false);
         return;
       }
