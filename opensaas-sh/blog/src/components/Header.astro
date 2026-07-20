@@ -9,6 +9,7 @@ import blogConfig from "virtual:starlight-blog/config";
 import config from "virtual:starlight/user-config";
 import CopyForLlmButton from "./CopyForLlmButton.astro";
 
+// TODO: fix these
 // @ts-expect-error
 import LanguageSelect from "virtual:starlight/components/LanguageSelect";
 // @ts-expect-error
@@ -58,6 +59,7 @@ const isBlog = pathname.startsWith("/blog/");
       <SocialIcons />
     </div>
     <CopyForLlmButton />
+    <!-- TODO: version selector also shown on blog routes -->
     <ThemeSelect />
     <LanguageSelect />
   </div>
