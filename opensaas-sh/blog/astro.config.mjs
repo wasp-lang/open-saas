@@ -96,6 +96,10 @@ export default defineConfig({
                   link: "/guides/payment-integrations/lemon-squeezy/",
                 },
                 { label: "Polar", link: "/guides/payment-integrations/polar/" },
+                {
+                  label: "Paddle",
+                  link: "/guides/payment-integrations/paddle/",
+                },
               ],
             },
             { label: "Deploying", link: "/guides/deploying/" },
