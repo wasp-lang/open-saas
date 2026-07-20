@@ -16,11 +16,13 @@ This is a reference on how the Admin dashboard, available at `/admin`, is set up
 
 The Admin dashboard is only accessible to users with the `isAdmin` field set to true.
 
-```tsx title="schema.prisma" {5}
+```prisma title="schema.prisma" {7}
 model User {
-  id                        Int             @id @default(autoincrement())
+  id                        String          @id @default(uuid())
+  createdAt                 DateTime        @default(now())
+
   email                     String?         @unique
-  username                  String?
+  username                  String?         @unique
   isAdmin                   Boolean         @default(false)
   //...
 ```
@@ -56,17 +58,17 @@ If you're finding this template and its guides useful, consider giving us [a sta
 The Admin analytics dashboard is a single place for you to view your most important metrics and perform some admin tasks. At the moment, it pulls data from:
 
 - [Payment Processor](/guides/payment-integrations/):
-  - total revenue
-  - revenue for each day of the past week
+  - Total revenue.
+  - Revenue for each day of the past week.
 - [Google or Plausible](/guides/analytics/): 
-  - total number of page views (non-unique)
-  - percentage change in page views from the previous day
-  - top sources/referrers with unique visitor count (i.e. how many people came from that source to your app)
+  - Total number of page views (non-unique).
+  - Percentage change in page views from the previous day.
+  - Top sources/referrers with unique visitor count (i.e. how many people came from that source to your app).
 - Database:
-  - total number of registered users
-  - daily change in number of registered users 
-  - total number of paying users
-  - daily change in number of paying users
+  - Total number of registered users.
+  - Daily change in number of registered users .
+  - Total number of paying users.
+  - Daily change in number of paying users.
 
 These metrics are aggregated within the background job `dailyStatsJob`, which by default is run every hour. You can change the frequency of this job by modifying its `cron` field:
 
@@ -77,8 +79,8 @@ job dailyStatsJob {
     fn: import { calculateDailyStats } from "@src/analytics/stats"
   },
   schedule: {
-    cron: "0 * * * *" // every hour. useful in production
-    // cron: "* * * * *" // every minute. useful for debugging
+    cron: "0 * * * *" // Every hour. useful in production.
+    // cron: "* * * * *" // Every minute. useful for debugging.
   },
   entities: [User, DailyStats, Logs, PageViewSource]
 }
@@ -93,6 +95,6 @@ We're always looking to improve the Admin dashboard. If you feel something is mi
 
 ### Users
 The Users page is where you can view all your users and their most important details. You can also search and filter users by:
-- email address
-- subscription/payment status
-- admin status
+- Email address.
+- Subscription/payment status.
+- Admin status.

@@ -80,10 +80,10 @@ export function PricingPage() {
     try {
       setIsPaymentLoading(true);
 
-      const checkoutResults = await generateCheckoutSession(paymentPlanId);
+      const checkoutSession = await generateCheckoutSession(paymentPlanId);
 
-      if (checkoutResults?.sessionUrl) {
-        window.open(checkoutResults.sessionUrl, "_self");
+      if (checkoutSession?.sessionUrl) {
+        window.open(checkoutSession.sessionUrl, "_self");
       } else {
         throw new Error("Error generating checkout session URL");
       }

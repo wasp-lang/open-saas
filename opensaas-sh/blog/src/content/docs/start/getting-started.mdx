@@ -21,7 +21,7 @@ If you prefer video tutorials, you can watch this walkthrough below which will g
 ### Pre-requisites
 
 You must have Node.js (and NPM) installed on your machine and available in `PATH` to use Wasp.
-Your version of Node.js must be >= 22.12.
+Your version of Node.js must be >= 24.14.1 ([you can check requirements here](https://wasp.sh/docs/quick-start#requirements)).
 
 To switch easily between Node.js versions, we recommend using [nvm](https://github.com/nvm-sh/nvm).
 
@@ -67,21 +67,6 @@ Open your terminal and run:
 ```shell
 npm i -g @wasp.sh/wasp-cli
 ```
-
-:::caution[Bad CPU type in executable]
-<details aria-label="Bad CPU type in executable">
-  <summary aria-label="Are you getting this error on a Mac (Apple Silicon)?">
-    Are you getting this error on a Mac (Apple Silicon)?
-  </summary>
-Given that the wasp binary is built for x86 and not for arm64 (Apple Silicon), you'll need to install <a href='https://support.apple.com/en-us/HT211861' alt='Rosetta on your Mac'>Rosetta on your Mac</a> if you are using a Mac with Mx (M1, M2, ...). Rosetta is a translation process that enables users to run applications designed for x86 on arm64 (Apple Silicon). To install Rosetta, run the following command in your terminal
-
-```bash
-softwareupdate --install-rosetta
-```
-Once Rosetta is installed, you should be able to run Wasp without any issues.
-
-</details>
-:::
 
 ### Windows
 
@@ -156,11 +141,10 @@ From the directory where you'd like to create your new project run:
 wasp new
 ```
 
-Then select option `[3] saas` from the list of templates after entering the name of your project.
-
+Then select option `saas` from the list of templates after entering the name of your project.
 This will clone a **clean copy of the Open SaaS template** into a new directory! 🎉
 
-### Start your DB
+### Start your database
 
 Before you start your app, you need to have a Postgres Database connected and running. With Wasp, that's super easy!
 
@@ -217,17 +201,17 @@ Then run:
 wasp start
 ```
 
-This will install all the dependencies and start the app (client and server) for you :)!
+This will install all the dependencies (if necessary) and start the app (client and server) for you :)!
 
 If the app doesn't open automatically in your browser, you can open it manually by visiting `http://localhost:3000` in your browser.
 
 At this point, you should have:
- - your database running in one terminal session, likely on port `5432`.
- - your app running in another terminal session, the client likely on port `3000`, and the server likely on port `3001`.
+ - Your database running in one terminal session, likely on port `5432`.
+ - Your app running in another terminal session, the client likely on port `3000`, and the server likely on port `3001`.
 
-#### Run Blog and Docs
+### Run Blog and Docs
 
-This SaaS app comes with a docs and blog section built with the [Starlight template on top of the Astro](https://starlight.astro.build) framework. You can use this as a starting point for your own blog and documentation, if necessary.
+This SaaS app comes with a docs and blog section built with the [Starlight theme on top of the Astro](https://starlight.astro.build) framework. You can use this as a starting point for your own blog and documentation, if necessary.
 
 If you do not need this, you can simply delete the `blog` folder from the root of the project.
 
