@@ -1,8 +1,9 @@
-import { Paddle, Environment } from '@paddle/paddle-node-sdk';
-import { requireNodeEnvVar } from '../../server/utils';
+import { Environment, Paddle } from "@paddle/paddle-node-sdk";
+import { env } from "wasp/server";
 
-const env = process.env.NODE_ENV === 'production' ? 'production' : 'sandbox';
-
-export const paddle = new Paddle(requireNodeEnvVar('PADDLE_API_KEY'), {
-  environment: env as Environment,
+export const paddleClient = new Paddle(env.PADDLE_API_KEY, {
+  environment:
+    env.PADDLE_SANDBOX_MODE === "true"
+      ? Environment.sandbox
+      : Environment.production,
 });
