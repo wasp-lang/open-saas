@@ -29,7 +29,7 @@
 +      )}
 +    >
 +      <h4 className="text-base font-semibold leading-tight text-gray-900 transition-opacity dark:text-white">
-+        {epic.name}
++        {epic.name.replace(/`/g, "")}
 +      </h4>
 +
 +      <div className="mt-auto pt-1">
