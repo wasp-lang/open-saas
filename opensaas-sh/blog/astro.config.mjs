@@ -134,7 +134,7 @@ export default defineConfig({
         starlightBlog({
           title: "Blog",
           // Our SiteTitle override renders its own Blog link.
-          // navigation: "none",
+          navigation: "none",
           customCss: ["./src/styles/tailwind.css"],
           authors: {
             vince: {
