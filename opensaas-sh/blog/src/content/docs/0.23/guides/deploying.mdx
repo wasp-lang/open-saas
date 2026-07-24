@@ -102,7 +102,7 @@ Do you have an Open SaaS app running in production? If yes, we'd love to send so
 
 ## Adding Server Redirect URL's to Social Auth
 
-After deploying your server, you need to add the correct redirect URIs to the credential settings. For this, refer to [the guides from the Wasp Docs](https://wasp.sh/docs/auth/social-auth/overview).
+After deploying your server, you need to add the correct redirect URIs to the credential settings. For this, refer to [the guides from the Wasp Docs](https://wasp.sh/docs/0.23/auth/social-auth/overview).
 
 ## Payment Providers Production Settings
 
@@ -226,7 +226,7 @@ Before deploying, make sure your app's meta tags, JSON-LD schema, and `llms.txt`
 
 **Wasp provides the handy `wasp deploy` command to deploy your entire full-stack app (DB, server, and client) in one command.**
 
-To learn how, please follow the detailed guide for [deploying to Fly via the Wasp CLI](https://wasp.sh/docs/deployment/deployment-methods/cli) from the Wasp documentation. We suggest you follow this guide carefully to get your app deployed.
+To learn how, please follow the detailed guide for [deploying to Fly via the Wasp CLI](https://wasp.sh/docs/0.23/deployment/deployment-methods/wasp-deploy/fly) from the Wasp documentation. We suggest you follow this guide carefully to get your app deployed.
 
 :::caution[Setting Environment Variables]
 Remember, because we've set certain client-side env variables, make sure to pass them to the `wasp deploy` commands so that they can be included in the build:
@@ -243,12 +243,12 @@ The `wasp deploy` command will also take care of setting the following server-si
 * `WASP_WEB_CLIENT_URL`
 * `WASP_SERVER_URL`
 
-For setting the remaining server-side environment variables, please refer to the [Deploying with the Wasp CLI Guide](https://wasp.sh/docs/deployment/deployment-methods/cli#launch).
+For setting the remaining server-side environment variables, please refer to the [Deploying with the Wasp CLI Guide](https://wasp.sh/docs/0.23/deployment/deployment-methods/wasp-deploy/fly#environment-variables).
 :::
 
 ### Deploying Manually
 
-If you prefer to deploy manually, your frontend and backend separately, or just prefer using your favorite provider you can follow [Wasp's Manual Deployment Guide](https://wasp.sh/docs/deployment/deployment-methods/paas).
+If you prefer to deploy manually, your frontend and backend separately, or just prefer using your favorite provider you can follow [Wasp's Manual Deployment Guide](https://wasp.sh/docs/0.23/deployment/deployment-methods/paas).
 
 :::caution[Client-side Environment Variables]
 Remember to always set additional client-side environment variables, such as `REACT_APP_STRIPE_CUSTOMER_PORTAL` by appending them to the build command, e.g.

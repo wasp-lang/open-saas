@@ -38,7 +38,7 @@ model User {
 }
 ```
 
-We store all user relevant information on the `User` entity, including identification, subscription, and payment processor information. Meanwhile, Wasp abstracts away all the Auth related entities dealing with `passwords`, `sessions`, and `socialLogins`, so you don't have to worry about these at all in your Prisma schema (if you want to learn more about this process, check out the [Wasp Auth Docs](https://wasp.sh/docs/auth/overview)).
+We store all user relevant information on the `User` entity, including identification, subscription, and payment processor information. Meanwhile, Wasp abstracts away all the Auth related entities dealing with `passwords`, `sessions`, and `socialLogins`, so you don't have to worry about these at all in your Prisma schema (if you want to learn more about this process, check out the [Wasp Auth Docs](https://wasp.sh/docs/0.23/auth/overview)).
 
 ### Payment Processors and Subscriptions
 
