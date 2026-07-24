@@ -64,7 +64,7 @@ As a completely free, open-source project, we appreciate any help 🙏
 
 ## Google Analytics
 
-First off, head over to `src/analytics/stats.ts` and switch out the Plausible Provider for Google Analytics so that your [background (cron) job](https://wasp.sh/docs/advanced/jobs) fetches the data from Google Analytics for your [Admin Dashboard](/0.23/general/admin-dashboard/):
+First off, head over to `src/analytics/stats.ts` and switch out the Plausible Provider for Google Analytics so that your [background (cron) job](https://wasp.sh/docs/0.23/advanced/jobs) fetches the data from Google Analytics for your [Admin Dashboard](/0.23/general/admin-dashboard/):
 
 ```ts ins={3} del={2} title="stats.ts"
 //...

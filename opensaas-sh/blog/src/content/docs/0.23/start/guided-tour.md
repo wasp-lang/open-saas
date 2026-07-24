@@ -88,23 +88,23 @@ Let's check out what's in the `app` folder in more detail:
 
 This template at its core is a Wasp project, where [Wasp](https://wasp.sh) is a full-stack web app framework that let's you write your app in React, NodeJS, and Prisma and will manage the "boilerplatey" work for you, allowing you to just take care of the fun stuff!
 
-[Wasp's secret sauce](https://wasp.sh/docs) is its use of a config file (`main.wasp`) and compiler which takes your code and outputs the client app, server app and deployment code for you.
+[Wasp's secret sauce](https://wasp.sh/docs/0.23) is its use of a config file (`main.wasp`) and compiler which takes your code and outputs the client app, server app and deployment code for you.
 
 In this template, we've already defined a number of things in the `main.wasp` config file, including:
 
-* [Auth](https://wasp.sh/docs/auth/overview).
-* [Routes and Pages](https://wasp.sh/docs/tutorial/pages).
-* [Prisma Database Models](https://wasp.sh/docs/data-model/entities).
-* [Operations (data read and write functions)](https://wasp.sh/docs/data-model/operations/overview).
-* [Background Jobs](https://wasp.sh/docs/advanced/jobs).
-* [Email Sending](https://wasp.sh/docs/advanced/email).
+* [Auth](https://wasp.sh/docs/0.23/auth/overview).
+* [Routes and Pages](https://wasp.sh/docs/0.23/tutorial/pages).
+* [Prisma Database Models](https://wasp.sh/docs/0.23/data-model/entities).
+* [Operations (data read and write functions)](https://wasp.sh/docs/0.23/data-model/operations/overview).
+* [Background Jobs](https://wasp.sh/docs/0.23/advanced/jobs).
+* [Email Sending](https://wasp.sh/docs/0.23/advanced/email).
 
 By defining these things in the config file, Wasp continuously handles the boilerplate necessary with putting all these features together. You just need to focus on the business logic of your app.
 
 Wasp abstracts away some things that you would normally be used to doing during development, so don't be surprised if you don't see some of the things you're used to seeing.
 
 :::note
-It's possible to learn Wasp's feature set simply through using this template, but if you find yourself unsure how to implement a Wasp-specific feature and/or just want to learn more, a great starting point is the intro tutorial in the [Wasp docs](https://wasp.sh/docs) which takes ~20 minutes.
+It's possible to learn Wasp's feature set simply through using this template, but if you find yourself unsure how to implement a Wasp-specific feature and/or just want to learn more, a great starting point is the intro tutorial in the [Wasp docs](https://wasp.sh/docs/0.23) which takes ~20 minutes.
 :::
 
 ### Client
@@ -137,7 +137,7 @@ The `src/server` folder contains any additional server-side code that does not b
 
 ### Auth
 
-This template comes with a fully functional auth flow out of the box. It takes advantages of Wasp's built-in [Auth features](https://wasp.sh/docs/auth/overview), which do the dirty work of rolling your own full-stack auth for you!
+This template comes with a fully functional auth flow out of the box. It takes advantages of Wasp's built-in [Auth features](https://wasp.sh/docs/0.23/auth/overview), which do the dirty work of rolling your own full-stack auth for you!
 
 ```js title="main.wasp"
   auth: {
@@ -198,7 +198,7 @@ Let's take a quick look at how payments are handled in this template.
 
 The payment processor you choose (Stripe, Lemon Squeezy or Polar) and its related functions can be found at `src/payment/paymentProcessor.ts`. The `PaymentProcessor` object holds the logic for creating checkout sessions, webhooks, etc.
 
-The logic for creating the Checkout session is defined in the `src/payment/operation.ts` file. [Actions](https://wasp.sh/docs/data-model/operations/actions) are a type of Wasp Operation, specifically your server-side functions that are used to **write** or **update** data to the database. Once they're defined in the `main.wasp` file, you can easily call them on the client-side:
+The logic for creating the Checkout session is defined in the `src/payment/operation.ts` file. [Actions](https://wasp.sh/docs/0.23/data-model/operations/actions) are a type of Wasp Operation, specifically your server-side functions that are used to **write** or **update** data to the database. Once they're defined in the `main.wasp` file, you can easily call them on the client-side:
 
 a) define the action in the `main.wasp` file
 
@@ -257,7 +257,7 @@ If you're finding this template and its guides useful, consider giving us [a sta
 
 Keeping an eye on your metrics is crucial for any SaaS. That's why we've built an administrator's dashboard where you can view your app's stats, user data, and revenue all in one place.
 
-To do that, we've leveraged Wasp's [Jobs feature](https://wasp.sh/docs/advanced/jobs) to run a cron job that calculates your daily stats. The app stats, such as page views and sources, can be pulled from either Plausible or Google Analytics. All you have to do is create a project with the analytics provider of your choice and import the respective pre-built helper functions!
+To do that, we've leveraged Wasp's [Jobs feature](https://wasp.sh/docs/0.23/advanced/jobs) to run a cron job that calculates your daily stats. The app stats, such as page views and sources, can be pulled from either Plausible or Google Analytics. All you have to do is create a project with the analytics provider of your choice and import the respective pre-built helper functions!
 
 ```js title="main.wasp"
 job dailyStatsJob {
@@ -303,7 +303,7 @@ Now would be a good time to decide which features you do and do not need for you
 For the features you will use, the next section of the documentation, `Guides`, will walk you through how to set each one up!
 
 :::note[Open SaaS is built on Wasp]
-Remember, this template is built on the Wasp framework. If, at any time, these docs fail to provide enough information about a certain built-in feature, make sure to check out the [Wasp docs](https://wasp.sh/docs)!
+Remember, this template is built on the Wasp framework. If, at any time, these docs fail to provide enough information about a certain built-in feature, make sure to check out the [Wasp docs](https://wasp.sh/docs/0.23)!
 :::
 
 But before you start setting up the main features, let's walk through the customizations you will likely want to make to the template to make it your own.
