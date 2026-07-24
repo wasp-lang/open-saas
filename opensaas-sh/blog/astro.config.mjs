@@ -129,7 +129,7 @@ export default defineConfig({
       ],
       plugins: [
         starlightVersions({
-          versions: [{ slug: "0.23", label: "<=0.23", }],
+          versions: [{ slug: "0.23", label: "<=0.23" }],
         }),
         starlightBlog({
           title: "Blog",
