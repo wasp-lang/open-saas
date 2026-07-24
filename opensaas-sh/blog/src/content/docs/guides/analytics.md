@@ -23,24 +23,21 @@ Once you've signed up, you'll be taken to your dashboard. Create your site by ad
 PLAUSIBLE_SITE_ID=<your domain without www>
 ```
 
-After adding your domain, you'll be taken to a page with your Plausible script tag. Copy and paste this script tag into the `main.wasp` file's head section. 
+After adding your domain, you'll be taken to a page with your Plausible script tag. Copy and paste this script tag into the app's `head` config, defined in the `src/client/head.wasp.ts` file. 
 
-```js {7}
-app OpenSaaS {
-  wasp: {
-    version: "^0.23.0"
-  },
-  title: "My SaaS App",
-  head: [
-    "<your plausible script tag here>",
-  ],
-  //...
+```ts title="src/client/head.wasp.ts" {5}
+import { type App } from "@wasp.sh/spec";
+
+export const head: App["head"] = [
+  // ...
+  "<your plausible script tag here>",
+];
 ```
 
 Go back to your Plausible dashboard, click on your username in the top right, and click on the `Settings` tab. Scroll down, find your API key and paste it into your `.env.server` file under the `PLAUSIBLE_API_KEY` variable.
 
 :::note[No Cookies]
-Plausible does not use cookies, so you don't need to add it to your [Cookie Consent Modal](/guides/cookie-consent/), hence the script can be added directly to `app.head` in your `main.wasp` file.
+Plausible does not use cookies, so you don't need to add it to your [Cookie Consent Modal](/guides/cookie-consent/), hence the script can be added directly to the app's `head` config in the `src/client/head.wasp.ts` file.
 :::
 
 ### Self-hosted Plausible
