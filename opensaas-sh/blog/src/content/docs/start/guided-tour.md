@@ -155,8 +155,6 @@ By defining the auth structure in your `main.wasp` file, Wasp manages all the ne
 - Custom-generated AuthUI components for login, signup, and password reset.
 - Auth hooks for fetching user data.
 
-<!-- TODO: add pic of AuthUI components -->
-
 We've set the template up with Wasp's `email`, `google`, `discord` and `gitHub` methods, which are all battle-tested and suitable for production. 
 
 You can get started developing your app with the `email` method right away! 
@@ -249,8 +247,6 @@ If you're finding this template and its guides useful, consider giving us [a sta
 ### Analytics and Admin Dashboard
 
 Keeping an eye on your metrics is crucial for any SaaS. That's why we've built an administrator's dashboard where you can view your app's stats, user data, and revenue all in one place.
-
-<!-- TODO: add pic of admin dash -->
 
 To do that, we've leveraged Wasp's [Jobs feature](https://wasp.sh/docs/advanced/jobs) to run a cron job that calculates your daily stats. The app stats, such as page views and sources, can be pulled from either Plausible or Google Analytics. All you have to do is create a project with the analytics provider of your choice and import the respective pre-built helper functions!
 

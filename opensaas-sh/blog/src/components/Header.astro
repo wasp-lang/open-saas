@@ -1,0 +1,137 @@
+---
+/**
+ * Overriden component, for more info:
+ * @see {@link https://starlight.astro.build/guides/overriding-components/}
+ * @see {@link https://starlight.astro.build/reference/overrides/#header-1}
+ */
+
+import blogConfig from "virtual:starlight-blog/config";
+import config from "virtual:starlight/user-config";
+import CopyForLlmButton from "./CopyForLlmButton.astro";
+
+// TODO: fix these
+// @ts-expect-error
+import LanguageSelect from "virtual:starlight/components/LanguageSelect";
+// @ts-expect-error
+import Search from "virtual:starlight/components/Search";
+// @ts-expect-error
+import SiteTitle from "virtual:starlight/components/SiteTitle";
+// @ts-expect-error
+import SocialIcons from "virtual:starlight/components/SocialIcons";
+// @ts-expect-error
+import ThemeSelect from "virtual:starlight/components/ThemeSelect";
+
+/**
+ * Render the `Search` component if Pagefind is enabled or the default search component has been overridden.
+ */
+const shouldRenderSearch =
+  config.pagefind ||
+  config.components.Search !== "@astrojs/starlight/components/Search.astro";
+
+const navLinkClass =
+  "font-semibold  aria-[current=page]:text-(--sl-color-text-accent) no-underline hover:text-(--sl-color-text-accent) text-(--sl-color-white) border-s border-s-(--sl-color-gray-5) ps-4";
+
+const { pathname } = Astro.url;
+const isBlog = pathname.startsWith("/blog/");
+---
+
+<div class="header">
+  <div class="title-wrapper sl-flex">
+    <SiteTitle />
+    <nav class="flex items-center justify-start gap-4 mx-4">
+      <a
+        aria-current={!isBlog ? "page" : undefined}
+        href="/"
+        class={navLinkClass}>Docs</a
+      >
+      <a
+        aria-current={isBlog ? "page" : undefined}
+        href="/blog/"
+        class={navLinkClass}>{blogConfig.title}</a
+      >
+    </nav>
+  </div>
+  <div class="sl-flex print:hidden">
+    {shouldRenderSearch && <Search />}
+  </div>
+  <div class="sl-hidden md:sl-flex print:hidden right-group">
+    <div class="sl-flex social-icons">
+      <SocialIcons />
+    </div>
+    <CopyForLlmButton />
+    <!-- TODO: version selector also shown on blog routes -->
+    <ThemeSelect />
+    <LanguageSelect />
+  </div>
+</div>
+
+<style>
+  @layer starlight.core {
+    .header {
+      display: flex;
+      gap: var(--sl-nav-gap);
+      justify-content: space-between;
+      align-items: center;
+      height: 100%;
+    }
+
+    .title-wrapper {
+      /* Prevent long titles overflowing and covering the search and menu buttons on narrow viewports. */
+      overflow: clip;
+      /* Avoid clipping focus ring around link inside title wrapper. */
+      padding: 0.25rem;
+      margin: -0.25rem;
+      min-width: 0;
+    }
+
+    .right-group,
+    .social-icons {
+      gap: 1rem;
+      align-items: center;
+    }
+    .social-icons::after {
+      content: "";
+      height: 2rem;
+      border-inline-end: 1px solid var(--sl-color-gray-5);
+    }
+
+    @media (min-width: 50rem) {
+      :global(:root[data-has-sidebar]) {
+        --__sidebar-pad: calc(2 * var(--sl-nav-pad-x));
+      }
+      :global(:root:not([data-has-toc])) {
+        --__toc-width: 0rem;
+      }
+      .header {
+        --__sidebar-width: max(
+          0rem,
+          var(--sl-content-inline-start, 0rem) - var(--sl-nav-pad-x)
+        );
+        --__main-column-fr: calc(
+          (
+              100% + var(--__sidebar-pad, 0rem) -
+                var(--__toc-width, var(--sl-sidebar-width)) -
+                (2 * var(--__toc-width, var(--sl-nav-pad-x))) -
+                var(--sl-content-inline-start, 0rem) - var(--sl-content-width)
+            ) /
+            2
+        );
+        display: grid;
+        grid-template-columns:
+        /* 1 (site title): runs up until the main content column’s left edge or the width of the title, whichever is the largest  */
+          minmax(
+            calc(
+              var(--__sidebar-width) +
+                max(0rem, var(--__main-column-fr) - var(--sl-nav-gap))
+            ),
+            auto
+          )
+          /* 2 (search box): all free space that is available. */
+          1fr
+          /* 3 (right items): use the space that these need. */
+          auto;
+        align-content: center;
+      }
+    }
+  }
+</style>

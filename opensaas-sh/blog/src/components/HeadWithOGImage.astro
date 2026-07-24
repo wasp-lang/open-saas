@@ -1,4 +1,10 @@
 ---
+/**
+ * Overriden component, for more info:
+ * @see {@link https://starlight.astro.build/guides/overriding-components/}
+ * @see {@link https://starlight.astro.build/reference/overrides/#head-1}
+ */
+
 import Default from "@astrojs/starlight/components/Head.astro";
 import BlogPostSchema from "./BlogPostSchema.astro";
 import {
@@ -20,7 +26,7 @@ if (imageExists) {
   ogImageUrl = new URL(`${BANNER_PATH}/${bannerImageFileName}`, Astro.site);
 }
 
-// Extract keywords and tags for meta tags
+// Extract keywords and tags for meta tags.
 const { entry } = Astro.locals.starlightRoute;
 const keywords = (entry?.data as any)?.keywords as string[] | undefined;
 const tags = (entry?.data as any)?.tags as string[] | undefined;

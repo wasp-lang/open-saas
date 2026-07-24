@@ -1,5 +1,12 @@
 ---
+/**
+ * Overriden component, for more info:
+ * @see {@link https://starlight.astro.build/guides/overriding-components/}
+ * @see {@link https://starlight.astro.build/reference/overrides/#pagetitle}
+ */
+
 import { Image } from "astro:assets";
+import VersionNotice from "starlight-versions/components/VersionNotice.astro";
 import {
   BANNER_PATH,
   checkBannerImageExists,
@@ -18,6 +25,7 @@ const imageExists = checkBannerImageExists({ bannerImageFileName });
 >
   {title}
 </h1>
+<VersionNotice />
 {
   subtitle && (
     <p class="my-2 text-(length:--sl-text-h4) text-(--sl-color-gray-2)">
