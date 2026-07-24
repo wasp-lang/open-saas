@@ -2,8 +2,10 @@ import {
   page,
   route,
   type Auth,
-  type AuthMethods,
+  type EmailAuthConfig,
+  type SocialAuthConfig,
   type Spec,
+  type UsernameAndPasswordConfig,
 } from "@wasp.sh/spec";
 
 import { LoginPage } from "./LoginPage" with { type: "ref" };
@@ -25,7 +27,7 @@ import {
   getGoogleUserFields,
 } from "./userSignupFields" with { type: "ref" };
 
-const emailAuthMethod: NonNullable<AuthMethods["email"]> = {
+const emailAuthMethod: EmailAuthConfig = {
   fromField: {
     name: "Open SaaS App",
     email: "me@example.com",
@@ -45,24 +47,22 @@ const emailAuthMethod: NonNullable<AuthMethods["email"]> = {
 // Do note that `email` and `usernameAndPassword` are mutually exclusive.
 // @ts-expect-error Demo purposes
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const usernameAndPasswordAuthMethod: NonNullable<
-  AuthMethods["usernameAndPassword"]
-> = {};
+const usernameAndPasswordAuthMethod: UsernameAndPasswordConfig = {};
 // @ts-expect-error Demo purposes
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const googleAuthMethod: NonNullable<AuthMethods["google"]> = {
+const googleAuthMethod: SocialAuthConfig = {
   userSignupFields: getGoogleUserFields,
   configFn: getGoogleAuthConfig,
 };
 // @ts-expect-error Demo purposes
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const gitGubAuthMethod: NonNullable<AuthMethods["gitHub"]> = {
+const gitGubAuthMethod: SocialAuthConfig = {
   userSignupFields: getGitHubUserFields,
   configFn: getGitHubAuthConfig,
 };
 // @ts-expect-error Demo purposes
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const discordAuthMethod: NonNullable<AuthMethods["discord"]> = {
+const discordAuthMethod: SocialAuthConfig = {
   userSignupFields: getDiscordUserFields,
   configFn: getDiscordAuthConfig,
 };

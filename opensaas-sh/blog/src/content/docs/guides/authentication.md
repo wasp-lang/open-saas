@@ -55,7 +55,7 @@ In order to use the `email` auth method in production, you'll need to switch fro
 2. Add your `SENDGRID_API_KEY` to the `.env.server` file.
 3. Make sure the email address you use in the `fromField` object is the same email address that you configured your SendGrid account to send out emails with. In the end, your config should look something like this: 
 ```ts title="src/auth/auth.wasp.ts" {3,5}
-const emailAuthMethod: NonNullable<AuthMethods["email"]> = {
+const emailAuthMethod: EmailAuthConfig = {
   fromField: {
     name: "Open SaaS App",
     // When using SendGrid, you must use the same email address that you configured your account to send out emails with!
