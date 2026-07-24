@@ -9,17 +9,15 @@ import blogConfig from "virtual:starlight-blog/config";
 import config from "virtual:starlight/user-config";
 import CopyForLlmButton from "./CopyForLlmButton.astro";
 
-// TODO: fix these
-// @ts-expect-error
 import LanguageSelect from "virtual:starlight/components/LanguageSelect";
-// @ts-expect-error
 import Search from "virtual:starlight/components/Search";
-// @ts-expect-error
 import SiteTitle from "virtual:starlight/components/SiteTitle";
-// @ts-expect-error
 import SocialIcons from "virtual:starlight/components/SocialIcons";
-// @ts-expect-error
-import ThemeSelect from "virtual:starlight/components/ThemeSelect";
+// `starlight-versions` overrides `ThemeSelect` to also render its version
+// selector next to it. The blog is not versioned, so it renders the plain
+// Starlight `ThemeSelect` instead.
+import DefaultThemeSelect from "@astrojs/starlight/components/ThemeSelect.astro";
+import ThemeSelectWithVersionSelect from "virtual:starlight/components/ThemeSelect";
 
 /**
  * Render the `Search` component if Pagefind is enabled or the default search component has been overridden.
@@ -59,8 +57,7 @@ const isBlog = pathname.startsWith("/blog/");
       <SocialIcons />
     </div>
     <CopyForLlmButton />
-    <!-- TODO: version selector also shown on blog routes -->
-    <ThemeSelect />
+    {isBlog ? <DefaultThemeSelect /> : <ThemeSelectWithVersionSelect />}
     <LanguageSelect />
   </div>
 </div>

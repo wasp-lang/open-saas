@@ -1,4 +1,3 @@
-import { readdirSync } from "node:fs";
 
 import starlight from "@astrojs/starlight";
 import tailwindcss from "@tailwindcss/vite";
@@ -6,22 +5,12 @@ import { defineConfig } from "astro/config";
 import starlightBlog from "starlight-blog";
 import starlightVersions from "starlight-versions";
 
-// The blog is not versioned, send versioned blog URLs back to the live blog.
-const versionedBlogRedirects = Object.fromEntries(
-  readdirSync("./src/content/docs/blog")
-    .filter((file) => /\.mdx?$/.test(file))
-    .map((file) => file.replace(/\.mdx?$/, ""))
-    .map((slug) => [`/0.23/blog/${slug}/`, `/blog/${slug}/`]),
-);
-
 // https://astro.build/config
 export default defineConfig({
   site: "https://docs.opensaas.sh",
   trailingSlash: "always",
   redirects: {
     "/guides/seo/": "/guides/seo-performance/",
-    "/0.23/blog/": "/blog/",
-    ...versionedBlogRedirects,
   },
   integrations: [
     starlight({
