@@ -1,6 +1,6 @@
 --- template/app/src/landing-page/components/RoadmapEpicCard.tsx
 +++ opensaas-sh/app/src/landing-page/components/RoadmapEpicCard.tsx
-@@ -0,0 +1,92 @@
+@@ -0,0 +1,110 @@
 +import { Plus } from "lucide-react";
 +import { cn } from "../../client/utils";
 +import type { GithubEpic } from "../operations";
@@ -29,7 +29,7 @@
 +      )}
 +    >
 +      <h4 className="text-base font-semibold leading-tight text-gray-900 transition-opacity dark:text-white">
-+        {epic.name}
++        {renderEpicTitle(epic.name)}
 +      </h4>
 +
 +      <div className="mt-auto pt-1">
@@ -63,6 +63,24 @@
 +    </a>
 +  );
 +}
++
++const renderEpicTitle = (name: string) => {
++  const parts = name.split("`");
++  return parts.map((part, index) => {
++    const isCode = index % 2 === 1 && index < parts.length - 1;
++    if (isCode) {
++      return (
++        <code
++          key={index}
++          className="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-[0.85em] text-gray-800 dark:bg-gray-800 dark:text-gray-300"
++        >
++          {part}
++        </code>
++      );
++    }
++    return <span key={index}>{index % 2 === 1 ? "`" + part : part}</span>;
++  });
++};
 +
 +const getProgressBarColor = (status: GithubEpicStatus) => {
 +  switch (status) {
