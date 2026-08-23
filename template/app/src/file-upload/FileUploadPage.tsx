@@ -9,7 +9,7 @@ import {
 } from "wasp/client/operations";
 import type { File } from "wasp/entities";
 
-import { Download, Trash } from "lucide-react";
+import { Download, LoaderCircle, Trash } from "lucide-react";
 import { Alert, AlertDescription } from "../client/components/ui/alert";
 import { Button } from "../client/components/ui/button";
 import { Card, CardContent, CardTitle } from "../client/components/ui/card";
@@ -32,6 +32,7 @@ import { ALLOWED_FILE_TYPES } from "./validation";
 export function FileUploadPage() {
   const [fileKeyForS3, setFileKeyForS3] = useState<File["s3Key"]>("");
   const [uploadProgressPercent, setUploadProgressPercent] = useState<number>(0);
+  const [isUploading, setIsUploading] = useState(false);
   const [fileToDelete, setFileToDelete] = useState<Pick<
     File,
     "id" | "s3Key" | "name"
@@ -103,6 +104,7 @@ export function FileUploadPage() {
       }
 
       const file = validateFile(formDataFileUpload);
+      setIsUploading(true);
 
       const { s3UploadUrl, s3UploadFields, s3Key } = await createFileUploadUrl({
         fileType: file.type,
@@ -138,6 +140,7 @@ export function FileUploadPage() {
         variant: "destructive",
       });
     } finally {
+      setIsUploading(false);
       setUploadProgressPercent(0);
     }
   };
@@ -202,14 +205,21 @@ export function FileUploadPage() {
                 <div className="space-y-2">
                   <Button
                     type="submit"
-                    disabled={uploadProgressPercent > 0}
+                    disabled={isUploading}
                     className="w-full"
                   >
-                    {uploadProgressPercent > 0
-                      ? `Uploading ${uploadProgressPercent}%`
-                      : "Upload"}
+                    {isUploading ? (
+                      <>
+                        <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                        {uploadProgressPercent > 0
+                          ? `Uploading ${uploadProgressPercent}%`
+                          : "Uploading..."}
+                      </>
+                    ) : (
+                      "Upload"
+                    )}
                   </Button>
-                  {uploadProgressPercent > 0 && (
+                  {isUploading && (
                     <Progress
                       value={uploadProgressPercent}
                       className="w-full"
