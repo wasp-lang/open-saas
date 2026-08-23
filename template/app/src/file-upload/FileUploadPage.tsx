@@ -27,6 +27,7 @@ import { Progress } from "../client/components/ui/progress";
 import { toast } from "../client/hooks/use-toast";
 import { cn } from "../client/utils";
 import { uploadFileWithProgress, validateFile } from "./fileUploading";
+import { getUploadButtonLabel } from "./uploadUi";
 import { ALLOWED_FILE_TYPES } from "./validation";
 
 export function FileUploadPage() {
@@ -211,9 +212,10 @@ export function FileUploadPage() {
                     {isUploading ? (
                       <>
                         <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
-                        {uploadProgressPercent > 0
-                          ? `Uploading ${uploadProgressPercent}%`
-                          : "Uploading..."}
+                        {getUploadButtonLabel(
+                          isUploading,
+                          uploadProgressPercent,
+                        )}
                       </>
                     ) : (
                       "Upload"
