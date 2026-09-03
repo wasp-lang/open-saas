@@ -1,3 +1,5 @@
+import { T } from "i18n-keyless-react";
+
 export function SectionTitle({
   title,
   description,
@@ -9,7 +11,7 @@ export function SectionTitle({
   const titleElement =
     typeof title === "string" ? (
       <h3 className="text-foreground mt-2 text-4xl font-bold tracking-tight sm:text-5xl">
-        {title}
+        <T>{title}</T>
       </h3>
     ) : (
       title
@@ -17,7 +19,7 @@ export function SectionTitle({
   const descriptionElement =
     typeof description === "string" ? (
       <p className="text-muted-foreground mt-4 text-lg leading-8">
-        {description}
+        <T>{description}</T>
       </p>
     ) : (
       description

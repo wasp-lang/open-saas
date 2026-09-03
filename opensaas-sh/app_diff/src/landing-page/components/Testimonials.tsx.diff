@@ -1,14 +1,17 @@
 --- template/app/src/landing-page/components/Testimonials.tsx
 +++ opensaas-sh/app/src/landing-page/components/Testimonials.tsx
-@@ -1,4 +1,3 @@
+@@ -1,5 +1,4 @@
+-import { T, useTranslation } from "i18n-keyless-react";
 -import { useState } from "react";
++import { T } from "i18n-keyless-react";
  import {
    Card,
    CardContent,
-@@ -21,18 +20,12 @@
+@@ -22,19 +21,12 @@
  }: {
    testimonials: Testimonial[];
  }) {
+-  const t = useTranslation();
 -  const [isExpanded, setIsExpanded] = useState(false);
 -  const shouldShowExpand = testimonials.length > 5;
 -  const mobileItemsToShow = 3;
@@ -25,7 +28,7 @@
            <div key={idx} className="mb-6 break-inside-avoid">
              <Card className="flex flex-col justify-between">
                <CardContent className="p-6">
-@@ -65,19 +58,6 @@
+@@ -69,23 +61,6 @@
            </div>
          ))}
        </div>
@@ -37,8 +40,12 @@
 -            className="text-primary bg-primary/10 hover:bg-primary/20 rounded-lg px-6 py-3 text-sm font-medium transition-colors duration-200"
 -          >
 -            {isExpanded
--              ? "Show Less"
--              : `Show ${testimonials.length - mobileItemsToShow} More`}
+-              ? t("Show Less")
+-              : t("Show {count} More", {
+-                  replace: {
+-                    "{count}": String(testimonials.length - mobileItemsToShow),
+-                  },
+-                })}
 -          </button>
 -        </div>
 -      )}

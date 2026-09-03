@@ -1,3 +1,4 @@
+import { T, useTranslation } from "i18n-keyless-react";
 import { useState } from "react";
 import {
   Card,
@@ -21,6 +22,7 @@ export function Testimonials({
 }: {
   testimonials: Testimonial[];
 }) {
+  const t = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
   const shouldShowExpand = testimonials.length > 5;
   const mobileItemsToShow = 3;
@@ -37,7 +39,9 @@ export function Testimonials({
             <Card className="flex flex-col justify-between">
               <CardContent className="p-6">
                 <blockquote className="mb-4 leading-6">
-                  <p className="text-sm italic">{testimonial.quote}</p>
+                  <p className="text-sm italic">
+                    <T>{testimonial.quote}</T>
+                  </p>
                 </blockquote>
               </CardContent>
               <CardFooter className="flex flex-col pt-0">
@@ -56,7 +60,7 @@ export function Testimonials({
                       {testimonial.name}
                     </CardTitle>
                     <CardDescription className="truncate text-xs">
-                      {testimonial.role}
+                      <T>{testimonial.role}</T>
                     </CardDescription>
                   </div>
                 </a>
@@ -73,8 +77,12 @@ export function Testimonials({
             className="text-primary bg-primary/10 hover:bg-primary/20 rounded-lg px-6 py-3 text-sm font-medium transition-colors duration-200"
           >
             {isExpanded
-              ? "Show Less"
-              : `Show ${testimonials.length - mobileItemsToShow} More`}
+              ? t("Show Less")
+              : t("Show {count} More", {
+                  replace: {
+                    "{count}": String(testimonials.length - mobileItemsToShow),
+                  },
+                })}
           </button>
         </div>
       )}

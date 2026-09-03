@@ -1,3 +1,4 @@
+import { T } from "i18n-keyless-react";
 import { SectionTitle } from "./SectionTitle";
 
 export interface Feature {
@@ -13,7 +14,7 @@ export function Features({ features }: { features: Feature[] }) {
       <SectionTitle
         title={
           <p className="text-foreground mt-2 text-4xl font-bold tracking-tight sm:text-5xl">
-            The <span className="text-secondary">Best</span> Features
+            <T>The Best Features</T>
           </p>
         }
         description="Don't work harder. Work smarter."
@@ -26,10 +27,10 @@ export function Features({ features }: { features: Feature[] }) {
                 <div className="border-accent bg-accent/30 absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg border">
                   <div className="text-2xl">{feature.icon}</div>
                 </div>
-                {feature.name}
+                <T>{feature.name}</T>
               </dt>
               <dd className="text-muted-foreground mt-2 text-base leading-7">
-                {feature.description}
+                <T>{feature.description}</T>
               </dd>
             </div>
           ))}

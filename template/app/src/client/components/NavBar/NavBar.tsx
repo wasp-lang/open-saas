@@ -1,3 +1,4 @@
+import { T } from "i18n-keyless-react";
 import { LogIn, Menu } from "lucide-react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Link as ReactRouterLink } from "react-router";
@@ -17,6 +18,7 @@ import { useIsLandingPage } from "../../hooks/useIsLandingPage";
 import logo from "../../static/logo.svg";
 import { cn } from "../../utils";
 import { DarkModeSwitcher } from "../DarkModeSwitcher";
+import { LanguageSelector } from "../LanguageSelector";
 import { Announcement } from "./Announcement";
 
 export interface NavigationItem {
@@ -113,6 +115,7 @@ function NavBarDesktopUserDropdown({ isScrolled }: { isScrolled: boolean }) {
   return (
     <div className="hidden items-center justify-end gap-3 lg:flex lg:flex-1">
       <ul className="flex items-center justify-center gap-2 sm:gap-4">
+        <LanguageSelector />
         <DarkModeSwitcher />
       </ul>
       {isUserLoading ? null : !user ? (
@@ -127,7 +130,7 @@ function NavBarDesktopUserDropdown({ isScrolled }: { isScrolled: boolean }) {
           )}
         >
           <div className="text-foreground hover:text-primary flex items-center transition-colors duration-300 ease-in-out">
-            Log in{" "}
+            <T>Log in</T>{" "}
             <LogIn
               size={isScrolled ? "1rem" : "1.1rem"}
               className={cn("transition-all duration-300", {
@@ -166,7 +169,9 @@ function NavBarMobileMenu({
               "text-muted-foreground hover:text-muted hover:bg-accent inline-flex items-center justify-center rounded-md transition-colors",
             )}
           >
-            <span className="sr-only">Open main menu</span>
+            <span className="sr-only">
+              <T>Open main menu</T>
+            </span>
             <Menu
               className={cn("transition-all duration-300", {
                 "size-8 p-1": !isScrolled,
@@ -194,7 +199,7 @@ function NavBarMobileMenu({
                 {isUserLoading ? null : !user ? (
                   <WaspRouterLink to={routes.LoginRoute.to}>
                     <div className="text-foreground hover:text-primary flex items-center justify-end transition-colors duration-300 ease-in-out">
-                      Log in <LogIn size="1.1rem" className="ml-1" />
+                      <T>Log in</T> <LogIn size="1.1rem" className="ml-1" />
                     </div>
                   </WaspRouterLink>
                 ) : (
@@ -206,8 +211,9 @@ function NavBarMobileMenu({
                   </ul>
                 )}
               </div>
-              <div className="py-6">
+              <div className="flex items-center justify-between py-6">
                 <DarkModeSwitcher />
+                <LanguageSelector />
               </div>
             </div>
           </div>
@@ -237,7 +243,7 @@ function renderNavigationItems(
           onClick={setMobileMenuOpen && (() => setMobileMenuOpen(false))}
           target={item.to.startsWith("http") ? "_blank" : undefined}
         >
-          {item.name}
+          <T>{item.name}</T>
         </ReactRouterLink>
       </li>
     );

@@ -9,6 +9,7 @@ import {
   marketingNavigationItems,
 } from "./components/NavBar/constants";
 import { CookieConsentBanner } from "./components/cookie-consent/Banner";
+import { initI18nKeyless } from "./i18n-keyless";
 
 /**
  * use this component to wrap all child components
@@ -37,6 +38,12 @@ export function App() {
   const isAdminDashboard = useMemo(() => {
     return location.pathname.startsWith(routes.AdminRoute.to);
   }, [location]);
+
+  // After hydration: the prerendered landing page and the first client render
+  // are both English, then the visitor's language is applied.
+  useEffect(() => {
+    initI18nKeyless();
+  }, []);
 
   useEffect(() => {
     if (location.hash) {
