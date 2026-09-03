@@ -1,6 +1,6 @@
 --- template/app/src/client/components/NavBar/NavBar.tsx
 +++ opensaas-sh/app/src/client/components/NavBar/NavBar.tsx
-@@ -3,6 +3,7 @@
+@@ -4,6 +4,7 @@
  import { Link as ReactRouterLink } from "react-router";
  import { useAuth } from "wasp/client/auth";
  import { Link as WaspRouterLink, routes } from "wasp/client/router";
@@ -8,15 +8,15 @@
  import {
    Sheet,
    SheetContent,
-@@ -17,6 +18,7 @@
- import logo from "../../static/logo.svg";
+@@ -19,6 +20,7 @@
  import { cn } from "../../utils";
  import { DarkModeSwitcher } from "../DarkModeSwitcher";
+ import { LanguageSelector } from "../LanguageSelector";
 +import { RepoInfo } from "../RepoInfo";
  import { Announcement } from "./Announcement";
  
  export interface NavigationItem {
-@@ -51,7 +53,7 @@
+@@ -53,7 +55,7 @@
        <header
          className={cn(
            "sticky top-0 z-50 transition-all duration-300",
@@ -25,7 +25,7 @@
          )}
        >
          <div
-@@ -66,7 +68,7 @@
+@@ -68,7 +70,7 @@
              className={cn(
                "flex items-center justify-between transition-all duration-300",
                {
@@ -34,7 +34,7 @@
                  "p-6 lg:px-8": !isScrolled,
                },
              )}
-@@ -87,7 +89,7 @@
+@@ -89,7 +91,7 @@
                      },
                    )}
                  >
@@ -43,13 +43,17 @@
                  </span>
                </WaspRouterLink>
  
-@@ -113,7 +115,12 @@
+@@ -115,8 +117,15 @@
    return (
      <div className="hidden items-center justify-end gap-3 lg:flex lg:flex-1">
        <ul className="flex items-center justify-center gap-2 sm:gap-4">
+-        <LanguageSelector />
 -        <DarkModeSwitcher />
 +        <li>
 +          <RepoInfo />
++        </li>
++        <li>
++          <LanguageSelector />
 +        </li>
 +        <li>
 +          <DarkModeSwitcher />
@@ -57,21 +61,21 @@
        </ul>
        {isUserLoading ? null : !user ? (
          <WaspRouterLink
-@@ -126,10 +133,11 @@
+@@ -129,10 +138,11 @@
              },
            )}
          >
 -          <div className="text-foreground hover:text-primary flex items-center transition-colors duration-300 ease-in-out">
 +          <div className="text-foreground hover:text-primary flex items-center gap-1 transition-colors duration-300 ease-in-out">
 +            <span>Demo App</span>
-             Log in{" "}
+             <T>Log in</T>{" "}
              <LogIn
 -              size={isScrolled ? "1rem" : "1.1rem"}
 +              size="1rem"
                className={cn("transition-all duration-300", {
                  "ml-1 mt-[0.1rem]": !isScrolled,
                  "ml-1": isScrolled,
-@@ -180,7 +188,7 @@
+@@ -185,7 +195,7 @@
            <SheetHeader>
              <SheetTitle className="flex items-center">
                <WaspRouterLink to={routes.LandingPageRoute.to}>
@@ -80,12 +84,12 @@
                  <NavLogo isScrolled={false} />
                </WaspRouterLink>
              </SheetTitle>
-@@ -193,9 +201,9 @@
+@@ -198,9 +208,9 @@
                <div className="py-6">
                  {isUserLoading ? null : !user ? (
                    <WaspRouterLink to={routes.LoginRoute.to}>
 -                    <div className="text-foreground hover:text-primary flex items-center justify-end transition-colors duration-300 ease-in-out">
--                      Log in <LogIn size="1.1rem" className="ml-1" />
+-                      <T>Log in</T> <LogIn size="1.1rem" className="ml-1" />
 -                    </div>
 +                    <Button variant="outline">
 +                      <span>Demo App</span> <LogIn className="ml-1" />
@@ -93,14 +97,20 @@
                    </WaspRouterLink>
                  ) : (
                    <ul className="space-y-2">
-@@ -207,7 +215,14 @@
+@@ -211,9 +221,18 @@
+                   </ul>
                  )}
                </div>
-               <div className="py-6">
+-              <div className="flex items-center justify-between py-6">
 -                <DarkModeSwitcher />
+-                <LanguageSelector />
++              <div className="py-6">
 +                <ul className="flex items-center justify-between gap-4">
 +                  <li>
 +                    <DarkModeSwitcher />
++                  </li>
++                  <li>
++                    <LanguageSelector />
 +                  </li>
 +                  <li>
 +                    <RepoInfo />
@@ -109,7 +119,7 @@
                </div>
              </div>
            </div>
-@@ -252,7 +267,7 @@
+@@ -258,7 +277,7 @@
          "size-7": isScrolled,
        })}
        src={logo}

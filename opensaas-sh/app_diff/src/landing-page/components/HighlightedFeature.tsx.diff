@@ -1,6 +1,6 @@
 --- template/app/src/landing-page/components/HighlightedFeature.tsx
 +++ opensaas-sh/app/src/landing-page/components/HighlightedFeature.tsx
-@@ -1,11 +1,14 @@
+@@ -2,11 +2,14 @@
  import { cn } from "../../client/utils";
  
  interface FeatureProps {
@@ -15,7 +15,7 @@
  }
  
  /**
-@@ -13,11 +16,14 @@
+@@ -14,11 +17,14 @@
   * Shows text description on one side, and whatever component you want to show on the other side to demonstrate the functionality.
   */
  export function HighlightedFeature({
@@ -30,7 +30,7 @@
  }: FeatureProps) {
    const tiltToClass: Record<Required<FeatureProps>["tilt"], string> = {
      left: "rotate-1",
-@@ -26,13 +32,16 @@
+@@ -27,15 +33,18 @@
  
    return (
      <div
@@ -42,14 +42,18 @@
        )}
      >
        <div className="flex-1 flex-col">
--        <h2 className="mb-2 text-4xl font-bold">{name}</h2>
+-        <h2 className="mb-2 text-4xl font-bold">
+-          <T>{name}</T>
+-        </h2>
 +        <a href={url} target="_blank" rel="noopener noreferrer">
-+          <h2 className="mb-2 text-4xl font-bold">{name}</h2>
++          <h2 className="mb-2 text-4xl font-bold">
++            <T>{name}</T>
++          </h2>
 +        </a>
          {typeof description === "string" ? (
-           <p className="text-muted-foreground">{description}</p>
-         ) : (
-@@ -43,6 +52,7 @@
+           <p className="text-muted-foreground">
+             <T>{description}</T>
+@@ -48,6 +57,7 @@
          className={cn(
            "my-10 flex w-full flex-1 items-center justify-center transition-transform duration-300 ease-in-out",
            tilt && tiltToClass[tilt],

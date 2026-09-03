@@ -102,6 +102,10 @@ export default defineConfig({
             { label: "SEO & Performance", link: "/guides/seo-performance/" },
             { label: "Email Sending", link: "/guides/email-sending/" },
             { label: "File Uploading", link: "/guides/file-uploading/" },
+            {
+              label: "Internationalization (i18n)",
+              link: "/guides/internationalization/",
+            },
             { label: "Tests", link: "/guides/tests/" },
             {
               label: "How (Not) to Update Your Open SaaS App",

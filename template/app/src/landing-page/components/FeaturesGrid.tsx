@@ -1,3 +1,4 @@
+import { T } from "i18n-keyless-react";
 import React from "react";
 import {
   Card,
@@ -114,12 +115,14 @@ function FeaturesGridItem({
             <CardTitle
               className={cn(align === "center" ? "text-center" : "text-left")}
             >
-              {name}
+              <T>{name}</T>
             </CardTitle>
           </div>
         )}
         {fullWidthIcon && (icon || emoji) && (
-          <CardTitle className="mb-2 text-center">{name}</CardTitle>
+          <CardTitle className="mb-2 text-center">
+            <T>{name}</T>
+          </CardTitle>
         )}
         <CardDescription
           className={cn(
@@ -129,7 +132,7 @@ function FeaturesGridItem({
               : "text-left",
           )}
         >
-          {description}
+          <T>{description}</T>
         </CardDescription>
       </CardContent>
     </Card>

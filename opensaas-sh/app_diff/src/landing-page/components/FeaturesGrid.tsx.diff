@@ -1,6 +1,6 @@
 --- template/app/src/landing-page/components/FeaturesGrid.tsx
 +++ opensaas-sh/app/src/landing-page/components/FeaturesGrid.tsx
-@@ -9,13 +9,15 @@
+@@ -10,13 +10,15 @@
  import { Feature } from "./Features";
  import { SectionTitle } from "./SectionTitle";
  
@@ -17,7 +17,7 @@
  }
  
  interface FeaturesGridProps {
-@@ -59,7 +61,8 @@
+@@ -60,7 +62,8 @@
    direction = "col",
    align = "center",
    size = "medium",
@@ -27,7 +27,7 @@
  }: GridFeature) {
    const gridFeatureSizeToClasses: Record<GridFeature["size"], string> = {
      small: "col-span-1",
-@@ -77,60 +80,98 @@
+@@ -78,62 +81,98 @@
      "col-reverse": "flex-col-reverse",
    };
  
@@ -80,7 +80,7 @@
 +                  direction === "col-reverse" ? "order-1" : "order-2",
 +                )}
 +              >
-+                {name}
++                <T>{name}</T>
 +              </CardTitle>
 +            )}
 +            <CardDescription
@@ -90,7 +90,7 @@
 +                direction === "col-reverse" ? "order-1" : "order-2",
 +              )}
 +            >
-+              {description}
++              <T>{description}</T>
 +            </CardDescription>
            </div>
          ) : (
@@ -124,12 +124,14 @@
 +                align === "center" ? "text-center" : "text-left",
 +              )}
              >
-               {name}
+               <T>{name}</T>
              </CardTitle>
            </div>
          )}
 -        {fullWidthIcon && (icon || emoji) && (
--          <CardTitle className="mb-2 text-center">{name}</CardTitle>
+-          <CardTitle className="mb-2 text-center">
+-            <T>{name}</T>
+-          </CardTitle>
 +        {!fullWidthIcon && (
 +          <CardDescription
 +            className={cn(
@@ -139,7 +141,7 @@
 +                : "text-left",
 +            )}
 +          >
-+            {description}
++            <T>{description}</T>
 +          </CardDescription>
          )}
 -        <CardDescription
@@ -150,12 +152,12 @@
 -              : "text-left",
 -          )}
 -        >
--          {description}
+-          <T>{description}</T>
 -        </CardDescription>
        </CardContent>
      </Card>
    );
-@@ -141,7 +182,7 @@
+@@ -144,7 +183,7 @@
          href={href}
          target="_blank"
          rel="noopener noreferrer"

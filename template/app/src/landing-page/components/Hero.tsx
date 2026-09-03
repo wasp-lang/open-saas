@@ -1,9 +1,12 @@
+import { T, useTranslation } from "i18n-keyless-react";
 import { Link as WaspRouterLink, routes } from "wasp/client/router";
 import { Button } from "../../client/components/ui/button";
 import openSaasBannerDark from "../../client/static/open-saas-banner-dark.svg";
 import openSaasBannerLight from "../../client/static/open-saas-banner-light.svg";
 
 export function Hero() {
+  const t = useTranslation();
+
   return (
     <div className="relative w-full pt-14">
       <TopGradient />
@@ -12,21 +15,23 @@ export function Hero() {
         <div className="max-w-8xl mx-auto px-6 lg:px-8">
           <div className="lg:mb-18 mx-auto max-w-3xl text-center">
             <h1 className="text-foreground text-5xl font-bold sm:text-6xl">
-              Some <span className="italic">cool</span> words about{" "}
-              <span className="text-gradient-primary">your product</span>
+              <T>Some cool words about</T>{" "}
+              <span className="text-gradient-primary">
+                <T>your product</T>
+              </span>
             </h1>
             <p className="text-muted-foreground mx-auto mt-6 max-w-2xl text-lg leading-8">
-              With some more exciting words about your product!
+              <T>With some more exciting words about your product!</T>
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Button size="lg" variant="outline" asChild>
                 <WaspRouterLink to={routes.PricingPageRoute.to}>
-                  Learn More
+                  <T>Learn More</T>
                 </WaspRouterLink>
               </Button>
               <Button size="lg" variant="default" asChild>
                 <WaspRouterLink to={routes.SignupRoute.to}>
-                  Get Started <span aria-hidden="true">→</span>
+                  <T>Get Started</T> <span aria-hidden="true">→</span>
                 </WaspRouterLink>
               </Button>
             </div>
@@ -35,7 +40,7 @@ export function Hero() {
             <div className="m-2 hidden justify-center rounded-xl md:flex lg:-m-4 lg:rounded-2xl lg:p-4">
               <img
                 src={openSaasBannerLight}
-                alt="App screenshot"
+                alt={t("App screenshot")}
                 width={1000}
                 height={530}
                 loading="lazy"
@@ -43,7 +48,7 @@ export function Hero() {
               />
               <img
                 src={openSaasBannerDark}
-                alt="App screenshot"
+                alt={t("App screenshot")}
                 width={1000}
                 height={530}
                 loading="lazy"

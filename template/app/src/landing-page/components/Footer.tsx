@@ -1,3 +1,5 @@
+import { T } from "i18n-keyless-react";
+
 interface NavigationItem {
   name: string;
   href: string;
@@ -18,12 +20,12 @@ export function Footer({
         className="relative border-t border-gray-900/10 py-24 sm:mt-32 dark:border-gray-200/10"
       >
         <h2 id="footer-heading" className="sr-only">
-          Footer
+          <T>Footer</T>
         </h2>
         <div className="mt-10 flex items-start justify-end gap-20">
           <div>
             <h3 className="text-sm font-semibold leading-6 text-gray-900 dark:text-white">
-              App
+              <T>App</T>
             </h3>
             <ul role="list" className="mt-6 space-y-4">
               {footerNavigation.app.map((item) => (
@@ -32,7 +34,7 @@ export function Footer({
                     href={item.href}
                     className="text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-white"
                   >
-                    {item.name}
+                    <T>{item.name}</T>
                   </a>
                 </li>
               ))}
@@ -40,7 +42,7 @@ export function Footer({
           </div>
           <div>
             <h3 className="text-sm font-semibold leading-6 text-gray-900 dark:text-white">
-              Company
+              <T>Company</T>
             </h3>
             <ul role="list" className="mt-6 space-y-4">
               {footerNavigation.company.map((item) => (
@@ -49,7 +51,7 @@ export function Footer({
                     href={item.href}
                     className="text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-white"
                   >
-                    {item.name}
+                    <T>{item.name}</T>
                   </a>
                 </li>
               ))}

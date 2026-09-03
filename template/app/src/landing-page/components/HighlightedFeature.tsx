@@ -1,3 +1,4 @@
+import { T } from "i18n-keyless-react";
 import { cn } from "../../client/utils";
 
 interface FeatureProps {
@@ -32,9 +33,13 @@ export function HighlightedFeature({
       )}
     >
       <div className="flex-1 flex-col">
-        <h2 className="mb-2 text-4xl font-bold">{name}</h2>
+        <h2 className="mb-2 text-4xl font-bold">
+          <T>{name}</T>
+        </h2>
         {typeof description === "string" ? (
-          <p className="text-muted-foreground">{description}</p>
+          <p className="text-muted-foreground">
+            <T>{description}</T>
+          </p>
         ) : (
           description
         )}
