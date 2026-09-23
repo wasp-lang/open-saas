@@ -18,7 +18,7 @@ export interface FetchCustomerPortalUrlArgs {
 }
 
 export interface PaymentProcessor {
-  id: "stripe" | "lemonsqueezy" | "polar";
+  id: "stripe" | "lemonsqueezy" | "polar" | "paddle";
   createCheckoutSession: (
     args: CreateCheckoutSessionArgs,
   ) => Promise<{ session: { id: string; url: string } }>;
@@ -37,3 +37,4 @@ export interface PaymentProcessor {
 export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
 // export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
 // export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
+// export const paymentProcessor: PaymentProcessor = paddlePaymentProcessor;

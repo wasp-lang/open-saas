@@ -6,11 +6,13 @@ import type {
 import * as z from "zod";
 import { PaymentPlanId, paymentPlans } from "../payment/plans";
 import { ensureArgsSchemaOrThrowHttpError } from "../server/validation";
-import { paymentProcessor } from "./paymentProcessor";
+import { type PaymentProcessor, paymentProcessor } from "./paymentProcessor";
 
 export type CheckoutSession = {
   sessionUrl: string | null;
   sessionId: string;
+  // Lets the client decide how to open checkout (e.g. redirect vs. Paddle.js overlay).
+  paymentProcessorId: PaymentProcessor["id"];
 };
 
 const generateCheckoutSessionSchema = z.nativeEnum(PaymentPlanId);
@@ -52,6 +54,7 @@ export const generateCheckoutSession: GenerateCheckoutSession<
   return {
     sessionUrl: session.url,
     sessionId: session.id,
+    paymentProcessorId: paymentProcessor.id,
   };
 };
 

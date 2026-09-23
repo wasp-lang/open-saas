@@ -10,20 +10,22 @@ This guide will show you how to set up payments for testing and local developmen
 - Stripe
 - Lemon Squeezy
 - Polar
+- Paddle
 
 :::note[Which should I choose?]
 Stripe is the industry standard, is more configurable, and has cheaper fees.
-Lemon Squeezy and Polar act as a [Merchant of Record](https://www.lemonsqueezy.com/reporting/merchant-of-record). This means they take care of paying taxes in multiple countries for you, but charge higher fees per transaction.
+Lemon Squeezy, Polar, and Paddle act as a [Merchant of Record](https://www.lemonsqueezy.com/reporting/merchant-of-record). This means they take care of paying taxes in multiple countries for you, but charge higher fees per transaction.
 :::
 
 ## Important First Steps
 
 First, go to `/src/payment/paymentProcessor.ts` and choose which payment processor you'd like to use:
 
-```ts title="src/payment/paymentProcessor.ts" ins={7, 9, 11}
+```ts title="src/payment/paymentProcessor.ts" ins={4, 13, 14}
 import { stripePaymentProcessor } from './stripe/paymentProcessor';
 import { lemonSqueezyPaymentProcessor } from './lemonSqueezy/paymentProcessor';
 import { polarPaymentProcessor } from './polar/paymentProcessor';
+import { paddlePaymentProcessor } from './paddle/paymentProcessor';
 
 // ...
 
@@ -32,6 +34,8 @@ export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
 export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
 // or
 export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
+// or
+export const paymentProcessor: PaymentProcessor = paddlePaymentProcessor;
 ```
 
 Then you should delete:
@@ -43,6 +47,8 @@ Then you should delete:
   - Stripe: `npm uninstall stripe`
   - Polar: `npm uninstall @polar-sh/sdk`
   - Lemon Squeezy: `npm uninstall @lemonsqueezy/lemonsqueezy.js`
+  - Paddle: `npm uninstall @paddle/paddle-node-sdk @paddle/paddle-js`
+- If you are not using Paddle, remove `REACT_APP_PADDLE_CLIENT_TOKEN` and `REACT_APP_PADDLE_SANDBOX_MODE` from `.env.client`.
 - If you are not using Lemon Squeezy remove the `lemonSqueezyCustomerPortalUrl` field from the `User` model in the `schema.prisma` file.
 
 Now your code is ready to go with your preferred payment processor and it's time to configure your payment processor's API keys, products, and other settings.
@@ -52,8 +58,9 @@ Follow the steps for your selected processor:
 - [Stripe](stripe/)
 - [Lemon Squeezy](lemon-squeezy/)
 - [Polar](polar/)
+- [Paddle](paddle/)
 
 
 ## Deploying
 
-Once you're ready to deploy your app, follow the steps from the [deploying guide](/guides/deploying/) to set up the production settings for your prayment provider.
+Once you're ready to deploy your app, follow the steps from the [deploying guide](/guides/deploying/) to set up the production settings for your payment provider.
