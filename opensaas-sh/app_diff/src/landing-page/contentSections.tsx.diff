@@ -10,8 +10,8 @@
  import kivo from "../client/static/examples/kivo.webp";
  import messync from "../client/static/examples/messync.webp";
  import microinfluencerClub from "../client/static/examples/microinfluencers.webp";
-@@ -6,161 +10,248 @@
- import reviewradar from "../client/static/examples/reviewradar.webp";
+@@ -6,161 +10,241 @@
+-import reviewradar from "../client/static/examples/reviewradar.webp";
  import scribeist from "../client/static/examples/scribeist.webp";
  import searchcraft from "../client/static/examples/searchcraft.webp";
 -import { BlogUrl, DocsUrl } from "../shared/common";
@@ -345,14 +345,10 @@
 +    imageSrc: promptpanda,
 +    href: "https://promptpanda.io",
    },
-   {
+-  {
 -    name: "Example #7",
 -    description: "Describe your example here.",
 -    imageSrc: searchcraft,
 -    href: "#",
-+    name: "Review Radar",
-+    description: "reviewradar.ai",
-+    imageSrc: reviewradar,
-+    href: "https://reviewradar.ai",
-   },
+-  },
  ];
