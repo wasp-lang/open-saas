@@ -99,11 +99,13 @@ jobs:
       # For Stripe webhooks to work in development, we need to run the Stripe CLI to listen for webhook events.
       # The Stripe CLI will receive the webhook events from Stripe test payments and
       # forward them to our local server so that we can test the payment flow in our e2e tests.
+      # Since Stripe CLI 1.51, `stripe listen` requires you to say which events to forward,
+      # so we list the ones our webhook handles.
       - name: "Run Stripe CLI to listen for webhooks"
         env:
           STRIPE_DEVICE_NAME: ${{ secrets.STRIPE_DEVICE_NAME }}
         run: |
-          stripe listen --api-key ${{ secrets.STRIPE_KEY }} --forward-to localhost:3001/payments-webhook &
+          stripe listen --api-key ${{ secrets.STRIPE_KEY }} --events invoice.paid,customer.subscription.updated,customer.subscription.deleted --forward-to localhost:3001/payments-webhook &
 
       - name: "Run Playwright tests"
         env:
