@@ -30,9 +30,11 @@ export const lemonSqueezyWebhook: PaymentsWebhook = async (
 
     switch (eventName) {
       case "order_created":
-        // Lemon Squeezy doesn't document a stable event id, so the order id serves
-        // as the key here. The subscription events below only set absolute values
-        // and don't need deduplication.
+        // Lemon Squeezy doesn't document a stable event id. Real payloads carry
+        // `meta.webhook_id`, but nothing guarantees it stays the same across retries,
+        // so it can't serve as a deduplication key. Orders have their own id, so this
+        // event uses it instead. The subscription events below have no such id, and
+        // they only set absolute values, so processing them more than once is harmless.
         await processWebhookEventOnce(
           {
             paymentProcessorEventId: `${eventName}:${data.id}`,
