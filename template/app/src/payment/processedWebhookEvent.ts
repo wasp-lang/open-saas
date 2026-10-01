@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { PrismaClient } from "wasp/server";
 
 interface WebhookEventIdentity {
@@ -10,28 +11,58 @@ interface WebhookEventIdentity {
  * your endpoint fails or times out, so the same event can reach your app twice.
  * Handling a "paid" event twice would grant purchased credits twice.
  *
- * This function remembers the id of every processed event and skips the ones it
- * has already seen. It records the event only after `handleEvent` succeeds, so
- * the payment processor still retries a failed attempt.
+ * This function records the event id before it runs `handleEvent`, so a retry
+ * that arrives while the first attempt is still running finds the record and
+ * skips the event. If `handleEvent` throws, it removes the record again, so the
+ * payment processor's next retry can process the event.
  */
 export async function processWebhookEventOnce(
-  { paymentProcessorEventId, eventType }: WebhookEventIdentity,
+  webhookEvent: WebhookEventIdentity,
   processedWebhookEventDelegate: PrismaClient["processedWebhookEvent"],
   handleEvent: () => Promise<void>,
 ): Promise<void> {
-  const processedEvent = await processedWebhookEventDelegate.findUnique({
-    where: { paymentProcessorEventId },
-  });
-  if (processedEvent) {
+  const isNewEvent = await recordWebhookEvent(
+    webhookEvent,
+    processedWebhookEventDelegate,
+  );
+  if (!isNewEvent) {
     console.info(
-      `Skipping already processed webhook event ${paymentProcessorEventId} (${eventType})`,
+      `Skipping already processed webhook event ${webhookEvent.paymentProcessorEventId} (${webhookEvent.eventType})`,
     );
     return;
   }
 
-  await handleEvent();
+  try {
+    await handleEvent();
+  } catch (error) {
+    await processedWebhookEventDelegate.delete({
+      where: { paymentProcessorEventId: webhookEvent.paymentProcessorEventId },
+    });
+    throw error;
+  }
+}
 
-  await processedWebhookEventDelegate.create({
-    data: { paymentProcessorEventId, eventType },
-  });
+/**
+ * Returns `false` if the event was already recorded.
+ */
+async function recordWebhookEvent(
+  webhookEvent: WebhookEventIdentity,
+  processedWebhookEventDelegate: PrismaClient["processedWebhookEvent"],
+): Promise<boolean> {
+  try {
+    await processedWebhookEventDelegate.create({ data: webhookEvent });
+    return true;
+  } catch (error) {
+    if (isUniqueConstraintError(error)) {
+      return false;
+    }
+    throw error;
+  }
+}
+
+function isUniqueConstraintError(error: unknown): boolean {
+  return (
+    error instanceof Prisma.PrismaClientKnownRequestError &&
+    error.code === "P2002"
+  );
 }
