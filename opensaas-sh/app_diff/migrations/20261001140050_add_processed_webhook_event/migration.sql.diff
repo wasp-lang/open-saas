@@ -1,5 +1,5 @@
---- template/app/migrations/20261001120000_add_processed_webhook_event/migration.sql
-+++ opensaas-sh/app/migrations/20261001120000_add_processed_webhook_event/migration.sql
+--- template/app/migrations/20261001140050_add_processed_webhook_event/migration.sql
++++ opensaas-sh/app/migrations/20261001140050_add_processed_webhook_event/migration.sql
 @@ -0,0 +1,12 @@
 +-- CreateTable
 +CREATE TABLE "ProcessedWebhookEvent" (
