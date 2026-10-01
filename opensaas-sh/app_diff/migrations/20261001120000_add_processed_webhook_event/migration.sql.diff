@@ -1,0 +1,15 @@
+--- template/app/migrations/20261001120000_add_processed_webhook_event/migration.sql
++++ opensaas-sh/app/migrations/20261001120000_add_processed_webhook_event/migration.sql
+@@ -0,0 +1,12 @@
++-- CreateTable
++CREATE TABLE "ProcessedWebhookEvent" (
++    "id" TEXT NOT NULL,
++    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
++    "paymentProcessorEventId" TEXT NOT NULL,
++    "eventType" TEXT NOT NULL,
++
++    CONSTRAINT "ProcessedWebhookEvent_pkey" PRIMARY KEY ("id")
++);
++
++-- CreateIndex
++CREATE UNIQUE INDEX "ProcessedWebhookEvent_paymentProcessorEventId_key" ON "ProcessedWebhookEvent"("paymentProcessorEventId");

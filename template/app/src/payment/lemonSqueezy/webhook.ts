@@ -8,6 +8,7 @@ import { assertUnreachable } from "../../shared/utils";
 import { UnhandledWebhookEventError } from "../errors";
 import { getPaymentProcessorPlanId } from "../paymentProcessorPlans";
 import { PaymentPlanId, paymentPlans, SubscriptionStatus } from "../plans";
+import { processWebhookEventOnce } from "../processedWebhookEvent";
 import { updateUserLemonSqueezyPaymentDetails } from "./paymentDetails";
 import {
   parseWebhookPayload,
@@ -29,7 +30,18 @@ export const lemonSqueezyWebhook: PaymentsWebhook = async (
 
     switch (eventName) {
       case "order_created":
-        await handleOrderCreated(data, userId, prismaUserDelegate);
+        // Lemon Squeezy doesn't document a stable event id, so we use the order id
+        // to make sure a retried `order_created` event doesn't grant credits twice.
+        // The subscription events below only set absolute values, so handling them
+        // more than once is harmless.
+        await processWebhookEventOnce(
+          {
+            paymentProcessorEventId: `${eventName}:${data.id}`,
+            eventType: eventName,
+          },
+          context.entities.ProcessedWebhookEvent,
+          () => handleOrderCreated(data, userId, prismaUserDelegate),
+        );
         break;
       case "subscription_created":
         await handleSubscriptionCreated(data, userId, prismaUserDelegate);

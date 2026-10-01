@@ -28,6 +28,14 @@ model User {
   files                     File[]
 }
 
+model ProcessedWebhookEvent {
+  id                        String          @id @default(uuid())
+  createdAt                 DateTime        @default(now())
+
+  paymentProcessorEventId   String          @unique
+  eventType                 String
+}
+
 model GptResponse {
   id                        String          @id @default(uuid())
   createdAt                 DateTime        @default(now())

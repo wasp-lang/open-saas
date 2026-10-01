@@ -14,7 +14,10 @@ import {
   PaymentPlanId,
   paymentPlans,
 } from "../plans";
+import { processWebhookEventOnce } from "../processedWebhookEvent";
 import { updateUserCredits, updateUserSubscription } from "../user";
+
+type PolarWebhookEvent = ReturnType<typeof validateEvent>;
 
 /**
  * Polar requires a raw request to construct events successfully.
@@ -44,16 +47,14 @@ export const polarWebhook: PaymentsWebhook = async (
       env.POLAR_WEBHOOK_SECRET,
     );
 
-    switch (event.type) {
-      case "order.paid":
-        await handleOrderPaid(event, prismaUserDelegate);
-        break;
-      case "subscription.updated":
-        await handleSubscriptionUpdated(event, prismaUserDelegate);
-        break;
-      default:
-        throw new UnhandledWebhookEventError(event.type);
-    }
+    await processWebhookEventOnce(
+      {
+        paymentProcessorEventId: getPolarEventId(request),
+        eventType: event.type,
+      },
+      context.entities.ProcessedWebhookEvent,
+      () => handlePolarEvent(event, prismaUserDelegate),
+    );
     return response.status(204).send();
   } catch (error) {
     if (error instanceof UnhandledWebhookEventError) {
@@ -78,6 +79,34 @@ export const polarWebhook: PaymentsWebhook = async (
     }
   }
 };
+
+/**
+ * Polar follows the Standard Webhooks spec: the event id is not part of the payload,
+ * but is sent in the `webhook-id` header and stays the same across retries.
+ */
+function getPolarEventId(request: express.Request): string {
+  const webhookId = request.headers["webhook-id"];
+  if (typeof webhookId !== "string") {
+    throw new Error("Polar webhook id not provided");
+  }
+  return webhookId;
+}
+
+async function handlePolarEvent(
+  event: PolarWebhookEvent,
+  userDelegate: PrismaClient["user"],
+): Promise<void> {
+  switch (event.type) {
+    case "order.paid":
+      await handleOrderPaid(event, userDelegate);
+      break;
+    case "subscription.updated":
+      await handleSubscriptionUpdated(event, userDelegate);
+      break;
+    default:
+      throw new UnhandledWebhookEventError(event.type);
+  }
+}
 
 async function handleOrderPaid(
   { data: order }: WebhookOrderPaidPayload,
