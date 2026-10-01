@@ -11,10 +11,12 @@ interface WebhookEventIdentity {
  * your endpoint fails or times out, so the same event can reach your app twice.
  * Handling a "paid" event twice would grant purchased credits twice.
  *
- * This function records the event id before it runs `handleEvent`, so a retry
- * that arrives while the first attempt is still running finds the record and
- * skips the event. If `handleEvent` throws, it removes the record again, so the
- * payment processor's next retry can process the event.
+ * This function records the event id first and runs `handleEvent` second.
+ * Recording first matters because a retry can arrive while the first attempt
+ * is still running.
+ *
+ * If `handleEvent` throws, the function removes the record so the payment
+ * processor can retry the event.
  */
 export async function processWebhookEventOnce(
   webhookEvent: WebhookEventIdentity,
