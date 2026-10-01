@@ -81,8 +81,7 @@ export const polarWebhook: PaymentsWebhook = async (
 };
 
 /**
- * Polar follows the Standard Webhooks spec. It sends the event id in the
- * `webhook-id` header instead of the payload, and the id stays the same across retries.
+ * Polar uses the `webhook-id` header as the stable webhook event id.
  */
 function getPolarEventId(request: express.Request): string {
   const webhookId = request.headers["webhook-id"];
