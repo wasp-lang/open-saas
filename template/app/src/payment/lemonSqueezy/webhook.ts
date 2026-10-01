@@ -30,10 +30,10 @@ export const lemonSqueezyWebhook: PaymentsWebhook = async (
 
     switch (eventName) {
       case "order_created":
-        // Lemon Squeezy doesn't document a stable event id, so we use the order id
-        // to make sure a retried `order_created` event doesn't grant credits twice.
-        // The subscription events below only set absolute values, so handling them
-        // more than once is harmless.
+        // Lemon Squeezy doesn't document a stable event id, so the order id serves
+        // as the key here. That stops a retried `order_created` event from granting
+        // credits twice. The subscription events below only set absolute values,
+        // so handling them more than once is harmless.
         await processWebhookEventOnce(
           {
             paymentProcessorEventId: `${eventName}:${data.id}`,

@@ -268,7 +268,7 @@ export const paymentSpec: Spec = [
 
 Within the webhook handler, we look for specific events that the payment processor sends us to let us know which payment was completed and for which user. Then we update the user's subscription status in the database.
 
-Payment processors may deliver the same event more than once (e.g. when they retry after a timeout), so the handler records the id of every processed event in the `ProcessedWebhookEvent` entity and skips events it has already seen. This way a retried event can't grant purchased credits twice. See `src/payment/processedWebhookEvent.ts`.
+Payment processors can deliver the same event more than once, for example when they retry after a timeout. The webhook handler records the id of every processed event in the `ProcessedWebhookEvent` entity and skips the events it has already seen, so a retried event can't grant purchased credits twice. You can find this logic in `src/payment/processedWebhookEvent.ts`.
 
 To learn more about configuring the app to handle your products and payments, check out the [Payment Integrations guide](/guides/payment-integrations/).
 

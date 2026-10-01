@@ -32,8 +32,8 @@ model ProcessedWebhookEvent {
   id                        String          @id @default(uuid())
   createdAt                 DateTime        @default(now())
 
-  paymentProcessorEventId   String          @unique
-  eventType                 String
+  paymentProcessorEventId   String          @unique // The id the payment processor gave the event, e.g. `evt_...` for Stripe.
+  eventType                 String                  // E.g. `invoice.paid`. Helps you find events in the table. The webhook doesn't read it.
 }
 
 model GptResponse {

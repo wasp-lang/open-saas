@@ -97,7 +97,7 @@ Start the Stripe CLI webhook forwarding on port 3001 where your Node server is r
 stripe listen --events invoice.paid,customer.subscription.updated,customer.subscription.deleted --forward-to localhost:3001/payments-webhook
 ```
 
-Since Stripe CLI 1.51, `stripe listen` requires you to say which events to forward. The ones above are the events the template's webhook handles. If you handle more events in `src/payment/stripe/webhook.ts`, add them here too.
+Since Stripe CLI 1.51, `stripe listen` requires you to list the events to forward. The command above lists the events the template's webhook handles. If you handle more events in `src/payment/stripe/webhook.ts`, add them to the command too.
 
 Remember to copy and paste the outputted webhook signing secret (`whsec_...`) into your `.env.server` file under `STRIPE_WEBHOOK_SECRET`.
 
