@@ -7,4 +7,8 @@ export default defineConfig({
   server: {
     open: true,
   },
+  test: {
+    // Server tests run separately, see `vitest.server.config.ts`.
+    exclude: ["src/**/*.server.test.ts"],
+  },
 });

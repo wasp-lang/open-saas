@@ -60,6 +60,10 @@ jobs:
           cp .env.server.example .env.server && cp .env.client.example .env.client
           wasp install
 
+      - name: "Run server tests"
+        working-directory: ./template/app
+        run: npx vitest run --config vitest.server.config.ts
+
       - name: "Install Node.js dependencies for Playwright tests"
         if: steps.cache-e2e-tests.outputs.cache-hit != 'true'
         working-directory: ./template
