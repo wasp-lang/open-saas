@@ -1,7 +1,6 @@
-import type { PrismaPromise } from "@prisma/client";
 import OpenAI from "openai";
 import type { GptResponse, Task, User } from "wasp/entities";
-import { env, HttpError, prisma } from "wasp/server";
+import { env, HttpError } from "wasp/server";
 import type {
   CreateTask,
   DeleteTask,
@@ -39,52 +38,19 @@ export const generateGptResponse: GenerateGptResponse<
     generateGptResponseInputSchema,
     rawArgs,
   );
-  const tasks = await context.entities.Task.findMany({
-    where: {
-      user: {
-        id: context.user.id,
-      },
-    },
-  });
 
-  console.log("Calling open AI api");
-  const generatedSchedule = await generateScheduleWithGpt(tasks, hours);
-  if (generatedSchedule === null) {
-    throw new HttpError(
-      500,
-      "Encountered a problem in communication with OpenAI",
-    );
-  }
-
-  const createResponse = context.entities.GptResponse.create({
-    data: {
-      user: { connect: { id: context.user.id } },
-      content: JSON.stringify(generatedSchedule),
-    },
-  });
-
-  const transactions: PrismaPromise<GptResponse | User>[] = [createResponse];
-
-  // We decrement the credits for users without an active subscription
-  // after using up tokens to get a daily plan from Chat GPT.
-  //
-  // This way, users don't feel cheated if something goes wrong.
-  // On the flipside, users can theoretically abuse this and spend more
-  // credits than they have, but the damage should be pretty limited.
-  //
-  // Think about which option you prefer for your app and edit the code accordingly.
-  if (!isUserSubscribed(context.user)) {
-    if (context.user.credits > 0) {
-      const decrementCredit = context.entities.User.update({
-        where: { id: context.user.id },
-        data: {
-          credits: {
-            decrement: 1,
-          },
-        },
-      });
-      transactions.push(decrementCredit);
-    } else {
+  // Users without an active subscription pay one credit per generated plan.
+  // We reserve the credit before calling OpenAI, so users without credits
+  // never reach it. The conditional update is atomic, which stops concurrent
+  // requests from spending more credits than the user has.
+  // If anything fails afterwards, we refund the credit.
+  const shouldChargeCredit = !isUserSubscribed(context.user);
+  if (shouldChargeCredit) {
+    const { count: reservedCredits } = await context.entities.User.updateMany({
+      where: { id: context.user.id, credits: { gt: 0 } },
+      data: { credits: { decrement: 1 } },
+    });
+    if (reservedCredits === 0) {
       throw new HttpError(
         402,
         "User has no subscription and is out of credits",
@@ -92,10 +58,41 @@ export const generateGptResponse: GenerateGptResponse<
     }
   }
 
-  console.log("Decrementing credits and saving response");
-  await prisma.$transaction(transactions);
+  try {
+    const tasks = await context.entities.Task.findMany({
+      where: {
+        user: {
+          id: context.user.id,
+        },
+      },
+    });
 
-  return generatedSchedule;
+    console.log("Calling open AI api");
+    const generatedSchedule = await generateScheduleWithGpt(tasks, hours);
+    if (generatedSchedule === null) {
+      throw new HttpError(
+        500,
+        "Encountered a problem in communication with OpenAI",
+      );
+    }
+
+    await context.entities.GptResponse.create({
+      data: {
+        user: { connect: { id: context.user.id } },
+        content: JSON.stringify(generatedSchedule),
+      },
+    });
+
+    return generatedSchedule;
+  } catch (error) {
+    if (shouldChargeCredit) {
+      await context.entities.User.update({
+        where: { id: context.user.id },
+        data: { credits: { increment: 1 } },
+      });
+    }
+    throw error;
+  }
 };
 
 function isUserSubscribed(user: User) {
