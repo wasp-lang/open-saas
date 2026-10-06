@@ -28,6 +28,14 @@ model User {
   files                     File[]
 }
 
+model ProcessedWebhookEvent {
+  id                        String          @id @default(uuid())
+  createdAt                 DateTime        @default(now())
+
+  paymentProcessorEventId   String          @unique // The payment processor's event id, e.g. `evt_...` for Stripe.
+  eventType                 String                  // The payment processor's event type, e.g. `invoice.paid`.
+}
+
 model GptResponse {
   id                        String          @id @default(uuid())
   createdAt                 DateTime        @default(now())

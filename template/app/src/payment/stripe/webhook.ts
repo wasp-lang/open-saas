@@ -8,6 +8,7 @@ import { assertUnreachable } from "../../shared/utils";
 import { UnhandledWebhookEventError } from "../errors";
 import { getPaymentPlanIdByPaymentProcessorPlanId } from "../paymentProcessorPlans";
 import { PaymentPlanId, paymentPlans, SubscriptionStatus } from "../plans";
+import { processWebhookEventOnce } from "../processedWebhookEvent";
 import { updateUserCredits, updateUserSubscription } from "../user";
 import { stripeClient } from "./stripeClient";
 
@@ -34,23 +35,11 @@ export const stripeWebhook: PaymentsWebhook = async (
   try {
     const event = constructStripeEvent(request);
 
-    // If you'd like to handle more events, you can add more cases below.
-    // When deploying your app, you configure your webhook in the Stripe dashboard
-    // to only send the events that you're handling above.
-    // See: https://docs.opensaas.sh/guides/deploying/#setting-up-your-stripe-webhook
-    switch (event.type) {
-      case "invoice.paid":
-        await handleInvoicePaid(event, prismaUserDelegate);
-        break;
-      case "customer.subscription.updated":
-        await handleCustomerSubscriptionUpdated(event, prismaUserDelegate);
-        break;
-      case "customer.subscription.deleted":
-        await handleCustomerSubscriptionDeleted(event, prismaUserDelegate);
-        break;
-      default:
-        throw new UnhandledWebhookEventError(event.type);
-    }
+    await processWebhookEventOnce(
+      { paymentProcessorEventId: event.id, eventType: event.type },
+      context.entities.ProcessedWebhookEvent,
+      () => handleStripeEvent(event, prismaUserDelegate),
+    );
     return response.status(204).send();
   } catch (error) {
     if (error instanceof UnhandledWebhookEventError) {
@@ -89,6 +78,29 @@ function constructStripeEvent(request: express.Request): Stripe.Event {
     stripeSignature,
     stripeWebhookSecret,
   );
+}
+
+async function handleStripeEvent(
+  event: Stripe.Event,
+  prismaUserDelegate: PrismaClient["user"],
+): Promise<void> {
+  // If you'd like to handle more events, you can add more cases below.
+  // When deploying your app, you configure your webhook in the Stripe dashboard
+  // to only send the events that you're handling above.
+  // See: https://docs.opensaas.sh/guides/deploying/#setting-up-your-stripe-webhook
+  switch (event.type) {
+    case "invoice.paid":
+      await handleInvoicePaid(event, prismaUserDelegate);
+      break;
+    case "customer.subscription.updated":
+      await handleCustomerSubscriptionUpdated(event, prismaUserDelegate);
+      break;
+    case "customer.subscription.deleted":
+      await handleCustomerSubscriptionDeleted(event, prismaUserDelegate);
+      break;
+    default:
+      throw new UnhandledWebhookEventError(event.type);
+  }
 }
 
 async function handleInvoicePaid(

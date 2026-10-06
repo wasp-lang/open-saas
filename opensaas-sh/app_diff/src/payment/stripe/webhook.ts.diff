@@ -9,7 +9,7 @@
  import { emailSender } from "wasp/server/email";
  import { assertUnreachable } from "../../shared/utils";
  import { UnhandledWebhookEventError } from "../errors";
-@@ -25,7 +25,7 @@
+@@ -26,7 +26,7 @@
    return middlewareConfig;
  };
  
@@ -18,7 +18,7 @@
    request,
    response,
    context,
-@@ -106,7 +106,7 @@
+@@ -118,7 +118,7 @@
      case PaymentPlanId.Credits10:
        await updateUserCredits(
          {
@@ -27,7 +27,7 @@
            datePaid: invoicePaidAtDate,
            numOfCreditsPurchased: paymentPlans[paymentPlanId].effect.amount,
          },
-@@ -117,7 +117,7 @@
+@@ -129,7 +129,7 @@
      case PaymentPlanId.Hobby:
        await updateUserSubscription(
          {
@@ -36,7 +36,7 @@
            datePaid: invoicePaidAtDate,
            paymentPlanId,
            subscriptionStatus: SubscriptionStatus.Active,
-@@ -164,7 +164,7 @@
+@@ -176,7 +176,7 @@
    );
  
    const user = await updateUserSubscription(
@@ -45,7 +45,7 @@
      prismaUserDelegate,
    );
  
-@@ -232,7 +232,7 @@
+@@ -244,7 +244,7 @@
  
    await updateUserSubscription(
      {
