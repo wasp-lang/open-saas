@@ -16,15 +16,17 @@ Next, Install the test dependencies:
 cd e2e-tests && npm install
 ```
 
-Start your Wasp DB and leave it running:
+Run migrations, then start the app:
 
 ```shell
-cd ../app && wasp db start
+cd ../app && wasp db migrate-dev
 ```
+
+Stop the app before running database commands.
 
 ### Skipping Email Verification in e2e Tests
 
-Open another terminal and start the Wasp app with the environment variable set to skip email verification in development mode:
+In the same terminal, start the Wasp app with the environment variable set to skip email verification in development mode:
 
 > [!IMPORTANT]  
 > When using the email auth method, a verification link is typically sent when a user registers. If you're using the default Dummy provider, this link is logged in the console.
@@ -32,8 +34,10 @@ Open another terminal and start the Wasp app with the environment variable set t
 > **However, during e2e tests, this manual step will cause the tests to hang and fail** because the link is never clicked. To prevent this, set the following environment variable when starting your app:
 
 ```bash
-cd app && SKIP_EMAIL_VERIFICATION_IN_DEV=true wasp start
+SKIP_EMAIL_VERIFICATION_IN_DEV=true wasp start
 ```
+
+Wasp starts the development database automatically.
 
 #### What this step will do:
 
