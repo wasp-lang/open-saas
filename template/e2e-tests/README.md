@@ -16,7 +16,7 @@ Next, Install the test dependencies:
 cd e2e-tests && npm install
 ```
 
-Run migrations, then start the app. Wasp starts the development database automatically.
+Run migrations, then start the app:
 
 ```shell
 cd ../app && wasp db migrate-dev
@@ -36,6 +36,8 @@ In the same terminal, start the Wasp app with the environment variable set to sk
 ```bash
 SKIP_EMAIL_VERIFICATION_IN_DEV=true wasp start
 ```
+
+Wasp starts the development database automatically.
 
 #### What this step will do:
 

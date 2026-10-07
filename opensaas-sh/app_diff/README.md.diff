@@ -21,7 +21,7 @@
  ### Running locally
  
  Make sure you have the `.env.client` and `.env.server` files with correct dev values in the root of the project.
-@@ -18,3 +27,9 @@
+@@ -20,3 +29,9 @@
  Run migrations again after changing your Prisma schema.
  
  Stop the app before running migrations, `wasp db seed`, `wasp db studio`, or `wasp db reset`.
