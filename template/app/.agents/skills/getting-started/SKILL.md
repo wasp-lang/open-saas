@@ -1,6 +1,6 @@
 ---
 name: getting-started
-description: Get started with your Open SaaS project — fetches docs, checks Wasp installation, and helps you start your database and app.
+description: Get started with your Open SaaS project. Fetch docs, check Wasp installation, and help start the app.
 user_invocable: true
 ---
 
@@ -25,6 +25,6 @@ Run `wasp version` to check if Wasp is installed and which version is available.
 
 ## Step 4: Offer to Help Start the App
 
-Ask the user if they'd like help starting their managed PostgreSQL database and Wasp app according to the instructions in the Getting Started guide.
+Ask the user if they'd like help starting their Wasp app according to the instructions in the Getting Started guide.
 
-If yes, walk them through the steps from the guide (starting the database, running migrations, starting the dev server, etc.). If they run into any issues, troubleshoot using the guide's content.
+If yes, walk them through the steps from the guide (checking Docker is running, running `wasp db migrate-dev`, then `wasp start`). If they run into any issues, troubleshoot using the guide's content.

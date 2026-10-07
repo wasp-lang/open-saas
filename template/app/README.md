@@ -7,6 +7,10 @@ Built with [Wasp](https://wasp.sh), based on the [Open Saas](https://opensaas.sh
 ### Running locally
 
 - Make sure you have the `.env.client` and `.env.server` files with correct dev values in the root of the project.
-- Run the database with `wasp start db` and leave it running.
-- Run `wasp start` and leave it running.
-- [OPTIONAL]: If this is the first time starting the app, or you've just made changes to your entities/prisma schema, also run `wasp db migrate-dev`.
+- Make sure Docker is running.
+- Run `wasp db migrate-dev` on first setup and after changing your Prisma schema.
+- Run `wasp start`.
+
+Without `DATABASE_URL`, Wasp starts the PostgreSQL development database if needed. Each command stops the database it started when it exits. Your data persists.
+
+Stop the app before running migrations, `wasp db seed`, `wasp db studio`, or `wasp db reset`.

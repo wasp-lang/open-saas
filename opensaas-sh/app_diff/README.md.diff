@@ -1,6 +1,6 @@
 --- template/app/README.md
 +++ opensaas-sh/app/README.md
-@@ -1,12 +1,27 @@
+@@ -1,9 +1,18 @@
 -# <YOUR_APP_NAME>
 +# opensaas.sh (demo) app
  
@@ -21,9 +21,10 @@
  ### Running locally
  
  - Make sure you have the `.env.client` and `.env.server` files with correct dev values in the root of the project.
- - Run the database with `wasp start db` and leave it running.
- - Run `wasp start` and leave it running.
- - [OPTIONAL]: If this is the first time starting the app, or you've just made changes to your entities/prisma schema, also run `wasp db migrate-dev`.
+@@ -14,3 +23,9 @@
+ Without `DATABASE_URL`, Wasp starts the PostgreSQL development database if needed. Each command stops the database it started when it exits. Your data persists.
+ 
+ Stop the app before running migrations, `wasp db seed`, `wasp db studio`, or `wasp db reset`.
 +
 +## Deployment
 +

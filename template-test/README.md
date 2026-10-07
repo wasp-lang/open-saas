@@ -23,11 +23,11 @@ npm run env:pull
 # Install dependencies.
 wasp install
 
-# Run the dev database and create migrations.
-wasp db start
+# With Docker running, create migrations.
 wasp db migrate-dev --name "init"
 
-# You can stop the dev database after you created the migration.
+# Without DATABASE_URL, Wasp starts the development database if needed.
+# It stops the database it started after migration. Your data persists.
 
 # Test that the app works in dev and prod modes.
 # Make sure the `@wasp.sh/wasp-app-runner` is updated to the latest version.

@@ -36,7 +36,7 @@ export default defineConfig({
    * `webServer` field tells Playwright how to run the app (webServer) it tests.
    * It seems however that there is a bug in Playwright that keeps the web server open after running tests locally https://github.com/microsoft/playwright/issues/11907,
    * causing errors when trying to run `wasp start` afterwards. To avoid this, we let Playwright run web server only in CI (where this is not a problem because after tests we don't do anything else).
-   * For local development, where this does pose a nuisance, we start the app / web server manually with `wasp db start` and `wasp start` and then start tests with `npm run local:e2e:start`.
+   * For local development, where this does pose a nuisance, we start the app / web server manually with Docker running and `wasp start` and then start tests with `npm run local:e2e:start`.
    */
   webServer: {
     command: "run-wasp-app dev --path-to-app=../app --wasp-cli-cmd=wasp",
