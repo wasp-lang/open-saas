@@ -16,13 +16,13 @@ Next, Install the test dependencies:
 cd e2e-tests && npm install
 ```
 
-With Docker running, create or apply migrations:
+Run migrations, then start the app. Wasp starts the development database automatically.
 
 ```shell
 cd ../app && wasp db migrate-dev
 ```
 
-Without `DATABASE_URL`, Wasp starts the development database if needed. When the command exits, Wasp stops the database it started and retains its files in the Docker volume. Stop the app before running database commands.
+Stop the app before running database commands.
 
 ### Skipping Email Verification in e2e Tests
 

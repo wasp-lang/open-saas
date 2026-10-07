@@ -27,4 +27,4 @@ Run `wasp version` to check if Wasp is installed and which version is available.
 
 Ask the user if they'd like help starting their Wasp app according to the instructions in the Getting Started guide.
 
-If yes, walk them through the steps from the guide (checking Docker is running, running `wasp db migrate-dev`, then `wasp start`). If they run into any issues, troubleshoot using the guide's content.
+If yes, walk them through the steps from the guide (running `wasp db migrate-dev`, then `wasp start`). If they run into any issues, troubleshoot using the guide's content.
