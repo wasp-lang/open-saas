@@ -23,8 +23,9 @@ npm run env:pull
 # Install dependencies.
 wasp install
 
-# Create migrations. Wasp starts the development database automatically.
+# Create migrations.
 wasp db migrate-dev --name "init"
+# Wasp starts the development database automatically.
 
 # Test that the app works in dev and prod modes.
 # Make sure the `@wasp.sh/wasp-app-runner` is updated to the latest version.

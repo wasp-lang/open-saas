@@ -16,7 +16,7 @@ Next, Install the test dependencies:
 cd e2e-tests && npm install
 ```
 
-Run migrations, then start the app. Wasp starts the development database automatically.
+Run migrations, then start the app:
 
 ```shell
 cd ../app && wasp db migrate-dev
@@ -38,6 +38,8 @@ SKIP_EMAIL_VERIFICATION_IN_DEV=true wasp start --client-port 3000 --server-port 
 ```
 
 The tests expect the app on ports `3000` and `3001`. We pin them because otherwise `wasp start` moves the app to other free ports when these are taken.
+
+Wasp starts the development database automatically.
 
 #### What this step will do:
 
