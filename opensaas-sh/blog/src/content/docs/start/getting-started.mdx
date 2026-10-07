@@ -153,7 +153,7 @@ cd app
 wasp db migrate-dev
 ```
 
-Without `DATABASE_URL`, Wasp starts a PostgreSQL development database if needed. When the command exits, it stops the database it started. Your data persists.
+Without `DATABASE_URL`, Wasp starts a PostgreSQL development database if needed. When the command exits, Wasp stops the database it started and retains its files in the Docker volume.
 
 Run `wasp db migrate-dev` again after changing your Prisma schema (Entities). Stop the app before running migrations, `wasp db seed`, `wasp db studio`, or `wasp db reset`.
 
@@ -167,9 +167,7 @@ Close Studio before starting the app again.
 
 ### Start your app
 
-Stay in the `app/` directory.
-
-Next, copy the `.env.server.example` file to `.env.server`.
+In the `app/` directory, copy the `.env.server.example` file to `.env.server`:
 
 ```sh
 cp .env.server.example .env.server
@@ -184,7 +182,7 @@ Then run:
 wasp start
 ```
 
-This installs dependencies if needed, starts the development database if needed, and starts the app (client and server). When you stop the app, Wasp stops the database it started. Your data persists.
+This installs dependencies if needed, starts the development database if needed, and starts the app (client and server). When you stop the app, Wasp stops the database it started and retains its files in the Docker volume.
 
 If the app doesn't open automatically in your browser, you can open it manually by visiting `http://localhost:3000` in your browser.
 

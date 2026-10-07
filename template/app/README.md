@@ -11,6 +11,6 @@ Built with [Wasp](https://wasp.sh), based on the [Open Saas](https://opensaas.sh
 - Run `wasp db migrate-dev` on first setup and after changing your Prisma schema.
 - Run `wasp start`.
 
-Without `DATABASE_URL`, Wasp starts the PostgreSQL development database if needed. Each command stops the database it started when it exits. Your data persists.
+Without `DATABASE_URL`, Wasp starts the PostgreSQL development database if needed. When each command exits, Wasp stops the database it started and retains its files in the Docker volume.
 
 Stop the app before running migrations, `wasp db seed`, `wasp db studio`, or `wasp db reset`.
