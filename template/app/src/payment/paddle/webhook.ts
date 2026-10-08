@@ -19,8 +19,13 @@ import {
   PaymentPlanId,
   paymentPlans,
 } from "../plans";
+import { processWebhookEventOnce } from "../processedWebhookEvent";
 import { updateUserCredits, updateUserSubscription } from "../user";
 import { paddleClient } from "./paddleClient";
+
+type PaddleWebhookEvent = Awaited<
+  ReturnType<typeof paddleClient.webhooks.unmarshal>
+>;
 
 /**
  * Paddle requires the raw request body to verify the webhook signature.
@@ -55,18 +60,11 @@ export const paddleWebhook: PaymentsWebhook = async (
       signature,
     );
 
-    switch (event.eventType) {
-      case EventName.TransactionCompleted:
-        await handleTransactionCompleted(event.data, prismaUserDelegate);
-        break;
-      case EventName.SubscriptionUpdated:
-      case EventName.SubscriptionCanceled:
-        await handleSubscriptionChange(event.data, prismaUserDelegate);
-        break;
-      default:
-        throw new UnhandledWebhookEventError(event.eventType);
-    }
-
+    await processWebhookEventOnce(
+      { paymentProcessorEventId: event.eventId, eventType: event.eventType },
+      context.entities.ProcessedWebhookEvent,
+      () => handlePaddleEvent(event, prismaUserDelegate),
+    );
     return response.status(200).json({ received: true });
   } catch (error) {
     if (error instanceof UnhandledWebhookEventError) {
@@ -93,6 +91,23 @@ export const paddleWebhook: PaymentsWebhook = async (
     }
   }
 };
+
+async function handlePaddleEvent(
+  event: PaddleWebhookEvent,
+  userDelegate: PrismaClient["user"],
+): Promise<void> {
+  switch (event.eventType) {
+    case EventName.TransactionCompleted:
+      await handleTransactionCompleted(event.data, userDelegate);
+      break;
+    case EventName.SubscriptionUpdated:
+    case EventName.SubscriptionCanceled:
+      await handleSubscriptionChange(event.data, userDelegate);
+      break;
+    default:
+      throw new UnhandledWebhookEventError(event.eventType);
+  }
+}
 
 async function handleTransactionCompleted(
   transaction: TransactionNotification,
