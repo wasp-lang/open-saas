@@ -1,0 +1,8 @@
+--- template/app/public/robots.txt
++++ opensaas-sh/app/public/robots.txt
+@@ -3,4 +3,4 @@
+ Disallow: /account
+ Disallow: /admin
+ 
+-Sitemap: https://your-saas-app.com/sitemap.xml
++Sitemap: https://opensaas.sh/sitemap.xml

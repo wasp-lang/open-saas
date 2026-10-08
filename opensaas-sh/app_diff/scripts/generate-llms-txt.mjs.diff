@@ -1,7 +1,7 @@
 --- template/app/scripts/generate-llms-txt.mjs
 +++ opensaas-sh/app/scripts/generate-llms-txt.mjs
-@@ -0,0 +1,94 @@
-+import { readdir, readFile, writeFile } from "node:fs/promises";
+@@ -0,0 +1,89 @@
++import { readdir, readFile } from "node:fs/promises";
 +import path from "node:path";
 +import { fileURLToPath } from "node:url";
 +
@@ -11,7 +11,6 @@
 +  APP_ROOT,
 +  "../blog/src/content/docs/blog",
 +);
-+const OUTPUT_FILE = path.join(APP_ROOT, "public/llms.txt");
 +
 +const DOCS_SITE = "https://docs.opensaas.sh";
 +
@@ -82,16 +81,12 @@
 +  return lines.join("\n");
 +}
 +
-+async function main() {
++/**
++ * Builds the contents of opensaas.sh/llms.txt. Called from the Vite build
++ * (see `vite.config.ts`), so it's always generated, whatever deploy command
++ * is used.
++ */
++export async function generateLlmsTxt() {
 +  const posts = await collectBlogPosts();
-+  const content = renderLlmsTxt(posts);
-+  await writeFile(OUTPUT_FILE, content, "utf8");
-+  console.log(
-+    `Wrote ${OUTPUT_FILE} with ${posts.length} blog post${posts.length === 1 ? "" : "s"}.`,
-+  );
++  return renderLlmsTxt(posts);
 +}
-+
-+main().catch((err) => {
-+  console.error(err);
-+  process.exit(1);
-+});
