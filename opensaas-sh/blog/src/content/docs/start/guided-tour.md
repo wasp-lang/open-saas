@@ -1,5 +1,6 @@
 ---
 title: Guided Tour
+description: "A tour of the Open SaaS codebase: file structure, the Wasp config file, client and server code, core features, and a checklist for customizing your app."
 banner:
   content: |
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>

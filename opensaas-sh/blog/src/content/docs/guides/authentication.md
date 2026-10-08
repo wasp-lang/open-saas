@@ -1,5 +1,6 @@
 ---
 title: Authentication
+description: "Set up SaaS authentication in Open SaaS with Wasp: email-verified sign-up and password reset, plus Google, GitHub, and Discord social login."
 banner:
   content: |
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
