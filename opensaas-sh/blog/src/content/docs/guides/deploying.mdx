@@ -13,6 +13,8 @@ Because this SaaS app is a React/NodeJS/Postgres app built on top of [Wasp](http
 
 The simplest and quickest option is to take advantage of Wasp's one-command deploy to Fly.io or Railway.
 
+If you haven't started your project yet, you can also [deploy Open SaaS to Railway in one click](#one-click-deploy-with-the-railway-template) and develop from there.
+
 Or if you prefer to deploy to a different provider, or your frontend and backend separately, you can follow the [Deploying Manually](#deploying-manually) section below.
 
 ## Steps for Deploying
@@ -222,6 +224,20 @@ The `wasp deploy` command will also take care of setting the following server-si
 - `WASP_SERVER_URL`
 
 For setting the remaining server-side environment variables, please refer to the [Deploying with the Wasp CLI Guide](https://wasp.sh/docs/deployment/deployment-methods/cli#launch).
+:::
+
+### One-click Deploy with the Railway Template
+
+If you're starting a new project, the [Open SaaS Railway template](https://railway.com/deploy/open-saas?referralCode=uA-ZC_) deploys the database, server, and client to [Railway](https://railway.com) in one click, with no local setup needed:
+
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/open-saas?referralCode=uA-ZC_)
+
+Once it's deployed, eject the template into your own GitHub repo (open the `Client` or `Server` service → `Settings` → `Upstream Repo` → `Eject`), then clone that repo and [develop locally](/start/getting-started/#install-wasp). Every push to `main` is automatically redeployed by Railway. The [template's README](https://github.com/wasp-lang/open-saas-railway) has step-by-step instructions.
+
+:::caution[Starting a new project only]
+The Railway template deploys its own copy of Open SaaS, so it's an alternative way to start, not a way to deploy an app you've already created with `wasp new`. For an existing app, use [`wasp deploy` for Railway](https://wasp.sh/docs/deployment/deployment-methods/wasp-deploy/railway) instead.
+
+And once you're using the template, don't use `wasp deploy` on it, because it would conflict with the Railway setup.
 :::
 
 ### Deploying Manually
