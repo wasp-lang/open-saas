@@ -39,9 +39,9 @@ export default defineConfig({
         baseUrl: "https://github.com/<your-repo>",
       },
       components: {
-        SiteTitle: "./src/components/MyHeader.astro",
+        SiteTitle: "./src/components/SiteTitle.astro",
         Head: "./src/components/HeadWithOGImage.astro",
-        PageTitle: "./src/components/TitleWithBannerImage.astro",
+        PageTitle: "./src/components/PageTitleWithBannerImage.astro",
       },
       social: [
         {

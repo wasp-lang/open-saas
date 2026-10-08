@@ -55,6 +55,7 @@ const genericEventSchema = z.object({
  * specifically Order['data'].
  */
 const orderDataSchema = z.object({
+  id: z.string(),
   attributes: z.object({
     customer_id: z.number(),
     status: z.string(),

@@ -94,13 +94,10 @@ See this [GitHuh issue](https://github.com/stripe/stripe-cli/issues/933) for mor
 Start the Stripe CLI webhook forwarding on port 3001 where your Node server is running:
 
 ```sh
-stripe listen --forward-to localhost:3001/payments-webhook
+stripe listen --events invoice.paid,customer.subscription.updated,customer.subscription.deleted --forward-to localhost:3001/payments-webhook
 ```
 
-:::caution[Webhook URL]
-In older versions of this template, the webhook URL was `http://localhost:3001/stripe-webhook`.
-If you're using an older version, **make sure to use the url that matches the webhook url in your `main.wasp` file payemnts API definition.**
-:::
+Since Stripe CLI 1.51, `stripe listen` requires you to list the events to forward. The command above lists the events the template's webhook handles. If you handle more events in `src/payment/stripe/webhook.ts`, add them to the command too.
 
 Remember to copy and paste the outputted webhook signing secret (`whsec_...`) into your `.env.server` file under `STRIPE_WEBHOOK_SECRET`.
 
@@ -115,11 +112,7 @@ The results of the event firing will be visible in the initial terminal window. 
 ```sh
 ...
 2023-11-21 09:31:09   --> invoice.paid [evt_1OEpMPILOQf67J5TjrUgRpk4]
-2023-11-21 09:31:09  <--  [200] POST http://localhost:3001/payments-webhook [evt_1OEpMPILOQf67J5TjrUgRpk4]
-2023-11-21 09:31:10   --> invoice.payment_succeeded [evt_1OEpMPILOQf67J5T3MFBr1bq]
-2023-11-21 09:31:10  <--  [200] POST http://localhost:3001/payments-webhook [evt_1OEpMPILOQf67J5T3MFBr1bq]
-2023-11-21 09:31:10   --> checkout.session.completed [evt_1OEpMQILOQf67J5ThTZ0999r]
-2023-11-21 09:31:11  <--  [200] POST http://localhost:3001/payments-webhook [evt_1OEpMQILOQf67J5ThTZ0999r]
+2023-11-21 09:31:09  <--  [204] POST http://localhost:3001/payments-webhook [evt_1OEpMPILOQf67J5TjrUgRpk4]
 ```
 
 For more info on testing webhooks, check out https://stripe.com/docs/webhooks#test-webhook.

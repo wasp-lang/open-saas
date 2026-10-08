@@ -19,6 +19,7 @@
     "prettier": "^3.4.2",
     "sharp": "^0.35.3",
     "starlight-blog": "^0.27.0",
+    "starlight-versions": "^0.9.1",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.4.5",
     "vanilla-cookieconsent": "^3.1.0"

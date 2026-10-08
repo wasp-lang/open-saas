@@ -4,28 +4,32 @@
 
 <copy-llm-button>
   <button type="button" class="flex items-center justify-center">
-    <span id="copy-llm-check" class="hidden w-[1.2em]">✅</span>
+    <span id="copy-llm-check-icon" class="hidden w-4">✅</span>
     <svg
-      id="copy-llm-icon"
+      id="copy-llm-document-icon"
+      class="icon label-icon"
+      aria-hidden="true"
       xmlns="http://www.w3.org/2000/svg"
-      width="1.2em"
-      height="1em"
+      width="16"
+      height="16"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      stroke-width="2"
+      stroke-width="1.5"
       stroke-linecap="round"
       stroke-linejoin="round"
-      class="feather feather-file-text"
     >
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
-      ></path>
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z">
+      </path>
       <polyline points="14 2 14 8 20 8"></polyline>
       <line x1="16" y1="13" x2="8" y2="13"></line>
       <line x1="16" y1="17" x2="8" y2="17"></line>
       <polyline points="10 9 9 9 8 9"></polyline>
     </svg>
-    <span class="ml-2 text-sm">Copy URL for LLMs</span>
+    <span
+      class="ml-1 text-(length:--sl-text-sm) text-(--sl-color-gray-1) font-normal"
+      >Copy URL for LLMs</span
+    >
   </button>
 </copy-llm-button>
 
@@ -59,11 +63,15 @@
       button.addEventListener("click", async () => {
         try {
           await navigator.clipboard.writeText(llmsUrl);
-          const originalIcon = button.querySelector("svg");
-          const checkIcon = button.querySelector("#copy-llm-check");
+
+          const originalIcon = button.querySelector("#copy-llm-document-icon");
+          const checkIcon = button.querySelector("#copy-llm-check-icon");
+
           if (!originalIcon || !checkIcon) return;
-          checkIcon.classList.remove("hidden");
+
           originalIcon.classList.add("hidden");
+          checkIcon.classList.remove("hidden");
+
           setTimeout(() => {
             originalIcon.classList.remove("hidden");
             checkIcon.classList.add("hidden");

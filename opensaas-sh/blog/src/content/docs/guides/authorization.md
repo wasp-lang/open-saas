@@ -19,14 +19,15 @@ Also, check out our [blog post](https://wasp.sh/blog/2022/11/29/permissions-in-w
 
 Open Saas starts with all users having access to the landing page (`/`), but only authenticated users having access to the rest of the app (e.g. to the `/demo-app`, or to the `/account`).
 
-To control which pages require users to be authenticated to access them, you can set the `authRequired` property of the corresponding `page` definition in your `main.wasp` file:
+To control which pages require users to be authenticated to access them, you can set the `authRequired` property of the corresponding `page` definition in your Wasp Spec:
 
-```tsx title="main.wasp" {3}
-route AccountRoute { path: "/account", to: AccountPage }
-page AccountPage {
-  authRequired: true,
-  component: import Account from "@src/user/AccountPage"
-}
+```ts title="src/user/user.wasp.ts" {5}
+import { page, route, type Spec } from "@wasp.sh/spec";
+import { AccountPage } from "./AccountPage" with { type: "ref" };
+
+export const userSpec: Spec = [
+  route("AccountRoute", "/account", page(AccountPage, { authRequired: true })),
+];
 ```
 
 This will automatically redirect users to the login page if they are not logged in while trying to access that page.

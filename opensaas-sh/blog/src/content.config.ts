@@ -3,6 +3,7 @@ import { docsSchema } from "@astrojs/starlight/schema";
 import { z } from "astro/zod";
 import { defineCollection } from "astro:content";
 import { blogSchema } from "starlight-blog/schema";
+import { docsVersionsLoader } from "starlight-versions/loader";
 
 export const collections = {
   docs: defineCollection({
@@ -19,4 +20,5 @@ export const collections = {
       },
     }),
   }),
+  versions: defineCollection({ loader: docsVersionsLoader() }),
 };

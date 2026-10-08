@@ -1,4 +1,10 @@
 ---
+/**
+ * Overriden component, for more info:
+ * @see {@link https://starlight.astro.build/guides/overriding-components/}
+ * @see {@link https://starlight.astro.build/reference/overrides/#head-1}
+ */
+
 import Default from "@astrojs/starlight/components/Head.astro";
 import {
   BANNER_PATH,
@@ -18,6 +24,12 @@ let ogImageUrl = new URL(`${BANNER_PATH}/${DEFAULT_BANNER_IMAGE}`, Astro.site);
 if (imageExists) {
   ogImageUrl = new URL(`${BANNER_PATH}/${bannerImageFileName}`, Astro.site);
 }
+
+// Extract keywords and tags for meta tags
+const { entry } = Astro.locals.starlightRoute;
+const keywords = (entry?.data as any)?.keywords as string[] | undefined;
+const tags = (entry?.data as any)?.tags as string[] | undefined;
+const metaKeywords = keywords || tags;
 ---
 
 <Default><slot /></Default>
@@ -27,3 +39,8 @@ if (imageExists) {
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta name="twitter:image" content={ogImageUrl} />
+{metaKeywords && <meta name="keywords" content={metaKeywords.join(",")} />}
+{
+  tags &&
+    tags.map((tag: string) => <meta property="article:tag" content={tag} />)
+}

@@ -70,20 +70,22 @@ The Admin analytics dashboard is a single place for you to view your most import
   - Total number of paying users.
   - Daily change in number of paying users.
 
-These metrics are aggregated within the background job `dailyStatsJob`, which by default is run every hour. You can change the frequency of this job by modifying its `cron` field:
+These metrics are aggregated within the background job `calculateDailyStatsJob`, which by default is run every hour. You can change the frequency of this job by modifying its `cron` field:
 
-```ts title="main.wasp" {8,7}
-job dailyStatsJob {
-  executor: PgBoss,
-  perform: {
-    fn: import { calculateDailyStats } from "@src/analytics/stats"
-  },
-  schedule: {
-    cron: "0 * * * *" // Every hour. useful in production.
-    // cron: "* * * * *" // Every minute. useful for debugging.
-  },
-  entities: [User, DailyStats, Logs, PageViewSource]
-}
+```ts title="src/analytics/analytics.wasp.ts" {8}
+import { job, type Spec } from "@wasp.sh/spec";
+import { calculateDailyStatsJob } from "./stats" with { type: "ref" };
+
+export const analyticsSpec: Spec = [
+  job(calculateDailyStatsJob, {
+    executor: "PgBoss",
+    schedule: {
+      cron: "0 * * * *", // Every hour. useful in production.
+      // cron: "* * * * *" // Every minute. useful for debugging.
+    },
+    entities: ["User", "DailyStats", "Logs", "PageViewSource"],
+  }),
+];
 ```
 For more info on Wasp's recurring background jobs, check out the [Wasp Jobs docs](https://wasp.sh/docs/advanced/jobs).
 

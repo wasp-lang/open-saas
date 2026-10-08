@@ -19,7 +19,7 @@
    action(generateCheckoutSession, { entities: ["User"] }),
 -  api("POST", "/payments-webhook", paymentsWebhook, {
 +  api("POST", "/payments-webhook", stripeWebhook, {
-     entities: ["User"],
+     entities: ["User", "ProcessedWebhookEvent"],
 -    middlewareConfigFn: paymentsMiddlewareConfigFn,
 +    middlewareConfigFn: stripeMiddlewareConfigFn,
    }),
