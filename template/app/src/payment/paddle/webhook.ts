@@ -13,7 +13,7 @@ import {
 import type { PaymentsWebhook } from "wasp/server/api";
 import { assertUnreachable } from "../../shared/utils";
 import { UnhandledWebhookEventError } from "../errors";
-import { paymentProcessorPlanIds } from "../paymentProcessorPlans";
+import { getPaymentPlanIdByPaymentProcessorPlanId } from "../paymentProcessorPlans";
 import {
   SubscriptionStatus as OpenSaasSubscriptionStatus,
   PaymentPlanId,
@@ -56,13 +56,9 @@ export const paddleWebhook: PaymentsWebhook = async (
     );
 
     switch (event.eventType) {
-      // `transaction.completed` is the settlement signal for BOTH one-time
-      // purchases and subscription payments (initial + renewals), so it's where
-      // we fulfill credits and (re)activate subscriptions.
       case EventName.TransactionCompleted:
         await handleTransactionCompleted(event.data, prismaUserDelegate);
         break;
-      // Subscription lifecycle changes (status transitions, scheduled cancels).
       case EventName.SubscriptionUpdated:
       case EventName.SubscriptionCanceled:
         await handleSubscriptionChange(event.data, prismaUserDelegate);
@@ -74,13 +70,14 @@ export const paddleWebhook: PaymentsWebhook = async (
     return response.status(200).json({ received: true });
   } catch (error) {
     if (error instanceof UnhandledWebhookEventError) {
-      // In development it's normal to receive events we don't handle.
+      // In development, it is likely that we will receive events that we are not handling.
       if (process.env.NODE_ENV === "development") {
         console.info("Unhandled Paddle webhook event in development: ", error);
       } else if (process.env.NODE_ENV === "production") {
         console.error("Unhandled Paddle webhook event in production: ", error);
       }
-      // We must return a 2XX status code, otherwise Paddle keeps retrying the event.
+
+      // We must return a 2XX status code, otherwise Paddle will keep retrying the event.
       return response.status(200).json({ error: error.message });
     }
 
@@ -101,9 +98,7 @@ async function handleTransactionCompleted(
   transaction: TransactionNotification,
   userDelegate: PrismaClient["user"],
 ): Promise<void> {
-  // Paddle emits `transaction.completed` for non-purchase transactions too — most
-  // notably the zero-value transaction created when a customer updates their payment
-  // method. Skip those so we don't wrongly (re)activate a subscription or bump datePaid.
+  // Updating a payment method creates a zero-value transaction, which isn't a payment.
   if (transaction.origin === "subscription_payment_method_change") {
     return;
   }
@@ -112,16 +107,9 @@ async function handleTransactionCompleted(
     throw new Error(`Paddle transaction ${transaction.id} has no customer ID`);
   }
 
-  const paymentPlanId = findPaymentPlanId(transaction.items);
-  if (!paymentPlanId) {
-    // A completed transaction whose line items don't match any of our plans (e.g. an
-    // add-on or a manual invoice). Nothing to fulfill — ignore it rather than throwing,
-    // which would make Paddle retry the delivery for days.
-    console.error(
-      `Paddle transaction ${transaction.id} has no line item matching a known plan; ignoring.`,
-    );
-    return;
-  }
+  const paymentPlanId = getPaymentPlanIdByPaymentProcessorPlanId(
+    getPriceId(transaction.items),
+  );
 
   const datePaid = new Date(transaction.billedAt ?? transaction.createdAt);
 
@@ -158,7 +146,9 @@ async function handleSubscriptionChange(
   userDelegate: PrismaClient["user"],
 ): Promise<void> {
   const subscriptionStatus = getOpenSaasSubscriptionStatus(subscription);
-  const paymentPlanId = findPaymentPlanId(subscription.items);
+  const paymentPlanId = getPaymentPlanIdByPaymentProcessorPlanId(
+    getPriceId(subscription.items),
+  );
 
   await updateUserSubscription(
     {
@@ -170,30 +160,23 @@ async function handleSubscriptionChange(
   );
 }
 
-/**
- * Finds the first of our Open SaaS plans among a set of Paddle line items, matching
- * on each item's price id. Returns undefined if none match — Paddle transactions and
- * subscriptions can carry prices (add-ons, manual charges) with no corresponding plan.
- */
-function findPaymentPlanId(
-  items: { price: { id: string } | null }[],
-): PaymentPlanId | undefined {
-  const priceIds = items.map((item) => item.price?.id);
-  for (const [planId, processorPlanId] of Object.entries(
-    paymentProcessorPlanIds,
-  )) {
-    if (priceIds.includes(processorPlanId)) {
-      return planId as PaymentPlanId;
-    }
+function getPriceId(items: { price: { id: string } | null }[]): string {
+  // We only expect one item.
+  // If your workflow expects more, you should change this function to handle them.
+  if (items.length !== 1) {
+    throw new Error(
+      "There should be exactly one item in Paddle transaction or subscription",
+    );
   }
-  return undefined;
+
+  const priceId = items[0].price?.id;
+  if (!priceId) {
+    throw new Error("Unable to extract price id from items");
+  }
+
+  return priceId;
 }
 
-/**
- * Maps a Paddle subscription onto our internal `SubscriptionStatus`. An active
- * subscription with a scheduled cancellation maps to `CancelAtPeriodEnd`, since
- * the customer keeps access until the change takes effect.
- */
 function getOpenSaasSubscriptionStatus(
   subscription: SubscriptionNotification,
 ): OpenSaasSubscriptionStatus {
@@ -214,6 +197,6 @@ function getOpenSaasSubscriptionStatus(
     case "canceled":
       return OpenSaasSubscriptionStatus.Deleted;
     default:
-      return OpenSaasSubscriptionStatus.PastDue;
+      assertUnreachable(subscription.status);
   }
 }

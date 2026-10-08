@@ -3,7 +3,7 @@ import { User } from "wasp/entities";
 import type { MiddlewareConfigFn } from "wasp/server";
 import type { PaymentsWebhook } from "wasp/server/api";
 import type { PaymentPlan } from "./plans";
-import { stripePaymentProcessor } from "./stripe/paymentProcessor";
+import { paddlePaymentProcessor } from './paddle/paymentProcessor';
 
 export interface CreateCheckoutSessionArgs {
   userId: User["id"];
@@ -17,11 +17,19 @@ export interface FetchCustomerPortalUrlArgs {
   prismaUserDelegate: PrismaClient["user"];
 }
 
+/**
+ * Payment processors either redirect the user to a hosted checkout page,
+ * or open the checkout within the page itself (e.g. an overlay).
+ */
+export type CheckoutSession =
+  | { kind: "redirect"; id: string; url: string }
+  | { kind: "inPage"; id: string };
+
 export interface PaymentProcessor {
   id: "stripe" | "lemonsqueezy" | "polar" | "paddle";
   createCheckoutSession: (
     args: CreateCheckoutSessionArgs,
-  ) => Promise<{ session: { id: string; url: string } }>;
+  ) => Promise<{ session: CheckoutSession }>;
   fetchCustomerPortalUrl: (
     args: FetchCustomerPortalUrlArgs,
   ) => Promise<string | null>;
@@ -34,7 +42,7 @@ export interface PaymentProcessor {
  * Choose which payment processor you'd like to use, then delete the
  * other payment processor code that you're not using  from `/src/payment`
  */
-export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
+export const paymentProcessor: PaymentProcessor = paddlePaymentProcessor;
 // export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
 // export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
 // export const paymentProcessor: PaymentProcessor = paddlePaymentProcessor;

@@ -38,6 +38,7 @@ export const polarPaymentProcessor: PaymentProcessor = {
 
     return {
       session: {
+        kind: "redirect",
         id: checkoutSession.id,
         url: checkoutSession.url,
       },

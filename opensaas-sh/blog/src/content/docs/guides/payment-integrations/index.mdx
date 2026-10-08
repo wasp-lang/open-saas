@@ -21,7 +21,7 @@ Lemon Squeezy, Polar, and Paddle act as a [Merchant of Record](https://www.lemon
 
 First, go to `/src/payment/paymentProcessor.ts` and choose which payment processor you'd like to use:
 
-```ts title="src/payment/paymentProcessor.ts" ins={4, 13, 14}
+```ts title="src/payment/paymentProcessor.ts" ins={8, 10, 12, 14}
 import { stripePaymentProcessor } from './stripe/paymentProcessor';
 import { lemonSqueezyPaymentProcessor } from './lemonSqueezy/paymentProcessor';
 import { polarPaymentProcessor } from './polar/paymentProcessor';
@@ -48,7 +48,7 @@ Then you should delete:
   - Polar: `npm uninstall @polar-sh/sdk`
   - Lemon Squeezy: `npm uninstall @lemonsqueezy/lemonsqueezy.js`
   - Paddle: `npm uninstall @paddle/paddle-node-sdk @paddle/paddle-js`
-- If you are not using Paddle, remove `REACT_APP_PADDLE_CLIENT_TOKEN` and `REACT_APP_PADDLE_SANDBOX_MODE` from `.env.client`.
+- If you are not using Paddle, remove `REACT_APP_PADDLE_CLIENT_TOKEN` and `REACT_APP_PADDLE_SANDBOX_MODE` from `.env.client`, and the `paddleClientEnvSchema` from `clientEnvValidationSchema` in `src/env.ts`.
 - If you are not using Lemon Squeezy remove the `lemonSqueezyCustomerPortalUrl` field from the `User` model in the `schema.prisma` file.
 
 Now your code is ready to go with your preferred payment processor and it's time to configure your payment processor's API keys, products, and other settings.

@@ -12,15 +12,14 @@ import { createPaddleTransaction, ensurePaddleCustomer } from "./checkoutUtils";
 import { paddleClient } from "./paddleClient";
 import { paddleMiddlewareConfigFn, paddleWebhook } from "./webhook";
 
-// Paddle's Metrics API only allows a 3-year lookback, so total revenue is
-// reported over (just under) the last 3 years rather than all-time.
+// Paddle's Metrics API only allows a 3-year lookback, so total revenue
+// is reported over the last 3 years rather than all-time.
 const PADDLE_REVENUE_MAX_LOOKBACK_YEARS = 3;
 
 function getRevenueWindow(): { from: string; to: string } {
   const to = new Date();
   const from = new Date(to);
   from.setFullYear(from.getFullYear() - PADDLE_REVENUE_MAX_LOOKBACK_YEARS);
-  // Stay just inside the allowed window to avoid an "earlier than max lookback" error.
   from.setDate(from.getDate() + 1);
   return {
     from: from.toISOString().split("T")[0],
@@ -49,13 +48,10 @@ export const paddlePaymentProcessor: PaymentProcessor = {
       userId,
     });
 
-    // The client opens the Paddle.js checkout overlay with `id` (the
-    // transaction id); `url` is the default-payment-link URL, kept for parity
-    // with the other processors' redirect contract.
     return {
       session: {
+        kind: "inPage",
         id: transaction.id,
-        url: transaction.checkout?.url ?? "",
       },
     };
   },
@@ -82,9 +78,7 @@ export const paddlePaymentProcessor: PaymentProcessor = {
   webhook: paddleWebhook,
   webhookMiddlewareConfigFn: paddleMiddlewareConfigFn,
   fetchTotalRevenue: async () => {
-    // Paddle's Metrics API returns revenue as a daily timeseries; we sum the
-    // datapoints over the max allowed window to get total collected revenue.
-    // NOTE: this is net revenue (after tax & fees, before refunds/chargebacks).
+    // NOTE: Paddle reports net revenue (after tax and fees).
     const { from, to } = getRevenueWindow();
     const revenue = await paddleClient.metrics.getRevenue({ from, to });
 
@@ -93,8 +87,7 @@ export const paddlePaymentProcessor: PaymentProcessor = {
       0,
     );
 
-    // Revenue is in the currency's smallest unit (e.g. cents), so convert to
-    // the main unit (e.g. dollars).
+    // Revenue is in cents so we convert to dollars (or your main currency unit)
     return totalInMinorUnits / 100;
   },
 };

@@ -48,6 +48,7 @@ export const stripePaymentProcessor: PaymentProcessor = {
 
     return {
       session: {
+        kind: "redirect",
         url: checkoutSession.url,
         id: checkoutSession.id,
       },

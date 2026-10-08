@@ -2,30 +2,25 @@ import { type Customer, type Transaction } from "@paddle/paddle-node-sdk";
 import { paddleClient } from "./paddleClient";
 
 /**
- * Returns a Paddle customer for the given email, creating one if none exist.
+ * Returns a Paddle customer for the given User email, creating a customer if none exist.
  *
- * NOTE: Paddle enforces unique customer emails across BOTH active and archived
- * customers, but `customers.list` returns only active customers by default. We
- * therefore search both statuses — otherwise a returning customer whose record was
- * archived would fall through to `create` and fail with `customer_already_exists`.
- * If the match is archived, we reactivate it so it can be used for checkout.
+ * NOTE: Paddle enforces unique emails across both active and archived customers,
+ *       so an archived customer is reactivated instead of creating a new one.
  */
 export async function ensurePaddleCustomer(
   userEmail: string,
 ): Promise<Customer> {
-  const existingCustomers = await paddleClient.customers
-    .list({ email: [userEmail], status: ["active", "archived"] })
+  const [customer] = await paddleClient.customers
+    .list({ email: [userEmail], status: ["active", "archived"], perPage: 1 })
     .next();
 
-  if (existingCustomers.length > 0) {
-    const customer = existingCustomers[0];
-    if (customer.status === "archived") {
-      return paddleClient.customers.update(customer.id, { status: "active" });
-    }
+  if (!customer) {
+    return paddleClient.customers.create({ email: userEmail });
+  } else if (customer.status === "archived") {
+    return paddleClient.customers.update(customer.id, { status: "active" });
+  } else {
     return customer;
   }
-
-  return paddleClient.customers.create({ email: userEmail });
 }
 
 interface CreatePaddleTransactionArgs {
@@ -34,12 +29,6 @@ interface CreatePaddleTransactionArgs {
   userId: string;
 }
 
-/**
- * Creates a Paddle transaction for the given price and customer. The returned
- * transaction id is handed to Paddle.js on the client to open the checkout
- * overlay; `userId` is stored as custom data so it flows through to the
- * resulting transaction and subscription webhook events.
- */
 export function createPaddleTransaction({
   priceId,
   customerId,

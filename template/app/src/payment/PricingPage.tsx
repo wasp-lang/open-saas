@@ -1,10 +1,5 @@
-import {
-  CheckoutEventNames,
-  initializePaddle,
-  type Paddle,
-} from "@paddle/paddle-js";
 import { CheckCircle } from "lucide-react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "wasp/client/auth";
 import {
@@ -22,7 +17,8 @@ import {
   CardTitle,
 } from "../client/components/ui/card";
 import { cn } from "../client/utils";
-import { CheckoutResult } from "./CheckoutResultPage";
+import { assertUnreachable } from "../shared/utils";
+import { openInPageCheckout } from "./inPageCheckout";
 import {
   PaymentPlanId,
   paymentPlans,
@@ -78,47 +74,6 @@ export function PricingPage() {
 
   const navigate = useNavigate();
 
-  // Paddle checkout runs client-side via Paddle.js. We initialize it lazily
-  // (only when a Paddle checkout is actually started) and cache the instance.
-  const paddleRef = useRef<Paddle | undefined>(undefined);
-
-  async function getPaddle(): Promise<Paddle> {
-    if (paddleRef.current) {
-      return paddleRef.current;
-    }
-
-    const clientToken = import.meta.env.REACT_APP_PADDLE_CLIENT_TOKEN;
-    if (!clientToken) {
-      throw new Error(
-        "REACT_APP_PADDLE_CLIENT_TOKEN is not set. Add it to .env.client to use Paddle checkout.",
-      );
-    }
-
-    const paddle = await initializePaddle({
-      token: clientToken,
-      environment:
-        import.meta.env.REACT_APP_PADDLE_SANDBOX_MODE === "true"
-          ? "sandbox"
-          : "production",
-      eventCallback: (event) => {
-        if (event.name === CheckoutEventNames.CHECKOUT_COMPLETED) {
-          navigate(
-            routes.CheckoutResultRoute.build({
-              search: { status: CheckoutResult.Success },
-            }),
-          );
-        }
-      },
-    });
-
-    if (!paddle) {
-      throw new Error("Failed to initialize Paddle.js");
-    }
-
-    paddleRef.current = paddle;
-    return paddle;
-  }
-
   async function handleBuyNowClick(paymentPlanId: PaymentPlanId) {
     if (!user) {
       navigate(routes.LoginRoute.to);
@@ -129,22 +84,21 @@ export function PricingPage() {
 
       const checkoutSession = await generateCheckoutSession(paymentPlanId);
 
-      // Paddle opens an in-page checkout overlay using the transaction id,
-      // rather than redirecting to a provider-hosted checkout URL.
-      if (checkoutSession.paymentProcessorId === "paddle") {
-        const paddle = await getPaddle();
-        paddle.Checkout.open({
-          transactionId: checkoutSession.sessionId,
-          settings: { variant: "one-page" },
-        });
-        setIsPaymentLoading(false);
-        return;
-      }
-
-      if (checkoutSession.sessionUrl) {
-        window.open(checkoutSession.sessionUrl, "_self");
-      } else {
-        throw new Error("Error generating checkout session URL");
+      switch (checkoutSession.kind) {
+        case "redirect":
+          window.open(checkoutSession.url, "_self");
+          break;
+        case "inPage":
+          if (!openInPageCheckout) {
+            throw new Error(
+              "In-page checkout is not set up. Choose it in src/payment/inPageCheckout.ts.",
+            );
+          }
+          await openInPageCheckout(checkoutSession.id);
+          setIsPaymentLoading(false);
+          break;
+        default:
+          assertUnreachable(checkoutSession);
       }
     } catch (error: unknown) {
       console.error(error);

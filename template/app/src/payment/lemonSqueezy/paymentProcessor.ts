@@ -30,7 +30,7 @@ export const lemonSqueezyPaymentProcessor: PaymentProcessor = {
       userEmail,
       userId,
     });
-    return { session };
+    return { session: { kind: "redirect", ...session } };
   },
   fetchCustomerPortalUrl: async (args: FetchCustomerPortalUrlArgs) => {
     const user = await args.prismaUserDelegate.findUniqueOrThrow({
