@@ -17,6 +17,7 @@ export default defineConfig({
       description:
         "Open SaaS is a free, open-source, full-stack SaaS starter kit for React + NodeJS.",
       customCss: ["./src/styles/tailwind.css"],
+      routeMiddleware: "./src/routeData.ts",
       logo: {
         src: "/src/assets/wasp-logo.svg",
         alt: "Open SaaS",
