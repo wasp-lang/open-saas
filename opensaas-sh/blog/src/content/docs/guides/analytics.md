@@ -1,5 +1,6 @@
 ---
 title: Analytics
+description: "Add Plausible (hosted or self-hosted) or Google Analytics to your Open SaaS app and blog, and connect them to the admin dashboard's page view stats."
 banner:
   content: |
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>

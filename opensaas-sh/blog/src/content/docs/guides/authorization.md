@@ -1,5 +1,6 @@
 ---
 title: Authorization
+description: "Restrict access in your Open SaaS app by subscription status, plan, or admin role, with examples of client-side and server-side authorization checks."
 banner:
   content: |
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>

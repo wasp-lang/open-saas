@@ -1,5 +1,6 @@
 ---
 title: Tests
+description: "Run the Playwright end-to-end tests included with Open SaaS locally, and add them to your CI pipeline with a GitHub Actions workflow and repository secrets."
 banner:
   content: |
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>

@@ -1,5 +1,6 @@
 ---
 title: User Overview
+description: "Reference for the User entity in Open SaaS: its Prisma schema fields, subscription plans and statuses synced from your payment processor, and admin roles."
 banner:
   content: |
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>

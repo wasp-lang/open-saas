@@ -13,9 +13,9 @@ export default defineConfig({
   },
   integrations: [
     starlight({
-      title: "OpenSaaS.sh",
+      title: "Open SaaS",
       description:
-        "Open SaaS is a free, open-source, full-stack SaaS starter kit for React + NodeJS.",
+        "Docs for Open SaaS, the free, open-source SaaS template built with React, Node.js, Prisma & Postgres (powered by Wasp).",
       customCss: ["./src/styles/tailwind.css"],
       logo: {
         src: "/src/assets/wasp-logo.svg",
