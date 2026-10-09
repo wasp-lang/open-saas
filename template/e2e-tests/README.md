@@ -32,8 +32,10 @@ Open another terminal and start the Wasp app with the environment variable set t
 > **However, during e2e tests, this manual step will cause the tests to hang and fail** because the link is never clicked. To prevent this, set the following environment variable when starting your app:
 
 ```bash
-cd app && SKIP_EMAIL_VERIFICATION_IN_DEV=true wasp start
+cd app && SKIP_EMAIL_VERIFICATION_IN_DEV=true wasp start --client-port 3000 --server-port 3001
 ```
+
+The tests expect the app on ports `3000` and `3001`. We pin them because otherwise `wasp start` moves the app to other free ports when these are taken.
 
 #### What this step will do:
 

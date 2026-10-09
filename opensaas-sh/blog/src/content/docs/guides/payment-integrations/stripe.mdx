@@ -91,7 +91,7 @@ See this [GitHuh issue](https://github.com/stripe/stripe-cli/issues/933) for mor
 
 ### Testing Webhooks via the Stripe CLI
 
-Start the Stripe CLI webhook forwarding on port 3001 where your Node server is running:
+Start the Stripe CLI webhook forwarding on port 3001 where your Node server is running (if port 3001 was taken, `wasp start` picks another one, so use the server port it prints):
 
 ```sh
 stripe listen --events invoice.paid,customer.subscription.updated,customer.subscription.deleted --forward-to localhost:3001/payments-webhook

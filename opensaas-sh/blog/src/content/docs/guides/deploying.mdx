@@ -47,6 +47,7 @@ Here are a list of all of them (some of which you may not be using, e.g. Analyti
 ##### General Vars
 - [ ] `DATABASE_URL`
 - [ ] `JWT_SECRET`
+- [ ] `PORT` (most hosting providers set this for you)
 - [ ] `WASP_WEB_CLIENT_URL`
 - [ ] `WASP_SERVER_URL`
 
@@ -233,6 +234,10 @@ Remember to always set additional client-side environment variables, such as `RE
 ```sh
 REACT_APP_CLIENT_ENV_VAR_1=<...> npm run build
 ```
+:::
+
+:::note[Server Health Checks]
+If your provider runs health checks against your server, point them at the `/up` endpoint (e.g. `https://your-server-url.com/up`). Wasp doesn't serve anything at `/` in production.
 :::
 
 ## Deploying your Blog
