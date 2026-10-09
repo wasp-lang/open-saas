@@ -17,11 +17,19 @@ export interface FetchCustomerPortalUrlArgs {
   prismaUserDelegate: PrismaClient["user"];
 }
 
+/**
+ * Payment processors either redirect the user to a hosted checkout page,
+ * or open the checkout within the page itself (e.g. an overlay).
+ */
+export type CheckoutSession =
+  | { kind: "redirect"; id: string; url: string }
+  | { kind: "inPage"; id: string };
+
 export interface PaymentProcessor {
-  id: "stripe" | "lemonsqueezy" | "polar";
+  id: "stripe" | "lemonsqueezy" | "polar" | "paddle";
   createCheckoutSession: (
     args: CreateCheckoutSessionArgs,
-  ) => Promise<{ session: { id: string; url: string } }>;
+  ) => Promise<{ session: CheckoutSession }>;
   fetchCustomerPortalUrl: (
     args: FetchCustomerPortalUrlArgs,
   ) => Promise<string | null>;
@@ -37,3 +45,4 @@ export interface PaymentProcessor {
 export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
 // export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
 // export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
+// export const paymentProcessor: PaymentProcessor = paddlePaymentProcessor;

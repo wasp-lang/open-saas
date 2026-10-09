@@ -17,6 +17,8 @@ import {
   CardTitle,
 } from "../client/components/ui/card";
 import { cn } from "../client/utils";
+import { assertUnreachable } from "../shared/utils";
+import { openInPageCheckout } from "./inPageCheckout";
 import {
   PaymentPlanId,
   paymentPlans,
@@ -82,10 +84,21 @@ export function PricingPage() {
 
       const checkoutSession = await generateCheckoutSession(paymentPlanId);
 
-      if (checkoutSession?.sessionUrl) {
-        window.open(checkoutSession.sessionUrl, "_self");
-      } else {
-        throw new Error("Error generating checkout session URL");
+      switch (checkoutSession.kind) {
+        case "redirect":
+          window.open(checkoutSession.url, "_self");
+          break;
+        case "inPage":
+          if (!openInPageCheckout) {
+            throw new Error(
+              "In-page checkout is not set up. Choose it in src/payment/inPageCheckout.ts.",
+            );
+          }
+          await openInPageCheckout(checkoutSession.id);
+          setIsPaymentLoading(false);
+          break;
+        default:
+          assertUnreachable(checkoutSession);
       }
     } catch (error: unknown) {
       console.error(error);
@@ -126,9 +139,9 @@ export function PricingPage() {
           </h2>
         </div>
         <p className="text-muted-foreground mx-auto mt-6 max-w-2xl text-center text-lg leading-8">
-          Choose between Stripe, LemonSqueezy or Polar as your payment provider.
-          Just add your Product IDs! Try it out below with test credit card
-          number <br />
+          Choose between Stripe, LemonSqueezy, Polar, or Paddle as your payment
+          provider. Just add your Product IDs! Try it out below with test credit
+          card number <br />
           <span className="bg-muted text-muted-foreground rounded-md px-2 py-1 font-mono text-sm">
             4242 4242 4242 4242 4242
           </span>

@@ -6,12 +6,7 @@ import type {
 import * as z from "zod";
 import { PaymentPlanId, paymentPlans } from "../payment/plans";
 import { ensureArgsSchemaOrThrowHttpError } from "../server/validation";
-import { paymentProcessor } from "./paymentProcessor";
-
-export type CheckoutSession = {
-  sessionUrl: string | null;
-  sessionId: string;
-};
+import { type CheckoutSession, paymentProcessor } from "./paymentProcessor";
 
 const generateCheckoutSessionSchema = z.nativeEnum(PaymentPlanId);
 
@@ -49,10 +44,7 @@ export const generateCheckoutSession: GenerateCheckoutSession<
     prismaUserDelegate: context.entities.User,
   });
 
-  return {
-    sessionUrl: session.url,
-    sessionId: session.id,
-  };
+  return session;
 };
 
 export const getCustomerPortalUrl: GetCustomerPortalUrl<

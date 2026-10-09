@@ -6,4 +6,6 @@ This project is based on [Open Saas](https://opensaas.sh) template and consists 
 2. `e2e-tests` - [Playwright](https://playwright.dev/) tests for your Wasp web app.
 3. `blog` - Your blog / docs, built with [Astro](https://docs.astro.build) based on [Starlight](https://starlight.astro.build/) template.
 
+To set up payments, see the [payment integrations guide](https://docs.opensaas.sh/guides/payment-integrations/).
+
 For more details, check READMEs of each respective directory!
