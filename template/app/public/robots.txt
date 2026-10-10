@@ -2,3 +2,5 @@ User-agent: *
 Allow: /
 Disallow: /account
 Disallow: /admin
+
+Sitemap: https://your-saas-app.com/sitemap.xml
