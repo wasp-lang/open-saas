@@ -22,6 +22,9 @@ This template is:
 
 🧑‍💻 Check it out in action here: [OpenSaaS.sh](https://opensaas.sh)
 📚 Check out the Docs here: [Open SaaS Docs](https://docs.opensaas.sh)
+🚂 Or deploy it to Railway in one click:
+
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/open-saas?referralCode=uA-ZC_)
 
 ## What's inside?
 
@@ -66,6 +69,10 @@ wasp new -t saas
 ```
 
 This will create a **clean copy of the Open SaaS template** into a new directory, and you can start building your SaaS app right away!
+
+### One-click Deploy on Railway
+
+Prefer to start from a live deployment? The [Open SaaS Railway template](https://railway.com/deploy/open-saas?referralCode=uA-ZC_) deploys the database, server, and client to Railway in one click. Then eject it into your own GitHub repo, clone it, and develop locally — every push to `main` redeploys automatically. See the [deployment guide](https://docs.opensaas.sh/guides/deploying/#one-click-deploy-with-the-railway-template) for details.
 
 ### Detailed Instructions
 
