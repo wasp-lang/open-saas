@@ -1,8 +1,10 @@
+import sitemap from "@astrojs/sitemap";
 import starlight from "@astrojs/starlight";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 import starlightBlog from "starlight-blog";
 import starlightVersions from "starlight-versions";
+import { getCurrentDocsPathname } from "./src/archivedDocsVersions.mjs";
 
 // https://astro.build/config
 export default defineConfig({
@@ -17,6 +19,8 @@ export default defineConfig({
       description:
         "Docs for Open SaaS, the free, open-source SaaS template built with React, Node.js, Prisma & Postgres (powered by Wasp).",
       customCss: ["./src/styles/tailwind.css"],
+      // Sets canonical URLs of old docs versions to their current equivalents.
+      routeMiddleware: "./src/routeData.ts",
       logo: {
         src: "/src/assets/wasp-logo.svg",
         alt: "Open SaaS",
@@ -152,6 +156,11 @@ export default defineConfig({
           },
         }),
       ],
+    }),
+    // Explicitly added (instead of Starlight's built-in one) so we can exclude
+    // old docs versions from the sitemap.
+    sitemap({
+      filter: (page) => !getCurrentDocsPathname(new URL(page).pathname),
     }),
   ],
   vite: { plugins: [tailwindcss()] },

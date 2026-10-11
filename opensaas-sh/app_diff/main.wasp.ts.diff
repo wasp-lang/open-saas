@@ -21,7 +21,7 @@
    name: "OpenSaaS",
    wasp: { version: "^0.26.0" },
 -  title: "My Open SaaS App",
-+  title: "Open SaaS – Free, Open-Source SaaS Template for React & Node.js",
++  title: "Open SaaS – Free, Open-Source React & Node.js SaaS Template",
    head,
    auth: authConfig,
    db: {
