@@ -29,4 +29,4 @@
 +
 +This app is deployed to fly.io, Wasp org, via `wasp deploy fly deploy`.
 +
-+You can run `npm run deploy` to deploy it via `wasp deploy fly deploy` with required client side env vars correctly set.
++Client-side env vars (e.g. the Google Analytics ID) come from the committed `.env.client`, which `vite.config.ts` loads for production builds too, so both `wasp deploy fly deploy` and `npm run deploy` work.
