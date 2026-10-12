@@ -12,21 +12,6 @@ import { createPaddleTransaction, ensurePaddleCustomer } from "./checkoutUtils";
 import { paddleClient } from "./paddleClient";
 import { paddleMiddlewareConfigFn, paddleWebhook } from "./webhook";
 
-// Paddle's Metrics API only allows a 3-year lookback, so total revenue
-// is reported over the last 3 years rather than all-time.
-const PADDLE_REVENUE_MAX_LOOKBACK_YEARS = 3;
-
-function getRevenueWindow(): { from: string; to: string } {
-  const to = new Date();
-  const from = new Date(to);
-  from.setFullYear(from.getFullYear() - PADDLE_REVENUE_MAX_LOOKBACK_YEARS);
-  from.setDate(from.getDate() + 1);
-  return {
-    from: from.toISOString().split("T")[0],
-    to: to.toISOString().split("T")[0],
-  };
-}
-
 export const paddlePaymentProcessor: PaymentProcessor = {
   id: "paddle",
   createCheckoutSession: async ({
@@ -91,3 +76,18 @@ export const paddlePaymentProcessor: PaymentProcessor = {
     return totalInMinorUnits / 100;
   },
 };
+
+// Paddle's Metrics API only allows a 3-year lookback, so total revenue
+// is reported over the last 3 years rather than all-time.
+const PADDLE_REVENUE_MAX_LOOKBACK_YEARS = 3;
+
+function getRevenueWindow(): { from: string; to: string } {
+  const to = new Date();
+  const from = new Date(to);
+  from.setFullYear(from.getFullYear() - PADDLE_REVENUE_MAX_LOOKBACK_YEARS);
+  from.setDate(from.getDate() + 1);
+  return {
+    from: from.toISOString().split("T")[0],
+    to: to.toISOString().split("T")[0],
+  };
+}

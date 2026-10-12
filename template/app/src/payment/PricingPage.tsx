@@ -17,8 +17,7 @@ import {
   CardTitle,
 } from "../client/components/ui/card";
 import { cn } from "../client/utils";
-import { assertUnreachable } from "../shared/utils";
-import { openInPageCheckout } from "./inPageCheckout";
+import { clientPaymentProcessor } from "./clientPaymentProcessor";
 import {
   PaymentPlanId,
   paymentPlans,
@@ -84,22 +83,14 @@ export function PricingPage() {
 
       const checkoutSession = await generateCheckoutSession(paymentPlanId);
 
-      switch (checkoutSession.kind) {
-        case "redirect":
-          window.open(checkoutSession.url, "_self");
-          break;
-        case "inPage":
-          if (!openInPageCheckout) {
-            throw new Error(
-              "In-page checkout is not set up. Choose it in src/payment/inPageCheckout.ts.",
-            );
-          }
-          await openInPageCheckout(checkoutSession.id);
-          setIsPaymentLoading(false);
-          break;
-        default:
-          assertUnreachable(checkoutSession);
+      if (checkoutSession.paymentProcessorId !== clientPaymentProcessor.id) {
+        throw new Error(
+          `Server uses "${checkoutSession.paymentProcessorId}" payment processor, but client uses "${clientPaymentProcessor.id}". Please choose the same payment processor in src/payment/paymentProcessor.ts and src/payment/clientPaymentProcessor.ts.`,
+        );
       }
+
+      await clientPaymentProcessor.openCheckout(checkoutSession);
+      setIsPaymentLoading(false);
     } catch (error: unknown) {
       console.error(error);
       if (error instanceof Error) {
@@ -107,7 +98,7 @@ export function PricingPage() {
       } else {
         setErrorMessage("Error processing payment. Please try again later.");
       }
-      setIsPaymentLoading(false); // We only set this to false here and not in the try block because we redirect to the checkout url within the same window
+      setIsPaymentLoading(false);
     }
   }
 

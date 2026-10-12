@@ -38,6 +38,27 @@ export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
 export const paymentProcessor: PaymentProcessor = paddlePaymentProcessor;
 ```
 
+Next, go to `/src/payment/clientPaymentProcessor.ts` and choose the same payment processor there.
+This is the part of the payment processor that runs in the browser, e.g. it redirects users to the checkout page.
+If the two don't match, your app will show an error when a user tries to buy a plan.
+
+```ts title="src/payment/clientPaymentProcessor.ts" ins={8, 10, 12, 14}
+import { stripeClientPaymentProcessor } from './stripe/clientPaymentProcessor';
+import { lemonSqueezyClientPaymentProcessor } from './lemonSqueezy/clientPaymentProcessor';
+import { polarClientPaymentProcessor } from './polar/clientPaymentProcessor';
+import { paddleClientPaymentProcessor } from './paddle/clientPaymentProcessor';
+
+// ...
+
+export const clientPaymentProcessor: ClientPaymentProcessor = stripeClientPaymentProcessor;
+// or
+export const clientPaymentProcessor: ClientPaymentProcessor = lemonSqueezyClientPaymentProcessor;
+// or
+export const clientPaymentProcessor: ClientPaymentProcessor = polarClientPaymentProcessor;
+// or
+export const clientPaymentProcessor: ClientPaymentProcessor = paddleClientPaymentProcessor;
+```
+
 Then you should delete:
 - The unused payment processor directories at `/src/payment/<unused-provider>`.
 - Any unused environment variables from `.env.server` (they will be prefixed with the name of the provider you are not using):

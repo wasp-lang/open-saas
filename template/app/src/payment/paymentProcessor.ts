@@ -25,8 +25,10 @@ export type CheckoutSession =
   | { kind: "redirect"; id: string; url: string }
   | { kind: "inPage"; id: string };
 
+export type PaymentProcessorId = "stripe" | "lemonsqueezy" | "polar" | "paddle";
+
 export interface PaymentProcessor {
-  id: "stripe" | "lemonsqueezy" | "polar" | "paddle";
+  id: PaymentProcessorId;
   createCheckoutSession: (
     args: CreateCheckoutSessionArgs,
   ) => Promise<{ session: CheckoutSession }>;
@@ -41,6 +43,8 @@ export interface PaymentProcessor {
 /**
  * Choose which payment processor you'd like to use, then delete the
  * other payment processor code that you're not using  from `/src/payment`
+ *
+ * Make sure to choose the same payment processor in `src/payment/clientPaymentProcessor.ts`.
  */
 export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
 // export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;

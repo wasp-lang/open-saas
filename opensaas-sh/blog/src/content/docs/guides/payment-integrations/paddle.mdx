@@ -7,7 +7,7 @@ banner:
 import ngrok from '@assets/ngrok.png';
 import { Image } from 'astro:assets';
 
-First, make sure you've defined your payment processor in `src/payment/paymentProcessor.ts`, as described in the [important first steps](/guides/payment-integrations/).
+First, make sure you've defined your payment processor in `src/payment/paymentProcessor.ts` and `src/payment/clientPaymentProcessor.ts`, as described in the [important first steps](/guides/payment-integrations/).
 
 Next, you'll need to create a Paddle account in the sandbox mode. You can do that [here](https://sandbox-vendors.paddle.com).
 
@@ -42,16 +42,17 @@ When you're ready to [deploy your app](/guides/deploying/), we'll remind you to 
 
 Once you've created your account, you'll need to get your API key.
 You can do that by:
-1. Navigating to the `Developer Tools > Authentication` page.
-2. Click on the `New API key` button to create a new key.
-3. Give your key a name (e.g., "Open SaaS Development").
-4. Select the following permissions:
-   - `Customers`: read and write
-   - `Transactions`: read and write
+1. Navigating to `My Account > Settings`.
+2. Opening the `Developer Tools > Authentication` page.
+3. Click on the `New API key` button to create a new key.
+4. Give your key a name (e.g., "Open SaaS Development").
+5. Select the following permissions:
    - `Customer portal sessions`: write
-   - `Reports`: read
+   - `Customers`: read and write
    - `Metrics`: read
-5. Copy the generated key and add it to your `.env.server` file:
+   - `Reports`: read
+   - `Transactions`: read and write
+6. Copy the generated key and add it to your `.env.server` file:
    ```ini title=".env.server"
    PADDLE_API_KEY=pdl_sdbx_apikey_...
    ```
@@ -60,32 +61,26 @@ You can do that by:
 
 Paddle's checkout runs in the browser with [Paddle.js](https://developer.paddle.com/paddle-js), which needs a client-side token.
 You can get one by:
-1. Navigating to the `Developer Tools > Authentication` page.
-2. Selecting the `Client-side tokens` tab.
-3. Click on the `New client-side token` button to create a new token.
-4. Copy the generated token and add it to your `.env.client` file:
+1. Navigating to `My Account > Settings`.
+2. Opening the `Developer Tools > Authentication` page.
+3. Selecting the `Client-side tokens` tab.
+4. Click on the `New client-side token` button to create a new token.
+5. Give your token a name (e.g., "Open SaaS Development Client").
+6. Copy the generated token and add it to your `.env.client` file:
    ```ini title=".env.client"
    REACT_APP_PADDLE_CLIENT_TOKEN=test_...
    ```
 
-### In-Page Checkout
-
-Unlike the other payment processors, which redirect to a hosted checkout page, Paddle opens its checkout as an overlay in your app.
-To enable it, set `openInPageCheckout` to `openPaddleCheckout` in your `src/payment/inPageCheckout.ts` file:
-
-```ts title="src/payment/inPageCheckout.ts"
-import { openPaddleCheckout } from "./paddle/inPageCheckout";
-
-export const openInPageCheckout: OpenInPageCheckout | null = openPaddleCheckout;
-```
-
 ### Default Payment Link
 
-Paddle requires a [default payment link](https://developer.paddle.com/build/transactions/default-payment-link) before it can open a checkout.
+Paddle requires a [default payment link](https://developer.paddle.com/build/transactions/default-payment-link) before it can open a checkout. It must be an `https` URL, but in sandbox mode it can be any `https` URL, so you can use `https://localhost:3000`.
+
 To set it:
-1. Navigate to the `Checkout > Checkout settings` page.
-2. Set the `Default payment link` to `http://localhost:3000`.
+1. Navigate to `Checkout > Checkout configuration` (the page is titled "Checkout settings").
+2. Set the `Default payment link` to `https://localhost:3000`.
 3. Click `Save`.
+
+In production, you'll need to set it to your deployed app's URL. We'll remind you to do that when you [deploy your app](/guides/deploying/#setting-the-default-payment-link).
 
 ### Creating Products
 
@@ -93,11 +88,16 @@ To create Paddle products, in your Paddle dashboard:
 1. Navigate to the `Catalog > Products` page.
 2. Click on the `+ New product` button to create a new product.
 3. Fill in the product details and click `Save`.
-4. On the product page, click on the `+ New price` button.
+4. Click on your newly created product in the `Catalog > Products` list to open its product page.
+5. On the product page, click on the `New Price +` button.
+   - Fill in the `Internal description` (e.g. "Monthly"). It's required, but isn't shown to your customers.
+   - Set the `Base price` (e.g. `9.99`).
    - For subscription products, select a `Recurring` billing period (e.g. monthly).
    - For one-time payment products, select `One-time`.
-5. Copy the `Price ID` (it starts with `pri_`). Note that Open SaaS uses the price ID, not the product ID.
-6. Add the `Price ID` to your `.env.server` file.
+   - Set the quantity to a minimum of `1` and a maximum of `1`. Open SaaS grants one plan (or one pack of credits) per purchase, so customers shouldn't be able to buy more than one at a time.
+6. Click `Save`.
+7. Copy the `Price ID` (it starts with `pri_`). Note that Open SaaS uses the price ID, not the product ID.
+8. Add the `Price ID` to your `.env.server` file.
    Open SaaS by default expects three products, two subscriptions and one one-time purchase plan:
    ```ini title=".env.server"
    PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID=<your-hobby-price-id>
@@ -131,23 +131,26 @@ You can do that by running `ngrok` on port 3001 (Wasp server runs on port 3001 b
 #### Creating your Paddle Webhook
 
 Next, configure the webhook in your Paddle dashboard:
-1. Navigate to the `Developer Tools > Notifications` page.
+1. Navigate to the `Events > Notifications` page.
 2. Click the `+ New destination` button.
-3. Set the `Type` to `Webhook`.
-4. In the URL field, paste your `ngrok` forwarding address with `/payments-webhook` appended (for example: `https://abc123.ngrok-free.app/payments-webhook`).
-5. Select the following events to listen for:
+3. Fill in the `Description` (e.g. "Open SaaS Development").
+4. Set the `Notification Type` to `Webhook`.
+5. In the URL field, paste your `ngrok` forwarding address with `/payments-webhook` appended (for example: `https://abc123.ngrok-free.app/payments-webhook`).
+6. Set the `Usage type` to `Both`.
+7. Select the following events to listen for:
    - `transaction.completed`
    - `subscription.updated`
    - `subscription.canceled`
-6. Click `Save destination`.
-7. Copy the destination's secret key and add it to your `.env.server` file:
-   ```ini title=".env.server"
-   PADDLE_WEBHOOK_SECRET=pdl_ntfset_...
-   ```
+8. Click `Save`.
+9. Click on your newly created destination in the `Events > Notifications` list to open it.
+10. Click copy on the `Secret key` and add it to your `.env.server` file:
+    ```ini title=".env.server"
+    PADDLE_WEBHOOK_SECRET=pdl_ntfset_...
+    ```
 
 ### Testing Payments in Local Development
 
-Before testing payments, make sure that you created and set all the required env variables in `.env.server` (`PADDLE_API_KEY`, `<NAME>_PLAN_ID` and `PADDLE_WEBHOOK_SECRET`) and `.env.client` (`REACT_APP_PADDLE_CLIENT_TOKEN`), and that your `ngrok` tunnel is running.
+Before testing payments, make sure that you created and set all the required env variables in `.env.server` (`PADDLE_API_KEY`, `<NAME>_PLAN_ID` and `PADDLE_WEBHOOK_SECRET`) and `.env.client` (`REACT_APP_PADDLE_CLIENT_TOKEN`), that you set a default payment link, and that your `ngrok` tunnel is running.
 
 You can then test the payment flow:
 
@@ -159,7 +162,7 @@ You can then test the payment flow:
 
 To verify everything executed correctly you can:
 - Check Paddle webhook event logs:
-  1. Navigate to the `Developer Tools > Notifications` page.
+  1. Navigate to the `Events > Notifications` page.
   2. Open your previously created destination.
   3. Confirm all of the events have been delivered successfully.
 - Inspect your database's `User` table:
