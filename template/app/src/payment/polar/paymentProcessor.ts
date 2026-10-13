@@ -13,7 +13,7 @@ import {
   createPolarCheckoutSession,
   ensurePolarCustomer,
 } from "./checkoutUtils";
-import { polarClient } from "./polarClient";
+import { polarApi } from "./polarApi";
 import { polarMiddlewareConfigFn, polarWebhook } from "./webhook";
 
 export const polarPaymentProcessor: PaymentProcessor = {
@@ -57,7 +57,7 @@ export const polarPaymentProcessor: PaymentProcessor = {
       return null;
     }
 
-    const customerSession = await polarClient.customerSessions.create({
+    const customerSession = await polarApi.customerSessions.create({
       customerId: paymentProcessorUserId,
     });
 
@@ -68,7 +68,7 @@ export const polarPaymentProcessor: PaymentProcessor = {
   fetchTotalRevenue: async () => {
     let totalRevenue = 0;
 
-    const result = await polarClient.orders.list({
+    const result = await polarApi.orders.list({
       limit: 100,
     });
 

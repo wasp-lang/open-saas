@@ -16,7 +16,7 @@ import {
   createStripeCheckoutSession,
   ensureStripeCustomer,
 } from "./checkoutUtils";
-import { stripeClient } from "./stripeClient";
+import { stripeApi } from "./stripeApi";
 import { stripeMiddlewareConfigFn, stripeWebhook } from "./webhook";
 
 export const stripePaymentProcessor: PaymentProcessor = {
@@ -67,11 +67,10 @@ export const stripePaymentProcessor: PaymentProcessor = {
       return null;
     }
 
-    const billingPortalSession =
-      await stripeClient.billingPortal.sessions.create({
-        customer: paymentProcessorUserId,
-        return_url: CUSTOMER_PORTAL_RETURN_URL,
-      });
+    const billingPortalSession = await stripeApi.billingPortal.sessions.create({
+      customer: paymentProcessorUserId,
+      return_url: CUSTOMER_PORTAL_RETURN_URL,
+    });
 
     return billingPortalSession.url;
   },
@@ -87,7 +86,7 @@ export const stripePaymentProcessor: PaymentProcessor = {
     let hasMore = true;
     while (hasMore) {
       const balanceTransactions =
-        await stripeClient.balanceTransactions.list(params);
+        await stripeApi.balanceTransactions.list(params);
 
       for (const transaction of balanceTransactions.data) {
         totalRevenue += transaction.amount;

@@ -21,10 +21,10 @@ import {
 } from "../plans";
 import { processWebhookEventOnce } from "../processedWebhookEvent";
 import { updateUserCredits, updateUserSubscription } from "../user";
-import { paddleClient } from "./paddleClient";
+import { paddleApi } from "./paddleApi";
 
 type PaddleWebhookEvent = Awaited<
-  ReturnType<typeof paddleClient.webhooks.unmarshal>
+  ReturnType<typeof paddleApi.webhooks.unmarshal>
 >;
 
 /**
@@ -54,7 +54,7 @@ export const paddleWebhook: PaymentsWebhook = async (
       throw new HttpError(400, "Missing Paddle-Signature header");
     }
 
-    const event = await paddleClient.webhooks.unmarshal(
+    const event = await paddleApi.webhooks.unmarshal(
       request.body.toString(),
       env.PADDLE_WEBHOOK_SECRET,
       signature,

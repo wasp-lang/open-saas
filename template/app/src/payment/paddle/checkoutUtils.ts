@@ -1,5 +1,5 @@
 import { type Customer, type Transaction } from "@paddle/paddle-node-sdk";
-import { paddleClient } from "./paddleClient";
+import { paddleApi } from "./paddleApi";
 
 /**
  * Returns a Paddle customer for the given User email, creating a customer if none exist.
@@ -10,14 +10,14 @@ import { paddleClient } from "./paddleClient";
 export async function ensurePaddleCustomer(
   userEmail: string,
 ): Promise<Customer> {
-  const [customer] = await paddleClient.customers
+  const [customer] = await paddleApi.customers
     .list({ email: [userEmail], status: ["active", "archived"], perPage: 1 })
     .next();
 
   if (!customer) {
-    return paddleClient.customers.create({ email: userEmail });
+    return paddleApi.customers.create({ email: userEmail });
   } else if (customer.status === "archived") {
-    return paddleClient.customers.update(customer.id, { status: "active" });
+    return paddleApi.customers.update(customer.id, { status: "active" });
   } else {
     return customer;
   }
@@ -34,7 +34,7 @@ export function createPaddleTransaction({
   customerId,
   userId,
 }: CreatePaddleTransactionArgs): Promise<Transaction> {
-  return paddleClient.transactions.create({
+  return paddleApi.transactions.create({
     items: [{ priceId, quantity: 1 }],
     customerId,
     customData: { userId },

@@ -2,11 +2,11 @@ import Stripe from "stripe";
 import { env } from "wasp/server";
 
 /**
- * The Stripe client API version.
+ * The Stripe API version.
  *
  * By default, Stripe uses the API version set in your Dashboard.
  *
- * You can override this by setting `apiVersion` when creating the Stripe client.
+ * You can override this by setting `apiVersion` when creating the Stripe API instance.
  * This is useful for testing new API versions before updating the
  * default version in your Dashboard.
  *
@@ -25,6 +25,6 @@ import { env } from "wasp/server";
  */
 const STRIPE_API_VERSION = "2025-04-30.basil";
 
-export const stripeClient = new Stripe(env.STRIPE_API_KEY, {
+export const stripeApi = new Stripe(env.STRIPE_API_KEY, {
   apiVersion: STRIPE_API_VERSION,
 });

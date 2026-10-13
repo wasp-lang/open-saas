@@ -44,7 +44,7 @@ export interface PaymentProcessor {
  * Choose which payment processor you'd like to use, then delete the
  * other payment processor code that you're not using  from `/src/payment`
  *
- * Make sure to choose the same payment processor in `src/payment/clientPaymentProcessor.ts`.
+ * Make sure to choose the same payment processor in `src/payment/paymentProcessorClient.ts`.
  */
 export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
 // export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;

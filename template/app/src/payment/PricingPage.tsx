@@ -17,7 +17,7 @@ import {
   CardTitle,
 } from "../client/components/ui/card";
 import { cn } from "../client/utils";
-import { clientPaymentProcessor } from "./clientPaymentProcessor";
+import { paymentProcessorClient } from "./paymentProcessorClient";
 import {
   PaymentPlanId,
   paymentPlans,
@@ -83,13 +83,13 @@ export function PricingPage() {
 
       const checkoutSession = await generateCheckoutSession(paymentPlanId);
 
-      if (checkoutSession.paymentProcessorId !== clientPaymentProcessor.id) {
+      if (checkoutSession.paymentProcessorId !== paymentProcessorClient.id) {
         throw new Error(
-          `Server uses "${checkoutSession.paymentProcessorId}" payment processor, but client uses "${clientPaymentProcessor.id}". Please choose the same payment processor in \`src/payment/paymentProcessor.ts\` and \`src/payment/clientPaymentProcessor.ts\`.`,
+          `Server uses "${checkoutSession.paymentProcessorId}" payment processor, but client uses "${paymentProcessorClient.id}". Please choose the same payment processor in \`src/payment/paymentProcessor.ts\` and \`src/payment/paymentProcessorClient.ts\`.`,
         );
       }
 
-      await clientPaymentProcessor.openCheckout(checkoutSession);
+      await paymentProcessorClient.openCheckout(checkoutSession);
       // Redirects keep the loading state until the browser leaves the page.
       if (checkoutSession.kind === "inPage") {
         setIsPaymentLoading(false);
