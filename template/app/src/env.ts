@@ -6,6 +6,7 @@ import { authEnvSchema } from "./auth/env";
 import { demoAiAppEnvSchema } from "./demo-ai-app/env";
 import { fileUploadEnvSchema } from "./file-upload/env";
 import { lemonSqueezyEnvSchema } from "./payment/lemonSqueezy/env";
+import { paddleClientEnvSchema, paddleEnvSchema } from "./payment/paddle/env";
 import { polarEnvSchema } from "./payment/polar/env";
 import { stripeEnvSchema } from "./payment/stripe/env";
 
@@ -22,9 +23,18 @@ export const serverEnvValidationSchema = defineEnvValidationSchema(
     ...stripeEnvSchema.shape,
     ...lemonSqueezyEnvSchema.shape,
     ...polarEnvSchema.shape,
+    ...paddleEnvSchema.shape,
     ...demoAiAppEnvSchema.shape,
     ...fileUploadEnvSchema.shape,
     ...plausibleEnvSchema.shape,
     ...googleAnalyticsEnvSchema.shape,
+  }),
+);
+
+// Same as above, but for the client-side env vars (prefixed with `REACT_APP_`).
+// Access the validated env vars with `import { env } from 'wasp/client'`.
+export const clientEnvValidationSchema = defineEnvValidationSchema(
+  z.object({
+    ...paddleClientEnvSchema.shape,
   }),
 );

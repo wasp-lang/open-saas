@@ -23,7 +23,7 @@
        prismaUserDelegate,
      );
  
-@@ -57,18 +54,15 @@
+@@ -58,18 +55,15 @@
      prismaUserDelegate,
      userId,
    }: FetchCustomerPortalUrlArgs) => {

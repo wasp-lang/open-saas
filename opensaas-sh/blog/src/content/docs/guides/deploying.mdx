@@ -195,6 +195,48 @@ With the webhook URL ready, in your [Polar Dashboard](https://polar.sh/dashboard
 6. Click `Save`.
 7. Copy the generated webhook secret and set it as the `POLAR_WEBHOOK_SECRET` environment variable in production.
 
+### Paddle
+
+#### Turning off the Sandbox mode
+
+Make sure to turn off the sandbox mode in your production environment, for both the server and the client:
+
+```ini title=".env.server"
+PADDLE_SANDBOX_MODE=false
+```
+
+```ini title=".env.client"
+REACT_APP_PADDLE_SANDBOX_MODE=false
+```
+
+#### Setting the Default Payment Link
+
+In production, Paddle requires a [default payment link](https://developer.paddle.com/build/transactions/default-payment-link) before it can open a checkout. It must be an `https` URL on a domain you've had approved by Paddle.
+
+In your [Paddle Dashboard](https://vendors.paddle.com):
+1. Navigate to `Checkout > Checkout configuration`.
+2. Set the `Default payment link` to your deployed app's URL, e.g. `https://opensaas.sh`.
+3. Click `Save`.
+
+#### Creating Your Production Webhook
+
+To set up your Paddle webhook, you'll need the URL of your newly deployed server + `/payments-webhook`, e.g. `https://open-saas-wasp-sh-server.fly.dev/payments-webhook`.
+
+With the webhook URL ready, in your [Paddle Dashboard](https://vendors.paddle.com):
+1. Navigate to `Events > Notifications`.
+2. Click the `+ New destination` button.
+3. Fill in the `Description` (e.g. "Open SaaS Production").
+4. Set the `Notification Type` to `Webhook`.
+5. In the URL field, paste your production webhook URL.
+6. Set the `Usage type` to `Both`.
+7. Select the following events to listen for:
+   - `transaction.completed`
+   - `subscription.updated`
+   - `subscription.canceled`
+8. Click `Save`.
+9. Click on your newly created destination in the `Events > Notifications` list to open it.
+10. Click copy on the `Secret key` and set it as the `PADDLE_WEBHOOK_SECRET` environment variable in production.
+
 ## Customizing SEO and Discoverability
 
 Before deploying, make sure your app's meta tags, JSON-LD schema, and `llms.txt` reflect your production URL and content so search engines and AI/LLM tools can index and recommend your app correctly. See the [SEO guide](/guides/seo-performance/) for details.
