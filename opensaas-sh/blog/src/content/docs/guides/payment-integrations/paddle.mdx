@@ -73,11 +73,11 @@ You can get one by:
 
 ### Default Payment Link
 
-Paddle requires a [default payment link](https://developer.paddle.com/build/transactions/default-payment-link) before it can open a checkout. It must be an `https` URL, but in sandbox mode it can be any `https` URL, so you can use `https://localhost:3000`.
+Paddle requires a [default payment link](https://developer.paddle.com/build/transactions/default-payment-link) before it can open a checkout. Paddle doesn't accept `localhost` URLs, but in sandbox mode the link isn't actually visited, so you can use `https://example.com`.
 
 To set it:
-1. Navigate to `Checkout > Checkout configuration` (the page is titled "Checkout settings").
-2. Set the `Default payment link` to `https://localhost:3000`.
+1. Navigate to `Checkout > Checkout configuration`.
+2. Set the `Default payment link` to `https://example.com`.
 3. Click `Save`.
 
 In production, you'll need to set it to your deployed app's URL. We'll remind you to do that when you [deploy your app](/guides/deploying/#setting-the-default-payment-link).

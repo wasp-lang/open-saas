@@ -85,7 +85,7 @@ export function PricingPage() {
 
       if (checkoutSession.paymentProcessorId !== clientPaymentProcessor.id) {
         throw new Error(
-          `Server uses "${checkoutSession.paymentProcessorId}" payment processor, but client uses "${clientPaymentProcessor.id}". Please choose the same payment processor in src/payment/paymentProcessor.ts and src/payment/clientPaymentProcessor.ts.`,
+          `Server uses "${checkoutSession.paymentProcessorId}" payment processor, but client uses "${clientPaymentProcessor.id}". Please choose the same payment processor in \`src/payment/paymentProcessor.ts\` and \`src/payment/clientPaymentProcessor.ts\`.`,
         );
       }
 
