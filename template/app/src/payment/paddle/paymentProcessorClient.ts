@@ -2,9 +2,9 @@ import { initializePaddle, type Paddle } from "@paddle/paddle-js";
 import { env } from "wasp/client";
 import { routes } from "wasp/client/router";
 import { CheckoutResult } from "../CheckoutResultPage";
-import type { ClientPaymentProcessor } from "../clientPaymentProcessor";
+import type { PaymentProcessorClient } from "../paymentProcessorClient";
 
-export const paddleClientPaymentProcessor: ClientPaymentProcessor = {
+export const paddlePaymentProcessorClient: PaymentProcessorClient = {
   id: "paddle",
   openCheckout: async (session) => {
     if (session.kind !== "inPage") {
@@ -15,7 +15,7 @@ export const paddleClientPaymentProcessor: ClientPaymentProcessor = {
       search: { status: CheckoutResult.Success },
     });
 
-    const paddle = await getPaddleBrowserClient();
+    const paddle = await getPaddleJs();
     paddle.Checkout.open({
       transactionId: session.id,
       settings: {
@@ -26,11 +26,11 @@ export const paddleClientPaymentProcessor: ClientPaymentProcessor = {
   },
 };
 
-let paddleBrowserClient: Paddle | undefined;
+let paddleJs: Paddle | undefined;
 
-async function getPaddleBrowserClient(): Promise<Paddle> {
-  if (paddleBrowserClient) {
-    return paddleBrowserClient;
+async function getPaddleJs(): Promise<Paddle> {
+  if (paddleJs) {
+    return paddleJs;
   }
 
   const paddle = await initializePaddle({
@@ -43,6 +43,6 @@ async function getPaddleBrowserClient(): Promise<Paddle> {
     throw new Error("Failed to initialize Paddle.js");
   }
 
-  paddleBrowserClient = paddle;
-  return paddleBrowserClient;
+  paddleJs = paddle;
+  return paddleJs;
 }

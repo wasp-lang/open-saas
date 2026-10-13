@@ -9,7 +9,7 @@ import {
   updateUserPaymentProcessorUserId,
 } from "../user";
 import { createPaddleTransaction, ensurePaddleCustomer } from "./checkoutUtils";
-import { paddleClient } from "./paddleClient";
+import { paddleApi } from "./paddleApi";
 import { paddleMiddlewareConfigFn, paddleWebhook } from "./webhook";
 
 export const paddlePaymentProcessor: PaymentProcessor = {
@@ -53,7 +53,7 @@ export const paddlePaymentProcessor: PaymentProcessor = {
       return null;
     }
 
-    const portalSession = await paddleClient.customerPortalSessions.create(
+    const portalSession = await paddleApi.customerPortalSessions.create(
       paymentProcessorUserId,
       [],
     );
@@ -65,7 +65,7 @@ export const paddlePaymentProcessor: PaymentProcessor = {
   fetchTotalRevenue: async () => {
     // NOTE: Paddle reports net revenue (after tax and fees).
     const { from, to } = getRevenueWindow();
-    const revenue = await paddleClient.metrics.getRevenue({ from, to });
+    const revenue = await paddleApi.metrics.getRevenue({ from, to });
 
     const totalInMinorUnits = revenue.timeseries.reduce(
       (sum, datapoint) => sum + parseInt(datapoint.amount, 10),

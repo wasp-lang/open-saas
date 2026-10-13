@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 import { User } from "wasp/entities";
 import { CHECKOUT_CANCELED_URL, CHECKOUT_SUCCESS_URL } from "../paths";
-import { stripeClient } from "./stripeClient";
+import { stripeApi } from "./stripeApi";
 
 /**
  * Returns a Stripe customer for the given User email, creating a customer if none exist.
@@ -10,12 +10,12 @@ import { stripeClient } from "./stripeClient";
 export async function ensureStripeCustomer(
   userEmail: NonNullable<User["email"]>,
 ): Promise<Stripe.Customer> {
-  const customers = await stripeClient.customers.list({
+  const customers = await stripeApi.customers.list({
     email: userEmail,
   });
 
   if (customers.data.length === 0) {
-    return stripeClient.customers.create({
+    return stripeApi.customers.create({
       email: userEmail,
     });
   } else {
@@ -34,7 +34,7 @@ export function createStripeCheckoutSession({
   customerId,
   mode,
 }: CreateStripeCheckoutSessionParams): Promise<Stripe.Checkout.Session> {
-  return stripeClient.checkout.sessions.create({
+  return stripeApi.checkout.sessions.create({
     customer: customerId,
     line_items: [
       {

@@ -1,7 +1,7 @@
 import { Checkout } from "@polar-sh/sdk/models/components/checkout.js";
 import { Customer } from "@polar-sh/sdk/models/components/customer.js";
 import { CHECKOUT_SUCCESS_URL } from "../paths";
-import { polarClient } from "./polarClient";
+import { polarApi } from "./polarApi";
 
 /**
  * Returns a Polar customer for the given User email, creating a customer if none exist.
@@ -13,12 +13,12 @@ export async function ensurePolarCustomer(
   userId: string,
   userEmail: string,
 ): Promise<Customer> {
-  const polarCustomers = await polarClient.customers.list({
+  const polarCustomers = await polarApi.customers.list({
     email: userEmail,
   });
 
   if (polarCustomers.result.items.length === 0) {
-    return polarClient.customers.create({
+    return polarApi.customers.create({
       externalId: userId,
       email: userEmail,
     });
@@ -36,7 +36,7 @@ export function createPolarCheckoutSession({
   productId,
   customerId,
 }: CreatePolarCheckoutSessionArgs): Promise<Checkout> {
-  return polarClient.checkouts.create({
+  return polarApi.checkouts.create({
     products: [productId],
     successUrl: CHECKOUT_SUCCESS_URL,
     customerId,
