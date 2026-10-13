@@ -90,7 +90,10 @@ export function PricingPage() {
       }
 
       await clientPaymentProcessor.openCheckout(checkoutSession);
-      setIsPaymentLoading(false);
+      // Redirects keep the loading state until the browser leaves the page.
+      if (checkoutSession.kind === "inPage") {
+        setIsPaymentLoading(false);
+      }
     } catch (error: unknown) {
       console.error(error);
       if (error instanceof Error) {
