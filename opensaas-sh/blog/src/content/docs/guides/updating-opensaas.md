@@ -1,5 +1,6 @@
 ---
 title: How (Not) to Update Your Open SaaS App
+description: "Why we advise against merging new Open SaaS template changes into an existing app, and how to update manually if you still need a specific fix or feature."
 banner:
   content: |
     Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
