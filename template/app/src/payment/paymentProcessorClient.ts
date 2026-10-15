@@ -18,3 +18,4 @@ export const paymentProcessorClient: PaymentProcessorClient =
 // export const paymentProcessorClient: PaymentProcessorClient = lemonSqueezyPaymentProcessorClient;
 // export const paymentProcessorClient: PaymentProcessorClient = polarPaymentProcessorClient;
 // export const paymentProcessorClient: PaymentProcessorClient = paddlePaymentProcessorClient;
+// export const paymentProcessorClient: PaymentProcessorClient = mptPaymentProcessorClient;

@@ -1,0 +1,94 @@
+---
+title: MPT (SEPA bank transfer)
+banner:
+  content: |
+    Have an Open SaaS app in production? <a href="https://e44cy1h4s0q.typeform.com/to/EPJCwsMi">We'll send you some swag! 👕</a>
+---
+
+First, make sure you've defined your payment processor in `src/payment/paymentProcessor.ts` and `src/payment/paymentProcessorClient.ts`, as described in the [important first steps](/guides/payment-integrations/).
+
+[MPT](https://mpt.hr) lets your users pay with a SEPA bank transfer. They scan a QR code (EPC or Croatian HUB3) in their banking app, and the euros arrive at your [Safe](https://safe.global) as EURe, an e-money token issued by [Monerium](https://monerium.com), a regulated e-money institution. MPT tells your app about the payment with a signed webhook.
+
+:::caution[One-time payments only]
+A bank transfer is a one-time push payment, so MPT can't renew a subscription. Use it for plans with a `credits` effect (e.g. `Credits10`). Checking out a subscription plan (`Hobby`, `Pro`) throws an error.
+:::
+
+### Get sandbox keys
+
+You don't need an account to start. One call gives you sandbox keys:
+
+```sh
+curl -s -X POST https://mpt.domovina.ai/api/sandbox/tenants \
+  -H 'content-type: application/json' \
+  -d '{"name":"My SaaS (dev)"}'
+```
+
+Copy the values from the response into your `.env.server` file:
+
+```ini title=".env.server"
+MPT_API_URL=https://mpt.domovina.ai
+MPT_SECRET_KEY=<secret_key>
+MPT_WEBHOOK_SECRET=<webhook_secret>
+MPT_TARGET_ADDRESS=<demo_target_address>
+```
+
+The keys are shown only once. In the sandbox no real money moves: you simulate the payment with a button on the MPT checkout page.
+
+If you want webhooks during development, add `"webhook_url":"https://<your-tunnel>/payments-webhook"` to the call above. You don't need them, though (see [Webhooks](#webhooks)).
+
+### Production
+
+For production you need your own [Monerium](https://monerium.com) account and an MPT tenant: contact MPT through [mpt.hr](https://mpt.hr). You then swap in the production `MPT_SECRET_KEY`, `MPT_WEBHOOK_SECRET` and your Safe as `MPT_TARGET_ADDRESS`. Nothing else changes. A sandbox key never works against a production tenant, and the other way around.
+
+### See it with real Monerium
+
+The simulated sandbox skips the bank and the blockchain. To see the full path, there is a public MPT tenant on Monerium's sandbox (`opensaas-sandbox`): a test SEPA transfer is issued as EURe by Monerium and minted on Gnosis Chiado straight into the project's Safe. Its transactions are public: [`opensaas-sandbox-demo` Safe on Blockscout](https://gnosis-chiado.blockscout.com/address/0xAbC300d2D6c838c0bf5FC5DA80De2693e092ef8e).
+
+Your own production setup has the same shape: your Monerium account, your IBAN, your Safe.
+
+### Set your plan prices
+
+MPT has no product catalog: a payment is just an amount. So for MPT, each `PAYMENTS_*_PLAN_ID` env var holds the plan's **price in EUR**:
+
+```ini title=".env.server"
+PAYMENTS_CREDITS_10_PLAN_ID=9.99
+# Subscriptions are not supported by MPT, but the env vars are still required.
+PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID=0
+PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID=0
+```
+
+### Webhooks
+
+MPT sends events to your server's `/payments-webhook` endpoint and signs them with the [Standard Webhooks](https://www.standardwebhooks.com/) scheme. Open SaaS verifies the signature and handles each event once:
+
+| Event | What Open SaaS does |
+|---|---|
+| `intent.paid` | Adds the plan's credits to the user. |
+| `payment.late` | Same as `intent.paid` if the full amount arrived after the payment window closed; otherwise nothing. |
+| `payment.received` | Nothing yet. Monerium holds the funds and `intent.paid` follows, usually within seconds. |
+| `payment.rejected`, `payment.underpaid` | Logs a warning and grants nothing. |
+
+You don't need a webhook to start developing. After checkout, MPT sends the buyer back to `/checkout?session_id=<sid>`, and the page asks your server to confirm the payment with MPT directly (`confirmCheckoutSession`). The purchase is applied under the same event id the webhook would use, so it is never applied twice.
+
+In production, register `https://<your-server-url>/payments-webhook` with MPT anyway: a buyer can close the tab before a bank transfer arrives, and only the webhook reaches your app then.
+
+### Test a payment
+
+1. Start your app with `wasp start` and log in.
+2. Go to the pricing page and buy the credits plan. You are redirected to the MPT checkout page.
+3. Click the button that simulates a successful payment. Other buttons simulate a late, short or rejected payment.
+4. Back in your app, the checkout page waits for the payment and then shows it as successful. The user's credits go up.
+
+The e2e tests cover the same flow, plus a short payment that grants nothing. With the app running, run them from `e2e-tests`:
+
+```sh
+E2E_PAYMENT_PROCESSOR=mpt npx playwright test tests/mptPaymentTests.spec.ts
+```
+
+### Revenue in the admin dashboard
+
+The daily stats job reads total revenue from MPT's `GET /api/intents/stats`: the money received for paid intents, plus late payments, since those grant credits too. Underpaid money is not counted.
+
+### Deploying
+
+When you deploy, set the production `MPT_SECRET_KEY`, `MPT_WEBHOOK_SECRET` and `MPT_TARGET_ADDRESS` on your server, and register your production webhook URL with MPT.

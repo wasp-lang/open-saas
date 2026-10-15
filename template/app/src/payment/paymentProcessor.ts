@@ -17,6 +17,15 @@ export interface FetchCustomerPortalUrlArgs {
   prismaUserDelegate: PrismaClient["user"];
 }
 
+export interface ConfirmCheckoutSessionArgs {
+  sessionId: string;
+  userId: User["id"];
+  prismaUserDelegate: PrismaClient["user"];
+  processedWebhookEventDelegate: PrismaClient["processedWebhookEvent"];
+}
+
+export type CheckoutSessionStatus = "paid" | "pending" | "failed";
+
 /**
  * Payment processors either redirect the user to a hosted checkout page,
  * or open the checkout within the page itself (e.g. an overlay).
@@ -25,7 +34,12 @@ export type CheckoutSession =
   | { kind: "redirect"; id: string; url: string }
   | { kind: "inPage"; id: string };
 
-export type PaymentProcessorId = "stripe" | "lemonsqueezy" | "polar" | "paddle";
+export type PaymentProcessorId =
+  | "stripe"
+  | "lemonsqueezy"
+  | "polar"
+  | "paddle"
+  | "mpt";
 
 export interface PaymentProcessor {
   id: PaymentProcessorId;
@@ -38,6 +52,14 @@ export interface PaymentProcessor {
   webhook: PaymentsWebhook;
   webhookMiddlewareConfigFn: MiddlewareConfigFn;
   fetchTotalRevenue: () => Promise<number>;
+  /**
+   * Optional. Asks the payment processor directly whether a checkout was paid
+   * and applies the purchase if so. For setups where webhooks can't reach the
+   * app, e.g. a shared demo account used from many local dev servers.
+   */
+  confirmCheckoutSession?: (
+    args: ConfirmCheckoutSessionArgs,
+  ) => Promise<CheckoutSessionStatus>;
 }
 
 /**
@@ -50,3 +72,4 @@ export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
 // export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
 // export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
 // export const paymentProcessor: PaymentProcessor = paddlePaymentProcessor;
+// export const paymentProcessor: PaymentProcessor = mptPaymentProcessor;

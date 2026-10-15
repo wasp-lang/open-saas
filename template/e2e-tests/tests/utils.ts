@@ -126,6 +126,44 @@ export const makeStripePayment = async ({
   }
 };
 
+/**
+ * MPT sandbox keys simulate the bank transfer on the MPT checkout page, so the
+ * whole flow runs without a bank or a webhook reaching localhost: the app
+ * confirms the payment itself when the buyer returns.
+ */
+export const makeMptSandboxPayment = async ({
+  test,
+  page,
+  outcome,
+}: {
+  test: typeof import("@playwright/test").test;
+  page: Page;
+  outcome: "paid" | "underpaid";
+}) => {
+  test.slow();
+
+  await page.goto("/pricing");
+  await page.waitForURL("**/pricing");
+
+  const buyBtn = page.locator('button[aria-describedby="credits10"]');
+  await expect(buyBtn).toBeVisible();
+  await expect(buyBtn).toBeEnabled();
+  await buyBtn.click();
+
+  await page.waitForURL(/\/checkout\/[A-Za-z0-9_-]+$/, {
+    waitUntil: "domcontentloaded",
+  });
+  const sessionId = new URL(page.url()).pathname.split("/").pop()!;
+  await page.locator(`button[onclick="simulate('${outcome}')"]`).click();
+  await expect(page.locator("#simMsg")).toContainText(outcome);
+
+  if (outcome === "underpaid") {
+    // Only a paid intent sends the buyer back on its own.
+    await page.goto(`/checkout?session_id=${sessionId}`);
+  }
+  await page.waitForURL(`**/checkout?session_id=${sessionId}*`);
+};
+
 export const acceptAllCookies = async (page: Page) => {
   await page.waitForSelector('button:has-text("Accept all")');
   await page.click('button:has-text("Accept all")');

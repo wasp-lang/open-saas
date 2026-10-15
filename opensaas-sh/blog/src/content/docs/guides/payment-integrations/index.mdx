@@ -11,21 +11,24 @@ This guide will show you how to set up payments for testing and local developmen
 - Lemon Squeezy
 - Polar
 - Paddle
+- MPT (SEPA bank transfer)
 
 :::note[Which should I choose?]
 Stripe is the industry standard, is more configurable, and has cheaper fees.
 Lemon Squeezy, Polar, and Paddle act as a [Merchant of Record](https://www.lemonsqueezy.com/reporting/merchant-of-record). This means they take care of paying taxes in multiple countries for you, but charge higher fees per transaction.
+MPT takes SEPA bank transfers in euros: no card fees, but one-time payments (credits) only, no subscriptions.
 :::
 
 ## Important First Steps
 
 First, go to `/src/payment/paymentProcessor.ts` and choose which payment processor you'd like to use:
 
-```ts title="src/payment/paymentProcessor.ts" ins={8, 10, 12, 14}
+```ts title="src/payment/paymentProcessor.ts" ins={9, 11, 13, 15, 17}
 import { stripePaymentProcessor } from './stripe/paymentProcessor';
 import { lemonSqueezyPaymentProcessor } from './lemonSqueezy/paymentProcessor';
 import { polarPaymentProcessor } from './polar/paymentProcessor';
 import { paddlePaymentProcessor } from './paddle/paymentProcessor';
+import { mptPaymentProcessor } from './mpt/paymentProcessor';
 
 // ...
 
@@ -36,17 +39,20 @@ export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
 export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
 // or
 export const paymentProcessor: PaymentProcessor = paddlePaymentProcessor;
+// or
+export const paymentProcessor: PaymentProcessor = mptPaymentProcessor;
 ```
 
 Next, go to `/src/payment/paymentProcessorClient.ts` and choose the same payment processor there.
 This is the part of the payment processor that runs in the browser, e.g. it redirects users to the checkout page.
 If the two don't match, your app will show an error when a user tries to buy a plan.
 
-```ts title="src/payment/paymentProcessorClient.ts" ins={8, 10, 12, 14}
+```ts title="src/payment/paymentProcessorClient.ts" ins={9, 11, 13, 15, 17}
 import { stripePaymentProcessorClient } from './stripe/paymentProcessorClient';
 import { lemonSqueezyPaymentProcessorClient } from './lemonSqueezy/paymentProcessorClient';
 import { polarPaymentProcessorClient } from './polar/paymentProcessorClient';
 import { paddlePaymentProcessorClient } from './paddle/paymentProcessorClient';
+import { mptPaymentProcessorClient } from './mpt/paymentProcessorClient';
 
 // ...
 
@@ -57,6 +63,8 @@ export const paymentProcessorClient: PaymentProcessorClient = lemonSqueezyPaymen
 export const paymentProcessorClient: PaymentProcessorClient = polarPaymentProcessorClient;
 // or
 export const paymentProcessorClient: PaymentProcessorClient = paddlePaymentProcessorClient;
+// or
+export const paymentProcessorClient: PaymentProcessorClient = mptPaymentProcessorClient;
 ```
 
 Then you should delete:
@@ -80,6 +88,7 @@ Follow the steps for your selected processor:
 - [Lemon Squeezy](lemon-squeezy/)
 - [Polar](polar/)
 - [Paddle](paddle/)
+- [MPT](mpt/)
 
 
 ## Deploying
