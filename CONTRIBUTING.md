@@ -45,3 +45,4 @@ We manually (re)assign the appropriate tag when we are ready to release a new ve
 
 1. Assign appropriate tag to the commit we want to release (usually current `main`) so `wasp new -t saas` can pick up code from the [/template](/template).
 2. Deploy the demo app + landing page and blog + docs: [/opensaas-sh/README.md#Deployment](/opensaas-sh/README.md#Deployment).
+3. If the release is for a new Wasp version, update the [Open SaaS Railway template](https://github.com/wasp-lang/open-saas-railway) to it by following that repo's [CONTRIBUTING.md](https://github.com/wasp-lang/open-saas-railway/blob/main/CONTRIBUTING.md), so the one-click Railway deploy matches the Wasp version users install locally.

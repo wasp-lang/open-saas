@@ -22,6 +22,9 @@ This template is:
 
 🧑‍💻 Check it out in action here: [OpenSaaS.sh](https://opensaas.sh)
 📚 Check out the Docs here: [Open SaaS Docs](https://docs.opensaas.sh)
+🚂 Or deploy it to Railway in one click:
+
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/open-saas?referralCode=uA-ZC_)
 
 ## What's inside?
 
@@ -43,7 +46,7 @@ Because we're using Wasp as the full-stack framework, we can leverage a lot of i
 - 🔐 [Full-stack Authentication](https://wasp.sh/docs/auth/overview) - Email verified + social Auth in a few lines of code.
 - ⛑ [End-to-end Type Safety](https://wasp.sh/docs/data-model/operations/overview) - Type your backend functions and get inferred types on the front-end automatically, without the need to install or configure any third-party libraries. Oh, and type-safe Links, too!
 - 🤖 [Jobs](https://wasp.sh/docs/advanced/jobs) - Run cron jobs in the background or set up queues simply by defining a function in the config file.
-- 🚀 [One-command Deploy](https://wasp.sh/docs/advanced/deployment/overview) - Easily deploy your DB, Server, & Client with one commaned to [Railway](https://railway.app) or [Fly.io](https://fly.io) via the CLI. Or deploy manually to any other hosting serivce of your choice.
+- 🚀 [One-command Deploy](https://wasp.sh/docs/advanced/deployment/overview) - Easily deploy your DB, Server, & Client with one command to [Railway](https://railway.app) or [Fly.io](https://fly.io) via the CLI. Or deploy manually to any other hosting service of your choice.
 
 You also get access to Wasp's diverse, helpful community if you get stuck or need help.
 
@@ -66,6 +69,10 @@ wasp new -t saas
 ```
 
 This will create a **clean copy of the Open SaaS template** into a new directory, and you can start building your SaaS app right away!
+
+### One-click Deploy on Railway
+
+Prefer to start from a live deployment? The [Open SaaS Railway template](https://railway.com/deploy/open-saas?referralCode=uA-ZC_) deploys the database, server, and client to Railway in one click. Then eject it into your own GitHub repo, clone it, and develop locally — every push to `main` redeploys automatically. See the [deployment guide](https://docs.opensaas.sh/guides/deploying/#one-click-deploy-with-the-railway-template) for details.
 
 ### Detailed Instructions
 
