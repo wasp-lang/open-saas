@@ -5,6 +5,7 @@ import {
   logUserIn,
   makeStripePayment,
   signUserUp,
+  skipUnlessStripe,
   type User,
 } from "./utils";
 
@@ -55,12 +56,14 @@ test("User should see the Buy Plan button before payment", async () => {
 });
 
 test("Make test payment with Stripe for hobby plan", async () => {
+  skipUnlessStripe(test);
   const planId = "hobby";
   await page.goto("/");
   await makeStripePayment({ test, page, planId });
 });
 
 test("User should see the Manage Subscription button after payment", async () => {
+  skipUnlessStripe(test);
   await page.goto("/pricing");
   // There are three tiers on the page, so we want to retrieve the first of the three buttons
   const manageSubscriptionButton = page
@@ -77,6 +80,7 @@ test("User should see the Manage Subscription button after payment", async () =>
 });
 
 test("Make test payment with Stripe for 10 credits", async () => {
+  skipUnlessStripe(test);
   await createAndLogInNewUser();
   await acceptAllCookies(page); // Clear the cookie consent modal so it doesn't interfere with the payment
   const planId = "credits10";
