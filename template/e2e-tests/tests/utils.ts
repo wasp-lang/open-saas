@@ -15,15 +15,11 @@ export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
   await page.fill('input[name="email"]', user.email);
   await page.fill('input[name="password"]', DEFAULT_PASSWORD);
 
-  const clickLogin = page.click('button:has-text("Log in")');
-
   await Promise.all([
-    page
-      .waitForResponse((response) => {
-        return response.url().includes("login") && response.status() === 200;
-      })
-      .catch((err) => console.error(err.message)),
-    clickLogin,
+    page.waitForResponse((response) => {
+      return response.url().includes("login") && response.status() === 200;
+    }),
+    page.click('button:has-text("Log in")'),
   ]);
 
   await page.waitForURL("**/demo-app");
@@ -52,15 +48,11 @@ export const signUserUp = async ({
   await page.fill('input[name="email"]', user.email);
   await page.fill('input[name="password"]', DEFAULT_PASSWORD);
 
-  const clickSignup = page.click('button:has-text("Sign up")');
-
   await Promise.all([
-    page
-      .waitForResponse((response) => {
-        return response.url().includes("signup") && response.status() === 200;
-      })
-      .catch((err) => console.error(err.message)),
-    clickSignup,
+    page.waitForResponse((response) => {
+      return response.url().includes("signup") && response.status() === 200;
+    }),
+    page.click('button:has-text("Sign up")'),
   ]);
 };
 
