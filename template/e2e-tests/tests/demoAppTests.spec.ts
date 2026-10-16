@@ -64,8 +64,8 @@ test("User can make 3 AI schedule generations", async () => {
     ]);
 
     const schedule = page.getByTestId("schedule");
-    expect(schedule).toContainText(task1, { ignoreCase: true });
-    expect(schedule).toContainText(task2, { ignoreCase: true });
+    await expect(schedule).toContainText(task1, { ignoreCase: true });
+    await expect(schedule).toContainText(task2, { ignoreCase: true });
   }
 });
 
@@ -95,8 +95,8 @@ test("AI schedule generation fails on 4th attempt", async () => {
   ]);
 
   const schedule = page.getByTestId("schedule");
-  expect(schedule).not.toContainText(task1, { ignoreCase: true });
-  expect(schedule).not.toContainText(task2, { ignoreCase: true });
+  await expect(schedule).not.toContainText(task1, { ignoreCase: true });
+  await expect(schedule).not.toContainText(task2, { ignoreCase: true });
 });
 
 test("Make test payment with Stripe for hobby plan", async () => {
@@ -111,29 +111,25 @@ test("User should be able to generate another schedule after payment", async () 
   await expect(generateScheduleButton).toBeVisible();
 
   await Promise.all([
-    page
-      .waitForRequest(
-        (req) =>
-          req.url().includes("operations/generate-gpt-response") &&
-          req.method() === "POST",
-      )
-      .catch((err) => console.error(err.message)),
-    page
-      .waitForResponse((response) => {
-        if (
-          response.url().includes("/operations/generate-gpt-response") &&
-          response.status() === 200
-        ) {
-          return true;
-        }
-        return false;
-      })
-      .catch((err) => console.error(err.message)),
+    page.waitForRequest(
+      (req) =>
+        req.url().includes("operations/generate-gpt-response") &&
+        req.method() === "POST",
+    ),
+    page.waitForResponse((response) => {
+      if (
+        response.url().includes("/operations/generate-gpt-response") &&
+        response.status() === 200
+      ) {
+        return true;
+      }
+      return false;
+    }),
     // We already started waiting before we perform the click that triggers the API calls. So now we just perform the click
     generateScheduleButton.click(),
   ]);
 
   const schedule = page.getByTestId("schedule");
-  expect(schedule).toContainText(task1, { ignoreCase: true });
-  expect(schedule).toContainText(task2, { ignoreCase: true });
+  await expect(schedule).toContainText(task1, { ignoreCase: true });
+  await expect(schedule).toContainText(task2, { ignoreCase: true });
 });
