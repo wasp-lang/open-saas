@@ -1,7 +1,7 @@
 import { initializePaddle, type Paddle } from "@paddle/paddle-js";
 import { env } from "wasp/client";
 import { routes } from "wasp/client/router";
-import { CheckoutResult } from "../CheckoutResultPage";
+import { CheckoutResult } from "../checkoutResult";
 import type { PaymentProcessorClient } from "../paymentProcessorClient";
 
 export const paddlePaymentProcessorClient: PaymentProcessorClient = {
