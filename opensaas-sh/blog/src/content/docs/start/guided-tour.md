@@ -350,7 +350,7 @@ But before you start setting up the main features, let's walk through the custom
   ```
 
   :::caution[Restart Your App]
-  Development databases are connceted to your app's name. Upon changing the app name, new, empty development database will be assigned to your app. This means you'll need to rerun `wasp db start`, `wasp db migrate-dev` and `wasp start`.
+  The development database is tied to your app's name. After changing the name, stop the app, run `wasp db migrate-dev`, then `wasp start`. Wasp starts a new, empty development database for the new name.
   :::
 - [ ] Update meta tags in the `head` config (`src/client/head.wasp.ts`) (even if you don't have a custom domain yet, put one you would like to have, as this won't affect development).
 - [ ] Update `defaultFrom.name` in the `emailSender` config (`src/server/emailSender.wasp.ts`) with the name of your app/company/whatever you want your users to see in their inbox, if you're using the `emailSender` feature and/or `email` Auth method.
