@@ -163,11 +163,11 @@ To view or edit your data in Prisma Studio, run:
 wasp db studio
 ```
 
-Close Studio before starting the app again.
+Stop `wasp db studio` with Ctrl+C before starting the app.
 
 ### Start your app
 
-In the `app/` directory, copy the `.env.server.example` file to `.env.server`:
+Copy `.env.server.example` to `.env.server`:
 
 ```sh
 cp .env.server.example .env.server
@@ -182,13 +182,7 @@ Then run:
 wasp start
 ```
 
-This installs dependencies if needed and starts the app (client and server).
-
-If the app doesn't open automatically in your browser, you can open it manually by visiting the client URL that `wasp start` prints (`http://localhost:3000` by default).
-
-At this point, you should have:
- - Your development database running, likely on port `5432`.
- - Your app running, the client likely on port `3000`, and the server likely on port `3001`.
+Open the client URL printed by `wasp start` in your browser.
 
 ### Run Blog and Docs
 
