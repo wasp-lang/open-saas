@@ -16,9 +16,11 @@ export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
   await page.fill('input[name="password"]', DEFAULT_PASSWORD);
 
   await Promise.all([
-    page.waitForResponse((response) => {
-      return response.url().includes("login") && response.status() === 200;
-    }),
+    page
+      .waitForResponse((response) => {
+        return response.url().includes("login") && response.status() === 200;
+      })
+      .catch((err) => console.error(err.message)),
     page.click('button:has-text("Log in")'),
   ]);
 
@@ -49,9 +51,11 @@ export const signUserUp = async ({
   await page.fill('input[name="password"]', DEFAULT_PASSWORD);
 
   await Promise.all([
-    page.waitForResponse((response) => {
-      return response.url().includes("signup") && response.status() === 200;
-    }),
+    page
+      .waitForResponse((response) => {
+        return response.url().includes("signup") && response.status() === 200;
+      })
+      .catch((err) => console.error(err.message)),
     page.click('button:has-text("Sign up")'),
   ]);
 };

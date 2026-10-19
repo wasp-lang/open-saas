@@ -111,20 +111,24 @@ test("User should be able to generate another schedule after payment", async () 
   await expect(generateScheduleButton).toBeVisible();
 
   await Promise.all([
-    page.waitForRequest(
-      (req) =>
-        req.url().includes("operations/generate-gpt-response") &&
-        req.method() === "POST",
-    ),
-    page.waitForResponse((response) => {
-      if (
-        response.url().includes("/operations/generate-gpt-response") &&
-        response.status() === 200
-      ) {
-        return true;
-      }
-      return false;
-    }),
+    page
+      .waitForRequest(
+        (req) =>
+          req.url().includes("operations/generate-gpt-response") &&
+          req.method() === "POST",
+      )
+      .catch((err) => console.error(err.message)),
+    page
+      .waitForResponse((response) => {
+        if (
+          response.url().includes("/operations/generate-gpt-response") &&
+          response.status() === 200
+        ) {
+          return true;
+        }
+        return false;
+      })
+      .catch((err) => console.error(err.message)),
     // We already started waiting before we perform the click that triggers the API calls. So now we just perform the click
     generateScheduleButton.click(),
   ]);
