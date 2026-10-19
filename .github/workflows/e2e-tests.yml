@@ -1,25 +1,29 @@
 name: e2e tests
+run-name: Compare e2e catches, five repetitions without retries
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-  pull_request:
 
 env:
   WASP_TELEMETRY_DISABLE: 1
-  WASP_VERSION:
-    # If you're copying this workflow to your own project, set this to your app's Wasp version:
-    main
+  WASP_VERSION: "0.26.0"
 
 jobs:
   test:
+    name: ${{ matrix.catches }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        catches: [with-catches, without-catches]
 
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v6
+
+      - name: Restore catches for the control variant
+        if: matrix.catches == 'with-catches'
+        run: git apply --unidiff-zero .github/diagnostics/restore-e2e-catches.patch
 
       - name: Setup Node.js
         id: setup-node
@@ -120,7 +124,16 @@ jobs:
           SKIP_EMAIL_VERIFICATION_IN_DEV: true
           # Client-side env vars
           REACT_APP_GOOGLE_ANALYTICS_ID: G-H3LSJCK95H
+          PLAYWRIGHT_JSON_OUTPUT_FILE: test-results/results.json
         working-directory: ./template
         run: |
           cd e2e-tests
-          npm run e2e:playwright
+          npm run e2e:playwright -- tests/demoAppTests.spec.ts --repeat-each=5 --retries=0 --workers=1 --trace=retain-on-failure --reporter=line,json
+
+      - name: Save comparison results and failure traces
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-${{ matrix.catches }}
+          path: template/e2e-tests/test-results/
+          retention-days: 3

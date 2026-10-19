@@ -1,0 +1,59 @@
+diff --git a/template/e2e-tests/tests/demoAppTests.spec.ts b/template/e2e-tests/tests/demoAppTests.spec.ts
+index f744cf1..475746d 100644
+--- a/template/e2e-tests/tests/demoAppTests.spec.ts
++++ b/template/e2e-tests/tests/demoAppTests.spec.ts
+@@ -114,14 +114,18 @@ test("User should be able to generate another schedule after payment", async ()
+-    page.waitForRequest(
+-      (req) =>
+-        req.url().includes("operations/generate-gpt-response") &&
+-        req.method() === "POST",
+-    ),
+-    page.waitForResponse((response) => {
+-      if (
+-        response.url().includes("/operations/generate-gpt-response") &&
+-        response.status() === 200
+-      ) {
+-        return true;
+-      }
+-      return false;
+-    }),
++    page
++      .waitForRequest(
++        (req) =>
++          req.url().includes("operations/generate-gpt-response") &&
++          req.method() === "POST",
++      )
++      .catch((err) => console.error(err.message)),
++    page
++      .waitForResponse((response) => {
++        if (
++          response.url().includes("/operations/generate-gpt-response") &&
++          response.status() === 200
++        ) {
++          return true;
++        }
++        return false;
++      })
++      .catch((err) => console.error(err.message)),
+diff --git a/template/e2e-tests/tests/utils.ts b/template/e2e-tests/tests/utils.ts
+index 1e148ac..692056e 100644
+--- a/template/e2e-tests/tests/utils.ts
++++ b/template/e2e-tests/tests/utils.ts
+@@ -19,3 +19,5 @@ export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
+-    page.waitForResponse((response) => {
+-      return response.url().includes("login") && response.status() === 200;
+-    }),
++    page
++      .waitForResponse((response) => {
++        return response.url().includes("login") && response.status() === 200;
++      })
++      .catch((err) => console.error(err.message)),
+@@ -52,3 +54,5 @@ export const signUserUp = async ({
+-    page.waitForResponse((response) => {
+-      return response.url().includes("signup") && response.status() === 200;
+-    }),
++    page
++      .waitForResponse((response) => {
++        return response.url().includes("signup") && response.status() === 200;
++      })
++      .catch((err) => console.error(err.message)),
