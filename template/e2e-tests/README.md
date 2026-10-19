@@ -69,3 +69,11 @@ You can copy and paste the `.github/` directory containing the `e2e-tests.yml` w
 In order for these tests to run correctly on GitHub, you need to provide the environment variables mentioned in the `e2e-tests.yml` file within your GitHub repository's "Actions" secrets so that they can be accessed by the tests.
 
 Upon pushing to the repository's main branch, or creating a PR against the main branch, the tests will run in the CI/CD pipeline.
+
+### Testing a Wasp release
+
+Manually run [e2e tests](https://github.com/wasp-lang/open-saas/actions/workflows/e2e-tests.yml) and set `wasp-version` to the published RC version. The default is `main`, which push and PR runs also use.
+
+```shell
+gh workflow run e2e-tests.yml --repo wasp-lang/open-saas --ref main -f wasp-version=0.26.0-rc.1
+```
