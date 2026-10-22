@@ -27,16 +27,16 @@
            datePaid: invoicePaidAtDate,
            numOfCreditsPurchased: paymentPlans[paymentPlanId].effect.amount,
          },
-@@ -129,7 +129,7 @@
-     case PaymentPlanId.Hobby:
+@@ -165,7 +165,7 @@
+ 
        await updateUserSubscription(
          {
 -          paymentProcessorUserId: customerId,
 +          stripeId: customerId,
            datePaid: invoicePaidAtDate,
-           paymentPlanId,
-           subscriptionStatus: SubscriptionStatus.Active,
-@@ -176,7 +176,7 @@
+           paymentPlanId: livePlanId,
+           subscriptionStatus: liveSubscriptionStatus,
+@@ -239,7 +239,7 @@
    );
  
    const user = await updateUserSubscription(
@@ -45,7 +45,7 @@
      prismaUserDelegate,
    );
  
-@@ -244,7 +244,7 @@
+@@ -326,7 +326,7 @@
  
    await updateUserSubscription(
      {
