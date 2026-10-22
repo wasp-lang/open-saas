@@ -175,6 +175,21 @@ async function handleCustomerSubscriptionUpdated(
     getSubscriptionPriceId(subscription),
   );
 
+  // Guard against out-of-order events: once a subscription is canceled (Deleted),
+  // it cannot be reactivated. Stripe creates a new subscription ID for resubscribes.
+  // If we already have this subscription marked as Deleted, ignore this update event.
+  const currentUser = await prismaUserDelegate.findUnique({
+    where: { paymentProcessorUserId: customerId },
+    select: { subscriptionStatus: true },
+  });
+
+  if (currentUser?.subscriptionStatus === SubscriptionStatus.Deleted) {
+    console.info(
+      `Ignoring subscription update for ${customerId} - subscription is already canceled`,
+    );
+    return;
+  }
+
   const user = await updateUserSubscription(
     { paymentProcessorUserId: customerId, paymentPlanId, subscriptionStatus },
     prismaUserDelegate,
