@@ -152,10 +152,15 @@ async function handleInvoicePaid(
         return;
       }
 
-      // Use live subscription state to avoid writing stale data
+      // Use live subscription state to avoid writing stale data.
       const liveSubscriptionStatus =
         getOpenSaasSubscriptionStatus(liveSubscription);
       if (!liveSubscriptionStatus) {
+        // paused and incomplete have no stored status, but the invoice was paid.
+        await prismaUserDelegate.update({
+          where: { paymentProcessorUserId: customerId },
+          data: { datePaid: invoicePaidAtDate },
+        });
         return;
       }
 
@@ -305,16 +310,24 @@ async function handleCustomerSubscriptionDeleted(
   const subscription = event.data.object;
   const customerId = getCustomerId(subscription.customer);
 
-  // Guard against out-of-order delete events: check if customer has any live subscription.
-  // List all subscriptions and skip downgrade if any is not terminal (handles trialing, active, past_due, etc).
+  // Live means another subscription that is active, trialing, or past_due.
+  // unpaid, paused, and incomplete count as ended, same as canceled.
+  // The Stripe read and the DB write are separate, so a concurrent event can
+  // land between them; the last write wins and the next event converges.
+  // The list is capped at 10 and is not paginated.
   const allSubscriptions = await stripeApi.subscriptions.list({
     customer: customerId,
     status: "all",
     limit: 10,
   });
 
+  const liveStatuses: Stripe.Subscription.Status[] = [
+    "active",
+    "trialing",
+    "past_due",
+  ];
   const hasLiveSubscription = allSubscriptions.data.some(
-    (sub) => !isSubscriptionTerminal(sub.status),
+    (sub) => sub.id !== subscription.id && liveStatuses.includes(sub.status),
   );
 
   if (hasLiveSubscription) {
