@@ -23,7 +23,7 @@
        prismaUserDelegate,
      );
  
-@@ -57,18 +54,15 @@
+@@ -58,17 +55,14 @@
      prismaUserDelegate,
      userId,
    }: FetchCustomerPortalUrlArgs) => {
@@ -38,10 +38,9 @@
        return null;
      }
  
-     const billingPortalSession =
-       await stripeClient.billingPortal.sessions.create({
--        customer: paymentProcessorUserId,
-+        customer: stripeId,
-         return_url: CUSTOMER_PORTAL_RETURN_URL,
-       });
+     const billingPortalSession = await stripeApi.billingPortal.sessions.create({
+-      customer: paymentProcessorUserId,
++      customer: stripeId,
+       return_url: CUSTOMER_PORTAL_RETURN_URL,
+     });
  
