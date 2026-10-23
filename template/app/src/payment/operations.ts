@@ -1,5 +1,6 @@
 import { HttpError } from "wasp/server";
 import type {
+  ConfirmCheckoutSession,
   GenerateCheckoutSession,
   GetCustomerPortalUrl,
 } from "wasp/server/operations";
@@ -8,6 +9,7 @@ import { PaymentPlanId, paymentPlans } from "../payment/plans";
 import { ensureArgsSchemaOrThrowHttpError } from "../server/validation";
 import {
   type CheckoutSession,
+  type CheckoutSessionStatus,
   paymentProcessor,
   type PaymentProcessorId,
 } from "./paymentProcessor";
@@ -69,5 +71,39 @@ export const getCustomerPortalUrl: GetCustomerPortalUrl<
   return paymentProcessor.fetchCustomerPortalUrl({
     userId: context.user.id,
     prismaUserDelegate: context.entities.User,
+  });
+};
+
+const confirmCheckoutSessionSchema = z.string().min(1);
+
+type ConfirmCheckoutSessionInput = z.infer<typeof confirmCheckoutSessionSchema>;
+
+/**
+ * Returns `unsupported` for payment processors that rely on webhooks only.
+ */
+export const confirmCheckoutSession: ConfirmCheckoutSession<
+  ConfirmCheckoutSessionInput,
+  CheckoutSessionStatus | "unsupported"
+> = async (rawSessionId, context) => {
+  if (!context.user) {
+    throw new HttpError(
+      401,
+      "Only authenticated users are allowed to perform this operation",
+    );
+  }
+
+  const sessionId = ensureArgsSchemaOrThrowHttpError(
+    confirmCheckoutSessionSchema,
+    rawSessionId,
+  );
+  if (!paymentProcessor.confirmCheckoutSession) {
+    return "unsupported";
+  }
+
+  return paymentProcessor.confirmCheckoutSession({
+    sessionId,
+    userId: context.user.id,
+    prismaUserDelegate: context.entities.User,
+    processedWebhookEventDelegate: context.entities.ProcessedWebhookEvent,
   });
 };

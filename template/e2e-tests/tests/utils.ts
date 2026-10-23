@@ -122,6 +122,82 @@ export const makeStripePayment = async ({
   }
 };
 
+/**
+ * The Stripe payment tests need the app to use `stripePaymentProcessor`.
+ * Skips them when the e2e run targets another payment processor.
+ */
+export const skipUnlessStripe = (
+  test: typeof import("@playwright/test").test,
+) => {
+  const paymentProcessor = process.env.E2E_PAYMENT_PROCESSOR ?? "stripe";
+  test.skip(
+    paymentProcessor !== "stripe",
+    `The app is set up with ${paymentProcessor}, not Stripe.`,
+  );
+};
+
+/**
+ * MPT sandbox keys simulate the bank transfer on the MPT checkout page, so the
+ * whole flow runs without a bank or a webhook reaching localhost: the app
+ * confirms the payment itself when the buyer returns.
+ *
+ * Two kinds of sandbox key work:
+ * - a self-serve sandbox key (`sk_test_…`) simulates any outcome instantly;
+ * - a tenant on Monerium's sandbox asks Monerium for a real sandbox SEPA
+ *   transfer of the full amount, which takes ~20 s and can only pay.
+ */
+export const makeMptSandboxPayment = async ({
+  test,
+  page,
+  outcome,
+}: {
+  test: typeof import("@playwright/test").test;
+  page: Page;
+  outcome: "paid" | "underpaid";
+}) => {
+  test.slow();
+
+  await page.goto("/pricing");
+  await page.waitForURL("**/pricing");
+
+  const buyBtn = page.locator('button[aria-describedby="credits10"]');
+  await expect(buyBtn).toBeVisible();
+  await expect(buyBtn).toBeEnabled();
+  await buyBtn.click();
+
+  await page.waitForURL(/\/checkout\/[A-Za-z0-9_-]+$/, {
+    waitUntil: "domcontentloaded",
+  });
+  const sessionId = new URL(page.url()).pathname.split("/").pop()!;
+  const moneriumSandboxBtn = page.locator('button[onclick="simulateSepa()"]');
+  const simulatedOutcomeBtn = page.locator(
+    `button[onclick="simulate('${outcome}')"]`,
+  );
+  await expect(moneriumSandboxBtn.or(simulatedOutcomeBtn)).toBeVisible();
+
+  if (await moneriumSandboxBtn.isVisible()) {
+    test.skip(
+      outcome !== "paid",
+      "A Monerium sandbox transfer always pays the full amount.",
+    );
+    await moneriumSandboxBtn.click();
+    await expect(page.locator("#simMsg")).toContainText("Monerium");
+    await page.waitForURL(`**/checkout?session_id=${sessionId}*`, {
+      timeout: 90_000,
+    });
+    return;
+  }
+
+  await simulatedOutcomeBtn.click();
+  await expect(page.locator("#simMsg")).toContainText(outcome);
+
+  if (outcome === "underpaid") {
+    // Only a paid intent sends the buyer back on its own.
+    await page.goto(`/checkout?session_id=${sessionId}`);
+  }
+  await page.waitForURL(`**/checkout?session_id=${sessionId}*`);
+};
+
 export const acceptAllCookies = async (page: Page) => {
   await page.waitForSelector('button:has-text("Accept all")');
   await page.click('button:has-text("Accept all")');

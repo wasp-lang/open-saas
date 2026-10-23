@@ -15,6 +15,13 @@ src/payment/lemonSqueezy/paymentProcessor.ts
 src/payment/lemonSqueezy/paymentProcessorClient.ts
 src/payment/lemonSqueezy/webhook.ts
 src/payment/lemonSqueezy/webhookPayload.ts
+src/payment/mpt/checkoutUtils.ts
+src/payment/mpt/env.ts
+src/payment/mpt/mptClient.ts
+src/payment/mpt/paymentProcessor.ts
+src/payment/mpt/paymentProcessorClient.ts
+src/payment/mpt/purchase.ts
+src/payment/mpt/webhook.ts
 src/payment/paddle/checkoutUtils.ts
 src/payment/paddle/env.ts
 src/payment/paddle/paddleApi.ts

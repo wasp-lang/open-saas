@@ -4,6 +4,7 @@ import {
   logUserIn,
   makeStripePayment,
   signUserUp,
+  skipUnlessStripe,
   type User,
 } from "./utils";
 
@@ -100,11 +101,13 @@ test("AI schedule generation fails on 4th attempt", async () => {
 });
 
 test("Make test payment with Stripe for hobby plan", async () => {
+  skipUnlessStripe(test);
   const planId = "hobby";
   await makeStripePayment({ test, page, planId });
 });
 
 test("User should be able to generate another schedule after payment", async () => {
+  skipUnlessStripe(test);
   await page.goto("/demo-app");
 
   const generateScheduleButton = page.getByTestId("generate-schedule-button");

@@ -2,6 +2,7 @@ import { action, api, page, query, route, type Spec } from "@wasp.sh/spec";
 
 import { CheckoutResultPage } from "./CheckoutResultPage" with { type: "ref" };
 import {
+  confirmCheckoutSession,
   generateCheckoutSession,
   getCustomerPortalUrl,
 } from "./operations" with { type: "ref" };
@@ -13,6 +14,9 @@ import {
 
 export const paymentSpec: Spec = [
   route("PricingPageRoute", "/pricing", page(PricingPage), { prerender: true }),
+  action(confirmCheckoutSession, {
+    entities: ["User", "ProcessedWebhookEvent"],
+  }),
   route(
     "CheckoutResultRoute",
     "/checkout",
