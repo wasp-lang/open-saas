@@ -99,7 +99,7 @@ import { paymentSpec } from "./src/payment/payment.wasp";
 
 export default app({
   name: "OpenSaaS",
-  wasp: { version: "^0.26.0" },
+  wasp: { version: "^0.26.1" },
   title: "My Open SaaS App",
   auth: authConfig,
   // ...
@@ -344,7 +344,7 @@ But before you start setting up the main features, let's walk through the custom
   ```ts title="main.wasp.ts" {2, 4}
   export default app({
     name: "YourAppName",
-    wasp: { version: "^0.26.0" },
+    wasp: { version: "^0.26.1" },
     title: "Your App Name",
     // ...
   });
