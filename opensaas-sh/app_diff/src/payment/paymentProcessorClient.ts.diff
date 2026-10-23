@@ -1,0 +1,14 @@
+--- template/app/src/payment/paymentProcessorClient.ts
++++ opensaas-sh/app/src/payment/paymentProcessorClient.ts
+@@ -10,11 +10,5 @@
+   openCheckout: (session: CheckoutSession) => Promise<void>;
+ }
+ 
+-/**
+- * Choose the same payment processor as in `src/payment/paymentProcessor.ts`.
+- */
+ export const paymentProcessorClient: PaymentProcessorClient =
+   stripePaymentProcessorClient;
+-// export const paymentProcessorClient: PaymentProcessorClient = lemonSqueezyPaymentProcessorClient;
+-// export const paymentProcessorClient: PaymentProcessorClient = polarPaymentProcessorClient;
+-// export const paymentProcessorClient: PaymentProcessorClient = paddlePaymentProcessorClient;

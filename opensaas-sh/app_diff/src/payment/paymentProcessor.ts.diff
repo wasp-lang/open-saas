@@ -9,7 +9,7 @@
  import type { PaymentPlan } from "./plans";
  import { stripePaymentProcessor } from "./stripe/paymentProcessor";
  
-@@ -25,15 +25,9 @@
+@@ -35,18 +35,9 @@
    fetchCustomerPortalUrl: (
      args: FetchCustomerPortalUrlArgs,
    ) => Promise<string | null>;
@@ -22,7 +22,10 @@
 -/**
 - * Choose which payment processor you'd like to use, then delete the
 - * other payment processor code that you're not using  from `/src/payment`
+- *
+- * Make sure to choose the same payment processor in `src/payment/paymentProcessorClient.ts`.
 - */
  export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
 -// export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
 -// export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
+-// export const paymentProcessor: PaymentProcessor = paddlePaymentProcessor;

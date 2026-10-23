@@ -17,6 +17,7 @@ import {
   CardTitle,
 } from "../client/components/ui/card";
 import { cn } from "../client/utils";
+import { paymentProcessorClient } from "./paymentProcessorClient";
 import {
   PaymentPlanId,
   paymentPlans,
@@ -82,10 +83,16 @@ export function PricingPage() {
 
       const checkoutSession = await generateCheckoutSession(paymentPlanId);
 
-      if (checkoutSession?.sessionUrl) {
-        window.open(checkoutSession.sessionUrl, "_self");
-      } else {
-        throw new Error("Error generating checkout session URL");
+      if (checkoutSession.paymentProcessorId !== paymentProcessorClient.id) {
+        throw new Error(
+          `Server uses "${checkoutSession.paymentProcessorId}" payment processor, but client uses "${paymentProcessorClient.id}". Please choose the same payment processor in \`src/payment/paymentProcessor.ts\` and \`src/payment/paymentProcessorClient.ts\`.`,
+        );
+      }
+
+      await paymentProcessorClient.openCheckout(checkoutSession);
+      // Redirects keep the loading state until the browser leaves the page.
+      if (checkoutSession.kind === "inPage") {
+        setIsPaymentLoading(false);
       }
     } catch (error: unknown) {
       console.error(error);
@@ -94,7 +101,7 @@ export function PricingPage() {
       } else {
         setErrorMessage("Error processing payment. Please try again later.");
       }
-      setIsPaymentLoading(false); // We only set this to false here and not in the try block because we redirect to the checkout url within the same window
+      setIsPaymentLoading(false);
     }
   }
 
@@ -126,9 +133,9 @@ export function PricingPage() {
           </h2>
         </div>
         <p className="text-muted-foreground mx-auto mt-6 max-w-2xl text-center text-lg leading-8">
-          Choose between Stripe, LemonSqueezy or Polar as your payment provider.
-          Just add your Product IDs! Try it out below with test credit card
-          number <br />
+          Choose between Stripe, LemonSqueezy, Polar, or Paddle as your payment
+          provider. Just add your Product IDs! Try it out below with test credit
+          card number <br />
           <span className="bg-muted text-muted-foreground rounded-md px-2 py-1 font-mono text-sm">
             4242 4242 4242 4242 4242
           </span>

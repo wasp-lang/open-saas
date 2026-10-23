@@ -294,10 +294,10 @@ function NewTaskForm({
 type TodoProps = Pick<Task, "id" | "isDone" | "description" | "time">;
 
 function Todo({ id, isDone, description, time }: TodoProps) {
-  const handleCheckboxChange = async (checked: boolean) => {
+  const handleCheckboxChange = async (checked: boolean | "indeterminate") => {
     await updateTask({
       id,
-      isDone: checked,
+      isDone: checked === true,
     });
   };
 

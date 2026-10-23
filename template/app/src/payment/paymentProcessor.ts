@@ -17,11 +17,21 @@ export interface FetchCustomerPortalUrlArgs {
   prismaUserDelegate: PrismaClient["user"];
 }
 
+/**
+ * Payment processors either redirect the user to a hosted checkout page,
+ * or open the checkout within the page itself (e.g. an overlay).
+ */
+export type CheckoutSession =
+  | { kind: "redirect"; id: string; url: string }
+  | { kind: "inPage"; id: string };
+
+export type PaymentProcessorId = "stripe" | "lemonsqueezy" | "polar" | "paddle";
+
 export interface PaymentProcessor {
-  id: "stripe" | "lemonsqueezy" | "polar";
+  id: PaymentProcessorId;
   createCheckoutSession: (
     args: CreateCheckoutSessionArgs,
-  ) => Promise<{ session: { id: string; url: string } }>;
+  ) => Promise<{ session: CheckoutSession }>;
   fetchCustomerPortalUrl: (
     args: FetchCustomerPortalUrlArgs,
   ) => Promise<string | null>;
@@ -33,7 +43,10 @@ export interface PaymentProcessor {
 /**
  * Choose which payment processor you'd like to use, then delete the
  * other payment processor code that you're not using  from `/src/payment`
+ *
+ * Make sure to choose the same payment processor in `src/payment/paymentProcessorClient.ts`.
  */
 export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
 // export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
 // export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
+// export const paymentProcessor: PaymentProcessor = paddlePaymentProcessor;

@@ -32,8 +32,10 @@ Open another terminal and start the Wasp app with the environment variable set t
 > **However, during e2e tests, this manual step will cause the tests to hang and fail** because the link is never clicked. To prevent this, set the following environment variable when starting your app:
 
 ```bash
-cd app && SKIP_EMAIL_VERIFICATION_IN_DEV=true wasp start
+cd app && SKIP_EMAIL_VERIFICATION_IN_DEV=true wasp start --client-port 3000 --server-port 3001
 ```
+
+The tests expect the app on ports `3000` and `3001`. We pin them because otherwise `wasp start` moves the app to other free ports when these are taken.
 
 #### What this step will do:
 
@@ -67,3 +69,11 @@ You can copy and paste the `.github/` directory containing the `e2e-tests.yml` w
 In order for these tests to run correctly on GitHub, you need to provide the environment variables mentioned in the `e2e-tests.yml` file within your GitHub repository's "Actions" secrets so that they can be accessed by the tests.
 
 Upon pushing to the repository's main branch, or creating a PR against the main branch, the tests will run in the CI/CD pipeline.
+
+### Testing a Wasp release
+
+Manually run [e2e tests](https://github.com/wasp-lang/open-saas/actions/workflows/e2e-tests.yml) and set `wasp-version` to the published RC version. The default is `main`, which push and PR runs also use.
+
+```shell
+gh workflow run e2e-tests.yml --repo wasp-lang/open-saas --ref main -f wasp-version=0.26.0-rc.1
+```

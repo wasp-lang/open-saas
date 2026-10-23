@@ -98,7 +98,7 @@ import { paymentSpec } from "./src/payment/payment.wasp";
 
 export default app({
   name: "OpenSaaS",
-  wasp: { version: "^0.24.0" },
+  wasp: { version: "^0.26.0" },
   title: "My Open SaaS App",
   auth: authConfig,
   // ...
@@ -215,7 +215,7 @@ Let's take a quick look at how payments are handled in this template.
 4. Payment processor sends a webhook event to the app's server with the payment info.
 5. The app server's **webhook handler** handles the event and updates the user's subscription status.
 
-The payment processor you choose (Stripe, Lemon Squeezy or Polar) and its related functions can be found at `src/payment/paymentProcessor.ts`. The `PaymentProcessor` object holds the logic for creating checkout sessions, webhooks, etc.
+The payment processor you choose (Stripe, Lemon Squeezy, Polar or Paddle) and its related functions can be found at `src/payment/paymentProcessor.ts`. The `PaymentProcessor` object holds the logic for creating checkout sessions, webhooks, etc. Its client-side counterpart, `PaymentProcessorClient` in `src/payment/paymentProcessorClient.ts`, opens the checkout session in the browser.
 
 The logic for creating the Checkout session is defined in the `src/payment/operation.ts` file. [Actions](https://wasp.sh/docs/data-model/operations/actions) are a type of Wasp Operation, specifically your server-side functions that are used to **write** or **update** data to the database. Once they're defined in the Wasp Spec, you can easily call them on the client-side:
 
@@ -343,7 +343,7 @@ But before you start setting up the main features, let's walk through the custom
   ```ts title="main.wasp.ts" {2, 4}
   export default app({
     name: "YourAppName",
-    wasp: { version: "^0.24.0" },
+    wasp: { version: "^0.26.0" },
     title: "Your App Name",
     // ...
   });
