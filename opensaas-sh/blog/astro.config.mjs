@@ -1,3 +1,4 @@
+import { URL } from "node:url";
 import sitemap from "@astrojs/sitemap";
 import starlight from "@astrojs/starlight";
 import tailwindcss from "@tailwindcss/vite";
