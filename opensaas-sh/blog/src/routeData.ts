@@ -1,15 +1,29 @@
 import { defineRouteMiddleware } from "@astrojs/starlight/route-data";
+import { getCurrentDocsPathname } from "./archivedDocsVersions.mjs";
 
-/**
- * starlight-blog generates the blog index, pagination, tag, and author pages
- * without a description, so they all fall back to the site-wide one. This
- * gives each of them its own `description` and `og:description`.
- */
 export const onRequest = defineRouteMiddleware(async (context, next) => {
   // Run starlight-blog's middleware first so `locals.starlightBlog` is set.
   await next();
 
   const { starlightRoute, starlightBlog } = context.locals;
+
+  // Old docs versions are near-duplicates of the current docs, so we point their
+  // canonical URL (and `og:url`) at the equivalent current page.
+  const currentPathname = getCurrentDocsPathname(context.url.pathname);
+  if (currentPathname && context.site) {
+    const currentHref = new URL(currentPathname, context.site).href;
+    for (const { tag, attrs } of starlightRoute.head) {
+      if (tag === "link" && attrs?.rel === "canonical") {
+        attrs.href = currentHref;
+      } else if (tag === "meta" && attrs?.property === "og:url") {
+        attrs.content = currentHref;
+      }
+    }
+  }
+
+  // starlight-blog generates the blog index, pagination, tag, and author pages
+  // without a description, so they all fall back to the site-wide one. This
+  // gives each of them its own `description` and `og:description`.
   const description = getBlogListingDescription(
     starlightRoute.id,
     starlightRoute.entry.data.title,
