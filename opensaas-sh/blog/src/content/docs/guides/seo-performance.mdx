@@ -109,6 +109,29 @@ Customize it before deploying:
 
 Keep the file short and intentional. It should be a concise index of your site that AI crawlers and LLMs can digest easily.
 
+## Robots.txt & Sitemap
+
+The template also ships a `robots.txt` and a `sitemap.xml` in the `public/` folder. `robots.txt` tells crawlers which pages to skip (like `/account` and `/admin`) and where to find your sitemap. The sitemap lists the public pages you want search engines to index:
+
+```xml title="public/sitemap.xml"
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://your-saas-app.com/</loc>
+  </url>
+  <url>
+    <loc>https://your-saas-app.com/pricing</loc>
+  </url>
+</urlset>
+```
+
+Customize them before deploying:
+
+- Replace `your-saas-app.com` with your production URL in both files
+- Add a `<url>` entry to `sitemap.xml` for every new public page you create (e.g. a blog, changelog, or comparison pages)
+- Don't list pages that require login
+
+Once deployed, submit your sitemap URL in [Google Search Console](https://search.google.com/search-console) so Google picks up new pages faster.
+
 ## Docs & Blog Meta Tags
 
 Astro, being a static-site generator, will automatically inject relevant information provided in the `blog/astro.config.mjs` file, as well as in the frontmatter of `.md` files into the pages HTML:
