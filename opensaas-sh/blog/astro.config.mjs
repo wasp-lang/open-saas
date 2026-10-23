@@ -1,8 +1,8 @@
-import { URL } from "node:url";
 import sitemap from "@astrojs/sitemap";
 import starlight from "@astrojs/starlight";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
+import { URL } from "node:url";
 import starlightBlog from "starlight-blog";
 import starlightVersions from "starlight-versions";
 import { getCurrentDocsPathname } from "./src/archivedDocsVersions.mjs";
