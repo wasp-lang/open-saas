@@ -21,7 +21,7 @@ import { userSpec } from "./src/user/user.wasp";
 
 export default app({
   name: "OpenSaaS",
-  wasp: { version: "^0.26.0" },
+  wasp: { version: "^0.26.1" },
   title: "My Open SaaS App",
   head,
   auth: authConfig,
