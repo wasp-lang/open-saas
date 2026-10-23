@@ -1,0 +1,19 @@
+--- template/app/public/sitemap.xml
++++ opensaas-sh/app/public/sitemap.xml
+@@ -1,14 +1,9 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+-<!--
+-  List your public, indexable pages here (e.g. the landing and pricing pages) and
+-  replace `your-saas-app.com` with your production domain.
+-  Don't list pages that require login, like `/account` or `/admin`.
+--->
+ <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+   <url>
+-    <loc>https://your-saas-app.com/</loc>
++    <loc>https://opensaas.sh/</loc>
+   </url>
+   <url>
+-    <loc>https://your-saas-app.com/pricing</loc>
++    <loc>https://opensaas.sh/pricing</loc>
+   </url>
+ </urlset>

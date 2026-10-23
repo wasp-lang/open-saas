@@ -20,7 +20,8 @@ export default defineConfig({
       description:
         "Docs for Open SaaS, the free, open-source SaaS template built with React, Node.js, Prisma & Postgres (powered by Wasp).",
       customCss: ["./src/styles/tailwind.css"],
-      // Sets canonical URLs of old docs versions to their current equivalents.
+      // Sets canonical URLs of old docs versions to their current equivalents
+      // and gives blog listing pages unique descriptions.
       routeMiddleware: "./src/routeData.ts",
       logo: {
         src: "/src/assets/wasp-logo.svg",

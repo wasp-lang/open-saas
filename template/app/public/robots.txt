@@ -2,3 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /account
 Disallow: /admin
+
+# TODO: Replace `your-saas-app.com` with your production domain.
+Sitemap: https://your-saas-app.com/sitemap.xml
