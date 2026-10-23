@@ -10,7 +10,7 @@ import { getPaymentPlanIdByPaymentProcessorPlanId } from "../paymentProcessorPla
 import { PaymentPlanId, paymentPlans, SubscriptionStatus } from "../plans";
 import { processWebhookEventOnce } from "../processedWebhookEvent";
 import { updateUserCredits, updateUserSubscription } from "../user";
-import { stripeClient } from "./stripeClient";
+import { stripeApi } from "./stripeApi";
 
 /**
  * Stripe requires a raw request to construct events successfully.
@@ -73,7 +73,7 @@ function constructStripeEvent(request: express.Request): Stripe.Event {
     throw new Error("Stripe webhook signature not provided");
   }
 
-  return stripeClient.webhooks.constructEvent(
+  return stripeApi.webhooks.constructEvent(
     request.body,
     stripeSignature,
     stripeWebhookSecret,

@@ -6,11 +6,14 @@ import type {
 import * as z from "zod";
 import { PaymentPlanId, paymentPlans } from "../payment/plans";
 import { ensureArgsSchemaOrThrowHttpError } from "../server/validation";
-import { paymentProcessor } from "./paymentProcessor";
+import {
+  type CheckoutSession,
+  paymentProcessor,
+  type PaymentProcessorId,
+} from "./paymentProcessor";
 
-export type CheckoutSession = {
-  sessionUrl: string | null;
-  sessionId: string;
+export type GeneratedCheckoutSession = CheckoutSession & {
+  paymentProcessorId: PaymentProcessorId;
 };
 
 const generateCheckoutSessionSchema = z.nativeEnum(PaymentPlanId);
@@ -21,7 +24,7 @@ type GenerateCheckoutSessionInput = z.infer<
 
 export const generateCheckoutSession: GenerateCheckoutSession<
   GenerateCheckoutSessionInput,
-  CheckoutSession
+  GeneratedCheckoutSession
 > = async (rawPaymentPlanId, context) => {
   if (!context.user) {
     throw new HttpError(
@@ -49,10 +52,7 @@ export const generateCheckoutSession: GenerateCheckoutSession<
     prismaUserDelegate: context.entities.User,
   });
 
-  return {
-    sessionUrl: session.url,
-    sessionId: session.id,
-  };
+  return { ...session, paymentProcessorId: paymentProcessor.id };
 };
 
 export const getCustomerPortalUrl: GetCustomerPortalUrl<

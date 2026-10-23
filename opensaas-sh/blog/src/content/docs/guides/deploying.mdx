@@ -13,6 +13,8 @@ Because this SaaS app is a React/NodeJS/Postgres app built on top of [Wasp](http
 
 The simplest and quickest option is to take advantage of Wasp's one-command deploy to Fly.io or Railway.
 
+If you haven't started your project yet, you can also [deploy Open SaaS to Railway in one click](#one-click-deploy-with-the-railway-template) and develop from there.
+
 Or if you prefer to deploy to a different provider, or your frontend and backend separately, you can follow the [Deploying Manually](#deploying-manually) section below.
 
 ## Steps for Deploying
@@ -47,6 +49,7 @@ Here are a list of all of them (some of which you may not be using, e.g. Analyti
 ##### General Vars
 - [ ] `DATABASE_URL`
 - [ ] `JWT_SECRET`
+- [ ] `PORT` (most hosting providers set this for you)
 - [ ] `WASP_WEB_CLIENT_URL`
 - [ ] `WASP_SERVER_URL`
 
@@ -102,26 +105,26 @@ When you create your Stripe account, Stripe will automatically assign you to the
 Because this template was built with a specific version of the Stripe API in mind, it could be that your Stripe account is set to a different API version. 
 
 :::note
-```ts title="stripeClient.ts" 
+```ts title="stripeApi.ts" 
 const STRIPE_API_VERSION = "2025-04-30.basil"; // or e.g. 2023-08-16 if using older format
 
-export const stripeClient = new Stripe(env.STRIPE_API_KEY, {
+export const stripeApi = new Stripe(env.STRIPE_API_KEY, {
   apiVersion: STRIPE_API_VERSION,
 });
 ```
-When you specify a specific API version in your Stripe client, the requests you send to Stripe from your server, along with their responses, will match that API version. On the other hand, Stripe will send all other events to your webhook that didn't originate as a request sent from your server, like those made after a user completes a payment on checkout, using the default API version of the API.
+When you specify a specific API version in `stripeApi`, the requests you send to Stripe from your server, along with their responses, will match that API version. On the other hand, Stripe will send all other events to your webhook that didn't originate as a request sent from your server, like those made after a user completes a payment on checkout, using the default API version of the API.
 
-This is why it's important to make sure your Stripe client version also matches the API version in your Stripe account, and to thoroughly test any changes you make to your Stripe client before deploying to production.
+This is why it's important to make sure the API version in `stripeApi` also matches the API version in your Stripe account, and to thoroughly test any changes you make to `stripeApi` before deploying to production.
 :::
 
 To make sure your app is consistent with your Stripe account, here are some steps you can follow:
 
 1. You can find your `default` API version in the Stripe dashboard under the [Developers](https://dashboard.stripe.com/developers) section.
-2. Check that the API version in your `/src/payment/stripe/stripeClient.ts` file matches the default API version in your dashboard:
-   ```ts title="stripeClient.ts" {1}
+2. Check that the API version in your `/src/payment/stripe/stripeApi.ts` file matches the default API version in your dashboard:
+   ```ts title="stripeApi.ts" {1}
    const STRIPE_API_VERSION = "2025-04-30.basil"; // or e.g. 2023-08-16 if using older format
 
-   export const stripeClient = new Stripe(env.STRIPE_API_KEY, {
+   export const stripeApi = new Stripe(env.STRIPE_API_KEY, {
      apiVersion: STRIPE_API_VERSION,
    });
    ```
@@ -135,7 +138,7 @@ To make sure your app is consistent with your Stripe account, here are some step
       ```sh
         npm install stripe@x.x.x # e.g. npm install stripe@13.11.0
       ```
-4. **Test your app thoroughly** to make sure that the changes you made to your Stripe client are working as expected before deploying to production.
+4. **Test your app thoroughly** to make sure that the changes you made to `stripeApi` are working as expected before deploying to production.
 
 
 #### Creating Your Production Webhook
@@ -194,6 +197,48 @@ With the webhook URL ready, in your [Polar Dashboard](https://polar.sh/dashboard
 6. Click `Save`.
 7. Copy the generated webhook secret and set it as the `POLAR_WEBHOOK_SECRET` environment variable in production.
 
+### Paddle
+
+#### Turning off the Sandbox mode
+
+Make sure to turn off the sandbox mode in your production environment, for both the server and the client:
+
+```ini title=".env.server"
+PADDLE_SANDBOX_MODE=false
+```
+
+```ini title=".env.client"
+REACT_APP_PADDLE_SANDBOX_MODE=false
+```
+
+#### Setting the Default Payment Link
+
+In production, Paddle requires a [default payment link](https://developer.paddle.com/build/transactions/default-payment-link) before it can open a checkout. It must be an `https` URL on a domain you've had approved by Paddle.
+
+In your [Paddle Dashboard](https://vendors.paddle.com):
+1. Navigate to `Checkout > Checkout configuration`.
+2. Set the `Default payment link` to your deployed app's URL, e.g. `https://opensaas.sh`.
+3. Click `Save`.
+
+#### Creating Your Production Webhook
+
+To set up your Paddle webhook, you'll need the URL of your newly deployed server + `/payments-webhook`, e.g. `https://open-saas-wasp-sh-server.fly.dev/payments-webhook`.
+
+With the webhook URL ready, in your [Paddle Dashboard](https://vendors.paddle.com):
+1. Navigate to `Events > Notifications`.
+2. Click the `+ New destination` button.
+3. Fill in the `Description` (e.g. "Open SaaS Production").
+4. Set the `Notification Type` to `Webhook`.
+5. In the URL field, paste your production webhook URL.
+6. Set the `Usage type` to `Both`.
+7. Select the following events to listen for:
+   - `transaction.completed`
+   - `subscription.updated`
+   - `subscription.canceled`
+8. Click `Save`.
+9. Click on your newly created destination in the `Events > Notifications` list to open it.
+10. Click copy on the `Secret key` and set it as the `PADDLE_WEBHOOK_SECRET` environment variable in production.
+
 ## Customizing SEO and Discoverability
 
 Before deploying, make sure your app's meta tags, JSON-LD schema, `llms.txt`, `robots.txt`, and `sitemap.xml` reflect your production URL and content so search engines and AI/LLM tools can index and recommend your app correctly. See the [SEO guide](/guides/seo-performance/) for details.
@@ -224,6 +269,20 @@ The `wasp deploy` command will also take care of setting the following server-si
 For setting the remaining server-side environment variables, please refer to the [Deploying with the Wasp CLI Guide](https://wasp.sh/docs/deployment/deployment-methods/cli#launch).
 :::
 
+### One-click Deploy with the Railway Template
+
+If you're starting a new project, the [Open SaaS Railway template](https://railway.com/deploy/open-saas?referralCode=uA-ZC_) deploys the database, server, and client to [Railway](https://railway.com) in one click, with no local setup needed:
+
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/open-saas?referralCode=uA-ZC_)
+
+Once it's deployed, eject the template into your own GitHub repo (open the `Client` or `Server` service → `Settings` → `Upstream Repo` → `Eject`), then clone that repo and [develop locally](/start/getting-started/#install-wasp). Every push to `main` is automatically redeployed by Railway. The [template's README](https://github.com/wasp-lang/open-saas-railway) has step-by-step instructions.
+
+:::caution[Starting a new project only]
+The Railway template deploys its own copy of Open SaaS, so it's an alternative way to start, not a way to deploy an app you've already created with `wasp new`. For an existing app, use [`wasp deploy` for Railway](https://wasp.sh/docs/deployment/deployment-methods/wasp-deploy/railway) instead.
+
+And once you're using the template, don't use `wasp deploy` on it, because it would conflict with the Railway setup.
+:::
+
 ### Deploying Manually
 
 If you prefer to deploy manually, your frontend and backend separately, or just prefer using your favorite provider you can follow [Wasp's Manual Deployment Guide](https://wasp.sh/docs/deployment/deployment-methods/paas).
@@ -233,6 +292,10 @@ Remember to always set additional client-side environment variables, such as `RE
 ```sh
 REACT_APP_CLIENT_ENV_VAR_1=<...> npm run build
 ```
+:::
+
+:::note[Server Health Checks]
+If your provider runs health checks against your server, point them at the `/up` endpoint (e.g. `https://your-server-url.com/up`). Wasp doesn't serve anything at `/` in production.
 :::
 
 ## Deploying your Blog
