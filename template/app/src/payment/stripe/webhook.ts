@@ -175,19 +175,48 @@ async function handleCustomerSubscriptionUpdated(
     getSubscriptionPriceId(subscription),
   );
 
-  const user = await updateUserSubscription(
+  if (subscriptionStatus === SubscriptionStatus.CancelAtPeriodEnd) {
+    const transition = await prismaUserDelegate.updateMany({
+      where: {
+        paymentProcessorUserId: customerId,
+        OR: [
+          {
+            subscriptionStatus: {
+              not: SubscriptionStatus.CancelAtPeriodEnd,
+            },
+          },
+          { subscriptionStatus: null },
+        ],
+      },
+      data: {
+        subscriptionStatus,
+        subscriptionPlan: paymentPlanId,
+      },
+    });
+
+    if (transition.count === 1) {
+      const user = await prismaUserDelegate.findUniqueOrThrow({
+        where: { paymentProcessorUserId: customerId },
+        select: { email: true },
+      });
+
+      if (user.email) {
+        await emailSender.send({
+          to: user.email,
+          subject: "We hate to see you go :(",
+          text: "We hate to see you go. Here is a sweet offer...",
+          html: "We hate to see you go. Here is a sweet offer...",
+        });
+      }
+    }
+
+    return;
+  }
+
+  await updateUserSubscription(
     { paymentProcessorUserId: customerId, paymentPlanId, subscriptionStatus },
     prismaUserDelegate,
   );
-
-  if (subscription.cancel_at_period_end && user.email) {
-    await emailSender.send({
-      to: user.email,
-      subject: "We hate to see you go :(",
-      text: "We hate to see you go. Here is a sweet offer...",
-      html: "We hate to see you go. Here is a sweet offer...",
-    });
-  }
 }
 
 function getOpenSaasSubscriptionStatus(
