@@ -27,16 +27,34 @@
            datePaid: invoicePaidAtDate,
            numOfCreditsPurchased: paymentPlans[paymentPlanId].effect.amount,
          },
-@@ -129,7 +129,7 @@
-     case PaymentPlanId.Hobby:
+@@ -133,7 +133,7 @@
+         // No subscription on this invoice, fall back to event data
+         await updateUserSubscription(
+           {
+-            paymentProcessorUserId: customerId,
++            stripeId: customerId,
+             datePaid: invoicePaidAtDate,
+             paymentPlanId,
+             subscriptionStatus: SubscriptionStatus.Active,
+@@ -158,7 +158,7 @@
+       if (!liveSubscriptionStatus) {
+         // paused and incomplete have no stored status, but the invoice was paid.
+         await prismaUserDelegate.update({
+-          where: { paymentProcessorUserId: customerId },
++          where: { stripeId: customerId },
+           data: { datePaid: invoicePaidAtDate },
+         });
+         return;
+@@ -170,7 +170,7 @@
+ 
        await updateUserSubscription(
          {
 -          paymentProcessorUserId: customerId,
 +          stripeId: customerId,
            datePaid: invoicePaidAtDate,
-           paymentPlanId,
-           subscriptionStatus: SubscriptionStatus.Active,
-@@ -176,7 +176,7 @@
+           paymentPlanId: livePlanId,
+           subscriptionStatus: liveSubscriptionStatus,
+@@ -244,7 +244,7 @@
    );
  
    const user = await updateUserSubscription(
@@ -45,7 +63,7 @@
      prismaUserDelegate,
    );
  
-@@ -244,7 +244,7 @@
+@@ -339,7 +339,7 @@
  
    await updateUserSubscription(
      {

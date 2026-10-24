@@ -126,17 +126,59 @@ async function handleInvoicePaid(
       );
       break;
     case PaymentPlanId.Pro:
-    case PaymentPlanId.Hobby:
+    case PaymentPlanId.Hobby: {
+      // Guard against late/retried invoice events: re-fetch and use live subscription state
+      const subscriptionId = getInvoiceSubscriptionId(invoice);
+      if (!subscriptionId) {
+        // No subscription on this invoice, fall back to event data
+        await updateUserSubscription(
+          {
+            paymentProcessorUserId: customerId,
+            datePaid: invoicePaidAtDate,
+            paymentPlanId,
+            subscriptionStatus: SubscriptionStatus.Active,
+          },
+          prismaUserDelegate,
+        );
+        break;
+      }
+
+      const liveSubscription =
+        await stripeApi.subscriptions.retrieve(subscriptionId);
+      if (isSubscriptionTerminal(liveSubscription.status)) {
+        console.info(
+          `Ignoring invoice.paid for terminal subscription ${subscriptionId}`,
+        );
+        return;
+      }
+
+      // Use live subscription state to avoid writing stale data.
+      const liveSubscriptionStatus =
+        getOpenSaasSubscriptionStatus(liveSubscription);
+      if (!liveSubscriptionStatus) {
+        // paused and incomplete have no stored status, but the invoice was paid.
+        await prismaUserDelegate.update({
+          where: { paymentProcessorUserId: customerId },
+          data: { datePaid: invoicePaidAtDate },
+        });
+        return;
+      }
+
+      const livePlanId = getPaymentPlanIdByPaymentProcessorPlanId(
+        getSubscriptionPriceId(liveSubscription),
+      );
+
       await updateUserSubscription(
         {
           paymentProcessorUserId: customerId,
           datePaid: invoicePaidAtDate,
-          paymentPlanId,
-          subscriptionStatus: SubscriptionStatus.Active,
+          paymentPlanId: livePlanId,
+          subscriptionStatus: liveSubscriptionStatus,
         },
         prismaUserDelegate,
       );
       break;
+    }
     default:
       assertUnreachable(paymentPlanId);
   }
@@ -158,21 +200,47 @@ function getInvoicePriceId(invoice: Stripe.Invoice): Stripe.Price["id"] {
   return priceId;
 }
 
+function getInvoiceSubscriptionId(
+  invoice: Stripe.Invoice,
+): Stripe.Subscription["id"] | null {
+  const subscription = invoice.parent?.subscription_details?.subscription;
+  if (!subscription) {
+    return null;
+  }
+  return typeof subscription === "string" ? subscription : subscription.id;
+}
+
+function isSubscriptionTerminal(status: Stripe.Subscription.Status): boolean {
+  return status === "canceled" || status === "incomplete_expired";
+}
+
 async function handleCustomerSubscriptionUpdated(
   event: Stripe.CustomerSubscriptionUpdatedEvent,
   prismaUserDelegate: PrismaClient["user"],
 ): Promise<void> {
   const subscription = event.data.object;
 
-  // There are other subscription statuses, such as `trialing` that we are not handling.
-  const subscriptionStatus = getOpenSaasSubscriptionStatus(subscription);
+  // Guard against out-of-order events: re-fetch the live subscription state from Stripe.
+  // If this subscription is already canceled or expired, ignore the event.
+  const liveSubscription = await stripeApi.subscriptions.retrieve(
+    subscription.id,
+  );
+  if (isSubscriptionTerminal(liveSubscription.status)) {
+    console.info(
+      `Ignoring stale update for terminal subscription ${subscription.id}`,
+    );
+    return;
+  }
+
+  // Use the live subscription state (not the event payload) to avoid writing stale data
+  const subscriptionStatus = getOpenSaasSubscriptionStatus(liveSubscription);
   if (!subscriptionStatus) {
     return;
   }
 
-  const customerId = getCustomerId(subscription.customer);
+  const customerId = getCustomerId(liveSubscription.customer);
   const paymentPlanId = getPaymentPlanIdByPaymentProcessorPlanId(
-    getSubscriptionPriceId(subscription),
+    getSubscriptionPriceId(liveSubscription),
   );
 
   const user = await updateUserSubscription(
@@ -180,7 +248,7 @@ async function handleCustomerSubscriptionUpdated(
     prismaUserDelegate,
   );
 
-  if (subscription.cancel_at_period_end && user.email) {
+  if (liveSubscription.cancel_at_period_end && user.email) {
     await emailSender.send({
       to: user.email,
       subject: "We hate to see you go :(",
@@ -241,6 +309,33 @@ async function handleCustomerSubscriptionDeleted(
 ): Promise<void> {
   const subscription = event.data.object;
   const customerId = getCustomerId(subscription.customer);
+
+  // Live means another subscription that is active, trialing, or past_due.
+  // unpaid, paused, and incomplete count as ended, same as canceled.
+  // The Stripe read and the DB write are separate, so a concurrent event can
+  // land between them; the last write wins and the next event converges.
+  // The list is capped at 10 and is not paginated.
+  const allSubscriptions = await stripeApi.subscriptions.list({
+    customer: customerId,
+    status: "all",
+    limit: 10,
+  });
+
+  const liveStatuses: Stripe.Subscription.Status[] = [
+    "active",
+    "trialing",
+    "past_due",
+  ];
+  const hasLiveSubscription = allSubscriptions.data.some(
+    (sub) => sub.id !== subscription.id && liveStatuses.includes(sub.status),
+  );
+
+  if (hasLiveSubscription) {
+    console.info(
+      `Ignoring delete of ${subscription.id}: customer ${customerId} has a live subscription`,
+    );
+    return;
+  }
 
   await updateUserSubscription(
     {
