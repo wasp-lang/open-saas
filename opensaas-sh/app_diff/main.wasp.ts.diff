@@ -24,7 +24,7 @@
 @@ -22,7 +19,7 @@
  export default app({
    name: "OpenSaaS",
-   wasp: { version: "^0.26.1" },
+   wasp: { version: "^0.27.0" },
 -  title: "My Open SaaS App",
 +  title: "Open SaaS – Free, Open-Source React & Node.js SaaS Template",
    head,
