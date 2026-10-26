@@ -247,7 +247,8 @@ async function generateScheduleWithGpt(
   }));
 
   const completion = await openAi.chat.completions.create({
-    model: "gpt-3.5-turbo", // you can use any model here, e.g. 'gpt-3.5-turbo', 'gpt-4', etc.
+    model: "gpt-6-luna",
+    reasoning_effort: "none",
     messages: [
       {
         role: "system",
