@@ -1,8 +1,8 @@
 --- template/app/src/file-upload/file-upload.wasp.ts
 +++ opensaas-sh/app/src/file-upload/file-upload.wasp.ts
 @@ -1,4 +1,4 @@
--import { action, page, query, route, type Spec } from "@wasp.sh/spec";
-+import { action, job, page, query, route, type Spec } from "@wasp.sh/spec";
+-import { action, page, query, route, type Spec } from "@wasp/spec";
++import { action, job, page, query, route, type Spec } from "@wasp/spec";
  
  import { FileUploadPage } from "./FileUploadPage" with { type: "ref" };
  import {

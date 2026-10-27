@@ -1,4 +1,4 @@
-import { page, route, type Spec } from "@wasp.sh/spec";
+import { page, route, type Spec } from "@wasp/spec";
 
 import { AnalyticsDashboardPage } from "./dashboards/analytics/AnalyticsDashboardPage" with { type: "ref" };
 import { MessagesPage } from "./dashboards/messages/MessagesPage" with { type: "ref" };

@@ -6,7 +6,7 @@ import {
   type SocialAuthConfig,
   type Spec,
   type UsernameAndPasswordConfig,
-} from "@wasp.sh/spec";
+} from "@wasp/spec";
 
 import { LoginPage } from "./LoginPage" with { type: "ref" };
 import { SignupPage } from "./SignupPage" with { type: "ref" };

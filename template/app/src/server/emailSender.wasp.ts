@@ -1,4 +1,4 @@
-import { type EmailSender } from "@wasp.sh/spec";
+import { type EmailSender } from "@wasp/spec";
 
 export const emailSender: EmailSender = {
   // NOTE: "Dummy" provider is just for local development purposes.

@@ -1,4 +1,4 @@
-import { action, api, page, query, route, type Spec } from "@wasp.sh/spec";
+import { action, api, page, query, route, type Spec } from "@wasp/spec";
 
 import { CheckoutResultPage } from "./CheckoutResultPage" with { type: "ref" };
 import {
