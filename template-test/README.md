@@ -30,9 +30,9 @@ wasp db migrate-dev --name "init"
 # You can stop the dev database after you created the migration.
 
 # Test that the app works in dev and prod modes.
-# Make sure the `@wasp.sh/wasp-app-runner` is updated to the latest version.
-npx @wasp.sh/wasp-app-runner dev
-npx @wasp.sh/wasp-app-runner build
+# Make sure the `@wasp/wasp-app-runner` is updated to the latest version.
+npx @wasp/wasp-app-runner dev
+npx @wasp/wasp-app-runner build
 ```
 
 ### If you want to update the template test app
