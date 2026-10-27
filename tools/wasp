@@ -2,7 +2,7 @@
 
 # Just a wrapper to always use the latest Wasp CLI from main branch.
 
-WASP_CLI_MAIN_URL="https://pkg.pr.new/@wasp.sh/wasp-cli@main"
+WASP_CLI_MAIN_URL="https://pkg.pr.new/@wasp/cli@main"
 
 get_latest_published_commit() {
   curl -fsLI "$WASP_CLI_MAIN_URL" \
@@ -18,4 +18,4 @@ if [ -z "$latest_commit" ]; then
   exit 1
 fi
 
-exec npx -y "https://pkg.pr.new/@wasp.sh/wasp-cli@$latest_commit" "$@"
+exec npx -y "https://pkg.pr.new/@wasp/cli@$latest_commit" "$@"

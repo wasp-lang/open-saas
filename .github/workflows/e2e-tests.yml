@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       wasp-version:
-        description: "Published Wasp version (e.g. 0.26.0-rc.1) or main"
+        description: "Published Wasp version (e.g. 0.27.0-rc.1) or main"
         type: string
         required: false
         default: "main"
@@ -37,13 +37,13 @@ jobs:
 
       - name: Install Wasp ${{ env.WASP_VERSION }}
         if: env.WASP_VERSION != 'main'
-        run: npm i -g "@wasp.sh/wasp-cli@${WASP_VERSION}"
+        run: npm i -g "@wasp/cli@${WASP_VERSION}"
 
       # If you're copying this workflow to your own project, you can remove this step:
       - name: Install latest development Wasp
         if: env.WASP_VERSION == 'main'
         # Installs the latest published build of the CLI from the `main` branch.
-        run: npm i -g https://pkg.pr.new/@wasp.sh/wasp-cli@main
+        run: npm i -g https://pkg.pr.new/@wasp/cli@main
 
       - name: Cache global node modules
         uses: actions/cache@v5

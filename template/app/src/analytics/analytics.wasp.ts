@@ -1,4 +1,4 @@
-import { job, query, type Spec } from "@wasp.sh/spec";
+import { job, query, type Spec } from "@wasp/spec";
 
 import { getDailyStats } from "./operations" with { type: "ref" };
 import { calculateDailyStatsJob } from "./stats" with { type: "ref" };

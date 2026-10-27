@@ -8,7 +8,7 @@
 +    "allow": [
 +      "Bash(ln:*)",
 +      "Bash(wasp start:*)",
-+      "Bash(npx -y https://pkg.pr.new/@wasp.sh/wasp-cli@main:*)"
++      "Bash(npx -y https://pkg.pr.new/@wasp/cli@main:*)"
 +    ]
 +  }
 +}
