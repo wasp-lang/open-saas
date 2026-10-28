@@ -1,6 +1,6 @@
 --- template/app/README.md
 +++ opensaas-sh/app/README.md
-@@ -1,12 +1,27 @@
+@@ -1,9 +1,18 @@
 -# <YOUR_APP_NAME>
 +# opensaas.sh (demo) app
  
@@ -20,10 +20,11 @@
 +
  ### Running locally
  
- - Make sure you have the `.env.client` and `.env.server` files with correct dev values in the root of the project.
- - Run the database with `wasp start db` and leave it running.
- - Run `wasp start` and leave it running.
- - [OPTIONAL]: If this is the first time starting the app, or you've just made changes to your entities/prisma schema, also run `wasp db migrate-dev`.
+ Make sure you have the `.env.client` and `.env.server` files with correct dev values in the root of the project.
+@@ -20,3 +29,9 @@
+ Run migrations again after changing your Prisma schema.
+ 
+ Stop the app before running migrations, `wasp db seed`, `wasp db studio`, or `wasp db reset`.
 +
 +## Deployment
 +
