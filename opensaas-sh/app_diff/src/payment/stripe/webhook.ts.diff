@@ -36,16 +36,28 @@
            datePaid: invoicePaidAtDate,
            paymentPlanId,
            subscriptionStatus: SubscriptionStatus.Active,
-@@ -176,7 +176,7 @@
-   );
+@@ -199,17 +199,17 @@
+   }
  
-   const user = await updateUserSubscription(
+   await updateUserSubscription(
 -    { paymentProcessorUserId: customerId, paymentPlanId, subscriptionStatus },
 +    { stripeId: customerId, paymentPlanId, subscriptionStatus },
      prismaUserDelegate,
    );
+ }
  
-@@ -244,7 +244,7 @@
+ async function fetchUserEmailAndSubscriptionStatus(
+-  paymentProcessorUserId: string,
++  stripeId: string,
+   prismaUserDelegate: PrismaClient["user"],
+ ): Promise<{ email: string | null; subscriptionStatus: string | null }> {
+   const user = await prismaUserDelegate.findUniqueOrThrow({
+-    where: { paymentProcessorUserId },
++    where: { stripeId },
+     select: { email: true, subscriptionStatus: true },
+   });
+   return user;
+@@ -269,7 +269,7 @@
  
    await updateUserSubscription(
      {

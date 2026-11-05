@@ -175,19 +175,44 @@ async function handleCustomerSubscriptionUpdated(
     getSubscriptionPriceId(subscription),
   );
 
-  const user = await updateUserSubscription(
-    { paymentProcessorUserId: customerId, paymentPlanId, subscriptionStatus },
+  const previousUser = await fetchUserEmailAndSubscriptionStatus(
+    customerId,
     prismaUserDelegate,
   );
 
-  if (subscription.cancel_at_period_end && user.email) {
+  // Send the cancellation email only when the subscription becomes scheduled
+  // to cancel, not on every update that arrives while it remains scheduled.
+  const startedCancelAtPeriodEnd =
+    subscriptionStatus === SubscriptionStatus.CancelAtPeriodEnd &&
+    previousUser.subscriptionStatus !== SubscriptionStatus.CancelAtPeriodEnd;
+
+  // The email is sent before the status update on purpose: if sending fails,
+  // the update never happens, so Stripe's retry of the same event still sees
+  // the old status and tries to send the email again.
+  if (startedCancelAtPeriodEnd && previousUser.email) {
     await emailSender.send({
-      to: user.email,
+      to: previousUser.email,
       subject: "We hate to see you go :(",
       text: "We hate to see you go. Here is a sweet offer...",
       html: "We hate to see you go. Here is a sweet offer...",
     });
   }
+
+  await updateUserSubscription(
+    { paymentProcessorUserId: customerId, paymentPlanId, subscriptionStatus },
+    prismaUserDelegate,
+  );
+}
+
+async function fetchUserEmailAndSubscriptionStatus(
+  paymentProcessorUserId: string,
+  prismaUserDelegate: PrismaClient["user"],
+): Promise<{ email: string | null; subscriptionStatus: string | null }> {
+  const user = await prismaUserDelegate.findUniqueOrThrow({
+    where: { paymentProcessorUserId },
+    select: { email: true, subscriptionStatus: true },
+  });
+  return user;
 }
 
 function getOpenSaasSubscriptionStatus(
