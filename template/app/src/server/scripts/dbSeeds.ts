@@ -45,7 +45,6 @@ function generateMockUserData(): MockUserData {
     isAdmin: false,
     credits,
     subscriptionStatus,
-    lemonSqueezyCustomerPortalUrl: null,
     paymentProcessorUserId: hasUserPaidOnStripe
       ? `cus_test_${faker.string.uuid()}`
       : null,

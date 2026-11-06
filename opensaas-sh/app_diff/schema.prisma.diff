@@ -1,6 +1,6 @@
 --- template/app/schema.prisma
 +++ opensaas-sh/app/schema.prisma
-@@ -13,10 +13,12 @@
+@@ -13,9 +13,12 @@
  
    email                     String?         @unique
    username                  String?         @unique
@@ -11,7 +11,6 @@
 +  isMockUser                Boolean         @default(false)
  
 -  paymentProcessorUserId    String?         @unique
--  lemonSqueezyCustomerPortalUrl String?     // You can delete this if you're not using Lemon Squeezy as your payments processor.
 +  stripeId                  String?         @unique
    subscriptionStatus        String?         // 'active', 'cancel_at_period_end', 'past_due', 'deleted'
    subscriptionPlan          String?         // 'hobby', 'pro'

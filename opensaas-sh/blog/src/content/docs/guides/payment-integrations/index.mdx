@@ -71,7 +71,6 @@ Then you should delete:
   - Lemon Squeezy: `npm uninstall @lemonsqueezy/lemonsqueezy.js`
   - Paddle: `npm uninstall @paddle/paddle-node-sdk @paddle/paddle-js`
 - If you are not using Paddle, remove `REACT_APP_PADDLE_CLIENT_TOKEN` and `REACT_APP_PADDLE_SANDBOX_MODE` from `.env.client`, and the `paddleClientEnvSchema` from `clientEnvValidationSchema` in `src/env.ts`.
-- If you are not using Lemon Squeezy remove the `lemonSqueezyCustomerPortalUrl` field from the `User` model in the `schema.prisma` file.
 
 Now your code is ready to go with your preferred payment processor and it's time to configure your payment processor's API keys, products, and other settings.
 
