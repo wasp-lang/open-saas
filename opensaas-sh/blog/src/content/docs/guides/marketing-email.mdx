@@ -1,0 +1,61 @@
+---
+title: Marketing Email
+description: "Email your Open SaaS users about launches, price changes and new features by reading the User table from a read-only database view."
+---
+
+The [Email Sending](/guides/email-sending/) guide covers transactional email sent by your app. This guide covers the other kind: announcements to your users, such as a new feature, a price change or a launch.
+
+Your users are already in your Postgres database, with their plan and payment status next to their email. A desktop or hosted email tool can read them through a read-only view, so you need no webhook or sync job in your app. This guide uses [Rowsend](https://rowsend.com) as the example. Any tool that reads a Postgres view works the same way.
+
+## The `User` columns that matter
+
+| Column | Use |
+| --- | --- |
+| `id` | Stable contact id |
+| `email` | Recipient. Nullable, so skip rows without one |
+| `username` | Display name |
+| `createdAt` | Signup date |
+| `subscriptionStatus` | `active`, `cancel_at_period_end`, `past_due`, `deleted` or null |
+| `subscriptionPlan` | `hobby`, `pro` or null |
+| `datePaid` | Last payment date |
+| `isAdmin` | Team accounts to exclude |
+
+Check your own `schema.prisma`, since your app may add or rename columns. Prisma creates the table as `"User"` with quoted camelCase columns.
+
+## Create the view
+
+```sql
+create schema if not exists rowsend;
+
+create view rowsend.contacts as
+select
+  u.id,
+  u.email,
+  u.username as name,
+  u."createdAt" as created_at,
+  greatest(u."createdAt", u."datePaid") as updated_at,
+  u."subscriptionStatus" as subscription_status,
+  u."subscriptionPlan" as subscription_plan,
+  u."isAdmin" as is_admin
+from public."User" as u
+where u.email is not null;
+```
+
+Leave payment-processor ids and portal URLs out of the view. An email tool needs the plan and status, not customer ids.
+
+Tools that sync by "last changed" need an `updated_at` column. `User` has none, so the view uses the later of `createdAt` and `datePaid`. A change to `subscriptionStatus` alone, such as a cancellation, doesn't move it. To catch those, add this line to the `User` model, run a migration, and select `u."updatedAt"` instead:
+
+```prisma
+updatedAt DateTime @updatedAt
+```
+
+## Pick an audience
+
+With the view connected, build segments from the extra columns:
+
+- **Paying:** `subscription_status` is `active`
+- **Cancelling:** `subscription_status` is `cancel_at_period_end`
+- **Free:** `subscription_plan` is empty
+- Exclude `is_admin` so your team doesn't receive its own announcement.
+
+Keep receipts and failed-payment notices in your app's own sender. Those are transactional and belong in the [Email Sending](/guides/email-sending/) setup.
