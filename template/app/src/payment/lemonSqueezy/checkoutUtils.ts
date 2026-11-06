@@ -1,38 +1,39 @@
-import { createCheckout } from "@lemonsqueezy/lemonsqueezy.js";
+import { type Checkout, createCheckout } from "@lemonsqueezy/lemonsqueezy.js";
+import { env } from "wasp/server";
 import { CHECKOUT_SUCCESS_URL } from "../paths";
 
-interface LemonSqueezyCheckoutSessionParams {
-  storeId: string;
+interface CreateLemonSqueezyCheckoutArgs {
   variantId: string;
-  userEmail: string;
   userId: string;
+  userEmail: string;
 }
 
-export async function createLemonSqueezyCheckoutSession({
-  storeId,
+/**
+ * Lemon Squeezy checkouts can't be tied to an existing customer.
+ * Instead, we pass the user ID as custom data, which Lemon Squeezy includes
+ * in the webhook events for the resulting order and subscription.
+ */
+export async function createLemonSqueezyCheckout({
   variantId,
-  userEmail,
   userId,
-}: LemonSqueezyCheckoutSessionParams) {
-  const { data: session, error } = await createCheckout(storeId, variantId, {
-    checkoutData: {
-      email: userEmail,
-      custom: {
-        user_id: userId, // You app's unique user ID is sent on checkout, and it's returned in the webhook so we can easily identify the user.
+  userEmail,
+}: CreateLemonSqueezyCheckoutArgs): Promise<Checkout> {
+  const { data: checkout, error } = await createCheckout(
+    env.LEMONSQUEEZY_STORE_ID,
+    variantId,
+    {
+      checkoutData: {
+        email: userEmail,
+        custom: { user_id: userId },
+      },
+      productOptions: {
+        redirectUrl: CHECKOUT_SUCCESS_URL,
       },
     },
-    productOptions: {
-      redirectUrl: CHECKOUT_SUCCESS_URL,
-    },
-  });
+  );
   if (error) {
     throw error;
   }
-  if (!session) {
-    throw new Error("Checkout not found");
-  }
-  return {
-    url: session.data.attributes.url,
-    id: session.data.id,
-  };
+
+  return checkout;
 }

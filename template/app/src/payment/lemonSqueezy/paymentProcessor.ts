@@ -1,4 +1,8 @@
-import { lemonSqueezySetup, listOrders } from "@lemonsqueezy/lemonsqueezy.js";
+import {
+  getCustomer,
+  getStore,
+  lemonSqueezySetup,
+} from "@lemonsqueezy/lemonsqueezy.js";
 import { env } from "wasp/server";
 import type {
   CreateCheckoutSessionArgs,
@@ -6,12 +10,11 @@ import type {
   PaymentProcessor,
 } from "../paymentProcessor";
 import { getPaymentProcessorPlanId } from "../paymentProcessorPlans";
-import { createLemonSqueezyCheckoutSession } from "./checkoutUtils";
+import { fetchUserPaymentProcessorUserId } from "../user";
+import { createLemonSqueezyCheckout } from "./checkoutUtils";
 import { lemonSqueezyMiddlewareConfigFn, lemonSqueezyWebhook } from "./webhook";
 
-lemonSqueezySetup({
-  apiKey: env.LEMONSQUEEZY_API_KEY,
-});
+lemonSqueezySetup({ apiKey: env.LEMONSQUEEZY_API_KEY });
 
 export const lemonSqueezyPaymentProcessor: PaymentProcessor = {
   id: "lemonsqueezy",
@@ -20,60 +23,53 @@ export const lemonSqueezyPaymentProcessor: PaymentProcessor = {
     userEmail,
     paymentPlan,
   }: CreateCheckoutSessionArgs) => {
-    if (!userId)
-      throw new Error(
-        "User ID needed to create Lemon Squeezy Checkout Session",
-      );
-    const session = await createLemonSqueezyCheckoutSession({
-      storeId: env.LEMONSQUEEZY_STORE_ID,
+    const checkout = await createLemonSqueezyCheckout({
       variantId: getPaymentProcessorPlanId(paymentPlan),
-      userEmail,
       userId,
+      userEmail,
     });
-    return { session: { kind: "redirect", ...session } };
+
+    return {
+      session: {
+        kind: "redirect",
+        id: checkout.data.id,
+        url: checkout.data.attributes.url,
+      },
+    };
   },
-  fetchCustomerPortalUrl: async (args: FetchCustomerPortalUrlArgs) => {
-    const user = await args.prismaUserDelegate.findUniqueOrThrow({
-      where: {
-        id: args.userId,
-      },
-      select: {
-        lemonSqueezyCustomerPortalUrl: true,
-      },
-    });
-    // Note that Lemon Squeezy assigns a unique URL to each user after the first successful payment.
-    // This is handled in the Lemon Squeezy webhook.
-    return user.lemonSqueezyCustomerPortalUrl;
+  fetchCustomerPortalUrl: async ({
+    userId,
+    prismaUserDelegate,
+  }: FetchCustomerPortalUrlArgs) => {
+    const paymentProcessorUserId = await fetchUserPaymentProcessorUserId(
+      userId,
+      prismaUserDelegate,
+    );
+
+    if (!paymentProcessorUserId) {
+      return null;
+    }
+
+    // The portal URL is pre-signed and only valid for 24 hours, so we fetch a fresh one each time.
+    // It is `null` for customers who never bought a subscription.
+    const { data: customer, error } = await getCustomer(paymentProcessorUserId);
+    if (error) {
+      throw error;
+    }
+
+    return customer.data.attributes.urls.customer_portal;
   },
   webhook: lemonSqueezyWebhook,
   webhookMiddlewareConfigFn: lemonSqueezyMiddlewareConfigFn,
   fetchTotalRevenue: async () => {
-    let totalRevenue = 0;
-    let hasNextPage = true;
-    let currentPage = 1;
-
-    while (hasNextPage) {
-      const { data: response } = await listOrders({
-        filter: {
-          storeId: env.LEMONSQUEEZY_STORE_ID,
-        },
-        page: {
-          number: currentPage,
-          size: 100,
-        },
-      });
-
-      if (response?.data) {
-        for (const order of response.data) {
-          totalRevenue += order.attributes.total;
-        }
-      }
-
-      hasNextPage = !response?.meta?.page.lastPage;
-      currentPage++;
+    // NOTE: Store revenue may not include test mode orders (or may be heavily delayed),
+    // so it can show 0 while testing.
+    const { data: store, error } = await getStore(env.LEMONSQUEEZY_STORE_ID);
+    if (error) {
+      throw error;
     }
 
-    // Revenue is in cents so we convert to dollars (or your main currency unit)
-    return totalRevenue / 100;
+    // Revenue is in USD cents so we convert to dollars
+    return store.data.attributes.total_revenue / 100;
   },
 };
