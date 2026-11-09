@@ -110,25 +110,32 @@ interface ChartOneState {
 }
 
 export function RevenueAndProfitChart({ weeklyStats }: DailyStatsProps) {
+  const sortedWeeks = useMemo(
+    () =>
+      weeklyStats
+        ? [...weeklyStats].sort(
+            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+          )
+        : undefined,
+    [weeklyStats],
+  );
+
   const dailyRevenueArray = useMemo(() => {
-    if (!!weeklyStats && weeklyStats?.length > 0) {
-      const sortedWeeks = weeklyStats?.sort((a, b) => {
-        return new Date(a.date).getTime() - new Date(b.date).getTime();
-      });
+    if (sortedWeeks && sortedWeeks.length > 0) {
       return sortedWeeks.map((stat) => stat.totalRevenue);
     }
-  }, [weeklyStats]);
+  }, [sortedWeeks]);
 
   const daysOfWeekArr = useMemo(() => {
-    if (!!weeklyStats && weeklyStats?.length > 0) {
-      const datesArr = weeklyStats?.map((stat) => {
+    if (sortedWeeks && sortedWeeks.length > 0) {
+      const datesArr = sortedWeeks.map((stat) => {
         // get day of week, month, and day of month
         const dateArr = stat.date.toString().split(" ");
         return dateArr.slice(0, 3).join(" ");
       });
       return datesArr;
     }
-  }, [weeklyStats]);
+  }, [sortedWeeks]);
 
   const [state, setState] = useState<ChartOneState>({
     series: [
