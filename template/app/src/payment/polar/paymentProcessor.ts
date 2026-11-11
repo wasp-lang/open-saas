@@ -14,6 +14,7 @@ import {
   ensurePolarCustomer,
 } from "./checkoutUtils";
 import { polarApi } from "./polarApi";
+import { fetchPolarSubscriptionState } from "./subscriptionState";
 import { polarMiddlewareConfigFn, polarWebhook } from "./webhook";
 
 export const polarPaymentProcessor: PaymentProcessor = {
@@ -24,16 +25,22 @@ export const polarPaymentProcessor: PaymentProcessor = {
     paymentPlan,
     prismaUserDelegate,
   }: CreateCheckoutSessionArgs) => {
-    const customer = await ensurePolarCustomer(userId, userEmail);
-
-    await updateUserPaymentProcessorUserId(
-      { userId, paymentProcessorUserId: customer.id },
+    let customerId = await fetchUserPaymentProcessorUserId(
+      userId,
       prismaUserDelegate,
     );
+    if (!customerId) {
+      const customer = await ensurePolarCustomer(userId, userEmail);
+      customerId = customer.id;
+      await updateUserPaymentProcessorUserId(
+        { userId, paymentProcessorUserId: customerId },
+        prismaUserDelegate,
+      );
+    }
 
     const checkoutSession = await createPolarCheckoutSession({
       productId: getPaymentProcessorPlanId(paymentPlan),
-      customerId: customer.id,
+      customerId,
     });
 
     return {
@@ -63,6 +70,7 @@ export const polarPaymentProcessor: PaymentProcessor = {
 
     return customerSession.customerPortalUrl;
   },
+  fetchSubscriptionState: fetchPolarSubscriptionState,
   webhook: polarWebhook,
   webhookMiddlewareConfigFn: polarMiddlewareConfigFn,
   fetchTotalRevenue: async () => {

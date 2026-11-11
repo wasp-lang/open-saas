@@ -4,6 +4,7 @@ import type { MiddlewareConfigFn } from "wasp/server";
 import type { PaymentsWebhook } from "wasp/server/api";
 import type { PaymentPlan } from "./plans";
 import { stripePaymentProcessor } from "./stripe/paymentProcessor";
+import type { FetchSubscriptionState } from "./subscription";
 
 export interface CreateCheckoutSessionArgs {
   userId: User["id"];
@@ -35,6 +36,7 @@ export interface PaymentProcessor {
   fetchCustomerPortalUrl: (
     args: FetchCustomerPortalUrlArgs,
   ) => Promise<string | null>;
+  fetchSubscriptionState: FetchSubscriptionState;
   webhook: PaymentsWebhook;
   webhookMiddlewareConfigFn: MiddlewareConfigFn;
   fetchTotalRevenue: () => Promise<number>;

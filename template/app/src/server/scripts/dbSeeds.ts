@@ -54,5 +54,11 @@ function generateMockUserData(): MockUserData {
     subscriptionPlan: subscriptionStatus
       ? faker.helpers.arrayElement(getSubscriptionPaymentPlanIds())
       : null,
+    currentPeriodEnd: subscriptionStatus
+      ? faker.date.soon({ days: 30, refDate: now })
+      : null,
+    cancelAtPeriodEnd:
+      subscriptionStatus === SubscriptionStatus.Active &&
+      faker.datatype.boolean(),
   };
 }

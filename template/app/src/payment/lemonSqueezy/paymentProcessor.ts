@@ -12,6 +12,7 @@ import type {
 import { getPaymentProcessorPlanId } from "../paymentProcessorPlans";
 import { fetchUserPaymentProcessorUserId } from "../user";
 import { createLemonSqueezyCheckout } from "./checkoutUtils";
+import { fetchLemonSqueezySubscriptionState } from "./subscriptionState";
 import { lemonSqueezyMiddlewareConfigFn, lemonSqueezyWebhook } from "./webhook";
 
 lemonSqueezySetup({ apiKey: env.LEMONSQUEEZY_API_KEY });
@@ -59,6 +60,7 @@ export const lemonSqueezyPaymentProcessor: PaymentProcessor = {
 
     return customer.data.attributes.urls.customer_portal;
   },
+  fetchSubscriptionState: fetchLemonSqueezySubscriptionState,
   webhook: lemonSqueezyWebhook,
   webhookMiddlewareConfigFn: lemonSqueezyMiddlewareConfigFn,
   fetchTotalRevenue: async () => {

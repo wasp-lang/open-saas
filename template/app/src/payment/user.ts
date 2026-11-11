@@ -1,6 +1,5 @@
 import { User } from "wasp/entities";
 import { PrismaClient } from "wasp/server";
-import { PaymentPlanId, SubscriptionStatus } from "./plans";
 
 export async function fetchUserPaymentProcessorUserId(
   userId: User["id"],
@@ -37,46 +36,23 @@ export function updateUserPaymentProcessorUserId(
   });
 }
 
-interface UpdateUserSubscriptionArgs {
+interface RecordUserPaymentArgs {
   paymentProcessorUserId: NonNullable<User["paymentProcessorUserId"]>;
-  subscriptionStatus: SubscriptionStatus;
-  paymentPlanId?: PaymentPlanId;
-  datePaid?: Date;
-}
-
-export function updateUserSubscription(
-  {
-    paymentProcessorUserId,
-    paymentPlanId,
-    subscriptionStatus,
-    datePaid,
-  }: UpdateUserSubscriptionArgs,
-  userDelegate: PrismaClient["user"],
-): Promise<User> {
-  return userDelegate.update({
-    where: {
-      paymentProcessorUserId,
-    },
-    data: {
-      subscriptionPlan: paymentPlanId,
-      subscriptionStatus,
-      datePaid,
-    },
-  });
-}
-
-interface UpdateUserCreditsArgs {
-  paymentProcessorUserId: NonNullable<User["paymentProcessorUserId"]>;
-  numOfCreditsPurchased: number;
   datePaid: Date;
+  // `0` for subscription payments.
+  numOfCreditsPurchased: number;
 }
 
-export function updateUserCredits(
+/**
+ * Sets the date of the user's last payment and adds the credits they bought
+ * (if not a subscription payment).
+ */
+export function recordUserPayment(
   {
     paymentProcessorUserId,
-    numOfCreditsPurchased,
     datePaid,
-  }: UpdateUserCreditsArgs,
+    numOfCreditsPurchased,
+  }: RecordUserPaymentArgs,
   userDelegate: PrismaClient["user"],
 ): Promise<User> {
   return userDelegate.update({

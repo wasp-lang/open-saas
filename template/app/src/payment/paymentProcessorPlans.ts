@@ -20,14 +20,15 @@ export function getPaymentProcessorPlanId(paymentPlan: PaymentPlan): string {
 }
 
 /**
- * Returns Open SaaS `PaymentPlanId` for some payment provider's plan ID.
+ * Returns Open SaaS `PaymentPlanId` for some payment provider's plan ID,
+ * or `undefined` if the plan ID doesn't belong to any of your payment plans.
  *
  * Different payment providers track plan ID in different ways.
  * e.g. Stripe price ID, Polar product ID...
  */
-export function getPaymentPlanIdByPaymentProcessorPlanId(
+export function findPaymentPlanIdByPaymentProcessorPlanId(
   paymentProcessorPlanId: string,
-): PaymentPlanId {
+): PaymentPlanId | undefined {
   for (const [planId, processorPlanId] of Object.entries(
     paymentProcessorPlanIds,
   )) {
@@ -36,7 +37,5 @@ export function getPaymentPlanIdByPaymentProcessorPlanId(
     }
   }
 
-  throw new Error(
-    `Unknown payment processor plan ID: ${paymentProcessorPlanId}`,
-  );
+  return undefined;
 }

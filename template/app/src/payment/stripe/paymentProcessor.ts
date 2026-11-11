@@ -17,6 +17,7 @@ import {
   ensureStripeCustomer,
 } from "./checkoutUtils";
 import { stripeApi } from "./stripeApi";
+import { fetchStripeSubscriptionState } from "./subscriptionState";
 import { stripeMiddlewareConfigFn, stripeWebhook } from "./webhook";
 
 export const stripePaymentProcessor: PaymentProcessor = {
@@ -27,15 +28,21 @@ export const stripePaymentProcessor: PaymentProcessor = {
     paymentPlan,
     prismaUserDelegate,
   }: CreateCheckoutSessionArgs) => {
-    const customer = await ensureStripeCustomer(userEmail);
-
-    await updateUserPaymentProcessorUserId(
-      { userId, paymentProcessorUserId: customer.id },
+    let customerId = await fetchUserPaymentProcessorUserId(
+      userId,
       prismaUserDelegate,
     );
+    if (!customerId) {
+      const customer = await ensureStripeCustomer(userId, userEmail);
+      customerId = customer.id;
+      await updateUserPaymentProcessorUserId(
+        { userId, paymentProcessorUserId: customerId },
+        prismaUserDelegate,
+      );
+    }
 
     const checkoutSession = await createStripeCheckoutSession({
-      customerId: customer.id,
+      customerId,
       priceId: getPaymentProcessorPlanId(paymentPlan),
       mode: paymentPlanEffectToStripeCheckoutSessionMode(paymentPlan.effect),
     });
@@ -74,6 +81,7 @@ export const stripePaymentProcessor: PaymentProcessor = {
 
     return billingPortalSession.url;
   },
+  fetchSubscriptionState: fetchStripeSubscriptionState,
   webhook: stripeWebhook,
   webhookMiddlewareConfigFn: stripeMiddlewareConfigFn,
   fetchTotalRevenue: async () => {

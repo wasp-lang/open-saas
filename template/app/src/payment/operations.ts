@@ -2,6 +2,7 @@ import { HttpError } from "wasp/server";
 import type {
   GenerateCheckoutSession,
   GetCustomerPortalUrl,
+  SyncUserSubscriptionAfterCheckout,
 } from "wasp/server/operations";
 import * as z from "zod";
 import { PaymentPlanId, paymentPlans } from "../payment/plans";
@@ -11,6 +12,7 @@ import {
   paymentProcessor,
   type PaymentProcessorId,
 } from "./paymentProcessor";
+import { syncUserSubscription } from "./subscription";
 
 export type GeneratedCheckoutSession = CheckoutSession & {
   paymentProcessorId: PaymentProcessorId;
@@ -70,4 +72,32 @@ export const getCustomerPortalUrl: GetCustomerPortalUrl<
     userId: context.user.id,
     prismaUserDelegate: context.entities.User,
   });
+};
+
+/**
+ * Users often return from checkout before the webhook reaches us.
+ */
+export const syncUserSubscriptionAfterCheckout: SyncUserSubscriptionAfterCheckout<
+  void,
+  void
+> = async (_args, context) => {
+  if (!context.user) {
+    throw new HttpError(
+      401,
+      "Only authenticated users are allowed to perform this operation",
+    );
+  }
+
+  const paymentProcessorUserId = context.user.paymentProcessorUserId;
+  if (!paymentProcessorUserId) {
+    // Lemon Squeezy creates the customer during checkout, so on a user's
+    // first checkout we don't know the customer until the webhook arrives.
+    return;
+  }
+
+  await syncUserSubscription(
+    paymentProcessorUserId,
+    paymentProcessor.fetchSubscriptionState,
+    context.entities.User,
+  );
 };
