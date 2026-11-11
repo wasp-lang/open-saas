@@ -23,8 +23,10 @@ model User {
   isAdmin                   Boolean         @default(false)
 
   paymentProcessorUserId    String?         @unique
-  subscriptionStatus        String?         // 'active', 'cancel_at_period_end', 'past_due', 'deleted'.
+  subscriptionStatus        String?         // 'active', 'trialing', 'past_due', 'paused', 'canceled'.
   subscriptionPlan          String?         // 'hobby', 'pro'.
+  currentPeriodEnd          DateTime?
+  cancelAtPeriodEnd         Boolean         @default(false)
   datePaid                  DateTime?
   credits                   Int             @default(3)
 
@@ -41,12 +43,14 @@ We store all user relevant information on the `User` entity, including identific
 
 We use payment processor to handle all of our subscription payments. The `User` entity has a number of fields that are related to payment processors and their ability to access features behind the paywall:
 
-```prisma title="schema.prisma" {3-7}
+```prisma title="schema.prisma" {3-9}
 model User {
   // ...
   paymentProcessorUserId    String?         @unique
-  subscriptionStatus        String?         // 'active', 'cancel_at_period_end', 'past_due', 'deleted'.
+  subscriptionStatus        String?         // 'active', 'trialing', 'past_due', 'paused', 'canceled'.
   subscriptionPlan          String?         // 'hobby', 'pro'.
+  currentPeriodEnd          DateTime?
+  cancelAtPeriodEnd         Boolean         @default(false)
   datePaid                  DateTime?
   credits                   Int             @default(3)
   // ...
@@ -54,40 +58,43 @@ model User {
 ```
 
 - `paymentProcessorUserId`: The payment processor's customer ID. This is created on checkout and used to identify the customer.
-- `subscriptionStatus`: The subscription status of a user. This is set by the payment processor and is used to determine whether the user has access to the app or not. By default, we have four statuses: `active`, `past_due`, `cancel_at_period_end`, and `deleted`.
+- `subscriptionStatus`: The subscription status of a user. This is set by the payment processor and is used to determine whether the user has access to the app or not. By default, we have five statuses: `active`, `trialing`, `past_due`, `paused`, and `canceled`.
+- `currentPeriodEnd`: When the current billing period ends. The subscription renews on this date, or ends on it if `cancelAtPeriodEnd` is set.
+- `cancelAtPeriodEnd`: Whether the user has canceled their subscription. They keep access until `currentPeriodEnd`.
 - `subscriptionPlan`: The subscription plan a user is on. This is set by the app and is used to determine what features the user has access to. By default, we have three payment plans: `hobby` and `pro` subscription plans, as well as a `credits10` one-time purchase plan.
 - `credits` (optional): By default, a user is given 3 credits to trial your product before they have to pay. You can create a one-time purchase product in Stripe to allow users to purchase more credits if they run out, e.g. the `credits10` plan in the template.
 
 #### Subscription Statuses
 
-In general, we determine if a user has paid for an initial subscription by checking if the `subscriptionStatus` field is set. This field is set by payment processor within your webhook handler and is used to signify more detailed information on the user's current status. By default, the template handles four statuses: `active`, `past_due`, `cancel_at_period_end`, and `deleted`.
+The payment processor owns the subscription, and the `User` fields hold a copy of it. Webhook events can arrive late, twice or out of order, so we don't build that copy from their payloads. Every event that can change a subscription calls `syncUserSubscription` in `src/payment/subscription.ts`, which fetches the subscription again and overwrites the copy. The same happens when the user returns from checkout. The approach comes from [Theo's Stripe recommendations](https://github.com/t3dotgg/stripe-recommendations).
 
-- When `active` the user has paid for a subscription and has full access to the app.
-- When `cancel_at_period_end`, the user has canceled their subscription and has access to the app until the end of their billing period.
-- When `deleted`, the user has reached the end of their subscription period after canceling and no longer has access to the app.
-- When `past_due`, the user's automatic subscription renewal payment was declined (e.g. their credit card expired). You can choose how to handle this status within your app. For example, you can send the user an email to update their payment information:
-  ```tsx title="src/payment/stripe/webhook.ts" 
+The template handles five statuses:
+
+- `active`: the user has paid and has access. If `cancelAtPeriodEnd` is set, they have canceled and keep access until `currentPeriodEnd`.
+- `trialing`: the user is in a free trial and has access. The template doesn't set up trials. The status only covers trials you configure in your payment processor.
+- `past_due`: the renewal payment was declined, e.g. the credit card expired. The user has no access.
+- `paused`: billing is paused. The user has no access.
+- `canceled`: the subscription has ended. The user has no access.
+
+`subscriptionStatus` is empty for users who never had a subscription.
+
+`hasActiveSubscription` in `src/payment/plans.ts` decides which statuses give access. To keep access while a payment is past due, add `past_due` there.
+
+You can also react to a status change. For example, you can send the user an email to update their payment information:
+  ```ts title="src/payment/subscription.ts"
   import { emailSender } from "wasp/server/email";
   //...
 
-  if (subscription.status === 'past_due') {
-    const updatedCustomer = await context.entities.User.update({
-      where: {
-        id: customer.id,
-      },
-      data: {
-        subscriptionStatus: 'past_due',
-      },
+  const hasPaymentJustFailed =
+    user.subscriptionStatus === SubscriptionStatus.PastDue &&
+    userBeforeSync.subscriptionStatus !== SubscriptionStatus.PastDue;
+  if (hasPaymentJustFailed && user.email) {
+    await emailSender.send({
+      to: user.email,
+      subject: 'Your Payment is Past Due',
+      text: 'Please update your payment information to continue using our service.',
+      html: '...',
     });
-
-    if (updatedCustomer.email) {
-      await emailSender.send({
-        to: updatedCustomer.email,
-        subject: 'Your Payment is Past Due',
-        text: 'Please update your payment information to continue using our service.',
-        html: '...',
-      });
-    }
   }
   ```
 

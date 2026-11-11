@@ -106,7 +106,12 @@ Next, configure the webhook in your Polar dashboard:
 4. Set the `Format` to `"Raw"`.
 5. Select the following events to listen for:
    - `order.paid`
+   - `subscription.created`
    - `subscription.updated`
+   - `subscription.active`
+   - `subscription.canceled`
+   - `subscription.uncanceled`
+   - `subscription.revoked`
 6. Click `Save`.
 7. Copy the generated webhook secret and add it to your `.env.server` file:
    ```ini title=".env.server"

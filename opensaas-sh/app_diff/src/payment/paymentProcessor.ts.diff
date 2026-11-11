@@ -8,11 +8,11 @@
 +import type { StripeWebhook } from "wasp/server/api";
  import type { PaymentPlan } from "./plans";
  import { stripePaymentProcessor } from "./stripe/paymentProcessor";
- 
-@@ -35,18 +35,9 @@
-   fetchCustomerPortalUrl: (
+ import type { FetchSubscriptionState } from "./subscription";
+@@ -37,18 +37,9 @@
      args: FetchCustomerPortalUrlArgs,
    ) => Promise<string | null>;
+   fetchSubscriptionState: FetchSubscriptionState;
 -  webhook: PaymentsWebhook;
 +  webhook: StripeWebhook;
    webhookMiddlewareConfigFn: MiddlewareConfigFn;

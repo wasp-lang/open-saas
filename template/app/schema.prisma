@@ -16,8 +16,10 @@ model User {
   isAdmin                   Boolean         @default(false)
 
   paymentProcessorUserId    String?         @unique
-  subscriptionStatus        String?         // 'active', 'cancel_at_period_end', 'past_due', 'deleted'
+  subscriptionStatus        String?         // 'active', 'trialing', 'past_due', 'paused', 'canceled'
   subscriptionPlan          String?         // 'hobby', 'pro'
+  currentPeriodEnd          DateTime?
+  cancelAtPeriodEnd         Boolean         @default(false)
   datePaid                  DateTime?
   credits                   Int             @default(3)
 

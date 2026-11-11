@@ -90,15 +90,20 @@ If you're seeing errors, consider appending `sudo` to the stripe commands.
 See this [GitHuh issue](https://github.com/stripe/stripe-cli/issues/933) for more details.
 :::
 
+### Recommended Stripe Settings
+
+- Limit customers to one subscription. The template expects a customer to have one subscription at a time. Without this setting, a customer can open two checkout pages and subscribe twice. Turn it on by following [Stripe's guide](https://docs.stripe.com/payments/checkout/limit-subscriptions).
+- Consider disabling Cash App Pay. According to [Theo's Stripe recommendations](https://github.com/t3dotgg/stripe-recommendations), over 90% of their canceled transactions came from it. You can turn it off in your [payment method settings](https://dashboard.stripe.com/settings/payment_methods).
+
 ### Testing Webhooks via the Stripe CLI
 
 Start the Stripe CLI webhook forwarding on port 3001 where your Node server is running (if port 3001 was taken, `wasp start` picks another one, so use the server port it prints):
 
 ```sh
-stripe listen --events invoice.paid,customer.subscription.updated,customer.subscription.deleted --forward-to localhost:3001/payments-webhook
+stripe listen --events checkout.session.completed,customer.subscription.created,customer.subscription.updated,customer.subscription.deleted,customer.subscription.paused,customer.subscription.resumed,customer.subscription.pending_update_applied,customer.subscription.pending_update_expired,customer.subscription.trial_will_end,invoice.paid,invoice.payment_failed,invoice.payment_action_required,invoice.upcoming,invoice.marked_uncollectible,invoice.payment_succeeded,payment_intent.succeeded,payment_intent.payment_failed,payment_intent.canceled --forward-to localhost:3001/payments-webhook
 ```
 
-Since Stripe CLI 1.51, `stripe listen` requires you to list the events to forward. The command above lists the events the template's webhook handles. If you handle more events in `src/payment/stripe/webhook.ts`, add them to the command too.
+Since Stripe CLI 1.51, `stripe listen` requires you to list the events to forward. The command above lists the events the template handles in `src/payment/stripe/webhook.ts`. If you handle more events, add them to the command too.
 
 Remember to copy and paste the outputted webhook signing secret (`whsec_...`) into your `.env.server` file under `STRIPE_WEBHOOK_SECRET`.
 

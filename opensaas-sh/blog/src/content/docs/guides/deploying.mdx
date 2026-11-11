@@ -147,7 +147,7 @@ To make sure your app is consistent with your Stripe account, here are some step
 2. Click on `+ add endpoint`
 3. Enter your endpoint url, which will be the url of your deployed server + `/payments-webhook`, e.g. `https://open-saas-wasp-sh-server.fly.dev/payments-webhook`
    <Image src={stripeListenEvents} alt="listen events" loading="lazy" />
-4. Select the events you want to listen to. These should be the same events you're consuming in your webhook which are handled in [`src/payment/stripe/webhook.ts`](https://github.com/wasp-lang/open-saas/blob/main/template/app/src/payment/stripe/webhook.ts):
+4. Select the events you want to listen to. These should be the same events you're consuming in your webhook, which are listed in [`src/payment/stripe/webhook.ts`](https://github.com/wasp-lang/open-saas/blob/main/template/app/src/payment/stripe/webhook.ts):
    <Image src={stripeSigningSecret} alt="signing secret" loading="lazy" />
 5. After that, go to the webhook you just created and `reveal` the new signing secret.
 6. Add this secret to your deployed server's `STRIPE_WEBHOOK_SECRET` environment variable. If you've deployed to Fly.io, you can do that easily with the following command:
@@ -170,6 +170,11 @@ With the webhook url ready, go to your [Lemon Squeezy Webhooks Dashboard](https:
    - `order_created`
    - `subscription_created`
    - `subscription_updated`
+   - `subscription_cancelled`
+   - `subscription_resumed`
+   - `subscription_expired`
+   - `subscription_paused`
+   - `subscription_unpaused`
    - `subscription_payment_success`
 6. Click `save`.
 
@@ -194,7 +199,12 @@ With the webhook URL ready, in your [Polar Dashboard](https://polar.sh/dashboard
 4. Set the `Format` to `"Raw"`.
 5. Select the following events to listen for:
    - `order.paid`
+   - `subscription.created`
    - `subscription.updated`
+   - `subscription.active`
+   - `subscription.canceled`
+   - `subscription.uncanceled`
+   - `subscription.revoked`
 6. Click `Save`.
 7. Copy the generated webhook secret and set it as the `POLAR_WEBHOOK_SECRET` environment variable in production.
 
@@ -234,7 +244,13 @@ With the webhook URL ready, in your [Paddle Dashboard](https://vendors.paddle.co
 6. Set the `Usage type` to `Both`.
 7. Select the following events to listen for:
    - `transaction.completed`
+   - `subscription.created`
    - `subscription.updated`
+   - `subscription.activated`
+   - `subscription.trialing`
+   - `subscription.past_due`
+   - `subscription.paused`
+   - `subscription.resumed`
    - `subscription.canceled`
 8. Click `Save`.
 9. Click on your newly created destination in the `Events > Notifications` list to open it.
