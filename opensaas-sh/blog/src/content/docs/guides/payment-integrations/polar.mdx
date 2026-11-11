@@ -51,6 +51,7 @@ You can do that by:
    - `customers:read`
    - `customers:write`
    - `orders:read`
+   - `subscriptions:read`
 6. Copy the generated token and add it to your `.env.server` file:
    ```ini title=".env.server"
    POLAR_ORGANIZATION_ACCESS_TOKEN=polar_oat_...
@@ -106,12 +107,12 @@ Next, configure the webhook in your Polar dashboard:
 4. Set the `Format` to `"Raw"`.
 5. Select the following events to listen for:
    - `order.paid`
-   - `subscription.created`
-   - `subscription.updated`
    - `subscription.active`
    - `subscription.canceled`
-   - `subscription.uncanceled`
+   - `subscription.created`
    - `subscription.revoked`
+   - `subscription.uncanceled`
+   - `subscription.updated`
 6. Click `Save`.
 7. Copy the generated webhook secret and add it to your `.env.server` file:
    ```ini title=".env.server"

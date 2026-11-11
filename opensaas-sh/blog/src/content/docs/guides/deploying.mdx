@@ -168,14 +168,14 @@ With the webhook url ready, go to your [Lemon Squeezy Webhooks Dashboard](https:
 4. Add this signing secret to your server's production environment variables under `LEMONSQUEEZY_WEBHOOK_SECRET`.
 5. Make sure to select at least the following updates to be sent:
    - `order_created`
-   - `subscription_created`
-   - `subscription_updated`
    - `subscription_cancelled`
-   - `subscription_resumed`
+   - `subscription_created`
    - `subscription_expired`
    - `subscription_paused`
-   - `subscription_unpaused`
    - `subscription_payment_success`
+   - `subscription_resumed`
+   - `subscription_unpaused`
+   - `subscription_updated`
 6. Click `save`.
 
 ### Polar
@@ -199,12 +199,12 @@ With the webhook URL ready, in your [Polar Dashboard](https://polar.sh/dashboard
 4. Set the `Format` to `"Raw"`.
 5. Select the following events to listen for:
    - `order.paid`
-   - `subscription.created`
-   - `subscription.updated`
    - `subscription.active`
    - `subscription.canceled`
-   - `subscription.uncanceled`
+   - `subscription.created`
    - `subscription.revoked`
+   - `subscription.uncanceled`
+   - `subscription.updated`
 6. Click `Save`.
 7. Copy the generated webhook secret and set it as the `POLAR_WEBHOOK_SECRET` environment variable in production.
 
@@ -243,15 +243,15 @@ With the webhook URL ready, in your [Paddle Dashboard](https://vendors.paddle.co
 5. In the URL field, paste your production webhook URL.
 6. Set the `Usage type` to `Both`.
 7. Select the following events to listen for:
-   - `transaction.completed`
-   - `subscription.created`
-   - `subscription.updated`
    - `subscription.activated`
-   - `subscription.trialing`
+   - `subscription.canceled`
+   - `subscription.created`
    - `subscription.past_due`
    - `subscription.paused`
    - `subscription.resumed`
-   - `subscription.canceled`
+   - `subscription.trialing`
+   - `subscription.updated`
+   - `transaction.completed`
 8. Click `Save`.
 9. Click on your newly created destination in the `Events > Notifications` list to open it.
 10. Click copy on the `Secret key` and set it as the `PADDLE_WEBHOOK_SECRET` environment variable in production.
