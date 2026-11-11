@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router";
-import { syncSubscriptionAfterCheckout } from "wasp/client/operations";
+import { syncUserSubscriptionAfterCheckout } from "wasp/client/operations";
 import { Link, routes } from "wasp/client/router";
 import { CheckoutResult } from "./checkoutResult";
 
@@ -14,7 +14,7 @@ export function CheckoutResultPage() {
   useEffect(() => {
     if (status === CheckoutResult.Success) {
       // The webhook might not have reached our server yet.
-      syncSubscriptionAfterCheckout().catch((error: unknown) => {
+      syncUserSubscriptionAfterCheckout().catch((error: unknown) => {
         console.error("Failed to sync subscription after checkout:", error);
       });
     }

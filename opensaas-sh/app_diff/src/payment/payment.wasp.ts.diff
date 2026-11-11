@@ -16,7 +16,7 @@
 @@ -22,8 +22,8 @@
    query(getCustomerPortalUrl, { entities: ["User"] }),
    action(generateCheckoutSession, { entities: ["User"] }),
-   action(syncSubscriptionAfterCheckout, { entities: ["User"] }),
+   action(syncUserSubscriptionAfterCheckout, { entities: ["User"] }),
 -  api("POST", "/payments-webhook", paymentsWebhook, {
 +  api("POST", "/payments-webhook", stripeWebhook, {
      entities: ["User", "ProcessedWebhookEvent"],

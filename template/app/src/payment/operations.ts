@@ -2,7 +2,7 @@ import { HttpError } from "wasp/server";
 import type {
   GenerateCheckoutSession,
   GetCustomerPortalUrl,
-  SyncSubscriptionAfterCheckout,
+  SyncUserSubscriptionAfterCheckout,
 } from "wasp/server/operations";
 import * as z from "zod";
 import { PaymentPlanId, paymentPlans } from "../payment/plans";
@@ -77,7 +77,7 @@ export const getCustomerPortalUrl: GetCustomerPortalUrl<
 /**
  * Users often return from checkout before the webhook reaches us.
  */
-export const syncSubscriptionAfterCheckout: SyncSubscriptionAfterCheckout<
+export const syncUserSubscriptionAfterCheckout: SyncUserSubscriptionAfterCheckout<
   void,
   void
 > = async (_args, context) => {
