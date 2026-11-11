@@ -14,7 +14,10 @@ import { hasActiveSubscription } from "../payment/plans";
 import { ensureArgsSchemaOrThrowHttpError } from "../server/validation";
 import { GeneratedSchedule, generatedScheduleSchema } from "./schedule";
 
-const openAi = new OpenAI({ apiKey: env.OPENAI_API_KEY });
+const openAi = new OpenAI({
+  apiKey: env.OPENAI_API_KEY,
+  baseURL: env.OPENAI_BASE_URL,
+});
 
 //#region Actions
 const generateGptResponseInputSchema = z.object({

@@ -13,4 +13,6 @@ export const fileUploadEnvSchema = z.object({
   AWS_S3_FILES_BUCKET: z.string({
     error: "AWS_S3_FILES_BUCKET is required for file uploads",
   }),
+  // Optional, for S3-compatible providers, e.g. Neon Object Storage.
+  AWS_S3_ENDPOINT_URL: z.url().optional(),
 });

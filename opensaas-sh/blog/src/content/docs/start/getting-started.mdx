@@ -169,6 +169,10 @@ wasp start db
 
 This will start and connect your app to a Postgres database for you. No need to do anything else! 🤯 Just make sure to leave this terminal window open in the background while developing. Once you terminate the process, your DB will no longer be available to your app.
 
+:::note[Using a hosted database]
+Instead of `wasp start db`, you can use a hosted Postgres database such as [Neon](https://neon.com). Copy `.env.server.example` to `.env.server`, set `DATABASE_URL` to the database's connection string, and skip `wasp start db`. With Neon, use the direct connection string (without `-pooler` in the hostname).
+:::
+
 Now let's create our very first database migration, to ensure the database has a correct schema. Open a new terminal tab/window and run the following command:
 
 ```sh

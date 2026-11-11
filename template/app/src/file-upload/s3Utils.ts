@@ -18,6 +18,12 @@ export const s3Client = new S3Client({
     accessKeyId: env.AWS_S3_IAM_ACCESS_KEY,
     secretAccessKey: env.AWS_S3_IAM_SECRET_KEY,
   },
+  // For S3-compatible providers, e.g. Neon Object Storage.
+  ...(env.AWS_S3_ENDPOINT_URL && {
+    endpoint: env.AWS_S3_ENDPOINT_URL,
+    forcePathStyle: true,
+    requestChecksumCalculation: "WHEN_REQUIRED" as const,
+  }),
 });
 
 type S3Upload = {
