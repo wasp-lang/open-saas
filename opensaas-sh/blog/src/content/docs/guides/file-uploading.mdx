@@ -18,7 +18,7 @@ import { Image } from 'astro:assets';
 This guide will show you how to set up file uploading in your SaaS app.
 
 There are two options we recommend:
-1. Using [AWS S3](https://aws.amazon.com/s3/) with presigned URLS for secure file storage.
+1. Using [AWS S3](https://aws.amazon.com/s3/) with presigned URLS for secure file storage (or an S3-compatible provider, like [Neon Object Storage](#using-neon-object-storage)).
 2. Using Multer middleware to upload files to your own server.
 
 **We recommend using AWS S3 as it's a scalable, secure option, that can handle a large amount of storage.**
@@ -123,6 +123,38 @@ Now that you have your S3 bucket set up, you'll need to get your S3 credentials 
       AWS_S3_FILES_BUCKET=your-bucket-name
       AWS_S3_REGION=your-region // (e.g. us-west-2)
     ```
+
+### Using Neon Object Storage
+
+[Neon Object Storage](https://neon.com/docs/storage/overview) is S3-compatible, so the same code works once you set `AWS_S3_ENDPOINT_URL`. Your Neon project needs to be in a [supported region](https://neon.com/docs/storage/get-started).
+
+1. Create a bucket with the [Neon CLI](https://neon.com/docs/cli):
+   ```sh
+   neon buckets create your-bucket-name
+   ```
+2. Create a credential, and save the `token_id` and `s3_secret_access_key` it prints:
+   ```sh
+   neon credentials create --scope storage:read --scope storage:write
+   ```
+3. Get your branch's S3 endpoint and region:
+   ```sh
+   neon api /projects/<project-id>/branches/<branch-id>/storage
+   ```
+4. Add the values to `.env.server`:
+   ```sh
+     AWS_S3_IAM_ACCESS_KEY=nak_live_...   # token_id
+     AWS_S3_IAM_SECRET_KEY=nsk_live_...   # s3_secret_access_key
+     AWS_S3_FILES_BUCKET=your-bucket-name
+     AWS_S3_REGION=us-east-2              # region
+     AWS_S3_ENDPOINT_URL=https://<branch-id>.storage.<cell>.<region>.aws.neon.tech  # s3_endpoint
+   ```
+5. Set the bucket's [CORS rules](#change-the-cors-settings), e.g. with the AWS CLI:
+   ```sh
+   AWS_ACCESS_KEY_ID=nak_live_... AWS_SECRET_ACCESS_KEY=nsk_live_... \
+   aws s3api put-bucket-cors --bucket your-bucket-name --region us-east-2 \
+     --endpoint-url https://<branch-id>.storage.<cell>.<region>.aws.neon.tech \
+     --cors-configuration '{"CORSRules":[{"AllowedHeaders":["*"],"AllowedMethods":["POST","GET"],"AllowedOrigins":["http://localhost:3000","https://<your-domain>"]}]}'
+   ```
 
 :::tip[Star our Repo on GitHub! 🌟]
 We've packed in a ton of features and love into this SaaS starter, and offer it all to you for free!
