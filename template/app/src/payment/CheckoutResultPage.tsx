@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router";
 import { syncUserSubscriptionAfterCheckout } from "wasp/client/operations";
 import { Link, routes } from "wasp/client/router";
 import { CheckoutResult } from "./checkoutResult";
+import { paymentProcessorClient } from "./paymentProcessorClient";
 
 const ACCOUNT_PAGE_REDIRECT_DELAY_MS = 4000;
 
@@ -41,7 +42,10 @@ export function CheckoutResultPage() {
     <div className="mt-10 flex flex-col items-stretch sm:mx-6 sm:items-center">
       <div className="flex flex-col gap-4 px-4 py-8 text-center shadow-xl ring-1 ring-gray-900/10 sm:max-w-md sm:rounded-lg sm:px-10 dark:ring-gray-100/10">
         <h1 className="text-xl font-semibold">
-          {status === CheckoutResult.Success && "🥳 Payment Successful!"}
+          {status === CheckoutResult.Success &&
+            (paymentProcessorClient.id === "yolfi"
+              ? "Checkout returned. Credits appear after verified payment confirmation."
+              : "🥳 Payment Successful!")}
           {status === CheckoutResult.Canceled && "😢 Payment Canceled."}
         </h1>
         <span className="">

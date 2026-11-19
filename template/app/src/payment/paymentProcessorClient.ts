@@ -18,3 +18,5 @@ export const paymentProcessorClient: PaymentProcessorClient =
 // export const paymentProcessorClient: PaymentProcessorClient = lemonSqueezyPaymentProcessorClient;
 // export const paymentProcessorClient: PaymentProcessorClient = polarPaymentProcessorClient;
 // export const paymentProcessorClient: PaymentProcessorClient = paddlePaymentProcessorClient;
+// To opt in, import yolfiPaymentProcessorClient from "./yolfi/paymentProcessorClient".
+// export const paymentProcessorClient: PaymentProcessorClient = yolfiPaymentProcessorClient;

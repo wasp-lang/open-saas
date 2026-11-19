@@ -26,7 +26,7 @@ export type CheckoutSession =
   | { kind: "redirect"; id: string; url: string }
   | { kind: "inPage"; id: string };
 
-export type PaymentProcessorId = "stripe" | "lemonsqueezy" | "polar" | "paddle";
+export type PaymentProcessorId = "stripe" | "lemonsqueezy" | "polar" | "paddle" | "yolfi";
 
 export interface PaymentProcessor {
   id: PaymentProcessorId;
@@ -52,3 +52,5 @@ export const paymentProcessor: PaymentProcessor = stripePaymentProcessor;
 // export const paymentProcessor: PaymentProcessor = lemonSqueezyPaymentProcessor;
 // export const paymentProcessor: PaymentProcessor = polarPaymentProcessor;
 // export const paymentProcessor: PaymentProcessor = paddlePaymentProcessor;
+// To opt in, import yolfiPaymentProcessor from "./yolfi/paymentProcessor".
+// export const paymentProcessor: PaymentProcessor = yolfiPaymentProcessor;

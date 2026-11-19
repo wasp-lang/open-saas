@@ -1,0 +1,110 @@
+---
+title: Yolfi
+description: "One-time hosted crypto checkout for the Open SaaS credit pack."
+---
+
+This provider uses the native Yolfi Checkout Sessions API. It supports the
+existing **10 Credits** one-time pack at **9.99 USD**, not SaaS subscriptions.
+Stripe remains the template default; selecting Yolfi is an explicit opt-in.
+
+## Select the provider
+
+1. In `src/payment/paymentProcessor.ts`, import `yolfiPaymentProcessor` from
+   `./yolfi/paymentProcessor` and select it as `paymentProcessor`.
+2. In `src/payment/paymentProcessorClient.ts`, import
+   `yolfiPaymentProcessorClient` from `./yolfi/paymentProcessorClient` and select
+   it as `paymentProcessorClient`. Both selections must match.
+3. Follow the payment integration overview to remove unused provider imports,
+   dependencies and environment validation schemas. In particular, remove unused
+   Stripe/Lemon Squeezy/Polar/Paddle schemas from `src/env.ts` and unused Paddle
+   client validation. Keep `yolfiEnvSchema` in the server schema.
+4. Configure server-only `YOLFI_API_KEY` and `YOLFI_WEBHOOK_SECRET` using your
+   app's environment configuration. The second value is the signing secret of
+   this webhook endpoint, **not** the API key. No client-side key is needed.
+5. Configure a native Yolfi webhook for your app's existing Wasp API route
+   `/payments-webhook`, with `payment.confirmed` enabled. Retain the provider's
+   raw-body middleware; do not put a JSON parser before signature verification.
+
+Yolfi configuration is optional while another provider is selected. Missing
+configuration fails closed when this provider is used. This integration accepts
+live confirmations only; sandbox events never grant usable credits.
+
+The pricing page hides unsupported subscription plans and card test instructions
+when Yolfi is selected. The existing success/cancel routes return the buyer to
+the app. Neither a redirect nor `CheckoutSession.status = COMPLETED` grants
+credits: COMPLETED means an Invoice was created, not that payment was confirmed.
+
+## Payment and reference handling
+
+The server sends a decimal USD **major-unit** amount to
+`POST https://app.yolfi.com/api/checkout-sessions`. It generates a unique
+`merchantOrderId`, uses the app user ID as `clientReferenceId`, and includes
+an integration/plan marker in metadata. It does not send customer names or email.
+
+Each logical outbound checkout has a 16–200-character idempotency key. The same
+request body and key are reused for at most one retry on timeout, transport
+failure, HTTP 429 or HTTP 5xx. Every request has a ten-second timeout and rejects
+redirects and non-success responses. A new app checkout action creates a new
+independent purchase attempt, not a retry of a previously paid purchase.
+Only HTTPS hosted URLs on `pay.yolfi.com` are supported.
+
+The webhook verifies raw-body HMAC-SHA256/base64 `X-Yolfi-Signature` with a
+constant-time comparison. After a signed live one-time `payment.confirmed`, it
+retrieves the authenticated session snapshot and validates its source USD price,
+currency, user, plan and merchant/session references. The event's `amount` is a
+token receivable, and `amountUsd` is not the immutable source price; neither is
+compared to 9.99 USD.
+
+A transaction records namespaced event, Invoice and Checkout Session deduplication
+keys in the existing `ProcessedWebhookEvent` table and increments the user's
+credits atomically. Concurrent confirmations cannot grant the same purchase twice.
+A failed credit update rolls back the keys and returns a retryable error.
+Keep these records for as long as old deliveries can be replayed; do not purge
+these Yolfi deduplication records independently of the credited purchase history.
+No schema migration is required.
+
+The fixed price is in `src/payment/yolfi/plan.ts`, matching the template pricing
+card. When customizing it, update the card too and keep the old configuration
+until all outstanding checkouts/confirmations have been resolved. This small
+adapter does not implement price-version migration or imported subscriptions.
+
+## Focused offline tests
+
+From `template/app`, with the template's existing TypeScript dev dependency:
+
+```sh
+node tests/payment/yolfi.test.cjs
+node tests/payment/yolfi-types.cjs
+```
+
+The second command performs a focused adapter type check against the existing
+`PaymentProcessor` interface with declaration collaborators for generated
+Wasp/Prisma/Express types and the unselected Stripe server provider. It is not a
+full generated Wasp build. The runtime tests also parse the authored UI and
+selection sources; they do not constitute browser UI or end-to-end testing.
+
+The runner transpiles and executes the actual TypeScript adapter and its local
+helpers. Only external HTTP, Wasp routing/environment, browser navigation,
+Express middleware and Prisma persistence collaborators are mocked. All responses and events are synthetic fixtures, not
+observed payments. Tests cover creation/retry/error handling, raw signatures and
+tampering, source-money and reference mismatches, non-confirmation events,
+duplicate/concurrent confirmations, and rollback/retry after credit-update failure.
+These tests do not run a full Wasp build, upstream CI or live payments.
+
+## Unsupported capabilities
+
+No cards, Stripe-compatible API, recurring billing, automatic renewals, refunds,
+partial payments, customer portal or revenue-history synchronization are implemented.
+Subscription checkout is rejected server-side. Portal/subscription lookup returns
+`null`; revenue lookup throws an explicit unsupported error rather than inventing
+a zero total. The template's admin revenue job therefore cannot report Yolfi
+revenue with this provider. Do not use it as a subscription migration adapter.
+Failed/expired/unrelated events are acknowledged without crediting an account.
+
+Public contract references:
+
+- https://docs.yolfi.com/en/checkout/api-reference
+- https://docs.yolfi.com/en/checkout/quickstart
+- https://docs.yolfi.com/en/checkout/lifecycle
+- https://docs.yolfi.com/en/webhooks/webhook-details
+- https://docs.yolfi.com/en/webhooks/webhook-signatures

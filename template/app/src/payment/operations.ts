@@ -88,6 +88,9 @@ export const syncUserSubscriptionAfterCheckout: SyncUserSubscriptionAfterCheckou
     );
   }
 
+  // Yolfi credit checkouts never synchronize or clear subscription state.
+  if (paymentProcessor.id === "yolfi") return;
+
   const paymentProcessorUserId = context.user.paymentProcessorUserId;
   if (!paymentProcessorUserId) {
     // Lemon Squeezy creates the customer during checkout, so on a user's
