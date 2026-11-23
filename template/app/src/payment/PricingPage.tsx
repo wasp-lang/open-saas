@@ -60,16 +60,17 @@ export function PricingPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { data: user } = useAuth();
-  const isUserSubscribed =
+  // Past due and paused users need the customer portal to fix their subscription.
+  const canManageSubscription =
     !!user &&
     !!user.subscriptionStatus &&
-    user.subscriptionStatus !== SubscriptionStatus.Deleted;
+    user.subscriptionStatus !== SubscriptionStatus.Canceled;
 
   const {
     data: customerPortalUrl,
     isLoading: isCustomerPortalUrlLoading,
     error: customerPortalUrlError,
-  } = useQuery(getCustomerPortalUrl, { enabled: isUserSubscribed });
+  } = useQuery(getCustomerPortalUrl, { enabled: canManageSubscription });
 
   const navigate = useNavigate();
 
@@ -209,7 +210,7 @@ export function PricingPage() {
                 </ul>
               </CardContent>
               <CardFooter>
-                {isUserSubscribed ? (
+                {canManageSubscription ? (
                   <Button
                     onClick={handleCustomerPortalClick}
                     disabled={isCustomerPortalUrlLoading}

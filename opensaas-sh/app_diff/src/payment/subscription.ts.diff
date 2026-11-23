@@ -1,0 +1,55 @@
+--- template/app/src/payment/subscription.ts
++++ opensaas-sh/app/src/payment/subscription.ts
+@@ -17,7 +17,7 @@
+   type SubscriptionStatus,
+ } from "./plans";
+ 
+-type PaymentProcessorUserId = NonNullable<User["paymentProcessorUserId"]>;
++type StripeId = NonNullable<User["stripeId"]>;
+ 
+ /**
+  * A subscription as the app sees it.
+@@ -34,23 +34,21 @@
+  * Returns `null` if the customer has no subscription.
+  */
+ export type FetchSubscriptionState = (
+-  paymentProcessorUserId: PaymentProcessorUserId,
++  stripeId: StripeId,
+ ) => Promise<SubscriptionState | null>;
+ 
+ export async function syncUserSubscription(
+-  paymentProcessorUserId: PaymentProcessorUserId,
++  stripeId: StripeId,
+   fetchSubscriptionState: FetchSubscriptionState,
+   userDelegate: PrismaClient["user"],
+ ): Promise<void> {
+-  const subscriptionState = await fetchSubscriptionState(
+-    paymentProcessorUserId,
+-  );
++  const subscriptionState = await fetchSubscriptionState(stripeId);
+ 
+   const userBeforeSync = await userDelegate.findUniqueOrThrow({
+-    where: { paymentProcessorUserId },
++    where: { stripeId },
+   });
+   const user = await updateUserSubscription(
+-    paymentProcessorUserId,
++    stripeId,
+     subscriptionState,
+     userDelegate,
+   );
+@@ -70,12 +68,12 @@
+ }
+ 
+ function updateUserSubscription(
+-  paymentProcessorUserId: PaymentProcessorUserId,
++  stripeId: StripeId,
+   subscriptionState: SubscriptionState | null,
+   userDelegate: PrismaClient["user"],
+ ): Promise<User> {
+   return userDelegate.update({
+-    where: { paymentProcessorUserId },
++    where: { stripeId },
+     data: {
+       subscriptionStatus: subscriptionState?.status ?? null,
+       subscriptionPlan: subscriptionState?.paymentPlanId ?? null,

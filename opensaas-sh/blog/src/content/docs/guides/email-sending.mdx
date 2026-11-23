@@ -46,14 +46,14 @@ export const emailSender: EmailSender = {
 
 This means that you can send emails from your app using the `send` function from the `email` modul provided by Wasp:
 
-```tsx title="src/server/webhooks.ts"
+```tsx title="src/payment/subscription.ts"
 import { emailSender } from "wasp/server/email";
 
 //...
 
-  if (subscription.cancel_at_period_end) {
+  if (hasUserJustCanceled && user.email) {
     await emailSender.send({
-      to: customer.email,
+      to: user.email,
       subject: 'We hate to see you go :(',
       text: 'We hate to see you go. Here is a sweet offer...',
       html: 'We hate to see you go. Here is a sweet offer...',
@@ -61,7 +61,7 @@ import { emailSender } from "wasp/server/email";
   }
 ```
 
-In the example above, you can see that we're sending an email to the customer when we receive a cancel subscription event within the Stripe webhook. 
+In the example above, you can see that we're sending an email to the user when we notice that they canceled their subscription. 
 
 This is a powerful feature and super simple to use.
 

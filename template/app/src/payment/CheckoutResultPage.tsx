@@ -1,18 +1,24 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router";
+import { syncUserSubscriptionAfterCheckout } from "wasp/client/operations";
 import { Link, routes } from "wasp/client/router";
+import { CheckoutResult } from "./checkoutResult";
 
 const ACCOUNT_PAGE_REDIRECT_DELAY_MS = 4000;
-
-export enum CheckoutResult {
-  Success = "success",
-  Canceled = "canceled",
-}
 
 export function CheckoutResultPage() {
   const navigate = useNavigate();
   const [urlSearchParams] = useSearchParams();
   const status = urlSearchParams.get("status");
+
+  useEffect(() => {
+    if (status === CheckoutResult.Success) {
+      // The webhook might not have reached our server yet.
+      syncUserSubscriptionAfterCheckout().catch((error: unknown) => {
+        console.error("Failed to sync subscription after checkout:", error);
+      });
+    }
+  }, [status]);
 
   useEffect(() => {
     const accountPageRedirectTimeoutId = setTimeout(() => {

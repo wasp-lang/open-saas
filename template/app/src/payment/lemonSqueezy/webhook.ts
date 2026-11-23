@@ -1,8 +1,3 @@
-import type {
-  Order,
-  Subscription,
-  SubscriptionInvoice,
-} from "@lemonsqueezy/lemonsqueezy.js";
 import crypto from "crypto";
 import express from "express";
 import {
@@ -12,39 +7,18 @@ import {
   type PrismaClient,
 } from "wasp/server";
 import type { PaymentsWebhook } from "wasp/server/api";
-import { assertUnreachable } from "../../shared/utils";
 import { UnhandledWebhookEventError } from "../errors";
-import { getPaymentPlanIdByPaymentProcessorPlanId } from "../paymentProcessorPlans";
-import { PaymentPlanId, paymentPlans, SubscriptionStatus } from "../plans";
+import { findPaymentPlanIdByPaymentProcessorPlanId } from "../paymentProcessorPlans";
+import { getPaymentPlanCreditsAmount } from "../plans";
 import { processWebhookEventOnce } from "../processedWebhookEvent";
-import {
-  updateUserCredits,
-  updateUserPaymentProcessorUserId,
-  updateUserSubscription,
-} from "../user";
-
-/**
- * The Lemon Squeezy SDK has no type for webhook events, so we define it here.
- * @see https://docs.lemonsqueezy.com/help/webhooks/webhook-requests
- */
-interface LemonSqueezyWebhookEvent<Data = unknown> {
-  meta: {
-    event_name: string;
-    // Only present when the checkout was created by the app, see `createLemonSqueezyCheckout`.
-    custom_data?: { user_id: string };
-  };
-  data: Data;
-}
-
-type LemonSqueezyOrderEvent = LemonSqueezyWebhookEvent<Order["data"]>;
-type LemonSqueezySubscriptionEvent = LemonSqueezyWebhookEvent<
-  Subscription["data"]
->;
-type LemonSqueezySubscriptionInvoiceEvent = LemonSqueezyWebhookEvent<
-  SubscriptionInvoice["data"]
->;
-type LemonSqueezySubscriptionStatus =
-  Subscription["data"]["attributes"]["status"];
+import { syncUserSubscription } from "../subscription";
+import { recordUserPayment, updateUserPaymentProcessorUserId } from "../user";
+import type {
+  LemonSqueezyOrder,
+  LemonSqueezySubscription,
+  LemonSqueezySubscriptionInvoice,
+} from "./lemonSqueezyTypes";
+import { fetchLemonSqueezySubscriptionState } from "./subscriptionState";
 
 /**
  * Lemon Squeezy requires the raw request body to verify the webhook signature.
@@ -120,7 +94,12 @@ function constructLemonSqueezyEvent(
     throw new HttpError(400, "Invalid Lemon Squeezy webhook signature");
   }
 
-  return JSON.parse(rawBody.toString("utf8"));
+  const { meta, data } = JSON.parse(rawBody.toString("utf8"));
+  return {
+    eventName: meta.event_name,
+    userId: meta.custom_data?.user_id,
+    data,
+  };
 }
 
 /**
@@ -147,48 +126,89 @@ async function handleLemonSqueezyEvent(
   userDelegate: PrismaClient["user"],
   processedWebhookEventDelegate: PrismaClient["processedWebhookEvent"],
 ): Promise<void> {
-  // If you'd like to handle more events, you can add more cases below.
-  // When deploying your app, you configure your webhook in the Lemon Squeezy dashboard
-  // to only send the events that you're handling below.
-  // See: https://docs.opensaas.sh/guides/deploying/#lemon-squeezy
-  switch (event.meta.event_name) {
-    case "order_created": {
-      const orderEvent = event as LemonSqueezyOrderEvent;
-      // Lemon Squeezy doesn't send a stable event id, so we deduplicate by the order id.
-      // Only this event needs it, since it adds credits. The other events set absolute
-      // values, so processing them more than once is harmless.
-      await processWebhookEventOnce(
-        {
-          paymentProcessorEventId: `order_created:${orderEvent.data.id}`,
-          eventType: orderEvent.meta.event_name,
-        },
-        processedWebhookEventDelegate,
-        () => handleOrderCreated(orderEvent, userDelegate),
-      );
-      break;
-    }
-    case "subscription_payment_success":
-      await handleSubscriptionPaymentSuccess(
-        event as LemonSqueezySubscriptionInvoiceEvent,
-        userDelegate,
-      );
-      break;
-    // Every subscription event carries the whole subscription, so we handle them the same way.
-    case "subscription_created":
-    case "subscription_updated":
-    case "subscription_cancelled":
-    case "subscription_resumed":
-    case "subscription_expired":
-    case "subscription_paused":
-    case "subscription_unpaused":
-      await handleSubscriptionChange(
-        event as LemonSqueezySubscriptionEvent,
-        userDelegate,
-      );
-      break;
-    default:
-      throw new UnhandledWebhookEventError(event.meta.event_name);
+  if (!isHandledLemonSqueezyEvent(event)) {
+    throw new UnhandledWebhookEventError(event.eventName);
   }
+
+  const customerId = event.data.attributes.customer_id.toString();
+  await linkUserToLemonSqueezyCustomer(event.userId, customerId, userDelegate);
+
+  if (event.eventName === "order_created") {
+    // Payments can't be fetched again, so we record each one once.
+    // Lemon Squeezy sends no stable event id, so we deduplicate by order id.
+    await processWebhookEventOnce(
+      {
+        paymentProcessorEventId: `order_created:${event.data.id}`,
+        eventType: event.eventName,
+      },
+      processedWebhookEventDelegate,
+      () => handleOrderCreated(event.data, customerId, userDelegate),
+    );
+  } else if (event.eventName === "subscription_payment_success") {
+    await recordUserPayment(
+      {
+        paymentProcessorUserId: customerId,
+        datePaid: new Date(event.data.attributes.created_at),
+        numOfCreditsPurchased: 0,
+      },
+      userDelegate,
+    );
+  }
+
+  await syncUserSubscription(
+    customerId,
+    fetchLemonSqueezySubscriptionState,
+    userDelegate,
+  );
+}
+
+function isHandledLemonSqueezyEvent(
+  event: LemonSqueezyWebhookEvent,
+): event is HandledLemonSqueezyEvent {
+  return (HANDLED_LEMON_SQUEEZY_EVENT_NAMES as readonly string[]).includes(
+    event.eventName,
+  );
+}
+
+/**
+ * Every event here triggers `syncUserSubscription`.
+ * Your Lemon Squeezy webhook must send all of them.
+ * See: https://docs.opensaas.sh/guides/deploying/#lemon-squeezy
+ */
+const HANDLED_LEMON_SQUEEZY_EVENT_NAMES = [
+  "order_created",
+  "subscription_payment_success",
+  "subscription_created",
+  "subscription_updated",
+  "subscription_cancelled",
+  "subscription_resumed",
+  "subscription_expired",
+  "subscription_paused",
+  "subscription_unpaused",
+] as const;
+
+type HandledLemonSqueezyEvent =
+  | LemonSqueezyWebhookEvent<"order_created", LemonSqueezyOrder>
+  | LemonSqueezyWebhookEvent<
+      "subscription_payment_success",
+      LemonSqueezySubscriptionInvoice
+    >
+  | LemonSqueezyWebhookEvent<SubscriptionEventName, LemonSqueezySubscription>;
+
+type SubscriptionEventName = Exclude<
+  (typeof HANDLED_LEMON_SQUEEZY_EVENT_NAMES)[number],
+  "order_created" | "subscription_payment_success"
+>;
+
+/**
+ * The Lemon Squeezy SDK has no type for webhook events, so we define it here.
+ * @see https://docs.lemonsqueezy.com/help/webhooks/webhook-requests
+ */
+interface LemonSqueezyWebhookEvent<EventName = string, Data = unknown> {
+  eventName: EventName;
+  // Only present when the checkout was created by the app, see `createLemonSqueezyCheckout`.
+  userId?: string;
+  data: Data;
 }
 
 /**
@@ -196,94 +216,42 @@ async function handleLemonSqueezyEvent(
  * Subscription payments are handled by `subscription_payment_success`.
  */
 async function handleOrderCreated(
-  { meta, data: order }: LemonSqueezyOrderEvent,
+  order: LemonSqueezyOrder,
+  customerId: string,
   userDelegate: PrismaClient["user"],
 ): Promise<void> {
-  const customerId = order.attributes.customer_id.toString();
-  await linkUserToLemonSqueezyCustomer(meta, customerId, userDelegate);
-
   if (order.attributes.status !== "paid") {
     return;
   }
 
-  const paymentPlanId = getPaymentPlanIdByPaymentProcessorPlanId(
+  const paymentPlanId = findPaymentPlanIdByPaymentProcessorPlanId(
     order.attributes.first_order_item.variant_id.toString(),
   );
-
-  switch (paymentPlanId) {
-    case PaymentPlanId.Credits10:
-      await updateUserCredits(
-        {
-          paymentProcessorUserId: customerId,
-          numOfCreditsPurchased: paymentPlans[paymentPlanId].effect.amount,
-          datePaid: new Date(order.attributes.created_at),
-        },
-        userDelegate,
-      );
-      break;
-    case PaymentPlanId.Hobby:
-    case PaymentPlanId.Pro:
-      break;
-    default:
-      assertUnreachable(paymentPlanId);
-  }
-}
-
-async function handleSubscriptionPaymentSuccess(
-  { meta, data: subscriptionInvoice }: LemonSqueezySubscriptionInvoiceEvent,
-  userDelegate: PrismaClient["user"],
-): Promise<void> {
-  const customerId = subscriptionInvoice.attributes.customer_id.toString();
-  await linkUserToLemonSqueezyCustomer(meta, customerId, userDelegate);
-
-  await updateUserSubscription(
-    {
-      paymentProcessorUserId: customerId,
-      subscriptionStatus: SubscriptionStatus.Active,
-      datePaid: new Date(subscriptionInvoice.attributes.created_at),
-    },
-    userDelegate,
-  );
-}
-
-async function handleSubscriptionChange(
-  { meta, data: subscription }: LemonSqueezySubscriptionEvent,
-  userDelegate: PrismaClient["user"],
-): Promise<void> {
-  const customerId = subscription.attributes.customer_id.toString();
-  await linkUserToLemonSqueezyCustomer(meta, customerId, userDelegate);
-
-  const subscriptionStatus = getOpenSaasSubscriptionStatus(
-    subscription.attributes.status,
-  );
-  if (!subscriptionStatus) {
+  const numOfCreditsPurchased = paymentPlanId
+    ? getPaymentPlanCreditsAmount(paymentPlanId)
+    : 0;
+  if (numOfCreditsPurchased === 0) {
     return;
   }
 
-  const paymentPlanId = getPaymentPlanIdByPaymentProcessorPlanId(
-    subscription.attributes.variant_id.toString(),
-  );
-
-  await updateUserSubscription(
+  await recordUserPayment(
     {
       paymentProcessorUserId: customerId,
-      subscriptionStatus,
-      paymentPlanId,
+      datePaid: new Date(order.attributes.created_at),
+      numOfCreditsPurchased,
     },
     userDelegate,
   );
 }
 
 /**
- * Lemon Squeezy creates the customer during checkout, so we only learn the customer id from the webhook.
- * We use the user id we passed as custom data at checkout to save it on the user.
+ * Lemon Squeezy creates the customer during checkout, so we learn the customer id here.
  */
 async function linkUserToLemonSqueezyCustomer(
-  meta: LemonSqueezyWebhookEvent["meta"],
+  userId: string | undefined,
   customerId: string,
   userDelegate: PrismaClient["user"],
 ): Promise<void> {
-  const userId = meta.custom_data?.user_id;
   if (!userId) {
     return;
   }
@@ -292,30 +260,4 @@ async function linkUserToLemonSqueezyCustomer(
     { userId, paymentProcessorUserId: customerId },
     userDelegate,
   );
-}
-
-function getOpenSaasSubscriptionStatus(
-  lemonSqueezySubscriptionStatus: LemonSqueezySubscriptionStatus,
-): SubscriptionStatus | undefined {
-  const lemonSqueezyToOpenSaasSubscriptionStatus: Record<
-    LemonSqueezySubscriptionStatus,
-    SubscriptionStatus | undefined
-  > = {
-    on_trial: SubscriptionStatus.Active,
-    active: SubscriptionStatus.Active,
-    // Lemon Squeezy's `cancelled` subscriptions stay valid until the end of the billing period.
-    cancelled: SubscriptionStatus.CancelAtPeriodEnd,
-    past_due: SubscriptionStatus.PastDue,
-    unpaid: SubscriptionStatus.Deleted,
-    expired: SubscriptionStatus.Deleted,
-    // Pausing has to be enabled in the Lemon Squeezy dashboard.
-    // If you enable it, decide how paused subscriptions should be handled here.
-    paused: undefined,
-    // The SDK's status type also lists `pause`, which the API docs don't mention.
-    pause: undefined,
-  };
-
-  return lemonSqueezyToOpenSaasSubscriptionStatus[
-    lemonSqueezySubscriptionStatus
-  ];
 }
