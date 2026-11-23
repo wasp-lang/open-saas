@@ -10,6 +10,7 @@ import {
 } from "../user";
 import { createPaddleTransaction, ensurePaddleCustomer } from "./checkoutUtils";
 import { paddleApi } from "./paddleApi";
+import { fetchPaddleSubscriptionState } from "./subscriptionState";
 import { paddleMiddlewareConfigFn, paddleWebhook } from "./webhook";
 
 export const paddlePaymentProcessor: PaymentProcessor = {
@@ -20,16 +21,22 @@ export const paddlePaymentProcessor: PaymentProcessor = {
     paymentPlan,
     prismaUserDelegate,
   }: CreateCheckoutSessionArgs) => {
-    const customer = await ensurePaddleCustomer(userEmail);
-
-    await updateUserPaymentProcessorUserId(
-      { userId, paymentProcessorUserId: customer.id },
+    let customerId = await fetchUserPaymentProcessorUserId(
+      userId,
       prismaUserDelegate,
     );
+    if (!customerId) {
+      const customer = await ensurePaddleCustomer(userEmail);
+      customerId = customer.id;
+      await updateUserPaymentProcessorUserId(
+        { userId, paymentProcessorUserId: customerId },
+        prismaUserDelegate,
+      );
+    }
 
     const transaction = await createPaddleTransaction({
       priceId: getPaymentProcessorPlanId(paymentPlan),
-      customerId: customer.id,
+      customerId,
       userId,
     });
 
@@ -60,6 +67,7 @@ export const paddlePaymentProcessor: PaymentProcessor = {
 
     return portalSession.urls.general.overview;
   },
+  fetchSubscriptionState: fetchPaddleSubscriptionState,
   webhook: paddleWebhook,
   webhookMiddlewareConfigFn: paddleMiddlewareConfigFn,
   fetchTotalRevenue: async () => {

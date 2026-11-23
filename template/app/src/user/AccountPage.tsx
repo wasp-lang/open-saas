@@ -10,8 +10,8 @@ import {
 } from "../client/components/ui/card";
 import { Separator } from "../client/components/ui/separator";
 import {
-  PaymentPlanId,
   SubscriptionStatus,
+  hasActiveSubscription,
   parsePaymentPlanId,
   prettyPaymentPlanName,
 } from "../payment/plans";
@@ -60,11 +60,7 @@ export function AccountPage({ user }: { user: User }) {
                 <div className="text-muted-foreground text-sm font-medium">
                   Your Plan
                 </div>
-                <UserCurrentSubscriptionPlan
-                  subscriptionPlan={user.subscriptionPlan}
-                  subscriptionStatus={user.subscriptionStatus}
-                  datePaid={user.datePaid}
-                />
+                <UserCurrentSubscriptionPlan user={user} />
               </div>
             </div>
             <Separator />
@@ -100,27 +96,20 @@ export function AccountPage({ user }: { user: User }) {
 }
 
 function UserCurrentSubscriptionPlan({
-  subscriptionPlan,
-  subscriptionStatus,
-  datePaid,
-}: Pick<User, "subscriptionPlan" | "subscriptionStatus" | "datePaid">) {
-  let subscriptionPlanMessage = "Free Plan";
-  if (
-    subscriptionPlan !== null &&
-    subscriptionStatus !== null &&
-    datePaid !== null
-  ) {
-    subscriptionPlanMessage = formatSubscriptionStatusMessage(
-      parsePaymentPlanId(subscriptionPlan),
-      datePaid,
-      subscriptionStatus as SubscriptionStatus,
-    );
-  }
-
+  user,
+}: {
+  user: Pick<
+    User,
+    | "subscriptionPlan"
+    | "subscriptionStatus"
+    | "currentPeriodEnd"
+    | "cancelAtPeriodEnd"
+  >;
+}) {
   return (
     <>
       <div className="text-foreground mt-1 text-sm sm:col-span-1 sm:mt-0">
-        {subscriptionPlanMessage}
+        {formatSubscriptionMessage(user)}
       </div>
       <div className="ml-auto mt-4 sm:mt-0">
         <CustomerPortalButton />
@@ -129,42 +118,49 @@ function UserCurrentSubscriptionPlan({
   );
 }
 
-function formatSubscriptionStatusMessage(
-  subscriptionPlan: PaymentPlanId,
-  datePaid: Date,
-  subscriptionStatus: SubscriptionStatus,
-): string {
-  const paymentPlanName = prettyPaymentPlanName(subscriptionPlan);
+function formatSubscriptionMessage({
+  subscriptionPlan,
+  subscriptionStatus,
+  currentPeriodEnd,
+  cancelAtPeriodEnd,
+}: Pick<
+  User,
+  | "subscriptionPlan"
+  | "subscriptionStatus"
+  | "currentPeriodEnd"
+  | "cancelAtPeriodEnd"
+>): string {
+  if (subscriptionPlan === null || subscriptionStatus === null) {
+    return "Free Plan";
+  }
+
+  const paymentPlanName = prettyPaymentPlanName(
+    parsePaymentPlanId(subscriptionPlan),
+  );
+  const endOfBillingPeriod = currentPeriodEnd?.toLocaleDateString();
+
+  if (hasActiveSubscription({ subscriptionStatus }) && cancelAtPeriodEnd) {
+    const endDateSuffix = endOfBillingPeriod ? `: ${endOfBillingPeriod}` : "";
+    return `Your ${paymentPlanName} plan subscription has been canceled, but remains active until the end of the current billing period${endDateSuffix}`;
+  }
+
+  const trialEndSuffix = endOfBillingPeriod
+    ? ` until ${endOfBillingPeriod}`
+    : "";
   const statusToMessage: Record<SubscriptionStatus, string> = {
     active: `${paymentPlanName}`,
+    trialing: `${paymentPlanName} (free trial${trialEndSuffix})`,
     past_due: `Payment for your ${paymentPlanName} plan is past due! Please update your subscription payment information.`,
-    cancel_at_period_end: `Your ${paymentPlanName} plan subscription has been canceled, but remains active until the end of the current billing period: ${prettyPrintEndOfBillingPeriod(
-      datePaid,
-    )}`,
-    deleted: `Your previous subscription has been canceled and is no longer active.`,
+    paused: `Your ${paymentPlanName} plan subscription is paused.`,
+    canceled: `Your previous subscription has been canceled and is no longer active.`,
   };
 
-  if (!statusToMessage[subscriptionStatus]) {
+  const message = statusToMessage[subscriptionStatus as SubscriptionStatus];
+  if (!message) {
     throw new Error(`Invalid subscription status: ${subscriptionStatus}`);
   }
 
-  return statusToMessage[subscriptionStatus];
-}
-
-function prettyPrintEndOfBillingPeriod(datePaid: Date) {
-  const lastDayOfNextMonth = new Date(datePaid);
-  lastDayOfNextMonth.setMonth(lastDayOfNextMonth.getMonth() + 2, 0);
-  // Clamped so e.g., Jan 31 + 1 month → Feb 28, not until March 3.
-  const clampedDayOfMonth = Math.min(
-    datePaid.getDate(),
-    lastDayOfNextMonth.getDate(),
-  );
-  const endOfBillingPeriod = new Date(datePaid);
-  endOfBillingPeriod.setMonth(
-    endOfBillingPeriod.getMonth() + 1,
-    clampedDayOfMonth,
-  );
-  return endOfBillingPeriod.toLocaleDateString();
+  return message;
 }
 
 function CustomerPortalButton() {
@@ -187,10 +183,7 @@ function CustomerPortalButton() {
 function BuyMoreButton({
   subscriptionStatus,
 }: Pick<User, "subscriptionStatus">) {
-  if (
-    subscriptionStatus === SubscriptionStatus.Active ||
-    subscriptionStatus === SubscriptionStatus.CancelAtPeriodEnd
-  ) {
+  if (hasActiveSubscription({ subscriptionStatus })) {
     return null;
   }
 

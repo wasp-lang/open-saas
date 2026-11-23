@@ -51,6 +51,7 @@ You can do that by:
    - `Customers`: read and write
    - `Metrics`: read
    - `Reports`: read
+   - `Subscriptions`: read
    - `Transactions`: read and write
 6. Copy the generated key and add it to your `.env.server` file:
    ```ini title=".env.server"
@@ -138,9 +139,15 @@ Next, configure the webhook in your Paddle dashboard:
 5. In the URL field, paste your `ngrok` forwarding address with `/payments-webhook` appended (for example: `https://abc123.ngrok-free.app/payments-webhook`).
 6. Set the `Usage type` to `Both`.
 7. Select the following events to listen for:
-   - `transaction.completed`
-   - `subscription.updated`
+   - `subscription.activated`
    - `subscription.canceled`
+   - `subscription.created`
+   - `subscription.past_due`
+   - `subscription.paused`
+   - `subscription.resumed`
+   - `subscription.trialing`
+   - `subscription.updated`
+   - `transaction.completed`
 8. Click `Save`.
 9. Click on your newly created destination in the `Events > Notifications` list to open it.
 10. Click copy on the `Secret key` and add it to your `.env.server` file:

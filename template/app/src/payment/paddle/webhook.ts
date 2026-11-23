@@ -1,6 +1,5 @@
 import {
   EventName,
-  type SubscriptionNotification,
   type TransactionNotification,
 } from "@paddle/paddle-node-sdk";
 import express from "express";
@@ -11,17 +10,14 @@ import {
   type PrismaClient,
 } from "wasp/server";
 import type { PaymentsWebhook } from "wasp/server/api";
-import { assertUnreachable } from "../../shared/utils";
 import { UnhandledWebhookEventError } from "../errors";
-import { getPaymentPlanIdByPaymentProcessorPlanId } from "../paymentProcessorPlans";
-import {
-  SubscriptionStatus as OpenSaasSubscriptionStatus,
-  PaymentPlanId,
-  paymentPlans,
-} from "../plans";
+import { findPaymentPlanIdByPaymentProcessorPlanId } from "../paymentProcessorPlans";
+import { getPaymentPlanCreditsAmount } from "../plans";
 import { processWebhookEventOnce } from "../processedWebhookEvent";
-import { updateUserCredits, updateUserSubscription } from "../user";
+import { syncUserSubscription } from "../subscription";
+import { recordUserPayment } from "../user";
 import { paddleApi } from "./paddleApi";
+import { fetchPaddleSubscriptionState } from "./subscriptionState";
 
 type PaddleWebhookEvent = Awaited<
   ReturnType<typeof paddleApi.webhooks.unmarshal>
@@ -47,7 +43,6 @@ export const paddleWebhook: PaymentsWebhook = async (
   response,
   context,
 ) => {
-  const prismaUserDelegate = context.entities.User;
   try {
     const signature = request.get("paddle-signature");
     if (!signature) {
@@ -60,10 +55,10 @@ export const paddleWebhook: PaymentsWebhook = async (
       signature,
     );
 
-    await processWebhookEventOnce(
-      { paymentProcessorEventId: event.eventId, eventType: event.eventType },
+    await handlePaddleEvent(
+      event,
+      context.entities.User,
       context.entities.ProcessedWebhookEvent,
-      () => handlePaddleEvent(event, prismaUserDelegate),
     );
     return response.status(200).json({ received: true });
   } catch (error) {
@@ -95,19 +90,62 @@ export const paddleWebhook: PaymentsWebhook = async (
 async function handlePaddleEvent(
   event: PaddleWebhookEvent,
   userDelegate: PrismaClient["user"],
+  processedWebhookEventDelegate: PrismaClient["processedWebhookEvent"],
 ): Promise<void> {
-  switch (event.eventType) {
-    case EventName.TransactionCompleted:
-      await handleTransactionCompleted(event.data, userDelegate);
-      break;
-    case EventName.SubscriptionUpdated:
-    case EventName.SubscriptionCanceled:
-      await handleSubscriptionChange(event.data, userDelegate);
-      break;
-    default:
-      throw new UnhandledWebhookEventError(event.eventType);
+  if (!isHandledPaddleEvent(event)) {
+    throw new UnhandledWebhookEventError(event.eventType);
   }
+
+  if (event.eventType === EventName.TransactionCompleted) {
+    // Payments can't be fetched again, so we record each one once.
+    await processWebhookEventOnce(
+      { paymentProcessorEventId: event.eventId, eventType: event.eventType },
+      processedWebhookEventDelegate,
+      () => handleTransactionCompleted(event.data, userDelegate),
+    );
+  }
+
+  const customerId = event.data.customerId;
+  if (!customerId) {
+    return;
+  }
+
+  await syncUserSubscription(
+    customerId,
+    fetchPaddleSubscriptionState,
+    userDelegate,
+  );
 }
+
+function isHandledPaddleEvent(
+  event: PaddleWebhookEvent,
+): event is HandledPaddleEvent {
+  return (HANDLED_PADDLE_EVENT_TYPES as readonly EventName[]).includes(
+    event.eventType,
+  );
+}
+
+/**
+ * Every event here triggers `syncUserSubscription`.
+ * Your Paddle webhook must send all of them.
+ * See: https://docs.opensaas.sh/guides/deploying/#paddle
+ */
+const HANDLED_PADDLE_EVENT_TYPES = [
+  EventName.TransactionCompleted,
+  EventName.SubscriptionCreated,
+  EventName.SubscriptionUpdated,
+  EventName.SubscriptionActivated,
+  EventName.SubscriptionTrialing,
+  EventName.SubscriptionPastDue,
+  EventName.SubscriptionPaused,
+  EventName.SubscriptionResumed,
+  EventName.SubscriptionCanceled,
+] as const satisfies EventName[];
+
+type HandledPaddleEvent = Extract<
+  PaddleWebhookEvent,
+  { eventType: (typeof HANDLED_PADDLE_EVENT_TYPES)[number] }
+>;
 
 async function handleTransactionCompleted(
   transaction: TransactionNotification,
@@ -122,96 +160,28 @@ async function handleTransactionCompleted(
     throw new Error(`Paddle transaction ${transaction.id} has no customer ID`);
   }
 
-  const paymentPlanId = getPaymentPlanIdByPaymentProcessorPlanId(
-    getPriceId(transaction.items),
-  );
-
-  const datePaid = new Date(transaction.billedAt ?? transaction.createdAt);
-
-  switch (paymentPlanId) {
-    case PaymentPlanId.Credits10:
-      await updateUserCredits(
-        {
-          paymentProcessorUserId: transaction.customerId,
-          numOfCreditsPurchased: paymentPlans[paymentPlanId].effect.amount,
-          datePaid,
-        },
-        userDelegate,
-      );
-      break;
-    case PaymentPlanId.Hobby:
-    case PaymentPlanId.Pro:
-      await updateUserSubscription(
-        {
-          paymentProcessorUserId: transaction.customerId,
-          paymentPlanId,
-          subscriptionStatus: OpenSaasSubscriptionStatus.Active,
-          datePaid,
-        },
-        userDelegate,
-      );
-      break;
-    default:
-      assertUnreachable(paymentPlanId);
-  }
-}
-
-async function handleSubscriptionChange(
-  subscription: SubscriptionNotification,
-  userDelegate: PrismaClient["user"],
-): Promise<void> {
-  const subscriptionStatus = getOpenSaasSubscriptionStatus(subscription);
-  const paymentPlanId = getPaymentPlanIdByPaymentProcessorPlanId(
-    getPriceId(subscription.items),
-  );
-
-  await updateUserSubscription(
+  await recordUserPayment(
     {
-      paymentProcessorUserId: subscription.customerId,
-      subscriptionStatus,
-      paymentPlanId,
+      paymentProcessorUserId: transaction.customerId,
+      datePaid: new Date(transaction.billedAt ?? transaction.createdAt),
+      numOfCreditsPurchased: getNumOfCreditsPurchased(transaction),
     },
     userDelegate,
   );
 }
 
-function getPriceId(items: { price: { id: string } | null }[]): string {
-  // We only expect one item.
-  // If your workflow expects more, you should change this function to handle them.
-  if (items.length !== 1) {
-    throw new Error(
-      "There should be exactly one item in Paddle transaction or subscription",
-    );
+function getNumOfCreditsPurchased(
+  transaction: TransactionNotification,
+): number {
+  let numOfCreditsPurchased = 0;
+  for (const transactionItem of transaction.items) {
+    const priceId = transactionItem.price?.id;
+    const paymentPlanId =
+      priceId && findPaymentPlanIdByPaymentProcessorPlanId(priceId);
+    if (paymentPlanId) {
+      numOfCreditsPurchased += getPaymentPlanCreditsAmount(paymentPlanId);
+    }
   }
 
-  const priceId = items[0].price?.id;
-  if (!priceId) {
-    throw new Error("Unable to extract price id from items");
-  }
-
-  return priceId;
-}
-
-function getOpenSaasSubscriptionStatus(
-  subscription: SubscriptionNotification,
-): OpenSaasSubscriptionStatus {
-  if (
-    subscription.status === "active" &&
-    subscription.scheduledChange?.action === "cancel"
-  ) {
-    return OpenSaasSubscriptionStatus.CancelAtPeriodEnd;
-  }
-
-  switch (subscription.status) {
-    case "active":
-    case "trialing":
-      return OpenSaasSubscriptionStatus.Active;
-    case "past_due":
-    case "paused":
-      return OpenSaasSubscriptionStatus.PastDue;
-    case "canceled":
-      return OpenSaasSubscriptionStatus.Deleted;
-    default:
-      assertUnreachable(subscription.status);
-  }
+  return numOfCreditsPurchased;
 }

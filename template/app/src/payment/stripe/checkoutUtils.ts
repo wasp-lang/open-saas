@@ -4,10 +4,11 @@ import { CHECKOUT_CANCELED_URL, CHECKOUT_SUCCESS_URL } from "../paths";
 import { stripeApi } from "./stripeApi";
 
 /**
- * Returns a Stripe customer for the given User email, creating a customer if none exist.
+ * Returns a Stripe customer for the given User, creating a customer if none exist.
  * Implements email uniqueness logic since Stripe doesn't enforce unique emails.
  */
 export async function ensureStripeCustomer(
+  userId: User["id"],
   userEmail: NonNullable<User["email"]>,
 ): Promise<Stripe.Customer> {
   const customers = await stripeApi.customers.list({
@@ -17,6 +18,7 @@ export async function ensureStripeCustomer(
   if (customers.data.length === 0) {
     return stripeApi.customers.create({
       email: userEmail,
+      metadata: { userId },
     });
   } else {
     return customers.data[0];

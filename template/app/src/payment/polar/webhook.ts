@@ -1,21 +1,15 @@
-import { Subscription } from "@polar-sh/sdk/models/components/subscription.js";
-import { SubscriptionStatus } from "@polar-sh/sdk/models/components/subscriptionstatus.js";
-import { WebhookOrderPaidPayload } from "@polar-sh/sdk/models/components/webhookorderpaidpayload.js";
-import { WebhookSubscriptionUpdatedPayload } from "@polar-sh/sdk/models/components/webhooksubscriptionupdatedpayload.js";
+import type { WebhookOrderPaidPayload } from "@polar-sh/sdk/models/components/webhookorderpaidpayload.js";
 import { validateEvent } from "@polar-sh/sdk/webhooks";
 import express from "express";
 import { env, type MiddlewareConfigFn, type PrismaClient } from "wasp/server";
 import type { PaymentsWebhook } from "wasp/server/api";
-import { assertUnreachable } from "../../shared/utils";
 import { UnhandledWebhookEventError } from "../errors";
-import { getPaymentPlanIdByPaymentProcessorPlanId } from "../paymentProcessorPlans";
-import {
-  SubscriptionStatus as OpenSaasSubscriptionStatus,
-  PaymentPlanId,
-  paymentPlans,
-} from "../plans";
+import { findPaymentPlanIdByPaymentProcessorPlanId } from "../paymentProcessorPlans";
+import { getPaymentPlanCreditsAmount } from "../plans";
 import { processWebhookEventOnce } from "../processedWebhookEvent";
-import { updateUserCredits, updateUserSubscription } from "../user";
+import { syncUserSubscription } from "../subscription";
+import { recordUserPayment } from "../user";
+import { fetchPolarSubscriptionState } from "./subscriptionState";
 
 type PolarWebhookEvent = ReturnType<typeof validateEvent>;
 
@@ -39,7 +33,6 @@ export const polarWebhook: PaymentsWebhook = async (
   response,
   context,
 ) => {
-  const prismaUserDelegate = context.entities.User;
   try {
     const event = validateEvent(
       request.body,
@@ -47,13 +40,11 @@ export const polarWebhook: PaymentsWebhook = async (
       env.POLAR_WEBHOOK_SECRET,
     );
 
-    await processWebhookEventOnce(
-      {
-        paymentProcessorEventId: getPolarEventId(request),
-        eventType: event.type,
-      },
+    await handlePolarEvent(
+      event,
+      getPolarEventId(request),
+      context.entities.User,
       context.entities.ProcessedWebhookEvent,
-      () => handlePolarEvent(event, prismaUserDelegate),
     );
     return response.status(204).send();
   } catch (error) {
@@ -93,104 +84,72 @@ function getPolarEventId(request: express.Request): string {
 
 async function handlePolarEvent(
   event: PolarWebhookEvent,
+  eventId: string,
   userDelegate: PrismaClient["user"],
+  processedWebhookEventDelegate: PrismaClient["processedWebhookEvent"],
 ): Promise<void> {
-  switch (event.type) {
-    case "order.paid":
-      await handleOrderPaid(event, userDelegate);
-      break;
-    case "subscription.updated":
-      await handleSubscriptionUpdated(event, userDelegate);
-      break;
-    default:
-      throw new UnhandledWebhookEventError(event.type);
+  if (!isHandledPolarEvent(event)) {
+    throw new UnhandledWebhookEventError(event.type);
   }
+
+  if (event.type === "order.paid") {
+    // Payments can't be fetched again, so we record each one once.
+    await processWebhookEventOnce(
+      { paymentProcessorEventId: eventId, eventType: event.type },
+      processedWebhookEventDelegate,
+      () => handleOrderPaid(event, userDelegate),
+    );
+  }
+
+  await syncUserSubscription(
+    event.data.customerId,
+    fetchPolarSubscriptionState,
+    userDelegate,
+  );
 }
+
+function isHandledPolarEvent(
+  event: PolarWebhookEvent,
+): event is HandledPolarEvent {
+  return (HANDLED_POLAR_EVENT_TYPES as readonly string[]).includes(event.type);
+}
+
+/**
+ * Every event here triggers `syncUserSubscription`.
+ * Your Polar webhook must send all of them.
+ * See: https://docs.opensaas.sh/guides/deploying/#polar
+ */
+const HANDLED_POLAR_EVENT_TYPES = [
+  "order.paid",
+  "subscription.created",
+  "subscription.updated",
+  "subscription.active",
+  "subscription.canceled",
+  "subscription.uncanceled",
+  "subscription.revoked",
+] as const satisfies PolarWebhookEvent["type"][];
+
+type HandledPolarEvent = Extract<
+  PolarWebhookEvent,
+  { type: (typeof HANDLED_POLAR_EVENT_TYPES)[number] }
+>;
 
 async function handleOrderPaid(
   { data: order }: WebhookOrderPaidPayload,
   userDelegate: PrismaClient["user"],
 ): Promise<void> {
-  const paymentPlanId = getPaymentPlanIdByPaymentProcessorPlanId(
-    order.productId,
-  );
+  const paymentPlanId =
+    order.productId &&
+    findPaymentPlanIdByPaymentProcessorPlanId(order.productId);
 
-  switch (paymentPlanId) {
-    case PaymentPlanId.Credits10:
-      await updateUserCredits(
-        {
-          paymentProcessorUserId: order.customerId,
-          numOfCreditsPurchased: paymentPlans[paymentPlanId].effect.amount,
-          datePaid: order.createdAt,
-        },
-        userDelegate,
-      );
-      break;
-    case PaymentPlanId.Hobby:
-    case PaymentPlanId.Pro:
-      await updateUserSubscription(
-        {
-          paymentProcessorUserId: order.customerId,
-          paymentPlanId,
-          subscriptionStatus: OpenSaasSubscriptionStatus.Active,
-          datePaid: order.createdAt,
-        },
-        userDelegate,
-      );
-      break;
-    default:
-      assertUnreachable(paymentPlanId);
-  }
-}
-
-async function handleSubscriptionUpdated(
-  { data: subscription }: WebhookSubscriptionUpdatedPayload,
-  userDelegate: PrismaClient["user"],
-): Promise<void> {
-  const newSubscriptionStatus = getOpenSaasSubscriptionStatus(subscription);
-  if (!newSubscriptionStatus) {
-    return;
-  }
-
-  const paymentPlanId = getPaymentPlanIdByPaymentProcessorPlanId(
-    subscription.productId,
-  );
-
-  await updateUserSubscription(
+  await recordUserPayment(
     {
-      paymentProcessorUserId: subscription.customer.id,
-      subscriptionStatus: newSubscriptionStatus,
-      paymentPlanId,
+      paymentProcessorUserId: order.customerId,
+      datePaid: order.createdAt,
+      numOfCreditsPurchased: paymentPlanId
+        ? getPaymentPlanCreditsAmount(paymentPlanId)
+        : 0,
     },
     userDelegate,
   );
-}
-
-function getOpenSaasSubscriptionStatus(
-  subscription: Subscription,
-): OpenSaasSubscriptionStatus | undefined {
-  const polarToOpenSaasSubscriptionStatus: Record<
-    SubscriptionStatus,
-    OpenSaasSubscriptionStatus | undefined
-  > = {
-    trialing: OpenSaasSubscriptionStatus.Active,
-    active: OpenSaasSubscriptionStatus.Active,
-    past_due: OpenSaasSubscriptionStatus.PastDue,
-    canceled: OpenSaasSubscriptionStatus.Deleted,
-    unpaid: OpenSaasSubscriptionStatus.Deleted,
-    incomplete_expired: OpenSaasSubscriptionStatus.Deleted,
-    incomplete: undefined,
-  };
-
-  const subscriptionStatus =
-    polarToOpenSaasSubscriptionStatus[subscription.status];
-
-  if (
-    subscriptionStatus === OpenSaasSubscriptionStatus.Active &&
-    subscription.cancelAtPeriodEnd
-  ) {
-    return OpenSaasSubscriptionStatus.CancelAtPeriodEnd;
-  }
-
-  return subscriptionStatus;
 }

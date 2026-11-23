@@ -1,8 +1,25 @@
+import { assertUnreachable } from "../shared/utils";
+
 export enum SubscriptionStatus {
-  PastDue = "past_due",
-  CancelAtPeriodEnd = "cancel_at_period_end",
   Active = "active",
-  Deleted = "deleted",
+  Trialing = "trialing",
+  PastDue = "past_due",
+  Paused = "paused",
+  Canceled = "canceled",
+}
+
+/**
+ * Whether the user has access to paid features.
+ */
+export function hasActiveSubscription({
+  subscriptionStatus,
+}: {
+  subscriptionStatus: string | null;
+}): boolean {
+  return (
+    subscriptionStatus === SubscriptionStatus.Active ||
+    subscriptionStatus === SubscriptionStatus.Trialing
+  );
 }
 
 export enum PaymentPlanId {
@@ -34,6 +51,18 @@ export const paymentPlans = {
     effect: { kind: "credits", amount: 10 },
   },
 } as const satisfies Record<PaymentPlanId, PaymentPlan>;
+
+export function getPaymentPlanCreditsAmount(planId: PaymentPlanId): number {
+  const { effect } = paymentPlans[planId];
+  switch (effect.kind) {
+    case "credits":
+      return effect.amount;
+    case "subscription":
+      return 0;
+    default:
+      assertUnreachable(effect);
+  }
+}
 
 export function prettyPaymentPlanName(planId: PaymentPlanId): string {
   const planToName: Record<PaymentPlanId, string> = {
