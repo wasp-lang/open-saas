@@ -1,15 +1,15 @@
 --- template/app/src/payment/user.ts
 +++ opensaas-sh/app/src/payment/user.ts
-@@ -2,7 +2,7 @@
+@@ -1,7 +1,7 @@
+ import { User } from "wasp/entities";
  import { PrismaClient } from "wasp/server";
- import { PaymentPlanId, SubscriptionStatus } from "./plans";
  
 -export async function fetchUserPaymentProcessorUserId(
 +export async function fetchUserStripeId(
    userId: User["id"],
    prismaUserDelegate: PrismaClient["user"],
  ): Promise<string | null> {
-@@ -11,20 +11,20 @@
+@@ -10,20 +10,20 @@
        id: userId,
      },
      select: {
@@ -36,7 +36,7 @@
    prismaUserDelegate: PrismaClient["user"],
  ): Promise<User> {
    return prismaUserDelegate.update({
-@@ -32,13 +32,13 @@
+@@ -31,13 +31,13 @@
        id: userId,
      },
      data: {
@@ -46,47 +46,22 @@
    });
  }
  
- interface UpdateUserSubscriptionArgs {
+ interface RecordUserPaymentArgs {
 -  paymentProcessorUserId: NonNullable<User["paymentProcessorUserId"]>;
 +  stripeId: NonNullable<User["stripeId"]>;
-   subscriptionStatus: SubscriptionStatus;
-   paymentPlanId?: PaymentPlanId;
-   datePaid?: Date;
-@@ -46,7 +46,7 @@
- 
- export function updateUserSubscription(
-   {
--    paymentProcessorUserId,
-+    stripeId,
-     paymentPlanId,
-     subscriptionStatus,
-     datePaid,
-@@ -55,7 +55,7 @@
- ): Promise<User> {
-   return userDelegate.update({
-     where: {
--      paymentProcessorUserId,
-+      stripeId,
-     },
-     data: {
-       subscriptionPlan: paymentPlanId,
-@@ -66,22 +66,18 @@
- }
- 
- interface UpdateUserCreditsArgs {
--  paymentProcessorUserId: NonNullable<User["paymentProcessorUserId"]>;
-+  stripeId: NonNullable<User["stripeId"]>;
-   numOfCreditsPurchased: number;
    datePaid: Date;
- }
- 
- export function updateUserCredits(
+   // `0` for subscription payments.
+   numOfCreditsPurchased: number;
+@@ -48,16 +48,12 @@
+  * (if not a subscription payment).
+  */
+ export function recordUserPayment(
 -  {
 -    paymentProcessorUserId,
--    numOfCreditsPurchased,
 -    datePaid,
--  }: UpdateUserCreditsArgs,
-+  { stripeId, numOfCreditsPurchased, datePaid }: UpdateUserCreditsArgs,
+-    numOfCreditsPurchased,
+-  }: RecordUserPaymentArgs,
++  { stripeId, datePaid, numOfCreditsPurchased }: RecordUserPaymentArgs,
    userDelegate: PrismaClient["user"],
  ): Promise<User> {
    return userDelegate.update({

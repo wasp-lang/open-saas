@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import type { GptResponse, Task, User } from "wasp/entities";
+import type { GptResponse, Task } from "wasp/entities";
 import { env, HttpError } from "wasp/server";
 import type {
   CreateTask,
@@ -10,7 +10,7 @@ import type {
   UpdateTask,
 } from "wasp/server/operations";
 import * as z from "zod";
-import { SubscriptionStatus } from "../payment/plans";
+import { hasActiveSubscription } from "../payment/plans";
 import { ensureArgsSchemaOrThrowHttpError } from "../server/validation";
 import { GeneratedSchedule, generatedScheduleSchema } from "./schedule";
 
@@ -44,7 +44,7 @@ export const generateGptResponse: GenerateGptResponse<
   // never reach it. The conditional update is atomic, which stops concurrent
   // requests from spending more credits than the user has.
   // If anything fails afterwards, we refund the credit.
-  const shouldChargeCredit = !isUserSubscribed(context.user);
+  const shouldChargeCredit = !hasActiveSubscription(context.user);
   if (shouldChargeCredit) {
     const { count: reservedCredits } = await context.entities.User.updateMany({
       where: { id: context.user.id, credits: { gt: 0 } },
@@ -94,13 +94,6 @@ export const generateGptResponse: GenerateGptResponse<
     throw error;
   }
 };
-
-function isUserSubscribed(user: User) {
-  return (
-    user.subscriptionStatus === SubscriptionStatus.Active ||
-    user.subscriptionStatus === SubscriptionStatus.CancelAtPeriodEnd
-  );
-}
 
 const createTaskInputSchema = z.object({
   description: z.string().nonempty(),

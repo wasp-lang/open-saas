@@ -3,14 +3,14 @@ import express from "express";
 import type { Stripe } from "stripe";
 import { env, type MiddlewareConfigFn } from "wasp/server";
 import { type PaymentsWebhook } from "wasp/server/api";
-import { emailSender } from "wasp/server/email";
-import { assertUnreachable } from "../../shared/utils";
 import { UnhandledWebhookEventError } from "../errors";
-import { getPaymentPlanIdByPaymentProcessorPlanId } from "../paymentProcessorPlans";
-import { PaymentPlanId, paymentPlans, SubscriptionStatus } from "../plans";
+import { findPaymentPlanIdByPaymentProcessorPlanId } from "../paymentProcessorPlans";
+import { getPaymentPlanCreditsAmount } from "../plans";
 import { processWebhookEventOnce } from "../processedWebhookEvent";
-import { updateUserCredits, updateUserSubscription } from "../user";
+import { syncUserSubscription } from "../subscription";
+import { recordUserPayment } from "../user";
 import { stripeApi } from "./stripeApi";
+import { fetchStripeSubscriptionState } from "./subscriptionState";
 
 /**
  * Stripe requires a raw request to construct events successfully.
@@ -31,14 +31,13 @@ export const stripeWebhook: PaymentsWebhook = async (
   response,
   context,
 ) => {
-  const prismaUserDelegate = context.entities.User;
   try {
     const event = constructStripeEvent(request);
 
-    await processWebhookEventOnce(
-      { paymentProcessorEventId: event.id, eventType: event.type },
+    await handleStripeEvent(
+      event,
+      context.entities.User,
       context.entities.ProcessedWebhookEvent,
-      () => handleStripeEvent(event, prismaUserDelegate),
     );
     return response.status(204).send();
   } catch (error) {
@@ -82,180 +81,106 @@ function constructStripeEvent(request: express.Request): Stripe.Event {
 
 async function handleStripeEvent(
   event: Stripe.Event,
-  prismaUserDelegate: PrismaClient["user"],
+  userDelegate: PrismaClient["user"],
+  processedWebhookEventDelegate: PrismaClient["processedWebhookEvent"],
 ): Promise<void> {
-  // If you'd like to handle more events, you can add more cases below.
-  // When deploying your app, you configure your webhook in the Stripe dashboard
-  // to only send the events that you're handling above.
-  // See: https://docs.opensaas.sh/guides/deploying/#setting-up-your-stripe-webhook
-  switch (event.type) {
-    case "invoice.paid":
-      await handleInvoicePaid(event, prismaUserDelegate);
-      break;
-    case "customer.subscription.updated":
-      await handleCustomerSubscriptionUpdated(event, prismaUserDelegate);
-      break;
-    case "customer.subscription.deleted":
-      await handleCustomerSubscriptionDeleted(event, prismaUserDelegate);
-      break;
-    default:
-      throw new UnhandledWebhookEventError(event.type);
-  }
-}
-
-async function handleInvoicePaid(
-  event: Stripe.InvoicePaidEvent,
-  prismaUserDelegate: PrismaClient["user"],
-): Promise<void> {
-  const invoice = event.data.object;
-  const customerId = getCustomerId(invoice.customer);
-  const invoicePaidAtDate = getInvoicePaidAtDate(invoice);
-  const paymentPlanId = getPaymentPlanIdByPaymentProcessorPlanId(
-    getInvoicePriceId(invoice),
-  );
-
-  switch (paymentPlanId) {
-    case PaymentPlanId.Credits10:
-      await updateUserCredits(
-        {
-          paymentProcessorUserId: customerId,
-          datePaid: invoicePaidAtDate,
-          numOfCreditsPurchased: paymentPlans[paymentPlanId].effect.amount,
-        },
-        prismaUserDelegate,
-      );
-      break;
-    case PaymentPlanId.Pro:
-    case PaymentPlanId.Hobby:
-      await updateUserSubscription(
-        {
-          paymentProcessorUserId: customerId,
-          datePaid: invoicePaidAtDate,
-          paymentPlanId,
-          subscriptionStatus: SubscriptionStatus.Active,
-        },
-        prismaUserDelegate,
-      );
-      break;
-    default:
-      assertUnreachable(paymentPlanId);
-  }
-}
-
-function getInvoicePriceId(invoice: Stripe.Invoice): Stripe.Price["id"] {
-  const invoiceLineItems = invoice.lines.data;
-  // We only expect one line item.
-  // If your workflow expects more, you should change this function to handle them.
-  if (invoiceLineItems.length !== 1) {
-    throw new Error("There should be exactly one line item in Stripe invoice");
+  if (!isHandledStripeEvent(event)) {
+    throw new UnhandledWebhookEventError(event.type);
   }
 
-  const priceId = invoiceLineItems[0].pricing?.price_details?.price;
-  if (!priceId) {
-    throw new Error("Unable to extract price id from items");
-  }
-
-  return priceId;
-}
-
-async function handleCustomerSubscriptionUpdated(
-  event: Stripe.CustomerSubscriptionUpdatedEvent,
-  prismaUserDelegate: PrismaClient["user"],
-): Promise<void> {
-  const subscription = event.data.object;
-
-  // There are other subscription statuses, such as `trialing` that we are not handling.
-  const subscriptionStatus = getOpenSaasSubscriptionStatus(subscription);
-  if (!subscriptionStatus) {
+  const customerId = getCustomerId(event.data.object.customer);
+  if (!customerId) {
+    // E.g. a payment made outside of our checkout.
     return;
   }
 
-  const customerId = getCustomerId(subscription.customer);
-  const paymentPlanId = getPaymentPlanIdByPaymentProcessorPlanId(
-    getSubscriptionPriceId(subscription),
-  );
-
-  const user = await updateUserSubscription(
-    { paymentProcessorUserId: customerId, paymentPlanId, subscriptionStatus },
-    prismaUserDelegate,
-  );
-
-  if (subscription.cancel_at_period_end && user.email) {
-    await emailSender.send({
-      to: user.email,
-      subject: "We hate to see you go :(",
-      text: "We hate to see you go. Here is a sweet offer...",
-      html: "We hate to see you go. Here is a sweet offer...",
-    });
-  }
-}
-
-function getOpenSaasSubscriptionStatus(
-  subscription: Stripe.Subscription,
-): SubscriptionStatus | undefined {
-  const stripeToOpenSaasSubscriptionStatus: Record<
-    Stripe.Subscription.Status,
-    SubscriptionStatus | undefined
-  > = {
-    trialing: SubscriptionStatus.Active,
-    active: SubscriptionStatus.Active,
-    past_due: SubscriptionStatus.PastDue,
-    canceled: SubscriptionStatus.Deleted,
-    unpaid: SubscriptionStatus.Deleted,
-    incomplete_expired: SubscriptionStatus.Deleted,
-    paused: undefined,
-    incomplete: undefined,
-  };
-
-  const subscriptionStatus =
-    stripeToOpenSaasSubscriptionStatus[subscription.status];
-
-  if (
-    subscriptionStatus === SubscriptionStatus.Active &&
-    subscription.cancel_at_period_end
-  ) {
-    return SubscriptionStatus.CancelAtPeriodEnd;
-  }
-
-  return subscriptionStatus;
-}
-
-function getSubscriptionPriceId(
-  subscription: Stripe.Subscription,
-): Stripe.Price["id"] {
-  const subscriptionItems = subscription.items.data;
-  // We only expect one subscription item.
-  // If your workflow expects more, you should change this function to handle them.
-  if (subscriptionItems.length !== 1) {
-    throw new Error(
-      "There should be exactly one subscription item in Stripe subscription",
+  if (event.type === "invoice.paid") {
+    // Payments can't be fetched again, so we record each one once.
+    await processWebhookEventOnce(
+      { paymentProcessorEventId: event.id, eventType: event.type },
+      processedWebhookEventDelegate,
+      () => handleInvoicePaid(event.data.object, customerId, userDelegate),
     );
   }
 
-  return subscriptionItems[0].price.id;
+  await syncUserSubscription(
+    customerId,
+    fetchStripeSubscriptionState,
+    userDelegate,
+  );
 }
 
-async function handleCustomerSubscriptionDeleted(
-  event: Stripe.CustomerSubscriptionDeletedEvent,
-  prismaUserDelegate: PrismaClient["user"],
-): Promise<void> {
-  const subscription = event.data.object;
-  const customerId = getCustomerId(subscription.customer);
+function isHandledStripeEvent(
+  event: Stripe.Event,
+): event is HandledStripeEvent {
+  return (HANDLED_STRIPE_EVENT_TYPES as readonly string[]).includes(event.type);
+}
 
-  await updateUserSubscription(
+/**
+ * Every event here triggers `syncUserSubscription`.
+ * Your Stripe webhook must send all of them.
+ * See: https://docs.opensaas.sh/guides/deploying/#stripe
+ */
+const HANDLED_STRIPE_EVENT_TYPES = [
+  "checkout.session.completed",
+  "customer.subscription.created",
+  "customer.subscription.updated",
+  "customer.subscription.deleted",
+  "customer.subscription.paused",
+  "customer.subscription.resumed",
+  "customer.subscription.pending_update_applied",
+  "customer.subscription.pending_update_expired",
+  "customer.subscription.trial_will_end",
+  "invoice.paid",
+  "invoice.payment_failed",
+  "invoice.payment_action_required",
+  "invoice.upcoming",
+  "invoice.marked_uncollectible",
+  "invoice.payment_succeeded",
+  "payment_intent.succeeded",
+  "payment_intent.payment_failed",
+  "payment_intent.canceled",
+] as const satisfies Stripe.Event["type"][];
+
+type HandledStripeEvent = Extract<
+  Stripe.Event,
+  { type: (typeof HANDLED_STRIPE_EVENT_TYPES)[number] }
+>;
+
+async function handleInvoicePaid(
+  invoice: Stripe.Invoice,
+  customerId: Stripe.Customer["id"],
+  userDelegate: PrismaClient["user"],
+): Promise<void> {
+  await recordUserPayment(
     {
       paymentProcessorUserId: customerId,
-      subscriptionStatus: SubscriptionStatus.Deleted,
+      datePaid: getInvoicePaidAtDate(invoice),
+      numOfCreditsPurchased: getNumOfCreditsPurchased(invoice),
     },
-    prismaUserDelegate,
+    userDelegate,
   );
+}
+
+function getNumOfCreditsPurchased(invoice: Stripe.Invoice): number {
+  let numOfCreditsPurchased = 0;
+  for (const invoiceLineItem of invoice.lines.data) {
+    const priceId = invoiceLineItem.pricing?.price_details?.price;
+    const paymentPlanId =
+      priceId && findPaymentPlanIdByPaymentProcessorPlanId(priceId);
+    if (paymentPlanId) {
+      numOfCreditsPurchased += getPaymentPlanCreditsAmount(paymentPlanId);
+    }
+  }
+
+  return numOfCreditsPurchased;
 }
 
 function getCustomerId(
   customer: string | Stripe.Customer | Stripe.DeletedCustomer | null,
-): Stripe.Customer["id"] {
+): Stripe.Customer["id"] | null {
   if (!customer) {
-    throw new Error("Customer is missing");
+    return null;
   } else if (typeof customer === "string") {
     return customer;
   } else {

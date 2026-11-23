@@ -1,0 +1,16 @@
+--- template/app/migrations/20261111120000_sync_subscription_state/migration.sql
++++ opensaas-sh/app/migrations/20261111120000_sync_subscription_state/migration.sql
+@@ -0,0 +1,13 @@
++-- AlterTable
++ALTER TABLE "User" ADD COLUMN     "cancelAtPeriodEnd" BOOLEAN NOT NULL DEFAULT false,
++ADD COLUMN     "currentPeriodEnd" TIMESTAMP(3);
++
++-- A scheduled cancellation is no longer a status, it is a flag on an active subscription.
++UPDATE "User"
++SET "subscriptionStatus" = 'active', "cancelAtPeriodEnd" = true
++WHERE "subscriptionStatus" = 'cancel_at_period_end';
++
++-- Rename the `deleted` status to `canceled`.
++UPDATE "User"
++SET "subscriptionStatus" = 'canceled'
++WHERE "subscriptionStatus" = 'deleted';

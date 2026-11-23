@@ -1,0 +1,21 @@
+--- template/app/src/payment/operations.ts
++++ opensaas-sh/app/src/payment/operations.ts
+@@ -88,15 +88,15 @@
+     );
+   }
+ 
+-  const paymentProcessorUserId = context.user.paymentProcessorUserId;
+-  if (!paymentProcessorUserId) {
++  const stripeId = context.user.stripeId;
++  if (!stripeId) {
+     // Lemon Squeezy creates the customer during checkout, so on a user's
+     // first checkout we don't know the customer until the webhook arrives.
+     return;
+   }
+ 
+   await syncUserSubscription(
+-    paymentProcessorUserId,
++    stripeId,
+     paymentProcessor.fetchSubscriptionState,
+     context.entities.User,
+   );
