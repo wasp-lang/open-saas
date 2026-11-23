@@ -1,6 +1,6 @@
 import { routes } from "wasp/client/router";
 import { config } from "wasp/server";
-import { CheckoutResult } from "./CheckoutResultPage";
+import { CheckoutResult } from "./checkoutResult";
 
 const CHECKOUT_SUCCESS_URL_PATH = routes.CheckoutResultRoute.build({
   search: {

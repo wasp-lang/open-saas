@@ -89,9 +89,14 @@ Next, go to your [Lemon Squeezy Webhooks Dashboard](https://app.lemonsqueezy.com
 4. Copy and paste this same signing secret into your `.env.server` file under `LEMONSQUEEZY_WEBHOOK_SECRET`.
 5. Make sure to select at least the following updates to be sent:
    - `order_created`
+   - `subscription_cancelled`
    - `subscription_created`
-   - `subscription_updated`
+   - `subscription_expired`
+   - `subscription_paused`
    - `subscription_payment_success`
+   - `subscription_resumed`
+   - `subscription_unpaused`
+   - `subscription_updated`
 6. Click `save`.
 
 You're now ready to start consuming Lemon Squeezy webhook events in local development.

@@ -12,18 +12,26 @@
  import {
    createStripeCheckoutSession,
    ensureStripeCustomer,
-@@ -29,8 +26,8 @@
+@@ -28,15 +25,12 @@
+     paymentPlan,
+     prismaUserDelegate,
    }: CreateCheckoutSessionArgs) => {
-     const customer = await ensureStripeCustomer(userEmail);
- 
--    await updateUserPaymentProcessorUserId(
--      { userId, paymentProcessorUserId: customer.id },
-+    await updateUserStripeId(
-+      { userId, stripeId: customer.id },
-       prismaUserDelegate,
-     );
- 
-@@ -58,17 +55,14 @@
+-    let customerId = await fetchUserPaymentProcessorUserId(
+-      userId,
+-      prismaUserDelegate,
+-    );
++    let customerId = await fetchUserStripeId(userId, prismaUserDelegate);
+     if (!customerId) {
+       const customer = await ensureStripeCustomer(userId, userEmail);
+       customerId = customer.id;
+-      await updateUserPaymentProcessorUserId(
+-        { userId, paymentProcessorUserId: customerId },
++      await updateUserStripeId(
++        { userId, stripeId: customerId },
+         prismaUserDelegate,
+       );
+     }
+@@ -65,17 +59,14 @@
      prismaUserDelegate,
      userId,
    }: FetchCustomerPortalUrlArgs) => {

@@ -34,8 +34,7 @@ export const calculateDailyStatsJob: CalculateDailyStatsJob<
     });
 
     const userCount = await context.entities.User.count({});
-    // users can have paid but canceled subscriptions which terminate at the end of the period
-    // we don't want to count those users as current paying users
+    // Users on a free trial haven't paid yet.
     const paidUserCount = await context.entities.User.count({
       where: {
         subscriptionStatus: SubscriptionStatus.Active,
@@ -121,7 +120,9 @@ export const calculateDailyStatsJob: CalculateDailyStatsJob<
     console.error("Error calculating daily stats: ", error);
     await context.entities.Logs.create({
       data: {
-        message: `Error calculating daily stats: ${error instanceof Error ? error.message : String(error)}`,
+        message: `Error calculating daily stats: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
         level: "job-error",
       },
     });
