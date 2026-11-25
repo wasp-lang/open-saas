@@ -13,27 +13,31 @@ export function TotalRevenueCard({
   weeklyStats,
   isLoading,
 }: DailyStatsProps) {
+  const sortedWeeks = useMemo(
+    () =>
+      weeklyStats
+        ? [...weeklyStats].sort(
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+          )
+        : undefined,
+    [weeklyStats],
+  );
+
   const isDeltaPositive = useMemo(() => {
-    if (!weeklyStats) return false;
-    return weeklyStats[0].totalRevenue - weeklyStats[1]?.totalRevenue > 0;
-  }, [weeklyStats]);
+    if (!sortedWeeks || sortedWeeks.length < 2) return false;
+    return sortedWeeks[0].totalRevenue - sortedWeeks[1].totalRevenue > 0;
+  }, [sortedWeeks]);
 
   const deltaPercentage = useMemo(() => {
-    if (!weeklyStats || weeklyStats.length < 2 || isLoading) return;
-    if (
-      weeklyStats[1]?.totalRevenue === 0 ||
-      weeklyStats[0]?.totalRevenue === 0
-    )
-      return 0;
-
-    weeklyStats.sort((a, b) => b.id - a.id);
+    if (!sortedWeeks || sortedWeeks.length < 2 || isLoading) return;
+    if (sortedWeeks[1].totalRevenue === 0) return 0;
 
     const percentage =
-      ((weeklyStats[0].totalRevenue - weeklyStats[1]?.totalRevenue) /
-        weeklyStats[1]?.totalRevenue) *
+      ((sortedWeeks[0].totalRevenue - sortedWeeks[1].totalRevenue) /
+        sortedWeeks[1].totalRevenue) *
       100;
     return Math.floor(percentage);
-  }, [isLoading, weeklyStats]);
+  }, [isLoading, sortedWeeks]);
 
   return (
     <Card>
