@@ -222,7 +222,7 @@ export function UsersTable() {
                 <Input
                   type="number"
                   min={1}
-                  defaultValue={currentPage}
+                  value={currentPage}
                   max={data?.totalPages}
                   onChange={(e) => {
                     const value = parseInt(e.currentTarget.value);
